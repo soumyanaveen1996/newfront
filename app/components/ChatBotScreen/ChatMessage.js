@@ -25,20 +25,17 @@ export default class ChatMessage extends React.Component {
 
     constructor(props) {
         super(props)
+        let { message } = this.props;
+        this.state = {
+            read: message.isRead(),
+            isFavorite: message.isFavorite()
+        };
     }
 
     image() {
         if (this.props.imageSource) {
             return <Image source={this.props.imageSource} style={styles.profilePic} />;
         }
-    }
-
-    componentWillMount() {
-        let { message } = this.props;
-        this.state = {
-            read: message.isRead(),
-            isFavorite: message.isFavorite()
-        };
     }
 
     componentWillUnmount() {

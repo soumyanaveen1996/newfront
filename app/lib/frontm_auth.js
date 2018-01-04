@@ -2,6 +2,16 @@ import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
 import UUID from 'uuid/v4';
+import { google } from 'react-native-simple-auth';
+import { GoogleSignin } from 'react-native-google-signin';
+
+GoogleSignin.configure({
+    scopes: Config.auth.ios.google.scopes,
+    iosClientId: Config.auth.ios.google.iosClientId,
+    webClientId: Config.auth.ios.google.iosClientId,
+    offlineAccess: false,
+    forceConsentPrompt: true,
+});
 
 class FrontmAuth {
     constructor() {
@@ -37,16 +47,13 @@ class FrontmAuth {
 
     //TODO(expo) : Implement Google auth
     loginWithGoogle(conversationId, botName) {
-        
         var self = this;
         return new Promise(function(resolve, reject) {
-            Expo.Google.logInAsync({
-                behavior: Config.auth.ios.google.behavior,
-                iosStandaloneAppClientId: Config.auth.ios.google.iosClientId,
-                scopes: Config.auth.ios.google.scopes,
-            }).then((result) => {
-                if (result.type === 'success') {
-                    const googleUser = result.user || {};
+
+            GoogleSignin.signOut();
+            GoogleSignin.signIn()
+                .then((user) => {
+                    const googleUser = user;
                     const data = {
                         user: {
                             emailAddress: googleUser.email,
@@ -66,7 +73,7 @@ class FrontmAuth {
                         'method': 'post',
                         'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
                         'headers': {
-                            token: result.idToken
+                            token: user.idToken
                         },
                         'data': data
                     };
@@ -79,19 +86,20 @@ class FrontmAuth {
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
                                 userUUID: resData.userUuid,
-                                refreshToken: result.refreshToken,
+                                refreshToken: user.refreshToken,
                                 info: data.user
                             }
                             return resolve({ type: 'success', credentials: self.credentials });
                         }).catch((err) => {
                             return reject({ type: 'error', error: err });
                         });
-                } else {
-                    return resolve({ type: 'cancel', msg: 'login canceled' });
-                }
-            }).catch((err) => {
-                reject({ type: 'error', error: err.code });
-            })
+                }).catch((err) => {
+                    if (err.code === -5) {
+                        return resolve({ type: 'cancel', msg: 'login canceled' });
+                    } else {
+                        reject({ type: 'error', error: err.code });
+                    }
+                })
         });
     }
 
@@ -117,11 +125,9 @@ class FrontmAuth {
                     return resolve(updatedCreds);
                 }).catch((err) => {
                     console.log('Error making refresh token call::', err);
-
                     return reject(err);
                 });
         })
-
     }
 }
 

@@ -778,7 +778,6 @@ export default class ChatBotScreen extends React.Component {
         return (
             <KeyboardAvoidingView style={chatStyles.container} behavior="padding" keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
                 <FlatList ref={(list) => {this.chatList = list}}
-                    inverted
                     data={this.state.messages}
                     renderItem={this.renderItem.bind(this)}
                     onEndReachedThreshold={10}

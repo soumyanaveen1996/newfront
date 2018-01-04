@@ -17,6 +17,7 @@ const config = {
             google: {
                 behavior: 'web',
                 iosClientId: '948594463167-ek2t5ctm2jq6kia2bi1l9d5e6uvki5fp.apps.googleusercontent.com',
+                callback: 'com.frontm.frontm:/oauth2redirect',
                 scopes: ['profile', 'email']
             },
             facebook: {
