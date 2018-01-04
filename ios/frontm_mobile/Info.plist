@@ -47,6 +47,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -57,7 +59,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -84,5 +86,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Frontm requires camera permission to take pictures</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Frontm requires contacts access to Add users</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Frontm requires microphone for taking pictures and sending voice messages</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Frontm requires Photo Library access</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Frontm requires Photo Library access</string>
 </dict>
 </plist>

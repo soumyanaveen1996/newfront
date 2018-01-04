@@ -2,7 +2,6 @@ import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
 import UUID from 'uuid/v4';
-import { google } from 'react-native-simple-auth';
 import { GoogleSignin } from 'react-native-google-signin';
 
 GoogleSignin.configure({

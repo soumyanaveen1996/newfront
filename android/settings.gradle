@@ -1,4 +1,6 @@
 rootProject.name = 'frontm_mobile'
+include ':@yfuks/react-native-action-sheet'
+project(':@yfuks/react-native-action-sheet').projectDir = new File(rootProject.projectDir, '../node_modules/@yfuks/react-native-action-sheet/android')
 include ':react-native-google-signin'
 project(':react-native-google-signin').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-signin/android')
 include ':react-native-svg'

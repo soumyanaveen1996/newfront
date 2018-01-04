@@ -1,16 +1,12 @@
 import React from 'react';
 import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text } from 'react-native';
 import { AudioRecorder, AudioUtils } from 'react-native-audio';
-
 import styles from './styles';
 import Images from '../../config/images';
 import Icons from '../../config/icons';
-
 import { AudioRecordingConfig, ChatInputBarState } from './config';
+import ActionSheet from '@yfuks/react-native-action-sheet';
 
-//import { connectActionSheet } from '@expo/react-native-action-sheet';
-
-// TODO(expo): ActionSheet
 export default class ChatInputBar extends React.Component {
 
     constructor(props) {
@@ -33,9 +29,11 @@ export default class ChatInputBar extends React.Component {
     showOptions() {
         const cancelButtonIndex = this.props.options.length;
         let optionLabels = this.props.options.map((elem) => elem.label)
-        optionLabels.push('Cancel');
+        if (Platform.OS === 'ios') {
+            optionLabels.push('Cancel');
+        }
 
-        this.props.showActionSheetWithOptions(
+        ActionSheet.showActionSheetWithOptions(
             {
                 options: optionLabels,
                 cancelButtonIndex: cancelButtonIndex
@@ -71,14 +69,14 @@ export default class ChatInputBar extends React.Component {
         // Event emitter is set only for iOS as Android gets it through promise
         if (Platform.OS === 'ios') {
             AudioRecorder.onFinished = (data) => {
-                  // Android callback comes in the form of a promise instead
-                  if (Platform.OS === 'ios') {
-                      if (data.status === 'OK') {
-                          this.sendAudio(data.audioFileURL);
-                          // Reset the state after the audio has been sent as we need the recorded time
-                          this._setPostAudioState();
-                      }
-                  }
+                // Android callback comes in the form of a promise instead
+                if (Platform.OS === 'ios') {
+                    if (data.status === 'OK') {
+                        this.sendAudio(data.audioFileURL);
+                        // Reset the state after the audio has been sent as we need the recorded time
+                        this._setPostAudioState();
+                    }
+                }
             };
         }
     }

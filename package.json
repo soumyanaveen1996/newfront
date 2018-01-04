@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@expo/react-native-action-sheet": "^1.0.0",
+    "@yfuks/react-native-action-sheet": "^0.0.4",
     "aws-sdk": "^2.94.0",
     "axios": "^0.16.2",
     "babel-plugin-module-resolver": "^3.0.0",
