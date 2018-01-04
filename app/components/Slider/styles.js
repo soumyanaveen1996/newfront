@@ -69,9 +69,13 @@ export default StyleSheet.create({
         fontWeight:'500'
     },
     checkboxContainer: {
-        paddingRight:12.5,
-        justifyContent:'center',
-        alignItems:'flex-start'
+        width: 22,
+        height: 22,
+        marginRight:12.5,
+        padding: 0,
+        marginLeft: 0,
+        marginVertical: 0,
+        backgroundColor: GlobalColors.transparent,
     },
     checkboxIconStyle: {
         height:22,

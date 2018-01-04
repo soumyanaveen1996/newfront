@@ -209,17 +209,16 @@ export default class Slider extends React.Component {
 
         if (option && option.select === true && option.smartReply !== true) {
             return (
-                <View style={styles.checkboxContainer}>
-                    <CheckBox
-                        style={styles.checkboxIconStyle}
-                        uncheckedIcon={checkBoxConfig.uncheckedIcon}
-                        checkedIcon={checkBoxConfig.checkedIcon}
-                        checkedColor={checkBoxConfig.checkedColor}
-                        iconType={checkBoxConfig.iconType}
-                        checked={selected}
-                        onPress={() => this.onRowsSelect(index, i)}
-                    />
-                </View>
+                <CheckBox
+                    containerStyle={styles.checkboxContainer}
+                    style={styles.checkboxIconStyle}
+                    uncheckedIcon={checkBoxConfig.uncheckedIcon}
+                    checkedIcon={checkBoxConfig.checkedIcon}
+                    checkedColor={checkBoxConfig.checkedColor}
+                    iconType={checkBoxConfig.iconType}
+                    checked={selected}
+                    onPress={() => this.onRowsSelect(index, i)}
+                />
             )
         }
     };
