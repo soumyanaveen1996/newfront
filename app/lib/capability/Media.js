@@ -9,7 +9,7 @@ export const DefaultCameraOptions = {
     base64: true,
     storageOptions: {
         skipBackup: true,
-        path: 'images'
+        path: 'camera_images'
     }
 }
 

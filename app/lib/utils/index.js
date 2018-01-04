@@ -5,6 +5,7 @@ import { Utils } from '../capability';
 import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
+import RNFS from 'react-native-fs';
 
 export function formattedDate(date) {
     if (!date) {
@@ -34,17 +35,22 @@ export function sessionStartFormattedDate(date) {
     }
 }
 
-// TODO(expo): Replace this function
 export async function copyFileAsync(uri, directory) {
-    /*
-    const result = await Expo.FileSystem.getInfoAsync(directory);
-    if (!result.exists) {
-        await Expo.FileSystem.makeDirectoryAsync(directory, { intermediates: true });
+    console.log('In copyFileAsync : ', uri, directory);
+    const exists = await RNFS.exists(directory);
+    if (!exists) {
+        await RNFS.mkdir(directory);
     }
     const parsedPath = PathParse(uri);
     const toUri = directory[directory.length - 1] === '/' ? directory + parsedPath.base : directory + '/' + parsedPath.base;
-    await Expo.FileSystem.copyAsync({ from: uri, to: toUri });
-    return toUri; */
+
+    const destExists = await RNFS.exists(toUri);
+    if (destExists) {
+        await RNFS.unlink(toUri);
+    }
+    await RNFS.copyFile(uri, toUri);
+    console.log('In copyFileAsync : ', toUri);
+    return toUri;
 }
 
 

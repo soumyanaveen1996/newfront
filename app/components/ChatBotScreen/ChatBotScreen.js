@@ -491,11 +491,12 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async sendImage(imageUri, base64) {
+        const toUri = await Utils.copyFileAsync(imageUri, Constants.IMAGES_DIRECTORY);
         let message = new Message();
         message.setCreatedBy(this.getUserUUID());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(base64, imageUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Image, this.user);
+        const uploadedUrl = await Resource.uploadFile(base64, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Image, this.user);
         message.imageMessage(uploadedUrl);
 
         return this.sendMessage(message);

@@ -44,7 +44,6 @@ class FrontmAuth {
         });
     } */
 
-    //TODO(expo) : Implement Google auth
     loginWithGoogle(conversationId, botName) {
         var self = this;
         return new Promise(function(resolve, reject) {
