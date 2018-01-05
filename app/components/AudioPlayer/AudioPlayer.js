@@ -6,6 +6,7 @@ import Config from './config.js';
 import Constants from '../../config/constants';
 import utils from '../../lib/utils';
 import Sound from 'react-native-sound';
+import _ from 'lodash';
 
 const AudioPlayerStates = {
     PLAYING: 'playing',
@@ -65,7 +66,7 @@ export default class AudioPlayer extends React.Component {
                 this.audio.getCurrentTime((currentTime, isPlaying) => {
                     callback(currentTime, isPlaying);
                 });
-            }, 1000);
+            }, 200);
         }
     }
 
@@ -90,7 +91,12 @@ export default class AudioPlayer extends React.Component {
             const { uri, headers } = this.props.audioSource;
             const audioSource = await utils.downloadFileAsync(uri, headers, Constants.AUDIO_DIRECTORY);
 
-            const sound = new Sound(audioSource.uri, (error) => callback(error, sound));
+            var audioPath = audioSource.uri;
+            if (_.startsWith(audioPath, 'file://')) {
+                audioPath = audioPath.substr(6);
+            }
+
+            const sound = new Sound(audioPath, '', (error) => callback(error, sound));
         } else {
             this.audio.play((success) => this._onPlayEnd(success));
             this._trackProgress(this.audio.getDuration())
@@ -127,7 +133,9 @@ export default class AudioPlayer extends React.Component {
         return (
             <View style={styles.progress}>
                 <View style={styles.line} />
-                {Icons.audioCircle({style: [styles.circle, {left: left}]})}
+                <View style={[styles.circle, {left: left}]} >
+                    {Icons.audioCircle()}
+                </View>
             </View>
         )
     }

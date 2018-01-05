@@ -27,7 +27,7 @@ const stylesheet = StyleSheet.create({
         left: Config.CIRCLE_SIZE / 2,
     },
     circle: {
-        position: 'absolute'
+        position: 'absolute',
     }
 });
 
