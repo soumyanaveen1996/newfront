@@ -1,6 +1,6 @@
 import React from 'react';
 import {View , Text ,Image, TouchableHighlight } from 'react-native';
-//import EasyListView from 'react-native-easy-listview-gridview'
+import EasyListView from 'react-native-easy-listview-gridview'
 import styles from './styles'
 import images from '../../../config/images'
 import {scrollViewConfig } from './config'
@@ -33,7 +33,6 @@ export default class CategoriesTab extends React.Component {
         return (
             <View
                 key={index}
-
                 style={styles.tileContainer}>
                 <TouchableHighlight
                     style={styles.gridStyle}
@@ -49,12 +48,7 @@ export default class CategoriesTab extends React.Component {
         )
     }
 
-    // TODO(expo): Replace EasyListView
     render() {
-        return <View />;
-    }
-    /*
-    render(){
         return (
             <View >
                 <EasyListView
@@ -69,10 +63,8 @@ export default class CategoriesTab extends React.Component {
                 />
 
             </View>
-
-
         )
-    } */
+    }
 
     _onFetch(pageNo, success, failure) {
 

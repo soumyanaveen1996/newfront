@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, Image, TouchableHighlight } from 'react-native';
-//import EasyListView from 'react-native-easy-listview-gridview'
+import EasyListView from 'react-native-easy-listview-gridview'
 import styles from './styles'
 import images from '../../../config/images'
 import I18n from '../../../config/i18n/i18n';
 import { Actions } from 'react-native-router-flux'
 const NUMBER_COLUMNS = 2
-
 
 export default class DeveloperTab extends React.Component {
     constructor(props){
@@ -39,7 +38,6 @@ export default class DeveloperTab extends React.Component {
         Actions.botList({data : selectedBots});
     }
 
-
     renderGridItem = (index, rowData, sectionID, rowID, highlightRow) => {
         return (
             <View
@@ -59,12 +57,7 @@ export default class DeveloperTab extends React.Component {
         )
     }
 
-    // TODO(expo): Replace EasyListView
     render() {
-        return <View />;
-    }
-    /*
-    render(){
         return (
             <View >
                 <EasyListView
@@ -79,12 +72,9 @@ export default class DeveloperTab extends React.Component {
                 >
                     <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>}
                 </EasyListView>
-
             </View>
-
-
         )
-    } */
+    }
 
     _onFetch(pageNo, success, failure) {
 

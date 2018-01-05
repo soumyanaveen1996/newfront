@@ -10,7 +10,6 @@ export default StyleSheet.create({
         borderColor: 'transparent',
         borderRadius:15,
     },
-
     tileContent: {
         flex: 1,
         alignItems: 'center',
@@ -29,7 +28,9 @@ export default StyleSheet.create({
 
     },
     gridStyle :{
-        flex: 1
+        flex: 1,
+        padding: 0,
+        backgroundColor: 'red',
     },
     listViewContentContainerStyle : {
         width :scrollViewConfig.width ,
