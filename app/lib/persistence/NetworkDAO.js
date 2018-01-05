@@ -2,6 +2,7 @@ import Promise from '../Promise';
 import { db } from './db';
 import networkSql from './networkSql';
 import moment from 'moment';
+import Utils from '../utils/index';
 
 /**
  * Create the network_queue table if it doesn't exist. Should be called during launch (each time is ok)
@@ -69,6 +70,7 @@ const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => 
     const args = [];
     db.transaction(tx => {
         tx.executeSql(networkSql.selectPendingEarliestNetworkRequest, args, function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve();
@@ -97,6 +99,7 @@ const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) =>
     const args = [key];
     db.transaction(tx => {
         tx.executeSql(networkSql.selectCompletedtNetworkRequestForKey, args, function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
 
             if (dbResults.length === 0) {
