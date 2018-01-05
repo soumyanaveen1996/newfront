@@ -106,12 +106,13 @@ export default class ChatInputBar extends React.Component {
                 // For iOS, we use the event emitter configured in the previous steps
                 if (Platform.OS === 'android') {
                     this.sendAudio(filePath);
+                    this._setPostAudioState();
                 }
             } catch (error) {
                 console.log('Error while stopping recording:', error);
+                this._setPostAudioState();
             }
             // Reset the state after the audio has been sent as we need the recorded time
-            this._setPostAudioState();
         }
     }
 
@@ -141,10 +142,11 @@ export default class ChatInputBar extends React.Component {
         const filePath = AudioUtils.DocumentDirectoryPath + '/FrontM_' + Date.now() + options.extension;
         console.log('Generated file path:', filePath, options);
         try {
-            return await AudioRecorder.prepareRecordingAtPath(filePath, options);
+            await AudioRecorder.prepareRecordingAtPath(filePath, options);
+            return true;
         } catch (error) {
             console.log('Error while preparing audio:', error);
-            return;
+            return false;
         }
     }
 
@@ -160,7 +162,7 @@ export default class ChatInputBar extends React.Component {
                 this._setOnFinishedListener();
                 try {
                     await AudioRecorder.startRecording();
-                } catch(error) {
+                } catch (error) {
                     this._setPostAudioState();
                 }
             } else {
@@ -179,7 +181,6 @@ export default class ChatInputBar extends React.Component {
             };
 
             return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale).then((result) => {
-                console.log('Permission result:', result);
                 return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
             });
         }
@@ -249,7 +250,7 @@ export default class ChatInputBar extends React.Component {
 
     render() {
         if (this.state.chatState === ChatInputBarState.RECORDING_SPEECH) {
-            let seconds = this.state.recordedTimeInSeconds;
+            let seconds = Math.floor(this.state.recordedTimeInSeconds);
             const minutes = String(Math.floor(seconds / 60));
             seconds = String(seconds);
             return (
