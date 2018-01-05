@@ -3,6 +3,7 @@ import { Message } from '../capability';
 import moment from 'moment';
 import { db } from './db';
 import messageSql from './messageSql';
+import Utils from '../utils/index';
 
 /**
  * Create the message table if it doesn't exist. Should be called during launch (each time is ok)
@@ -30,7 +31,7 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
         message.getCreatedBy()];
 
     db.transaction(transaction => {
-        transaction.executeSql(messageSql.insertMessage, args, function success() {
+        transaction.executeSql(messageSql.insertMessage, args, function success(tx, res) {
             return resolve();
         }, function failure(tx, err) {
             return reject(err);
@@ -86,6 +87,7 @@ const unreadMessageCount = (botkey) => new Promise((resolve, reject) => {
     const args = [botkey];
     db.transaction(transaction => {
         transaction.executeSql(messageSql.unreadCount, args, function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve(0);
@@ -129,7 +131,7 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new
 
         transaction.executeSql(sql, args, function success(tx, res) {
             res = res || {};
-
+            res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             let messages = dbMessages.map((msg) => {
                 const opts = {
@@ -159,7 +161,7 @@ const selectFavoriteMessages = (limit, offset) => new Promise((resolve, reject) 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.selectFavoriteMessages, args, function success(tx, res) {
             res = res || {};
-
+            res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             let messages = dbMessages.map((msg) => {
                 const opts = {
@@ -190,6 +192,7 @@ const selectUserMessageCountSince = (botkey, sinceDateString) => new Promise((re
     const args = [botkey, sinceDateString];
     db.transaction(transaction => {
         transaction.executeSql(messageSql.totalUserMessageCountSince, args, function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve(0);

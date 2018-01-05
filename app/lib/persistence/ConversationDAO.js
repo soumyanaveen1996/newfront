@@ -2,6 +2,7 @@ import Promise from '../Promise';
 import { db } from './db';
 import conversationSql from './conversationSql';
 import moment from 'moment';
+import Utils from '../utils/index';
 
 /**
  * Create the network_queue table if it doesn't exist. Should be called during launch (each time is ok)
@@ -31,6 +32,7 @@ const insertNetworkRequest = (conversationId, type) => new Promise((resolve, rej
 const selectConversations = (type) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
         transaction.executeSql(conversationSql.selectConversations, [type], function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve([]);
@@ -52,6 +54,7 @@ const selectConversations = (type) => new Promise((resolve, reject) => {
 const selectConversation = (conversationId, type) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
         transaction.executeSql(conversationSql.selectConversation, [type, conversationId], function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve(null);

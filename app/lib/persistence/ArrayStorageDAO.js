@@ -1,6 +1,7 @@
 import Promise from '../Promise';
 import { db } from './db';
 import arrayStorageSql from './arrayStorageSql';
+import Utils from '../utils/index';
 
 /**
  * Create the network_queue table if it doesn't exist. Should be called during launch (each time is ok)
@@ -43,6 +44,7 @@ const selectArrayValues = (key) => new Promise((resolve, reject) => {
     let args = [key];
     db.transaction(transaction => {
         transaction.executeSql(arrayStorageSql.selectArrayValues, args, function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
                 return resolve([]);

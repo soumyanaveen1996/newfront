@@ -113,6 +113,21 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
     }
 }
 
+export function addArrayToSqlResults(results) {
+    var returnRes = {}
+    if (!results || !results.rows) {
+        return results;
+    }
+    returnRes.rows = results.rows;
+    returnRes.rows._array = []
+    var len = results.rows.length;
+    for (let i = 0; i < len; i++) {
+        let row = results.rows.item(i);
+        returnRes.rows._array.push(row);
+    }
+    return returnRes;
+}
+
 
 export default {
     formattedDate,
@@ -121,4 +136,5 @@ export default {
     checkBotStatus,
     downloadFileAsync,
     sessionStartFormattedDate,
+    addArrayToSqlResults
 }
