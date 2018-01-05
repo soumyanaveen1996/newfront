@@ -7,11 +7,13 @@
 
 * Install nvm - https://github.com/creationix/nvm
 * Install nodejs via nvm (>=8) - `nvm install 8.4.0`
+* Use the installed nvm - `nvm use 8.4.0`
 * Install yarn - `npm install -g yarn`
 * ESLint: `npm install -g eslint`
 * Install watchman - `brew install watchman`
 * Install react-native-cli - `npm install -g react-native-cli`
-* yarn install
+* Install all packages - `yarn install`
+* Link Native libraries - `RNFB_ANDROID_PERMISSIONS=true react-native link`
 
 
 ## Adding Packages
@@ -19,18 +21,15 @@
 * react-native link (Only if the package contains native code)
 
 ## Running native
-
-# Development
-
+### Development
 * npm start
 * Compile and run the code from Xcode / Android Studio
+* Currently we have to refresh the app manually if we change JS files. use Cmd + R to refresh the app in simulator.
 
-# Just running
-
+### Just running
 * react-native run-ios
 
 ## Running tests
-
 * Run: `yarn test`
 
 
