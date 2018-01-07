@@ -15,57 +15,6 @@
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
-		045F0B391FFFE0C8005C0ACE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		045F0B3A1FFFE0C8005C0ACE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		045F0B3C1FFFE0C8005C0ACE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7982D89132F446980344C24 /* SystemConfiguration.framework */; };
-		045F0B3D1FFFE0C8005C0ACE /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		045F0B3E1FFFE0C8005C0ACE /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		045F0B3F1FFFE0C8005C0ACE /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		045F0B401FFFE0C8005C0ACE /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
-		045F0B411FFFE0C8005C0ACE /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
-		045F0B421FFFE0C8005C0ACE /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
-		045F0B431FFFE0C8005C0ACE /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
-		045F0B441FFFE0C8005C0ACE /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
-		045F0B451FFFE0C8005C0ACE /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
-		045F0B461FFFE0C8005C0ACE /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
-		045F0B471FFFE0C8005C0ACE /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
-		045F0B481FFFE0C8005C0ACE /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		045F0B491FFFE0C8005C0ACE /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		045F0B4A1FFFE0C8005C0ACE /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
-		045F0B4B1FFFE0C8005C0ACE /* libRNAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B21CA0355F48AD875194AF /* libRNAudio.a */; };
-		045F0B4C1FFFE0C8005C0ACE /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
-		045F0B4D1FFFE0C8005C0ACE /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF4196B376234F78A314980A /* libRCTCamera.a */; };
-		045F0B4E1FFFE0C8005C0ACE /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7697C3983D264D1F814461AA /* libRCTContacts.a */; };
-		045F0B4F1FFFE0C8005C0ACE /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 556C25EA73DE44548EE2DB82 /* libRNFetchBlob.a */; };
-		045F0B501FFFE0C8005C0ACE /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEDFE3AADCFB40338C03BF19 /* libRNFS.a */; };
-		045F0B511FFFE0C8005C0ACE /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 527FA991FBE9494095F65A4B /* libRNI18n.a */; };
-		045F0B521FFFE0C8005C0ACE /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB199F28C20C48F482B9FACD /* libRNImagePicker.a */; };
-		045F0B531FFFE0C8005C0ACE /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 256F5B9952B44327858F89C0 /* libRNKeychain.a */; };
-		045F0B541FFFE0C8005C0ACE /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619956975FE040FE82D453AE /* libAirMaps.a */; };
-		045F0B551FFFE0C8005C0ACE /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADB3CA7D1A6496C8CECFD75 /* libRNSound.a */; };
-		045F0B561FFFE0C8005C0ACE /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC14FC24D5EA47619B56D82E /* libSQLite.a */; };
-		045F0B571FFFE0C8005C0ACE /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 75812EF58C4D4BCAB0FF4872 /* libsqlite3.0.tbd */; };
-		045F0B581FFFE0C8005C0ACE /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE75215682854A6787976CA1 /* libRNVectorIcons.a */; };
-		045F0B591FFFE0C8005C0ACE /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7EC8AEAA21A47649B6ED17A /* libRCTVideo.a */; };
-		045F0B5A1FFFE0C8005C0ACE /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 429900950192486080C1A87E /* libRNSVG.a */; };
-		045F0B5B1FFFE0C8005C0ACE /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1B959205B8A43FBB87BB84D /* libRNGoogleSignin.a */; };
-		045F0B5C1FFFE0C8005C0ACE /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF211C1B79C4421DA60C8697 /* libz.tbd */; };
-		045F0B5D1FFFE0C8005C0ACE /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D5BD8DC874603BB4800FB /* SafariServices.framework */; };
-		045F0B5E1FFFE0C8005C0ACE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6455D14207044E8F88F76EC3 /* AddressBook.framework */; };
-		045F0B601FFFE0C8005C0ACE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		045F0B611FFFE0C8005C0ACE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		045F0B621FFFE0C8005C0ACE /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398A80F2BB13450A8A3B3811 /* Entypo.ttf */; };
-		045F0B631FFFE0C8005C0ACE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67F880D57C534C14AF2FD790 /* EvilIcons.ttf */; };
-		045F0B641FFFE0C8005C0ACE /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F6339121E18646EEA793795C /* Feather.ttf */; };
-		045F0B651FFFE0C8005C0ACE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F18DD2DF5A44CEDB7FDC185 /* FontAwesome.ttf */; };
-		045F0B661FFFE0C8005C0ACE /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8379B8CA80E44F82A07D327F /* Foundation.ttf */; };
-		045F0B671FFFE0C8005C0ACE /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEDE13D034C54C3D96894D83 /* Ionicons.ttf */; };
-		045F0B681FFFE0C8005C0ACE /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C31618F90BC452FB8592C30 /* MaterialCommunityIcons.ttf */; };
-		045F0B691FFFE0C8005C0ACE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F830A0727B8D4495B1F293A7 /* MaterialIcons.ttf */; };
-		045F0B6A1FFFE0C8005C0ACE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0314A9C62FD4348BFE8F156 /* Octicons.ttf */; };
-		045F0B6B1FFFE0C8005C0ACE /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 275A0AA2A043404A927CA969 /* SimpleLineIcons.ttf */; };
-		045F0B6C1FFFE0C8005C0ACE /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
-		045F0B6D1FFFE0C8005C0ACE /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64EA99883FE74F80B6804DC8 /* Zocial.ttf */; };
 		12E0C1ECACE542C9ADE38BEB /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -520,8 +469,6 @@
 		040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignInDependencies.framework; sourceTree = "<group>"; };
 		040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
 		040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
-		045F0B721FFFE0C8005C0ACE /* frontm_mobile_prod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = frontm_mobile_prod.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		045F0B731FFFE0C8005C0ACE /* frontm_mobile_prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = frontm_mobile_prod.plist; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile_prod.plist"; sourceTree = "<absolute>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
 		04AE7CBBC3AE43B7B575695D /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -588,49 +535,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		045F0B3B1FFFE0C8005C0ACE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				045F0B3C1FFFE0C8005C0ACE /* SystemConfiguration.framework in Frameworks */,
-				045F0B3D1FFFE0C8005C0ACE /* libRCTBlob.a in Frameworks */,
-				045F0B3E1FFFE0C8005C0ACE /* libRCTAnimation.a in Frameworks */,
-				045F0B3F1FFFE0C8005C0ACE /* libReact.a in Frameworks */,
-				045F0B3E1FFFE0C8005C0ACE /* libRCTAnimation.a in Frameworks */,
-				045F0B401FFFE0C8005C0ACE /* libRCTActionSheet.a in Frameworks */,
-				045F0B411FFFE0C8005C0ACE /* libRCTGeolocation.a in Frameworks */,
-				045F0B421FFFE0C8005C0ACE /* libRCTImage.a in Frameworks */,
-				045F0B431FFFE0C8005C0ACE /* GoogleSignIn.framework in Frameworks */,
-				045F0B441FFFE0C8005C0ACE /* libRCTLinking.a in Frameworks */,
-				045F0B451FFFE0C8005C0ACE /* GoogleSignInDependencies.framework in Frameworks */,
-				045F0B461FFFE0C8005C0ACE /* libRCTNetwork.a in Frameworks */,
-				045F0B471FFFE0C8005C0ACE /* libRCTSettings.a in Frameworks */,
-				045F0B481FFFE0C8005C0ACE /* libRCTText.a in Frameworks */,
-				045F0B491FFFE0C8005C0ACE /* libRCTVibration.a in Frameworks */,
-				045F0B4A1FFFE0C8005C0ACE /* libRCTWebSocket.a in Frameworks */,
-				045F0B4B1FFFE0C8005C0ACE /* libRNAudio.a in Frameworks */,
-				045F0B4C1FFFE0C8005C0ACE /* libRNBackgroundTimer.a in Frameworks */,
-				045F0B4D1FFFE0C8005C0ACE /* libRCTCamera.a in Frameworks */,
-				045F0B4E1FFFE0C8005C0ACE /* libRCTContacts.a in Frameworks */,
-				045F0B4F1FFFE0C8005C0ACE /* libRNFetchBlob.a in Frameworks */,
-				045F0B501FFFE0C8005C0ACE /* libRNFS.a in Frameworks */,
-				045F0B511FFFE0C8005C0ACE /* libRNI18n.a in Frameworks */,
-				045F0B521FFFE0C8005C0ACE /* libRNImagePicker.a in Frameworks */,
-				045F0B531FFFE0C8005C0ACE /* libRNKeychain.a in Frameworks */,
-				045F0B541FFFE0C8005C0ACE /* libAirMaps.a in Frameworks */,
-				045F0B551FFFE0C8005C0ACE /* libRNSound.a in Frameworks */,
-				045F0B561FFFE0C8005C0ACE /* libSQLite.a in Frameworks */,
-				045F0B571FFFE0C8005C0ACE /* libsqlite3.0.tbd in Frameworks */,
-				045F0B581FFFE0C8005C0ACE /* libRNVectorIcons.a in Frameworks */,
-				045F0B591FFFE0C8005C0ACE /* libRCTVideo.a in Frameworks */,
-				045F0B5A1FFFE0C8005C0ACE /* libRNSVG.a in Frameworks */,
-				045F0B5B1FFFE0C8005C0ACE /* libRNGoogleSignin.a in Frameworks */,
-				045F0B5C1FFFE0C8005C0ACE /* libz.tbd in Frameworks */,
-				045F0B5D1FFFE0C8005C0ACE /* SafariServices.framework in Frameworks */,
-				045F0B5E1FFFE0C8005C0ACE /* AddressBook.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1022,7 +926,6 @@
 				C012FAE9CECA450BAC1F14F2 /* Frameworks */,
 				AA842CAA401B478A8BAAE3FF /* Resources */,
 				040C5A321FFCF9A40071B62D /* Recovered References */,
-				045F0B731FFFE0C8005C0ACE /* frontm_mobile_prod.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1033,7 +936,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* frontm_mobile.app */,
-				045F0B721FFFE0C8005C0ACE /* frontm_mobile_prod.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1083,24 +985,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		045F0B371FFFE0C8005C0ACE /* frontm_mobile_prod */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 045F0B6F1FFFE0C8005C0ACE /* Build configuration list for PBXNativeTarget "frontm_mobile_prod" */;
-			buildPhases = (
-				045F0B381FFFE0C8005C0ACE /* Sources */,
-				045F0B3B1FFFE0C8005C0ACE /* Frameworks */,
-				045F0B5F1FFFE0C8005C0ACE /* Resources */,
-				045F0B6E1FFFE0C8005C0ACE /* Bundle React Native code and images */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = frontm_mobile_prod;
-			productName = "Hello World";
-			productReference = 045F0B721FFFE0C8005C0ACE /* frontm_mobile_prod.app */;
-			productType = "com.apple.product-type.application";
-		};
 		13B07F861A680F5B00A75B9A /* frontm_mobile */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "frontm_mobile" */;
@@ -1128,15 +1012,6 @@
 				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					045F0B371FFFE0C8005C0ACE = {
-						DevelopmentTeam = 6EZTYQSN4H;
-						ProvisioningStyle = Manual;
-						SystemCapabilities = {
-							com.apple.Keychain = {
-								enabled = 1;
-							};
-						};
-					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
 						ProvisioningStyle = Manual;
@@ -1276,7 +1151,6 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* frontm_mobile */,
-				045F0B371FFFE0C8005C0ACE /* frontm_mobile_prod */,
 			);
 		};
 /* End PBXProject section */
@@ -1677,27 +1551,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		045F0B5F1FFFE0C8005C0ACE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				045F0B601FFFE0C8005C0ACE /* Images.xcassets in Resources */,
-				045F0B611FFFE0C8005C0ACE /* LaunchScreen.xib in Resources */,
-				045F0B621FFFE0C8005C0ACE /* Entypo.ttf in Resources */,
-				045F0B631FFFE0C8005C0ACE /* EvilIcons.ttf in Resources */,
-				045F0B641FFFE0C8005C0ACE /* Feather.ttf in Resources */,
-				045F0B651FFFE0C8005C0ACE /* FontAwesome.ttf in Resources */,
-				045F0B661FFFE0C8005C0ACE /* Foundation.ttf in Resources */,
-				045F0B671FFFE0C8005C0ACE /* Ionicons.ttf in Resources */,
-				045F0B681FFFE0C8005C0ACE /* MaterialCommunityIcons.ttf in Resources */,
-				045F0B691FFFE0C8005C0ACE /* MaterialIcons.ttf in Resources */,
-				045F0B6A1FFFE0C8005C0ACE /* Octicons.ttf in Resources */,
-				045F0B6B1FFFE0C8005C0ACE /* SimpleLineIcons.ttf in Resources */,
-				045F0B6C1FFFE0C8005C0ACE /* GoogleSignIn.bundle in Resources */,
-				045F0B6D1FFFE0C8005C0ACE /* Zocial.ttf in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1736,32 +1589,9 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		045F0B6E1FFFE0C8005C0ACE /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		045F0B381FFFE0C8005C0ACE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				045F0B391FFFE0C8005C0ACE /* AppDelegate.m in Sources */,
-				045F0B3A1FFFE0C8005C0ACE /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1786,107 +1616,12 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		045F0B701FFFE0C8005C0ACE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = frontm_mobile_prod.entitlements;
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-audio/ios",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
-					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
-					"$(SRCROOT)/../node_modules/react-native-sqlite-storage/src/ios",
-					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/frontm_mobile_prod.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-					"$(OTHER_LDFLAGS)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0b555495-4752-484a-9165-740e34b394d3";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Debug;
-		};
-		045F0B711FFFE0C8005C0ACE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = frontm_mobile_prod.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/react-native-audio/ios",
-					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
-					"$(SRCROOT)/../node_modules/react-native-camera/ios",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-fs/**",
-					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
-					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
-					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
-					"$(SRCROOT)/../node_modules/react-native-sqlite-storage/src/ios",
-					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
-				);
-				INFOPLIST_FILE = "$(SRCROOT)/frontm_mobile_prod.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-					"-lc++",
-					"$(OTHER_LDFLAGS)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dfcfd0f9-51d7-431d-8c87-41506c62cdd2";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -2057,15 +1792,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		045F0B6F1FFFE0C8005C0ACE /* Build configuration list for PBXNativeTarget "frontm_mobile_prod" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				045F0B701FFFE0C8005C0ACE /* Debug */,
-				045F0B711FFFE0C8005C0ACE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "frontm_mobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
