@@ -1043,7 +1043,13 @@
 						DevelopmentTeam = 6EZTYQSN4H;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -1702,10 +1708,10 @@
 					"-lc++",
 					"$(OTHER_LDFLAGS)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.frontm.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "98fa21b8-6349-41c1-b6f0-badbe3005639";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development ai.frontm.ios";
+				PROVISIONING_PROFILE = "0b555495-4752-484a-9165-740e34b394d3";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1750,10 +1756,10 @@
 					"-lc++",
 					"$(OTHER_LDFLAGS)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ai.frontm.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "66977a5f-e425-494c-8554-66e021c937fd";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore ai.frontm.ios";
+				PROVISIONING_PROFILE = "dfcfd0f9-51d7-431d-8c87-41506c62cdd2";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

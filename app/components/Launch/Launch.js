@@ -7,7 +7,7 @@ import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller } from '../../lib/network';
-import { Auth } from '../../lib/capability';
+import { Auth, Notification } from '../../lib/capability';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
@@ -44,6 +44,14 @@ export default class Splash extends React.Component {
                 if (!user) {
                     // Creating a DefaultUser session for OnBoarding Bot.
                     return Auth.saveUser(DefaultUser);
+                }
+            })
+            .then(() => {
+                return Notification.deviceInfo()
+            })
+            .then((info) => {
+                if (info) {
+                    Notification.configure();
                 }
             })
             .then(() => {
