@@ -1,6 +1,6 @@
 import React from 'react';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { Image } from 'react-native';
+import { View, Image } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
@@ -110,7 +110,9 @@ export default class Splash extends React.Component {
 
     render() {
         return (
-            <Image style={styles.imageStyle} source={Icon} resizeMode={'center'} />
+            <View style={styles.container}>
+                <Image style={styles.imageStyle} source={Icon} resizeMode={'contain'} />
+            </View>
         );
     }
 }

@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,13 +16,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FM-logo-landing page" translatesAutoresizingMaskIntoConstraints="NO" id="e9C-O4-VsG">
-                    <rect key="frame" x="52" y="-107.5" width="272" height="881"/>
+                    <rect key="frame" x="50" y="-107.5" width="275" height="881"/>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="e9C-O4-VsG" firstAttribute="leading" secondItem="Jhl-0H-Mmg" secondAttribute="leadingMargin" constant="36" id="535-bQ-6Z5"/>
-                <constraint firstAttribute="trailingMargin" secondItem="e9C-O4-VsG" secondAttribute="trailing" constant="35" id="7i6-jB-yFE"/>
+                <constraint firstItem="e9C-O4-VsG" firstAttribute="leading" secondItem="Jhl-0H-Mmg" secondAttribute="leading" constant="50" id="535-bQ-6Z5"/>
+                <constraint firstAttribute="trailing" secondItem="e9C-O4-VsG" secondAttribute="trailing" constant="50" id="7i6-jB-yFE"/>
                 <constraint firstItem="e9C-O4-VsG" firstAttribute="centerY" secondItem="Jhl-0H-Mmg" secondAttribute="centerY" id="Ewr-iE-wHe"/>
             </constraints>
         </view>
