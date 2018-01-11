@@ -1,7 +1,7 @@
 import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
 import Notifications from '../notifications';
-import { Platform } from 'react-native';
+import EventEmitter, { NotificationEvents } from '../../lib/events';
 
 
 const NotificationKeys = {
@@ -16,16 +16,16 @@ export default class Notification {
                     resolve(value);
                 } else {
                     PushNotification.configure({
-                        onNotification: Notifications.NotificationHandler.handleNotification,
-                        onRegister: function (token) {
-                            console.log('onRegister', token);
-                            if (token) {
+                        onRegister: function (response) {
+                            console.log('onRegister', response);
+                            if (response) {
                                 var notificationDeviceInfo = {
-                                    deviceType: Platform.OS === 'ios' ? 'iphone' : 'android',
-                                    deviceId: token,
+                                    deviceType: response.os === 'ios' ? 'iphone' : 'android',
+                                    deviceId: response.token,
                                 }
                                 DeviceStorage.save(NotificationKeys.notification, notificationDeviceInfo)
                                     .then(() => {
+                                        EventEmitter.emit(NotificationEvents.registeredNotifications);
                                         resolve(notificationDeviceInfo);
                                     })
                                     .catch((error) => {
@@ -57,11 +57,14 @@ export default class Notification {
             })
     });
 
-    static configure = () => {
+    static configure = (notificationHandler = undefined) => {
         console.log('Configuring notifications');
-        PushNotification.configure({
-            onNotification: Notifications.NotificationHandler.handleNotification,
-        });
+        if (notificationHandler) {
+            PushNotification.configure({
+                onRegister: () => { },
+                onNotification: notificationHandler,
+            });
+        }
     }
 
     static sendLocalNotification(message, details = {}) {

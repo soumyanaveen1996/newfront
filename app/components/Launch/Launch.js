@@ -9,8 +9,9 @@ import { DefaultUser } from '../../lib/user';
 import { NetworkPoller } from '../../lib/network';
 import { Auth, Notification } from '../../lib/capability';
 import { overrideConsole } from '../../config/config';
-import EventEmitter, { AuthEvents } from '../../lib/events';
+import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 export default class Splash extends React.Component {
 
@@ -47,14 +48,6 @@ export default class Splash extends React.Component {
                 }
             })
             .then(() => {
-                return Notification.deviceInfo()
-            })
-            .then((info) => {
-                if (info) {
-                    Notification.configure();
-                }
-            })
-            .then(() => {
                 return Auth.isUserLoggedIn();
             })
             .then((isUserLoggedIn) => {
@@ -70,10 +63,36 @@ export default class Splash extends React.Component {
             .then(() => {
                 this.listenToEvents();
             })
+            .then(() => {
+                this.configureNotifications();
+            })
             .catch((err) => {
                 // ignore
                 console.log(err);
             });
+    }
+
+    configureNotifications = () => {
+        console.log('In Configurig Notifications');
+        Notification.deviceInfo()
+            .then((info) => {
+                if (info) {
+                    Notification.configure(this.handleNotification.bind(this));
+                }
+            })
+    }
+
+    notificationRegistrationHandler = () => {
+        this.configureNotifications()
+    }
+
+    handleNotification = (notification) => {
+        console.log('In HandleNotification : ', notification, Actions.currentScene);
+        if (!notification.foreground && notification.userInteraction) {
+            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
+                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+            }
+        }
     }
 
     userLoggedInHandler = async () => {
@@ -101,11 +120,13 @@ export default class Splash extends React.Component {
         // For now the user should not be taken back
         // EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
         // EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     render() {
