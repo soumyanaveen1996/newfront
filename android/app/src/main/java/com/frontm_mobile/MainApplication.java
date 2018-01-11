@@ -19,6 +19,7 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
+import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -38,7 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
             new ActionSheetPackage(),
             new RNGoogleSigninPackage(),
             new SvgPackage(),
@@ -54,7 +55,8 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeContacts(),
             new RCTCameraPackage(),
             new BackgroundTimerPackage(),
-            new ReactNativeAudioPackage()
+            new ReactNativeAudioPackage(),
+            new SQLitePluginPackage()
       );
     }
 
