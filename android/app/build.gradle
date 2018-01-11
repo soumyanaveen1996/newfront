@@ -139,7 +139,11 @@ android {
 dependencies {
     compile project(':@yfuks/react-native-action-sheet')
     compile project(':react-native-google-signin')
-    compile project(':react-native-svg')
+    // Due to different versions of support library in the project and the one
+    // used by this library. Look at https://github.com/react-native-community/react-native-svg/issues/465
+    compile(project(':react-native-svg')) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
     compile project(':react-native-video')
     compile project(':react-native-vector-icons')
     compile project(':react-native-sound')
