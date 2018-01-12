@@ -6,6 +6,7 @@ import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
+import { Platform } from 'react-native';
 
 export function formattedDate(date) {
     if (!date) {
@@ -128,6 +129,61 @@ export function addArrayToSqlResults(results) {
     return returnRes;
 }
 
+async function copyFile(fromPath, toPath) {
+    const toExists = await RNFS.exists(toPath);
+    if (toExists) {
+        await RNFS.unlink(toPath);
+    }
+    await RNFS.copyFile(fromPath, toPath);
+}
+
+async function copyDir(fromDir, toDir, overwrite = false) {
+    const fromExists = await RNFS.exists(fromDir);
+    if (!fromExists) {
+        return;
+    }
+
+    let fromResources = await RNFS.readDir(fromDir);
+
+    for (let i = 0; i < fromResources.length; ++i) {
+        let stat = fromResources[i];
+        console.log(`Checking for ${stat.path}`);
+        const toPath = toDir + '/' + stat.name;
+        const exists = await RNFS.exists(toPath);
+        if (stat.isFile()) {
+            if (!exists) {
+                console.log(`File Copying ${stat.path} to ${toPath}`);
+                await copyFile(stat.path, toPath);
+            } else {
+                console.log(`File ${toPath} exists`);
+            }
+        } else if (stat.isDirectory()) {
+            if (!exists) {
+                console.log(`Copying ${stat.path} to ${toPath}`);
+                await RNFS.mkdir(toPath);
+                await copyDir(stat.path, toPath);
+            } else {
+                console.log(`${toPath} exists`);
+            }
+        }
+    }
+}
+
+export async function copyIntialBots() {
+    console.log('Main Bundle Path : ', RNFS.MainBundlePath);
+    console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
+
+    const botFromDir = RNFS.MainBundlePath + '/bots';
+    const botToDir = RNFS.DocumentDirectoryPath + '/bots';
+    await RNFS.mkdir(botToDir);
+    await copyDir(botFromDir, botToDir);
+
+    const botDependenciesFromDir = RNFS.MainBundlePath + '/bot_dependencies';
+    const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
+    await RNFS.mkdir(botDependenciesToDir);
+    await copyDir(botDependenciesFromDir, botDependenciesToDir);
+}
+
 
 export default {
     formattedDate,
@@ -136,5 +192,6 @@ export default {
     checkBotStatus,
     downloadFileAsync,
     sessionStartFormattedDate,
-    addArrayToSqlResults
+    addArrayToSqlResults,
+    copyIntialBots
 }

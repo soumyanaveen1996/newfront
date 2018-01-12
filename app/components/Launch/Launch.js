@@ -7,7 +7,8 @@ import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller } from '../../lib/network';
-import { Auth, Notification } from '../../lib/capability';
+import { Auth, Notification, Utils } from '../../lib/capability';
+import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
@@ -20,12 +21,14 @@ export default class Splash extends React.Component {
         this.state = { duration: props.duration || 2000 };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // Override logging in prod builds
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         console.log('Overrode console object. Now starting initialization');
+
+        await BotUtils.copyIntialBots();
 
         // Chain all setup stuff
         persist.createMessageTable()

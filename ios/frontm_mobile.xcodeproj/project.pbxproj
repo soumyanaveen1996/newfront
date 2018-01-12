@@ -16,6 +16,8 @@
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
+		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
+		0486BED22008CC5F00DF553B /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
 		12E0C1ECACE542C9ADE38BEB /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -487,6 +489,8 @@
 		040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
+		0486BECF2008CC5F00DF553B /* bot_dependencies */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bot_dependencies; path = ../initial_bots/bot_dependencies; sourceTree = "<group>"; };
+		0486BED02008CC5F00DF553B /* bots */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bots; path = ../initial_bots/bots; sourceTree = "<group>"; };
 		04AE7CBBC3AE43B7B575695D /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		0C31618F90BC452FB8592C30 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -846,6 +850,8 @@
 		13B07FAE1A68108700A75B9A /* frontm_mobile */ = {
 			isa = PBXGroup;
 			children = (
+				0486BECF2008CC5F00DF553B /* bot_dependencies */,
+				0486BED02008CC5F00DF553B /* bots */,
 				045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -1044,7 +1050,7 @@
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
@@ -1607,6 +1613,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				0486BED12008CC5F00DF553B /* bot_dependencies in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				E0354B3D9DA2499CB8209B18 /* Entypo.ttf in Resources */,
 				D95F95FB8B3E41A6A99BB03B /* EvilIcons.ttf in Resources */,
@@ -1617,6 +1624,7 @@
 				5BB197FD4BFD4F81948D134F /* MaterialCommunityIcons.ttf in Resources */,
 				35E71C4FC9594948BCA2CF66 /* MaterialIcons.ttf in Resources */,
 				18F38A5101C141C692D61127 /* Octicons.ttf in Resources */,
+				0486BED22008CC5F00DF553B /* bots in Resources */,
 				E477AD9AB06B49D68C085521 /* SimpleLineIcons.ttf in Resources */,
 				040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */,
 				D18C2379935446B6A457F93B /* Zocial.ttf in Resources */,
