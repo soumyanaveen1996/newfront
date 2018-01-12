@@ -118,7 +118,7 @@
         });
     }
 
-    function executeCustomCapability(capabilityName, params, sync, botContext, user) {
+    function executeCustomCapability(capabilityName, params, sync, requestUuid, botContext, user) {
         let Promise = botContext.getCapability('Promise');
         const utils = botContext.getCapability('Utils');
         let _ = utils.Lodash;
@@ -128,6 +128,7 @@
                 capability: capabilityName,
                 userUuid: user.userUUID,
                 parameters : params,
+                requestUuid: requestUuid,
                 sync: sync
             };
 
@@ -257,7 +258,7 @@
         protocol: 'http://'
     };
 
-    const env = 'dev';
+    const env = 'stage';
 
     const doNetworkCall = function(postReq, botContext, user) {
         let Network = botContext.getCapability('Network');

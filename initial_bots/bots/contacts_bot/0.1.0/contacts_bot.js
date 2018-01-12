@@ -45,7 +45,7 @@
             .then(function(usr) {
                 user = usr;
                 const agentGuardService = botContext.getCapability('agentGuardService');
-                return agentGuardService.executeCustomCapability(FIND_CONTACTS_CAP, {queryString: msg.getMessage()}, true, botContext, user);
+                return agentGuardService.executeCustomCapability(FIND_CONTACTS_CAP, {queryString: msg.getMessage()}, true, undefined, botContext, user);
             })
             .then(function(contacts) {
                 showContactList(contacts, botContext, true);

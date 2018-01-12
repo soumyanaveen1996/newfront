@@ -196,7 +196,6 @@
             return notification.register();
         })
         .then((notificationDeviceInfo) => {
-            console.log('HEREEE!!!!!' + notificationDeviceInfo + "HEREEE!!!!");
             const agentGuardService = botContext.getCapability('agentGuardService');
             return agentGuardService.registerDevice(notificationDeviceInfo, botContext, user);
         })
@@ -218,7 +217,7 @@
             return agentGuardService.deregisterDevice(notificationDeviceInfo, botContext, user);
         })
         .then(() => {
-            tell("Device registered successfully", botContext);
+            tell("Device deregistered successfully", botContext);
         });
     };
 
