@@ -5,7 +5,7 @@ export const backArrowConfig =
     Platform.select({
         ios: {
             type: 'ionicon',
-            name: 'arrow-back',
+            name: 'ios-arrow-back',
             size: 30,
             underlayColor: GlobalColors.transparent,
             color: GlobalColors.white,
