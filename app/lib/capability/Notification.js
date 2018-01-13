@@ -13,7 +13,15 @@ export default class Notification {
         DeviceStorage.get(NotificationKeys.notification)
             .then((value) => {
                 if (value) {
-                    resolve(value);
+                    value.isRegistered = true;
+                    DeviceStorage.save(NotificationKeys.notification, value)
+                        .then(() => {
+                            EventEmitter.emit(NotificationEvents.registeredNotifications);
+                            resolve(value);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
                 } else {
                     PushNotification.configure({
                         onRegister: function (response) {
@@ -22,6 +30,7 @@ export default class Notification {
                                 var notificationDeviceInfo = {
                                     deviceType: response.os === 'ios' ? 'iphone' : 'android',
                                     deviceId: response.token,
+                                    isRegistered: true,
                                 }
                                 DeviceStorage.save(NotificationKeys.notification, notificationDeviceInfo)
                                     .then(() => {
@@ -45,6 +54,24 @@ export default class Notification {
             .catch((error) => {
                 reject(error);
             });
+    });
+
+    static deregister = () => new Promise((resolve, reject) => {
+        DeviceStorage.get(NotificationKeys.notification)
+            .then((value) => {
+                if (value) {
+                    value.isRegistered = false;
+                    return DeviceStorage.save(NotificationKeys.notification, value);
+                } else {
+                    reject(new Error('Device not registered'));
+                }
+            })
+            .then((value) => {
+                resolve(value);
+            })
+            .catch((error) => {
+                reject(error);
+            })
     });
 
     static deviceInfo = () => new Promise((resolve, reject) => {
