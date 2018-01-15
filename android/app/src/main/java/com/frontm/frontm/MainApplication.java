@@ -1,15 +1,13 @@
-package com.frontm_mobile;
+package com.frontm.frontm;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.actionsheet.ActionSheetPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.horcrux.svg.SvgPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.zmxv.RNSound.RNSoundPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.keychain.KeychainPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
@@ -41,12 +39,10 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ActionSheetPackage(),
-            new RNGoogleSigninPackage(),
             new SvgPackage(),
             new ReactVideoPackage(),
             new VectorIconsPackage(),
             new RNSoundPackage(),
-            new MapsPackage(),
             new KeychainPackage(),
             new ImagePickerPackage(),
             new RNI18nPackage(),

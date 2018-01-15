@@ -1,4 +1,4 @@
-package com.frontm_mobile;
+package com.frontm.frontm;
 
 import com.facebook.react.ReactActivity;
 
