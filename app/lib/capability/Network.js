@@ -3,6 +3,8 @@
 
 import Network from 'axios';
 import { Queue } from '../network';
+import { NetInfo } from 'react-native';
+import { Promise } from './index';
 
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
@@ -38,6 +40,22 @@ export class NetworkRequest {
         return this.options;
     }
 }
+
+Network.getNetworkInfo = () => NetInfo.getConnectionInfo()
+
+Network.isWiFi = () => new Promise((resolve, reject) => {
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+        resolve(connectionInfo.type === 'wifi');
+    });
+});
+
+Network.isCellular = () => new Promise((resolve, reject) => {
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+        resolve(connectionInfo.type === 'cellular');
+    });
+});
+
+Network.isConnected = () => NetInfo.isConnected.fetch()
 
 export default Network;
 
