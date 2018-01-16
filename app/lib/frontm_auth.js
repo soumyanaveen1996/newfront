@@ -1,16 +1,25 @@
+import { Platform } from 'react-native';
 import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
 import UUID from 'uuid/v4';
 import { GoogleSignin } from 'react-native-google-signin';
 
-GoogleSignin.configure({
-    scopes: Config.auth.ios.google.scopes,
-    iosClientId: Config.auth.ios.google.iosClientId,
-    webClientId: Config.auth.ios.google.iosClientId,
-    offlineAccess: false,
-    forceConsentPrompt: true,
-});
+if (Platform.OS === 'ios') {
+    GoogleSignin.configure({
+        scopes: Config.auth.ios.google.scopes,
+        iosClientId: Config.auth.ios.google.iosClientId,
+        webClientId: Config.auth.ios.google.iosClientId,
+        offlineAccess: false,
+        forceConsentPrompt: true,
+    });
+} else {
+    GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
+        GoogleSignin.configure(config.auth.android.google);
+    }).catch((error) => {
+        console.log('Error while configuring Google-signin. Error:', error);
+    });
+}
 
 class FrontmAuth {
     constructor() {

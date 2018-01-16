@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "705702062891",
+    "project_id": "fmnlpdev"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705702062891:android:1f220dd7292cb650",
+        "android_client_info": {
+          "package_name": "com.frontm.frontm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "705702062891-9sgn1fm9fogt3rkov6g5is2os73aupfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.frontm",
+            "certificate_hash": "6dc3d26d4aacc71edc8ed65e69b5e44337c616b6"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVSwuWbhYNZbXHHlvTVY8ZliHjy4AcwZ4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
