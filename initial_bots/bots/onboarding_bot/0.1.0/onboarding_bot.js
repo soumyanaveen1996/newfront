@@ -82,7 +82,7 @@
         const notification = botContext.getCapability('Notification');
         notification.deviceInfo()
         .then((deviceInfo) => {
-            if(_.isEmpty(deviceInfo)) {
+            if(_.isEmpty(deviceInfo) || !deviceInfo.isRegistered) {
                 options.push({
                     title: 'Register Device',
                     id: REGISTER_DEVICE
@@ -196,11 +196,13 @@
             return notification.register();
         })
         .then((notificationDeviceInfo) => {
+            botContext.wait(true);
             const agentGuardService = botContext.getCapability('agentGuardService');
             return agentGuardService.registerDevice(notificationDeviceInfo, botContext, user);
         })
         .then(() => {
-           tell("Device registered successfully", botContext);
+            tell("Device registered successfully", botContext);
+            logoutAsk(botContext);
         });
     };
 
@@ -210,14 +212,16 @@
         .then((usr) => {
             user = usr;
             const notification = botContext.getCapability('Notification');
-            return notification.deviceInfo();
+            return notification.deregister();
         })
         .then((notificationDeviceInfo) => {
+            botContext.wait(true);
             const agentGuardService = botContext.getCapability('agentGuardService');
             return agentGuardService.deregisterDevice(notificationDeviceInfo, botContext, user);
         })
         .then(() => {
             tell("Device deregistered successfully", botContext);
+            logoutAsk(botContext);
         });
     };
 
