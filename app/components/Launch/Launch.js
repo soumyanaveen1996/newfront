@@ -1,16 +1,18 @@
 import React from 'react';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { Image } from 'react-native';
+import { View, Image } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller } from '../../lib/network';
-import { Auth } from '../../lib/capability';
+import { Auth, Notification, Utils } from '../../lib/capability';
+import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
-import EventEmitter, { AuthEvents } from '../../lib/events';
+import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 export default class Splash extends React.Component {
 
@@ -19,12 +21,14 @@ export default class Splash extends React.Component {
         this.state = { duration: props.duration || 2000 };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // Override logging in prod builds
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         console.log('Overrode console object. Now starting initialization');
+
+        await BotUtils.copyIntialBots();
 
         // Chain all setup stuff
         persist.createMessageTable()
@@ -62,10 +66,36 @@ export default class Splash extends React.Component {
             .then(() => {
                 this.listenToEvents();
             })
+            .then(() => {
+                this.configureNotifications();
+            })
             .catch((err) => {
                 // ignore
                 console.log(err);
             });
+    }
+
+    configureNotifications = () => {
+        console.log('In Configurig Notifications');
+        Notification.deviceInfo()
+            .then((info) => {
+                if (info) {
+                    Notification.configure(this.handleNotification.bind(this));
+                }
+            })
+    }
+
+    notificationRegistrationHandler = () => {
+        this.configureNotifications()
+    }
+
+    handleNotification = (notification) => {
+        console.log('In HandleNotification : ', notification, Actions.currentScene);
+        if (!notification.foreground && notification.userInteraction) {
+            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
+                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+            }
+        }
     }
 
     userLoggedInHandler = async () => {
@@ -93,16 +123,20 @@ export default class Splash extends React.Component {
         // For now the user should not be taken back
         // EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
         // EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     render() {
         return (
-            <Image style={styles.imageStyle} source={Icon} resizeMode={'center'} />
+            <View style={styles.container}>
+                <Image style={styles.imageStyle} source={Icon} resizeMode={'contain'} />
+            </View>
         );
     }
 }

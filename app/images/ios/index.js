@@ -36,7 +36,7 @@ const images = {
     btn_info: { uri: 'btn_info' },
     icn_slider: { uri: 'icn_slider' },
     walkthrough_image: require('./walkthrough/image.png'),
-    splash_page_logo: require('./logo/FM_logo_landing_page.png'),
+    splash_page_logo: { uri: 'FM-logo-landing page' },
     user_image: { uri: 'user_image' }
 };
 

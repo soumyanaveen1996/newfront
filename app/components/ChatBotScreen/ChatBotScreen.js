@@ -123,7 +123,7 @@ export default class ChatBotScreen extends React.Component {
             } catch (error) { }
         }
 
-        if (self.loadedBot === undefined) {
+        if (!self.loadedBot) {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
                 I18n.t('Bot_load_failed'),

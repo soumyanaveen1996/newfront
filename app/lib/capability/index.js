@@ -9,6 +9,7 @@ import { NetworkRequest, futureRequest } from './Network';
 import ConversationContext from './ConversationContext';
 import Auth from './Auth';
 import Media from './Media';
+import Notification from './Notification';
 import Resource, { ResourceTypes } from './Resource';
 import { AUTH_PROVIDERS } from './Auth';
 
@@ -24,6 +25,7 @@ export {
     NetworkRequest,
     futureRequest,
     MessageTypeConstants,
+    Notification,
     ConversationContext,
     Auth,
     AUTH_PROVIDERS,
