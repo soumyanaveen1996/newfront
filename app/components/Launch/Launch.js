@@ -34,16 +34,7 @@ export default class Splash extends React.Component {
         }
 
         // Chain all setup stuff
-        persist.createMessageTable()
-            .then(() => {
-                return persist.createNetworkRequestQueueTable()
-            })
-            .then(() => {
-                return persist.createConversationTable()
-            })
-            .then(() => {
-                return persist.createArrayStorageTable()
-            })
+        persist.runMigrations()
             .then(() => {
                 return Auth.getUser();
             })

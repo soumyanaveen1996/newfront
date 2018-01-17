@@ -13,6 +13,21 @@ const createMessageTable = `
     ) WITHOUT ROWID;
 `;
 
+const createV2MessageTable = `
+    CREATE TABLE IF NOT EXISTS messages (
+        message_id text PRIMARY KEY NOT NULL,
+        bot_key text NOT NULL,
+        msg text NOT NULL,
+        message_type text NOT NULL,
+        options text,
+        added_by_bot integer NOT NULL,
+        message_date integer NOT NULL,
+        read integer NOT NULL DEFAULT 0,
+        is_favorite integer DEFAULT 0,
+        created_by text
+    ) WITHOUT ROWID;
+`;
+
 const insertMessage = `
     INSERT INTO messages (
         message_id,
@@ -100,6 +115,7 @@ const totalUserMessageCountSince = `
 
 export default {
     createMessageTable: createMessageTable,
+    createV2MessageTable: createV2MessageTable,
     insertMessage: insertMessage,
     selectRecentMessages: selectRecentMessages,
     deleteMessage: deleteMessage,

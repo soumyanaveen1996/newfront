@@ -4,6 +4,7 @@ import moment from 'moment';
 import { db } from './db';
 import messageSql from './messageSql';
 import Utils from '../utils/index';
+import _ from 'lodash';
 
 /**
  * Create the message table if it doesn't exist. Should be called during launch (each time is ok)
@@ -18,6 +19,89 @@ const createMessageTable = () => new Promise((resolve, reject) => {
     });
 });
 
+const createV2MessageTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.createV2MessageTable, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const renameToTemp = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('ALTER TABLE messages RENAME TO tmp_messages;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+})
+
+
+const selectAllTempMessages = () => new Promise((resolve, reject) => {
+    const sql = `SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by
+    FROM tmp_messages`;
+
+    db.transaction(transaction => {
+        transaction.executeSql(sql, [], function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let messages = dbMessages.map((msg) => {
+                const opts = {
+                    uuid: msg.message_id,
+                    botKey: msg.bot_key,
+                    msg: msg.msg,
+                    messageType: msg.message_type,
+                    options: msg.options,
+                    addedByBot: msg.added_by_bot ? true : false,
+                    messageDate: new Date(msg.message_date),
+                    isRead: (msg.read === 1),
+                    isFavorite: (msg.is_favorite === 1),
+                    createdBy: msg.created_by
+                };
+                return new Message(opts);
+            });
+            return resolve(messages);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const migrateToV2Messages = () => new Promise((resolve, reject) => {
+    renameToTemp()
+        .then(() => {
+            return createV2MessageTable();
+        })
+        .then(() => {
+            return selectAllTempMessages();
+        })
+        .then((messages) => {
+            return Promise.all(_.map(messages, (message) => {
+                return insertMessage(message);
+            }))
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((error) => {
+            reject(error);
+        })
+});
+
 const insertMessage = (message) => new Promise((resolve, reject) => {
     const args = [message.getMessageId(),
         message.getBotKey(),
@@ -25,7 +109,7 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
         message.getMessageType(),
         message.getMessageOptionsString(),
         message.isMessageByBot() ? 1 : 0,
-        moment(message.getMessageDate()).format(),
+        moment(message.getMessageDate()).valueOf(),
         message.isRead() ? 1 : 0,
         message.isFavorite() ? 1 : 0,
         message.getCreatedBy()];
@@ -99,6 +183,8 @@ const unreadMessageCount = (botkey) => new Promise((resolve, reject) => {
         });
     });
 });
+
+
 
 const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new Promise((resolve, reject) => {
     ignoreMessagesOfType = ignoreMessagesOfType || [];
@@ -207,6 +293,8 @@ const selectUserMessageCountSince = (botkey, sinceDateString) => new Promise((re
 
 export default {
     createMessageTable: createMessageTable,
+    createV2MessageTable: createV2MessageTable,
+    migrateToV2Messages: migrateToV2Messages,
     insertMessage: insertMessage,
     selectMessages: selectMessages,
     unreadMessageCount: unreadMessageCount,
