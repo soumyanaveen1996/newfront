@@ -15,7 +15,7 @@ if (Platform.OS === 'ios') {
     });
 } else {
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
-        GoogleSignin.configure(config.auth.android.google);
+        GoogleSignin.configure(Config.auth.android.google);
     }).catch((error) => {
         console.log('Error while configuring Google-signin. Error:', error);
     });
@@ -56,7 +56,6 @@ class FrontmAuth {
     loginWithGoogle(conversationId, botName) {
         var self = this;
         return new Promise(function(resolve, reject) {
-
             GoogleSignin.signOut();
             GoogleSignin.signIn()
                 .then((user) => {
