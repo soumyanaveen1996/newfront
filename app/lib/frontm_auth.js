@@ -15,9 +15,13 @@ if (Platform.OS === 'ios') {
     });
 } else {
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
-        GoogleSignin.configure(Config.auth.android.google);
+        GoogleSignin.configure({}).then(() => {
+            console.log('Google signin configured');
+        }).catch((err) => {
+            console.log('Error while configuring Google-signin. Error:', err);
+        });
     }).catch((error) => {
-        console.log('Error while configuring Google-signin. Error:', error);
+        console.log('Error while resolving Google Play services. Error:', error);
     });
 }
 
