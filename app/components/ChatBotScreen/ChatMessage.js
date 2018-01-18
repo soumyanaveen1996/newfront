@@ -80,7 +80,7 @@ export default class ChatMessage extends React.Component {
         var talkSign = <View style={talkIconSign(this.props.alignRight)}/>;
 
         return (
-            <View style={chatMessageStyle(this.props.alignRight)}>
+            <View style={[chatMessageStyle(this.props.alignRight)]}>
                 {this.props.alignRight ? favIcon : talkSign}
                 {component}
                 {this.props.alignRight ? talkSign : favIcon}

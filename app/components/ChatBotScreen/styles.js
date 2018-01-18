@@ -233,7 +233,8 @@ const stylesheet = StyleSheet.create({
         borderBottomColor: 'transparent',
     },
     chatMsg: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        width: '80%',
     },
     sessionStartMessage: {
         flexDirection: 'row',
