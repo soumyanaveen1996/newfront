@@ -139,7 +139,6 @@ android {
 dependencies {
     compile project(':react-native-push-notification')
     compile project(':@yfuks/react-native-action-sheet')
-    compile project(':react-native-google-signin')
     // Due to different versions of support library in the project and the one
     // used by this library. Look at https://github.com/react-native-community/react-native-svg/issues/465
     compile(project(':react-native-svg')) {
