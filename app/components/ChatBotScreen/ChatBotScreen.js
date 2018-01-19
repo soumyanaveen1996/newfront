@@ -469,10 +469,25 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    waitForQueueProcessing() {
+        return new Promise((resolve, reject) => {
+            var self = this;
+            let interval = setInterval(function () {
+                if (self.processingMessageQueue === false) {
+                    clearInterval(interval);
+                    resolve()
+                }
+            }, Config.ChatMessageOptions.messageTransitionTime / 2);
+        })
+    }
+
     sendMessage = async (message) => {
         this.updateChat(message)
         this.scrollToBottom = true;
-        return this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
+        this.waitForQueueProcessing()
+            .then(() => {
+                this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
+            })
     }
 
     onSendMessage = async (messageStr) => {

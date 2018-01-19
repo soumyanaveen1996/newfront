@@ -334,6 +334,11 @@ export default class Message {
     }
 }
 
+export const ButtonStyle = {
+    light: 0,
+    bright: 1,
+}
+
 export const MessageTypeConstants = {
     MESSAGE_TYPE_STRING: 'string',
     MESSAGE_TYPE_LIST: 'list',

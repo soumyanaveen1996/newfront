@@ -9,7 +9,9 @@ import {
     talkIconSign,
     chatMessageStyle,
     ellipsisMessageBubbleStyle,
-    videoContainerStyle
+    videoContainerStyle,
+    buttonStyle,
+    buttonTextStyle,
 } from './styles';
 import { MessageTypeConstants } from '../../lib/capability';
 import utils from '../../lib/utils';
@@ -171,8 +173,8 @@ export default class ChatMessage extends React.Component {
                         <TouchableHighlight
                             underlayColor="white"
                             onPress={this.buttonResponseOnPress.bind(this, i, message.getMessage()[i])}
-                            style={styles.buttonMessage}>
-                            <Text>
+                            style={buttonStyle(message.getMessage()[i].style)}>
+                            <Text style={buttonTextStyle(message.getMessage()[i].style)}>
                                 {message.getMessage()[i].title}
                             </Text>
                         </TouchableHighlight>
@@ -181,11 +183,11 @@ export default class ChatMessage extends React.Component {
             }
 
             const component = (
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: 'column', width: '70%' }}>
                     {buttons}
                 </View>
             );
-            return this.wrapBetweenFavAndTalk(message, component);
+            return component;
 
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM) {
             const component = (

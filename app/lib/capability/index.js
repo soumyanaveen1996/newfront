@@ -4,7 +4,7 @@ import Network from './Network';
 import Promise from './Promise';
 import Utils from './Utils';
 import Message from './Message';
-import { MessageTypeConstants }  from './Message';
+import { MessageTypeConstants, ButtonStyle }  from './Message';
 import { NetworkRequest, futureRequest } from './Network';
 import ConversationContext from './ConversationContext';
 import Auth from './Auth';
@@ -32,5 +32,6 @@ export {
     Media,
     Resource,
     ResourceTypes,
+    ButtonStyle,
     version
 };

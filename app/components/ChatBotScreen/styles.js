@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles'
 import Config from './config';
+import { ButtonStyle } from '../../lib/capability';
 
 const stylesheet = StyleSheet.create({
     container: {
@@ -71,21 +72,6 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.accent,
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 8,
-    },
-    buttonMsgParent: {
-        flexDirection: 'row',
-        marginTop: 20,
-        width: 200
-    },
-    buttonMessage: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'stretch',
-        borderWidth: 1,
-        borderColor: GlobalColors.botChatBubbleColor,
-        padding: 10,
-        borderRadius: 10
     },
     message: {
         fontSize: 16,
@@ -262,8 +248,56 @@ const stylesheet = StyleSheet.create({
         fontWeight: 'bold',
         fontStyle: 'italic',
         fontSize: 12,
-    }
+    },
+    buttonMsgParent: {
+        flexDirection: 'row',
+        marginTop: 20,
+        width: '100%'
+    },
+    buttonMessage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+        padding: 10,
+    },
+    buttonBright: {
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderColor: GlobalColors.transparent,
+        borderRadius: 4,
+        shadowColor: GlobalColors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+    },
+    buttonLight: {
+        borderColor: GlobalColors.botChatBubbleColor,
+        borderWidth: 1,
+        borderRadius: 4,
+    },
+    buttonLightText: {
+        color: GlobalColors.botChatBubbleColor,
+    },
+    buttonBrightText: {
+        color: GlobalColors.white,
+    },
 });
+
+export function buttonStyle(style) {
+    if (style === ButtonStyle.bright) {
+        return [stylesheet.buttonMessage, stylesheet.buttonBright]
+    } else {
+        return [stylesheet.buttonMessage, stylesheet.buttonLight];
+    }
+}
+
+export function buttonTextStyle(style) {
+    if (style === ButtonStyle.bright) {
+        return [stylesheet.buttonBrightText]
+    } else {
+        return [stylesheet.buttonLightText];
+    }
+}
 
 export function chatMessageStyle(alignRight = false) {
     if (alignRight) {
