@@ -16,6 +16,7 @@ import {
 import { MessageTypeConstants } from '../../lib/capability';
 import utils from '../../lib/utils';
 import AudioPlayer from '../AudioPlayer';
+import CachedImage from '../CachedImage';
 import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
 import { FormMessage } from '../FormMessage';
@@ -36,7 +37,7 @@ export default class ChatMessage extends React.Component {
 
     image() {
         if (this.props.imageSource) {
-            return <Image source={this.props.imageSource} style={styles.profilePic} />;
+            return <CachedImage source={this.props.imageSource} style={styles.profilePic} />;
         }
     }
 
