@@ -17,12 +17,14 @@ import { MessageTypeConstants } from '../../lib/capability';
 import utils from '../../lib/utils';
 import AudioPlayer from '../AudioPlayer';
 import CachedImage from '../CachedImage';
+import ProfileImage from '../ProfileImage';
 import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
 import { FormMessage } from '../FormMessage';
 import TapToLoadImage from './TapToLoadImage';
 import AnimatedEllipsis from 'react-native-animated-ellipsis';
 import VideoPlayer from 'react-native-video-player';
+import Images from '../../config/images';
 
 export default class ChatMessage extends React.Component {
 
@@ -36,8 +38,18 @@ export default class ChatMessage extends React.Component {
     }
 
     image() {
-        if (this.props.imageSource) {
-            return <CachedImage source={this.props.imageSource} style={styles.profilePic} />;
+        let { message, isUserChat, alignRight } = this.props;
+        if (!alignRight) {
+            if (message.getCreatedBy() && isUserChat) {
+                return <ProfileImage
+                    uuid={message.getCreatedBy()}
+                    placeholder={Images.user_image}
+                    style={styles.profilePic}
+                    placeholderStyle={styles.placeholderProfilePic}
+                    resizeMode="cover"/>;
+            } else {
+                return <CachedImage source={this.props.imageSource} style={styles.profilePic} />;
+            }
         }
     }
 

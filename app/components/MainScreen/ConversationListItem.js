@@ -3,6 +3,7 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { BotListItemStyles } from './styles';
 import { Icons } from '../../config/icons';
 import images from '../../config/images';
+import ProfileImage from '../ProfileImage';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
@@ -45,6 +46,7 @@ export default class ConversationListItem extends React.Component {
             };
         }
         stateObj.chatName = this.props.chatData.chatName;
+        stateObj.otherUserId = this.props.chatData.otherUserId;
 
         if (this.props.chatData.totalUnread > 0) {
             stateObj.count = this.props.chatData.totalUnread;
@@ -60,11 +62,19 @@ export default class ConversationListItem extends React.Component {
             return <Text numberOfLines={2} style={ BotListItemStyles.subTitle } >{this.state.subTitle}</Text>;
         }
     }
+    renderProfileimage() {
+        return <ProfileImage
+            uuid={this.state.otherUserId}
+            placeholder={images.user_image}
+            style={BotListItemStyles.image}
+            placeholderStyle={BotListItemStyles.image}
+            resizeMode="cover"/>;
+    }
 
     render() {
         return (
             <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
-                <Image source={ images.user_image } style={ BotListItemStyles.image } resizeMode="contain"/>
+                {this.renderProfileimage()}
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={ BotListItemStyles.title } >{this.state.chatName}</Text>
                     {this.renderSubview()}

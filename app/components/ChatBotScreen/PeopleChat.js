@@ -111,4 +111,8 @@ export default class PeopleChat extends ChatBotScreen {
         // People chat should not reset conversation.
     }
 
+    isUserChat() {
+        return true
+    }
+
 }

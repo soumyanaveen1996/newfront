@@ -63,7 +63,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'name': 'IMBot',
         'slug': 'im-bot',
         'url': 'botfarm/imBot.js',
-        'logoSlug': 'front_bot_logo',
+        'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/FrontBotLogo.png',
         'description': 'Instant Messenger',
         'id': 'im-bot', // This should never change (permanent)
         'version': '0.1.0',
