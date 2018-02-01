@@ -145,4 +145,9 @@ export default class PeopleChat extends ChatBotScreen {
         this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
         this.loadedBot.init(this.botState, this.state.messages, this.botContext);
     }
+
+    isUserChat() {
+        return true
+    }
+
 }

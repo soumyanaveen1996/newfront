@@ -194,6 +194,16 @@ export default class ConversationContext {
             });
     });
 
+    static getOtherUserId = function(conversationContext, user) {
+        const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
+            return p.uuid !== user.userUUID
+        });
+        if (otherParticipants.length === 1) {
+            return otherParticipants[0].uuid;
+        }
+        return undefined;
+    }
+
     static updateParticipants = function (conversationContext, participants) {
         let filteredParticipants = _.filter(participants, (participant) => {
             return _.find(conversationContext.participants, (p) => p === participant.uuid) === undefined;

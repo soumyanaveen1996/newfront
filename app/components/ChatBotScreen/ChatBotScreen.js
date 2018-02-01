@@ -456,10 +456,17 @@ export default class ChatBotScreen extends React.Component {
         return msgs;
     }
 
+    isUserChat() {
+        return false;
+    }
+
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
-            return <ChatMessage message={message} user={this.user} imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
+            return <ChatMessage message={message}
+                isUserChat={this.isUserChat()}
+                user={this.user}
+                imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}/>;
         } else {

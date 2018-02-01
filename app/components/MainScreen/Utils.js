@@ -10,16 +10,18 @@ const getMessageDataForBot = (bot) => new Promise((resolve, reject) => {
 const getMessageDataForConversation = (conversation, user) => new Promise((resolve, reject) => {
     let context = null;
     let chatName = '';
+    var otherUserId = null;
     // TODO: This is not a very performant code - we need to optimize this!
     ConversationContext.getBotConversationContextForId(conversation.conversationId)
         .then((conversationContext) => {
             context = conversationContext;
             chatName = ConversationContext.getChatName(context, user)
+            otherUserId = ConversationContext.getOtherUserId(context, user)
             return Contact.getContactFieldForUUIDs([context.creatorInstanceId]);
         })
         .then((contacts) => {
             if (contacts.length === 0 || !contacts[0].ignored) {
-                getMessageDataForConversationFromServer(conversation, context, chatName)
+                getMessageDataForConversationFromServer(conversation, context, chatName, otherUserId)
                     .then((data) => {
                         resolve(data);
                     })
@@ -34,10 +36,11 @@ const getMessageDataForConversation = (conversation, user) => new Promise((resol
 
 });
 
-const getMessageDataForConversationFromServer = (conversation, conversationContext, chatName) => new Promise((resolve, reject) => {
+const getMessageDataForConversationFromServer = (conversation, conversationContext, chatName, otherUserId) => new Promise((resolve, reject) => {
     getMessageDataFor(conversation.conversationId)
         .then((results) => {
             results.chatName = chatName;
+            results.otherUserId = otherUserId;
             resolve(results);
         })
         .catch((e) => {

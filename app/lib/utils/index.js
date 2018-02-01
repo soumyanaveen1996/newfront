@@ -22,6 +22,10 @@ export function formattedDate(date) {
     }
 }
 
+export function userProfileUrl(userId) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
+}
+
 export function sessionStartFormattedDate(date) {
     if (!date) {
         return '';
@@ -55,7 +59,7 @@ export async function copyFileAsync(uri, directory) {
 }
 
 
-export function s3DownloadHeaders(s3Url, user) {
+export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     const host = config.bot.baseUrl;
 
     // We dont care about urls that are not S3 based
@@ -63,7 +67,7 @@ export function s3DownloadHeaders(s3Url, user) {
         return null;
     }
     const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    const headers = Utils.createAuthHeader(host, 'GET', path, config.bot.s3ServiceApi, '', user);
+    const headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
 
     console.log(`Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`);
 
@@ -193,5 +197,6 @@ export default {
     downloadFileAsync,
     sessionStartFormattedDate,
     addArrayToSqlResults,
-    copyIntialBots
+    copyIntialBots,
+    userProfileUrl
 }

@@ -1,8 +1,5 @@
 import React from 'react';
-import { Image, TouchableOpacity } from 'react-native';
-import styles, {
-    chatMessageImageStyle,
-} from './styles';
+import { Image } from 'react-native';
 import ImageCache from '../../lib/image_cache';
 
 
@@ -47,7 +44,9 @@ export default class CachedImage extends React.Component {
 
     componentWillUnmount() {
         const { uri } = this.props.source;
-        ImageCache.imageCacheManager.unsubscribe(uri, this);
+        if (uri) {
+            ImageCache.imageCacheManager.unsubscribe(uri, this);
+        }
     }
 
     imageDownloaded(path) {
@@ -62,19 +61,8 @@ export default class CachedImage extends React.Component {
         return pattern.test(uri)
     }
 
-
     async getImagePathFromCache(uri) {
         return ImageCache.imageCacheManager.getImagePathFromCache(uri);
-    }
-
-    renderLocalFile(uri) {
-        return (
-            <TouchableOpacity onPress={this.onImagePress.bind(this)}>
-                <Image
-                    style={chatMessageImageStyle(this.props.alignRight)}
-                    source={{ uri: uri }} />
-            </TouchableOpacity>
-        );
     }
 
     render() {

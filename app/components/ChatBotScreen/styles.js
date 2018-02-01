@@ -27,6 +27,12 @@ const stylesheet = StyleSheet.create({
         width: 30,
         marginHorizontal: 10
     },
+    placeholderProfilePic: {
+        height: 30,
+        width: 30,
+        marginHorizontal: 10,
+        borderRadius: 15,
+    },
     bubble: {
         maxWidth: '90%',
         paddingVertical: 5,
