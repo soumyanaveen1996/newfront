@@ -17,11 +17,33 @@ const createConversationTable = () => new Promise((resolve, reject) => {
     });
 });
 
-const insertNetworkRequest = (conversationId, type) => new Promise((resolve, reject) => {
+const insertConversation = (conversationId, type) => new Promise((resolve, reject) => {
     const nowString = moment().format();
     const args = [conversationId, type, nowString];
     db.transaction(tx => {
         tx.executeSql(conversationSql.insertConversation, args, function success(tx, res) {
+            return resolve(+res.insertId || 0);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const deleteConversation = (conversationId, type) => new Promise((resolve, reject) => {
+    const args = [conversationId, type];
+    db.transaction(tx => {
+        tx.executeSql(conversationSql.deleteConversation, args, function success(tx, res) {
+            return resolve(+res.insertId || 0);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const updateConversationId = (oldConversationId, newConversationId) => new Promise((resolve, reject) => {
+    const args = [newConversationId, oldConversationId];
+    db.transaction(tx => {
+        tx.executeSql(conversationSql.updateConversation, args, function success(tx, res) {
             return resolve(+res.insertId || 0);
         }, function failure(tx, err) {
             return reject(err);
@@ -74,7 +96,9 @@ const selectConversation = (conversationId, type) => new Promise((resolve, rejec
 
 export default {
     createConversationTable: createConversationTable,
-    insertNetworkRequest: insertNetworkRequest,
+    insertConversation: insertConversation,
+    deleteConversation: deleteConversation,
     selectConversations: selectConversations,
-    selectConversation: selectConversation
+    selectConversation: selectConversation,
+    updateConversationId, updateConversationId
 };

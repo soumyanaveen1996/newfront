@@ -184,6 +184,16 @@ export default class ConversationContext {
         return names.join(',');
     };
 
+    static deleteConversationContext = (conversationId)  => new Promise((resolve, reject) => {
+        DeviceStorage.delete(ConversationContext._getStorageKeyForId(conversationId))
+            .then(function (ctx) {
+                resolve(true);
+            })
+            .catch(() => {
+                resolve(false);
+            });
+    });
+
     static updateParticipants = function (conversationContext, participants) {
         let filteredParticipants = _.filter(participants, (participant) => {
             return _.find(conversationContext.participants, (p) => p === participant.uuid) === undefined;

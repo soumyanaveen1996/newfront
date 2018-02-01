@@ -11,7 +11,7 @@ export default class Conversation {
     });
 
     static createIMConversation = (conversationId) => new Promise((resolve, reject) => {
-        ConversationDAO.insertNetworkRequest(conversationId, IM_CHAT)
+        ConversationDAO.insertConversation(conversationId, IM_CHAT)
             .then((id) => {
                 return resolve({
                     id: id,
@@ -22,6 +22,32 @@ export default class Conversation {
                 reject(err);
             });
     });
+
+    static deleteConversation = (conversationId) => new Promise((resolve, reject) => {
+        ConversationDAO.deleteConversation(conversationId, IM_CHAT)
+            .then((id) => {
+                return resolve({
+                    conversationId: conversationId
+                });
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
+    static updateConversation = (oldConversationId, newConversationId) => new Promise((resolve, reject) => {
+        ConversationDAO.updateConversation(oldConversationId, newConversationId)
+            .then((id) => {
+                return resolve({
+                    oldConversationId: oldConversationId,
+                    newConversationId: newConversationId
+                });
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
 
     static getIMConversation = (conversationId) => new Promise((resolve, reject) => {
         return resolve(ConversationDAO.selectConversation(conversationId, IM_CHAT));

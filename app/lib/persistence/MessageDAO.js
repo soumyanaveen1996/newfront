@@ -291,6 +291,18 @@ const selectUserMessageCountSince = (botkey, sinceDateString) => new Promise((re
     });
 });
 
+const moveMessagesToNewBotKey = (fromBotKey, toBotKey) => new Promise((resolve, reject) => {
+    const args = [toBotKey, fromBotKey];
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.moveMessagesToNewBotKey, args, function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -303,5 +315,6 @@ export default {
     markBotMessageAsRead: markBotMessageAsRead,
     markBotMessageAsUnFavorite: markBotMessageAsUnFavorite,
     markBotMessageAsFavorite: markBotMessageAsFavorite,
-    selectFavoriteMessages: selectFavoriteMessages
+    selectFavoriteMessages: selectFavoriteMessages,
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey, 
 };

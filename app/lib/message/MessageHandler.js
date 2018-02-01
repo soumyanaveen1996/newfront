@@ -204,4 +204,8 @@ export default class MessageHandler extends events.EventEmitter {
     toggleFavorite = (botKey, messageId, isFavorite) => {
         return isFavorite ? MessageDAO.markBotMessageAsFavorite(botKey, messageId) : MessageDAO.markBotMessageAsUnFavorite(botKey, messageId)
     }
+
+    moveMessages = (fromBotKey, toBotKey) => {
+        return MessageDAO.moveMessagesToNewBotKey(fromBotKey, toBotKey);
+    }
 }

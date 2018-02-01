@@ -75,7 +75,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
     let fakeBotContext = getFakeBotKey(botKey);
     let creator = null;
 
-    getConversationData(botKey, user)
+    getConversationData(botKey, message.createdBy, user)
         .then((conversationData) => {
             if (conversationData && conversationData.data) {
                 const data = conversationData.data;
@@ -123,10 +123,10 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
         });
 });
 
-const getConversationData = (conversationId, user) => {
+const getConversationData = (conversationId, createdBy, user) => {
     let options = {
         'method': 'get',
-        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SYSTEM_BOT_MANIFEST.IMChat.id,
+        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SYSTEM_BOT_MANIFEST.IMChat.id + '&createdBy=' + createdBy,
         'headers': getHeaders(user)
     };
 

@@ -15,6 +15,21 @@ const insertConversation = `
     ) VALUES (?, ?, ?);
 `;
 
+const deleteConversation = `
+    DELETE FROM conversation
+    WHERE 
+        conversationId = ?
+        AND type = ?
+`;
+
+const updateConversation = `
+    UPDATE conversation
+    SET 
+        conversationId = ?
+    WHERE
+        conversationId = ?
+`;
+
 const selectConversations = `
     SELECT
         id,
@@ -41,6 +56,8 @@ const selectConversation = `
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
+    deleteConversation: deleteConversation,
     selectConversations: selectConversations,
-    selectConversation: selectConversation
+    selectConversation: selectConversation,
+    updateConversation, updateConversation
 };

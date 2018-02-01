@@ -5,6 +5,7 @@ import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack } from '../Header';
+import { MessageHandler } from '../../lib/message';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -46,7 +47,7 @@ export default class PeopleChat extends ChatBotScreen {
 
     // Implemented methods
     getBotKey = () => {
-        return this.botKey;
+        return this.conversation.conversationId;
     }
 
     async getConversationContext(botContext, user) {
@@ -71,15 +72,15 @@ export default class PeopleChat extends ChatBotScreen {
 
             this.props.navigation.setParams({ title: ConversationContext.getChatName(context, user) });
 
-            // Save this conversation context (save has to happen after the botkey has been extracted)
-            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
-
             // Create a conversation for this conversation id
             this.conversation = await Promise.resolve(Conversation.createIMConversation(context.conversationId));
 
+            // Save this conversation context (save has to happen after the botkey has been extracted)
+            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
+
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for people chat');
+            console.log('Error getting a conversation context for people chat', error);
             throw error;
         }
     }
@@ -111,4 +112,37 @@ export default class PeopleChat extends ChatBotScreen {
         // People chat should not reset conversation.
     }
 
+    async createOrUpdateConversation(oldConversationId, newConversationId) {
+        let newConversation = await Conversation.getIMConversation(newConversationId);
+        if (newConversation) {
+            await Conversation.deleteConversation(oldConversationId);
+            this.conversation = newConversation
+        } else {
+            await Conversation.updateConversation(oldConversationId, newConversationId);
+            this.conversation = await Conversation.getIMConversation(newConversationId);
+        }
+    }
+
+    async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
+        let newContext = await ConversationContext.getBotConversationContextForId(newConversationId);
+        if (!newContext) {
+            this.conversationContext.conversationId = newConversationId;
+            await ConversationContext.saveConversationContext(this.conversationContext, this.botContext, this.user)
+        } else {
+            this.conversationContext = newContext;
+        }
+        await ConversationContext.deleteConversationContext(oldConversationId);
+    }
+
+    async updateConversationContextId(newConversationId) {
+        let oldConversationId = this.conversationContext.conversationId;
+
+        await this.createOrUpdateConversation(oldConversationId, oldConversationId);
+        await MessageHandler.moveMessages(oldConversationId, newConversationId);
+        await this.checkAndUpdateConversationContext(oldConversationId, oldConversationId)
+
+        this.botContext.setConversationContext(this.conversationContext);
+        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
+        this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+    }
 }

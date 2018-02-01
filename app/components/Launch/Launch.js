@@ -28,10 +28,10 @@ export default class Splash extends React.Component {
 
         console.log('Overrode console object. Now starting initialization');
 
-        if (!__DEV__) {
+        //if (!__DEV__) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots();
-        }
+            await BotUtils.copyIntialBots(__DEV__);
+        //}
 
         // Chain all setup stuff
         persist.runMigrations()

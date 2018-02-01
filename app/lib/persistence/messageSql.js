@@ -113,6 +113,10 @@ const totalUserMessageCountSince = `
         AND added_by_bot = 0 ;
 `;
 
+const moveMessagesToNewBotKey = `
+    UPDATE messages SET bot_key = ? where bot_key = ?;
+`;
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -125,5 +129,6 @@ export default {
     markAllBotMessagesAsRead: markAllBotMessagesAsRead,
     selectFavoriteMessages: selectFavoriteMessages,
     markAsUnFavorite: markAsUnFavorite,
-    markAsFavorite: markAsFavorite
+    markAsFavorite: markAsFavorite,
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey,
 };

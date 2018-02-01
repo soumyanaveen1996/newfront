@@ -151,14 +151,14 @@ async function copyDir(fromDir, toDir, overwrite = false) {
         const toPath = toDir + '/' + stat.name;
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
-            if (!exists) {
+            if (!exists || overwrite) {
                 console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
-            if (!exists) {
+            if (!exists || overwrite) {
                 console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyDir(stat.path, toPath);
@@ -169,19 +169,19 @@ async function copyDir(fromDir, toDir, overwrite = false) {
     }
 }
 
-export async function copyIntialBots() {
+export async function copyIntialBots(overwrite) {
     console.log('Main Bundle Path : ', RNFS.MainBundlePath);
     console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
 
     const botFromDir = RNFS.MainBundlePath + '/bots';
     const botToDir = RNFS.DocumentDirectoryPath + '/bots';
     await RNFS.mkdir(botToDir);
-    await copyDir(botFromDir, botToDir);
+    await copyDir(botFromDir, botToDir, overwrite);
 
     const botDependenciesFromDir = RNFS.MainBundlePath + '/bot_dependencies';
     const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
     await RNFS.mkdir(botDependenciesToDir);
-    await copyDir(botDependenciesFromDir, botDependenciesToDir);
+    await copyDir(botDependenciesFromDir, botDependenciesToDir, overwrite);
 }
 
 

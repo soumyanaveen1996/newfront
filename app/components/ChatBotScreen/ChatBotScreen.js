@@ -603,6 +603,9 @@ export default class ChatBotScreen extends React.Component {
             });
     }
 
+    async updateConversationContextId(newConversationId) {
+    }
+
     resetConversation() {
         Keyboard.dismiss();
         // TODO: should the first parameter be message even?
