@@ -72,7 +72,6 @@
         .then((response) => {
             if(!_.isEmpty(response)) {
                 let convIdToUpdate = _.get(response, '[0].conversationId');
-                tell('Update the context with id:' + convIdToUpdate, botContext);
                 botContext.updateConversationContextId(convIdToUpdate);
             }
         })
