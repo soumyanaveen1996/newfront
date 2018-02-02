@@ -17,10 +17,11 @@ export default class PeopleChat extends ChatBotScreen {
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
         } else {
-            navigationOptions.headerLeft = <HeaderBack onPress={() => {
+            navigationOptions.headerLeft = <HeaderBack onPress={async () => {
                 if (state.params.botDone) {
                     state.params.botDone();
                 }
+                await state.params.deleteConversation();
                 if (state.params.onBack) {
                     Actions.pop(); state.params.onBack();
                 } else {
@@ -33,6 +34,8 @@ export default class PeopleChat extends ChatBotScreen {
 
     constructor(props) {
         super(props);
+        this.newSession = false;
+        this.sentMessageCount = 0;
         // TODO: name or id? - what is constant across releases?
         this.botKey = null;
         // This means we have a list of participants to start the conversation with (new chat)
@@ -42,6 +45,7 @@ export default class PeopleChat extends ChatBotScreen {
         // Botkey is the id
         if (this.conversation) {
             this.botKey = this.conversation.conversationId;
+            this.newSession = false;
         }
     }
 
@@ -50,13 +54,21 @@ export default class PeopleChat extends ChatBotScreen {
         return this.conversation.conversationId;
     }
 
+    setNavigationParams(context, user) {
+        this.props.navigation.setParams({
+            title: ConversationContext.getChatName(context, user),
+            botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
+            deleteConversation: this.deleteConversation.bind(this)
+        });
+    }
+
     async getConversationContext(botContext, user) {
         try {
             let context = null;
             // Existing conversation - so pick from storage
             if (this.conversation) {
                 context = await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
-                this.props.navigation.setParams({ title: ConversationContext.getChatName(context, user) });
+                this.setNavigationParams(context, user);
                 return context;
             }
             // Else its a new conversation with participants.
@@ -70,7 +82,7 @@ export default class PeopleChat extends ChatBotScreen {
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
 
-            this.props.navigation.setParams({ title: ConversationContext.getChatName(context, user) });
+            this.setNavigationParams(context, user);
 
             // Create a conversation for this conversation id
             this.conversation = await Promise.resolve(Conversation.createIMConversation(context.conversationId));
@@ -78,6 +90,7 @@ export default class PeopleChat extends ChatBotScreen {
             // Save this conversation context (save has to happen after the botkey has been extracted)
             await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
 
+            this.newSession = true;
             return context;
         } catch (error) {
             console.log('Error getting a conversation context for people chat', error);
@@ -154,9 +167,16 @@ export default class PeopleChat extends ChatBotScreen {
         return true
     }
 
-    componentWillUnmount = () => {
-        super.componentWillUnmount();
-        
+    async onSendMessage(messageStr) {
+        this.sentMessageCount += 1;
+        return super.onSendMessage(messageStr);
+    }
+
+    async deleteConversation() {
+        if (this.newSession && this.sentMessageCount === 0) {
+            console.log('Hello hererssss');
+            Conversation.deleteConversation(this.conversation.conversationId);
+        }
     }
 
 }

@@ -210,7 +210,7 @@ export default class ChatBotScreen extends React.Component {
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
     }
 
-    componentWillUnmount = () => {
+    async componentWillUnmount() {
         this.mounted = false;
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
@@ -497,8 +497,7 @@ export default class ChatBotScreen extends React.Component {
             })
     }
 
-    onSendMessage = async (messageStr) => {
-
+    async onSendMessage (messageStr) {
         let self = this;
         // read message from component state
         let message = new Message();

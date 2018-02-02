@@ -1,8 +1,13 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    ScrollView,
+    KeyboardAvoidingView,
+    Keyboard } from 'react-native';
 import Styles from './styles';
 import { Actions } from 'react-native-router-flux';
-import { FormLabel, FormInput } from 'react-native-elements';
 import I18n from '../../config/i18n/i18n';
 
 export default class FormPopup extends React.Component {
