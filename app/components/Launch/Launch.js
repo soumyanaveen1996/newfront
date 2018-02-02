@@ -97,7 +97,7 @@ export default class Splash extends React.Component {
     }
 
     userLoggedOutHandler = async () => {
-        this.showOnboardingScreen();
+        //this.showOnboardingScreen();
     }
 
     showMainScreen = () => {
@@ -108,7 +108,8 @@ export default class Splash extends React.Component {
     showOnboardingScreen = () => {
         SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.OnboardingBot)
             .then((onboardingBot) => {
-                Actions.onboarding({ bot: onboardingBot, type: ActionConst.REPLACE, onBack: this.showMainScreen.bind(this) });
+                //Actions.lightbox({ type: ActionConst.REPLACE, duration: 0 });
+                Actions.onboarding({ bot: onboardingBot, type: ActionConst.REPLACE, onBack: this.showMainScreen.bind(this), duration: 0 });
             })
         return;
     }

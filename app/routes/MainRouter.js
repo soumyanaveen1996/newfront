@@ -57,10 +57,10 @@ const MainRouter = () => {
                         <Scene key={ROUTER_SCENE_KEYS.botFilter} component={BotFilter} hideNavBar/>
                         <Scene key={ROUTER_SCENE_KEYS.mapView} component={MapView} hideNavBar/>
                         <Scene key={ROUTER_SCENE_KEYS.locationPicker} component={LocationPicker} hideNavBar/>
+                        <Scene key={ROUTER_SCENE_KEYS.onboarding} component={BotChat}
+                            headerStyle={Config.navBar.headerStyle}
+                            headerTintColor={Config.navBar.navigationBarTintColor} intial title={I18n.t('FrontM')} />
                     </Scene>
-                    <Scene key={ROUTER_SCENE_KEYS.onboarding} component={BotChat}
-                        headerStyle={Config.navBar.headerStyle}
-                        headerTintColor={Config.navBar.navigationBarTintColor} intial title={I18n.t('FrontM')} />    
                 </Scene>
                 <Lightbox key={ROUTER_SCENE_KEYS.info} component={InfoPopup} hideNavBar/>
                 <Lightbox lightbox key={ROUTER_SCENE_KEYS.form} component={FormPopup} hideNavBar/>
