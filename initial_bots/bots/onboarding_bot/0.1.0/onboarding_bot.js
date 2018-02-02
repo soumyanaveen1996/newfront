@@ -72,11 +72,10 @@
         let Message = botContext.getCapability('Message');
         let message = new Message();
         let options = [
-            // COMMENTING this until profile image is displayed in IM bot conversations
-            // {
-            //     title: 'Add/change profile picture',
-            //     id: PROFILE_PIC
-            // }
+            {
+                 title: 'Add/change profile picture',
+                 id: PROFILE_PIC
+            }
         ];
 
         const notification = botContext.getCapability('Notification');
@@ -242,7 +241,7 @@
                 } else {
                     const Resource = botContext.getCapability('Resource');
                     const ResourceTypes = botContext.getCapability('ResourceTypes');
-                    return Resource.uploadFile(media.base64, media.uri, PROFILE_PIC_BUCKET, user.userUUID, ResourceTypes.Image, user);
+                    return Resource.uploadFile(media.base64, media.uri, PROFILE_PIC_BUCKET, user.userUUID, ResourceTypes.Image, user, true);
                 }
             })
             .then((fileUrl) => {

@@ -2,6 +2,7 @@
 
     const ADD_CONTACT_ACTION = 'AddContact';
     const IGNORE_CONTACT_ACTION = 'IgnoreContact';
+    const SEND_IM_MSG_CAPABILITY = 'SendIMMessage';
 
     let next = function (message, state, previousMessages, botContext) {
         return decode(message, state, previousMessages, botContext);
@@ -44,8 +45,7 @@
 
                     return 'Contact proccessed';
                 } else {
-                    const agentGuardService = botContext.getCapability('agentGuardService');
-                    return agentGuardService.send(message, botContext, user, botContext.botManifest.id, previousMessages);
+                    return sendImMessage(message, botContext, user);
                 }
             })
             .catch(function (err) {
@@ -53,11 +53,36 @@
             });
     };
 
+    let sendImMessage = function(msg, botContext, user) {
+        let agentGuardService = botContext.getCapability('agentGuardService');
+        let _ = botContext.getCapability('Utils').Lodash;
+
+        let params = {
+            action: 'Send',
+            messages: [{
+                messageUuid: msg.getMessageId(),
+                contentType: agentGuardService.getMessageContentType(msg, botContext),
+                createdOn: msg.getMessageDate().valueOf(),
+                createdBy: msg.getCreatedBy(),
+                content: [msg.getMessage()]
+            }]
+        };
+
+        agentGuardService.executeCustomCapability(SEND_IM_MSG_CAPABILITY, params, true, undefined, botContext, user, true)
+        .then((response) => {
+            if(!_.isEmpty(response)) {
+                let convIdToUpdate = _.get(response, '[0].conversationId');
+                tell('Update the context with id:' + convIdToUpdate, botContext);
+                botContext.updateConversationContextId(convIdToUpdate);
+            }
+        })
+    };
+
     let tell = function (msg, botContext) {
         // Should bots delay? - not for now - make this a dynamic capability?
         // setTimeout(() => botContext.tell(msg), 500);
         botContext.tell(msg);
-    }
+    };
 
 
     let state = {
@@ -68,7 +93,7 @@
         return {
             localState: state
         }
-    }
+    };
 
     let farewell = function (msg, state, previousMessages, botContext) {
     };
@@ -78,8 +103,10 @@
         let _ = utils.Lodash;
         const content = _.get(result, 'details[0].message');
         const contentType = _.get(result, 'contentType');
+        const createdOn = _.get(result, 'createdOn');
+        const createdBy = _.get(result, 'createdBy');
         let Message = botContext.getCapability('Message');
-        let message = new Message();
+        let message = new Message({messageDate: createdOn, createdBy: createdBy});
 
         if (content) {
             if (contentType == 30) {
@@ -122,11 +149,13 @@
                     msg.buttonMessage([{
                         title: 'Accept',
                         action: ADD_CONTACT_ACTION,
-                        user: contact
+                        user: contact,
+                        style: 1,
                     }, {
                         title: 'Ignore',
                         action: IGNORE_CONTACT_ACTION,
-                        user: contact
+                        user: contact,
+                        style: 0,
                     }], {smartReply: true});
                     tell(msg, botContext);
                 }

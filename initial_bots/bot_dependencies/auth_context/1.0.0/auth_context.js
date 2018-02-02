@@ -25,7 +25,7 @@
   let logout = function(botContext) {
     let Auth = botContext.getCapability('Auth');
 
-    // Will return a promise 
+    // Will return a promise
     return Auth.logout();
   }
 

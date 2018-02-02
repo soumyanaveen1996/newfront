@@ -40,6 +40,7 @@
         const authContext = botContext.getCapability('authContext');
         const _ = botContext.getCapability('Utils').Lodash;
 
+        botContext.wait(true);
         let user = {};
         authContext.getAuthUser(botContext)
             .then(function(usr) {
@@ -153,8 +154,8 @@
         authContext.getAuthUser(botContext)
             .then(function (user) {
                 let queryStr = '{uuid: {$not: {$eq: \'' + user.userUUID + '\'}}}';
-                let pageQuery = "&&page==" + page;
-                let pgSizeQuery = "&&pagesize==10";
+                let pageQuery = "&page=" + page;
+                let pgSizeQuery = "&pagesize=10";
                 let queryObj = queryStr + pageQuery + pgSizeQuery;
 
                 return getContacts(message, botContext, user, previousMessages, null, queryObj);
@@ -245,7 +246,7 @@
     //     "surname": "Sharma",
     //     "name": "Akshay Sharma",
     //     "uuid": "11A2A680-7E76-4154-A811-2A6BAB2A3BF9",
-    // }    
+    // }
     const _reverseFromSliderMessageFormat = function (contacts) {
         contacts = contacts || [];
         const contactFormat = contacts.map((contact) => {

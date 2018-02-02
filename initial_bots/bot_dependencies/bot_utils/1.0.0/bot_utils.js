@@ -1,6 +1,6 @@
 (function () {
     const STORAGE_KEY_PREFIX = 'bot-async-request-uuid-';
-    
+
     const saveAsyncRequest = function(botContext, requestUuid, data) {
         let DeviceStorage = botContext.getCapability('DeviceStorage');
         let store = {
@@ -24,7 +24,7 @@
                 .catch(function (err) {
                     console.log('Error saving the request', err);
                     reject(err);
-                });                
+                });
         });
     };
 
