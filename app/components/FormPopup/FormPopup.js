@@ -18,6 +18,7 @@ export default class FormPopup extends React.Component {
     }
 
     onClose() {
+        console.log('close');
         Keyboard.dismiss();
         if (this.props.onClose) {
             this.props.onClose();
@@ -103,7 +104,7 @@ export default class FormPopup extends React.Component {
         return (
             <View style={Styles.containerStyle}>
                 <KeyboardAvoidingView behavior="position" style={Styles.formContainer}>
-                    <ScrollView style={Styles.formScrollView}>
+                    <ScrollView style={Styles.formScrollView} keyboardShouldPersistTaps="handled">
                         {this.renderForm()}
                     </ScrollView>
                 </KeyboardAvoidingView>
