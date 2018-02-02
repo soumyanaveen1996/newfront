@@ -287,6 +287,33 @@ const stylesheet = StyleSheet.create({
     buttonBrightText: {
         color: GlobalColors.white,
     },
+    formButtonWrapper: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '90%',
+        height: 54,
+    },
+    formButton: {
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderColor: GlobalColors.white,
+        borderWidth: 1,
+        borderRadius: 4,
+        width: '80%',
+        paddingVertical: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    formButtonText: {
+        color: GlobalColors.white,
+    }
 });
 
 export function buttonStyle(style) {

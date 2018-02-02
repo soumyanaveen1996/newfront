@@ -67,7 +67,7 @@ const selectAllTempMessages = () => new Promise((resolve, reject) => {
                     messageType: msg.message_type,
                     options: msg.options,
                     addedByBot: msg.added_by_bot ? true : false,
-                    messageDate: new Date(msg.message_date),
+                    messageDate: moment(msg.message_date).toDate(),
                     isRead: (msg.read === 1),
                     isFavorite: (msg.is_favorite === 1),
                     createdBy: msg.created_by
@@ -227,7 +227,7 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new
                     messageType: msg.message_type,
                     options: msg.options,
                     addedByBot: msg.added_by_bot ? true : false,
-                    messageDate: new Date(msg.message_date),
+                    messageDate: moment(msg.message_date).toDate(),
                     isRead: (msg.read === 1),
                     isFavorite: (msg.is_favorite === 1),
                     createdBy: msg.created_by
@@ -257,7 +257,7 @@ const selectFavoriteMessages = (limit, offset) => new Promise((resolve, reject) 
                     messageType: msg.message_type,
                     options: msg.options,
                     addedByBot: msg.added_by_bot ? true : false,
-                    messageDate: new Date(msg.message_date),
+                    messageDate: moment(msg.message_date).toDate(),
                     isRead: (msg.read === 1),
                     isFavorite: (msg.is_favorite === 1),
                     createdBy: msg.created_by

@@ -114,6 +114,8 @@ export default class PeopleChat extends ChatBotScreen {
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
         let newConversation = await Conversation.getIMConversation(newConversationId);
+        console.log('New conversation : ', newConversation);
+        console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
         if (newConversation) {
             await Conversation.deleteConversation(oldConversationId);
             this.conversation = newConversation
@@ -121,6 +123,7 @@ export default class PeopleChat extends ChatBotScreen {
             await Conversation.updateConversation(oldConversationId, newConversationId);
             this.conversation = await Conversation.getIMConversation(newConversationId);
         }
+        console.log(await Conversation.getIMConversation(newConversationId));
     }
 
     async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
@@ -131,15 +134,16 @@ export default class PeopleChat extends ChatBotScreen {
         } else {
             this.conversationContext = newContext;
         }
+        console.log(await ConversationContext.getBotConversationContextForId(newConversationId));
         await ConversationContext.deleteConversationContext(oldConversationId);
     }
 
     async updateConversationContextId(newConversationId) {
         let oldConversationId = this.conversationContext.conversationId;
 
-        await this.createOrUpdateConversation(oldConversationId, oldConversationId);
+        await this.createOrUpdateConversation(oldConversationId, newConversationId);
         await MessageHandler.moveMessages(oldConversationId, newConversationId);
-        await this.checkAndUpdateConversationContext(oldConversationId, oldConversationId)
+        await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
 
         this.botContext.setConversationContext(this.conversationContext);
         this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
@@ -148,6 +152,11 @@ export default class PeopleChat extends ChatBotScreen {
 
     isUserChat() {
         return true
+    }
+
+    componentWillUnmount = () => {
+        super.componentWillUnmount();
+        
     }
 
 }

@@ -9,6 +9,7 @@ const ROUTER_SCENE_KEYS = {
     'webview': 'webview',
     'addContacts': 'addContacts',
     'info': 'info',
+    'form': 'form',
     'botStore': 'botStore',
     'botFilter': 'botFilter',
     'botList': 'botList',

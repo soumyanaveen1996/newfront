@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, View, TouchableHighlight } from 'react-native';
+import { Text, Image, View, TouchableHighlight, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import {
     chatMessageBubbleStyle,
@@ -20,11 +20,11 @@ import CachedImage from '../CachedImage';
 import ProfileImage from '../ProfileImage';
 import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
-import { FormMessage } from '../FormMessage';
 import TapToLoadImage from './TapToLoadImage';
 import AnimatedEllipsis from 'react-native-animated-ellipsis';
 import VideoPlayer from 'react-native-video-player';
 import Images from '../../config/images';
+import I18n from '../../config/i18n/i18n';
 
 export default class ChatMessage extends React.Component {
 
@@ -183,14 +183,14 @@ export default class ChatMessage extends React.Component {
             for (var i = 0; i < message.getMessage().length; i++) {
                 buttons.push(
                     <View style={styles.buttonMsgParent} key={i}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             underlayColor="white"
                             onPress={this.buttonResponseOnPress.bind(this, i, message.getMessage()[i])}
                             style={buttonStyle(message.getMessage()[i].style)}>
                             <Text style={buttonTextStyle(message.getMessage()[i].style)}>
                                 {message.getMessage()[i].title}
                             </Text>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
                 )
             }
@@ -204,9 +204,15 @@ export default class ChatMessage extends React.Component {
 
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM) {
             const component = (
-                <FormMessage
-                    formData={message.getMessage()}
-                    onCTAClicked={this.formCTAClick.bind(this)} />
+                <View style={styles.formButtonWrapper} key={i}>
+                    <TouchableOpacity
+                        onPress={this.openForm.bind(this, message.getMessage())}
+                        style={styles.formButton}>
+                        <Text style={styles.formButtonText}>
+                            {I18n.t('Fill_form')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML) {
@@ -235,16 +241,22 @@ export default class ChatMessage extends React.Component {
         }
     }
 
+    openForm(formMessage) {
+        console.log('Form message : ', formMessage);
+        Actions.form({ formData : formMessage, onFormSubmit: this.onFormSubmit.bind(this)})
+    }
+
+    onFormSubmit(items) {
+        console.log('Form submitted : ', items);
+        this.props.onFormCTAClick(items)
+    }
+
     htmlResponseOnPress(htmlText) {
         Actions.webview({ htmlString: htmlText.htmlMsg });
     }
 
     buttonResponseOnPress(index, item) {
         this.props.onDoneBtnClick(item)
-    }
-
-    formCTAClick(items) {
-        this.props.onFormCTAClick(items)
     }
 
     renderMetadata() {

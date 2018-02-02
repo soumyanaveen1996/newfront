@@ -36,7 +36,7 @@ export default class Conversation {
     });
 
     static updateConversation = (oldConversationId, newConversationId) => new Promise((resolve, reject) => {
-        ConversationDAO.updateConversation(oldConversationId, newConversationId)
+        ConversationDAO.updateConversationId(oldConversationId, newConversationId)
             .then((id) => {
                 return resolve({
                     oldConversationId: oldConversationId,

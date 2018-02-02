@@ -1,10 +1,11 @@
 // A wrapper around network operations - Http 2 or 1, in the future could be QUIC etc
 // Support simple operations like GET, POST, PUT and DELETE for now
 
-import Network from 'axios';
+import axios from 'axios';
 import { Queue } from '../network';
 import { NetInfo } from 'react-native';
 import { Promise } from './index';
+import SHA1 from 'crypto-js/sha1';
 
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
@@ -41,6 +42,24 @@ export class NetworkRequest {
     }
 }
 
+function Network(options, queue = false) {
+    return new Promise((resolve, reject) => {
+        Network.isConnected()
+            .then((connected) => {
+                if (connected) {
+                    return resolve(axios(options));
+                } else {
+                    if (queue) {
+                        let key = SHA1(JSON.stringify(options.data)).toString();
+                        return resolve(futureRequest(key, new NetworkRequest(options)));
+                    } else {
+                        reject(new Error('No network connectivity'));
+                    }
+                }
+            })
+    });
+}
+
 Network.getNetworkInfo = () => NetInfo.getConnectionInfo()
 
 Network.isWiFi = () => new Promise((resolve, reject) => {
@@ -55,7 +74,20 @@ Network.isCellular = () => new Promise((resolve, reject) => {
     });
 });
 
-Network.isConnected = () => NetInfo.isConnected.fetch()
+Network.isConnected = () => {
+    return NetInfo.getConnectionInfo().then(reachability => {
+        if (reachability.type === 'unknown') {
+            return new Promise(resolve => {
+                const handleFirstConnectivityChangeIOS = isConnected => {
+                    NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+                    resolve(isConnected);
+                };
+                NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+            });
+        }
+        return (reachability.type !== 'none' && reachability.type !== 'unknown')
+    });
+}
 
 export default Network;
 

@@ -100,5 +100,5 @@ export default {
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
     selectConversation: selectConversation,
-    updateConversationId, updateConversationId
+    updateConversationId: updateConversationId
 };
