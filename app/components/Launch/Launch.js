@@ -7,12 +7,16 @@ import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller } from '../../lib/network';
-import { Auth, Notification, Utils } from '../../lib/capability';
+import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import DeviceStorage from '../../lib/capability/DeviceStorage';
+
+const VERSION = 2; // Corresponding to 2.2.0
+const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
 
@@ -28,10 +32,16 @@ export default class Splash extends React.Component {
 
         console.log('Overrode console object. Now starting initialization');
 
-        //if (!__DEV__) {
+
+        let versionString = await DeviceStorage.get(VERSION_KEY);
+        let version = parseInt(versionString, 10);
+        let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
+
+        if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(__DEV__);
-        //}
+            await BotUtils.copyIntialBots(forceUpdate);
+            await DeviceStorage.save(VERSION_KEY, VERSION);
+        }
 
         // Chain all setup stuff
         persist.runMigrations()
