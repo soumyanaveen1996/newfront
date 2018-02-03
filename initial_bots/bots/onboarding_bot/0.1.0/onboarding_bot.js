@@ -83,12 +83,12 @@
         .then((deviceInfo) => {
             if(_.isEmpty(deviceInfo) || !deviceInfo.isRegistered) {
                 options.push({
-                    title: 'Register Device',
+                    title: 'Register for Push Notifications',
                     id: REGISTER_DEVICE
                 });
             } else {
                 options.push({
-                    title: 'Deregister Device',
+                    title: 'Deregister for Push Notifications',
                     id: DEREGISTER_DEVICE
                 });
             }
