@@ -126,6 +126,30 @@ export default class Auth {
             });
     });
 
+
+    /**
+     * Method to update user details like screenName, givenName, surName.
+     * @param {obj} details Method expects a object with screenName, givenName or surName.
+     *  if none of those keys exist, user is not updated.
+     *
+     * @return {Promise} user
+	 */
+    static updateUserDetails = (details) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    user.info.screenName = details.screenName || user.info.screenName;
+                    user.info.surname = details.surname || user.info.surname;
+                    user.info.givenName = details.givenName || user.info.givenName;
+                    user.info.name = user.info.givenName + ' ' + user.info.surname;
+                    return resolve(Auth.saveUser(user));
+                } else {
+                    reject('No valid user session');
+                }
+            })
+    })
+
+
     /**
 	 * Invalidate the session for now
 	 * @return {Promise}
