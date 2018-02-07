@@ -95,7 +95,7 @@ export default class FormPopup extends React.Component {
 
 
     CTAResponseOnPress() {
-        if (this.isValid()) {
+        if (!this.isValid()) {
             return;
         }
         var formData = this.props.formData
