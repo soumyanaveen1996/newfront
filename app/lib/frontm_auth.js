@@ -3,6 +3,7 @@ import Config from '../config/config';
 import { Network } from './capability';
 import UUID from 'uuid/v4';
 import { GoogleSignin } from 'react-native-google-signin';
+import _ from 'lodash';
 
 GoogleSignin.configure({
     scopes: Config.auth.ios.google.scopes,
@@ -65,28 +66,34 @@ class FrontmAuth {
                             uuid: conversationId || UUID(),
                             bot: botName
                         },
-                        creatorInstanceId: UUID()
+                        creatorInstanceId: UUID(),
                     };
                     let options = {
                         'method': 'post',
                         'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
                         'headers': {
-                            token: user.idToken
+                            token: user.idToken,
+                            provider_name: 'google'
                         },
                         'data': data
                     };
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
+                            if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
+                                reject(new Error('Empty response from the server'));
+                                return;
+                            }
                             self.credentials.google = {
                                 identityId: resData.creds.identityId,
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.userUuid,
+                                userUUID: resData.user.uuid,
                                 refreshToken: user.refreshToken,
-                                info: data.user
+                                info: resData.user || data.user
                             }
+
                             return resolve({ type: 'success', credentials: self.credentials });
                         }).catch((err) => {
                             return reject({ type: 'error', error: err });
