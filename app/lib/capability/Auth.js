@@ -87,7 +87,7 @@ export default class Auth {
             })
             .then((result) => {
                 if (result && result.type === 'success') {
-                    const creds = result.credentials.google;
+                    const creds = result.credentials.facebook;
                     currentUser = new User({
                         userUUID: creds.userUUID
                     });

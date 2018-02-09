@@ -27,7 +27,6 @@ class FrontmAuth {
             reject(new Error('Error fetching facebook data'));
         } else {
             console.log('Success fetching data: ' + JSON.stringify(result));
-            console.log('Success fetching data: ' + JSON.stringify(result));
 
             // {"first_name":"amal","name":"amal r","last_name":"r","id":"101583750666079","email":"amal_trmtkhd_r@tfbnw.net"}
             const fbDetails = result;
@@ -65,18 +64,18 @@ class FrontmAuth {
                                 reject(new Error('Empty response from the server'));
                                 return;
                             }
-                            console.log('Resdata : ', resData);
                             self.credentials.facebook = {
                                 identityId: resData.creds.identityId,
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
                                 userUUID: resData.user.uuid,
-                                info: resData.user || data.user
+                                info: resData.user || data.user,
+                                refreshToken: resData.longTermToken
                             }
                             console.log('Facebook credentials : ', self.credentials.facebook);
 
-                            //return resolve({ type: 'success', credentials: self.credentials });
+                            return resolve({ type: 'success', credentials: self.credentials });
                         }).catch((err) => {
                             return reject({ type: 'error', error: err });
                         });
