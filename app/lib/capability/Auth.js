@@ -30,9 +30,9 @@ export default class Auth {
             return reject('Invalid provider. Not supported: ', provider);
         }
         if (provider === AUTH_PROVIDERS.google) {
-            return Auth.loginWithGoogle(conversationId, botName);
+            return resolve(Auth.loginWithGoogle(conversationId, botName));
         } else if (provider === AUTH_PROVIDERS.facebook) {
-            return Auth.loginWithFacebook(conversationId, botName);
+            return resolve(Auth.loginWithFacebook(conversationId, botName));
         } else {
             return reject('Not supported right now: ', provider);
         }
