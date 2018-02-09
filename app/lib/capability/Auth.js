@@ -10,7 +10,7 @@ const USER_SESSION = 'userSession';
 
 export const AUTH_PROVIDERS = {
     google: 'google',
-    //facebook: 'facebook'
+    facebook: 'facebook'
 };
 
 /**
@@ -29,11 +29,17 @@ export default class Auth {
         if (!AUTH_PROVIDERS[provider]) {
             return reject('Invalid provider. Not supported: ', provider);
         }
-        if (provider !== AUTH_PROVIDERS.google) {
-            return reject('Not supported for now');
+        if (provider === AUTH_PROVIDERS.google) {
+            return Auth.loginWithGoogle(conversationId, botName);
+        } else if (provider === AUTH_PROVIDERS.facebook) {
+            return Auth.loginWithFacebook(conversationId, botName);
+        } else {
+            return reject('Not supported right now: ', provider);
         }
-        let currentUser = null;
+    });
 
+    static loginWithGoogle = (conversationId, botName) => new Promise((resolve, reject) => {
+        let currentUser = null;
         Auth.getUser()
             .then((user) => {
                 currentUser = user;
@@ -71,6 +77,47 @@ export default class Auth {
                 reject('Error with authing the user', error);
             });
     });
+
+    static loginWithFacebook = (conversationId, botName) => new Promise((resolve, reject) => {
+        let currentUser = null;
+        Auth.getUser()
+            .then((user) => {
+                currentUser = user;
+                return FrontmAuth.loginWithFacebook(conversationId, botName)
+            })
+            .then((result) => {
+                if (result && result.type === 'success') {
+                    const creds = result.credentials.google;
+                    currentUser = new User({
+                        userUUID: creds.userUUID
+                    });
+                    currentUser.aws = {
+                        identityId: creds.identityId,
+                        accessKeyId: creds.accessKeyId,
+                        secretAccessKey: creds.secretAccessKey,
+                        sessionToken: creds.sessionToken
+                    };
+                    currentUser.provider = {
+                        name: AUTH_PROVIDERS.facebook,
+                        refreshToken: creds.refreshToken,
+                        lastRefreshTime: Date.now()
+                    };
+                    currentUser.info = creds.info;
+
+                    Auth.saveUser(currentUser)
+                        .then((user) => {
+                            EventEmitter.emit(AuthEvents.userLoggedIn, user);
+                            resolve(user);
+                        })
+                        .catch((error) => {
+                            reject('Errors saving user session', error);
+                        });
+                }
+            }).catch((error) => {
+                reject('Error with authings the user', error);
+            });
+    });
+
 
     /**
 	 * Invalidate the session for now
