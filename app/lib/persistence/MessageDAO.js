@@ -302,6 +302,18 @@ const moveMessagesToNewBotKey = (fromBotKey, toBotKey) => new Promise((resolve, 
     });
 });
 
+const deleteBotMessages = (botKey) => new Promise((resolve, reject) => {
+    const args = [botKey];
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.deleteBotMessages, args, function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            return reject(new Error('Unable to delete bot messages'));
+        });
+    });
+
+})
+
 
 export default {
     createMessageTable: createMessageTable,
@@ -316,5 +328,6 @@ export default {
     markBotMessageAsUnFavorite: markBotMessageAsUnFavorite,
     markBotMessageAsFavorite: markBotMessageAsFavorite,
     selectFavoriteMessages: selectFavoriteMessages,
-    moveMessagesToNewBotKey: moveMessagesToNewBotKey, 
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages
 };

@@ -117,6 +117,10 @@ const moveMessagesToNewBotKey = `
     UPDATE messages SET bot_key = ? where bot_key = ?;
 `;
 
+const deleteBotMessages = `
+    DELETE FROM messages where bot_key = ?;
+`;
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -131,4 +135,5 @@ export default {
     markAsUnFavorite: markAsUnFavorite,
     markAsFavorite: markAsFavorite,
     moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages,
 };

@@ -43,6 +43,7 @@ I18n.translations = {
         Bot_uninstall_failed: 'Bot uninstall failed',
         Bot_installed: 'Bot installed',
         Bot_install_failed: 'Bot install failed',
+        Bot_uninstall_confirmation: 'Are you sure you want to uninstall the bot ?',
         Install: 'INSTALL',
         Installed: 'INSTALLED',
         Update_Bot: 'UPDATE',
@@ -69,8 +70,9 @@ I18n.translations = {
         Bot_load_failed: 'It appears we are having trouble connecting to the internet. Please retry in some time.',
         Take_picture: 'Take a picture',
         Select_image: 'Select an image',
-        'Fill_form' : 'Please fill the form',
-        'Close': 'Close',
+        Fill_form : 'Please fill the form',
+        Close: 'Close',
+        Yes: 'Yes',
     },
 }
 
