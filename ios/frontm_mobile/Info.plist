@@ -55,7 +55,7 @@
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
-    <string>fbauth</string>
+		<string>fbauth</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
@@ -77,9 +77,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Frontm requires camera permission to take pictures</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Frontm requires contacts access to Add users</string>
+	<string>Frontm requires contacts access to Invite users</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Frontm requires location permissions</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Frontm requires microphone for taking pictures and sending voice messages</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
