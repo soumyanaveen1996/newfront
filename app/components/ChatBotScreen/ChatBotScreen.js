@@ -83,7 +83,6 @@ export default class ChatBotScreen extends React.Component {
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false
-        this.canScrollToBottom = false
         this.firstUnreadIndex = -1
 
         // Create a new botcontext with this as the bot
@@ -208,6 +207,7 @@ export default class ChatBotScreen extends React.Component {
         }
 
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
     }
 
     async componentWillUnmount() {
@@ -219,12 +219,19 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardWillShowListener) {
             this.keyboardWillShowListener.remove();
         }
+        if (this.keyboardDidShowListener) {
+            this.keyboardDidShowListener.remove();
+        }
     }
 
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
         }
+    }
+
+    keyboardDidShow = () => {
+        this.scrollToBottomIfNeeded();
     }
 
     handleAsyncMessageResult (event) {
@@ -378,10 +385,20 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
-    scrollToBottomIfNeeded() {
-        if (this.canScrollToBottom) {
-            this.chatList.scrollToEnd({ animated: true });
+    onSliderOpen() {
+        // Comparing the chat list height with total scroll height to decide if to
+        // scroll to the end.
+        console.log('On Slider open : ', this.chatListHeight, this.scrollHeight);
+        if (this.chatListHeight < this.scrollHeight) {
+            setTimeout(() => {
+                this.scrollToBottomIfNeeded();
+            }, 1);
         }
+    }
+
+    scrollToBottomIfNeeded() {
+        console.log('In scrolling to Bottom');
+        this.chatList.scrollToEnd({ animated: true });
     }
 
     onSliderDone = (selectedRows) => {
@@ -460,6 +477,31 @@ export default class ChatBotScreen extends React.Component {
         return false;
     }
 
+    onChatListLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        console.log('On chat layout changed : ', height);
+        this.chatListHeight = height;
+        //this.chatList.scrollToBottom({animated : true});
+    }
+
+    onMessageItemLayout = (event, message) => {
+        console.log('On Message Item Layout');
+        const key = message.getMessageId();
+        if (!this.scrollHeight) {
+            this.scrollHeight = 0;
+            this.itemHeights = {};
+        }
+        const { height } = event.nativeEvent.layout;
+        console.log('On Message Item Layout : ', height);
+        this.scrollHeight += height - (this.itemHeights[key] || 0);
+        this.itemHeights[key] = height;
+        if (_.keys(this.itemHeights) === this.state.messages.count &&
+            this.messages[this.messages.length - 1].getMessageId() === key &&
+            this.scrollToBottom) {
+            this.scrollToBottomIfNeeded();
+        }
+    }
+
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
@@ -468,10 +510,12 @@ export default class ChatBotScreen extends React.Component {
                 user={this.user}
                 imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
-                onFormCTAClick={this.onFormDone.bind(this)}/>;
+                onFormCTAClick={this.onFormDone.bind(this)}
+                onLayout={this.onMessageItemLayout.bind(this)} />;
         } else {
             return (
-                <ChatMessage message={message} alignRight user={this.user} />
+                <ChatMessage message={message} alignRight user={this.user}
+                    onLayout={this.onMessageItemLayout.bind(this)}/>
             )
         }
     }
@@ -680,19 +724,18 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+
     onChatEndReached(info) {
-        if (info.distanceFromEnd > 0) {
-            this.canScrollToBottom = true;
-        }
-        if (this.scrollToBottom && info.distanceFromEnd > 0) {
-            this.chatList.scrollToEnd({ animated: true });
+        console.log('On Chat End reached : ', info);
+        if (this.scrollToBottom) {
+            this.scrollToBottomIfNeeded();
         } else {
             if (this.firstUnreadIndex !== -1) {
                 // This can throw error sometimes https://github.com/facebook/react-native/issues/14198
                 try {
                     this.chatList.scrollToIndex({ index: this.firstUnreadIndex, viewPosition: 0 });
                 } catch (error) {
-                    this.chatList.scrollToEnd({ animated: true });
+                    this.scrollToBottomIfNeeded();
                 }
                 this.firstUnreadIndex = -1;
             }
@@ -717,18 +760,9 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
     }
 
-    onSliderOpen() {
-        // TODO(amal): Temporary fix for scrolling when there are not enough messages.
-        // Will have to fix it when we implement layout for FlatList
-        if (this.state.messages.length >= 4) {
-            setTimeout( () => {
-                this.chatList.scrollToEnd({ animated: true });
-            }, 1);
-        }
-    }
 
     addBotMessage = (message) => new Promise((resolve) => {
-        // TODO: Adding bot messages directly seems a bad choice. May be should have a new 
+        // TODO: Adding bot messages directly seems a bad choice. May be should have a new
         // Message type (Echo message) that contains a internal message for bot to process
         // and echo it back.
         this.persistMessage(message)
@@ -801,12 +835,15 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <KeyboardAvoidingView style={chatStyles.container} behavior="padding" keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
+            <KeyboardAvoidingView style={chatStyles.container}
+                behavior="padding"
+                keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
                 <FlatList ref={(list) => {this.chatList = list}}
                     data={this.state.messages}
                     renderItem={this.renderItem.bind(this)}
                     onEndReachedThreshold={10}
                     onEndReached={this.onChatEndReached.bind(this)}
+                    onLayout={this.onChatListLayout.bind(this)}
                     refreshControl={
                         <RefreshControl colors={['#9Bd35A', '#689F38']}
                             refreshing={this.state.refreshing}

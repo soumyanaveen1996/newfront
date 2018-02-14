@@ -268,11 +268,15 @@ export default class ChatMessage extends React.Component {
         )
     }
 
+    onLayout(event) {
+        this.props.onLayout(event, this.props.message);
+    }
+
     render() {
         let { message } = this.props;
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             return (
-                <View style={styles.sessionStartMessage}>
+                <View onLayout={this.onLayout.bind(this)} style={styles.sessionStartMessage}>
                     <View style={styles.sessionStartHorizontalLine} />
                     <View>
                         <Text style={styles.sessionStartText}>{utils.sessionStartFormattedDate(message.getMessageDate())}</Text>
@@ -282,7 +286,7 @@ export default class ChatMessage extends React.Component {
             )
         } else {
             return (
-                <View>
+                <View onLayout={this.onLayout.bind(this)}>
                     <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
                         {this.image()}
                         {this.renderMessage()}

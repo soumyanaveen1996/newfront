@@ -17,7 +17,15 @@ const poll = () => {
     let requestId = 0;
     let key = '';
     let user = null;
-    Queue.dequeueNetworkRequest()
+    Auth.getUser()
+        .then((authUser) => {
+            user = authUser;
+            return Auth.refresh(authUser);
+        })
+        .then(() => {
+            console.log('Dequeuing network request');
+            return Queue.dequeueNetworkRequest()
+        })
         .then(function (res) {
             if (res === null) {
                 // Nothing to do - no more pending requests in the queue
@@ -38,14 +46,6 @@ const poll = () => {
             // Now also poll the Async Queue
         })
         .then(() => {
-            return Auth.getUser();
-        })
-        .then((authUser) => {
-            // TODO: evaluate when to refresh
-            return Auth.refresh(authUser);
-        })
-        .then((authUser) => {
-            user = authUser;
             return readQueue(user);
         })
         .then((res) => {

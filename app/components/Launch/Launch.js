@@ -14,7 +14,6 @@ import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import DeviceStorage from '../../lib/capability/DeviceStorage';
-import Contact from '../../lib/capability/Contact';
 
 const VERSION = 2; // Corresponding to 2.2.0
 const VERSION_KEY = 'version';
