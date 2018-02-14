@@ -206,10 +206,10 @@ export default class ChatMessage extends React.Component {
             const component = (
                 <View style={styles.formButtonWrapper} key={i}>
                     <TouchableOpacity
-                        onPress={this.openForm.bind(this, message.getMessage())}
+                        onPress={this.openForm.bind(this, message)}
                         style={styles.formButton}>
                         <Text style={styles.formButtonText}>
-                            {I18n.t('Fill_form')}
+                            {message.isCompleted() ? I18n.t('View_form') : I18n.t('Fill_form')}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -241,14 +241,16 @@ export default class ChatMessage extends React.Component {
         }
     }
 
-    openForm(formMessage) {
-        console.log('Form message : ', formMessage);
-        Actions.form({ formData : formMessage, onFormSubmit: this.onFormSubmit.bind(this)})
+    openForm(message) {
+        const formMessage = message.getMessage();
+        Actions.form({ formData : formMessage,
+            onFormSubmit: this.onFormSubmit.bind(this),
+            editable: !message.isCompleted()})
     }
 
     onFormSubmit(items) {
-        console.log('Form submitted : ', items);
-        this.props.onFormCTAClick(items)
+        let { message } = this.props;
+        this.props.onFormCTAClick(items, message);
     }
 
     htmlResponseOnPress(htmlText) {

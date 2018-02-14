@@ -3,6 +3,7 @@ import { db } from './db';
 import conversationSql from './conversationSql';
 import moment from 'moment';
 import Utils from '../utils/index';
+import _ from 'lodash';
 
 /**
  * Create the network_queue table if it doesn't exist. Should be called during launch (each time is ok)
@@ -17,9 +18,9 @@ const createConversationTable = () => new Promise((resolve, reject) => {
     });
 });
 
-const insertConversation = (conversationId, type) => new Promise((resolve, reject) => {
-    const nowString = moment().format();
-    const args = [conversationId, type, nowString];
+const insertConversation = (conversationId, type, createdAt = undefined) => new Promise((resolve, reject) => {
+    const nowMilliSeconds = moment(createdAt).valueOf();
+    const args = [conversationId, type, nowMilliSeconds];
     db.transaction(tx => {
         tx.executeSql(conversationSql.insertConversation, args, function success(tx, res) {
             return resolve(+res.insertId || 0);
@@ -94,11 +95,100 @@ const selectConversation = (conversationId, type) => new Promise((resolve, rejec
 });
 
 
+
+const createV2ConversationTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(conversationSql.createV2ConversationTable, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const renameToTemp = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('ALTER TABLE conversation RENAME TO tmp_conversations;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+})
+
+const dropTempTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('DROP TABLE tmp_conversations;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+
+const selectAllTempConversations = () => new Promise((resolve, reject) => {
+    const sql = `
+    SELECT
+        id,
+        conversationId,
+        type,
+        created_at_date
+    FROM tmp_conversations
+    `;
+
+    db.transaction(transaction => {
+        transaction.executeSql(sql, [], function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbConversations = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let conversations = dbConversations.map((dbConversation) => {
+                return {
+                    id: dbConversation.id,
+                    conversationId: dbConversation.conversationId,
+                    type: dbConversation.type,
+                    created_at_date: moment(dbConversation.created_at_date).toDate(),
+                };
+            });
+            return resolve(conversations);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const migrateToV2Conversations = () => new Promise((resolve, reject) => {
+    renameToTemp()
+        .then(() => {
+            return createV2ConversationTable();
+        })
+        .then(() => {
+            return selectAllTempConversations();
+        })
+        .then((conversations) => {
+            return Promise.all(_.map(conversations, (conversation) => {
+                return insertConversation(conversation.conversationId, conversation.type, conversation.created_at_date)
+            }))
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((error) => {
+            dropTempTable()
+                .then(() => {
+                    reject(error);
+                })
+        })
+});
+
+
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
     selectConversation: selectConversation,
-    updateConversationId: updateConversationId
+    updateConversationId: updateConversationId,
+    createV2ConversationTable: createV2ConversationTable,
+    migrateToV2Conversations: migrateToV2Conversations
 };

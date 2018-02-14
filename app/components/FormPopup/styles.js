@@ -106,6 +106,9 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    formButtonDisabled: {
+        backgroundColor: GlobalColors.disabledGray,
+    },
     formButtonText: {
         color: GlobalColors.white,
         fontWeight: '400',

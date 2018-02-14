@@ -32,7 +32,7 @@ export default class MessageHandler extends events.EventEmitter {
         }
         message.setBotKey(botKey);
 
-        return resolve(MessageDAO.insertMessage(message));
+        return resolve(MessageDAO.insertOrUpdateMessage(message));
     });
 
     /**

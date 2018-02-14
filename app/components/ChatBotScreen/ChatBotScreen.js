@@ -271,7 +271,6 @@ export default class ChatBotScreen extends React.Component {
             let msg = new Message({addedByBot: true});
             msg.waitMessage();
             this.appendMessageToChat(msg);
-            console.log(this.state.messages.count);
         } else {
             this.stopWaiting();
         }
@@ -290,10 +289,10 @@ export default class ChatBotScreen extends React.Component {
         if (messages.length === 0 || this.isMessageBeforeToday(messages[messages.length - 1].message)) {
             let sMessage = new Message({addedByBot: true});
             sMessage.sessionStartMessage();
-            this.queueMessage(sMessage);
             // TODO: Should we do it in a timeout so that its displayed first?
             this.persistMessage(sMessage)
                 .then(() => {
+                    this.queueMessage(sMessage);
                     resolve();
                 })
                 .catch((err) => {
@@ -344,8 +343,10 @@ export default class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.queueMessage(message);
-        this.persistMessage(message);
+        this.persistMessage(message)
+            .then(() => {
+                this.queueMessage(message);
+            })
         // Has to be Immutable for react
     }
 
@@ -418,11 +419,28 @@ export default class ChatBotScreen extends React.Component {
         this.sendButtonResponseMessage(selectedItem);
     }
 
-    onFormDone = (formItems) => {
-        let message = new Message({ addedByBot: false });
-        message.formResponseMessage(formItems);
-        message.setCreatedBy(this.getUserUUID());
-        return this.sendMessage(message);
+    replaceUpdatedMessage = (updatedMessage) => {
+        const index = _.findIndex(this.state.messages, (item) => item.message.getMessageId() === updatedMessage.getMessageId());
+        if (index !== -1) {
+            const messages = this.state.messages.slice();
+            messages[index] = updatedMessage.toBotDisplay();
+            this.setState({
+                messages: messages
+            });
+        }
+    }
+
+    onFormDone = (formItems, formMessage) => {
+        formMessage.setCompleted(true);
+        formMessage.formMessage(formItems);
+        this.persistMessage(formMessage)
+            .then(() => {
+                this.replaceUpdatedMessage(formMessage);
+                let message = new Message({ addedByBot: false });
+                message.formResponseMessage(formItems);
+                message.setCreatedBy(this.getUserUUID());
+                return this.sendMessage(message);
+            });
     }
 
     updateMessages = (messages, callback) => {

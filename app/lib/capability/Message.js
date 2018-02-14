@@ -23,6 +23,7 @@ export default class Message {
         this._isFavorite = opts.isFavorite;
         // userUUID or the botUUID for tracking in conversations
         this._createdBy = opts.createdBy;
+        this._completed = opts.completed || false;
     }
 
     /**
@@ -331,6 +332,14 @@ export default class Message {
 
     setFavorite(favorite = false) {
         this._isFavorite = favorite;
+    }
+
+    setCompleted(completed = false) {
+        this._completed = completed;
+    }
+
+    isCompleted() {
+        return this._completed;
     }
 }
 

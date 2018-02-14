@@ -7,6 +7,15 @@ const createConversationTable = `
     );
 `;
 
+const createV2ConversationTable = `
+    CREATE TABLE IF NOT EXISTS conversation (
+        id integer primary key,
+        conversationId text NOT NULL,
+        type text NOT NULL,
+        created_at_date integer NOT NULL
+    );
+`;
+
 const insertConversation = `
     INSERT INTO conversation ( 
         conversationId, 
@@ -59,5 +68,6 @@ export default {
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
     selectConversation: selectConversation,
-    updateConversation, updateConversation
+    updateConversation: updateConversation,
+    createV2ConversationTable: createV2ConversationTable,
 };

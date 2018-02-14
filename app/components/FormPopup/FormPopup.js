@@ -42,8 +42,9 @@ class FormTextInput extends React.Component {
     }
 
     render() {
-        const { formData } = this.props;
+        const { formData, editable } = this.props;
         return <TextInput
+            editable={editable}
             onChangeText={this.onChangeText.bind(this)}
             style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
             placeholder={formData.title}
@@ -95,7 +96,7 @@ export default class FormPopup extends React.Component {
 
 
     CTAResponseOnPress() {
-        if (!this.isValid()) {
+        if (!this.isValid() || !this.props.editable) {
             return;
         }
         var formData = this.props.formData
@@ -132,6 +133,7 @@ export default class FormPopup extends React.Component {
                 buttons.push(
                     <View style={Styles.formElementsContainer} key={i}>
                         <FormTextInput
+                            editable={this.props.editable}
                             formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}
                             containerStyle={Styles.noBorder}
@@ -139,12 +141,13 @@ export default class FormPopup extends React.Component {
                     </View>
                 )
             } else if (formData[i].type === 'button') {
+                const buttonStyle = this.props.editable ? Styles.formButton : [Styles.formButton, Styles.formButtonDisabled];
                 buttons.push(
                     <View style={Styles.formButtonContainer} key={i}>
                         <TouchableOpacity
                             underlayColor="white"
                             onPress={this.CTAResponseOnPress.bind(this)}
-                            style={Styles.formButton}>
+                            style={buttonStyle}>
                             <Text style={Styles.formButtonText}>
                                 {formData[i].title}
                             </Text>

@@ -71,6 +71,7 @@ I18n.translations = {
         Take_picture: 'Take a picture',
         Select_image: 'Select an image',
         Fill_form : 'Please fill the form',
+        View_form : 'View the form details',
         Close: 'Close',
         Yes: 'Yes',
     },
