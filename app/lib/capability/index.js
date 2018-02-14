@@ -4,6 +4,7 @@ import Network from './Network';
 import Promise from './Promise';
 import Utils from './Utils';
 import Message from './Message';
+import Messages from './Messages';
 import { MessageTypeConstants, ButtonStyle }  from './Message';
 import { NetworkRequest, futureRequest } from './Network';
 import ConversationContext from './ConversationContext';
@@ -22,6 +23,7 @@ export {
     Promise,
     Utils,
     Message,
+    Messages,
     NetworkRequest,
     futureRequest,
     MessageTypeConstants,
