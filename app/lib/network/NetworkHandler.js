@@ -13,41 +13,31 @@ import IMBotMessageHandler from './IMBotMessageHandler';
  */
 const poll = () => {
     console.log('NetworkHandler::poll::called at ', new Date());
-
-    let requestId = 0;
-    let key = '';
-    let user = null;
     Auth.getUser()
         .then((authUser) => {
-            user = authUser;
             return Auth.refresh(authUser);
         })
-        .then(() => {
-            console.log('Dequeuing network request');
-            return Queue.dequeueNetworkRequest()
+        .then((refreshedUser) => {
+            prosessNetworkQueue();
+            readRemoteLambdaQueue(refreshedUser);
+        });
+};
+
+const readLambda = () => {
+    console.log('NetworkHandler::readLambda::called at ', new Date());
+    Auth.getUser()
+        .then((authUser) => {
+            return Auth.refresh(authUser);
         })
-        .then(function (res) {
-            if (res === null) {
-                // Nothing to do - no more pending requests in the queue
-                return;
-            }
-            requestId = res.id;
-            key = res.key;
-            let request = res.request;
-            return Network(request.getNetworkRequestOptions())
-        })
-        .then((res) => {
-            if (!res) {
-                return;
-            }
-            // Axios wraps the results in data
-            let results = res.data;
-            return Queue.completeNetworkRequest(requestId, key, results);
-            // Now also poll the Async Queue
-        })
-        .then(() => {
-            return readQueue(user);
-        })
+        .then((refreshedUser) => {
+            prosessNetworkQueue();
+            readRemoteLambdaQueue(refreshedUser);
+        });
+}
+
+const readRemoteLambdaQueue = (user) => {
+    console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
+    readQueue(user)
         .then((res) => {
             const _ = Utils.Lodash;
 
@@ -94,12 +84,40 @@ const poll = () => {
                 }
             }
         })
+        .catch((error) => {
+            console.log('Error in Reading Lambda queue', error);
+        })
+}
+
+const prosessNetworkQueue = () => {
+    console.log('NetworkHandler::prosessNetworkQueue::called at ', new Date());
+    let requestId = 0;
+    let key = '';
+    Queue.dequeueNetworkRequest()
+        .then(function (res) {
+            if (res === null) {
+                // Nothing to do - no more pending requests in the queue
+                return;
+            }
+            requestId = res.id;
+            key = res.key;
+            let request = res.request;
+            return Network(request.getNetworkRequestOptions())
+        })
+        .then((res) => {
+            if (!res) {
+                return;
+            }
+            // Axios wraps the results in data
+            let results = res.data;
+            return Queue.completeNetworkRequest(requestId, key, results);
+        })
         .catch((err) => {
             console.log('Error making the api ai call ', err);
             return Queue.handleNetworkRequestFailure(requestId, key);
         });
 
-};
+}
 
 const readQueue = (user) => {
     const host = config.network.queueHost;
@@ -133,5 +151,6 @@ const readQueue = (user) => {
 };
 
 export default {
-    poll: poll
+    poll: poll,
+    readLambda: readLambda
 };

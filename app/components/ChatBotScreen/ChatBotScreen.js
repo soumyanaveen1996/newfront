@@ -504,14 +504,12 @@ export default class ChatBotScreen extends React.Component {
     }
 
     onMessageItemLayout = (event, message) => {
-        console.log('On Message Item Layout');
         const key = message.getMessageId();
         if (!this.scrollHeight) {
             this.scrollHeight = 0;
             this.itemHeights = {};
         }
         const { height } = event.nativeEvent.layout;
-        console.log('On Message Item Layout : ', height);
         this.scrollHeight += height - (this.itemHeights[key] || 0);
         this.itemHeights[key] = height;
         if (_.keys(this.itemHeights) === this.state.messages.count &&
