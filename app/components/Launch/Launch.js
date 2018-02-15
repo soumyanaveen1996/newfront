@@ -6,7 +6,7 @@ const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
-import { NetworkPoller } from '../../lib/network';
+import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
@@ -99,6 +99,9 @@ export default class Splash extends React.Component {
             if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
             }
+        }
+        if (notification.foreground) {
+            NetworkHandler.readLambda();
         }
     }
 
