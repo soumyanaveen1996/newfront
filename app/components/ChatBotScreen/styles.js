@@ -6,7 +6,7 @@ import { ButtonStyle } from '../../lib/capability';
 const stylesheet = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: GlobalColors.white,
+        backgroundColor: 'rgb(248, 248, 248)',
     },
     container: {
         flex: 1,
