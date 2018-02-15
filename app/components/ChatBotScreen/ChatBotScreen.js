@@ -8,6 +8,7 @@ import {
     RefreshControl,
     View,
     Alert,
+    SafeAreaView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -853,24 +854,26 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <KeyboardAvoidingView style={chatStyles.container}
-                behavior="padding"
-                keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
-                <FlatList ref={(list) => {this.chatList = list}}
-                    data={this.state.messages}
-                    renderItem={this.renderItem.bind(this)}
-                    onEndReachedThreshold={10}
-                    onEndReached={this.onChatEndReached.bind(this)}
-                    onLayout={this.onChatListLayout.bind(this)}
-                    refreshControl={
-                        <RefreshControl colors={['#9Bd35A', '#689F38']}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh.bind(this)} />
-                    }
-                />
-                {this.state.showSlider ? this.renderSlider() : null}
-                {this.renderChatInputBar()}
-            </KeyboardAvoidingView>
+            <SafeAreaView style={chatStyles.safeArea}>
+                <KeyboardAvoidingView style={chatStyles.container}
+                    behavior="padding"
+                    keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
+                    <FlatList ref={(list) => {this.chatList = list}}
+                        data={this.state.messages}
+                        renderItem={this.renderItem.bind(this)}
+                        onEndReachedThreshold={10}
+                        onEndReached={this.onChatEndReached.bind(this)}
+                        onLayout={this.onChatListLayout.bind(this)}
+                        refreshControl={
+                            <RefreshControl colors={['#9Bd35A', '#689F38']}
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)} />
+                        }
+                    />
+                    {this.state.showSlider ? this.renderSlider() : null}
+                    {this.renderChatInputBar()}
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         );
     }
 }

@@ -4,6 +4,10 @@ import Config from './config';
 import { ButtonStyle } from '../../lib/capability';
 
 const stylesheet = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: GlobalColors.white,
+    },
     container: {
         flex: 1,
         backgroundColor: GlobalColors.white,

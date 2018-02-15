@@ -6,7 +6,7 @@ import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 
 export function formattedDate(date) {
     if (!date) {
@@ -188,6 +188,16 @@ export async function copyIntialBots(overwrite) {
     await copyDir(botDependenciesFromDir, botDependenciesToDir, overwrite);
 }
 
+export function isiPhoneX() {
+    const dimen = Dimensions.get('window');
+    return (
+        Platform.OS === 'ios' &&
+        !Platform.isPad &&
+        !Platform.isTVOS &&
+        (dimen.height === 812 || dimen.width === 812)
+    );
+}
+
 
 export default {
     formattedDate,
@@ -198,5 +208,6 @@ export default {
     sessionStartFormattedDate,
     addArrayToSqlResults,
     copyIntialBots,
-    userProfileUrl
+    userProfileUrl,
+    isiPhoneX,
 }
