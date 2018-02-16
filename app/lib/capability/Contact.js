@@ -166,8 +166,12 @@ export default class Contact {
             } else {
                 let emails = _.reduce(contacts, (emailsList, contact) => {
                     let contactEmails = _.map(contact.emailAddresses, (emailObject) => {
+                        let givenName = contact.givenName;
+                        if (_.isEmpty(contact.givenName) && _.isEmpty(contact.familyName)) {
+                            givenName = emailObject.email
+                        }
                         return {
-                            givenName: contact.givenName,
+                            givenName: givenName,
                             familyName: contact.familyName,
                             middleName: contact.middleName,
                             type: emailObject.label,
@@ -176,7 +180,7 @@ export default class Contact {
                     });
                     return _.concat(emailsList, contactEmails);
                 }, []);
-                resolve(_.sortBy(emails, (o) => o.givenName + ' ' + o.familyName));
+                resolve(_.sortBy(emails, (o) => _.lowerCase(o.givenName + ' ' + o.familyName)));
             }
         })
     });
