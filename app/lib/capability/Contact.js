@@ -176,7 +176,7 @@ export default class Contact {
                     });
                     return _.concat(emailsList, contactEmails);
                 }, []);
-                resolve(emails);
+                resolve(_.sortBy(emails, (o) => o.givenName + ' ' + o.familyName));
             }
         })
     });
