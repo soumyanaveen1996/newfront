@@ -15,7 +15,7 @@ import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import DeviceStorage from '../../lib/capability/DeviceStorage';
 
-const VERSION = 4; // Corresponding to 2.3.0
+const VERSION = 5; // Corresponding to 2.3.0. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
