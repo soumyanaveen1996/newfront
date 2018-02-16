@@ -399,7 +399,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
     scrollToBottomIfNeeded() {
-        console.log('In scrolling to Bottom');
         this.chatList.scrollToEnd({ animated: true });
     }
 
@@ -554,6 +553,7 @@ export default class ChatBotScreen extends React.Component {
         this.waitForQueueProcessing()
             .then(() => {
                 this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
+                this.scrollToBottomIfNeeded();
             })
     }
 
