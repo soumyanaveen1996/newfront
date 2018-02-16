@@ -62,6 +62,10 @@ const selectConversation = `
     ORDER BY created_at_date desc
 `;
 
+const deleteAllConversations = `
+    DELETE from conversation
+`;
+
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
@@ -70,4 +74,5 @@ export default {
     selectConversation: selectConversation,
     updateConversation: updateConversation,
     createV2ConversationTable: createV2ConversationTable,
+    deleteAllConversations: deleteAllConversations
 };

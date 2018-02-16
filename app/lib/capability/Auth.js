@@ -5,6 +5,7 @@ import { User, DefaultUser, isDefaultUser } from '../../lib/user';
 import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
+import { ConversationDAO } from '../../lib/persistence';
 
 const USER_SESSION = 'userSession';
 
@@ -114,7 +115,7 @@ export default class Auth {
                         });
                 }
             }).catch((error) => {
-                reject('Error with authings the user', error);
+                reject('Error with authenticating the user', error);
             });
     });
 
@@ -125,6 +126,9 @@ export default class Auth {
 	 */
     static logout = () => new Promise((resolve, reject) => {
         DeviceStorage.delete(USER_SESSION)
+            .then(() => {
+                return ConversationDAO.deleteAllConversations();
+            })
             .then(() => {
                 EventEmitter.emit(AuthEvents.userLoggedOut);
                 // Logging in as Default user for Onboarding bot

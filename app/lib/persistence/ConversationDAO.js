@@ -182,6 +182,18 @@ const migrateToV2Conversations = () => new Promise((resolve, reject) => {
 });
 
 
+const deleteAllConversations = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(conversationSql.deleteAllConversations, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+
+
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
@@ -190,5 +202,6 @@ export default {
     selectConversation: selectConversation,
     updateConversationId: updateConversationId,
     createV2ConversationTable: createV2ConversationTable,
-    migrateToV2Conversations: migrateToV2Conversations
+    migrateToV2Conversations: migrateToV2Conversations,
+    deleteAllConversations: deleteAllConversations
 };
