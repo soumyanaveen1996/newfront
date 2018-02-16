@@ -6,7 +6,7 @@ const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
-import { NetworkPoller } from '../../lib/network';
+import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
@@ -15,7 +15,7 @@ import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import DeviceStorage from '../../lib/capability/DeviceStorage';
 
-const VERSION = 3; // Corresponding to 2.2.0 build 4
+const VERSION = 4; // Corresponding to 2.3.0
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -99,6 +99,9 @@ export default class Splash extends React.Component {
             if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
             }
+        }
+        if (notification.foreground) {
+            NetworkHandler.readLambda();
         }
     }
 

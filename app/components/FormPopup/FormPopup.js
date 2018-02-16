@@ -9,6 +9,50 @@ import { View,
 import Styles from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
+import { GlobalColors } from '../../config/styles';
+import _ from 'lodash';
+
+
+class FormTextInput extends React.Component {
+
+    state = {
+        borderColor: GlobalColors.disabledGray
+    }
+
+    constructor(props) {
+        super(props);
+        this.value = this.props.formData.value;
+    }
+
+    onChangeText(text) {
+        this.value = text;
+        this.props.onChangeText(text);
+        const { formData } = this.props;
+        if (formData.optional === false) {
+            if (_.trim(text) === '') {
+                this.setState({
+                    borderColor: GlobalColors.red
+                })
+            } else {
+                this.setState({
+                    borderColor: GlobalColors.disabledGray
+                })
+            }
+        }
+    }
+
+    render() {
+        const { formData, editable } = this.props;
+        return <TextInput
+            editable={editable}
+            onChangeText={this.onChangeText.bind(this)}
+            style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
+            placeholder={formData.title}
+            defaultValue={this.value}
+            containerStyle={Styles.noBorder}
+        />;
+    }
+}
 
 export default class FormPopup extends React.Component {
 
@@ -40,8 +84,21 @@ export default class FormPopup extends React.Component {
         console.log(keyboard);
     }
 
+    isValid() {
+        var formData = this.props.formData
+        for (var i = 0; i < formData.length; i++) {
+            if (formData[i].optional === false && _.trim(this.formTextArr[i]) === '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     CTAResponseOnPress() {
+        if (!this.isValid() || !this.props.editable) {
+            return;
+        }
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
             var eachFormData = formData[i]
@@ -72,23 +129,25 @@ export default class FormPopup extends React.Component {
                     </View>
                 )
             } else if (formData[i].type === 'text_field') {
+                this.formTextArr[i] = formData[i].value;
                 buttons.push(
                     <View style={Styles.formElementsContainer} key={i}>
-                        <TextInput
+                        <FormTextInput
+                            editable={this.props.editable}
+                            formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}
-                            style={Styles.formTextField}
-                            placeholder={formData[i].title}
                             containerStyle={Styles.noBorder}
                         />
                     </View>
                 )
             } else if (formData[i].type === 'button') {
+                const buttonStyle = this.props.editable ? Styles.formButton : [Styles.formButton, Styles.formButtonDisabled];
                 buttons.push(
                     <View style={Styles.formButtonContainer} key={i}>
                         <TouchableOpacity
-                            underlayColor='white'
+                            underlayColor="white"
                             onPress={this.CTAResponseOnPress.bind(this)}
-                            style={Styles.formButton}>
+                            style={buttonStyle}>
                             <Text style={Styles.formButtonText}>
                                 {formData[i].title}
                             </Text>

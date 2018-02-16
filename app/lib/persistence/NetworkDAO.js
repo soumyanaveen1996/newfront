@@ -3,6 +3,7 @@ import { db } from './db';
 import networkSql from './networkSql';
 import moment from 'moment';
 import Utils from '../utils/index';
+import _ from 'lodash';
 
 /**
  * Create the network_queue table if it doesn't exist. Should be called during launch (each time is ok)
@@ -17,8 +18,9 @@ const createNetworkRequestQueueTable = () => new Promise((resolve, reject) => {
     });
 });
 
-const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CONSTANTS.pending, result = '') => new Promise((resolve, reject) => {
-    const nowString = moment().format();
+const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CONSTANTS.pending, result = '', createdAt = undefined, updatedAt = undefined) => new Promise((resolve, reject) => {
+    const createdAtMilliSeconds = moment(createdAt).valueOf();
+    const updatedAtMilliSeconds = moment(updatedAt).valueOf();
     let requestFormatted = '';
     let resultFormatted = '';
     try {
@@ -28,7 +30,7 @@ const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CO
         return reject(error);
     }
 
-    const args = [key, status, requestFormatted, nowString, nowString, resultFormatted];
+    const args = [key, status, requestFormatted, createdAtMilliSeconds, updatedAtMilliSeconds, resultFormatted];
     db.transaction(tx => {
         tx.executeSql(networkSql.insertNetworkOperation, args, function success(tx, res) {
             return resolve(+res.insertId || 0);
@@ -125,11 +127,111 @@ const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) =>
     });
 });
 
+
+const createV2NetworkQueueTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(networkSql.createV2NetworkQueueTable, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const renameToTemp = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('ALTER TABLE network_queue RENAME TO tmp_network_queue;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+})
+
+const dropTempTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('DROP TABLE tmp_network_queue;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+
+const selectAllTempOperations = () => new Promise((resolve, reject) => {
+    const sql = `
+    SELECT
+        id,
+        key,
+        status,
+        request,
+        created_at_date,
+        updated_at_date,
+        result
+    FROM tmp_network_queue
+    `;
+
+    db.transaction(transaction => {
+        transaction.executeSql(sql, [], function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbOperations = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let operations = dbOperations.map((dbOperation) => {
+                return {
+                    id: dbOperation.id,
+                    key: dbOperation.key,
+                    status: dbOperation.status,
+                    request: JSON.parse(dbOperation.request),
+                    created_at_date: moment(dbOperation.created_at_date).toDate(),
+                    updated_at_date: moment(dbOperation.updated_at_date).toDate(),
+                    result: JSON.parse(dbOperation.result),
+                };
+            });
+            return resolve(operations);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const migrateToV2NetworkQueue = () => new Promise((resolve, reject) => {
+    renameToTemp()
+        .then(() => {
+            return createV2NetworkQueueTable();
+        })
+        .then(() => {
+            return selectAllTempOperations();
+        })
+        .then((operations) => {
+            return Promise.all(_.map(operations, (operation) => {
+                return insertNetworkRequest(
+                    operation.key,
+                    operation.request,
+                    operation.status,
+                    operation.result,
+                    operation.created_at_date,
+                    operation.updated_at_date
+                )
+            }))
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((error) => {
+            dropTempTable()
+                .then(() => {
+                    reject(error);
+                })
+        })
+});
+
 export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,
     insertNetworkRequest: insertNetworkRequest,
     updateNetworkRequestStatus: updateNetworkRequestStatus,
     deleteNetworkRequest: deleteNetworkRequest,
     selectFirstPendingNetworkRequest: selectFirstPendingNetworkRequest,
-    selectCompletedNetworkRequests: selectCompletedNetworkRequests
+    selectCompletedNetworkRequests: selectCompletedNetworkRequests,
+    migrateToV2NetworkQueue: migrateToV2NetworkQueue
 };

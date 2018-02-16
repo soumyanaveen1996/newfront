@@ -141,7 +141,7 @@
                 }
             })
             .then((users) => {
-                if(!_.isEmpty(users)) {
+                if(!_.isEmpty(users) && _.isUndefined(state['AddIgnoreMsgShown'])) {
                     let contact = users[0];
                     tell('User ' + contact.name +' would like to connect with you. Add user to contacts?', botContext);
                     let msg = new Message();
@@ -157,6 +157,7 @@
                         style: 0,
                     }], {smartReply: true});
                     tell(msg, botContext);
+                    state['AddIgnoreMsgShown'] = true;
                 }
             });
     };

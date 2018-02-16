@@ -3,6 +3,7 @@ import DeviceStorage from './DeviceStorage';
 export const CONTACT_STORAGE_KEY_CAPABILITY = 'CONTACT_STORAGE_KEY_CAPABILITY';
 import Message from './Message';
 import I18n from '../../config/i18n/i18n';
+import RNContacts from 'react-native-contacts';
 
 /**
  * Expected format per contact:
@@ -117,7 +118,7 @@ export default class Contact {
             });
     });
 
-    
+
     static saveContacts = (contacts) => new Promise((resolve, reject) => {
         DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, contacts)
             .then(() => {
@@ -156,6 +157,28 @@ export default class Contact {
             .catch((err) => {
                 return reject(err);
             });
+    });
+
+    static getAddressBookEmails = () => new Promise((resolve, reject) => {
+        RNContacts.getAllWithoutPhotos((error, contacts) => {
+            if (error === 'denied') {
+                reject(new Error('User rejected permissions'));
+            } else {
+                let emails = _.reduce(contacts, (emailsList, contact) => {
+                    let contactEmails = _.map(contact.emailAddresses, (emailObject) => {
+                        return {
+                            givenName: contact.givenName,
+                            familyName: contact.familyName,
+                            middleName: contact.middleName,
+                            type: emailObject.label,
+                            emailAddress: emailObject.email
+                        }
+                    });
+                    return _.concat(emailsList, contactEmails);
+                }, []);
+                resolve(emails);
+            }
+        })
     });
 
     static asSliderMessage = (contacts, opts) => {

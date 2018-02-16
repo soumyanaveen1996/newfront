@@ -7,6 +7,15 @@ const createConversationTable = `
     );
 `;
 
+const createV2ConversationTable = `
+    CREATE TABLE IF NOT EXISTS conversation (
+        id integer primary key,
+        conversationId text NOT NULL,
+        type text NOT NULL,
+        created_at_date integer NOT NULL
+    );
+`;
+
 const insertConversation = `
     INSERT INTO conversation ( 
         conversationId, 
@@ -53,11 +62,17 @@ const selectConversation = `
     ORDER BY created_at_date desc
 `;
 
+const deleteAllConversations = `
+    DELETE from conversation
+`;
+
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
     selectConversation: selectConversation,
-    updateConversation, updateConversation
+    updateConversation: updateConversation,
+    createV2ConversationTable: createV2ConversationTable,
+    deleteAllConversations: deleteAllConversations
 };

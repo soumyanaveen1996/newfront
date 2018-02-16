@@ -3,6 +3,7 @@ package com.frontm_mobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.actionsheet.ActionSheetPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -40,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FBSDKPackage(),
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),
             new RNGoogleSigninPackage(),

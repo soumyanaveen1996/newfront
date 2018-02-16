@@ -34,12 +34,18 @@
     return Auth.authProviders();
   }
 
+    let updateUserDetails = function(userDetails, botContext) {
+        let Auth = botContext.getCapability('Auth');
+        return Auth.updateUserDetails(userDetails);
+    };
+
   return {
       getAuthUser: getAuthUser,
       isUserLoggedIn: isUserLoggedIn,
       logout: logout,
       login: login,
       getAuthProviders: getAuthProviders,
+      updateUserDetails: updateUserDetails,
       version: '1.0.0'
   };
 })();

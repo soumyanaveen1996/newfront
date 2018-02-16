@@ -23,6 +23,7 @@ export default class Message {
         this._isFavorite = opts.isFavorite;
         // userUUID or the botUUID for tracking in conversations
         this._createdBy = opts.createdBy;
+        this._completed = opts.completed || false;
     }
 
     /**
@@ -195,7 +196,7 @@ export default class Message {
         if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE) {
             let items = this.getMessage();
             let titles = _.map(items, (item) => item.title)
-            return I18n.t('Slider_Response_Message', { lines: titles.join('\n') })
+            return I18n.t('Slider_Response', { lines: titles.join('\n') })
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
             let item = this.getMessage();
             return I18n.t('Slider_Response_Message', { lines: item.title })
@@ -331,6 +332,14 @@ export default class Message {
 
     setFavorite(favorite = false) {
         this._isFavorite = favorite;
+    }
+
+    setCompleted(completed = false) {
+        this._completed = completed;
+    }
+
+    isCompleted() {
+        return this._completed;
     }
 }
 

@@ -8,12 +8,13 @@
     const LOGOUT = 'logout';
     const NO_LOGOUT = 'noLogout';
     const PROFILE_PIC = 'profilePic';
+    const UPDATE_INFO = 'updateInfo';
     const REGISTER_DEVICE = 'registerDevice';
     const DEREGISTER_DEVICE = 'deregisterDevice';
     const ONBOARDING_NLP_ID = 'FMBot';
     const PROFILE_PIC_BUCKET = 'profile-pics';
 
-    var botState = OnboardingStates.userNotLoggedIn;
+    let botState = OnboardingStates.userNotLoggedIn;
     const AUTH_ENTERED_KEY = 'authCodeEntered';
 
     const greeting = function (state, previousMessages, botContext) {
@@ -75,6 +76,10 @@
             {
                  title: 'Add/change profile picture',
                  id: PROFILE_PIC
+            },
+            {
+                title: 'Update personal info',
+                id: UPDATE_INFO
             }
         ];
 
@@ -83,16 +88,23 @@
         .then((deviceInfo) => {
             if(_.isEmpty(deviceInfo) || !deviceInfo.isRegistered) {
                 options.push({
-                    title: 'Register for Push Notifications',
+                    title: 'Activate Push Notifications',
                     id: REGISTER_DEVICE
                 });
             } else {
                 options.push({
-                    title: 'Deregister for Push Notifications',
+                    title: 'Deactivate Push Notifications',
                     id: DEREGISTER_DEVICE
                 });
             }
-            options.push({
+            options.push(
+            {
+                title: 'Featured Partners'
+            },
+            {
+                title: 'Find help',
+            },
+            {
                 title: 'Logout',
                 id: CONFIRM_LOGOUT
             });
@@ -155,13 +167,19 @@
                         });
                 } else if (sliderMsgId === NO_LOGOUT) {
                     tell('You can use this bot to logout anytime', botContext);
-                    logoutAsk(botContext);
                 } else if (sliderMsgId === PROFILE_PIC) {
                     uploadProfilePic(authContext, botContext);
-                }  else if (sliderMsgId === REGISTER_DEVICE) {
+                } else if (sliderMsgId === UPDATE_INFO) {
+                    showUserForm(authContext, botContext);
+                } else if (sliderMsgId === REGISTER_DEVICE) {
                     registerDevice(authContext, botContext);
-                }  else if (sliderMsgId === DEREGISTER_DEVICE) {
+                } else if (sliderMsgId === DEREGISTER_DEVICE) {
                     deregisterDevice(authContext, botContext);
+                } else {
+                    let Message = botContext.getCapability('Message');
+                    let msg = new Message();
+                    msg.stringMessage(message.getMessage()[0].title);
+                    processNlp(msg, state, previousMessages, botContext);
                 }
             }
         } else if (message.getMessageType() === 'string') {
@@ -173,6 +191,8 @@
                         if(msgTxt === 'spaceshipone') {
                             initialLogin(botContext);
                             return loginAsk(botContext);
+                        } else {
+                            return tell('The code you entered is not valid. Please enter a valid authentication code', botContext);
                         }
                     } else {
                         if (botState === OnboardingStates.userNotLoggedIn) {
@@ -183,6 +203,8 @@
                         }
                     }
             });
+        } else if (message.getMessageType() === 'form_response') {
+            updateUserInfo(message, state, previousMessages, botContext);
         }
     };
 
@@ -200,8 +222,7 @@
             return agentGuardService.registerDevice(notificationDeviceInfo, botContext, user);
         })
         .then(() => {
-            tell("Device registered successfully", botContext);
-            logoutAsk(botContext);
+            tell("Push notifications are activated for your device", botContext);
         });
     };
 
@@ -219,8 +240,91 @@
             return agentGuardService.deregisterDevice(notificationDeviceInfo, botContext, user);
         })
         .then(() => {
-            tell("Device deregistered successfully", botContext);
-            logoutAsk(botContext);
+            tell("Push notifications are deactivated for your device", botContext);
+        });
+    };
+
+    const showUserForm = function(authContext, botContext) {
+        authContext.getAuthUser(botContext)
+        .then((usr) => {
+            let Message = botContext.getCapability('Message');
+            let message = new Message();
+            message.formMessage([
+                { id: 1, title: 'Enter your updated details', type: 'text' },
+                { id:2, title: 'Screen Name', value: usr.info.screenName, type: 'text_field', optional: false },
+                { id:3, title: 'First Name', value: usr.info.givenName, type: 'text_field', optional: false },
+                { id:4, title: 'Last Name', value: usr.info.surname, type: 'text_field', optional: false },
+                { id:5, title:'Update', type: 'button' }
+            ], '');
+            tell(message, botContext);
+        });
+    };
+
+    const updateUserInfo = function(msg, state, previousMessages, botContext) {
+        let isFormMsg = (msg.getMessageType() === 'form_response');
+        let domainsSuccessMsg = '';
+        let userDetails = {};
+        const authContext = botContext.getCapability('authContext');
+        authContext.getAuthUser(botContext)
+        .then(function(user) {
+            botContext.wait(true);
+
+            let userInfo = user.info || {};
+            let dbDocument = {};
+
+            if (isFormMsg) {
+                let screenName = msg.getMessage()[1].value || userInfo.screenName;
+                let givenName = msg.getMessage()[2].value || userInfo.givenName;
+                let lastName = msg.getMessage()[3].value || userInfo.surname;
+
+                userDetails.screenName = screenName;
+                userDetails.surname = lastName;
+                userDetails.givenName = givenName;
+
+                dbDocument.givenName = givenName;
+                dbDocument.screenName = screenName;
+                dbDocument.surname = lastName;
+            } else {
+                const _ = botContext.getCapability('Utils').Lodash;
+                let domains = userInfo.domains || [];
+                let msgArr = JSON.parse(msg.getMessage());
+                let company = msgArr[0];
+                domainsSuccessMsg = msgArr[1];
+                if(_.indexOf(domains, company) === -1) {
+                    domains.push(company);
+                }
+
+                userDetails.domains = domains;
+                dbDocument.domains = domains;
+            }
+
+            let params = {
+                collection: "People",
+                documents: [{
+                    queryString: "uuid==" + user.userUUID,
+                    document: dbDocument
+                }]
+            };
+            const agentGuardService = botContext.getCapability('agentGuardService');
+            return agentGuardService.writeData(msg, botContext, user, previousMessages, params);
+        })
+        .then(function() {
+            return authContext.updateUserDetails(userDetails, botContext);
+        })
+        .then(function() {
+            if (isFormMsg) {
+                return tell('Information updated', botContext);
+            } else {
+                if(domainsSuccessMsg) {
+                    return tell(domainsSuccessMsg, botContext);
+                } else {
+                    return tell('You should now be able to access the featured partner\'s bot', botContext);
+                }
+            }
+        })
+        .catch(function(error) {
+            console.error('Error occurred while updating user details: ', error);
+            tell('Error occurred: Unable to update details', botContext);
         });
     };
 
@@ -239,6 +343,7 @@
                 if(media.cancelled) {
                     return null;
                 } else {
+                    botContext.wait(true);
                     const Resource = botContext.getCapability('Resource');
                     const ResourceTypes = botContext.getCapability('ResourceTypes');
                     return Resource.uploadFile(media.base64, media.uri, PROFILE_PIC_BUCKET, user.userUUID, ResourceTypes.Image, user, true);
@@ -250,18 +355,15 @@
                     let message = new Message();
                     message.imageMessage(fileUrl);
                     tell(message, botContext);
-                    logoutAsk(botContext);
                 }
             });
     };
-
 
     const processNlp = function(msg, state, previousMessages, botContext) {
         const authContext = botContext.getCapability('authContext');
         const _ = botContext.getCapability('Utils').Lodash;
 
         botContext.wait(true);
-        let user = {};
         authContext.getAuthUser(botContext)
             .then(function(user) {
                 const agentGuardService = botContext.getCapability('agentGuardService');
@@ -269,30 +371,68 @@
             })
             .then(function(queryResp) {
                 let Message = botContext.getCapability('Message');
-                let message = new Message();
                 let messages = queryResp.messages || [];
+                let action = queryResp.action;
 
                 if(_.isEmpty(messages)) {
                     let strMsg = queryResp.speech || 'Unable to get results for the query';
-                    message.stringMessage(strMsg);
+                    tell(strMsg, botContext);
+                } else if(action === '1_configurationMenu') {
+                    return logoutAsk(botContext);
                 } else {
-                    const replies = messages[0].replies || [];
-                    if(_.isEmpty(replies)) {
-                        message.stringMessage(messages[0].speech);
-                    } else {
-                        message.sliderMessage(replies, {select: false, multiSelect: false});
+                    let type0Msg = _.find(messages, function (element) {
+                        return element.type === 0;
+                    });
+
+                    let type0MsgSpeech = type0Msg.speech;
+
+                    if (_.startsWith(action, '10_Catalogue')) {
+                        let domain = action.replace('10_Catalogue_', '').toLowerCase();
+                        let company = (domain === 'inmarsat') ? 'inmarsat' : 'frontmai';
+                        let Message = botContext.getCapability('Message');
+                        let companyMsg = new Message();
+                        let msgArr = [company, type0MsgSpeech];
+                        companyMsg.stringMessage(JSON.stringify(msgArr));
+                        return updateUserInfo(companyMsg, state, previousMessages, botContext);
+                    }
+
+                    if(type0MsgSpeech) {
+                        tell(type0MsgSpeech, botContext);
+                    }
+
+                    let typ2Or4Msg = _.find(messages, function (element) {
+                        return element.type === 4;
+                    });
+
+                    if(_.isEmpty(typ2Or4Msg)) {
+                        typ2Or4Msg = _.find(messages, function (element) {
+                            return element.type === 2;
+                        });
+                    }
+
+                    if (typ2Or4Msg) {
+                        let messages = _.get(typ2Or4Msg, "payload.messages") || _.get(typ2Or4Msg, "replies") || [];
+                        let sliderMsgList = [];
+                        _.each(messages, function (element) {
+                            sliderMsgList.push({title: element});
+                        });
+                        let message = new Message();
+                        message.sliderMessage(sliderMsgList, {smartReply: true});
+                        tell(message, botContext);
                     }
                 }
-                tell(message, botContext);
-                logoutAsk(botContext);
             });
     };
 
+    let asyncResult = function(result, state, previousMessages, botContext) {
+
+    };
 
     return {
         done: farewell,
         init: greeting,
         next: next,
+        asyncResult: asyncResult,
         version: "1.0.0"
     };
 })();

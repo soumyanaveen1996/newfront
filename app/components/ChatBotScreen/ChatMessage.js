@@ -206,10 +206,10 @@ export default class ChatMessage extends React.Component {
             const component = (
                 <View style={styles.formButtonWrapper} key={i}>
                     <TouchableOpacity
-                        onPress={this.openForm.bind(this, message.getMessage())}
+                        onPress={this.openForm.bind(this, message)}
                         style={styles.formButton}>
                         <Text style={styles.formButtonText}>
-                            {I18n.t('Fill_form')}
+                            {message.isCompleted() ? I18n.t('View_form') : I18n.t('Fill_form')}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -241,14 +241,16 @@ export default class ChatMessage extends React.Component {
         }
     }
 
-    openForm(formMessage) {
-        console.log('Form message : ', formMessage);
-        Actions.form({ formData : formMessage, onFormSubmit: this.onFormSubmit.bind(this)})
+    openForm(message) {
+        const formMessage = message.getMessage();
+        Actions.form({ formData : formMessage,
+            onFormSubmit: this.onFormSubmit.bind(this),
+            editable: !message.isCompleted()})
     }
 
     onFormSubmit(items) {
-        console.log('Form submitted : ', items);
-        this.props.onFormCTAClick(items)
+        let { message } = this.props;
+        this.props.onFormCTAClick(items, message);
     }
 
     htmlResponseOnPress(htmlText) {
@@ -268,11 +270,15 @@ export default class ChatMessage extends React.Component {
         )
     }
 
+    onLayout(event) {
+        this.props.onLayout(event, this.props.message);
+    }
+
     render() {
         let { message } = this.props;
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             return (
-                <View style={styles.sessionStartMessage}>
+                <View onLayout={this.onLayout.bind(this)} style={styles.sessionStartMessage}>
                     <View style={styles.sessionStartHorizontalLine} />
                     <View>
                         <Text style={styles.sessionStartText}>{utils.sessionStartFormattedDate(message.getMessageDate())}</Text>
@@ -282,7 +288,7 @@ export default class ChatMessage extends React.Component {
             )
         } else {
             return (
-                <View>
+                <View onLayout={this.onLayout.bind(this)}>
                     <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
                         {this.image()}
                         {this.renderMessage()}

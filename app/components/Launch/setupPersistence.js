@@ -28,6 +28,27 @@ function oneToTwoMigration() {
         })
 }
 
+function twoToThreeMigration() {
+    return ConversationDAO.migrateToV2Conversations()
+        .then(() => {
+            return DbVersionDAO.updateVersion(3);
+        })
+}
+
+function threeToFourMigration() {
+    return NetworkDAO.migrateToV2NetworkQueue()
+        .then(() => {
+            return DbVersionDAO.updateVersion(4);
+        })
+}
+
+function fourToFiveMigration() {
+    return MessageDAO.addCompletedColumn()
+        .then(() => {
+            return DbVersionDAO.updateVersion(5);
+        })
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -48,6 +69,27 @@ function runMigrations() {
             .then((version) => {
                 if (version === 1) {
                     return oneToTwoMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 2) {
+                    return twoToThreeMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 3) {
+                    return threeToFourMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 4) {
+                    return fourToFiveMigration()
                 } else {
                     return version;
                 }

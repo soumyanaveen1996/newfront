@@ -39,8 +39,25 @@ const insertMessage = `
         message_date,
         read,
         is_favorite,
-        created_by
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        created_by,
+        completed
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+`;
+
+
+const updateMessageById = `
+    UPDATE messages
+    SET bot_key = ?,
+        msg = ?,
+        message_type = ?,
+        options = ?,
+        added_by_bot = ?,
+        message_date = ?,
+        read = ?,
+        is_favorite = ?,
+        created_by = ?,
+        completed = ?
+    WHERE message_id = ?
 `;
 
 const markAsRead = `
@@ -74,7 +91,8 @@ const selectRecentMessages = `
         message_date,
         read,
         is_favorite,
-        created_by
+        created_by,
+        completed
     FROM messages
     WHERE bot_key = ?
     ORDER BY message_date desc
@@ -92,13 +110,31 @@ const selectFavoriteMessages = `
         added_by_bot,
         message_date,
         read,
-        is_favorite
-        created_by
+        is_favorite,
+        created_by,
+        completed
     FROM messages
     WHERE is_favorite = 1
     ORDER BY message_date desc
     LIMIT ?
     OFFSET ?;
+`;
+
+const selectMessageById = `
+    SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by,
+        completed
+    FROM messages
+    WHERE message_id = ?
 `;
 
 const deleteMessage = 'TBD';
@@ -117,6 +153,14 @@ const moveMessagesToNewBotKey = `
     UPDATE messages SET bot_key = ? where bot_key = ?;
 `;
 
+const deleteBotMessages = `
+    DELETE FROM messages where bot_key = ?;
+`;
+
+const addCompletedColumn =`
+    ALTER TABLE messages ADD COLUMN completed INTEGER NOT NULL DEFAULT 0
+`;
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -131,4 +175,8 @@ export default {
     markAsUnFavorite: markAsUnFavorite,
     markAsFavorite: markAsFavorite,
     moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages,
+    updateMessageById: updateMessageById,
+    addCompletedColumn: addCompletedColumn,
+    selectMessageById: selectMessageById,
 };

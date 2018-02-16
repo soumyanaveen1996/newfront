@@ -7,6 +7,7 @@ import moment from 'moment';
 import axios from 'axios';
 import Auth from '../capability/Auth';
 import utils from '../../lib/utils';
+import RNFS from 'react-native-fs';
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.DocumentDir + '/image-cache';
 const CACHE_SIZE = 200 * 1024 * 1024; // 200 MB
@@ -243,5 +244,11 @@ export default class ImageCacheManager {
      */
     notifyImageFromCache(uri) {
         this.notify(uri, 'imageFromCache');
+    }
+
+    async storeIncache(uri, imagePath) {
+        await this.removeFromCache(uri);
+        const path = this.getPath(uri);
+        await RNFS.copyFile(imagePath, path);
     }
 }

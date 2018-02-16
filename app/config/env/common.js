@@ -21,8 +21,8 @@ const config = {
                 scopes: ['profile', 'email']
             },
             facebook: {
-                appId: '269375866878799',
-                permissions: ['public_profile', 'email']
+                appId: '150576769074284',
+                permissions: ['email', 'public_profile'] // Keep it in sorted order
             }
         },
         cognito: {
@@ -49,7 +49,7 @@ const config = {
         botDependenciesDirName: 'bot_dependencies'
     },
     network: {
-        pollingInterval: 5000,
+        pollingInterval: 60000,
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',

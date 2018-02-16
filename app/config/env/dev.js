@@ -4,7 +4,7 @@ import _ from 'lodash';
 const S3_HOST = 's3.amazonaws.com';
 const CATALOG_HOST = 'mq2bsx6jae.execute-api.us-east-1.amazonaws.com';
 const QUEUE_HOST = 'oc8208kdrk.execute-api.us-east-1.amazonaws.com';
-const PROXY_HOST = 'dev.frontm.ai';
+const PROXY_HOST = 'elbdev.frontm.ai';
 
 // Overwrite any properties for dev. 
 const devConfig = {

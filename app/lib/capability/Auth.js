@@ -5,12 +5,13 @@ import { User, DefaultUser, isDefaultUser } from '../../lib/user';
 import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
+import { ConversationDAO } from '../../lib/persistence';
 
 const USER_SESSION = 'userSession';
 
 export const AUTH_PROVIDERS = {
     google: 'google',
-    //facebook: 'facebook'
+    facebook: 'facebook'
 };
 
 /**
@@ -29,11 +30,17 @@ export default class Auth {
         if (!AUTH_PROVIDERS[provider]) {
             return reject('Invalid provider. Not supported: ', provider);
         }
-        if (provider !== AUTH_PROVIDERS.google) {
-            return reject('Not supported for now');
+        if (provider === AUTH_PROVIDERS.google) {
+            return resolve(Auth.loginWithGoogle(conversationId, botName));
+        } else if (provider === AUTH_PROVIDERS.facebook) {
+            return resolve(Auth.loginWithFacebook(conversationId, botName));
+        } else {
+            return reject('Not supported right now: ', provider);
         }
-        let currentUser = null;
+    });
 
+    static loginWithGoogle = (conversationId, botName) => new Promise((resolve, reject) => {
+        let currentUser = null;
         Auth.getUser()
             .then((user) => {
                 currentUser = user;
@@ -72,12 +79,56 @@ export default class Auth {
             });
     });
 
+    static loginWithFacebook = (conversationId, botName) => new Promise((resolve, reject) => {
+        let currentUser = null;
+        Auth.getUser()
+            .then((user) => {
+                currentUser = user;
+                return FrontmAuth.loginWithFacebook(conversationId, botName)
+            })
+            .then((result) => {
+                if (result && result.type === 'success') {
+                    const creds = result.credentials.facebook;
+                    currentUser = new User({
+                        userUUID: creds.userUUID
+                    });
+                    currentUser.aws = {
+                        identityId: creds.identityId,
+                        accessKeyId: creds.accessKeyId,
+                        secretAccessKey: creds.secretAccessKey,
+                        sessionToken: creds.sessionToken
+                    };
+                    currentUser.provider = {
+                        name: AUTH_PROVIDERS.facebook,
+                        refreshToken: creds.refreshToken,
+                        lastRefreshTime: Date.now()
+                    };
+                    currentUser.info = creds.info;
+
+                    Auth.saveUser(currentUser)
+                        .then((user) => {
+                            EventEmitter.emit(AuthEvents.userLoggedIn, user);
+                            resolve(user);
+                        })
+                        .catch((error) => {
+                            reject('Errors saving user session', error);
+                        });
+                }
+            }).catch((error) => {
+                reject('Error with authenticating the user', error);
+            });
+    });
+
+
     /**
 	 * Invalidate the session for now
 	 * @return {Promise}
 	 */
     static logout = () => new Promise((resolve, reject) => {
         DeviceStorage.delete(USER_SESSION)
+            .then(() => {
+                return ConversationDAO.deleteAllConversations();
+            })
             .then(() => {
                 EventEmitter.emit(AuthEvents.userLoggedOut);
                 // Logging in as Default user for Onboarding bot
@@ -125,6 +176,30 @@ export default class Auth {
                 }
             });
     });
+
+
+    /**
+     * Method to update user details like screenName, givenName, surName.
+     * @param {obj} details Method expects a object with screenName, givenName or surName.
+     *  if none of those keys exist, user is not updated.
+     *
+     * @return {Promise} user
+	 */
+    static updateUserDetails = (details) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    user.info.screenName = details.screenName || user.info.screenName;
+                    user.info.surname = details.surname || user.info.surname;
+                    user.info.givenName = details.givenName || user.info.givenName;
+                    user.info.name = user.info.givenName + ' ' + user.info.surname;
+                    return resolve(Auth.saveUser(user));
+                } else {
+                    reject('No valid user session');
+                }
+            })
+    })
+
 
     /**
 	 * Invalidate the session for now
