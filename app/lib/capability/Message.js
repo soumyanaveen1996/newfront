@@ -196,7 +196,7 @@ export default class Message {
         if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE) {
             let items = this.getMessage();
             let titles = _.map(items, (item) => item.title)
-            return I18n.t('Slider_Response_Message', { lines: titles.join('\n') })
+            return I18n.t('Slider_Response', { lines: titles.join('\n') })
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
             let item = this.getMessage();
             return I18n.t('Slider_Response_Message', { lines: item.title })

@@ -37,6 +37,7 @@ I18n.translations = {
         Image_Save_Failed: 'Saving the image to the Photo Album failed.',
         Image_Save_Success: 'Saved the image to the Photos Album',
         Slider_Response_Message: 'You selected : \n{{lines}}',
+        Slider_Response: '{{lines}}',
         SNR_Chart_title: 'Signal to Noise ratio',
         Conversations: 'Chats',
         Bot_uninstalled: 'Bot uninstalled',

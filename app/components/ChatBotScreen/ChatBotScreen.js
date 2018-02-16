@@ -498,7 +498,6 @@ export default class ChatBotScreen extends React.Component {
 
     onChatListLayout = (event) => {
         const { height } = event.nativeEvent.layout;
-        console.log('On chat layout changed : ', height);
         this.chatListHeight = height;
         //this.chatList.scrollToBottom({animated : true});
     }
@@ -702,7 +701,7 @@ export default class ChatBotScreen extends React.Component {
                     .then((context) => {
                         this.conversationContext = context;
                         let message = new Message();
-                        message.stringMessage(I18n.t('Slider_Response_Message', { lines: names.join('\n') }));
+                        message.stringMessage(I18n.t('Slider_Response', { lines: names.join('\n') }));
                         message.setCreatedBy(this.getUserUUID());
                         return this.sendMessage(message);
                     });
@@ -743,7 +742,6 @@ export default class ChatBotScreen extends React.Component {
 
 
     onChatEndReached(info) {
-        console.log('On Chat End reached : ', info);
         if (this.scrollToBottom) {
             this.scrollToBottomIfNeeded();
         } else {
