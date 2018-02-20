@@ -84,6 +84,16 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 20,
     },
+    formInputContainer: {
+        marginVertical: 5,
+        height: 60,
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    formInputLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+    },
     formTextField: {
         padding: 10,
         borderWidth: 1,

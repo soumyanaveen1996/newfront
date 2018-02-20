@@ -131,7 +131,8 @@ export default class FormPopup extends React.Component {
             } else if (formData[i].type === 'text_field') {
                 this.formTextArr[i] = formData[i].value;
                 buttons.push(
-                    <View style={Styles.formElementsContainer} key={i}>
+                    <View style={Styles.formInputContainer} key={i}>
+                        <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
                         <FormTextInput
                             editable={this.props.editable}
                             formData={formData[i]}
