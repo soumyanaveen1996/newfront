@@ -8,9 +8,21 @@ const DEFAULT_WIDGET_SIZE = { width: DEVICE_WIDTH - 30, height: DEVICE_HEIGHT - 
 
 const Styles = StyleSheet.create({
     containerStyle: {
-        flex: 1,
-        backgroundColor: GlobalColors.modalBackground,
-        flexDirection: 'column',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.8)',
+    },
+    formContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: GlobalColors.white,
+        paddingBottom: 5,
+        maxHeight: 250,
     },
     headerContainer: {
         height: 58,
@@ -45,15 +57,6 @@ const Styles = StyleSheet.create({
     formScrollView: {
         backgroundColor: GlobalColors.white,
         paddingBottom: 20,
-    },
-    formContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: GlobalColors.white,
-        paddingBottom: 20,
-        maxHeight: 250,
     },
     formTitleContainer: {
         padding: 20,
