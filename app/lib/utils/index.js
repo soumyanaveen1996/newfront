@@ -22,6 +22,22 @@ export function formattedDate(date) {
     }
 }
 
+export function botLogoUrl(logoUrl) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoUrl}`
+}
+
+function logoName(name) {
+    return _.toLower(name).replace(' ', '_');
+}
+
+export function categoryLogoUrl(categoryName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(categoryName)}.png`
+}
+
+export function developerLogoUrl(developerName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(developerName)}.png`
+}
+
 export function userProfileUrl(userId) {
     return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
 }
@@ -237,4 +253,7 @@ export default {
     userProfileUrl,
     isiPhoneX,
     isEmail,
+    developerLogoUrl,
+    categoryLogoUrl,
+    botLogoUrl,
 }

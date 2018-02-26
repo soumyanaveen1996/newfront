@@ -32,7 +32,7 @@ export default class SystemBot {
     });
 
     static getDefaultBots = () => new Promise((resolve, reject) => {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.OnboardingBot)
+        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES['onboarding-bot'])
             .then((bot) => {
                 resolve([bot]);
             });
@@ -51,15 +51,15 @@ export default class SystemBot {
 }
 
 export const SYSTEM_BOT_MANIFEST_NAMES = {
-    IMChat: 'IMChat',
-    OnboardingBot: 'OnboardingBot',
-    ContactsBot: 'ContactsBot'
+    'im-bot': 'im-bot',
+    'onboarding-bot': 'onboarding-bot',
+    'contacts-bot': 'contacts-bot'
 };
 
 // This is initial configuration - every release make sure the versions are updated
 // The app still picks the latest from the server once the user visits the botstore once
 export const SYSTEM_BOT_MANIFEST = {
-    IMChat: {
+    'im-bot': {
         'name': 'IMBot',
         'slug': 'im-bot',
         'url': 'botfarm/imBot.js',
@@ -87,7 +87,7 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         }
     },
-    OnboardingBot: {
+    'onboarding-bot': {
         'name': 'Onboarding Bot',
         'slug': 'onboarding-bot',
         'url': 'botfarm/onboardingBot.js',
@@ -110,7 +110,7 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         }
     },
-    ContactsBot: {
+    'contacts-bot': {
         'name': 'Address Book Management',
         'slug': 'contacts-bot',
         'url': 'botfarm/contactsBot.js',

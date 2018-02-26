@@ -60,7 +60,7 @@ const config = {
         host: PROXY_HOST,
         protocol: 'http://',
         queuePath: '/queueLambda',
-        catalogPath: '/catalogLambda',
+        catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
         conversationPath: '/conversation'

@@ -29,7 +29,7 @@ const devConfig = {
         host: PROXY_HOST,
         protocol: 'https://',
         queuePath: '/queueLambda',
-        catalogPath: '/catalogLambda',
+        catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
         conversationPath: '/conversation'
