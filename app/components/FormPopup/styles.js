@@ -90,9 +90,18 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 20,
     },
+    titleContainer: {
+        flex: 1,
+        flexDirection: 'row'
+    },
     formInputLabel: {
         fontSize: 14,
         fontWeight: '600',
+    },
+    formErrorLabel: {
+        fontSize: 12,
+        fontWeight: '300',
+        color: GlobalColors.red,
     },
     formTextField: {
         padding: 10,

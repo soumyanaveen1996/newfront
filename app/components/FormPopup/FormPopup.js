@@ -44,12 +44,14 @@ class FormTextInput extends React.Component {
     render() {
         const { formData, editable } = this.props;
         return <TextInput
+            numberOfLines={this.props.numberOfLines}
             editable={editable}
             onChangeText={this.onChangeText.bind(this)}
             style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
             placeholder={formData.title}
             defaultValue={this.value}
             containerStyle={Styles.noBorder}
+            secureTextEntry={this.props.secureTextEntry}
         />;
     }
 }
@@ -59,10 +61,10 @@ export default class FormPopup extends React.Component {
     constructor(props) {
         super(props);
         this.formTextArr = []
+        this.errorMessages = []
     }
 
     onClose() {
-        console.log('close');
         Keyboard.dismiss();
         if (this.props.onClose) {
             this.props.onClose();
@@ -88,8 +90,20 @@ export default class FormPopup extends React.Component {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
             if (formData[i].optional === false && _.trim(this.formTextArr[i]) === '') {
+                this.errorMessages[i] = I18n.t('Field_mandatory');
                 return false;
             }
+
+            if (formData[i].type === 'number_field' && isNaN(+this.formTextArr[i])) {
+                this.errorMessages[i] = I18n.t('Not_a_number');
+                return false;
+            }
+
+            if (formData[i].type === 'password_field' && _.trim(this.formTextArr[i]) === '') {
+                this.errorMessages[i] = I18n.t('Password_not_empty')
+                return false;
+            }
+            this.errorMessages[i] = undefined;
         }
         return true;
     }
@@ -128,12 +142,30 @@ export default class FormPopup extends React.Component {
                         </TouchableOpacity>
                     </View>
                 )
-            } else if (formData[i].type === 'text_field') {
+            } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field') {
+                this.formTextArr[i] = formData[i].value;
+                buttons.push(
+                    <View style={Styles.formInputContainer} key={i}>
+                        <View style={Styles.titleContainer}>
+                            <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                            <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
+                        </View>
+                        <FormTextInput
+                            editable={this.props.editable}
+                            formData={formData[i]}
+                            onChangeText={this.onChangeText.bind(this, i)}
+                            containerStyle={Styles.noBorder}
+                            secureTextEntry={formData[i].type === 'password_field'}
+                        />
+                    </View>
+                )
+            } else if (formData[i].type === 'text_area') {
                 this.formTextArr[i] = formData[i].value;
                 buttons.push(
                     <View style={Styles.formInputContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
                         <FormTextInput
+                            numberOfLines={3}
                             editable={this.props.editable}
                             formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}

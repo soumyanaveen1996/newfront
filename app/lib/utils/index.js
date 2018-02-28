@@ -26,6 +26,10 @@ export function botLogoUrl(logoUrl) {
     return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoUrl}`
 }
 
+export function channelLogoUrl(channelLogoName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${channelLogoName}`
+}
+
 function logoName(name) {
     return _.toLower(name).replace(' ', '_');
 }
@@ -256,4 +260,5 @@ export default {
     developerLogoUrl,
     categoryLogoUrl,
     botLogoUrl,
+    channelLogoUrl
 }

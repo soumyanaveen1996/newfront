@@ -7,13 +7,14 @@ import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
+import { DataManager } from '../../lib/DataManager';
 import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import DeviceStorage from '../../lib/capability/DeviceStorage';
+import { DeviceStorage, Contact } from '../../lib/capability';
 
 const VERSION = 5; // Corresponding to 2.3.0. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -26,12 +27,14 @@ export default class Splash extends React.Component {
     }
 
     async componentDidMount() {
+
         // Override logging in prod builds
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         console.log('Overrode console object. Now starting initialization');
 
+        DataManager.init();
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
@@ -119,7 +122,7 @@ export default class Splash extends React.Component {
     }
 
     showOnboardingScreen = () => {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.OnboardingBot)
+        SystemBot.get(SystemBot.onboardingBotManifestName)
             .then((onboardingBot) => {
                 //Actions.lightbox({ type: ActionConst.REPLACE, duration: 0 });
                 Actions.onboarding({ bot: onboardingBot, type: ActionConst.REPLACE, onBack: this.showMainScreen.bind(this), duration: 0 });

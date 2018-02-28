@@ -37,6 +37,7 @@ export const Icons = {
     cameraFlashOutline: icon('ios-flash-outline', 'ionicon', 32, Colors.white, Colors.transparent, '500'),
     cameraFlip: icon('ios-reverse-camera', 'ionicon', 32, Colors.white, Colors.transparent, '500'),
     videoRecordCircle: icon('circle', 'font-awesome', 46, '#F00'),
+    delete: icon('md-trash', 'ionicon', 32, 'rgb(198, 198, 198)'),
 };
 
 export default Icons;

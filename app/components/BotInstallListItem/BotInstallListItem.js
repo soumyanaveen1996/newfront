@@ -1,7 +1,6 @@
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View, Text, Image, TouchableHighlight } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View, Text, Image } from 'react-native';
 import styles from './styles';
-import images from '../../config/images';
 import Bot from '../../lib/bot/index';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';

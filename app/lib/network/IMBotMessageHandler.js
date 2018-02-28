@@ -3,7 +3,7 @@ import { Promise, Contact, Network, ConversationContext } from '../capability';
 import { Conversation } from '../conversation';
 import { BotContext } from '../botcontext';
 import config from '../../config/config';
-import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 
 /**
  * Guarantees ordering - first in first out
@@ -126,7 +126,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
 const getConversationData = (conversationId, createdBy, user) => {
     let options = {
         'method': 'get',
-        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SYSTEM_BOT_MANIFEST.IMChat.id + '&createdBy=' + createdBy,
+        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SystemBot.imBot.id + '&createdBy=' + createdBy,
         'headers': getHeaders(user)
     };
 

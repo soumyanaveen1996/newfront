@@ -16,13 +16,16 @@ const devConfig = {
         binaryS3Bucket: 'frontm-contentdelivery-mobilehub-1030065648/conversationsFiles',
         catalogHost: CATALOG_HOST,
         catalogPath: '/Development/items',
-        catalogServiceApi: 'execute-api'
+        catalogServiceApi: 'execute-api',
     },
     network: {
         queueProtocol: 'https://',
         queueHost: QUEUE_HOST,
         queuePath: '/Development/items',
-        queueServiceApi: 'execute-api'
+        queueServiceApi: 'execute-api',
+        contactsPath: '/contacts',
+        channelsPath: '/channels',
+        channelUnsubscribePath: '/unsubChannel'
     },
     proxy: {
         enabled: true,
@@ -32,7 +35,7 @@ const devConfig = {
         catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
-        conversationPath: '/conversation'
+        conversationPath: '/conversation',
     }
 }
 

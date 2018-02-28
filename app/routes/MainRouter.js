@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
-import { Scene, Router, Lightbox, Modal } from 'react-native-router-flux';
+import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import { MainScreen, ConversationList } from '../components/MainScreen';
 import { BotChat, PeopleChat, FavoriteMessages, VideoPlayer } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
@@ -20,6 +20,7 @@ import { SNRChart } from  '../components/SNRChart';
 import { LocationPicker } from  '../components/LocationPicker';
 import { VideoRecorder } from  '../components/VideoRecorder';
 import { FormPopup } from  '../components/FormPopup';
+import { ChannelsList } from '../components/ChannelsList';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import Config from './config';
 
@@ -51,6 +52,7 @@ const MainRouter = () => {
                             <Scene key={ROUTER_SCENE_KEYS.conversations} component={ConversationList} title={I18n.t('Conversations')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.installedBots} headerStyle={Config.navBar.borderlessHeaderStyle} component={InstalledBotsScreen} title={I18n.t('Installed_bots')} />
                             <Scene key={ROUTER_SCENE_KEYS.imageViewer} component={ImageViewer} />
+                            <Scene key={ROUTER_SCENE_KEYS.channelsList} component={ChannelsList} title={I18n.t('Channels')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.SNRChart} component={SNRChart}/>
                         </Scene>
                         <Scene key={ROUTER_SCENE_KEYS.botFilter} component={BotFilter} hideNavBar/>

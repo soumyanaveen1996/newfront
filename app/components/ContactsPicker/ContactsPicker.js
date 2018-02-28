@@ -11,7 +11,7 @@ import ContactsPickerItemSeparator from './ContactsPickerItemSeparator';
 import { SECTION_HEADER_HEIGHT, searchBarConfig, addButtonConfig } from './config';
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 
 export default class ContactsPicker extends React.Component {
 
@@ -37,7 +37,7 @@ export default class ContactsPicker extends React.Component {
     }
 
     handleAddContact = () => {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.ContactsBot)
+        SystemBot.get(SystemBot.contactsBotManifestName)
             .then((contactBot) => {
                 Actions.botChat({ bot: contactBot, onBack: this.onBack });
             });
@@ -110,7 +110,7 @@ export default class ContactsPicker extends React.Component {
                 uuid: contact.id,
                 name: contact.screenName
             }];
-            SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.IMChat)
+            SystemBot.get(SystemBot.imBotManifestName)
                 .then((imBot) => {
                     Actions.peopleChat({ bot: imBot, participants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
                 });
@@ -156,7 +156,7 @@ export default class ContactsPicker extends React.Component {
         });
 
         if (participants.length > 0) {
-            SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.IMChat)
+            SystemBot.get(SystemBot.imBotManifestName)
                 .then((imBot) => {
                     Actions.peopleChat({ bot: imBot, participants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
                 });

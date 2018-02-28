@@ -53,7 +53,10 @@ const config = {
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',
-        queueServiceApi: 'execute-api'
+        queueServiceApi: 'execute-api',
+        contactsPath: '/contacts',
+        channelsPath: '/channels',
+        channelUnsubscribePath: '/unsubChannel'
     },
     proxy: {
         enabled: false,
