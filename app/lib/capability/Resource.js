@@ -18,7 +18,7 @@ export default class Resource {
      * @param filenameWithoutExtension object name in the bucket without extension
      * @param resourceType Either 'image', 'video', or 'audio'
      * @param user Authenticated user
-     * 
+     *
      * @return S3 URL of the file uploaded
      */
     static async uploadFile(base64Data, fileUri, bucketName, filenameWithoutExtension, resourceType, user = undefined, clearCache = false) {

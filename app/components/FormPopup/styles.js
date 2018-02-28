@@ -1,10 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
-// The popup widget will be created with the following default size.
-// The 30 and 150, were chosen approximately from the design provided.
-const DEFAULT_WIDGET_SIZE = { width: DEVICE_WIDTH - 30, height: DEVICE_HEIGHT - 150 };
 
 const Styles = StyleSheet.create({
     containerStyle: {

@@ -140,7 +140,7 @@ export default class Contact {
         Contact.getAddedContacts()
             .then(function (cts) {
                 cts = cts || [];
-                const filtered = _.filter(cts, (contact) => { 
+                const filtered = _.filter(cts, (contact) => {
                     return contact.ignored
                 });
                 return resolve(filtered);

@@ -22,7 +22,6 @@ const ROUTER_SCENE_KEYS = {
     'conversations': 'conversations',
     'favoriteMessage' : 'favoriteMessage',
     'locationPicker': 'locationPicker',
-    'videoPlayer' : 'videoPlayer',
     'onboarding': 'onboarding',
     'videoRecorder': 'videoRecorder',
     'channelsList': 'channelsList'

@@ -565,7 +565,7 @@ export default class ChatBotScreen extends React.Component {
         message.stringMessage(messageStr);
 
         return self.sendMessage(message);
-    };
+    }
 
     getUserUUID = () => {
         return this.user.userUUID;

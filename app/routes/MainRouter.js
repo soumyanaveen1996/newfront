@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import { MainScreen, ConversationList } from '../components/MainScreen';
-import { BotChat, PeopleChat, FavoriteMessages, VideoPlayer } from '../components/ChatBotScreen';
+import { BotChat, PeopleChat, FavoriteMessages } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
 import { ContactsPicker } from '../components/ContactsPicker';
 import { Slider } from '../components/Slider';
@@ -45,7 +45,6 @@ const MainRouter = () => {
                             <Scene key={ROUTER_SCENE_KEYS.botStore} component = {BotStoreScreen} title={I18n.t('Bot_Store')}/>
                             <Scene key={ROUTER_SCENE_KEYS.botList} component = {BotListScreen} title={I18n.t('Bots')}/>
                             <Scene key={ROUTER_SCENE_KEYS.favoriteMessage} component = {FavoriteMessages} title={I18n.t('Favorites')}/>
-                            <Scene key={ROUTER_SCENE_KEYS.videoPlayer} component = {VideoPlayer} title={I18n.t('Chat_Input_Video')}/>
                             <Scene key={ROUTER_SCENE_KEYS.videoRecorder} component = {VideoRecorder} hideNavBar/>
                             <Scene key={ROUTER_SCENE_KEYS.barCodeScanner} component={BarcodeScanner} hideNavBar/>
                             <Scene key={ROUTER_SCENE_KEYS.addContacts} headerStyle={Config.navBar.borderlessHeaderStyle} component={ContactsPicker} title={I18n.t('My_Contacts')} back/>

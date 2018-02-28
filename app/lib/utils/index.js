@@ -232,7 +232,7 @@ export function isEmail(email) {
     }
 
     // Further checking of some things regex can't handle
-    var parts = email.split("@");
+    var parts = email.split('@');
     if (parts[0].length > 64) {
         return false;
     }

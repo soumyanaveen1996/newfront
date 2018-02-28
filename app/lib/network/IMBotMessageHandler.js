@@ -7,7 +7,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 
 /**
  * Guarantees ordering - first in first out
- * @param {object} message 
+ * @param {object} message
  * @param {object} user
  */
 const handleMessageQueue = (messageQ, user) => {
@@ -33,7 +33,7 @@ const handleMessageQueue = (messageQ, user) => {
 
 /**
  * Check if the message has to be handled - single message. Queue calls this
- * @param {object} message 
+ * @param {object} message
  * @param {object} user
  */
 const handle = (message, user) => new Promise((resolve, reject) => {
@@ -42,9 +42,9 @@ const handle = (message, user) => new Promise((resolve, reject) => {
     // 1. First check if the conversation Exists - if it does, complete Queue call
     // 2. If the conversation doesn't exist then:
     //  - Get the participants and the creator of this message
-    //  - Check whether the creator of the message is a contact for this user 
+    //  - Check whether the creator of the message is a contact for this user
     //  - If the creator is NOT a contact for this user - then ignore the message and return
-    //  - If the creator is indeed a contact this means that this is the first time the user is getting pinged about this message. 
+    //  - If the creator is indeed a contact this means that this is the first time the user is getting pinged about this message.
     //  - then, create a new conversation context with the participants, along with the conversationId as the botkey
     //  - then complete Queue call
     Conversation.getIMConversation(botKey)
@@ -63,9 +63,9 @@ const handle = (message, user) => new Promise((resolve, reject) => {
 
 // 2. If the conversation doesn't exist then:
 //  - Get the participants ( are array of {name, uuid} ) and the creator ({name, uuid}) of this message
-//  - Check whether the creator of the message is a contact for this user 
+//  - Check whether the creator of the message is a contact for this user
 //  - If the creator is a ignored contact for this user - then ignore the message and return
-//  - If the creator is not a contact in added contacts, this means that this is the first time the user is getting pinged about this message. 
+//  - If the creator is not a contact in added contacts, this means that this is the first time the user is getting pinged about this message.
 //  - then, create a new conversation context with the participants, along with the conversationId as the botkey
 //  - then complete Queue call
 const handleNewConversation = (message, user) => new Promise((resolve, reject) => {

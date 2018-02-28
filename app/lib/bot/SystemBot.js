@@ -115,7 +115,7 @@ export const SYSTEM_BOT_MANIFEST = {
                 remote: true,
                 url: 'botfarm/rc/agentGuardService.js'
             }
-        } 
+        }
     }
 };
 
