@@ -6,6 +6,7 @@ import { Bot as DceBot } from '../dce';
 import { Utils, Network, Auth, Promise } from '../capability';
 import { NetworkError } from '../network';
 import SystemBot from './SystemBot';
+import {MessageHandler} from "../message";
 
 class Bot extends events.EventEmitter {
 
@@ -76,6 +77,20 @@ class Bot extends events.EventEmitter {
     static async getTimeLineBots() {
         return Bot.getInstalledBots()
     }
+
+    static async unInstallBots() {
+        try {
+            const bots = await Bot.getInstalledBots();
+            _.each( bots , async (bot) => {
+                await MessageHandler.deleteBotMessages(bot.id);
+                const dceBot = dce.bot(bot);
+                await Bot.delete(dceBot);
+            });
+        } catch (e) {
+            console.log('Error occurred while uninstalling bots !:', e);
+            throw e;
+        }
+    };
 
     static async getCatalog() {
         try {
