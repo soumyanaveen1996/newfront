@@ -6,6 +6,7 @@ import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
 import { ConversationDAO } from '../../lib/persistence';
+import Bot from '../../lib/bot/index';
 
 const USER_SESSION = 'userSession';
 
@@ -126,6 +127,9 @@ export default class Auth {
 	 */
     static logout = () => new Promise((resolve, reject) => {
         DeviceStorage.delete(USER_SESSION)
+            .then(() => {
+                return Bot.unInstallBots();
+            })
             .then(() => {
                 return ConversationDAO.deleteAllConversations();
             })
