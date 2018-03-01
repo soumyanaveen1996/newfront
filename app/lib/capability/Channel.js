@@ -29,7 +29,7 @@ export default class Channel {
                     let domainChannels = _.map(channelsGroup, (value, key) => {
                         return {
                             domain: key,
-                            channels: _.map(value, 'channelName'),
+                            channels: _.map(value, 'name'),
                         }
                     });
                     let options = {
@@ -59,7 +59,7 @@ export default class Channel {
                     reject(new ChannelError(+err));
                 } else {
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.channelLogo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.name, channel.description, channel.logo, channel.domain);
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -172,7 +172,7 @@ export default class Channel {
                 if (response.data && response.data.content) {
                     let channels = response.data.content;
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.channelLogo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.name, channel.description, channel.logo, channel.domain);
                     })
                     return Promise.all(channelInsertPromises);
                 }

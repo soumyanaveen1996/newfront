@@ -2,7 +2,7 @@ const createChannelsTable = `
     CREATE TABLE IF NOT EXISTS channel ( 
         id integer primary key, 
         name text NOT NULL, 
-        description text NOT NULL,
+        desc text NOT NULL,
         logo text NOT NULL,
         domain text NOT NULL,
         conversationId text
@@ -12,7 +12,7 @@ const createChannelsTable = `
 const insertChannel = `
     INSERT INTO channel ( 
         name, 
-        description,
+        desc,
         logo,
         domain
     ) VALUES (?, ?, ?, ?);
@@ -38,7 +38,7 @@ const selectChannels = `
         id,
         conversationId,
         name,
-        description,
+        desc,
         logo,
         domain
     FROM channel
@@ -49,7 +49,7 @@ const selectChannel = `
         id,
         conversationId,
         name,
-        description,
+        desc,
         logo,
         domain
     FROM channel
@@ -61,7 +61,7 @@ const selectChannelByNameAndDomain = `
         id,
         conversationId,
         name,
-        description,
+        desc,
         logo,
         domain
     FROM channel

@@ -73,7 +73,7 @@ const channelDataFromDbResult = (dbResult) => {
     return {
         id: dbResult.id,
         name: dbResult.name,
-        description: dbResult.description,
+        desc: dbResult.desc,
         logo: dbResult.logo,
         conversationId: dbResult.conversationId,
         domain: dbResult.domain
