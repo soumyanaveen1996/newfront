@@ -57,17 +57,24 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
+    onItemPressed() {
+        console.log('On Item pressed')
+        if (this.props.onChannelTapped) {
+            this.props.onChannelTapped(this.props.channel);
+        }
+    }
+
     render() {
         const channel = this.props.channel;
         return (
-            <View style={styles.container}>
+            <TouchableOpacity style={styles.container} onPress={this.onItemPressed.bind(this)}>
                 <Image source={{ uri: Utils.channelLogoUrl(channel.logo) } } style={ styles.image } resizeMode="contain"/>
                 <View style={styles.textContainer}>
                     <Text style={ styles.title } >{ channel.name }</Text>
-                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.description}</Text>
+                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.desc}</Text>
                 </View>
                 { this.renderRightArea() }
-            </View>
+            </TouchableOpacity>
         );
     }
 }

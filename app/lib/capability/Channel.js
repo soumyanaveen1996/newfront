@@ -58,8 +58,9 @@ export default class Channel {
                 if (err !== '0' && err !== 0) {
                     reject(new ChannelError(+err));
                 } else {
+                    console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.name, channel.description, channel.logo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.name, channel.desc, channel.logo, channel.domain);
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -171,8 +172,9 @@ export default class Channel {
             .then((response) => {
                 if (response.data && response.data.content) {
                     let channels = response.data.content;
+                    console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.name, channel.description, channel.logo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.name, channel.desc, channel.logo, channel.domain);
                     })
                     return Promise.all(channelInsertPromises);
                 }

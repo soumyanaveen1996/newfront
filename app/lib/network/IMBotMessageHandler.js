@@ -4,6 +4,7 @@ import { Conversation } from '../conversation';
 import { BotContext } from '../botcontext';
 import config from '../../config/config';
 import SystemBot from '../../lib/bot/SystemBot';
+import ChannelDAO from '../persistence/ChannelDAO';
 
 /**
  * Guarantees ordering - first in first out
@@ -61,39 +62,18 @@ const handle = (message, user) => new Promise((resolve, reject) => {
         });
 });
 
-// 2. If the conversation doesn't exist then:
-//  - Get the participants ( are array of {name, uuid} ) and the creator ({name, uuid}) of this message
-//  - Check whether the creator of the message is a contact for this user
-//  - If the creator is a ignored contact for this user - then ignore the message and return
-//  - If the creator is not a contact in added contacts, this means that this is the first time the user is getting pinged about this message.
-//  - then, create a new conversation context with the participants, along with the conversationId as the botkey
-//  - then complete Queue call
-const handleNewConversation = (message, user) => new Promise((resolve, reject) => {
-    const botKey = message.conversation;
+const handleNewIMConversation = (conversationData, message, user, botContext, creator) => new Promise((resolve, reject) => {
     let isUnignoredContact = false;
-    let participants = null;
-    let fakeBotContext = getFakeBotKey(botKey);
-    let creator = null;
+    const botKey = message.conversation;
+    let participants = conversationData.participants;
 
-    getConversationData(botKey, message.createdBy, user)
-        .then((conversationData) => {
-            if (conversationData && conversationData.data) {
-                const data = conversationData.data;
-                if (!data) {
-                    return null;
-                }
-
-                creator = data.conversationOwner;
-                participants = data.participants;
-                return Contact.getContactFieldForUUIDs([creator.uuid]);
-            }
-        })
+    Contact.getContactFieldForUUIDs([creator.uuid])
         .then((contacts) => {
             if (contacts && contacts.length > 0 && contacts[0].ignored) {
                 isUnignoredContact = false
             } else {
                 isUnignoredContact = true;
-                return ConversationContext.createNewConversationContext(fakeBotContext);
+                return ConversationContext.createNewConversationContext(botContext);
             }
         })
         .then((conversationContext) => {
@@ -102,7 +82,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
                 ConversationContext.updateParticipants(conversationContext, participants);
                 conversationContext.creatorInstanceId = creator.uuid;
                 conversationContext.creator = creator;
-                return ConversationContext.saveConversationContext(conversationContext, fakeBotContext, user);
+                return ConversationContext.saveConversationContext(conversationContext, botContext, user);
             }
         })
         .then((conversationContext) => {
@@ -120,7 +100,71 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
         })
         .catch((err) => {
             console.log('Error handling the message for IMBot message ', err, message);
+            reject();
         });
+});
+
+const handleNewChannelConversation = (conversationData, message, user, botContext, creator) => new Promise((resolve, reject) => {
+    const botKey = message.conversation;
+    let channel = conversationData.onChannels[0];
+
+    ConversationContext.createNewChannelConversationContext(botContext, user, channel)
+        .then((conversationContext) => {
+            conversationContext.conversationId = botKey;
+            conversationContext.onChannels = conversationData.onChannels;
+            conversationContext.creatorInstanceId = creator.uuid;
+            conversationContext.creator = creator;
+            return ConversationContext.saveConversationContext(conversationContext, botContext, user);
+        })
+        .then((conversationContext) => {
+            return ChannelDAO.updateConversationForChannel(channel.name, channel.domain, botKey);
+        })
+        .then(() => {
+            return Queue.completeAsyncQueueResponse(botKey, message);
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((err) => {
+            console.log('Error handling the message for Channel message ', err, message);
+            reject();
+        });
+});
+
+// 2. If the conversation doesn't exist then:
+//  - Get the participants ( are array of {name, uuid} ) and the creator ({name, uuid}) of this message
+//  - Check whether the creator of the message is a contact for this user
+//  - If the creator is a ignored contact for this user - then ignore the message and return
+//  - If the creator is not a contact in added contacts, this means that this is the first time the user is getting pinged about this message.
+//  - then, create a new conversation context with the participants, along with the conversationId as the botkey
+//  - then complete Queue call
+const handleNewConversation = (message, user) => new Promise((resolve, reject) => {
+    const botKey = message.conversation;
+    let fakeBotContext = getFakeBotKey(botKey);
+    let creator = null;
+
+    getConversationData(botKey, message.createdBy, user)
+        .then((conversationData) => {
+            if (conversationData && conversationData.data) {
+                const data = conversationData.data;
+                if (!data) {
+                    return null;
+                }
+                creator = data.conversationOwner;
+                if (data.onChannels.count === 0) {
+                    return handleNewIMConversation(data, message, user, fakeBotContext, creator);
+                } else {
+                    return handleNewChannelConversation(data, message, user, fakeBotContext, creator);
+                }
+            }
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((err) => {
+            console.log('Error handling the new Message ', err, message);
+        });
+
 });
 
 const getConversationData = (conversationId, createdBy, user) => {

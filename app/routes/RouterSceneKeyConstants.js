@@ -5,6 +5,7 @@ const ROUTER_SCENE_KEYS = {
     'chatScene': 'chatScene',
     'botChat': 'botChat',
     'peopleChat': 'peopleChat',
+    'channelChat': 'channelChat',
     'slider': 'slider',
     'webview': 'webview',
     'addContacts': 'addContacts',

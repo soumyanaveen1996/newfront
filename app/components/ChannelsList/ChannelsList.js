@@ -42,10 +42,6 @@ export default class ChannelsList extends React.Component {
         this.refresh();
     }
 
-    async componentWillMount() {
-        this.refresh();
-        //Channel.refreshChannels();
-    }
 
     async refresh() {
         const channels = await Channel.getSubscribedChannels();
@@ -63,12 +59,21 @@ export default class ChannelsList extends React.Component {
         this.refs.toast.show(I18n.t('Channel_unsubscribe_failed'), DURATION.LENGTH_SHORT);
     }
 
+
+    onChannelTapped = (channel) => {
+        SystemBot.get(SystemBot.imBotManifestName)
+            .then((imBot) => {
+                Actions.channelChat({ bot: imBot, channel: channel, onBack: this.props.onBack });
+            });
+    }
+
     renderRow = (channel) => {
         return (
             <ChannelsListItem
                 channel={channel}
                 onUnsubscribe={this.onChannelUnsubscribe.bind(this)}
-                onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)} />
+                onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)} 
+                onChannelTapped={this.onChannelTapped.bind(this)}/>
         );
     }
 

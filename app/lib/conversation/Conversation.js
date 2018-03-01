@@ -24,13 +24,13 @@ export default class Conversation {
             });
     });
 
-    static createIMConversation = (conversationId) => this.createConversation(conversationId, IM_CHAT)
+    static createIMConversation = (conversationId) => Conversation.createConversation(conversationId, IM_CHAT)
 
-    static createChannelConversion = (conversationId) => this.createConversation(conversationId, CHANNEL_CHAT)
+    static createChannelConversation = (conversationId) => Conversation.createConversation(conversationId, CHANNEL_CHAT)
 
 
-    static deleteConversation = (conversationId) => new Promise((resolve, reject) => {
-        ConversationDAO.deleteConversation(conversationId, IM_CHAT)
+    static removeConversation = (conversationId, type) => new Promise((resolve, reject) => {
+        ConversationDAO.deleteConversation(conversationId, type)
             .then((id) => {
                 return resolve({
                     conversationId: conversationId
@@ -40,6 +40,9 @@ export default class Conversation {
                 reject(err);
             });
     });
+
+    static deleteConversation = (conversationId) => Conversation.removeConversation(conversationId, IM_CHAT)
+    static deleteChannelConversation = (conversationId) => Conversation.removeConversation(conversationId, CHANNEL_CHAT)
 
     static updateConversation = (oldConversationId, newConversationId) => new Promise((resolve, reject) => {
         ConversationDAO.updateConversationId(oldConversationId, newConversationId)
@@ -57,6 +60,10 @@ export default class Conversation {
 
     static getIMConversation = (conversationId) => new Promise((resolve, reject) => {
         return resolve(ConversationDAO.selectConversation(conversationId, IM_CHAT));
+    });
+
+    static getChannelConversation = (conversationId) => new Promise((resolve, reject) => {
+        return resolve(ConversationDAO.selectConversation(conversationId, CHANNEL_CHAT));
     });
 
 }

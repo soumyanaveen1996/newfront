@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import { MainScreen, ConversationList } from '../components/MainScreen';
-import { BotChat, PeopleChat, FavoriteMessages } from '../components/ChatBotScreen';
+import { BotChat, PeopleChat, FavoriteMessages, ChannelChat } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
 import { ContactsPicker } from '../components/ContactsPicker';
 import { Slider } from '../components/Slider';
@@ -40,6 +40,7 @@ const MainRouter = () => {
                             <Scene key={ROUTER_SCENE_KEYS.timeline} component={MainScreen} initial title={I18n.t('FrontM')}/>
                             <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} inital/>
                             <Scene key={ROUTER_SCENE_KEYS.peopleChat} component={PeopleChat}/>
+                            <Scene key={ROUTER_SCENE_KEYS.channelChat} component={ChannelChat}/>
                             <Scene key={ROUTER_SCENE_KEYS.slider} component={Slider} />
                             <Scene key={ROUTER_SCENE_KEYS.webview} component={WebViewScreen} hideNavBar/>
                             <Scene key={ROUTER_SCENE_KEYS.botStore} component = {BotStoreScreen} title={I18n.t('Bot_Store')}/>

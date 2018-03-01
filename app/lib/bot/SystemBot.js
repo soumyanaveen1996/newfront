@@ -96,7 +96,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'vendor': 'frontmai',
         'slug': 'channels-bot',
         'url': 'botfarm/channelsBot.js',
-        'logoUrl': 'Survey_logopng.png',
+        'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/Survey_logopng.png',
         'description': 'channels bot',
         'version': '0.1.0',
         'featured': true,

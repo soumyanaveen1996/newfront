@@ -38,8 +38,8 @@ const deleteChannel = (channelId) => new Promise((resolve, reject) => {
 });
 
 
-const updateConversationForChannel = (channelId, conversationId) => new Promise((resolve, reject) => {
-    const args = [conversationId, channelId];
+const updateConversationForChannel = (name, domain, conversationId) => new Promise((resolve, reject) => {
+    const args = [conversationId, name, domain];
     db.transaction(tx => {
         tx.executeSql(channelSql.updateConversationForChannel, args, function success(tx, res) {
             return resolve(+res.insertId || 0);
@@ -79,6 +79,23 @@ const channelDataFromDbResult = (dbResult) => {
         domain: dbResult.domain
     };
 }
+selectChannelByConversationId
+
+const selectChannelByConversationId = (conversationId) => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(channelSql.selectChannelByConversationId, [conversationId], function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
+            let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            if (dbResults.length === 0) {
+                return resolve(null);
+            } else {
+                return resolve(channelDataFromDbResult(dbResults[0]));
+            }
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
 
 const selectChannel = (channelId) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
@@ -146,5 +163,6 @@ export default {
     selectChannels,
     deleteAllChannels,
     selectChannelByNameAndDomain,
-    insertIfNotPresent
+    insertIfNotPresent,
+    selectChannelByConversationId
 };

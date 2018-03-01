@@ -30,7 +30,8 @@ const updateConversationForChannel = `
     SET 
         conversationId = ?
     WHERE
-        id = ?
+        name = ?
+    AND domain = ?
 `;
 
 const selectChannels = `
@@ -54,6 +55,18 @@ const selectChannel = `
         domain
     FROM channel
     WHERE id = ?
+`;
+
+const selectChannelByConversationId = `
+    SELECT
+        id,
+        conversationId,
+        name,
+        desc,
+        logo,
+        domain
+    FROM channel
+    WHERE conversationId = ?
 `;
 
 const selectChannelByNameAndDomain = `
@@ -81,6 +94,7 @@ export default {
     updateConversationForChannel,
     selectChannels,
     selectChannel,
+    selectChannelByConversationId,
     deleteAllChannels,
     selectChannelByNameAndDomain
 };
