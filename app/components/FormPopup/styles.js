@@ -8,7 +8,7 @@ const Styles = StyleSheet.create({
         right: 0,
         top: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.8)',
+        backgroundColor: 'rgba(32, 32, 32, 0.6)',
     },
     formContainer: {
         position: 'absolute',

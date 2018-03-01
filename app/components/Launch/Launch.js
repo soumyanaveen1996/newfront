@@ -14,7 +14,7 @@ import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import { DeviceStorage, Contact } from '../../lib/capability';
+import { DeviceStorage } from '../../lib/capability';
 
 const VERSION = 5; // Corresponding to 2.3.0. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
