@@ -524,7 +524,7 @@ export default class ChatBotScreen extends React.Component {
             return <ChatMessage message={message}
                 isUserChat={this.isUserChat()}
                 user={this.user}
-                imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
+                imageSource={{ uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
                 onLayout={this.onMessageItemLayout.bind(this)} />;
@@ -566,7 +566,7 @@ export default class ChatBotScreen extends React.Component {
         message.stringMessage(messageStr);
 
         return self.sendMessage(message);
-    };
+    }
 
     getUserUUID = () => {
         return this.user.userUUID;

@@ -4,6 +4,10 @@ export const CONTACT_STORAGE_KEY_CAPABILITY = 'CONTACT_STORAGE_KEY_CAPABILITY';
 import Message from './Message';
 import I18n from '../../config/i18n/i18n';
 import RNContacts from 'react-native-contacts';
+import Utils from '../../lib/utils';
+import config from '../../config/config';
+import { Auth, Network } from '.';
+import SystemBot from '../bot/SystemBot';
 
 /**
  * Expected format per contact:
@@ -136,7 +140,7 @@ export default class Contact {
         Contact.getAddedContacts()
             .then(function (cts) {
                 cts = cts || [];
-                const filtered = _.filter(cts, (contact) => { 
+                const filtered = _.filter(cts, (contact) => {
                     return contact.ignored
                 });
                 return resolve(filtered);
@@ -166,19 +170,56 @@ export default class Contact {
             } else {
                 let emails = _.reduce(contacts, (emailsList, contact) => {
                     let contactEmails = _.map(contact.emailAddresses, (emailObject) => {
+                        if (!Utils.isEmail(emailObject.email)) {
+                            return;
+                        }
+                        let givenName = contact.givenName;
+                        if (_.isEmpty(contact.givenName) && _.isEmpty(contact.familyName)) {
+                            givenName = emailObject.email
+                        }
                         return {
-                            givenName: contact.givenName,
+                            givenName: givenName,
                             familyName: contact.familyName,
                             middleName: contact.middleName,
                             type: emailObject.label,
                             emailAddress: emailObject.email
                         }
                     });
-                    return _.concat(emailsList, contactEmails);
+                    return _.concat(emailsList, _.filter(contactEmails, (o) => o !== undefined));
                 }, []);
-                resolve(emails);
+                resolve(_.sortBy(emails, (o) => _.lowerCase(o.givenName + ' ' + o.familyName)));
             }
         })
+    });
+
+    static refreshContacts = () => new Promise((resolve, reject) => {
+        Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    let options = {
+                        'method': 'get',
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}`,
+                        'headers': {
+                            accessKeyId: user.aws.accessKeyId,
+                            secretAccessKey: user.aws.secretAccessKey,
+                            sessionToken: user.aws.sessionToken
+                        }
+                    };
+                    return Network(options);
+                }
+            })
+            .then((response) => {
+                if (response.data) {
+                    var contacts = _.map(response.data.contacts, (contact) => {
+                        return _.extend({}, contact, {ignored: false});
+                    });
+                    var ignored = _.map(response.data.contacts, (contact) => {
+                        return _.extend({}, contact, {ignored: true});
+                    });
+                    var allContacts = _.concat(contacts, ignored);
+                    Contact.saveContacts(allContacts);
+                }
+            })
     });
 
     static asSliderMessage = (contacts, opts) => {

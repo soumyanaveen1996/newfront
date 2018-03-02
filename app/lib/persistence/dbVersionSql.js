@@ -4,13 +4,21 @@ const createVersionTable = `
     );
 `;
 
-const updateVersion = `UPDATE db_version SET version = ?;`;
+const updateVersion = `
+    UPDATE db_version SET version = ?;
+`;
 
-const getVersion = `SELECT version FROM db_version LIMIT 1`;
+const getVersion = `
+    SELECT version FROM db_version LIMIT 1
+`;
 
-const insertVersion = `INSERT INTO db_version values (?)`;
+const insertVersion = `
+    INSERT INTO db_version values (?)
+`;
 
-const tableExists = `SELECT count(*) as row_count FROM sqlite_master WHERE type='table' AND name='db_version';`
+const tableExists = `
+    SELECT count(*) as row_count FROM sqlite_master WHERE type='table' AND name='db_version';
+`
 
 export default {
     createVersionTable: createVersionTable,

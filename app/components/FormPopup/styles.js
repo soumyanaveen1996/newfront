@@ -1,16 +1,23 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
-// The popup widget will be created with the following default size.
-// The 30 and 150, were chosen approximately from the design provided.
-const DEFAULT_WIDGET_SIZE = { width: DEVICE_WIDTH - 30, height: DEVICE_HEIGHT - 150 };
 
 const Styles = StyleSheet.create({
     containerStyle: {
-        flex: 1,
-        backgroundColor: GlobalColors.modalBackground,
-        flexDirection: 'column',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(32, 32, 32, 0.6)',
+    },
+    formContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: GlobalColors.white,
+        paddingBottom: 5,
+        maxHeight: 250,
     },
     headerContainer: {
         height: 58,
@@ -46,15 +53,6 @@ const Styles = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         paddingBottom: 20,
     },
-    formContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: GlobalColors.white,
-        paddingBottom: 20,
-        maxHeight: 250,
-    },
     formTitleContainer: {
         padding: 20,
         height: 50,
@@ -80,6 +78,25 @@ const Styles = StyleSheet.create({
         height: 60,
         justifyContent: 'center',
         paddingHorizontal: 20,
+    },
+    formInputContainer: {
+        marginVertical: 5,
+        height: 60,
+        justifyContent: 'center',
+        paddingHorizontal: 20,
+    },
+    titleContainer: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    formInputLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    formErrorLabel: {
+        fontSize: 12,
+        fontWeight: '300',
+        color: GlobalColors.red,
     },
     formTextField: {
         padding: 10,

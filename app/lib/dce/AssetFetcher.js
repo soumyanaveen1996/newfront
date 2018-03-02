@@ -127,7 +127,7 @@ class AssetFetcher {
         }
     }
 
-    // TODO: improve for production. This is not a good solution as too much is loaded in memory and 
+    // TODO: improve for production. This is not a good solution as too much is loaded in memory and
     // data is being sent in one shot
     // Ideal algo: chunk data + compress (each chunk) + stream to http2 backend as chunks
     static async uploadFileToS3(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user) {

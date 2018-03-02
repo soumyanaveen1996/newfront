@@ -7,7 +7,7 @@ import ProfileImage from '../ProfileImage';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES, SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 
 export default class ConversationListItem extends React.Component {
 
@@ -18,13 +18,13 @@ export default class ConversationListItem extends React.Component {
             date: '',
             count: 0,
             message: null,
-            chatName: SYSTEM_BOT_MANIFEST.IMChat.name
+            chatName: SystemBot.imBot.name
         }
         this.conversation = this.props.conversation;
     }
 
     handleBotSelection() {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.IMChat)
+        SystemBot.get(SystemBot.imBotManifestName)
             .then((imBot) => {
                 Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
             });
@@ -42,7 +42,7 @@ export default class ConversationListItem extends React.Component {
             };
         } else {
             stateObj = {
-                subTitle: SYSTEM_BOT_MANIFEST.IMChat.description
+                subTitle: SystemBot.imBot.desc
             };
         }
         stateObj.chatName = this.props.chatData.chatName;

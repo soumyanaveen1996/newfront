@@ -6,6 +6,7 @@ import { Queue } from '../network';
 import { NetInfo } from 'react-native';
 import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
+import EventEmitter, {NetworkEvents} from "../events";
 
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
@@ -46,13 +47,16 @@ function Network(options, queue = false) {
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
+                //connected = false;
                 if (connected) {
+                    //EventEmitter.emit(NetworkEvents.networkSatellite);
                     return resolve(axios(options));
                 } else {
                     if (queue) {
                         let key = SHA1(JSON.stringify(options.data)).toString();
                         return resolve(futureRequest(key, new NetworkRequest(options)));
                     } else {
+                        //EventEmitter.emit(NetworkEvents.networkOffline);
                         reject(new Error('No network connectivity'));
                     }
                 }

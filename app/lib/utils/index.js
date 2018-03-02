@@ -22,6 +22,26 @@ export function formattedDate(date) {
     }
 }
 
+export function botLogoUrl(logoUrl) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoUrl}`
+}
+
+export function channelLogoUrl(channelLogoName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${channelLogoName}`
+}
+
+function logoName(name) {
+    return _.toLower(name).replace(' ', '_');
+}
+
+export function categoryLogoUrl(categoryName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(categoryName)}.png`
+}
+
+export function developerLogoUrl(developerName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(developerName)}.png`
+}
+
 export function userProfileUrl(userId) {
     return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
 }
@@ -199,6 +219,32 @@ export function isiPhoneX() {
 }
 
 
+
+export function isEmail(email) {
+    var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-?\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+    if (!email || email.length > 254) {
+        return false;
+    }
+
+    var valid = tester.test(email);
+    if (!valid) {
+        return false;
+    }
+
+    // Further checking of some things regex can't handle
+    var parts = email.split('@');
+    if (parts[0].length > 64) {
+        return false;
+    }
+
+    var domainParts = parts[1].split('.');
+    if (domainParts.some(function(part) { return part.length > 63; })) {
+        return false;
+    }
+    return true;
+
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -210,4 +256,9 @@ export default {
     copyIntialBots,
     userProfileUrl,
     isiPhoneX,
+    isEmail,
+    developerLogoUrl,
+    categoryLogoUrl,
+    botLogoUrl,
+    channelLogoUrl
 }

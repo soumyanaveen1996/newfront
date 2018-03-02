@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, TextInput ,TouchableOpacity , NetInfo} from "react-native";
 import chatStyles from "./styles";
-import styles from "../Slider/styles";
 import {Icons} from "../../config/icons";
 
 
-export default class ChatBotStatusBar extends React.Component {
+export default class ChatStatusBar extends React.Component {
 
     componentWillMount() {
         this.setInitialState();
@@ -40,7 +39,7 @@ export default class ChatBotStatusBar extends React.Component {
                         style={this.state.network === "true" ? chatStyles.statusMessageNetOn : chatStyles.statusMessageNetOff}
                         value={this.state.statusMessage}
                     />
-                    <TouchableOpacity style={styles.closeButton} onPress={this.closeStatus.bind(this)} >
+                    <TouchableOpacity style={chatStyles.closeButton} onPress={this.closeStatus.bind(this)} >
                         {this.state.network === "true" ? Icons.statusBarCloseNetOn() : Icons.statusBarCloseNetOff()}
                     </TouchableOpacity>
                 </View>

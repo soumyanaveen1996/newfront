@@ -22,17 +22,20 @@ const stageConfig = {
         queueProtocol: 'https://',
         queueHost: QUEUE_HOST,
         queuePath: '/Development/items',
-        queueServiceApi: 'execute-api'
+        queueServiceApi: 'execute-api',
+        contactsPath: '/contacts',
+        channelsPath: '/channels',
+        channelUnsubscribePath: '/unsubChannel'
     },
     proxy: {
         enabled: true,
         host: PROXY_HOST,
         protocol: 'https://',
         queuePath: '/queueLambda',
-        catalogPath: '/catalogLambda',
+        catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
-        conversationPath: '/conversation'
+        conversationPath: '/conversation',
     }
 };
 

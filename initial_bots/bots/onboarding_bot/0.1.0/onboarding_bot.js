@@ -78,7 +78,7 @@
                  id: PROFILE_PIC
             },
             {
-                title: 'Update personal info',
+                title: 'Update user name',
                 id: UPDATE_INFO
             }
         ];
@@ -98,9 +98,9 @@
                 });
             }
             options.push(
-            {
-                title: 'Featured Partners'
-            },
+            // {
+            //     title: 'Featured Partners'
+            // },
             {
                 title: 'Find help',
             },
@@ -252,8 +252,8 @@
             message.formMessage([
                 { id: 1, title: 'Enter your updated details', type: 'text' },
                 { id:2, title: 'Screen Name', value: usr.info.screenName, type: 'text_field', optional: false },
-                { id:3, title: 'First Name', value: usr.info.givenName, type: 'text_field', optional: false },
-                { id:4, title: 'Last Name', value: usr.info.surname, type: 'text_field', optional: false },
+                //{ id:3, title: 'First Name', value: usr.info.givenName, type: 'text_field', optional: false },
+                //{ id:4, title: 'Last Name', value: usr.info.surname, type: 'text_field', optional: false },
                 { id:5, title:'Update', type: 'button' }
             ], '');
             tell(message, botContext);
@@ -274,16 +274,16 @@
 
             if (isFormMsg) {
                 let screenName = msg.getMessage()[1].value || userInfo.screenName;
-                let givenName = msg.getMessage()[2].value || userInfo.givenName;
-                let lastName = msg.getMessage()[3].value || userInfo.surname;
+                //let givenName = msg.getMessage()[2].value || userInfo.givenName;
+                //let lastName = msg.getMessage()[3].value || userInfo.surname;
 
                 userDetails.screenName = screenName;
-                userDetails.surname = lastName;
-                userDetails.givenName = givenName;
+                //userDetails.surname = lastName;
+                //userDetails.givenName = givenName;
 
-                dbDocument.givenName = givenName;
                 dbDocument.screenName = screenName;
-                dbDocument.surname = lastName;
+                //dbDocument.givenName = givenName;
+                //dbDocument.surname = lastName;
             } else {
                 const _ = botContext.getCapability('Utils').Lodash;
                 let domains = userInfo.domains || [];

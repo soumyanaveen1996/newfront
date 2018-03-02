@@ -3,6 +3,7 @@ import DeviceStorage from './DeviceStorage';
 import Network from './Network';
 import Promise from './Promise';
 import Utils from './Utils';
+import Channel from './Channel';
 import Message from './Message';
 import Messages from './Messages';
 import { MessageTypeConstants, ButtonStyle }  from './Message';
@@ -35,5 +36,6 @@ export {
     Resource,
     ResourceTypes,
     ButtonStyle,
+    Channel,
     version
 };

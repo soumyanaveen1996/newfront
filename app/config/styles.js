@@ -21,6 +21,7 @@ export const GlobalColors = {
     black: 'rgb(0, 0, 0)',
     headerTextInputBackground: 'rgb(56,194,212)',
     headerTextInputPlaceholder: 'rgb(210,210,210)',
+    statusBarBackgroundColor: 'rgb(255, 192, 203)',
 };
 
 export default GlobalColors;

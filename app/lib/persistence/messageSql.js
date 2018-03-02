@@ -157,7 +157,7 @@ const deleteBotMessages = `
     DELETE FROM messages where bot_key = ?;
 `;
 
-const addCompletedColumn =`
+const addCompletedColumn = `
     ALTER TABLE messages ADD COLUMN completed INTEGER NOT NULL DEFAULT 0
 `;
 

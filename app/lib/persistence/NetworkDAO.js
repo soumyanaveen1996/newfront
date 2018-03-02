@@ -106,7 +106,7 @@ const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) =>
 
             if (dbResults.length === 0) {
                 return resolve();
-            } 
+            }
             let formattedResults = dbResults.map((dbResult) => {
                 let resultFormatted = null;
                 try {

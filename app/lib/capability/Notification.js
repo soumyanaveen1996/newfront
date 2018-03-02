@@ -1,6 +1,5 @@
 import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
-import Notifications from '../notifications';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
 
 

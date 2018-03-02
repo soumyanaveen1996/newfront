@@ -17,7 +17,7 @@ export default class ConversationContext {
     /**
      * Retruns a conversation context. A conversation context is of the format:
      */
-    static getConversationContext = (botContext, user) => new Promise((resolve, reject) => {
+    static getConversationContext = (botContext, user, channel = false) => new Promise((resolve, reject) => {
         // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
         if (botContext.getConversationContext()) {
             return resolve(botContext.getConversationContext())
@@ -31,6 +31,26 @@ export default class ConversationContext {
                     return resolve(context);
                 }
                 return resolve(ConversationContext.createAndSaveNewConversationContext(botContext, user))
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
+    static getChannelConversationContext = (botContext, user, channel) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (context) {
+                    botContext.setConversationContext(context);
+                    return resolve(context);
+                }
+                return resolve(ConversationContext.createAndSaveNewChannelConversationContext(botContext, user, channel))
             })
             .catch((err) => {
                 reject(err);
@@ -73,8 +93,46 @@ export default class ConversationContext {
         }
     });
 
+    static createNewChannelConversationContext = (botContext, currentUser, channel)  => new Promise((resolve, reject) => {
+        const UUID = Utils.UUID;
+        if (currentUser && channel) {
+            const context = {
+                conversationId: UUID(),
+                creatorInstanceId:currentUser.userUUID,
+                onChannels: [{
+                    name: channel.name,
+                    domain: channel.domain
+                }],
+                closed: false
+            };
+            resolve(context);
+        } else {
+            const context = {
+                conversationId: UUID(),
+                participantsInfo: [],
+                participants: [],
+                onChannels: [],
+                closed: false
+            };
+            resolve(context);
+        }
+    });
+
     static createAndSaveNewConversationContext = (botContext, user)  => new Promise((resolve, reject) => {
         ConversationContext.createNewConversationContext(botContext, user)
+            .then(function (ctx) {
+                return ConversationContext.saveConversationContext(ctx, botContext, user);
+            })
+            .then(function (ctx) {
+                return resolve(ctx);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
+    static createAndSaveNewChannelConversationContext = (botContext, user, channel)  => new Promise((resolve, reject) => {
+        ConversationContext.createNewChannelConversationContext(botContext, user, channel)
             .then(function (ctx) {
                 return ConversationContext.saveConversationContext(ctx, botContext, user);
             })

@@ -242,7 +242,7 @@
                 }
             })
             .catch((err) => {
-                    console.log('Error getting the conversation context ', err);
+                console.log('Error getting the conversation context ', err);
                 reject(err);
             });
     };
@@ -262,7 +262,7 @@
         protocol: 'http://'
     };
 
-    const env = 'stage';
+    const env = 'dev';
 
     const doNetworkCall = function(postReq, botContext, user, canQueue = false) {
         let Network = botContext.getCapability('Network');

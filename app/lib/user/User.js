@@ -1,6 +1,6 @@
 /**
  * A simple user class that can be persisted in device storage
- * Usage: 
+ * Usage:
  * `let user = new User({userUUID: 'abc', ...});
  *  user.userUUID; // 'abc'
  */

@@ -83,9 +83,7 @@ class FrontmAuth {
         }
     }
 
-    //TODO(expo) : Implement Facebook auth
     loginWithFacebook(conversationId, botName) {
-        var self = this;
         return new Promise((resolve, reject) => {
             LoginManager.logInWithReadPermissions(Config.auth.ios.facebook.permissions)
                 .then((premissionsResult) => {

@@ -10,7 +10,7 @@ const createArrayStorageTable = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(arrayStorageSql.createArrayStorageTable, null, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(t, err) {
             return reject(err);
         });
     });
@@ -32,9 +32,9 @@ const insertArrayValues = (key, valuesArr = []) => new Promise((resolve, reject)
     sql = sql.slice(0, -1);
 
     db.transaction(tx => {
-        tx.executeSql(sql, args, function success(tx, res) {
+        tx.executeSql(sql, args, function success(t, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(t, err) {
             return reject(err);
         });
     });
@@ -54,7 +54,7 @@ const selectArrayValues = (key) => new Promise((resolve, reject) => {
                 });
                 return resolve(formattedResults);
             }
-        }, function failure(tx, err) {
+        }, function failure(t, err) {
             return reject(err);
         });
     });
@@ -71,7 +71,7 @@ const deleteArrayValues = (key, value = null) => new Promise((resolve, reject) =
     db.transaction(tx => {
         tx.executeSql(sql, args, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(t, err) {
             return reject(err);
         });
     });
