@@ -153,14 +153,14 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
 
     getConversationData(botKey, message.createdBy, user)
         .then((conversationData) => {
-            console.log('Handling new conversation : ', conversationData);
             if (conversationData && conversationData.data) {
                 const data = conversationData.data;
+                console.log('Handling new conversation : ', data);
                 if (!data) {
                     return null;
                 }
                 creator = data.conversationOwner;
-                if (data.onChannels.count === 0) {
+                if (data.onChannels.length === 0) {
                     return handleNewIMConversation(data, message, user, fakeBotContext, creator);
                 } else {
                     return handleNewChannelConversation(data, message, user, fakeBotContext, creator);

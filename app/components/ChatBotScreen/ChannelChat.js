@@ -103,7 +103,7 @@ export default class ChannelChat extends ChatBotScreen {
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for people chat', error);
+            console.log('Error getting a conversation context for channel chat', error);
             throw error;
         }
     }
@@ -138,15 +138,19 @@ export default class ChannelChat extends ChatBotScreen {
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
         let newConversation = await Conversation.getChannelConversation(newConversationId);
-        console.log('New conversation : ', newConversation);
+        console.log('New conversation : ', newConversation, newConversationId, oldConversationId);
         console.log('Old conversation : ', await Conversation.getChannelConversation(oldConversationId))
         if (newConversation) {
+            console.log('Deleting old conversation');
             await Conversation.deleteChannelConversation(oldConversationId);
             this.conversation = newConversation
         } else {
+            console.log('updating old conversation');
             await Conversation.updateConversation(oldConversationId, newConversationId);
+            console.log('updated old conversation');
             this.conversation = await Conversation.getChannelConversation(newConversationId);
         }
+        console.log('Old conversation : ', await Conversation.getChannelConversation(oldConversationId))
         console.log(await Conversation.getChannelConversation(newConversationId));
     }
 
@@ -163,6 +167,7 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async updateConversationContextId(newConversationId) {
+        console.log('New convesation Id : ', newConversationId);
         let oldConversationId = this.conversationContext.conversationId;
 
         await this.createOrUpdateConversation(oldConversationId, newConversationId);
