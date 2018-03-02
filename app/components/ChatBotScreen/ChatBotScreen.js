@@ -14,6 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
+import ChatBotStatusBar from './ChatBotStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
@@ -775,7 +776,6 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
     }
 
-
     addBotMessage = (message) => new Promise((resolve) => {
         // TODO: Adding bot messages directly seems a bad choice. May be should have a new
         // Message type (Echo message) that contains a internal message for bot to process
@@ -854,6 +854,7 @@ export default class ChatBotScreen extends React.Component {
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior="padding"
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
+                    <ChatBotStatusBar />
                     <FlatList ref={(list) => {this.chatList = list}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
