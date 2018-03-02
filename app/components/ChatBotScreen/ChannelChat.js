@@ -7,7 +7,6 @@ import { Actions } from 'react-native-router-flux';
 import { HeaderBack } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
-import ConversationDAO from '../../lib/persistence';
 
 export default class ChannelChat extends ChatBotScreen {
 
@@ -66,8 +65,10 @@ export default class ChannelChat extends ChatBotScreen {
     async getConversationContext(botContext, user) {
         try {
             let context = null;
-            if (this.channel && this.channel.conversationId) {
-                this.conversation = Conversation.getChannelConversation(this.channel.conversationId);
+            if (this.conversation) {
+                this.channel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId)
+            } else if (this.channel && this.channel.conversationId) {
+                this.conversation = await Conversation.getChannelConversation(this.channel.conversationId);
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {
@@ -135,17 +136,17 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
-        let newConversation = await Conversation.getIMConversation(newConversationId);
+        let newConversation = await Conversation.getChannelConversation(newConversationId);
         console.log('New conversation : ', newConversation);
-        console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
+        console.log('Old conversation : ', await Conversation.getChannelConversation(oldConversationId))
         if (newConversation) {
-            await Conversation.deleteConversation(oldConversationId);
+            await Conversation.deleteChannelConversation(oldConversationId);
             this.conversation = newConversation
         } else {
             await Conversation.updateConversation(oldConversationId, newConversationId);
-            this.conversation = await Conversation.getIMConversation(newConversationId);
+            this.conversation = await Conversation.getChannelConversation(newConversationId);
         }
-        console.log(await Conversation.getIMConversation(newConversationId));
+        console.log(await Conversation.getChannelConversation(newConversationId));
     }
 
     async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
@@ -166,7 +167,7 @@ export default class ChannelChat extends ChatBotScreen {
         await this.createOrUpdateConversation(oldConversationId, newConversationId);
         await MessageHandler.moveMessages(oldConversationId, newConversationId);
         await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
-        await ChannelDAO.updateConversationForChannel(channel.name, channel.domain, newConversationId);
+        await ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, newConversationId);
 
         this.botContext.setConversationContext(this.conversationContext);
         this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
