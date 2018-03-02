@@ -14,7 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
-import ChatBotStatusBar from './ChatBotStatusBar';
+import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
@@ -524,7 +524,7 @@ export default class ChatBotScreen extends React.Component {
             return <ChatMessage message={message}
                 isUserChat={this.isUserChat()}
                 user={this.user}
-                imageSource={{ uri: this.bot.logoUrl }}
+                imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
                 onLayout={this.onMessageItemLayout.bind(this)} />;
@@ -566,7 +566,7 @@ export default class ChatBotScreen extends React.Component {
         message.stringMessage(messageStr);
 
         return self.sendMessage(message);
-    }
+    };
 
     getUserUUID = () => {
         return this.user.userUUID;
@@ -854,7 +854,7 @@ export default class ChatBotScreen extends React.Component {
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior="padding"
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <ChatBotStatusBar />
+                    <ChatStatusBar />
                     <FlatList ref={(list) => {this.chatList = list}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
