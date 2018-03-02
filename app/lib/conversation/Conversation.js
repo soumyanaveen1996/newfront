@@ -57,13 +57,16 @@ export default class Conversation {
             });
     });
 
+    static getConversation = (conversationId) => new Promise((resolve, reject) => {
+        return resolve(ConversationDAO.selectConversation(conversationId));
+    });
 
     static getIMConversation = (conversationId) => new Promise((resolve, reject) => {
-        return resolve(ConversationDAO.selectConversation(conversationId, IM_CHAT));
+        return resolve(ConversationDAO.selectConversationByType(conversationId, IM_CHAT));
     });
 
     static getChannelConversation = (conversationId) => new Promise((resolve, reject) => {
-        return resolve(ConversationDAO.selectConversation(conversationId, CHANNEL_CHAT));
+        return resolve(ConversationDAO.selectConversationByType(conversationId, CHANNEL_CHAT));
     });
 
 }

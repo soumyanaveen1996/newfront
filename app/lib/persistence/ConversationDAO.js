@@ -74,9 +74,9 @@ const selectConversations = (type) => new Promise((resolve, reject) => {
     });
 });
 
-const selectConversation = (conversationId, type) => new Promise((resolve, reject) => {
+const selectConversationByType = (conversationId, type) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
-        transaction.executeSql(conversationSql.selectConversation, [type, conversationId], function success(tx, res) {
+        transaction.executeSql(conversationSql.selectConversationByType, [type, conversationId], function success(tx, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -85,6 +85,27 @@ const selectConversation = (conversationId, type) => new Promise((resolve, rejec
                 const formattedResults = {
                     id: dbResults[0].id,
                     conversationId: dbResults[0].conversationId
+                };
+                return resolve(formattedResults);
+            }
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const selectConversation = (conversationId) => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(conversationSql.selectConversation, [conversationId], function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
+            let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            if (dbResults.length === 0) {
+                return resolve(null);
+            } else {
+                const formattedResults = {
+                    id: dbResults[0].id,
+                    conversationId: dbResults[0].conversationId,
+                    type: dbResults[0].type
                 };
                 return resolve(formattedResults);
             }
@@ -199,6 +220,7 @@ export default {
     insertConversation: insertConversation,
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
+    selectConversationByType: selectConversationByType,
     selectConversation: selectConversation,
     updateConversationId: updateConversationId,
     createV2ConversationTable: createV2ConversationTable,

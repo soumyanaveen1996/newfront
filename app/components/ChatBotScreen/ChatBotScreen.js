@@ -248,6 +248,7 @@ export default class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
+        console.log('Bot Key :', this.getBotKey());
         Queue.selectCompletedNetworkRequests(this.getBotKey())
             .then((pendingAsyncResults) => {
                 pendingAsyncResults = pendingAsyncResults || [];

@@ -51,7 +51,7 @@ export default class ChannelChat extends ChatBotScreen {
 
     // Implemented methods
     getBotKey = () => {
-        return this.conversation.conversationId;
+        return this.conversation.conversationId || this.channel.conversationId;
     }
 
     setNavigationParams(context, user) {
@@ -65,6 +65,7 @@ export default class ChannelChat extends ChatBotScreen {
     async getConversationContext(botContext, user) {
         try {
             let context = null;
+            console.log('Conversation ID from channel : ', this.channel.conversationId);
             if (this.conversation) {
                 this.channel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId)
             } else if (this.channel && this.channel.conversationId) {
@@ -73,7 +74,6 @@ export default class ChannelChat extends ChatBotScreen {
             // Existing conversation - so pick from storage
             if (this.conversation) {
                 context = await Promise.resolve(ConversationContext.getChannelConversationContext(botContext, user, this.channel));
-                this.channel = await ChannelDAO.selectChannelByConversationId()
                 this.setNavigationParams(context, user);
                 return context;
             }
@@ -82,7 +82,7 @@ export default class ChannelChat extends ChatBotScreen {
                 throw new Error('Channel Object is required');
             }
 
-            context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel));
+            context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel, this.channel.conversationId));
             ConversationContext.updateParticipants(context, this.participants);
 
             console.log('Conversation Context : ', context);
@@ -119,6 +119,7 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async handleAsyncMessageResult (event) {
+        console.log('Event : ', event);
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
             return;

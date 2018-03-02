@@ -50,7 +50,7 @@ const selectConversations = `
     ORDER BY created_at_date desc
 `;
 
-const selectConversation = `
+const selectConversationByType = `
     SELECT
         id,
         conversationId,
@@ -59,6 +59,17 @@ const selectConversation = `
     FROM conversation
     WHERE type = ?
         AND conversationId = ?
+    ORDER BY created_at_date desc
+`;
+
+const selectConversation = `
+    SELECT
+        id,
+        conversationId,
+        type,
+        created_at_date
+    FROM conversation
+    WHERE conversationId = ?
     ORDER BY created_at_date desc
 `;
 
@@ -72,6 +83,7 @@ export default {
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
     selectConversation: selectConversation,
+    selectConversationByType: selectConversationByType,
     updateConversation: updateConversation,
     createV2ConversationTable: createV2ConversationTable,
     deleteAllConversations: deleteAllConversations

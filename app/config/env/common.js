@@ -49,7 +49,7 @@ const config = {
         botDependenciesDirName: 'bot_dependencies'
     },
     network: {
-        pollingInterval: 60000,
+        pollingInterval: 20000,
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',
