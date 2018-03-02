@@ -12,36 +12,6 @@ const stylesheet = StyleSheet.create({
         flex: 1,
         backgroundColor: GlobalColors.white,
     },
-    closeButton: {
-        height:30,
-        width:24,
-        paddingTop: 10,
-        paddingBottom: 7,
-    },
-    statusBarNetOn: {
-        flexDirection: 'row',
-        height: 30,
-        backgroundColor: 'rgb(255, 218, 185)',
-    },
-    statusBarNetOff: {
-        flexDirection: 'row',
-        height: 30,
-        backgroundColor: 'rgb(248, 248, 248)',
-    },
-    statusMessageNetOn: {
-        height: 40,
-        textAlign: 'center',
-        paddingBottom:7,
-        flex:1,
-        color:'rgb(255,78,66)',
-    },
-    statusMessageNetOff: {
-        height: 40,
-        textAlign: 'center',
-        paddingBottom:7,
-        flex:1,
-        color:'rgb(0,0,0)',
-    },
     row: {
         marginTop: 12,
         flexDirection: 'row',
@@ -150,11 +120,6 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 7,
         borderTopWidth: 1,
         borderColor: 'rgb(202, 206, 204)',
-    },
-    closeButton: {
-        height:24,
-        width:24,
-        marginLeft:15,
     },
     chatTextInput: {
         paddingHorizontal: 20,
@@ -362,6 +327,35 @@ const stylesheet = StyleSheet.create({
     },
     formButtonText: {
         color: GlobalColors.white,
+    },
+    closeButton: {
+        height:24,
+        width:24,
+        marginLeft:15,
+    },
+    statusBarNetOn: {
+        flexDirection: 'row',
+        height: 30,
+        backgroundColor: 'rgb(255, 218, 185)',
+    },
+    statusBarNetOff: {
+        flexDirection: 'row',
+        height: 30,
+        backgroundColor: 'rgb(248, 248, 248)',
+    },
+    statusMessageNetOn: {
+        height: 40,
+        textAlign: 'center',
+        paddingBottom:7,
+        flex:1,
+        color:'rgb(255,78,66)',
+    },
+    statusMessageNetOff: {
+        height: 40,
+        textAlign: 'center',
+        paddingBottom:7,
+        flex:1,
+        color:'rgb(0,0,0)',
     }
 });
 
