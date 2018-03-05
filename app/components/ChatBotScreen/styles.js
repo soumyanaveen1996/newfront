@@ -332,6 +332,7 @@ const stylesheet = StyleSheet.create({
         height:24,
         width:24,
         marginLeft:15,
+        paddingTop: 8
     },
     statusBarNetOn: {
         flexDirection: 'row',

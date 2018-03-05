@@ -2,13 +2,14 @@ import React from 'react';
 import { View, TextInput ,TouchableOpacity , NetInfo} from "react-native";
 import chatStyles from "./styles";
 import {Icons} from "../../config/icons";
+import { Network } from '../../lib/capability';
 
 
 export default class ChatStatusBar extends React.Component {
 
     componentWillMount() {
         this.setInitialState();
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        Network.addConnectionChangeEventListener(this.handleConnectionChange)
     }
 
     setInitialState() {
@@ -16,7 +17,7 @@ export default class ChatStatusBar extends React.Component {
     }
 
     componentWillUnmount() {
-        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+        Network.removeConnectionChangeEventListener(this.handleConnectionChange)
     }
 
     handleConnectionChange = (isConnected) => {

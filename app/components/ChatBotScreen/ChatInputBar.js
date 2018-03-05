@@ -6,6 +6,7 @@ import Images from '../../config/images';
 import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
+import { Network } from '../../lib/capability';
 
 export default class ChatInputBar extends React.Component {
 
@@ -15,17 +16,17 @@ export default class ChatInputBar extends React.Component {
 
     componentWillMount() {
         this.setInitialState();
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        Network.addConnectionChangeEventListener(this.handleConnectionChange)
     }
 
     async componentWillUnmount() {
         // Stop recording when the user closes the app
         await this._cancelRecording();
-        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+        Network.removeConnectionChangeEventListener(this.handleConnectionChange);
     }
 
     setInitialState() {
-        this.setState({ recordedTimeInSeconds: 0, text: '', chatState: ChatInputBarState.READY_FOR_SPEECH, network:'true'});
+        this.setState({ recordedTimeInSeconds: 0, text: '', chatState: ChatInputBarState.READY_FOR_SPEECH, network:'false'});
     }
 
     handleConnectionChange = (isConnected) => {

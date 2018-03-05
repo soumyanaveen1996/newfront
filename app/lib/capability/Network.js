@@ -6,8 +6,6 @@ import { Queue } from '../network';
 import { NetInfo } from 'react-native';
 import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
-import EventEmitter, {NetworkEvents} from "../events";
-
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -77,6 +75,14 @@ Network.isCellular = () => new Promise((resolve, reject) => {
         resolve(connectionInfo.type === 'cellular');
     });
 });
+
+Network.addConnectionChangeEventListener = (handleConnectionChange) => {
+    NetInfo.isConnected.addEventListener('connectionChange', handleConnectionChange);
+}
+
+Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
+    NetInfo.isConnected.removeEventListener('connectionChange', handleConnectionChange);
+}
 
 Network.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
