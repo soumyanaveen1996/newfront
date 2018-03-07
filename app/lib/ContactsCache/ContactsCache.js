@@ -16,7 +16,7 @@ class ContactsCache {
     }
 
     fetchContactDetailsForUser= (userId) => new Promise((resolve, reject) => {
-        Contact.fetchAndAddContactForUser()
+        Contact.fetchAndAddContactForUser(userId)
             .then(contact => {
                 this.contactsCache[contact.id] = contact;
                 resolve(contact);
