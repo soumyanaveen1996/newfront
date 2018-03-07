@@ -223,6 +223,11 @@
     };
 
     let greeting = function (state, previousMessages, botContext) {
+        const _ = botContext.getCapability('Utils').Lodash;
+        if(_.isEmpty(previousMessages)) {
+            let greeting = 'To search for people already using the platform, select the "Find users" option. To invite your friends to start using FrontM, select one of the invite users options';
+            tell(greeting, botContext);
+        }
         return ask(botContext);
     };
 
@@ -262,11 +267,23 @@
         const greeting = 'Adding the selected contacts for you';
         tell(greeting, botContext);
 
-        const Contact = botContext.getCapability('Contact');
-        Contact.addContacts(_reverseFromSliderMessageFormat(message.getMessage()))
-            .then(() => {
-                return ask(botContext);
-            });
+        let contactsToAdd = _reverseFromSliderMessageFormat(message.getMessage());
+        let uuidList = contactsToAdd.map(user =>  user.uuid );
+
+        const authContext = botContext.getCapability('authContext');
+        authContext.getAuthUser(botContext)
+        .then(function (user) {
+            let agentGuardService = botContext.getCapability('agentGuardService');
+            const ADD_CONTACT_ACTION = 'AddContact';
+            agentGuardService.executeCustomCapability(ADD_CONTACT_ACTION, {users: uuidList}, true, undefined, botContext, user, true)
+        })
+        .then(() => {
+            let Contact = botContext.getCapability('Contact');
+            return Contact.addContacts(contactsToAdd);
+        })
+        .then(() => {
+            return ask(botContext);
+        });
     };
 
     const _formatForSliderMessage = function (peopleJson) {

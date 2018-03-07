@@ -242,13 +242,13 @@
                 }
             })
             .catch((err) => {
-                console.log('Error getting the conversation context ', err);
+                    console.log('Error getting the conversation context ', err);
                 reject(err);
             });
     };
 
     const stage = {
-        host: 'stage1.frontm.ai',
+        host: 'stage.frontm.ai',
         protocol: 'https://'
     };
 
@@ -262,7 +262,7 @@
         protocol: 'http://'
     };
 
-    const env = 'dev';
+    const env = 'stage';
 
     const doNetworkCall = function(postReq, botContext, user, canQueue = false) {
         let Network = botContext.getCapability('Network');
@@ -304,7 +304,7 @@
                 uuid : conversation.conversationId,
                 bot: botId,
                 participants: conversation.participants,
-                onChannels: [],
+                onChannels: conversation.onChannels,
                 closed: false
             };
         } else {
