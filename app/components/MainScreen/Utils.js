@@ -1,6 +1,8 @@
 import { Contact, Promise, ConversationContext, MessageTypeConstants } from '../../lib/capability';
 import { MessageHandler } from '../../lib/message';
 import { Queue } from '../../lib/network';
+import { IM_CHAT } from '../../lib/conversation/Conversation';
+import ChannelDAO from '../../lib/persistence/ChannelDAO';
 
 const getMessageDataForBot = (bot) => new Promise((resolve, reject) => {
     // Bot id is the botkey for bot chats
@@ -12,28 +14,46 @@ const getMessageDataForConversation = (conversation, user) => new Promise((resol
     let chatName = '';
     var otherUserId = null;
     // TODO: This is not a very performant code - we need to optimize this!
-    ConversationContext.getBotConversationContextForId(conversation.conversationId)
-        .then((conversationContext) => {
-            context = conversationContext;
-            chatName = ConversationContext.getChatName(context, user)
-            otherUserId = ConversationContext.getOtherUserId(context, user)
-            return Contact.getContactFieldForUUIDs([context.creatorInstanceId]);
-        })
-        .then((contacts) => {
-            if (contacts.length === 0 || !contacts[0].ignored) {
-                getMessageDataForConversationFromServer(conversation, context, chatName, otherUserId)
+    if (conversation.type === IM_CHAT) {
+        ConversationContext.getBotConversationContextForId(conversation.conversationId)
+            .then((conversationContext) => {
+                context = conversationContext;
+                chatName = ConversationContext.getChatName(context, user)
+                otherUserId = ConversationContext.getOtherUserId(context, user)
+                return Contact.getContactFieldForUUIDs([context.creatorInstanceId]);
+            })
+            .then((contacts) => {
+                if (contacts.length === 0 || !contacts[0].ignored) {
+                    getMessageDataForConversationFromServer(conversation, context, chatName, otherUserId)
+                        .then((data) => {
+                            resolve(data);
+                        })
+                } else {
+                    // For ignored users, we don't want to fetch the details from the server.
+                    resolve({
+                        totalUnread: 0,
+                        chatName: chatName
+                    });
+                }
+            })
+    } else {
+        //let channel = null;
+        ConversationContext.getBotConversationContextForId(conversation.conversationId)
+            .then((conversationContext) => {
+                context = conversationContext;
+                chatName = ConversationContext.getChatName(context, user)
+                return ChannelDAO.selectChannelByConversationId(conversation.conversationId);
+            })
+            .then((channel) => {
+                getMessageDataForConversationFromServer(conversation, context, chatName, undefined)
                     .then((data) => {
+                        data.channel = channel;
+                        console.log('Data from server : ', data);
                         resolve(data);
-                    })
-            } else {
-                // For ignored users, we don't want to fetch the details from the server.
-                resolve({
-                    totalUnread: 0,
-                    chatName: chatName
-                });
-            }
-        })
-
+                    });
+            })
+            .catch(reject);
+    }
 });
 
 const getMessageDataForConversationFromServer = (conversation, conversationContext, chatName, otherUserId) => new Promise((resolve, reject) => {

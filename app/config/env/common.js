@@ -49,17 +49,17 @@ const config = {
         botDependenciesDirName: 'bot_dependencies'
     },
     network: {
-        pollingInterval: 20000,
+        pollingInterval: 60000,
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        channelUnsubscribePath: '/unsubChannel'
+        userDetailsPath: '/userDetails',
     },
     proxy: {
-        enabled: false,
+        enabled: true,
         host: PROXY_HOST,
         protocol: 'http://',
         queuePath: '/queueLambda',

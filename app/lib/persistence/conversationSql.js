@@ -39,7 +39,7 @@ const updateConversation = `
         conversationId = ?
 `;
 
-const selectConversations = `
+const selectConversationsByType = `
     SELECT
         id,
         conversationId,
@@ -47,6 +47,16 @@ const selectConversations = `
         created_at_date
     FROM conversation
     WHERE type = ?
+    ORDER BY created_at_date desc
+`;
+
+const selectConversations = `
+    SELECT
+        id,
+        conversationId,
+        type,
+        created_at_date
+    FROM conversation
     ORDER BY created_at_date desc
 `;
 
@@ -82,6 +92,7 @@ export default {
     insertConversation: insertConversation,
     deleteConversation: deleteConversation,
     selectConversations: selectConversations,
+    selectConversationsByType: selectConversationsByType,
     selectConversation: selectConversation,
     selectConversationByType: selectConversationByType,
     updateConversation: updateConversation,

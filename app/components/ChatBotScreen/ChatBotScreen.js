@@ -496,6 +496,10 @@ export default class ChatBotScreen extends React.Component {
         return false;
     }
 
+    shouldShowUserName() {
+        return false;
+    }
+
     onChatListLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         this.chatListHeight = height;
@@ -523,6 +527,7 @@ export default class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             return <ChatMessage message={message}
                 isUserChat={this.isUserChat()}
+                shouldShowUserName={this.shouldShowUserName()}
                 user={this.user}
                 imageSource={{ uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}

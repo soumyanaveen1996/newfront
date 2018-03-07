@@ -5,6 +5,7 @@ import { BotContext } from '../botcontext';
 import config from '../../config/config';
 import SystemBot from '../../lib/bot/SystemBot';
 import ChannelDAO from '../persistence/ChannelDAO';
+import ChannelContactDAO from '../persistence/ChannelContactDAO';
 
 /**
  * Guarantees ordering - first in first out
@@ -52,7 +53,11 @@ const handle = (message, user) => new Promise((resolve, reject) => {
         .then((conversation) => {
             if (conversation) {
                 // Complete the queue call
-                return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                if (Conversation.isChannelConversation(conversation)) {
+                    return resolve(checkForContactAndCompleteQueueResponse(botKey, message));
+                } else {
+                    return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                }
             } else {
                 console.log('Handling new Conversation');
                 return resolve(handleNewConversation(message, user));
@@ -61,6 +66,29 @@ const handle = (message, user) => new Promise((resolve, reject) => {
         .catch((err) => {
             console.log('Error handling the message for IMBot message ', err, message);
         });
+});
+
+const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise((resolve, reject) => {
+    let returnObj = null;
+    Queue.completeAsyncQueueResponse(botKey, message)
+        .then((obj) => {
+            returnObj = obj;
+            console.log('Checking for user : ', message.createdBy);
+            return ChannelContactDAO.selectChannelContact(message.createdBy)
+        })
+        .then((contact) => {
+            console.log('Got contact for user : ', contact);
+            if (contact) {
+                return contact;
+            } else {
+                return Contact.fetchAndContactForUser(message.createdBy)
+            }
+        })
+        .then((contact) => {
+            console.log('Fetched contact for user : ', contact);
+            resolve(returnObj);
+        })
+        .catch(reject);
 });
 
 const handleNewIMConversation = (conversationData, message, user, botContext, creator) => new Promise((resolve, reject) => {
@@ -121,14 +149,14 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
             return ConversationContext.saveConversationContext(conversationContext, botContext, user);
         })
         .then((conversationContext) => {
-            console.log('Conversation Context : ', conversationContext, channel, botKey);
+            console.log('Conversation Context in new message : ', conversationContext, channel, botKey);
             return ChannelDAO.updateConversationForChannel(channel.name, channel.domain, botKey);
         })
         .then(() => {
             return Conversation.createChannelConversation(botKey);
         })
         .then(() => {
-            return Queue.completeAsyncQueueResponse(botKey, message);
+            return checkForContactAndCompleteQueueResponse(botKey, message);
         })
         .then(() => {
             resolve();

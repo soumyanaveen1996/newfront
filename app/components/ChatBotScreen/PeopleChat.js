@@ -174,7 +174,6 @@ export default class PeopleChat extends ChatBotScreen {
 
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
-            console.log('Hello hererssss');
             Conversation.deleteConversation(this.conversation.conversationId);
         }
     }

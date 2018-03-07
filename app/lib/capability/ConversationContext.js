@@ -235,11 +235,15 @@ export default class ConversationContext {
     };
 
     static getChatName = function (conversationContext, user) {
-        const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-            return p.uuid !== user.userUUID
-        });
-        const names = _.map(otherParticipants, 'name');
-        return names.join(',');
+        if (conversationContext.onChannels.length > 0) {
+            return conversationContext.onChannels[0].name;
+        } else {
+            const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
+                return p.uuid !== user.userUUID
+            });
+            const names = _.map(otherParticipants, 'name');
+            return names.join(',');
+        }
     };
 
     static deleteConversationContext = (conversationId)  => new Promise((resolve, reject) => {

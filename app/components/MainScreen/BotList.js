@@ -29,7 +29,7 @@ export default class BotList extends React.Component {
     async refresh() {
         // TODO: In general overall performance of this is questionable. We need a better way to know what has changed and bubble that up
         const bots = this.props.bots;
-        let conversations = await Promise.resolve(Conversation.getAllIMConversations()) || [];
+        let conversations = await Promise.resolve(Conversation.getAllConversations()) || [];
         let user = await Auth.getUser();
         // All
         let allChats = [];

@@ -1,5 +1,6 @@
 import { MessageDAO, NetworkDAO, ConversationDAO, ArrayStorageDAO, DbVersionDAO } from '../../lib/persistence';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
+import ChannelContactDAO from '../../lib/persistence/ChannelContactDAO';
 
 const createMessageTable = MessageDAO.createMessageTable;
 const createNetworkRequestQueueTable = NetworkDAO.createNetworkRequestQueueTable;
@@ -57,6 +58,13 @@ function fiveToSixMigration() {
         })
 }
 
+function sixToSevenMigration() {
+    return ChannelContactDAO.createChannelContactsTable()
+        .then(() => {
+            return DbVersionDAO.updateVersion(7);
+        })
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -105,6 +113,13 @@ function runMigrations() {
             .then((version) => {
                 if (version === 5) {
                     return fiveToSixMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 6) {
+                    return sixToSevenMigration()
                 } else {
                     return version;
                 }

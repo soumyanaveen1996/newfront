@@ -8,6 +8,9 @@ import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
+import { IM_CHAT } from '../../lib/conversation/Conversation';
+import Utils from '../../lib/utils';
+import { CachedImage } from '../CachedImage';
 
 export default class ConversationListItem extends React.Component {
 
@@ -63,12 +66,19 @@ export default class ConversationListItem extends React.Component {
         }
     }
     renderProfileimage() {
-        return <ProfileImage
-            uuid={this.state.otherUserId}
-            placeholder={images.user_image}
-            style={BotListItemStyles.image}
-            placeholderStyle={BotListItemStyles.image}
-            resizeMode="cover"/>;
+        if (this.conversation.type === IM_CHAT) {
+            return <ProfileImage
+                uuid={this.state.otherUserId}
+                placeholder={images.user_image}
+                style={BotListItemStyles.image}
+                placeholderStyle={BotListItemStyles.image}
+                resizeMode="cover"/>;
+        } else {
+            return <CachedImage
+                source={{ uri: Utils.channelLogoUrl(this.props.chatData.channel.logo) } }
+                style={ BotListItemStyles.image }
+                resizeMode="contain"/>;
+        }
     }
 
     render() {

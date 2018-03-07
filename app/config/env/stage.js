@@ -4,7 +4,7 @@ import commonConfig from './common';
 const S3_HOST = 's3.amazonaws.com';
 const CATALOG_HOST = 'mq2bsx6jae.execute-api.us-east-1.amazonaws.com';
 const QUEUE_HOST = 'oc8208kdrk.execute-api.us-east-1.amazonaws.com';
-const PROXY_HOST = 'stage1.frontm.ai';
+const PROXY_HOST = 'stage.frontm.ai';
 
 // Overwrite any property as desired.
 const stageConfig = {
@@ -25,7 +25,7 @@ const stageConfig = {
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        channelUnsubscribePath: '/unsubChannel'
+        userDetailsPath: '/userDetails',
     },
     proxy: {
         enabled: true,

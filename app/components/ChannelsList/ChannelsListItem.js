@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View, Text, Image } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View, Text } from 'react-native';
 import styles from './styles';
 import Utils from '../../lib/utils';
+import CachedImage from '../CachedImage';
 import { Channel } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 
@@ -68,7 +69,7 @@ export default class ChannelsListItem extends React.Component {
         const channel = this.props.channel;
         return (
             <TouchableOpacity style={styles.container} onPress={this.onItemPressed.bind(this)}>
-                <Image source={{ uri: Utils.channelLogoUrl(channel.logo) } } style={ styles.image } resizeMode="contain"/>
+                <CachedImage source={{ uri: Utils.channelLogoUrl(channel.logo) } } style={ styles.image } resizeMode="contain"/>
                 <View style={styles.textContainer}>
                     <Text style={ styles.title } >{ channel.name }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.desc}</Text>

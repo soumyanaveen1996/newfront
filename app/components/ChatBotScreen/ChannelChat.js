@@ -85,7 +85,6 @@ export default class ChannelChat extends ChatBotScreen {
             context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel, this.channel.conversationId));
             ConversationContext.updateParticipants(context, this.participants);
 
-            console.log('Conversation Context : ', context);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -119,7 +118,6 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async handleAsyncMessageResult (event) {
-        console.log('Event : ', event);
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
             return;
@@ -138,20 +136,13 @@ export default class ChannelChat extends ChatBotScreen {
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
         let newConversation = await Conversation.getChannelConversation(newConversationId);
-        console.log('New conversation : ', newConversation, newConversationId, oldConversationId);
-        console.log('Old conversation : ', await Conversation.getChannelConversation(oldConversationId))
         if (newConversation) {
-            console.log('Deleting old conversation');
             await Conversation.deleteChannelConversation(oldConversationId);
             this.conversation = newConversation
         } else {
-            console.log('updating old conversation');
             await Conversation.updateConversation(oldConversationId, newConversationId);
-            console.log('updated old conversation');
             this.conversation = await Conversation.getChannelConversation(newConversationId);
         }
-        console.log('Old conversation : ', await Conversation.getChannelConversation(oldConversationId))
-        console.log(await Conversation.getChannelConversation(newConversationId));
     }
 
     async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
@@ -162,12 +153,10 @@ export default class ChannelChat extends ChatBotScreen {
         } else {
             this.conversationContext = newContext;
         }
-        console.log(await ConversationContext.getBotConversationContextForId(newConversationId));
         await ConversationContext.deleteConversationContext(oldConversationId);
     }
 
     async updateConversationContextId(newConversationId) {
-        console.log('New convesation Id : ', newConversationId);
         let oldConversationId = this.conversationContext.conversationId;
 
         await this.createOrUpdateConversation(oldConversationId, newConversationId);
@@ -184,6 +173,10 @@ export default class ChannelChat extends ChatBotScreen {
         return true
     }
 
+    shouldShowUserName() {
+        return true
+    }
+
     async onSendMessage(messageStr) {
         this.sentMessageCount += 1;
         return super.onSendMessage(messageStr);
@@ -191,12 +184,14 @@ export default class ChannelChat extends ChatBotScreen {
 
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
-            console.log('Hello hererssss');
             Conversation.deleteChannelConversation(this.conversation.conversationId);
-            if (this.channel) {
+            let currentChannel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId);
+            if (currentChannel && this.channel && this.channel.id === currentChannel.id) {
+                console.log('deleting conversation Id from channel');
                 ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, null);
+            } else {
+                console.log('conversation got updated. So not upditng to null');
             }
         }
     }
-
 }
