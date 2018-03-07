@@ -6,6 +6,7 @@ import config from '../../config/config';
 import SystemBot from '../../lib/bot/SystemBot';
 import ChannelDAO from '../persistence/ChannelDAO';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
+import { ContactsCache } from '../ContactsCache';
 
 /**
  * Guarantees ordering - first in first out
@@ -81,7 +82,7 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             if (contact) {
                 return contact;
             } else {
-                return Contact.fetchAndContactForUser(message.createdBy)
+                return ContactsCache.fetchContactDetailsForUser(message.createdBy);
             }
         })
         .then((contact) => {

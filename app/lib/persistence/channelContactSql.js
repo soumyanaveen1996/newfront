@@ -38,10 +38,22 @@ const selectChannelContact = `
     WHERE id = ?
 `;
 
+const selectAllContacts = `
+    SELECT
+        id,
+        name,
+        email,
+        screenName,
+        givenName,
+        surname
+    FROM channel_contacts
+`;
+
 
 export default {
     createChannelContactsTable,
     insertChannelContact,
     deleteChannelContact,
     selectChannelContact,
+    selectAllContacts,
 };

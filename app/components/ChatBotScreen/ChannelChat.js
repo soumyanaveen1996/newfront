@@ -65,11 +65,13 @@ export default class ChannelChat extends ChatBotScreen {
     async getConversationContext(botContext, user) {
         try {
             let context = null;
-            console.log('Conversation ID from channel : ', this.channel.conversationId);
             if (this.conversation) {
                 this.channel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId)
             } else if (this.channel && this.channel.conversationId) {
                 this.conversation = await Conversation.getChannelConversation(this.channel.conversationId);
+            }
+            if (this.channel) {
+                console.log('Conversation ID from channel : ', this.channel.conversationId);
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {

@@ -264,6 +264,14 @@ const stylesheet = StyleSheet.create({
         marginTop: 20,
         width: '100%'
     },
+    userNameStyle: {
+        display: 'flex',
+        color: GlobalColors.white,
+        fontWeight: '600',
+        fontSize: 12,
+        marginBottom: 3,
+        fontStyle: 'italic'
+    },
     buttonMessage: {
         flex: 1,
         alignItems: 'center',

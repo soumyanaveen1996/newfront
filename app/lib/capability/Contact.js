@@ -223,7 +223,7 @@ export default class Contact {
             })
     });
 
-    static fetchAndContactForUser = (uuid) => new Promise((resolve, reject) => {
+    static fetchAndAddContactForUser = (uuid) => new Promise((resolve, reject) => {
         Auth.getUser()
             .then((user) => {
                 if (user) {

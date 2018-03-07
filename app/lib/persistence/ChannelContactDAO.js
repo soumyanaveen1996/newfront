@@ -2,6 +2,7 @@ import Promise from '../Promise';
 import { db } from './db';
 import channelContactSql from './channelContactSql';
 import Utils from '../utils/index';
+import _ from 'lodash';
 
 
 const createChannelContactsTable = () => new Promise((resolve, reject) => {
@@ -72,9 +73,27 @@ const selectChannelContact = (id) => new Promise((resolve, reject) => {
     });
 });
 
+const selectAllContacts = (id) => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(channelContactSql.selectAllContacts, [], function success(tx, res) {
+            res = Utils.addArrayToSqlResults(res);
+            let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            if (dbResults.length === 0) {
+                return resolve(null);
+            } else {
+                let contacts = _.map(dbResults, (dbResult) => channelContactDataFromDbResult(dbResult));
+                return resolve(contacts);
+            }
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createChannelContactsTable,
     insertChannelContact,
     deleteChannelContact,
     selectChannelContact,
+    selectAllContacts,
 };

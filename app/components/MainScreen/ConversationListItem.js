@@ -29,7 +29,11 @@ export default class ConversationListItem extends React.Component {
     handleBotSelection() {
         SystemBot.get(SystemBot.imBotManifestName)
             .then((imBot) => {
-                Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                if (this.conversation.type === IM_CHAT) {
+                    Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                } else {
+                    Actions.channelChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                }
             });
     }
 
