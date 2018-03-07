@@ -107,10 +107,8 @@ export default class ChatMessage extends React.Component {
     renderImageMessage(message) {
         const url = message.getMessage();
         let headers = utils.s3DownloadHeaders(url, this.props.user) || undefined;
-        const component = (
-            <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />
-        );
-
+        const imageComponent = <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />;
+        const component = this.wrapWithTitle(imageComponent);
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
@@ -166,10 +164,9 @@ export default class ChatMessage extends React.Component {
         console.log(shouldShowUserName, message.isMessageByBot())
         if (shouldShowUserName && message.getCreatedBy()) {
             let user = ContactsCache.getUserDetails(message.getCreatedBy());
-            console.log(' User from contacts cache : ', );
             return (
                 <View style={{flexDirection: 'column'}}>
-                    <Text style={styles.userNameStyle}>{user ? user.screenName : message.getCreatedBy()}</Text>
+                    <Text style={styles.userNameStyle}>{user ? user.screenName : I18n.t('Unknown')}</Text>
                     {component}
                 </View>
             )

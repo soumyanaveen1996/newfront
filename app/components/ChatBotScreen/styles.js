@@ -270,7 +270,8 @@ const stylesheet = StyleSheet.create({
         fontWeight: '600',
         fontSize: 12,
         marginBottom: 3,
-        fontStyle: 'italic'
+        fontStyle: 'italic',
+        height: 15,
     },
     buttonMessage: {
         flex: 1,

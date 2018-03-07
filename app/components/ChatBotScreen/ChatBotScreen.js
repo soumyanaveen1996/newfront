@@ -400,7 +400,9 @@ export default class ChatBotScreen extends React.Component {
     }
 
     scrollToBottomIfNeeded() {
-        this.chatList.scrollToEnd({ animated: true });
+        if (this.chatList) {
+            this.chatList.scrollToEnd({ animated: true });
+        }
     }
 
     onSliderDone = (selectedRows) => {
