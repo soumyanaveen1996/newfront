@@ -48,7 +48,6 @@ const getMessageDataForConversation = (conversation, user) => new Promise((resol
                 getMessageDataForConversationFromServer(conversation, context, chatName, undefined)
                     .then((data) => {
                         data.channel = channel;
-                        console.log('Data from server : ', data);
                         resolve(data);
                     });
             })
