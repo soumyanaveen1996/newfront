@@ -41,10 +41,10 @@ const readRemoteLambdaQueue = (user) => {
         .then((res) => {
             const _ = Utils.Lodash;
 
-            let resData = res ? res.data : [];
+            let resData = res.data || []
 
-            if (_.head(resData).count > 0) {
-                let messages = _.head(resData).data || [];
+            if (resData.length > 0) {
+                let messages = resData;
 
                 // Note: This is done to account for the agentGuardQueue which is not FIFO but LIFO
                 messages = messages.reverse();
