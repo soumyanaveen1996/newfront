@@ -1,12 +1,11 @@
 import React from 'react';
 import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text, NetInfo } from 'react-native';
 import { AudioRecorder, AudioUtils } from 'react-native-audio';
-import styles from './styles';
+import styles, { chatBarStyle } from './styles';
 import Images from '../../config/images';
 import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
-import { Network } from '../../lib/capability';
 
 export default class ChatInputBar extends React.Component {
 
@@ -16,25 +15,15 @@ export default class ChatInputBar extends React.Component {
 
     componentWillMount() {
         this.setInitialState();
-        Network.addConnectionChangeEventListener(this.handleConnectionChange)
     }
 
     async componentWillUnmount() {
         // Stop recording when the user closes the app
         await this._cancelRecording();
-        Network.removeConnectionChangeEventListener(this.handleConnectionChange);
     }
 
     setInitialState() {
-        this.setState({ recordedTimeInSeconds: 0, text: '', chatState: ChatInputBarState.READY_FOR_SPEECH, network:'false'});
-    }
-
-    handleConnectionChange = (isConnected) => {
-        if(isConnected){
-            this.setState({ network: 'true' });
-        } else {
-            this.setState({ network: 'false' });
-        }
+        this.setState({ recordedTimeInSeconds: 0, text: '', chatState: ChatInputBarState.READY_FOR_SPEECH });
     }
 
     showOptions() {
@@ -265,7 +254,7 @@ export default class ChatInputBar extends React.Component {
             const minutes = String(Math.floor(seconds / 60));
             seconds = String(seconds);
             return (
-                <View style={this.state.network === "true" ? styles.chatBarNetOn : styles.chatBarNetOff}>
+                <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={() => this._cancelRecording()} style={styles.cancelButton}>
                         {Icons.cancelRecording({style: styles.cancelRecordingIcon})}
                     </TouchableOpacity>
@@ -277,7 +266,7 @@ export default class ChatInputBar extends React.Component {
             );
         } else {
             return (
-                <View style={this.state.network === "true" ? styles.chatBarNetOn : styles.chatBarNetOff}>
+                <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={this.showOptions.bind(this)}>
                         <Image source={Images.btn_more} style={styles.chatBarMoreButton}/>
                     </TouchableOpacity>

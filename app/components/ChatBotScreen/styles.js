@@ -101,26 +101,6 @@ const stylesheet = StyleSheet.create({
         fontWeight: 'bold',
         paddingRight: 10,
     },
-    chatBarNetOn: {
-        minHeight: 50,
-        maxHeight: 108,
-        flexDirection: 'row',
-        backgroundColor: 'rgb(255, 218, 185)',
-        alignItems: 'center',
-        paddingVertical: 7,
-        borderTopWidth: 1,
-        borderColor: 'rgb(202, 206, 204)',
-    },
-    chatBarNetOff: {
-        minHeight: 50,
-        maxHeight: 108,
-        flexDirection: 'row',
-        backgroundColor: 'rgb(248, 248, 248)',
-        alignItems: 'center',
-        paddingVertical: 7,
-        borderTopWidth: 1,
-        borderColor: 'rgb(202, 206, 204)',
-    },
     chatTextInput: {
         paddingHorizontal: 20,
         fontSize: 18,
@@ -353,21 +333,34 @@ const stylesheet = StyleSheet.create({
         height: 30,
         backgroundColor: 'rgb(248, 248, 248)',
     },
-    statusMessageNetOn: {
-        height: 40,
-        textAlign: 'center',
-        paddingBottom:7,
-        flex:1,
-        color:'rgb(255,78,66)',
+    chatBar: {
+        minHeight: 50,
+        maxHeight: 108,
+        flexDirection: 'row',
+        backgroundColor: 'rgb(248, 248, 248)',
+        alignItems: 'center',
+        paddingVertical: 7,
+        borderTopWidth: 1,
+        borderColor: 'rgb(202, 206, 204)',
     },
-    statusMessageNetOff: {
-        height: 40,
-        textAlign: 'center',
-        paddingBottom:7,
-        flex:1,
-        color:'rgb(0,0,0)',
-    }
+    chatBarSatellite: {
+        backgroundColor: 'rgb(255, 218, 185)',
+    },
+    chatBarNoNetwork: {
+        backgroundColor: 'rgb(192, 201, 208)',
+    },
 });
+
+
+export function chatBarStyle(network) {
+    if (network === 'none') {
+        return [ stylesheet.chatBar, stylesheet.chatBarNoNetwork ];
+    } else if (network === 'satellite') {
+        return [ stylesheet.chatBar, stylesheet.chatBarSatellite ];
+    } else {
+        return [ stylesheet.chatBar ];
+    }
+}
 
 export function buttonStyle(style) {
     if (style === ButtonStyle.bright) {
@@ -483,6 +476,56 @@ export function ellipsisMessageBubbleStyle(alignRight = false, imageSource) {
         } else {
             return [stylesheet.ellipsisBubble, { marginLeft: 15 }];
         }
+    }
+}
+
+
+export const ChatStatusBarStyles = StyleSheet.create({
+    chatStatusBar: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 24,
+        flexDirection: 'row',
+        backgroundColor: 'rgb(192, 201, 208)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    chatStatusBarSatellite: {
+        backgroundColor: 'rgb(254, 214, 203)',
+    },
+    closeButton: {
+        height: 24,
+        width: 24,
+        position: 'absolute',
+        top: 2,
+        right: 3,
+    },
+    statusMessage: {
+        textAlign: 'center',
+        color: 'rgb(122, 127, 135)',
+    },
+    statusMessageSatellite: {
+        color: 'rgb(243, 115, 78)',
+    }
+})
+
+export function networkStatusBarStyle(network) {
+    if (network === 'none') {
+        return [ChatStatusBarStyles.chatStatusBar];
+    } else if (network === 'satellite') {
+        return [ChatStatusBarStyles.chatStatusBar, ChatStatusBarStyles.chatStatusBarSatellite];
+    } else {
+    }
+}
+
+export function networkStatusBarTextStyle(network) {
+    if (network === 'none') {
+        return [ChatStatusBarStyles.statusMessage];
+    } else if (network === 'satellite') {
+        return [ChatStatusBarStyles.statusMessage, ChatStatusBarStyles.statusMessageSatellite];
+    } else {
     }
 }
 

@@ -45,16 +45,13 @@ function Network(options, queue = false) {
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
-                //connected = false;
                 if (connected) {
-                    //EventEmitter.emit(NetworkEvents.networkSatellite);
                     return resolve(axios(options));
                 } else {
                     if (queue) {
                         let key = SHA1(JSON.stringify(options.data)).toString();
                         return resolve(futureRequest(key, new NetworkRequest(options)));
                     } else {
-                        //EventEmitter.emit(NetworkEvents.networkOffline);
                         reject(new Error('No network connectivity'));
                     }
                 }
@@ -77,11 +74,11 @@ Network.isCellular = () => new Promise((resolve, reject) => {
 });
 
 Network.addConnectionChangeEventListener = (handleConnectionChange) => {
-    NetInfo.isConnected.addEventListener('connectionChange', handleConnectionChange);
+    NetInfo.addEventListener('change', handleConnectionChange);
 }
 
 Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
-    NetInfo.isConnected.removeEventListener('connectionChange', handleConnectionChange);
+    NetInfo.removeEventListener('change', handleConnectionChange);
 }
 
 Network.isConnected = () => {

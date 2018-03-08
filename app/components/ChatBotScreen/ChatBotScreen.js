@@ -18,16 +18,8 @@ import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Message,
-    Contact,
-    MessageTypeConstants,
-    Auth,
-    ConversationContext,
-    Media,
-    Resource,
-    ResourceTypes } from '../../lib/capability';
+import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes } from '../../lib/capability';
 import dce from '../../lib/dce';
-import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
 import Constants from '../../config/constants';
@@ -210,6 +202,7 @@ export default class ChatBotScreen extends React.Component {
 
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
+        Network.addConnectionChangeEventListener(this.handleConnectionChange)
     }
 
     async componentWillUnmount() {
@@ -223,6 +216,24 @@ export default class ChatBotScreen extends React.Component {
         }
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
+        }
+        Network.removeConnectionChangeEventListener(this.handleConnectionChange)
+    }
+
+    handleConnectionChange = (connection) => {
+        console.log('Connection : ', connection);
+        if (connection === 'none') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'none'
+            })
+        } else {
+            if (this.state.network === 'none') {
+                this.setState({
+                    showNetworkStatusBar: false,
+                    network: 'connected',
+                })
+            }
         }
     }
 
@@ -532,7 +543,7 @@ export default class ChatBotScreen extends React.Component {
                 isUserChat={this.isUserChat()}
                 shouldShowUserName={this.shouldShowUserName()}
                 user={this.user}
-                imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
+                imageSource={{ uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
                 onLayout={this.onMessageItemLayout.bind(this)} />;
@@ -839,11 +850,27 @@ export default class ChatBotScreen extends React.Component {
 
         return (
             <ChatInputBar
+                network={this.state.network}
                 onSend={this.onSendMessage.bind(this)}
                 onSendAudio={this.onSendAudio.bind(this)}
                 options={moreOptions}
                 onOptionSelected={this.onOptionSelected.bind(this)} />
         );
+    }
+
+    onChatStatusBarClose = () => {
+        this.setState({
+            showNetworkStatusBar: false,
+        })
+    }
+
+    renderNetworkStatusBar = () => {
+        const { network, showNetworkStatusBar } = this.state;
+        console.log('In render Network Status bar : ', network, showNetworkStatusBar);
+        if (showNetworkStatusBar && (network === 'none' || network === 'satellite')) {
+            console.log('Rending Chat status bar');
+            return <ChatStatusBar network={this.state.network} onChatStatusBarClose={this.onChatStatusBarClose}/>;
+        }
     }
 
     render() {
@@ -862,7 +889,6 @@ export default class ChatBotScreen extends React.Component {
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior="padding"
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <ChatStatusBar />
                     <FlatList ref={(list) => {this.chatList = list}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
@@ -877,6 +903,7 @@ export default class ChatBotScreen extends React.Component {
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
                     {this.renderChatInputBar()}
+                    {this.renderNetworkStatusBar()}
                 </KeyboardAvoidingView>
             </SafeAreaView>
         );

@@ -16,7 +16,7 @@ import dce from '../../lib/dce';
 import SystemBot from '../../lib/bot/SystemBot';
 import { MessageHandler } from '../../lib/message';
 
-export default class InstalledBotsScreen extends React.Component {ƒ
+export default class InstalledBotsScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {

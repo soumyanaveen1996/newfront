@@ -161,7 +161,7 @@ export default class ChatMessage extends React.Component {
 
     wrapWithTitle(component) {
         let { message, shouldShowUserName } = this.props;
-        console.log(shouldShowUserName, message.isMessageByBot())
+        //console.log(shouldShowUserName, message.isMessageByBot())
         if (shouldShowUserName && message.getCreatedBy()) {
             let user = ContactsCache.getUserDetails(message.getCreatedBy());
             return (

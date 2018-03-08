@@ -1,54 +1,45 @@
 import React from 'react';
-import { View, TextInput ,TouchableOpacity , NetInfo} from "react-native";
-import chatStyles from "./styles";
-import {Icons} from "../../config/icons";
-import { Network } from '../../lib/capability';
-
+import { View, Text ,TouchableOpacity} from 'react-native';
+import { ChatStatusBarStyles, networkStatusBarStyle, networkStatusBarTextStyle } from './styles';
+import { Icons } from '../../config/icons';
+import I18n from '../../config/i18n/i18n';
 
 export default class ChatStatusBar extends React.Component {
-
     componentWillMount() {
-        this.setInitialState();
-        Network.addConnectionChangeEventListener(this.handleConnectionChange)
-    }
-
-    setInitialState() {
-        this.setState({ showStatusBar: 'true',statusMessage: 'Online over Satellite',network:'true'});
-    }
-
-    componentWillUnmount() {
-        Network.removeConnectionChangeEventListener(this.handleConnectionChange)
-    }
-
-    handleConnectionChange = (isConnected) => {
-        if(isConnected){
-            this.setState({ network: 'true',showStatusBar: 'true', statusMessage: 'Online Over Satellite'});
-        } else {
-            this.setState({ network: 'false',showStatusBar: 'true', statusMessage: 'Offline' });
-        }
     }
 
     closeStatus() {
-        this.setState({ showStatusBar: false });
+        this.props.onChatStatusBarClose();
     }
 
-    render() {
-        if(this.state.showStatusBar) {
-            return (
-                <View style={this.state.network === "true" ? chatStyles.statusBarNetOn : chatStyles.statusBarNetOff}>
-                    <TextInput
-                        style={this.state.network === "true" ? chatStyles.statusMessageNetOn : chatStyles.statusMessageNetOff}
-                        value={this.state.statusMessage}
-                    />
-                    <TouchableOpacity style={chatStyles.closeButton} onPress={this.closeStatus.bind(this)} >
-                        {this.state.network === "true" ? Icons.statusBarCloseNetOn() : Icons.statusBarCloseNetOff()}
-                    </TouchableOpacity>
-                </View>
-            );
-        } else {
-            return (null);
+    message() {
+        const { network } = this.props;
+        if (network === 'none') {
+            return I18n.t('No_Network');
+        } else if (network === 'satellite') {
+            return I18n.t('Satellite_connection');
         }
     }
 
-};
+    icon() {
+        const { network } = this.props;
+        if (network === 'none') {
+            return Icons.nonetworkChatStatusClose();
+        } else if (network === 'satellite') {
+            return Icons.satelliteChatStatusClose();
+        }
+    }
+
+    render() {
+        const { network } = this.props;
+        return (
+            <View style={networkStatusBarStyle(network)}>
+                <Text style={networkStatusBarTextStyle(network)}>{this.message()}</Text>
+                <TouchableOpacity style={ChatStatusBarStyles.closeButton} onPress={this.closeStatus.bind(this)} >
+                    {this.icon()}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+}
 

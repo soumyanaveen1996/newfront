@@ -80,7 +80,9 @@ I18n.translations = {
         'Field_mandatory': 'Field is mandatory',
         'Channel_unsubscribed': 'Unsubscribed from the channel',
         'Channel_unsubscribe_failed': 'Failed to unsubscribe from the channel',
-        'Unknown': 'Unknown'
+        'Unknown': 'Unknown',
+        'No_Network': 'No network connection',
+        'Satellite_connection': 'Online over Satellite',
     },
 }
 

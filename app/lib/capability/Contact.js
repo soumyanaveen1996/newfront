@@ -227,7 +227,6 @@ export default class Contact {
         Auth.getUser()
             .then((user) => {
                 if (user) {
-                    console.log('URL : ', `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}&uuid=${uuid}`);
                     let options = {
                         'method': 'get',
                         'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}&uuid=${uuid}`,
