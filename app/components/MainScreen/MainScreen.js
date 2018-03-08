@@ -100,7 +100,7 @@ export default class MainScreen extends React.Component {
 
     openChannels() {
         this.floatingButton.reset(true);
-        Actions.channelsList();
+        Actions.channelsList({ onBack: this.onBack.bind(this) });
     }
 
     openBotFilter() {
