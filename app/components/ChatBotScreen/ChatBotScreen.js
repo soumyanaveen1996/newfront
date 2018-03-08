@@ -866,9 +866,7 @@ export default class ChatBotScreen extends React.Component {
 
     renderNetworkStatusBar = () => {
         const { network, showNetworkStatusBar } = this.state;
-        console.log('In render Network Status bar : ', network, showNetworkStatusBar);
         if (showNetworkStatusBar && (network === 'none' || network === 'satellite')) {
-            console.log('Rending Chat status bar');
             return <ChatStatusBar network={this.state.network} onChatStatusBarClose={this.onChatStatusBarClose}/>;
         }
     }

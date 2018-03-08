@@ -21,10 +21,13 @@ class NetworkPoller {
         AppState.addEventListener('change', this.handleAppStateChange);
     }
 
-    handleAppStateChange = (nextAppState) => {
+    handleAppStateChange = async (nextAppState) => {
         if (nextAppState === 'active') {
-            console.log('Reading Lambda');
-            NetworkHandler.readLambda();
+            let user = await Auth.getUser();
+            if (user.userUUID !== 'default_user_uuid') {
+                console.log('Reading Lambda');
+                NetworkHandler.readLambda();
+            }
         }
     }
 
