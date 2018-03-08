@@ -6,7 +6,7 @@ import { Bot as DceBot } from '../dce';
 import { Utils, Network, Auth, Promise } from '../capability';
 import { NetworkError } from '../network';
 import SystemBot from './SystemBot';
-import {MessageHandler} from "../message";
+import {MessageHandler} from '../message';
 import FrontmUtils from '../../lib/utils';
 
 class Bot extends events.EventEmitter {
