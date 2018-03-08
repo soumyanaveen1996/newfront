@@ -25,6 +25,7 @@ import AnimatedEllipsis from 'react-native-animated-ellipsis';
 import VideoPlayer from 'react-native-video-player';
 import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
+import { ContactsCache } from '../../lib/ContactsCache';
 
 export default class ChatMessage extends React.Component {
 
@@ -106,10 +107,8 @@ export default class ChatMessage extends React.Component {
     renderImageMessage(message) {
         const url = message.getMessage();
         let headers = utils.s3DownloadHeaders(url, this.props.user) || undefined;
-        const component = (
-            <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />
-        );
-
+        const imageComponent = <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />;
+        const component = this.wrapWithTitle(imageComponent);
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
@@ -160,6 +159,22 @@ export default class ChatMessage extends React.Component {
             });
     }
 
+    wrapWithTitle(component) {
+        let { message, shouldShowUserName } = this.props;
+        console.log(shouldShowUserName, message.isMessageByBot())
+        if (shouldShowUserName && message.getCreatedBy()) {
+            let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            return (
+                <View style={{flexDirection: 'column'}}>
+                    <Text style={styles.userNameStyle}>{user ? user.screenName : I18n.t('Unknown')}</Text>
+                    {component}
+                </View>
+            )
+        } else {
+            return component;
+        }
+    }
+
     renderMessage() {
         let { message } = this.props;
 
@@ -169,7 +184,7 @@ export default class ChatMessage extends React.Component {
 
             const component = (
                 <View style={chatMessageBubbleStyle(this.props.alignRight, this.props.imageSource)}>
-                    <Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>
+                    {this.wrapWithTitle(<Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>)}
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);

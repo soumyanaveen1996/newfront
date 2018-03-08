@@ -15,8 +15,9 @@ import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import SystemBot from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
+import { ContactsCache } from '../../lib/ContactsCache';
 
-const VERSION = 5; // Corresponding to 2.3.0. Update this number every time we update initial_bots
+const VERSION = 6; // Corresponding to 2.3.0. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -35,10 +36,12 @@ export default class Splash extends React.Component {
         console.log('Overrode console object. Now starting initialization');
 
         DataManager.init();
+        ContactsCache.init();
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
+
 
         if (forceUpdate) {
             console.log('Copying Bots');

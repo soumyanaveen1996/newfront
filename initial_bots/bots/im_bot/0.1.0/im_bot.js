@@ -26,16 +26,27 @@
                     Contact.getContactFieldForUUIDs(contact.uuid)
                         .then((contacts) => {
                             if (_.isEmpty(contacts)) {
+                                let capParams = {
+                                    users: [contact.uuid]
+                                };
+
+                                let agentGuardService = botContext.getCapability('agentGuardService');
                                 if (ADD_CONTACT_ACTION === action) {
-                                    Contact.addContacts(contact)
+                                    agentGuardService.executeCustomCapability(ADD_CONTACT_ACTION, capParams, true, undefined, botContext, user, true)
                                         .then(() => {
-                                        tell('Contact ' + contact.name + ' added', botContext);
-                                    });
+                                            return Contact.addContacts(contact);
+                                        })
+                                        .then(() => {
+                                            tell('Contact ' + contact.name + ' added', botContext);
+                                        });
                                 } else if (IGNORE_CONTACT_ACTION === action) {
-                                    Contact.ignoreContact(contact)
+                                    agentGuardService.executeCustomCapability(IGNORE_CONTACT_ACTION, capParams, true, undefined, botContext, user, true)
                                         .then(() => {
-                                        tell('Contact ' + contact.name + ' ignored', botContext);
-                                    });
+                                            return Contact.ignoreContact(contact);
+                                        })
+                                        .then(() => {
+                                            tell('Contact ' + contact.name + ' ignored', botContext);
+                                        });
                                 }
                             } else {
                                 let contactStatus = contacts[0].ignored ? 'ignored' : 'added';
@@ -58,7 +69,6 @@
         let _ = botContext.getCapability('Utils').Lodash;
 
         let params = {
-            action: 'Send',
             messages: [{
                 messageUuid: msg.getMessageId(),
                 contentType: agentGuardService.getMessageContentType(msg, botContext),
@@ -68,13 +78,27 @@
             }]
         };
 
-        agentGuardService.executeCustomCapability(SEND_IM_MSG_CAPABILITY, params, true, undefined, botContext, user, true)
-        .then((response) => {
-            if(!_.isEmpty(response)) {
-                let convIdToUpdate = _.get(response, '[0].conversationId');
-                botContext.updateConversationContextId(convIdToUpdate);
-            }
-        })
+        let conversationContext = botContext.getCapability('ConversationContext');
+        conversationContext.getConversationContext(botContext, user)
+            .then(function(conversation) {
+                let channelsInfo = conversation.onChannels;
+                if(_.isEmpty(channelsInfo)) {
+                    params.action = 'Send';
+                } else {
+                    params.action = 'SendToChannel';
+                    params.domain = channelsInfo[0].domain;
+                    params.channel = channelsInfo[0].name;
+                }
+
+                agentGuardService.executeCustomCapability(SEND_IM_MSG_CAPABILITY, params, true, undefined, botContext, user, true)
+                    .then((response) => {
+                        if(!_.isEmpty(response)) {
+                            let convIdToUpdate = _.get(response, '[0].conversationId');
+                            botContext.updateConversationContextId(convIdToUpdate);
+                        }
+                    });
+            });
+
     };
 
     let tell = function (msg, botContext) {
@@ -124,14 +148,22 @@
             tell(message, botContext);
         }
 
-        const Contact = botContext.getCapability('Contact');
         const authContext = botContext.getCapability('authContext');
         let loggedInUser = {};
-
         authContext.getAuthUser(botContext)
             .then(function (user) {
                 loggedInUser = user;
-                return Contact.getContactFieldForUUIDs([result.createdBy]);
+                let conversationContext = botContext.getCapability('ConversationContext');
+                return conversationContext.getConversationContext(botContext, user)
+            })
+            .then(function(conversation) {
+                let channelsInfo = conversation.onChannels;
+                if (_.isEmpty(channelsInfo)) {
+                    const Contact = botContext.getCapability('Contact');
+                    return Contact.getContactFieldForUUIDs([result.createdBy]);
+                } else {
+                    return ' ';
+                }
             })
             .then((contacts) => {
                 if (_.isEmpty(contacts)) {
@@ -166,7 +198,8 @@
         const agentGuardService = botContext.getCapability('agentGuardService');
         let params = {
             collection: "People",
-            queryObject: "{uuid:'" + uuid + "'}"
+            queryObject: "{uuid:'" + uuid + "'}",
+            fields: ['emailAddress','givenName', 'screenName', 'surname', 'name', 'uuid']
         };
         return agentGuardService.readData(null, botContext, user, previousMessages, params);
     };

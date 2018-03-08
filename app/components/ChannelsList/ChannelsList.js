@@ -3,7 +3,7 @@ import { View, FlatList } from 'react-native';
 import styles from './styles';
 import { addButtonConfig, headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
-import { HeaderRightIcon } from '../Header';
+import { HeaderRightIcon, HeaderBack } from '../Header';
 import ChannelsListItem from './ChannelsListItem';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
@@ -16,6 +16,7 @@ export default class ChannelsList extends React.Component {
         return {
             headerTitle: headerConfig.headerTitle,
             headerRight: <HeaderRightIcon config={addButtonConfig} onPress={state.params.handleAddChannel} />,
+            headerLeft: <HeaderBack onPress={state.params.onBack ? () => { Actions.pop(); state.params.onBack() } : Actions.pop } refresh={true}/>,
         }
     }
 

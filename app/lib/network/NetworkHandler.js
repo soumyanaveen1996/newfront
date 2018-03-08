@@ -68,11 +68,12 @@ const readRemoteLambdaQueue = (user) => {
 
                 //need to sequence messages for IM Bot - add it to a queue and flush it in series
                 let imbotMessages = [];
+                console.log(messages);
                 _.forEach(messages, function (message) {
                     // TODO: Should we handle IMBot differently here?
                     let bot = message.bot;
                     // Name of the bot is the key, unless its IMBot (one to many relationship)
-                    if (bot === 'im-bot') {
+                    if (bot === 'im-bot'|| bot === 'channels-bot') {
                         // return IMBotMessageHandler.handle(message, user);
                         imbotMessages.push(message);
                     } else {
@@ -80,6 +81,7 @@ const readRemoteLambdaQueue = (user) => {
                     }
                 });
                 if (imbotMessages.length > 0) {
+                    console.log('Handling messages : ', imbotMessages);
                     return IMBotMessageHandler.handleMessageQueue(imbotMessages, user);
                 }
             }

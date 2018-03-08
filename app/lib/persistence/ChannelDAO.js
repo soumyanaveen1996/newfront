@@ -79,7 +79,6 @@ const channelDataFromDbResult = (dbResult) => {
         domain: dbResult.domain
     };
 }
-selectChannelByConversationId
 
 const selectChannelByConversationId = (conversationId) => new Promise((resolve, reject) => {
     db.transaction(transaction => {

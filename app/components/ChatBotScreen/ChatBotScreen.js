@@ -249,6 +249,7 @@ export default class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
+        console.log('Bot Key :', this.getBotKey());
         Queue.selectCompletedNetworkRequests(this.getBotKey())
             .then((pendingAsyncResults) => {
                 pendingAsyncResults = pendingAsyncResults || [];
@@ -400,7 +401,9 @@ export default class ChatBotScreen extends React.Component {
     }
 
     scrollToBottomIfNeeded() {
-        this.chatList.scrollToEnd({ animated: true });
+        if (this.chatList) {
+            this.chatList.scrollToEnd({ animated: true });
+        }
     }
 
     onSliderDone = (selectedRows) => {
@@ -496,6 +499,10 @@ export default class ChatBotScreen extends React.Component {
         return false;
     }
 
+    shouldShowUserName() {
+        return false;
+    }
+
     onChatListLayout = (event) => {
         const { height } = event.nativeEvent.layout;
         this.chatListHeight = height;
@@ -523,6 +530,7 @@ export default class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             return <ChatMessage message={message}
                 isUserChat={this.isUserChat()}
+                shouldShowUserName={this.shouldShowUserName()}
                 user={this.user}
                 imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}

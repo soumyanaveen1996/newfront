@@ -1,4 +1,7 @@
 import DeviceStorage from '../capability/DeviceStorage';
+import { botLogoUrl } from '../utils';
+
+console.log('FrontmUtils : ', botLogoUrl);
 
 const DEVICE_STORAGE_KEY = 'SystemBot-manifest';
 
@@ -91,12 +94,12 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         }
     },
-    'channels-bot': { name: 'ChannelsBot',
+    'channels-bot': { 'name': 'ChannelsBot',
         'id': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
         'vendor': 'frontmai',
         'slug': 'channels-bot',
         'url': 'botfarm/channelsBot.js',
-        'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/Survey_logopng.png',
+        'logoUrl': botLogoUrl('Survey_logopng.png'),
         'description': 'channels bot',
         'version': '0.1.0',
         'featured': true,
@@ -106,14 +109,14 @@ export const SYSTEM_BOT_MANIFEST = {
         'systemBot': true,
         'dependencies': {
             'authContext': {
-                version: '1.0.0',
-                remote: true,
-                url: 'botfarm/rc/authContext.js'
+                'version': '1.0.0',
+                'remote': true,
+                'url': 'botfarm/rc/authContext.js'
             },
-            agentGuardService: {
-                version: '1.0.0',
-                remote: true,
-                url: 'botfarm/rc/agentGuardService.js'
+            'agentGuardService': {
+                'version': '1.0.0',
+                'remote': true,
+                'url': 'botfarm/rc/agentGuardService.js'
             }
         }
     }

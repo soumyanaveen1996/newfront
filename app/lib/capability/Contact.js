@@ -8,6 +8,7 @@ import Utils from '../../lib/utils';
 import config from '../../config/config';
 import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
+import ChannelContactDAO from '../persistence/ChannelContactDAO';
 
 /**
  * Expected format per contact:
@@ -220,6 +221,37 @@ export default class Contact {
                     Contact.saveContacts(allContacts);
                 }
             })
+    });
+
+    static fetchAndAddContactForUser = (uuid) => new Promise((resolve, reject) => {
+        Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    console.log('URL : ', `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}&uuid=${uuid}`);
+                    let options = {
+                        'method': 'get',
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}&uuid=${uuid}`,
+                        'headers': {
+                            accessKeyId: user.aws.accessKeyId,
+                            secretAccessKey: user.aws.secretAccessKey,
+                            sessionToken: user.aws.sessionToken
+                        }
+                    };
+                    return Network(options);
+                }
+            })
+            .then((response) => {
+                console.log(response.data);
+                if (response.data && response.data.length > 0) {
+                    let contact = response.data[0];
+                    return ChannelContactDAO.insertChannelContact(contact.uuid, contact.name, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
+                }
+            })
+            .then((contact) => {
+                console.log('Return contact : ', contact);
+                resolve(contact);
+            })
+            .catch(reject);
     });
 
     static asSliderMessage = (contacts, opts) => {

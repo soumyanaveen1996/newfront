@@ -98,9 +98,9 @@
                 });
             }
             options.push(
-            // {
-            //     title: 'Featured Partners'
-            // },
+            {
+                title: 'Featured Partners'
+            },
             {
                 title: 'Find help',
             },
@@ -393,7 +393,7 @@
                         let companyMsg = new Message();
                         let msgArr = [company, type0MsgSpeech];
                         companyMsg.stringMessage(JSON.stringify(msgArr));
-                        return updateUserInfo(companyMsg, state, previousMessages, botContext);
+                        return updateuserinfo(companyMsg, state, previousMessages, botContext);
                     }
 
                     if(type0MsgSpeech) {

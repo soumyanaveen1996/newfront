@@ -42,6 +42,7 @@ export default class BotContext {
     updateConversationContextId = (contextId) => {
         //const previousConversaionContext = this.conversationContext;
         //this.conversationContext = context;
+        console.log('New Context ID : ', contextId);
         this.botScreen.updateConversationContextId(contextId);
     }
 

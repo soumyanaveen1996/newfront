@@ -5,6 +5,8 @@ import { BotContext } from '../botcontext';
 import config from '../../config/config';
 import SystemBot from '../../lib/bot/SystemBot';
 import ChannelDAO from '../persistence/ChannelDAO';
+import ChannelContactDAO from '../persistence/ChannelContactDAO';
+import { ContactsCache } from '../ContactsCache';
 
 /**
  * Guarantees ordering - first in first out
@@ -48,12 +50,17 @@ const handle = (message, user) => new Promise((resolve, reject) => {
     //  - If the creator is indeed a contact this means that this is the first time the user is getting pinged about this message.
     //  - then, create a new conversation context with the participants, along with the conversationId as the botkey
     //  - then complete Queue call
-    Conversation.getIMConversation(botKey)
+    Conversation.getConversation(botKey)
         .then((conversation) => {
             if (conversation) {
                 // Complete the queue call
-                return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                if (Conversation.isChannelConversation(conversation)) {
+                    return resolve(checkForContactAndCompleteQueueResponse(botKey, message));
+                } else {
+                    return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                }
             } else {
+                console.log('Handling new Conversation');
                 return resolve(handleNewConversation(message, user));
             }
         })
@@ -62,11 +69,35 @@ const handle = (message, user) => new Promise((resolve, reject) => {
         });
 });
 
+const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise((resolve, reject) => {
+    let returnObj = null;
+    Queue.completeAsyncQueueResponse(botKey, message)
+        .then((obj) => {
+            returnObj = obj;
+            console.log('Checking for user : ', message.createdBy);
+            return ChannelContactDAO.selectChannelContact(message.createdBy)
+        })
+        .then((contact) => {
+            console.log('Got contact for user : ', contact);
+            if (contact) {
+                return contact;
+            } else {
+                return ContactsCache.fetchContactDetailsForUser(message.createdBy);
+            }
+        })
+        .then((contact) => {
+            console.log('Fetched contact for user : ', contact);
+            resolve(returnObj);
+        })
+        .catch(reject);
+});
+
 const handleNewIMConversation = (conversationData, message, user, botContext, creator) => new Promise((resolve, reject) => {
     let isUnignoredContact = false;
     const botKey = message.conversation;
     let participants = conversationData.participants;
 
+    console.log('Handling new IM Conversation');
     Contact.getContactFieldForUUIDs([creator.uuid])
         .then((contacts) => {
             if (contacts && contacts.length > 0 && contacts[0].ignored) {
@@ -108,19 +139,25 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
     const botKey = message.conversation;
     let channel = conversationData.onChannels[0];
 
+    console.log('Handling new Channel Conversation : ', conversationData, message, user, botContext, creator);
     ConversationContext.createNewChannelConversationContext(botContext, user, channel)
         .then((conversationContext) => {
             conversationContext.conversationId = botKey;
             conversationContext.onChannels = conversationData.onChannels;
             conversationContext.creatorInstanceId = creator.uuid;
             conversationContext.creator = creator;
+            console.log('Conversation Context : ', conversationContext);
             return ConversationContext.saveConversationContext(conversationContext, botContext, user);
         })
         .then((conversationContext) => {
+            console.log('Conversation Context in new message : ', conversationContext, channel, botKey);
             return ChannelDAO.updateConversationForChannel(channel.name, channel.domain, botKey);
         })
         .then(() => {
-            return Queue.completeAsyncQueueResponse(botKey, message);
+            return Conversation.createChannelConversation(botKey);
+        })
+        .then(() => {
+            return checkForContactAndCompleteQueueResponse(botKey, message);
         })
         .then(() => {
             resolve();
@@ -147,11 +184,12 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
         .then((conversationData) => {
             if (conversationData && conversationData.data) {
                 const data = conversationData.data;
+                console.log('Handling new conversation : ', data);
                 if (!data) {
                     return null;
                 }
                 creator = data.conversationOwner;
-                if (data.onChannels.count === 0) {
+                if (data.onChannels.length === 0) {
                     return handleNewIMConversation(data, message, user, fakeBotContext, creator);
                 } else {
                     return handleNewChannelConversation(data, message, user, fakeBotContext, creator);

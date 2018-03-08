@@ -56,10 +56,10 @@ const config = {
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        channelUnsubscribePath: '/unsubChannel'
+        userDetailsPath: '/userDetails',
     },
     proxy: {
-        enabled: false,
+        enabled: true,
         host: PROXY_HOST,
         protocol: 'http://',
         queuePath: '/queueLambda',

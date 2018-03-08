@@ -93,11 +93,11 @@ export default class ConversationContext {
         }
     });
 
-    static createNewChannelConversationContext = (botContext, currentUser, channel)  => new Promise((resolve, reject) => {
+    static createNewChannelConversationContext = (botContext, currentUser, channel, conversationId = undefined)  => new Promise((resolve, reject) => {
         const UUID = Utils.UUID;
         if (currentUser && channel) {
             const context = {
-                conversationId: UUID(),
+                conversationId: conversationId || UUID(),
                 creatorInstanceId:currentUser.userUUID,
                 onChannels: [{
                     name: channel.name,
@@ -108,7 +108,7 @@ export default class ConversationContext {
             resolve(context);
         } else {
             const context = {
-                conversationId: UUID(),
+                conversationId: conversationId || UUID(),
                 participantsInfo: [],
                 participants: [],
                 onChannels: [],
@@ -235,11 +235,15 @@ export default class ConversationContext {
     };
 
     static getChatName = function (conversationContext, user) {
-        const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-            return p.uuid !== user.userUUID
-        });
-        const names = _.map(otherParticipants, 'name');
-        return names.join(',');
+        if (conversationContext.onChannels.length > 0) {
+            return conversationContext.onChannels[0].name;
+        } else {
+            const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
+                return p.uuid !== user.userUUID
+            });
+            const names = _.map(otherParticipants, 'name');
+            return names.join(',');
+        }
     };
 
     static deleteConversationContext = (conversationId)  => new Promise((resolve, reject) => {

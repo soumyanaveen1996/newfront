@@ -7,7 +7,6 @@ import { Actions } from 'react-native-router-flux';
 import { HeaderBack } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
-import ConversationDAO from '../../lib/persistence';
 
 export default class ChannelChat extends ChatBotScreen {
 
@@ -52,7 +51,7 @@ export default class ChannelChat extends ChatBotScreen {
 
     // Implemented methods
     getBotKey = () => {
-        return this.conversation.conversationId;
+        return this.conversation.conversationId || this.channel.conversationId;
     }
 
     setNavigationParams(context, user) {
@@ -66,13 +65,17 @@ export default class ChannelChat extends ChatBotScreen {
     async getConversationContext(botContext, user) {
         try {
             let context = null;
-            if (this.channel && this.channel.conversationId) {
-                this.conversation = Conversation.getChannelConversation(this.channel.conversationId);
+            if (this.conversation) {
+                this.channel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId)
+            } else if (this.channel && this.channel.conversationId) {
+                this.conversation = await Conversation.getChannelConversation(this.channel.conversationId);
+            }
+            if (this.channel) {
+                console.log('Conversation ID from channel : ', this.channel.conversationId);
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {
                 context = await Promise.resolve(ConversationContext.getChannelConversationContext(botContext, user, this.channel));
-                this.channel = await ChannelDAO.selectChannelByConversationId()
                 this.setNavigationParams(context, user);
                 return context;
             }
@@ -81,10 +84,9 @@ export default class ChannelChat extends ChatBotScreen {
                 throw new Error('Channel Object is required');
             }
 
-            context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel));
+            context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel, this.channel.conversationId));
             ConversationContext.updateParticipants(context, this.participants);
 
-            console.log('Conversation Context : ', context);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -102,7 +104,7 @@ export default class ChannelChat extends ChatBotScreen {
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for people chat', error);
+            console.log('Error getting a conversation context for channel chat', error);
             throw error;
         }
     }
@@ -135,17 +137,14 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
-        let newConversation = await Conversation.getIMConversation(newConversationId);
-        console.log('New conversation : ', newConversation);
-        console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
+        let newConversation = await Conversation.getChannelConversation(newConversationId);
         if (newConversation) {
-            await Conversation.deleteConversation(oldConversationId);
+            await Conversation.deleteChannelConversation(oldConversationId);
             this.conversation = newConversation
         } else {
             await Conversation.updateConversation(oldConversationId, newConversationId);
-            this.conversation = await Conversation.getIMConversation(newConversationId);
+            this.conversation = await Conversation.getChannelConversation(newConversationId);
         }
-        console.log(await Conversation.getIMConversation(newConversationId));
     }
 
     async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
@@ -156,7 +155,6 @@ export default class ChannelChat extends ChatBotScreen {
         } else {
             this.conversationContext = newContext;
         }
-        console.log(await ConversationContext.getBotConversationContextForId(newConversationId));
         await ConversationContext.deleteConversationContext(oldConversationId);
     }
 
@@ -166,7 +164,7 @@ export default class ChannelChat extends ChatBotScreen {
         await this.createOrUpdateConversation(oldConversationId, newConversationId);
         await MessageHandler.moveMessages(oldConversationId, newConversationId);
         await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
-        await ChannelDAO.updateConversationForChannel(channel.name, channel.domain, newConversationId);
+        await ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, newConversationId);
 
         this.botContext.setConversationContext(this.conversationContext);
         this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
@@ -177,6 +175,10 @@ export default class ChannelChat extends ChatBotScreen {
         return true
     }
 
+    shouldShowUserName() {
+        return true
+    }
+
     async onSendMessage(messageStr) {
         this.sentMessageCount += 1;
         return super.onSendMessage(messageStr);
@@ -184,12 +186,14 @@ export default class ChannelChat extends ChatBotScreen {
 
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
-            console.log('Hello hererssss');
             Conversation.deleteChannelConversation(this.conversation.conversationId);
-            if (this.channel) {
+            let currentChannel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId);
+            if (currentChannel && this.channel && this.channel.id === currentChannel.id) {
+                console.log('deleting conversation Id from channel');
                 ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, null);
+            } else {
+                console.log('conversation got updated. So not upditng to null');
             }
         }
     }
-
 }
