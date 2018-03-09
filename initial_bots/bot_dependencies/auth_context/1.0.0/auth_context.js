@@ -39,6 +39,11 @@
         return Auth.updateUserDetails(userDetails);
     };
 
+    let addDomains = function(domains, botContext) {
+        let Auth = botContext.getCapability('Auth');
+        return Auth.addDomains(domains);
+    };
+
   return {
       getAuthUser: getAuthUser,
       isUserLoggedIn: isUserLoggedIn,
@@ -46,6 +51,7 @@
       login: login,
       getAuthProviders: getAuthProviders,
       updateUserDetails: updateUserDetails,
+      addDomains: addDomains,
       version: '1.0.0'
   };
 })();

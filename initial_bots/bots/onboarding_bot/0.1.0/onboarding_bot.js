@@ -78,7 +78,7 @@
                  id: PROFILE_PIC
             },
             {
-                title: 'Update user name',
+                title: 'Update user details',
                 id: UPDATE_INFO
             }
         ];
@@ -252,8 +252,8 @@
             message.formMessage([
                 { id: 1, title: 'Enter your updated details', type: 'text' },
                 { id:2, title: 'Screen Name', value: usr.info.screenName, type: 'text_field', optional: false },
-                //{ id:3, title: 'First Name', value: usr.info.givenName, type: 'text_field', optional: false },
-                //{ id:4, title: 'Last Name', value: usr.info.surname, type: 'text_field', optional: false },
+                { id:3, title: 'First Name', value: usr.info.givenName, type: 'text_field', optional: false },
+                { id:4, title: 'Last Name', value: usr.info.surname, type: 'text_field', optional: false },
                 { id:5, title:'Update', type: 'button' }
             ], '');
             tell(message, botContext);
@@ -264,37 +264,36 @@
         let isFormMsg = (msg.getMessageType() === 'form_response');
         let domainsSuccessMsg = '';
         let userDetails = {};
+        let newDomain = null;
         const authContext = botContext.getCapability('authContext');
         authContext.getAuthUser(botContext)
         .then(function(user) {
-            botContext.wait(true);
 
             let userInfo = user.info || {};
             let dbDocument = {};
 
             if (isFormMsg) {
+                botContext.wait(true);
                 let screenName = msg.getMessage()[1].value || userInfo.screenName;
-                //let givenName = msg.getMessage()[2].value || userInfo.givenName;
-                //let lastName = msg.getMessage()[3].value || userInfo.surname;
+                let givenName = msg.getMessage()[2].value || userInfo.givenName;
+                let lastName = msg.getMessage()[3].value || userInfo.surname;
 
                 userDetails.screenName = screenName;
-                //userDetails.surname = lastName;
-                //userDetails.givenName = givenName;
+                userDetails.surname = lastName;
+                userDetails.givenName = givenName;
 
                 dbDocument.screenName = screenName;
-                //dbDocument.givenName = givenName;
-                //dbDocument.surname = lastName;
+                dbDocument.givenName = givenName;
+                dbDocument.surname = lastName;
             } else {
                 const _ = botContext.getCapability('Utils').Lodash;
                 let domains = userInfo.domains || [];
                 let msgArr = JSON.parse(msg.getMessage());
-                let company = msgArr[0];
+                newDomain = msgArr[0];
                 domainsSuccessMsg = msgArr[1];
-                if(_.indexOf(domains, company) === -1) {
-                    domains.push(company);
+                if(_.indexOf(domains, newDomain) === -1) {
+                    domains.push(newDomain);
                 }
-
-                userDetails.domains = domains;
                 dbDocument.domains = domains;
             }
 
@@ -309,7 +308,11 @@
             return agentGuardService.writeData(msg, botContext, user, previousMessages, params);
         })
         .then(function() {
-            return authContext.updateUserDetails(userDetails, botContext);
+            if (isFormMsg) {
+                return authContext.updateUserDetails(userDetails, botContext);
+            } else {
+                return authContext.addDomains(newDomain, botContext);
+            }
         })
         .then(function() {
             if (isFormMsg) {
@@ -388,12 +391,11 @@
 
                     if (_.startsWith(action, '10_Catalogue')) {
                         let domain = action.replace('10_Catalogue_', '').toLowerCase();
-                        let company = (domain === 'inmarsat') ? 'inmarsat' : 'frontmai';
                         let Message = botContext.getCapability('Message');
                         let companyMsg = new Message();
-                        let msgArr = [company, type0MsgSpeech];
+                        let msgArr = [domain, type0MsgSpeech];
                         companyMsg.stringMessage(JSON.stringify(msgArr));
-                        return updateuserinfo(companyMsg, state, previousMessages, botContext);
+                        return updateUserInfo(companyMsg, state, previousMessages, botContext);
                     }
 
                     if(type0MsgSpeech) {

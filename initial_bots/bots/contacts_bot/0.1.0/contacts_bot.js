@@ -302,10 +302,7 @@
                     }, {
                         key: 'Screen Name',
                         value: person.screenName
-                    }, {
-                        key: 'uuid',
-                        value: person.uuid
-                    }, {
+                    } , {
                         key: 'Given Name',
                         value: person.givenName
                     }, {
