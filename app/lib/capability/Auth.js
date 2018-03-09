@@ -15,6 +15,29 @@ export const AUTH_PROVIDERS = {
     facebook: 'facebook'
 };
 
+
+export class AuthError extends Error {
+    constructor(code, message) {
+        super();
+        this.code = code;
+        this.message = message;
+    }
+
+    get code() {
+        return this.code;
+    }
+
+    get message() {
+        return this.message;
+    }
+}
+
+export const AuthErrorCodes = {
+    0: 'User cancelled',
+    1: 'Error in saving Auth Session',
+    99: 'Unknown error',
+}
+
 /**
  * A simple auth wrapper
  */
@@ -72,11 +95,13 @@ export default class Auth {
                             resolve(user);
                         })
                         .catch((error) => {
-                            reject('Errors saving user session', error);
+                            reject(new AuthError(1, AuthErrorCodes[1]));
                         });
+                } else {
+                    reject(new AuthError(0, AuthErrorCodes[0]));
                 }
             }).catch((error) => {
-                reject('Error with authing the user', error);
+                reject(new AuthError(99, 'Error in Authenticating the user'));
             });
     });
 
@@ -112,11 +137,13 @@ export default class Auth {
                             resolve(user);
                         })
                         .catch((error) => {
-                            reject('Errors saving user session', error);
+                            reject(new AuthError(1, AuthErrorCodes[1]));
                         });
+                } else {
+                    reject(new AuthError(0, AuthErrorCodes[0]));
                 }
             }).catch((error) => {
-                reject('Error with authenticating the user', error);
+                reject(new AuthError(99, 'Error in Authenticating the user'));
             });
     });
 
