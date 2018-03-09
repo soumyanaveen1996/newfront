@@ -17,7 +17,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 
-const VERSION = 6; // Corresponding to 2.3.0. Update this number every time we update initial_bots
+const VERSION = 7; // Corresponding to 2.4.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {

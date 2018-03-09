@@ -151,7 +151,11 @@
                     })
                     .catch((error) => {
                         console.log('Login error :', error);
-                        tell('Error in logging in.', botContext);
+                        if(error.code === 0) {
+                            botContext.wait(false);
+                        } else {
+                            tell('Error occurred while logging in', botContext);
+                        }
                         loginAsk(botContext);
                     });
             } else {
