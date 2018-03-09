@@ -284,7 +284,7 @@ export default class ChatBotScreen extends React.Component {
         if (shouldWait) {
             let msg = new Message({addedByBot: true});
             msg.waitMessage();
-            this.appendMessageToChat(msg);
+            this.appendMessageToChat(msg, true);
         } else {
             this.stopWaiting();
         }
@@ -464,7 +464,8 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
-    appendMessageToChat(message) {
+    appendMessageToChat(message, immediate = false) {
+        const timeout = immediate ? 0 : Config.ChatMessageOptions.messageTransitionTime
         return new Promise((resolve) => {
             setTimeout(() => {
                 // Potentially avoiding issues if the component is unmounted
@@ -476,7 +477,7 @@ export default class ChatBotScreen extends React.Component {
                         }
                     });
                 }
-            }, Config.ChatMessageOptions.messageTransitionTime)
+            }, timeout)
         });
     }
 
