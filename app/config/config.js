@@ -1,5 +1,4 @@
-// import configToUse from './env/stage';
-import configToUse from './env/local';
+import configToUse from './env/stage';
 
 // Point to the right environment config based on what is being released
 const config = configToUse;
