@@ -108,6 +108,43 @@ export default class Channel {
             .catch(reject);
     });
 
+    static update = (name, description, domain) => new Promise((resolve, reject) => {
+        Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    let options = {
+                        'method': 'POST',
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.channelsPath}`,
+                        'headers': {
+                            accessKeyId: user.aws.accessKeyId,
+                            secretAccessKey: user.aws.secretAccessKey,
+                            sessionToken: user.aws.sessionToken
+                        },
+                        data: {
+                            action: 'Edit',
+                            userUuid: user.userUUID,
+                            conversationId: user.userUUID,
+                            botId: SystemBot.channelsBot.id,
+                            name: name,
+                            desc: description,
+                            domain: domain
+                        }
+                    };
+                    return Network(options);
+                }
+            })
+            .then((response) => {
+                let err = _.get(response, 'data.error');
+                if (err !== '0' && err !== 0) {
+                    reject(new ChannelError(+err));
+                } else {
+                    return ChannelDAO.updateChannel(name, domain, description);
+                }
+            })
+            .then(resolve)
+            .catch(reject);
+    });
+
     static unsubscribe = (channel) => new Promise((resolve, reject) => {
         Auth.getUser()
             .then((user) => {
