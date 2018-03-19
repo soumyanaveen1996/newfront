@@ -62,6 +62,9 @@ export default class ChatMessage extends React.Component {
         this.mounted = true
         let { message } = this.props;
 
+        if (!message.isRead() && message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM) {
+            this.openForm(message);
+        }
         MessageHandler.markBotMessageAsRead(message.getBotKey(), message.getMessageId())
             .then((success) => {
                 if (this.mounted) {

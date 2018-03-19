@@ -76,7 +76,6 @@ export const BotListItemStyles = {
         height: 60,
         width: 60,
         marginTop: 5,
-        borderRadius: 30,
     },
     textContainer: {
         flex: 1,
