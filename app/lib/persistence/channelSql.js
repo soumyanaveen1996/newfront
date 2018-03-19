@@ -34,6 +34,15 @@ const updateConversationForChannel = `
     AND domain = ?
 `;
 
+const updateChannel = `
+    UPDATE channel
+    SET 
+        desc = ?
+    WHERE
+        name = ?
+    AND domain = ?
+`;
+
 const selectChannels = `
     SELECT
         id,
@@ -92,6 +101,7 @@ export default {
     insertChannel,
     deleteChannel,
     updateConversationForChannel,
+    updateChannel,
     selectChannels,
     selectChannel,
     selectChannelByConversationId,

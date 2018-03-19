@@ -49,6 +49,18 @@ const updateConversationForChannel = (name, domain, conversationId) => new Promi
     });
 });
 
+const updateChannel = (name, domain, desc) => new Promise((resolve, reject) => {
+    const args = [desc, name, domain];
+    console.log('ChannelDAO::updateChannel::', args);
+    db.transaction(tx => {
+        tx.executeSql(channelSql.updateChannel, args, function success(tx, res) {
+            console.log('ChannelDAO::updateChannel::', args);
+            return resolve(+res.insertId || 0);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
 
 const selectChannels = () => new Promise((resolve, reject) => {
     db.transaction(transaction => {
@@ -158,6 +170,7 @@ export default {
     insertChannel,
     deleteChannel,
     updateConversationForChannel,
+    updateChannel,
     selectChannel,
     selectChannels,
     deleteAllChannels,
