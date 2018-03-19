@@ -35,6 +35,7 @@ export default class Resource {
             try {
                 let imageResizeResponse = await ImageResizer.createResizedImage(fileUri, 800, 800, 'JPEG', 50, 0, null)
                 fileUri = imageResizeResponse.uri;
+                base64Data = null;
             } catch (error) {
                 throw error;
             }
