@@ -11,7 +11,15 @@ import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
 import { GlobalColors } from '../../config/styles';
 import _ from 'lodash';
+import { CheckBox } from 'react-native-elements';
 
+
+export const CHECKBOX_CONFIG = {
+    uncheckedIcon : 'ios-radio-button-off-outline',
+    checkedIcon : 'ios-checkmark-circle',
+    checkedColor : '#FF7F50',
+    iconType : 'ionicon',
+}
 
 class FormTextInput extends React.Component {
 
@@ -53,6 +61,48 @@ class FormTextInput extends React.Component {
             containerStyle={Styles.noBorder}
             secureTextEntry={this.props.secureTextEntry}
         />;
+    }
+}
+
+
+class FormCheckBox extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: props.formData.value
+        }
+    }
+
+    onRowSelect() {
+        if (this.props.onValueChange) {
+            this.props.onValueChange(!this.state.value);
+        }
+        this.setState({
+            value: !this.state.value
+        });
+    }
+
+    render() {
+        const { formData, id } = this.props;
+        return (
+            <TouchableOpacity style={Styles.checkBoxContainer} key={id} onPress={this.onRowSelect.bind(this)}>
+                <CheckBox
+                    key={formData.id}
+                    containerStyle={Styles.checkboxContainer}
+                    style={Styles.checkboxIconStyle}
+                    uncheckedIcon={CHECKBOX_CONFIG.uncheckedIcon}
+                    checkedIcon={CHECKBOX_CONFIG.checkedIcon}
+                    checkedColor={CHECKBOX_CONFIG.checkedColor}
+                    iconType={CHECKBOX_CONFIG.iconType}
+                    checked={this.state.value}
+                    onPress={this.onRowSelect.bind(this)}
+                />
+                <Text style={Styles.checkBoxText}>
+                    {formData.title}
+                </Text>
+            </TouchableOpacity>
+        );
     }
 }
 
@@ -129,9 +179,14 @@ export default class FormPopup extends React.Component {
         this.formTextArr[i] = text
     }
 
+    onCheckBoxValueChange(i, value) {
+        this.formTextArr[i] = value;
+    }
+
     renderForm() {
         var buttons = []
         var formData = this.props.formData
+
         for (var i = 0; i < formData.length; i++) {
             if (formData[i].type === 'text') {
                 buttons.push(
@@ -186,6 +241,12 @@ export default class FormPopup extends React.Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
+                )
+            } else if (formData[i].type === 'checkbox') {
+                const data = formData[i];
+                this.formTextArr[i] = true;
+                buttons.push(
+                    <FormCheckBox formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
                 )
             }
         }

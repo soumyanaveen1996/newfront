@@ -134,6 +134,32 @@ const Styles = StyleSheet.create({
     noBorder: {
         borderWidth: 0,
     },
+    checkboxContainer: {
+        width: 22,
+        height: 22,
+        marginRight:12.5,
+        padding: 0,
+        marginLeft: 0,
+        marginVertical: 0,
+        backgroundColor: GlobalColors.transparent,
+        borderWidth: 0,
+    },
+    checkboxIconStyle: {
+        height:22,
+        width:22,
+    },
+    checkBoxText: {
+        color: GlobalColors.black,
+        fontWeight: '400',
+        fontSize: 16,
+    },
+    checkBoxContainer: {
+        height: 60,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+    },
 });
 
 export default Styles;
