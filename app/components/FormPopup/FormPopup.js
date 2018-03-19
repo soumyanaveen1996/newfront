@@ -110,7 +110,7 @@ export default class FormPopup extends React.Component {
 
     constructor(props) {
         super(props);
-        this.formTextArr = []
+        this.formValuesArray = []
         this.errorMessages = []
     }
 
@@ -139,17 +139,17 @@ export default class FormPopup extends React.Component {
     isValid() {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
-            if (formData[i].optional === false && _.trim(this.formTextArr[i]) === '') {
+            if (formData[i].optional === false && _.trim(this.formValuesArray[i]) === '') {
                 this.errorMessages[i] = I18n.t('Field_mandatory');
                 return false;
             }
 
-            if (formData[i].type === 'number_field' && isNaN(+this.formTextArr[i])) {
+            if (formData[i].type === 'number_field' && isNaN(+this.formValuesArray[i])) {
                 this.errorMessages[i] = I18n.t('Not_a_number');
                 return false;
             }
 
-            if (formData[i].type === 'password_field' && _.trim(this.formTextArr[i]) === '') {
+            if (formData[i].type === 'password_field' && _.trim(this.formValuesArray[i]) === '') {
                 this.errorMessages[i] = I18n.t('Password_not_empty')
                 return false;
             }
@@ -166,7 +166,7 @@ export default class FormPopup extends React.Component {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
             var eachFormData = formData[i]
-            eachFormData.value = this.formTextArr[i]
+            eachFormData.value = this.formValuesArray[i]
             formData[i] = eachFormData
         }
         if (this.props.onFormSubmit) {
@@ -176,11 +176,11 @@ export default class FormPopup extends React.Component {
     }
 
     onChangeText(i, text) {
-        this.formTextArr[i] = text
+        this.formValuesArray[i] = text
     }
 
     onCheckBoxValueChange(i, value) {
-        this.formTextArr[i] = value;
+        this.formValuesArray[i] = value;
     }
 
     renderForm() {
@@ -198,7 +198,7 @@ export default class FormPopup extends React.Component {
                     </View>
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field') {
-                this.formTextArr[i] = formData[i].value;
+                this.formValuesArray[i] = formData[i].value;
                 buttons.push(
                     <View style={Styles.formInputContainer} key={i}>
                         <View style={Styles.titleContainer}>
@@ -215,7 +215,7 @@ export default class FormPopup extends React.Component {
                     </View>
                 )
             } else if (formData[i].type === 'text_area') {
-                this.formTextArr[i] = formData[i].value;
+                this.formValuesArray[i] = formData[i].value;
                 buttons.push(
                     <View style={Styles.formInputContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
@@ -244,7 +244,7 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'checkbox') {
                 const data = formData[i];
-                this.formTextArr[i] = true;
+                this.formValuesArray[i] = true;
                 buttons.push(
                     <FormCheckBox formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
                 )
