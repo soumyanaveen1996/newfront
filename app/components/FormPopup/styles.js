@@ -17,7 +17,7 @@ const Styles = StyleSheet.create({
         right: 0,
         backgroundColor: GlobalColors.white,
         paddingBottom: 5,
-        maxHeight: 250,
+        maxHeight: 340,
     },
     headerContainer: {
         height: 58,
