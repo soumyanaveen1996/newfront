@@ -1,6 +1,7 @@
 import { AssetFetcher } from '../dce';
 import Auth from './Auth';
 import ImageCache from '../../lib/image_cache';
+import ImageResizer from 'react-native-image-resizer';
 
 export const ResourceTypes = {
     Image: 'image',
@@ -28,11 +29,22 @@ export default class Resource {
         if (!user) {
             throw new Error('Auth Failure: No Authenticated user');
         }
-        let contentType = 'image/png';
-        let extension = '.png';
+
+        // Resizing the image
         if (resourceType === ResourceTypes.Image) {
-            contentType = 'image/png';
-            extension = 'png';
+            try {
+                let imageResizeResponse = await ImageResizer.createResizedImage(fileUri, 800, 800, 'JPEG', 50, 0, null)
+                fileUri = imageResizeResponse.uri;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        let contentType = 'image/jpeg';
+        let extension = 'jpg';
+        if (resourceType === ResourceTypes.Image) {
+            contentType = 'image/jpeg';
+            extension = 'jpg';
         } else if (resourceType === ResourceTypes.Audio) {
             contentType = 'audio/x-caf';
             extension = 'caf';

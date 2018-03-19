@@ -77,6 +77,12 @@ export const BotListItemStyles = {
         width: 60,
         marginTop: 5,
     },
+    conversationImage: {
+        height: 60,
+        width: 60,
+        marginTop: 5,
+        borderRadius: 30,
+    },
     textContainer: {
         flex: 1,
         marginLeft: 10,

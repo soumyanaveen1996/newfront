@@ -262,7 +262,7 @@
         protocol: 'http://'
     };
 
-    const env = 'stage';
+    const env = 'dev';
 
     const doNetworkCall = function(postReq, botContext, user, canQueue = false) {
         let Network = botContext.getCapability('Network');

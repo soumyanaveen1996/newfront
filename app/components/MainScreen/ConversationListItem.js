@@ -74,13 +74,13 @@ export default class ConversationListItem extends React.Component {
             return <ProfileImage
                 uuid={this.state.otherUserId}
                 placeholder={images.user_image}
-                style={BotListItemStyles.image}
-                placeholderStyle={BotListItemStyles.image}
+                style={BotListItemStyles.conversationImage}
+                placeholderStyle={BotListItemStyles.conversationImage}
                 resizeMode="cover"/>;
         } else {
             return <CachedImage
                 source={{ uri: Utils.channelLogoUrl(this.props.chatData.channel.logo) } }
-                style={ BotListItemStyles.image }
+                style={ BotListItemStyles.conversationImage }
                 resizeMode="contain"/>;
         }
     }
