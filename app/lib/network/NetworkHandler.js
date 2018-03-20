@@ -6,6 +6,8 @@ import { Network, Utils, Auth } from '../capability';
 import config from '../../config/config';
 import IMBotMessageHandler from './IMBotMessageHandler';
 import { MessageCounter } from '../MessageCounter';
+import EventEmitter from '../events';
+import { SatelliteConnectionEvents } from '../events';
 
 /**
  * Polls the local queue for pending network request and makes them.
@@ -157,6 +159,11 @@ const readQueue = (user) => new Promise((resolve, reject) => {
     return Network(options)
         .then((res) => {
             MessageCounter.subtractCounts(stats);
+            if (res.data.onSatellite) {
+                EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
+            } else {
+                EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
+            }
             resolve(res);
         })
         .catch(reject)

@@ -35,6 +35,7 @@ import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
+import { EventEmitter, SatelliteConnectionEvents } from '../../lib/events';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -204,6 +205,8 @@ export default class ChatBotScreen extends React.Component {
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
         Network.addConnectionChangeEventListener(this.handleConnectionChange)
+        EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
+        EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
     }
 
     async componentWillUnmount() {
@@ -219,10 +222,29 @@ export default class ChatBotScreen extends React.Component {
             this.keyboardDidShowListener.remove();
         }
         Network.removeConnectionChangeEventListener(this.handleConnectionChange)
+        EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
+        EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+    }
+
+    satelliteConnectionHandler = () => {
+        if (this.state.network !== 'satellite') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'satellite'
+            })
+        }
+    }
+
+    satelliteDisconnectHandler = () => {
+        if (this.state.network === 'satellite') {
+            this.setState({
+                showNetworkStatusBar: false,
+                network: 'connected'
+            })
+        }
     }
 
     handleConnectionChange = (connection) => {
-        console.log('Connection : ', connection);
         if (connection === 'none') {
             this.setState({
                 showNetworkStatusBar: true,
