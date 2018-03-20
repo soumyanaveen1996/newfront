@@ -169,7 +169,24 @@ const readQueue = (user) => new Promise((resolve, reject) => {
         .catch(reject)
 });
 
+const ping = (user) => {
+    console.log('NetworkHandler::ping::called at ', new Date());
+    let options = {
+        'method': 'get',
+        'url': config.proxy.protocol + config.proxy.host + config.proxy.pingPath,
+    };
+    return Network(options);
+};
+
+const keepAlive = () => {
+    Auth.getUser()
+        .then((authUser) => {
+            ping();
+        });
+};
+
 export default {
     poll: poll,
-    readLambda: readLambda
+    readLambda: readLambda,
+    keepAlive: keepAlive,
 };

@@ -8,6 +8,7 @@ import { AppState } from 'react-native';
 
 
 const POLL_KEY = 'poll_key';
+const KEEPALIVE_KEY = 'keepalive_key';
 
 class NetworkPoller {
     start = async () => {
@@ -43,9 +44,12 @@ class NetworkPoller {
 
     stopPolling = async () => {
         const intervalId = await DeviceStorage.get(POLL_KEY);
+        const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
         if (intervalId) {
             BackgroundTimer.clearInterval(intervalId);
+            BackgroundTimer.clearInterval(keepAliveId);
             await DeviceStorage.delete(POLL_KEY);
+            await DeviceStorage.delete(KEEPALIVE_KEY);
         }
     }
 
@@ -58,7 +62,12 @@ class NetworkPoller {
             const newIntervalId = BackgroundTimer.setInterval(() => {
                 NetworkHandler.poll();
             }, config.network.pollingInterval)
+
+            const keepAliveId = BackgroundTimer.setInterval(() => {
+                NetworkHandler.keepAlive();
+            }, config.network.keepAliveInterval)
             await DeviceStorage.save(POLL_KEY, newIntervalId);
+            await DeviceStorage.save(KEEPALIVE_KEY, keepAliveId);
         }
     }
 }

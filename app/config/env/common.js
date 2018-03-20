@@ -49,10 +49,12 @@ const config = {
         botDependenciesDirName: 'bot_dependencies'
     },
     network: {
-        pollingInterval: 60000,
+        pollingInterval: 600000,
+        keepAliveInterval: 120000,
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',
+        pingPath: '/ping',
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
@@ -63,6 +65,7 @@ const config = {
         host: PROXY_HOST,
         protocol: 'http://',
         queuePath: '/queueLambda',
+        pingPath: '/ping',
         catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
