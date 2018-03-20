@@ -34,6 +34,7 @@ import { MessageHandler } from '../../lib/message';
 import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
+import { MessageCounter } from '../../lib/MessageCounter';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -237,6 +238,10 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    getBotId() {
+        return this.props.bot.id;
+    }
+
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
@@ -321,6 +326,8 @@ export default class ChatBotScreen extends React.Component {
     tell = (message) => {
         // Removing the waiting message.
         this.stopWaiting();
+
+        MessageCounter.addCount(this.getBotId(), 1);
 
         // Update the bot interface
         // Push a new message to the end

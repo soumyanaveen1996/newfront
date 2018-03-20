@@ -5,6 +5,7 @@ import Queue from './Queue';
 import { Network, Utils, Auth } from '../capability';
 import config from '../../config/config';
 import IMBotMessageHandler from './IMBotMessageHandler';
+import { MessageCounter } from '../MessageCounter';
 
 /**
  * Polls the local queue for pending network request and makes them.
@@ -68,7 +69,6 @@ const readRemoteLambdaQueue = (user) => {
 
                 //need to sequence messages for IM Bot - add it to a queue and flush it in series
                 let imbotMessages = [];
-                console.log(messages);
                 _.forEach(messages, function (message) {
                     // TODO: Should we handle IMBot differently here?
                     let bot = message.bot;
@@ -81,7 +81,6 @@ const readRemoteLambdaQueue = (user) => {
                     }
                 });
                 if (imbotMessages.length > 0) {
-                    console.log('Handling messages : ', imbotMessages);
                     return IMBotMessageHandler.handleMessageQueue(imbotMessages, user);
                 }
             }
@@ -121,12 +120,18 @@ const prosessNetworkQueue = () => {
 
 }
 
-const readQueue = (user) => {
+const readQueue = (user) => new Promise((resolve, reject) => {
     const host = config.network.queueHost;
+    let stats = MessageCounter.getCounts();
+
     let options = {
-        'method': 'get',
-        'url': getUrl() + '?userUuid=' + user.userUUID,
-        'headers': getHeaders(user)
+        'method': 'post',
+        'url': getUrl(),
+        'headers': getHeaders(user),
+        'data': {
+            stats: stats,
+            userUuid: user.userUUID,
+        }
     };
 
     function getUrl() {
@@ -149,8 +154,13 @@ const readQueue = (user) => {
         }
     }
 
-    return Network(options);
-};
+    return Network(options)
+        .then((res) => {
+            MessageCounter.subtractCounts(stats);
+            resolve(res);
+        })
+        .catch(reject)
+});
 
 export default {
     poll: poll,
