@@ -44,7 +44,7 @@ const readLambda = () => {
 const handleLambdaResponse = (res, user) => {
     const _ = Utils.Lodash;
 
-    let resData = res.data || []
+    let resData = res.data.queueMsgs || []
 
     if (resData.length > 0) {
         let messages = resData;
