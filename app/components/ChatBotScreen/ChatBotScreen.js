@@ -75,7 +75,6 @@ export default class ChatBotScreen extends React.Component {
             messages: [],
             typing: '',
             showSlider: false,
-            loadedDate: moment().valueOf(),
             refreshing: false,
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
@@ -299,12 +298,8 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async loadMessages() {
-        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.state.loadedDate)
-        if (this.mounted && messages.length > 0) {
-            this.setState({
-                loadedDate: moment(messages[0].message.getMessageDate()).valueOf()
-            })
-        }
+        console.log('Oldest loaded date : ', this.oldestLoadedDate());
+        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.oldestLoadedDate())
         return messages;
     }
 
@@ -822,13 +817,23 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
-    async loadOldMessagesFromServer() {
+    oldestLoadedDate() {
         let date = moment().valueOf();
         if (this.state.messages.length > 0) {
-            const message = this.state.messages[0];
-            date = moment(message.message.getMessageDate()).valueOf();
+            for (var i = 0; i < this.state.messages.length; i++) {
+                const message = this.state.messages[i];
+                if (message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT &&
+                    message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
+                    date = moment(message.message.getMessageDate()).valueOf();
+                    break;
+                }
+            }
         }
-        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(this.conversationContext.conversationId, this.getBotId(), date);
+        return date;
+    }
+
+    async loadOldMessagesFromServer() {
+        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(this.conversationContext.conversationId, this.getBotId(), this.oldestLoadedDate());
         return messages;
     }
 
