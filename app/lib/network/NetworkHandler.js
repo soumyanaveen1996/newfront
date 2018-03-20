@@ -201,11 +201,11 @@ const requestMessagesBeforeDateFromLambda = (user, conversationId, botId, date) 
     return resolve(Network(options));
 });
 
-const handlePreviousMessages = (res, conversationId, botId, date) => {
+const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.previousMsgs;
     let messages = [];
     _.each(prevMessagesData, (mData) => {
-        let message = Message.from(mData);
+        let message = Message.from(mData, user);
         MessageHandler.persistOnDevice(conversationId, message);
         messages.push(message.toBotDisplay());
     })
@@ -218,7 +218,7 @@ const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
         .then((res) => {
             handleOnSatelliteResponse(res);
             handleLambdaResponse(res, user)
-            let messages = handlePreviousMessages(res, conversationId, botId, date);
+            let messages = handlePreviousMessages(res, conversationId, botId, date, user);
             resolve(messages);
         })
         .catch((error) => {
