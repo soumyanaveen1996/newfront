@@ -31,7 +31,7 @@ import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
 import { HeaderBack } from '../Header';
 
 import { MessageHandler } from '../../lib/message';
-import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
+import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
@@ -69,12 +69,13 @@ export default class ChatBotScreen extends React.Component {
         this.messageQueue = []
         this.processingMessageQueue = false
         this.camera = null
+        this.allLocalMessagesLoaded = false
 
         this.state = {
             messages: [],
             typing: '',
             showSlider: false,
-            offset: 0,
+            loadedDate: moment().valueOf(),
             refreshing: false,
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
@@ -298,10 +299,10 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async loadMessages() {
-        let messages = await MessageHandler.fetchDeviceMessages(this.getBotKey(), pageSize, this.state.offset)
-        if (this.mounted) {
+        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.state.loadedDate)
+        if (this.mounted && messages.length > 0) {
             this.setState({
-                offset: this.state.offset + pageSize + 1
+                loadedDate: moment(messages[0].message.getMessageDate()).valueOf()
             })
         }
         return messages;
@@ -819,6 +820,16 @@ export default class ChatBotScreen extends React.Component {
                 refreshing: false
             });
         }
+    }
+
+    async loadOldMessagesFromServer() {
+        let date = moment().valueOf();
+        if (this.state.messages.length > 0) {
+            const message = this.state.messages[0];
+            date = moment(message.message.getMessageDate()).valueOf();
+        }
+        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(this.conversationContext.conversationId, this.getBotId(), date);
+        return messages;
     }
 
     onSliderResize() {

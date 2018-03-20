@@ -8,6 +8,9 @@ import IMBotMessageHandler from './IMBotMessageHandler';
 import { MessageCounter } from '../MessageCounter';
 import EventEmitter from '../events';
 import { SatelliteConnectionEvents } from '../events';
+import _ from 'lodash';
+import Message from '../capability/Message';
+import { MessageHandler } from '../../lib/message'
 
 /**
  * Polls the local queue for pending network request and makes them.
@@ -38,54 +41,58 @@ const readLambda = () => {
         });
 }
 
+const handleLambdaResponse = (res, user) => {
+    const _ = Utils.Lodash;
+
+    let resData = res.data || []
+
+    if (resData.length > 0) {
+        let messages = resData;
+
+        // Note: This is done to account for the agentGuardQueue which is not FIFO but LIFO
+        messages = messages.reverse();
+
+        //    Sample message
+        //     { 'createdBy': 'test2',
+        //         'bot': 'IMBot',
+        //         'requestUuid': '',
+        //         'details': [
+        //         {
+        //             'options': [
+        //                 'op1',
+        //                 'op2'
+        //             ]
+        //         }
+        //     ],
+        //         'contentType': 2,
+        //         'createdOn': 1502381820277,
+        //         'conversation': 'uuid123'
+        // //}
+
+        //need to sequence messages for IM Bot - add it to a queue and flush it in series
+        let imbotMessages = [];
+        _.forEach(messages, function (message) {
+            // TODO: Should we handle IMBot differently here?
+            let bot = message.bot;
+            // Name of the bot is the key, unless its IMBot (one to many relationship)
+            if (bot === 'im-bot'|| bot === 'channels-bot') {
+                // return IMBotMessageHandler.handle(message, user);
+                imbotMessages.push(message);
+            } else {
+                return Queue.completeAsyncQueueResponse(bot, message);
+            }
+        });
+        if (imbotMessages.length > 0) {
+            return IMBotMessageHandler.handleMessageQueue(imbotMessages, user);
+        }
+    }
+}
+
 const readRemoteLambdaQueue = (user) => {
     console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
     readQueue(user)
         .then((res) => {
-            const _ = Utils.Lodash;
-
-            let resData = res.data || []
-
-            if (resData.length > 0) {
-                let messages = resData;
-
-                // Note: This is done to account for the agentGuardQueue which is not FIFO but LIFO
-                messages = messages.reverse();
-
-                //    Sample message
-                //     { 'createdBy': 'test2',
-                //         'bot': 'IMBot',
-                //         'requestUuid': '',
-                //         'details': [
-                //         {
-                //             'options': [
-                //                 'op1',
-                //                 'op2'
-                //             ]
-                //         }
-                //     ],
-                //         'contentType': 2,
-                //         'createdOn': 1502381820277,
-                //         'conversation': 'uuid123'
-                // //}
-
-                //need to sequence messages for IM Bot - add it to a queue and flush it in series
-                let imbotMessages = [];
-                _.forEach(messages, function (message) {
-                    // TODO: Should we handle IMBot differently here?
-                    let bot = message.bot;
-                    // Name of the bot is the key, unless its IMBot (one to many relationship)
-                    if (bot === 'im-bot'|| bot === 'channels-bot') {
-                        // return IMBotMessageHandler.handle(message, user);
-                        imbotMessages.push(message);
-                    } else {
-                        return Queue.completeAsyncQueueResponse(bot, message);
-                    }
-                });
-                if (imbotMessages.length > 0) {
-                    return IMBotMessageHandler.handleMessageQueue(imbotMessages, user);
-                }
-            }
+            return handleLambdaResponse(res, user);
         })
         .catch((error) => {
             console.log('Error in Reading Lambda queue', error);
@@ -159,14 +166,75 @@ const readQueue = (user) => new Promise((resolve, reject) => {
     return Network(options)
         .then((res) => {
             MessageCounter.subtractCounts(stats);
-            if (res.data.onSatellite) {
-                EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
-            } else {
-                EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
-            }
+            handleOnSatelliteResponse(res);
             resolve(res);
         })
         .catch(reject)
+});
+
+const handleOnSatelliteResponse = (res) => {
+    if (res.data.onSatellite) {
+        EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
+    } else {
+        EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
+    }
+}
+
+const requestMessagesBeforeDateFromLambda = (user, conversationId, botId, date) => new Promise((resolve, reject) => {
+    let options = {
+        'method': 'post',
+        'url': config.proxy.protocol + config.proxy.host + config.proxy.queuePath,
+        'headers': {
+            accessKeyId: user.aws.accessKeyId,
+            secretAccessKey: user.aws.secretAccessKey,
+            sessionToken: user.aws.sessionToken
+        },
+        'data': {
+            userUuid: user.userUUID,
+            conversation: conversationId,
+            botId: botId,
+            timestamp: date,
+        }
+    };
+    console.log('Options : ', options);
+
+    return resolve(Network(options));
+});
+
+const handlePreviousMessages = (res, conversationId, botId, date) => {
+    const prevMessagesData = res.data.previousMsgs;
+    let messages = [];
+    _.each(prevMessagesData, (mData) => {
+        let message = Message.from(mData);
+        MessageHandler.persistOnDevice(conversationId, message);
+        messages.push(message.toBotDisplay());
+    })
+    return messages.reverse();
+};
+
+const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) => new Promise((resolve, reject) => {
+    console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
+    requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
+        .then((res) => {
+            handleOnSatelliteResponse(res);
+            handleLambdaResponse(res, user)
+            let messages = handlePreviousMessages(res, conversationId, botId, date);
+            resolve(messages);
+        })
+        .catch((error) => {
+            console.log('Error in fetching old messages from lambda before date', error);
+        })
+});
+
+const fetchOldMessagesBeforeDate = (conversationId, botId, date) => new Promise((resolve, reject) => {
+    console.log('NetworkHandler::readOldQueueMessages::called at ', new Date());
+    Auth.getUser()
+        .then((authUser) => {
+            return Auth.refresh(authUser);
+        })
+        .then((refreshedUser) => {
+            resolve(fetchMessagesBeforeDateFromLambda(refreshedUser, conversationId, botId, date));
+        });
 });
 
 const ping = (user) => {
@@ -189,4 +257,5 @@ export default {
     poll: poll,
     readLambda: readLambda,
     keepAlive: keepAlive,
+    fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
 };

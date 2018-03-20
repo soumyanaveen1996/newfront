@@ -65,6 +65,13 @@ function sixToSevenMigration() {
         })
 }
 
+function sevenToEightMigration() {
+    return MessageDAO.createMessageDateIndex()
+        .then(() => {
+            return DbVersionDAO.updateVersion(8);
+        })
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -120,6 +127,13 @@ function runMigrations() {
             .then((version) => {
                 if (version === 6) {
                     return sixToSevenMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 7) {
+                    return sevenToEightMigration()
                 } else {
                     return version;
                 }

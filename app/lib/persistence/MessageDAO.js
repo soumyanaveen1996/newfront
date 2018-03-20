@@ -282,6 +282,27 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new
     });
 });
 
+
+const selectMessagesBeforeDate = (botkey, limit, date) => new Promise((resolve, reject) => {
+    let args = [botkey, date, limit];
+    db.transaction(transaction => {
+        let sql = messageSql.selectMessagesBeforeDate;
+
+        transaction.executeSql(sql, args, function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let messages = dbMessages.map((msg) => {
+                let message = messageFromDatabaseRow(msg);
+                return message.toBotDisplay();
+            });
+            return resolve(messages);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 const messageFromDatabaseRow = (msg) => {
     const opts = {
         uuid: msg.message_id,
@@ -370,6 +391,17 @@ const addCompletedColumn = () => new Promise((resolve, reject) => {
 
 })
 
+const createMessageDateIndex = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.addMessageCreatedAtIndex, [], function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            console.log('errror : ', err);
+            return reject(new Error('Unable to add index on Message table'));
+        });
+    });
+});
+
 
 export default {
     createMessageTable: createMessageTable,
@@ -387,5 +419,7 @@ export default {
     moveMessagesToNewBotKey: moveMessagesToNewBotKey,
     deleteBotMessages: deleteBotMessages,
     addCompletedColumn: addCompletedColumn,
-    insertOrUpdateMessage: insertOrUpdateMessage
+    insertOrUpdateMessage: insertOrUpdateMessage,
+    selectMessagesBeforeDate: selectMessagesBeforeDate,
+    createMessageDateIndex: createMessageDateIndex
 };

@@ -4,6 +4,42 @@ import I18n from '../../config/i18n/i18n';
 import _ from 'lodash';
 import uuidV4 from 'uuid/v4';
 
+
+export const ButtonStyle = {
+    light: 0,
+    bright: 1,
+}
+
+export const MessageTypeConstants = {
+    MESSAGE_TYPE_STRING: 'string',
+    MESSAGE_TYPE_LIST: 'list',
+    MESSAGE_TYPE_SLIDER: 'slider',
+    MESSAGE_TYPE_BUTTON: 'button',
+    MESSAGE_TYPE_FORM: 'form',
+    MESSAGE_TYPE_HTML: 'html',
+    MESSAGE_TYPE_IMAGE: 'image',
+    MESSAGE_TYPE_VIDEO: 'video',
+    MESSAGE_TYPE_MAP: 'map',
+    MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response',
+    MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
+    MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
+    MESSAGE_TYPE_AUDIO: 'audio',
+    MESSAGE_TYPE_CHART: 'chart',
+    MESSAGE_TYPE_WAIT: 'wait',
+    MESSAGE_TYPE_SESSION_START: 'session_start',
+};
+
+
+export const IntToMessageTypeConstants = {
+    10: MessageTypeConstants.MESSAGE_TYPE_STRING,
+    30: MessageTypeConstants.MESSAGE_TYPE_IMAGE,
+    40: MessageTypeConstants.MESSAGE_TYPE_VIDEO,
+    60: MessageTypeConstants.MESSAGE_TYPE_AUDIO,
+    140: MessageTypeConstants.MESSAGE_TYPE_HTML,
+};
+
+export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants)
+
 export default class Message {
     constructor(opts) {
         // Opts can be passed to revive a message from storage
@@ -341,28 +377,21 @@ export default class Message {
     isCompleted() {
         return this._completed;
     }
+
+    static from(json) {
+        const messageType = IntToMessageTypeConstants[json.contentType];
+        let options = {
+            messageType: messageType,
+            uuid: json.messageUuid,
+            addedByBot: false,
+            botKey: json.conversation,
+            msg: json.content[0],
+            isRead: true,
+            isFavorite: false,
+            createdBy: json.createdBy,
+            messageDate: parseInt(json.createdOn.$numberLong, 10)
+        }
+        return new Message(options);
+    }
 }
 
-export const ButtonStyle = {
-    light: 0,
-    bright: 1,
-}
-
-export const MessageTypeConstants = {
-    MESSAGE_TYPE_STRING: 'string',
-    MESSAGE_TYPE_LIST: 'list',
-    MESSAGE_TYPE_SLIDER: 'slider',
-    MESSAGE_TYPE_BUTTON: 'button',
-    MESSAGE_TYPE_FORM: 'form',
-    MESSAGE_TYPE_HTML: 'html',
-    MESSAGE_TYPE_IMAGE: 'image',
-    MESSAGE_TYPE_VIDEO: 'video',
-    MESSAGE_TYPE_MAP: 'map',
-    MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response',
-    MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
-    MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
-    MESSAGE_TYPE_AUDIO: 'audio',
-    MESSAGE_TYPE_CHART: 'chart',
-    MESSAGE_TYPE_WAIT: 'wait',
-    MESSAGE_TYPE_SESSION_START: 'session_start',
-};

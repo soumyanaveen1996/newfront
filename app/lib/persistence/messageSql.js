@@ -100,6 +100,25 @@ const selectRecentMessages = `
     OFFSET ?;
 `;
 
+const selectMessagesBeforeDate = `
+    SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by,
+        completed
+    FROM messages
+    WHERE bot_key = ? AND message_date < ?
+    ORDER BY message_date desc
+    LIMIT ?
+`;
+
 const selectFavoriteMessages = `
     SELECT
         message_id,
@@ -161,11 +180,16 @@ const addCompletedColumn = `
     ALTER TABLE messages ADD COLUMN completed INTEGER NOT NULL DEFAULT 0
 `;
 
+const addMessageCreatedAtIndex = `
+    CREATE INDEX idx_bot_key_date ON messages (bot_key, message_date DESC);
+`;
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
     insertMessage: insertMessage,
     selectRecentMessages: selectRecentMessages,
+    selectMessagesBeforeDate: selectMessagesBeforeDate,
     deleteMessage: deleteMessage,
     markAsRead: markAsRead,
     unreadCount: unreadCount,
@@ -179,4 +203,5 @@ export default {
     updateMessageById: updateMessageById,
     addCompletedColumn: addCompletedColumn,
     selectMessageById: selectMessageById,
+    addMessageCreatedAtIndex: addMessageCreatedAtIndex
 };

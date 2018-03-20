@@ -196,4 +196,34 @@ export default class ChannelChat extends ChatBotScreen {
             }
         }
     }
+
+
+    async onRefresh() {
+        if (this.allOldMessagesLoaded) {
+            this.setState({
+                refreshing: false
+            })
+            return;
+        }
+        this.setState({
+            refreshing: true
+        })
+        let messages = await this.loadMessages()
+        if (messages.length === 0) {
+            this.allLocalMessagesLoaded = true;
+        }
+        if (this.allLocalMessagesLoaded) {
+            messages = await this.loadOldMessagesFromServer()
+            if (messages.length === 0) {
+                this.allOldMessagesLoaded = true;
+            }
+        }
+        let combinedMsgs = messages.concat(this.state.messages)
+        if (this.mounted) {
+            this.setState({
+                messages: combinedMsgs,
+                refreshing: false
+            });
+        }
+    }
 }
