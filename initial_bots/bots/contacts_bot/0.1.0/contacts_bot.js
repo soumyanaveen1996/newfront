@@ -26,7 +26,7 @@
                 return showEmailForm(message, state, previousMessages, botContext);
             } else if ('ShowAddressBookUsers' === action) {
                 return showAddressBookUsers(message, state, previousMessages, botContext);
-            } else if('Help' === action || 'NlpSmartReply' === action) {
+            } else if('NlpSmartReply' === action) {
                 let Message = botContext.getCapability('Message');
                 let msg = new Message();
                 msg.stringMessage(message.getMessage()[0].title);
@@ -50,12 +50,7 @@
                 return processNlp(msg, state, previousMessages, botContext);
             }
         }  else if (message.getMessageType() === 'string') {
-            let msgVal = message.getMessage().toLowerCase();
-            if (msgVal === 'help') {
-                return ask(botContext);
-            } else {
-                return processNlp(message, state, previousMessages, botContext);
-            }
+            return processNlp(message, state, previousMessages, botContext);
         } else {
             return ask(botContext);
         }
@@ -149,9 +144,6 @@
         }, {
             title: 'Invite user with email',
             action: 'InviteUser'
-        }, {
-            title: 'Help',
-            action: 'Help'
         }
         ], {smartReply: true});
         tell(message, botContext);
