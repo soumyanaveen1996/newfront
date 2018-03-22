@@ -151,6 +151,7 @@
                         break;
                     case CONFIGURATION_MENU.NETWORK_USAGE:
                         tell('This functionality is coming in next release', botContext);
+                        showMainMenu(botContext);
                         break;
                     case NETWORK_CONTROL_MENU.MANUAL:
                     case NETWORK_CONTROL_MENU.AUTO:
@@ -179,11 +180,13 @@
         let chosenStrategy = _.get(PollingStrategyTypes, option.toLowerCase());
         if(_.isUndefined(chosenStrategy) || _.isEmpty(chosenStrategy)) {
             tell('This functionality is coming in next release', botContext);
+            return showMainMenu(botContext);
         } else {
             const Settings = botContext.getCapability('Settings');
             return Settings.setPollingStrategy(chosenStrategy)
             .then(function() {
                 tell('Network control has been updated to ' + option, botContext);
+                return showMainMenu(botContext);
             });
         }
     };
@@ -221,6 +224,7 @@
             if(_.isEmpty(messages)) {
                 let strMsg = queryResp.speech || 'Unable to get results for the query';
                 tell(strMsg, botContext);
+                return showMainMenu(botContext);
             } else if(action === '1_configurationMenu') {
                 return showMainMenu(botContext);
             } else {
@@ -252,6 +256,8 @@
                     let message = new Message();
                     message.sliderMessage(sliderMsgList, {smartReply: true});
                     tell(message, botContext);
+                } else {
+                    return showMainMenu(botContext);
                 }
             }
         });
@@ -312,10 +318,11 @@
         })
         .then(function() {
             if (isFormMsg) {
-                return tell('Information updated', botContext);
+                tell('Information updated', botContext);
             } else {
-                return tell('You should now be able to access the featured partner\'s bot', botContext);
+                tell('You should now be able to access the featured partner\'s bot', botContext);
             }
+            return showMainMenu(botContext);
         })
         .catch(function(error) {
             console.error('Error occurred while updating user details: ', error);
@@ -351,6 +358,7 @@
             } else {
                 tell("Push notifications are deactivated for your device", botContext);
             }
+            return showMainMenu(botContext);
         });
     };
 
@@ -398,6 +406,7 @@
                 message.imageMessage(fileUrl);
                 tell(message, botContext);
             }
+            return showMainMenu(botContext);
         });
     };
 

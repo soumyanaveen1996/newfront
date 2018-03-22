@@ -26,7 +26,7 @@
                 return showEmailForm(message, state, previousMessages, botContext);
             } else if ('ShowAddressBookUsers' === action) {
                 return showAddressBookUsers(message, state, previousMessages, botContext);
-            } else if('Help' === action || 'NlpSmartReply' === action) {
+            } else if('NlpSmartReply' === action) {
                 let Message = botContext.getCapability('Message');
                 let msg = new Message();
                 msg.stringMessage(message.getMessage()[0].title);
@@ -50,12 +50,7 @@
                 return processNlp(msg, state, previousMessages, botContext);
             }
         }  else if (message.getMessageType() === 'string') {
-            let msgVal = message.getMessage().toLowerCase();
-            if (msgVal === 'help') {
-                return ask(botContext);
-            } else {
-                return processNlp(message, state, previousMessages, botContext);
-            }
+            return processNlp(message, state, previousMessages, botContext);
         } else {
             return ask(botContext);
         }
@@ -149,9 +144,6 @@
         }, {
             title: 'Invite user with email',
             action: 'InviteUser'
-        }, {
-            title: 'Help',
-            action: 'Help'
         }
         ], {smartReply: true});
         tell(message, botContext);
@@ -225,7 +217,7 @@
     let greeting = function (state, previousMessages, botContext) {
         const _ = botContext.getCapability('Utils').Lodash;
         if(_.isEmpty(previousMessages)) {
-            let greeting = 'To search for people already using the platform, select the "Find users" option. To invite your friends to start using FrontM, select one of the invite users options';
+            let greeting = 'Want to find out if you know anyone on the platform? Select ‘Search User’ and type in their name. If you want to invite a friend to use FrontM please select an invite option';
             tell(greeting, botContext);
         }
         return ask(botContext);
@@ -292,6 +284,7 @@
             let name = person.name || person.givenName + ' ' + (person.surname || person.familyName);
             return {
                 title: name,
+                uuid: person.uuid,
                 data: {
                     contact_info: [{
                         key: 'Name',
@@ -330,9 +323,9 @@
                 name: contact.data.contact_info[0].value,
                 emailAddress: contact.data.contact_info[1].value,
                 screenName: contact.data.contact_info[2].value,
-                uuid: contact.data.contact_info[3].value,
-                givenName: contact.data.contact_info[4].value,
-                surname: contact.data.contact_info[5].value
+                givenName: contact.data.contact_info[3].value,
+                surname: contact.data.contact_info[4].value,
+                uuid: contact.uuid
             };
         });
         return contactFormat;

@@ -83,9 +83,9 @@
             .then(function(conversation) {
                 let channelsInfo = conversation.onChannels;
                 if(_.isEmpty(channelsInfo)) {
-                    params.action = 'Send';
+                    params.action = 'SendAndArchive';
                 } else {
-                    params.action = 'SendToChannel';
+                    params.action = 'SendToChannelAndArchive';
                     params.domain = channelsInfo[0].domain;
                     params.channel = channelsInfo[0].name;
                 }
