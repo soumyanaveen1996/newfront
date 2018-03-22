@@ -18,7 +18,7 @@ import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes } from '../../lib/capability';
+import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes, Settings, PollingStrategyTypes } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
@@ -28,14 +28,15 @@ import moment from 'moment';
 
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
 
-import { HeaderBack } from '../Header';
+import { HeaderBack, HeaderRightIcon } from '../Header';
 
 import { MessageHandler } from '../../lib/message';
 import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
-import { EventEmitter, SatelliteConnectionEvents } from '../../lib/events';
+import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents } from '../../lib/events';
+import { Icons } from '../../config/icons';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -56,6 +57,12 @@ export default class ChatBotScreen extends React.Component {
                     Actions.pop();
                 }
             }} />;
+        }
+
+        if (state.params.showRefresh) {
+            navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
+                state.params.refresh();
+            }} icon={Icons.refresh()}/>;
         }
         return navigationOptions;
     }
@@ -207,6 +214,39 @@ export default class ChatBotScreen extends React.Component {
         Network.addConnectionChangeEventListener(this.handleConnectionChange)
         EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+
+
+        this.checkPollingStrategy();
+        this.props.navigation.setParams({
+            refresh: this.readLambdaQueue.bind(this)
+        });
+        EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+    }
+
+    readLambdaQueue() {
+        NetworkHandler.readLambda();
+    }
+
+    showRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: true
+        });
+    }
+
+    hideRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: false
+        });
+    }
+
+    async checkPollingStrategy() {
+        console.log('Polling strategy changed');
+        let pollingStrategy = await Settings.getPollingStrategy();
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.showRefreshButton();
+        } else {
+            this.hideRefreshButton();
+        }
     }
 
     async componentWillUnmount() {
@@ -224,6 +264,7 @@ export default class ChatBotScreen extends React.Component {
         Network.removeConnectionChangeEventListener(this.handleConnectionChange)
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+        EventEmitter.removeListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
     }
 
     satelliteConnectionHandler = () => {

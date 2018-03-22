@@ -10,10 +10,13 @@ import { Actions } from 'react-native-router-flux';
 import { HeaderLeftIcon } from '../Header';
 import Config from './config';
 import appConfig from '../../config/config';
-import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS } from '../../lib/network';
+import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, NetworkHandler } from '../../lib/network';
 import Auth from '../../lib/capability/Auth';
+import { PollingStrategyTypes, Settings } from '../../lib/capability';
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
+import { HeaderRightIcon } from '../Header';
+import { Icons } from '../../config/icons';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -30,6 +33,14 @@ export default class MainScreen extends React.Component {
         }
         if (appConfig.app.hideFilter !== true) {
             ret.headerLeft = <HeaderLeftIcon config={Config.filterButtonConfig} onPress={state.params.openBotFilter} />;
+        }
+
+        if (state.params.showRefresh) {
+            ret.headerRight = <HeaderRightIcon onPress={() => {
+                state.params.refresh();
+            }} icon={Icons.refresh()}/>;
+        } else {
+            ret.headerRight = undefined;
         }
         return ret;
     }
@@ -49,6 +60,34 @@ export default class MainScreen extends React.Component {
         }
         this.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, this.handleAsyncMessageResult.bind(this));
         this.update();
+        this.props.navigation.setParams({
+            refresh: this.readLambdaQueue.bind(this)
+        });
+    }
+
+    readLambdaQueue() {
+        NetworkHandler.readLambda();
+    }
+
+    showRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: true
+        });
+    }
+
+    hideRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: false
+        });
+    }
+
+    async checkPollingStrategy() {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.showRefreshButton();
+        } else {
+            this.hideRefreshButton();
+        }
     }
 
     update = async () => {
@@ -57,6 +96,7 @@ export default class MainScreen extends React.Component {
         const authStatus = userLoggedIn ? MainScreenStates.authenticated : MainScreenStates.unauthenticated;
         this.setState({ screenState: authStatus, bots: botsList });
         this.refs.botList.refresh();
+        this.checkPollingStrategy();
     }
 
     componentWillUnmount = () => {
