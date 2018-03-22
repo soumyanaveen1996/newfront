@@ -49,8 +49,13 @@ const config = {
         botDependenciesDirName: 'bot_dependencies'
     },
     network: {
-        pollingInterval: 600000,
-        keepAliveInterval: 120000,
+        satellite: {
+            pollingInterval: 600000,
+            keepAliveInterval: 120000,
+        },
+        gsm: {
+            pollingInterval: 60000,
+        },
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
         queuePath: '/queue/Development/items',

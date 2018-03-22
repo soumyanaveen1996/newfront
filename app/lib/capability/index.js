@@ -12,6 +12,7 @@ import ConversationContext from './ConversationContext';
 import Auth from './Auth';
 import Media from './Media';
 import Notification from './Notification';
+import Settings from './Settings';
 import Resource, { ResourceTypes } from './Resource';
 import { AUTH_PROVIDERS } from './Auth';
 
@@ -37,5 +38,6 @@ export {
     ResourceTypes,
     ButtonStyle,
     Channel,
+    Settings,
     version
 };
