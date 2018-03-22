@@ -1,6 +1,6 @@
 (function() {
-    
-    function send(msg, botContext, user, botName, previousMessages, sync) {
+
+    function send(msg, botContext, user, previousMessages, sync) {
         let Promise = botContext.getCapability('Promise');
         const utils = botContext.getCapability('Utils');
         let _ = utils.Lodash;
@@ -118,7 +118,7 @@
         });
     }
 
-    function executeCustomCapability(capabilityName, params, sync, requestUuid, botContext, user) {
+    function executeCustomCapability(capabilityName, params, sync, requestUuid, botContext, user, canQueue = false) {
         let Promise = botContext.getCapability('Promise');
         const utils = botContext.getCapability('Utils');
         let _ = utils.Lodash;
@@ -137,7 +137,7 @@
                 return resolve(content || {});
             };
 
-            executeCapability(botContext, user, _, postReq, reject, resloveFunc);
+            executeCapability(botContext, user, _, postReq, reject, resloveFunc, canQueue);
         });
     }
 
@@ -214,7 +214,7 @@
         });
     };
 
-    const executeCapability = function(botContext, user, _, postReq, reject, resloveFunc) {
+    const executeCapability = function(botContext, user, _, postReq, reject, resloveFunc, canQueue = false) {
         let conversationContext = botContext.getCapability('ConversationContext');
         let conversation = null;
 
@@ -223,18 +223,22 @@
                 conversation = context;
                 postReq['creatorInstanceId'] = conversation.creatorInstanceId;
                 addConvOrInstanceIdToRequest(botContext.botManifest.id, conversation, postReq, _);
-                return doNetworkCall(postReq, botContext, user);
+                return doNetworkCall(postReq, botContext, user, canQueue);
             })
             .then((res) => {
-                let err = _.get(res, 'data.error');
-                if(err != "0") {
-                    reject("Error occurred executing capability:" + err);
-                } else {
-                    const serverInstanceId = _.get(res, 'data.instanceId');
-                    if(_.isEmpty(conversation.instanceId)) {
-                        conversationContext.setInstanceId(serverInstanceId, botContext);
-                    }
+                if (canQueue && Object.getPrototypeOf(res).constructor.name === 'NetworkRequest') {
                     resloveFunc(res);
+                } else {
+                    let err = _.get(res, 'data.error');
+                    if(err != "0") {
+                        reject("Error occurred executing capability:" + err);
+                    } else {
+                        const serverInstanceId = _.get(res, 'data.instanceId');
+                        if(_.isEmpty(conversation.instanceId)) {
+                            conversationContext.setInstanceId(serverInstanceId, botContext);
+                        }
+                        resloveFunc(res);
+                    }
                 }
             })
             .catch((err) => {
@@ -244,7 +248,7 @@
     };
 
     const stage = {
-        host: 'stage1.frontm.ai',
+        host: 'stage.frontm.ai',
         protocol: 'https://'
     };
 
@@ -260,7 +264,7 @@
 
     const env = 'stage';
 
-    const doNetworkCall = function(postReq, botContext, user) {
+    const doNetworkCall = function(postReq, botContext, user, canQueue = false) {
         let Network = botContext.getCapability('Network');
         const Utils = botContext.getCapability('Utils');
 
@@ -289,7 +293,7 @@
             };
         }
 
-        return Network(options);
+        return Network(options, canQueue);
     };
 
     const addConvOrInstanceIdToRequest = function(botId, conversation, postReq, _) {
@@ -300,7 +304,7 @@
                 uuid : conversation.conversationId,
                 bot: botId,
                 participants: conversation.participants,
-                onChannels: [],
+                onChannels: conversation.onChannels,
                 closed: false
             };
         } else {
@@ -323,16 +327,17 @@
           return 140;
         }
       };
-    
+
       return {
           send: send,
-          readData : readData,
+          readData: readData,
           nlp: nlp,
           sendEmail: sendEmail,
           writeData: writeData,
           getDataAsync: getDataAsync,
           executeCustomCapability: executeCustomCapability,
           deregisterDevice: deregisterDevice,
-          registerDevice: registerDevice
+          registerDevice: registerDevice,
+          getMessageContentType: getMessageContentType
       };
 })();

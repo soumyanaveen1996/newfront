@@ -4,6 +4,7 @@ import moment from 'moment';
 import { db } from './db';
 import messageSql from './messageSql';
 import Utils from '../utils/index';
+import _ from 'lodash';
 
 /**
  * Create the message table if it doesn't exist. Should be called during launch (each time is ok)
@@ -18,6 +19,140 @@ const createMessageTable = () => new Promise((resolve, reject) => {
     });
 });
 
+const createV2MessageTable = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.createV2MessageTable, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const renameToTemp = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql('ALTER TABLE messages RENAME TO tmp_messages;', null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+})
+
+
+const selectAllTempMessages = () => new Promise((resolve, reject) => {
+    const sql = `SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by
+    FROM tmp_messages`;
+
+    db.transaction(transaction => {
+        transaction.executeSql(sql, [], function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let messages = dbMessages.map((msg) => {
+                const opts = {
+                    uuid: msg.message_id,
+                    botKey: msg.bot_key,
+                    msg: msg.msg,
+                    messageType: msg.message_type,
+                    options: msg.options,
+                    addedByBot: msg.added_by_bot ? true : false,
+                    messageDate: moment(msg.message_date).toDate(),
+                    isRead: (msg.read === 1),
+                    isFavorite: (msg.is_favorite === 1),
+                    createdBy: msg.created_by
+                };
+                return new Message(opts);
+            });
+            return resolve(messages);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const migrateToV2Messages = () => new Promise((resolve, reject) => {
+    renameToTemp()
+        .then(() => {
+            return createV2MessageTable();
+        })
+        .then(() => {
+            return selectAllTempMessages();
+        })
+        .then((messages) => {
+            return Promise.all(_.map(messages, (message) => {
+                return insertMessage(message);
+            }))
+        })
+        .then(() => {
+            resolve();
+        })
+        .catch((error) => {
+            reject(error);
+        })
+});
+
+const selectMessageById = (message) => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.selectMessageById, [message.getMessageId()], function success(tx, res) {
+            res = res || {};
+            res = Utils.addArrayToSqlResults(res);
+            let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            let messages = dbMessages.map((msg) => {
+                return messageFromDatabaseRow(msg);
+            });
+            return resolve(messages[0]);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const insertOrUpdateMessage = (message) => new Promise((resolve, reject) => {
+    selectMessageById(message)
+        .then((dbMessage) => {
+            if (dbMessage) {
+                resolve(updateMessage(message));
+            } else {
+                resolve(insertMessage(message));
+            }
+        })
+});
+
+const updateMessage = (message) => new Promise((resolve, reject) => {
+    const args = [
+        message.getBotKey(),
+        message.getMessageString(),
+        message.getMessageType(),
+        message.getMessageOptionsString(),
+        message.isMessageByBot() ? 1 : 0,
+        moment(message.getMessageDate()).valueOf(),
+        message.isRead() ? 1 : 0,
+        message.isFavorite() ? 1 : 0,
+        message.getCreatedBy(),
+        message.isCompleted() ? 1 : 0,
+        message.getMessageId()
+    ];
+
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.updateMessageById, args, function success(tx, res) {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 const insertMessage = (message) => new Promise((resolve, reject) => {
     const args = [message.getMessageId(),
         message.getBotKey(),
@@ -25,10 +160,11 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
         message.getMessageType(),
         message.getMessageOptionsString(),
         message.isMessageByBot() ? 1 : 0,
-        moment(message.getMessageDate()).format(),
+        moment(message.getMessageDate()).valueOf(),
         message.isRead() ? 1 : 0,
         message.isFavorite() ? 1 : 0,
-        message.getCreatedBy()];
+        message.getCreatedBy(),
+        message.isCompleted() ? 1 : 0];
 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.insertMessage, args, function success(tx, res) {
@@ -100,6 +236,8 @@ const unreadMessageCount = (botkey) => new Promise((resolve, reject) => {
     });
 });
 
+
+
 const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new Promise((resolve, reject) => {
     ignoreMessagesOfType = ignoreMessagesOfType || [];
     let args = [botkey];
@@ -134,19 +272,7 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new
             res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             let messages = dbMessages.map((msg) => {
-                const opts = {
-                    uuid: msg.message_id,
-                    botKey: msg.bot_key,
-                    msg: msg.msg,
-                    messageType: msg.message_type,
-                    options: msg.options,
-                    addedByBot: msg.added_by_bot ? true : false,
-                    messageDate: new Date(msg.message_date),
-                    isRead: (msg.read === 1),
-                    isFavorite: (msg.is_favorite === 1),
-                    createdBy: msg.created_by
-                };
-                let message = new Message(opts);
+                let message = messageFromDatabaseRow(msg);
                 return message.toBotDisplay();
             });
             return resolve(messages);
@@ -156,6 +282,24 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) => new
     });
 });
 
+const messageFromDatabaseRow = (msg) => {
+    const opts = {
+        uuid: msg.message_id,
+        botKey: msg.bot_key,
+        msg: msg.msg,
+        messageType: msg.message_type,
+        options: msg.options,
+        addedByBot: msg.added_by_bot ? true : false,
+        messageDate: moment(msg.message_date).toDate(),
+        isRead: (msg.read === 1),
+        isFavorite: (msg.is_favorite === 1),
+        createdBy: msg.created_by,
+        completed: msg.completed === 1,
+    };
+    let message = new Message(opts);
+    return message;
+}
+
 const selectFavoriteMessages = (limit, offset) => new Promise((resolve, reject) => {
     const args = [limit, offset];
     db.transaction(transaction => {
@@ -164,20 +308,7 @@ const selectFavoriteMessages = (limit, offset) => new Promise((resolve, reject) 
             res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             let messages = dbMessages.map((msg) => {
-                const opts = {
-                    uuid: msg.message_id,
-                    botKey: msg.bot_key,
-                    msg: msg.msg,
-                    messageType: msg.message_type,
-                    options: msg.options,
-                    addedByBot: msg.added_by_bot ? true : false,
-                    messageDate: new Date(msg.message_date),
-                    isRead: (msg.read === 1),
-                    isFavorite: (msg.is_favorite === 1),
-                    createdBy: msg.created_by
-                };
-                let message = new Message(opts);
-                return message.toBotDisplay();
+                return messageFromDatabaseRow(msg).toBotDisplay();
             });
             return resolve(messages);
         }, function failure(tx, err) {
@@ -205,8 +336,45 @@ const selectUserMessageCountSince = (botkey, sinceDateString) => new Promise((re
     });
 });
 
+const moveMessagesToNewBotKey = (fromBotKey, toBotKey) => new Promise((resolve, reject) => {
+    const args = [toBotKey, fromBotKey];
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.moveMessagesToNewBotKey, args, function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
+const deleteBotMessages = (botKey) => new Promise((resolve, reject) => {
+    const args = [botKey];
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.deleteBotMessages, args, function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            return reject(new Error('Unable to delete bot messages'));
+        });
+    });
+
+})
+
+const addCompletedColumn = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.addCompletedColumn, [], function success() {
+            return resolve(true);
+        }, function failure(tx, err) {
+            return reject(new Error('Unable to add completed column'));
+        });
+    });
+
+})
+
+
 export default {
     createMessageTable: createMessageTable,
+    createV2MessageTable: createV2MessageTable,
+    migrateToV2Messages: migrateToV2Messages,
     insertMessage: insertMessage,
     selectMessages: selectMessages,
     unreadMessageCount: unreadMessageCount,
@@ -215,5 +383,9 @@ export default {
     markBotMessageAsRead: markBotMessageAsRead,
     markBotMessageAsUnFavorite: markBotMessageAsUnFavorite,
     markBotMessageAsFavorite: markBotMessageAsFavorite,
-    selectFavoriteMessages: selectFavoriteMessages
+    selectFavoriteMessages: selectFavoriteMessages,
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages,
+    addCompletedColumn: addCompletedColumn,
+    insertOrUpdateMessage: insertOrUpdateMessage
 };

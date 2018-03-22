@@ -32,7 +32,7 @@ export default class MessageHandler extends events.EventEmitter {
         }
         message.setBotKey(botKey);
 
-        return resolve(MessageDAO.insertMessage(message));
+        return resolve(MessageDAO.insertOrUpdateMessage(message));
     });
 
     /**
@@ -203,5 +203,20 @@ export default class MessageHandler extends events.EventEmitter {
      */
     toggleFavorite = (botKey, messageId, isFavorite) => {
         return isFavorite ? MessageDAO.markBotMessageAsFavorite(botKey, messageId) : MessageDAO.markBotMessageAsUnFavorite(botKey, messageId)
+    }
+
+    /**
+     * Deletes all the messages of the bot.
+     *
+     * @param botKey A string key to indicate the identifier of bot
+     *
+     * @return Promise that resolves to a true on success.
+     */
+    deleteBotMessages = (botKey) => {
+        return MessageDAO.deleteBotMessages(botKey)
+    }
+
+    moveMessages = (fromBotKey, toBotKey) => {
+        return MessageDAO.moveMessagesToNewBotKey(fromBotKey, toBotKey);
     }
 }

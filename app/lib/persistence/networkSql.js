@@ -10,6 +10,18 @@ const createNetworkQueueTable = `
     );
 `;
 
+const createV2NetworkQueueTable = `
+    CREATE TABLE IF NOT EXISTS network_queue (
+        id integer primary key,
+        key text NOT NULL,
+        status text NOT NULL default 'pending',
+        request text NOT NULL,
+        result text,
+        created_at_date integer NOT NULL,
+        updated_at_date integer NOT NULL
+    );
+`;
+
 const insertNetworkOperation = `
     INSERT INTO network_queue ( 
         key, 
@@ -66,6 +78,7 @@ const STATUS_CONSTANTS = {
 
 export default {
     createNetworkQueueTable: createNetworkQueueTable,
+    createV2NetworkQueueTable: createV2NetworkQueueTable,
     insertNetworkOperation: insertNetworkOperation,
     updateRequest: updateRequest,
     deleteNetworkOperation: deleteNetworkOperation,

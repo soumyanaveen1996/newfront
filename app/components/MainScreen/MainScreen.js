@@ -13,7 +13,7 @@ import appConfig from '../../config/config';
 import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS } from '../../lib/network';
 import Auth from '../../lib/capability/Auth';
 import Bot from '../../lib/bot';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -98,13 +98,18 @@ export default class MainScreen extends React.Component {
         Actions.conversations();
     }
 
+    openChannels() {
+        this.floatingButton.reset(true);
+        Actions.channelsList({ onBack: this.onBack.bind(this) });
+    }
+
     openBotFilter() {
         Actions.botFilter();
     }
 
     openConfigure() {
         this.floatingButton.reset(true);
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.OnboardingBot)
+        SystemBot.get(SystemBot.onboardingBotManifestName)
             .then((onboardingBot) => {
                 Actions.onboarding({ bot: onboardingBot, onBack: this.onBack.bind(this) });
             });
@@ -116,7 +121,7 @@ export default class MainScreen extends React.Component {
                 <FloatingButton ref={(button) => { this.floatingButton = button }} style={MainScreenStyles.floatingButton}>
                     {/* <FloatingButton.Item title={I18n.t('Favorites')} image={images.icn_fav} onPress={() => console.log('Favorites tapped!')} /> */}
                     <FloatingButton.Item title={I18n.t('Contacts')} image={images.icn_contact} onPress={this.openContacts.bind(this)} />
-                    {/* <FloatingButton.Item title={I18n.t('Channels')} image={images.icn_channel} onPress={this.openConversations.bind(this)} /> */}
+                    <FloatingButton.Item title={I18n.t('Channels')} image={images.icn_channel} onPress={this.openChannels.bind(this)} />
                     <FloatingButton.Item title={I18n.t('ChatBots')} image={images.icn_chatbot} onPress={this.openBotStore.bind(this)} />
                     <FloatingButton.Item title={I18n.t('Configure')} image={images.icn_configure} onPress={this.openConfigure.bind(this)} />
                 </FloatingButton>

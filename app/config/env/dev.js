@@ -4,9 +4,9 @@ import _ from 'lodash';
 const S3_HOST = 's3.amazonaws.com';
 const CATALOG_HOST = 'mq2bsx6jae.execute-api.us-east-1.amazonaws.com';
 const QUEUE_HOST = 'oc8208kdrk.execute-api.us-east-1.amazonaws.com';
-const PROXY_HOST = 'dev.frontm.ai';
+const PROXY_HOST = 'elbdev.frontm.ai';
 
-// Overwrite any properties for dev. 
+// Overwrite any properties for dev.
 const devConfig = {
     bot: {
         baseProtocol: 'https://',
@@ -16,23 +16,26 @@ const devConfig = {
         binaryS3Bucket: 'frontm-contentdelivery-mobilehub-1030065648/conversationsFiles',
         catalogHost: CATALOG_HOST,
         catalogPath: '/Development/items',
-        catalogServiceApi: 'execute-api'
+        catalogServiceApi: 'execute-api',
     },
     network: {
         queueProtocol: 'https://',
         queueHost: QUEUE_HOST,
         queuePath: '/Development/items',
-        queueServiceApi: 'execute-api'
+        queueServiceApi: 'execute-api',
+        contactsPath: '/contacts',
+        channelsPath: '/channels',
+        userDetailsPath: '/userDetails',
     },
     proxy: {
         enabled: true,
         host: PROXY_HOST,
         protocol: 'https://',
         queuePath: '/queueLambda',
-        catalogPath: '/catalogLambda',
+        catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
-        conversationPath: '/conversation'
+        conversationPath: '/conversation',
     }
 }
 

@@ -1,32 +1,57 @@
 (function () {
 
     const FIND_CONTACTS_CAP = 'FindContacts';
-    const EMAIL_BODY = "Hi there,\n\n" +
-        "FrontM is a Messaging platform optimised for use in remote and poorly connected places.\n" +
-        "Are you on a ship? An airplane? Or far away from the nearest cell tower? We have you covered.\n" +
-        "With FrontM you have the power of chatbots and instant messaging at your fingertips, even when you are offline.\n" +
-        "To download the iOS client of the app, follow the link below:\n" +
-        "\n" +
-        "\n" +
-        "Enjoy it!!\n" +
-        "The FrontM Team\n";
+    const CONTACTS_FIND_NLP_ID = 'ContactsBot-FindName';
+    const EMAIL_BODY = "<p>Hello there!</p>" +
+        "<p>FrontM is a platform for businesses and people to collaborate and take smart decisions – EVEN IN ISOLATED ENVIRONMENTS.</p>" +
+        "<p>So if you, or your colleague or your friend, are on a ship, or on an aeroplane, or far away from the nearest cell tower……. " +
+        "we have you covered with Powerful Chatbots that even work offline and data optimized multi-platform instant messaging.</p>" +
+        "<p>Go ahead and download the <a href=\"http://itunes.com/apps/frontm\">app</a> and log in using Google or Facebook. And off you go :)</p>" +
+        "<p><i>Android, Web, desktop, Mac, MS Hololens  – all coming soon</i></p>" +
+        "<p>If you have any questions, we would love to hear from you. Email us at info@frontm.com or follow us on twitter @frontmplatform</p>"+
+        "<p>Happy staying in touch from anywhere!</p>" +
+        "<p><font size=\"1\">Guillermo Acilu</font></p>"+
+        "<p><font size=\"1\">Co-founder and CTO</font></p>"+
+        "<p><img src=\"https://s3.amazonaws.com/frontm-contentdelivery/botLogos/emailIcon.png\" alt=\"FrontM logo\" width=\"163\" height=\"26\" style=\"margin-right: 0px;\"></p>";
+    const PLATFORM_USERS = 'platformUsers';
+    const ADDRESS_BOOK_USERS = 'addressBookUsers';
 
 
     let next = function (message, state, previousMessages, botContext) {
         if (message.getMessageType() === 'slider_response') {
             let action = message.getMessage()[0].action || '';
-            if ('GetPlatformContacts' === action) {
-                return getPlatformContacts(message, state, previousMessages, botContext);
+            if ('SearchPlatformContacts' === action) {
+                return showSearchForm(message, state, previousMessages, botContext);
             } else if ('InviteUser' === action) {
                 return showEmailForm(message, state, previousMessages, botContext);
+            } else if ('ShowAddressBookUsers' === action) {
+                return showAddressBookUsers(message, state, previousMessages, botContext);
+            } else if('Help' === action || 'NlpSmartReply' === action) {
+                let Message = botContext.getCapability('Message');
+                let msg = new Message();
+                msg.stringMessage(message.getMessage()[0].title);
+                return processNlpString(msg, state, previousMessages, botContext);
             } else {
-                return addContacts(message, state, previousMessages, botContext);
+                let userType = getStateVariable('userType');
+                if(userType === PLATFORM_USERS) {
+                    return addContacts(message, state, previousMessages, botContext);
+                } else if(userType === ADDRESS_BOOK_USERS) {
+                    return sendEmail(message, previousMessages, botContext);
+                }
             }
         } else if (message.getMessageType() === 'form_response') {
-            return sendEmail(message, state, previousMessages, botContext);
+            let buttonTitle = message.getMessage()[2].title;
+            if (buttonTitle === 'Invite') {
+                return sendEmail(message, previousMessages, botContext);
+            } else if (buttonTitle === 'Search') {
+                let Message = botContext.getCapability('Message');
+                let msg = new Message();
+                msg.stringMessage('find ' + message.getMessage()[1].value);
+                return processNlp(msg, state, previousMessages, botContext);
+            }
         }  else if (message.getMessageType() === 'string') {
             let msgVal = message.getMessage().toLowerCase();
-            if (msgVal === 'options') {
+            if (msgVal === 'help') {
                 return ask(botContext);
             } else {
                 return processNlp(message, state, previousMessages, botContext);
@@ -38,8 +63,8 @@
 
     const processNlp = function(msg, state, previousMessages, botContext) {
         const authContext = botContext.getCapability('authContext');
-        const _ = botContext.getCapability('Utils').Lodash;
 
+        botContext.wait(true);
         let user = {};
         authContext.getAuthUser(botContext)
             .then(function(usr) {
@@ -48,7 +73,7 @@
                 return agentGuardService.executeCustomCapability(FIND_CONTACTS_CAP, {queryString: msg.getMessage()}, true, undefined, botContext, user);
             })
             .then(function(contacts) {
-                showContactList(contacts, botContext, true);
+                showContactList(contacts, botContext, PLATFORM_USERS);
             })
             .catch(function (err) {
                 console.log(err);
@@ -56,70 +81,106 @@
             });
     };
 
-    let writeUserFeedback = function(msg, botContext, user, previousMessages, nlpIntent) {
-        let doc = {
-            bot: botContext.botManifest.id,
-            question: msg.getMessage(),
-            lastError: nlpIntent,
-            user: user.userUUID
-        };
-
-        const agentGuardService = botContext.getCapability('agentGuardService');
-        let params = {
-            collection: "UserFeedback",
-            documents: [{document: doc}]
-        };
-
-        return agentGuardService.writeData(msg, botContext, user, previousMessages, params);
-    };
-
-    let getContacts = function(msg, botContext, user, previousMessages, queryString, queryObject) {
-        const agentGuardService = botContext.getCapability('agentGuardService');
+    const processNlpString = function(msg, state, previousMessages, botContext) {
+        const authContext = botContext.getCapability('authContext');
         const _ = botContext.getCapability('Utils').Lodash;
-        let params = {
-            collection: "People"
-        };
 
-        if(_.isEmpty(queryString)) {
-            params["queryObject"] = queryObject;
-        } else {
-            params["queryString"] = queryString;
-        }
-        return agentGuardService.readData(msg, botContext, user, previousMessages, params);
+        botContext.wait(true);
+        authContext.getAuthUser(botContext)
+            .then(function(user) {
+                const agentGuardService = botContext.getCapability('agentGuardService');
+                return agentGuardService.nlp(msg, botContext, user, previousMessages, CONTACTS_FIND_NLP_ID);
+            })
+            .then(function(queryResp) {
+                let Message = botContext.getCapability('Message');
+                let messages = queryResp.messages || [];
+                let action = queryResp.action;
+
+                if(_.isEmpty(messages)) {
+                    let strMsg = queryResp.speech || 'Unable to get results for the query';
+                    tell(strMsg, botContext);
+                } else {
+                    let type0Msg = _.find(messages, function (element) {
+                        return element.type === 0;
+                    });
+
+                    if(type0Msg.speech) {
+                        tell(type0Msg.speech, botContext);
+                    }
+
+                    if(action === '0_configurationMenu') {
+                        return ask(botContext);
+                    } else {
+                        let typ2Or4Msg = _.find(messages, function (element) {
+                            return element.type === 4;
+                        });
+
+                        if(_.isEmpty(typ2Or4Msg)) {
+                            typ2Or4Msg = _.find(messages, function (element) {
+                                return element.type === 2;
+                            });
+                        }
+
+                        if (typ2Or4Msg) {
+                            let messages = _.get(typ2Or4Msg, "payload.messages") || _.get(typ2Or4Msg, "replies") || [];
+                            let sliderMsgList = [];
+                            _.each(messages, function (element) {
+                                sliderMsgList.push({title: element, action: 'NlpSmartReply'});
+                            });
+                            let message = new Message();
+                            message.sliderMessage(sliderMsgList, {smartReply: true});
+                            tell(message, botContext);
+                        }
+                    }
+
+                }
+            });
     };
 
     const ask = function(botContext) {
         let Message = botContext.getCapability('Message');
         let message = new Message();
         message.sliderMessage([{
-            title: 'Show me FrontM users I might know',
-            action: 'GetPlatformContacts'
+            title: 'Search user',
+            action: 'SearchPlatformContacts'
+        }, {
+            title: 'Invite users from address book',
+            action: 'ShowAddressBookUsers'
         }, {
             title: 'Invite user with email',
             action: 'InviteUser'
+        }, {
+            title: 'Help',
+            action: 'Help'
         }
         ], {smartReply: true});
         tell(message, botContext);
 
     };
 
-    function sendEmail(msg, state, previousMessages, botContext) {
-        let emailId = msg.getMessage()[1].value || '';
+    function sendEmail(msg, previousMessages, botContext) {
+        let emailId = null;
+        if (msg.getMessageType() === 'slider_response') {
+            let addrBookUsers = _reverseFromSliderMessageFormat(msg.getMessage()) || [];
+            emailId = addrBookUsers.map((user) => user.emailAddress);
+        } else {
+            emailId = msg.getMessage()[1].value || '';
+        }
         const authContext = botContext.getCapability('authContext');
         authContext.getAuthUser(botContext)
             .then(function(user) {
                 let userInfo = user.info || {};
                 let params = {
                     address: emailId,
-                    body: EMAIL_BODY,
+                    htmlBody: EMAIL_BODY,
                     title: userInfo.name + " is inviting you to try FrontM!"
                 };
                 const agentGuardService = botContext.getCapability('agentGuardService');
                 agentGuardService.sendEmail(msg, botContext, user, previousMessages, params);
-                tell('Email invitation sent to user', botContext);
+                tell('Email invitation sent to user(s)', botContext);
                 return ask(botContext);
             });
-    };
+    }
 
     let showEmailForm = function (msg, state, previousMessages, botContext) {
         let Message = botContext.getCapability('Message');
@@ -135,52 +196,58 @@
             value: ''
         },{
             id:3,
-            title:'Submit',
+            title:'Invite',
+            type: 'button'
+        }], '');
+        tell(message, botContext);
+    };
+
+    let showSearchForm = function (msg, state, previousMessages, botContext) {
+        let Message = botContext.getCapability('Message');
+        let message = new Message();
+        message.formMessage([{
+            id:1,
+            title:'Please enter the user\'s name or email',
+            type: 'text'
+        }, {
+            id:2,
+            title:'User name or email',
+            type: 'text_field',
+            value: ''
+        },{
+            id:3,
+            title:'Search',
             type: 'button'
         }], '');
         tell(message, botContext);
     };
 
     let greeting = function (state, previousMessages, botContext) {
+        const _ = botContext.getCapability('Utils').Lodash;
+        if(_.isEmpty(previousMessages)) {
+            let greeting = 'To search for people already using the platform, select the "Find users" option. To invite your friends to start using FrontM, select one of the invite users options';
+            tell(greeting, botContext);
+        }
         return ask(botContext);
     };
 
-    let getPlatformContacts = function (message, state, previousMessages, botContext) {
-        botContext.wait(true);
-        let page = state.contactsPage || 1;
 
-        const authContext = botContext.getCapability('authContext');
-        authContext.getAuthUser(botContext)
-            .then(function (user) {
-                let queryStr = '{uuid: {$not: {$eq: \'' + user.userUUID + '\'}}}';
-                let pageQuery = "&&page==" + page;
-                let pgSizeQuery = "&&pagesize==10";
-                let queryObj = queryStr + pageQuery + pgSizeQuery;
-
-                return getContacts(message, botContext, user, previousMessages, null, queryObj);
-            })
-            .then((contacts) => {
-                const _ = botContext.getCapability('Utils').Lodash;
-                if (_.isEmpty(contacts)) {
-                    state['contactsPage'] = 1;
-                } else {
-                    state['contactsPage'] = page + 1;
-                }
-                showContactList(contacts, botContext);
-            })
-            .catch(function (err) {
-                tell('Error occurred making the call to readPeople on agent guard' + err, botContext);
+    let showAddressBookUsers = function (message, state, previousMessages, botContext) {
+        const Contact = botContext.getCapability('Contact');
+        Contact.getAddressBookEmails()
+            .then((addressBookContacts) => {
+                showContactList(addressBookContacts, botContext, ADDRESS_BOOK_USERS);
             });
     };
 
-    let showContactList = function(contacts, botContext, isNlp) {
+    let showContactList = function(contacts, botContext, userType) {
         contacts = contacts || [];
         const _ = botContext.getCapability('Utils').Lodash;
         if (_.isEmpty(contacts)) {
-            if(isNlp) {
-                tell('No contacts exist which match the criteria', botContext);
+            if(ADDRESS_BOOK_USERS === userType) {
+                tell('No contacts exist in the address book', botContext);
             } else {
-                tell('No more contacts exist. Will display the contacts from the beginning from next time', botContext);
+                tell('No contacts exist which match the criteria', botContext);
             }
             return ask(botContext);
         } else {
@@ -191,6 +258,7 @@
                 select: true,
                 multiSelect: true
             });
+            state['userType'] = userType;
             tell(message, botContext);
         }
     };
@@ -199,38 +267,47 @@
         const greeting = 'Adding the selected contacts for you';
         tell(greeting, botContext);
 
-        const Contact = botContext.getCapability('Contact');
-        Contact.addContacts(_reverseFromSliderMessageFormat(message.getMessage()))
-            .then(() => {
-                return ask(botContext);
-            });
+        let contactsToAdd = _reverseFromSliderMessageFormat(message.getMessage());
+        let uuidList = contactsToAdd.map(user =>  user.uuid );
+
+        const authContext = botContext.getCapability('authContext');
+        authContext.getAuthUser(botContext)
+        .then(function (user) {
+            let agentGuardService = botContext.getCapability('agentGuardService');
+            const ADD_CONTACT_ACTION = 'AddContact';
+            agentGuardService.executeCustomCapability(ADD_CONTACT_ACTION, {users: uuidList}, true, undefined, botContext, user, true)
+        })
+        .then(() => {
+            let Contact = botContext.getCapability('Contact');
+            return Contact.addContacts(contactsToAdd);
+        })
+        .then(() => {
+            return ask(botContext);
+        });
     };
 
-    // TODO: reuse from peopleData ? do we need a utils lib for bots??
     const _formatForSliderMessage = function (peopleJson) {
         peopleJson = peopleJson || [];
         const sliderFormat = peopleJson.map((person) => {
+            let name = person.name || person.givenName + ' ' + (person.surname || person.familyName);
             return {
-                title: person.name,
+                title: name,
                 data: {
                     contact_info: [{
                         key: 'Name',
-                        value: person.name
+                        value: name
                     }, {
                         key: 'Email',
                         value: person.emailAddress
                     }, {
                         key: 'Screen Name',
                         value: person.screenName
-                    }, {
-                        key: 'uuid',
-                        value: person.uuid
-                    }, {
+                    } , {
                         key: 'Given Name',
                         value: person.givenName
                     }, {
                         key: 'Sur Name',
-                        value: person.surname
+                        value: person.surname || person.familyName
                     }]
                 }
             }
@@ -245,7 +322,7 @@
     //     "surname": "Sharma",
     //     "name": "Akshay Sharma",
     //     "uuid": "11A2A680-7E76-4154-A811-2A6BAB2A3BF9",
-    // }    
+    // }
     const _reverseFromSliderMessageFormat = function (contacts) {
         contacts = contacts || [];
         const contactFormat = contacts.map((contact) => {
@@ -259,16 +336,20 @@
             };
         });
         return contactFormat;
-    }
+    };
 
     let tell = function (msg, botContext) {
         // Should bots delay? - not for now - make this a dynamic capability?
         // setTimeout(() => botContext.tell(msg), 500);
         botContext.tell(msg);
-    }
+    };
 
 
     let state = {
+    };
+
+    let getStateVariable = function(varName) {
+        return state[varName];
     };
 
     // We can use this to dump the state of the bot at any time.
@@ -276,7 +357,7 @@
         return {
             localState: state
         }
-    }
+    };
 
     let farewell = function (msg, state, previousMessages, botContext) {
     };

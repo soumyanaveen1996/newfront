@@ -4,6 +4,8 @@ import { NetworkHandler } from './index';
 import config from '../../config/config';
 import BackgroundTimer from 'react-native-background-timer';
 import EventEmitter, { AuthEvents } from '../events';
+import { AppState } from 'react-native';
+
 
 const POLL_KEY = 'poll_key';
 
@@ -16,6 +18,17 @@ class NetworkPoller {
     listenToEvents = async () => {
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
+    handleAppStateChange = async (nextAppState) => {
+        if (nextAppState === 'active') {
+            let user = await Auth.getUser();
+            if (user.userUUID !== 'default_user_uuid') {
+                console.log('Reading Lambda');
+                NetworkHandler.readLambda();
+            }
+        }
     }
 
     userLoggedInHandler = async () => {

@@ -19,6 +19,11 @@ export const overrideConsole = (trueConsole) => {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments)
             }
+        },
+        'info': function() {
+            if (global.__DEV__) {
+                trueConsole.log.apply(trueConsole, arguments)
+            }
         }
     };
 }

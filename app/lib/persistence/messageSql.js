@@ -13,6 +13,21 @@ const createMessageTable = `
     ) WITHOUT ROWID;
 `;
 
+const createV2MessageTable = `
+    CREATE TABLE IF NOT EXISTS messages (
+        message_id text PRIMARY KEY NOT NULL,
+        bot_key text NOT NULL,
+        msg text NOT NULL,
+        message_type text NOT NULL,
+        options text,
+        added_by_bot integer NOT NULL,
+        message_date integer NOT NULL,
+        read integer NOT NULL DEFAULT 0,
+        is_favorite integer DEFAULT 0,
+        created_by text
+    ) WITHOUT ROWID;
+`;
+
 const insertMessage = `
     INSERT INTO messages (
         message_id,
@@ -24,8 +39,25 @@ const insertMessage = `
         message_date,
         read,
         is_favorite,
-        created_by
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        created_by,
+        completed
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+`;
+
+
+const updateMessageById = `
+    UPDATE messages
+    SET bot_key = ?,
+        msg = ?,
+        message_type = ?,
+        options = ?,
+        added_by_bot = ?,
+        message_date = ?,
+        read = ?,
+        is_favorite = ?,
+        created_by = ?,
+        completed = ?
+    WHERE message_id = ?
 `;
 
 const markAsRead = `
@@ -59,7 +91,8 @@ const selectRecentMessages = `
         message_date,
         read,
         is_favorite,
-        created_by
+        created_by,
+        completed
     FROM messages
     WHERE bot_key = ?
     ORDER BY message_date desc
@@ -77,13 +110,31 @@ const selectFavoriteMessages = `
         added_by_bot,
         message_date,
         read,
-        is_favorite
-        created_by
+        is_favorite,
+        created_by,
+        completed
     FROM messages
     WHERE is_favorite = 1
     ORDER BY message_date desc
     LIMIT ?
     OFFSET ?;
+`;
+
+const selectMessageById = `
+    SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by,
+        completed
+    FROM messages
+    WHERE message_id = ?
 `;
 
 const deleteMessage = 'TBD';
@@ -98,8 +149,21 @@ const totalUserMessageCountSince = `
         AND added_by_bot = 0 ;
 `;
 
+const moveMessagesToNewBotKey = `
+    UPDATE messages SET bot_key = ? where bot_key = ?;
+`;
+
+const deleteBotMessages = `
+    DELETE FROM messages where bot_key = ?;
+`;
+
+const addCompletedColumn = `
+    ALTER TABLE messages ADD COLUMN completed INTEGER NOT NULL DEFAULT 0
+`;
+
 export default {
     createMessageTable: createMessageTable,
+    createV2MessageTable: createV2MessageTable,
     insertMessage: insertMessage,
     selectRecentMessages: selectRecentMessages,
     deleteMessage: deleteMessage,
@@ -109,5 +173,10 @@ export default {
     markAllBotMessagesAsRead: markAllBotMessagesAsRead,
     selectFavoriteMessages: selectFavoriteMessages,
     markAsUnFavorite: markAsUnFavorite,
-    markAsFavorite: markAsFavorite
+    markAsFavorite: markAsFavorite,
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages,
+    updateMessageById: updateMessageById,
+    addCompletedColumn: addCompletedColumn,
+    selectMessageById: selectMessageById,
 };

@@ -6,6 +6,7 @@ import images from '../../config/images';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
+import { CachedImage } from '../CachedImage';
 
 export default class BotListItem extends React.Component {
 
@@ -57,7 +58,7 @@ export default class BotListItem extends React.Component {
         const { bot } = this.props;
         return (
             <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
-                <Image source={images[bot.logoSlug] || { uri: bot.logoUrl }} style={ BotListItemStyles.image } resizeMode="contain"/>
+                <CachedImage source={images[bot.logoSlug] || { uri: bot.logoUrl }} style={ BotListItemStyles.image } resizeMode="contain"/>
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={ BotListItemStyles.title } >{bot.name}</Text>
                     {this.renderSubview()}

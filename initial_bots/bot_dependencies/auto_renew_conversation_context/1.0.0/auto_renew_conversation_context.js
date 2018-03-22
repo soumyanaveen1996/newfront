@@ -1,5 +1,5 @@
 (function() {
-    
+
       /**
        * Logic:
        *  1. Check if it has been ELAPSED_TIME_FOR_NEW_CONVERSATION_IN_HOURS since last message:
@@ -7,8 +7,8 @@
        *  3. If not, check if a conversation context exists for this bot.
        *  4. If yes, return it
        *  5. If not create a new conversation context and return it
-       *  
-       * Returns the following: 
+       *
+       * Returns the following:
        * ```
        *  {
        *    conversationId: string,
@@ -19,10 +19,10 @@
        *    closed: boolean // When the conversation is initialised must be set to false and remain false until the conversation is closed (a new conversationId is generated).
        *  }
        * ```
-       *  
-       * @param {*} message 
-       * @param {*} botContext 
-       * @param {*} previousMessages 
+       *
+       * @param {*} message
+       * @param {*} botContext
+       * @param {*} previousMessages
        */
       const getConversationContext = function(message, botContext, previousMessages, user) {
         let lastMessage = previousMessages ? previousMessages[previousMessages.length - 1] : null;
@@ -65,7 +65,7 @@
         NUM: 24,
         SCALE: 'hours'
       };
-    
+
       return {
         getConversationContext: getConversationContext,
         setInstanceId: setInstanceId,

@@ -3,10 +3,14 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { BotListItemStyles } from './styles';
 import { Icons } from '../../config/icons';
 import images from '../../config/images';
+import ProfileImage from '../ProfileImage';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES, SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
+import { IM_CHAT } from '../../lib/conversation/Conversation';
+import Utils from '../../lib/utils';
+import { CachedImage } from '../CachedImage';
 
 export default class ConversationListItem extends React.Component {
 
@@ -17,15 +21,19 @@ export default class ConversationListItem extends React.Component {
             date: '',
             count: 0,
             message: null,
-            chatName: SYSTEM_BOT_MANIFEST.IMChat.name
+            chatName: SystemBot.imBot.name
         }
         this.conversation = this.props.conversation;
     }
 
     handleBotSelection() {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.IMChat)
+        SystemBot.get(SystemBot.imBotManifestName)
             .then((imBot) => {
-                Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                if (this.conversation.type === IM_CHAT) {
+                    Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                } else {
+                    Actions.channelChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
+                }
             });
     }
 
@@ -41,10 +49,11 @@ export default class ConversationListItem extends React.Component {
             };
         } else {
             stateObj = {
-                subTitle: SYSTEM_BOT_MANIFEST.IMChat.description
+                subTitle: SystemBot.imBot.desc
             };
         }
         stateObj.chatName = this.props.chatData.chatName;
+        stateObj.otherUserId = this.props.chatData.otherUserId;
 
         if (this.props.chatData.totalUnread > 0) {
             stateObj.count = this.props.chatData.totalUnread;
@@ -60,11 +69,26 @@ export default class ConversationListItem extends React.Component {
             return <Text numberOfLines={2} style={ BotListItemStyles.subTitle } >{this.state.subTitle}</Text>;
         }
     }
+    renderProfileimage() {
+        if (this.conversation.type === IM_CHAT) {
+            return <ProfileImage
+                uuid={this.state.otherUserId}
+                placeholder={images.user_image}
+                style={BotListItemStyles.image}
+                placeholderStyle={BotListItemStyles.image}
+                resizeMode="cover"/>;
+        } else {
+            return <CachedImage
+                source={{ uri: Utils.channelLogoUrl(this.props.chatData.channel.logo) } }
+                style={ BotListItemStyles.image }
+                resizeMode="contain"/>;
+        }
+    }
 
     render() {
         return (
             <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
-                <Image source={ images.user_image } style={ BotListItemStyles.image } resizeMode="contain"/>
+                {this.renderProfileimage()}
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={ BotListItemStyles.title } >{this.state.chatName}</Text>
                     {this.renderSubview()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableHighlight, TextInput } from 'react-native';
+import { Text, View, TouchableHighlight } from 'react-native';
 import { FormLabel, FormInput } from 'react-native-elements'
 import styles from './styles';
 
@@ -14,7 +14,7 @@ export default class FormMessage extends React.Component {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
             var eachFormData = formData[i]
-            eachFormData['value'] = formTextArr[i]
+            eachFormData.value = formTextArr[i]
             formData[i] = eachFormData
         }
         this.props.onCTAClicked(formData)
@@ -49,7 +49,7 @@ export default class FormMessage extends React.Component {
                 buttons.push(
                     <View style={styles.buttonMsgParent} key={i}>
                         <TouchableHighlight
-                            underlayColor='white'
+                            underlayColor="white"
                             onPress={this.CTAResponseOnPress.bind(this)}
                             style={styles.buttonMessage}>
                             <Text>

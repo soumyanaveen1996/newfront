@@ -1,9 +1,11 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import { checkBoxConfig } from './config';
 import { CheckBox } from 'react-native-elements';
 import _ from 'lodash';
+import ProfileImage from '../ProfileImage';
+import Images from '../../config/images';
 
 
 export default class ContactsPickerRow extends React.Component {
@@ -33,11 +35,17 @@ export default class ContactsPickerRow extends React.Component {
     render() {
         const contact = this.props.contact;
         const emails = _.map(contact.emails, (item) => item.email)
+        const uuid = contact.id;
         return (
             <TouchableOpacity onPress={this.onItemPressed.bind(this)}>
                 <View style={styles.contactItemContainer}>
                     {this.renderCheckbox()}
-                    <Image style={styles.contactItemImage} source={contact.thumbnail}/>
+                    <ProfileImage
+                        uuid={uuid}
+                        placeholder={Images.user_image}
+                        style={styles.contactItemImage}
+                        placeholderStyle={styles.contactItemImage}
+                        resizeMode="cover"/>
                     <View style={styles.contactItemDetailsContainer}>
                         <Text style={styles.contactItemName}>{contact.name}</Text>
                         <Text style={styles.contactItemEmail}>{contact.screenName + ' - ' + emails.join(',')}</Text>

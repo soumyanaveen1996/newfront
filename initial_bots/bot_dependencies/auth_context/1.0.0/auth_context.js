@@ -25,7 +25,7 @@
   let logout = function(botContext) {
     let Auth = botContext.getCapability('Auth');
 
-    // Will return a promise 
+    // Will return a promise
     return Auth.logout();
   }
 
@@ -34,12 +34,24 @@
     return Auth.authProviders();
   }
 
+    let updateUserDetails = function(userDetails, botContext) {
+        let Auth = botContext.getCapability('Auth');
+        return Auth.updateUserDetails(userDetails);
+    };
+
+    let addDomains = function(domains, botContext) {
+        let Auth = botContext.getCapability('Auth');
+        return Auth.addDomains(domains);
+    };
+
   return {
       getAuthUser: getAuthUser,
       isUserLoggedIn: isUserLoggedIn,
       logout: logout,
       login: login,
       getAuthProviders: getAuthProviders,
+      updateUserDetails: updateUserDetails,
+      addDomains: addDomains,
       version: '1.0.0'
   };
 })();

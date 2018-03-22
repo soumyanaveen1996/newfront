@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -18,6 +17,7 @@
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
 		0486BED22008CC5F00DF553B /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
+		0CA770390734B837128F930A /* libPods-frontm_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */; };
 		12E0C1ECACE542C9ADE38BEB /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -28,6 +28,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		18F38A5101C141C692D61127 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0314A9C62FD4348BFE8F156 /* Octicons.ttf */; };
+		1F5F715922F241099C363C04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4BF23652804675A540A09D /* libRCTFBSDK.a */; };
 		2D0BBCA1DA6F436D86AB0045 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF211C1B79C4421DA60C8697 /* libz.tbd */; };
 		319EFC1442A8414BA51CA7B7 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D5BD8DC874603BB4800FB /* SafariServices.framework */; };
 		320C7129065B4281992A3E0B /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7EC8AEAA21A47649B6ED17A /* libRCTVideo.a */; };
@@ -98,6 +99,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
+		};
+		0402898F202DB89C000E9BFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
+			remoteInfo = RCTFBSDK;
 		};
 		040AA75C20034A630057C959 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -528,8 +536,13 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8379B8CA80E44F82A07D327F /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
+		8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-frontm_mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
+		9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontm_mobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile.debug.xcconfig"; sourceTree = "<group>"; };
 		A7982D89132F446980344C24 /* SystemConfiguration.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A8BBE20D76724876A3FCDBFA /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
+		AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontm_mobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile.release.xcconfig"; sourceTree = "<group>"; };
+		AD4BF23652804675A540A09D /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
 		AF211C1B79C4421DA60C8697 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -596,6 +609,8 @@
 				2D0BBCA1DA6F436D86AB0045 /* libz.tbd in Frameworks */,
 				319EFC1442A8414BA51CA7B7 /* SafariServices.framework in Frameworks */,
 				DCC6B1A3AB014119B60F543F /* AddressBook.framework in Frameworks */,
+				1F5F715922F241099C363C04 /* libRCTFBSDK.a in Frameworks */,
+				0CA770390734B837128F930A /* libPods-frontm_mobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -661,6 +676,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0402898C202DB89C000E9BFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04028990202DB89C000E9BFA /* libRCTFBSDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		040AA74920034A630057C959 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -690,6 +713,7 @@
 				429900950192486080C1A87E /* libRNSVG.a */,
 				E87F5D84A7F74D639D64288B /* libRNSVG-tvOS.a */,
 				E1B959205B8A43FBB87BB84D /* libRNGoogleSignin.a */,
+				AD4BF23652804675A540A09D /* libRCTFBSDK.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -935,6 +959,7 @@
 				0148FD44A03F451D96DCF8FA /* RCTVideo.xcodeproj */,
 				183B3E8A9A004B05A794FA35 /* RNSVG.xcodeproj */,
 				8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */,
+				908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -959,6 +984,7 @@
 				C012FAE9CECA450BAC1F14F2 /* Frameworks */,
 				AA842CAA401B478A8BAAE3FF /* Resources */,
 				040C5A321FFCF9A40071B62D /* Recovered References */,
+				D3362C033AE81F21F8C363ED /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1011,8 +1037,18 @@
 				006D5BD8DC874603BB4800FB /* SafariServices.framework */,
 				A7982D89132F446980344C24 /* SystemConfiguration.framework */,
 				6455D14207044E8F88F76EC3 /* AddressBook.framework */,
+				8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D3362C033AE81F21F8C363ED /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */,
+				AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1022,10 +1058,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "frontm_mobile" */;
 			buildPhases = (
+				0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				859AD39D46D6DD62E54C15EF /* [CP] Embed Pods Frameworks */,
+				2699CE04E9DE5ACCB6698EFA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1097,6 +1136,10 @@
 				{
 					ProductGroup = 040C5A7B1FFCF9A50071B62D /* Products */;
 					ProjectRef = 498B9A007F1540289E4FB3E1 /* RCTContacts.xcodeproj */;
+				},
+				{
+					ProductGroup = 0402898C202DB89C000E9BFA /* Products */;
+					ProjectRef = 908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -1232,6 +1275,13 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		04028990202DB89C000E9BFA /* libRCTFBSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTFBSDK.a;
+			remoteRef = 0402898F202DB89C000E9BFA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		040AA75D20034A630057C959 /* libRCTPushNotification.a */ = {
@@ -1648,6 +1698,57 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
+		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-frontm_mobile-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2699CE04E9DE5ACCB6698EFA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		859AD39D46D6DD62E54C15EF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1677,6 +1778,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
@@ -1707,9 +1809,14 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				INFOPLIST_FILE = frontm_mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/frontm_mobile\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1726,6 +1833,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
@@ -1755,9 +1863,14 @@
 					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				INFOPLIST_FILE = frontm_mobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/frontm_mobile\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

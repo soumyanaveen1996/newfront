@@ -8,7 +8,7 @@ import config from '../../config/config.js';
 import AssetFetcher from './AssetFetcher';
 
 import { Auth, MessageTypeConstants } from '../capability';
-import SystemBot, { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
 
@@ -99,7 +99,7 @@ class Bot {
             this.user = await Promise.resolve(Auth.getUser());
 
             let remoteDeps = _.pickBy(this.manifest.dependencies, function (dep) {
-                return dep.remote === true;
+                return dep.remote === true || dep.remote === 'true';
             });
             await Promise.all(_.map(remoteDeps, async (dep, depName) => {
 

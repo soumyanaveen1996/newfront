@@ -6,6 +6,8 @@ import { Bot as DceBot } from '../dce';
 import { Utils, Network, Auth, Promise } from '../capability';
 import { NetworkError } from '../network';
 import SystemBot from './SystemBot';
+import {MessageHandler} from '../message';
+import FrontmUtils from '../../lib/utils';
 
 class Bot extends events.EventEmitter {
 
@@ -77,14 +79,30 @@ class Bot extends events.EventEmitter {
         return Bot.getInstalledBots()
     }
 
+    static async unInstallBots() {
+        try {
+            const bots = await Bot.getInstalledBots();
+            _.each( bots , async (bot) => {
+                await MessageHandler.deleteBotMessages(bot.id);
+                const dceBot = dce.bot(bot);
+                await Bot.delete(dceBot);
+            });
+        } catch (e) {
+            console.log('Error occurred while uninstalling bots !:', e);
+            throw e;
+        }
+    };
+
     static async getCatalog() {
         try {
+            let user = await Promise.resolve(Auth.getUser());
+            if (!user) {
+                return {};
+            }
             // For now since we do not have a search
             let postReq = {
-                context: '',
-                capabilities: []
+                domains: user.info.domains
             };
-            let user = await Promise.resolve(Auth.getUser());
 
             let options = {
                 'method': 'post',
@@ -93,16 +111,48 @@ class Bot extends events.EventEmitter {
                 'data': postReq
             };
             let results = await Network(options);
-            const catalog = _.get(results, 'data');
+            let catalog = _.get(results, 'data');
+            if (!catalog) {
+                throw new NetworkError('Error getting catalog');
+            }
+            catalog = _.map(catalog, (bot) => _.merge(bot, {logoUrl : FrontmUtils.botLogoUrl(bot.logoUrl)}));
+
+            const catalogData = {
+                bots: catalog
+            }
+            catalogData.featured = _.map(_.filter(catalog, (bot) => (bot.featured === 'true' || bot.featured === true) && (bot.systemBot === false || bot.systemBot === 'false' || bot.systemBot === undefined)), 'id');
+            catalogData.systemBots = _.keyBy(_.filter(catalog, (bot) => bot.systemBot === 'true' || bot.systemBot === true), 'slug');
+            const developerBots = _.omit(_.groupBy(catalog, 'developer'), 'undefined');
+            catalogData.developer = _.map(_.keys(developerBots), (developer) => {
+                return {
+                    name: developer,
+                    logoUrl: FrontmUtils.developerLogoUrl(developer),
+                    botIds: _.map(developerBots[developer], 'id')
+                }
+            });
+            const categories = _.reduce(catalog, (result, bot) => {
+                _.forEach(bot.category, (category) => {
+                    result[category] = _.concat(result[category] || [], bot);
+                })
+                return result;
+            }, {});
+
+            catalogData.categories = _.map(_.keys(categories), (category) => {
+                return {
+                    name: category,
+                    logoUrl: FrontmUtils.developerLogoUrl(category),
+                    botIds: _.map(categories[category], 'id')
+                }
+            });
 
             // Update the latest catalog
-            const systemBotsCatalog = catalog.systemBots;
+            const systemBotsCatalog = catalogData.systemBots;
             if (systemBotsCatalog) {
                 // Why do we care to await?
                 await Promise.resolve(SystemBot.update(systemBotsCatalog));
             }
 
-            return catalog;
+            return catalogData;
         } catch (e) {
             // TODO: handle errors
             console.log('Error occurred getting the catalog!:', e);

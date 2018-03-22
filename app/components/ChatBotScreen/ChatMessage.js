@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, View, TouchableHighlight } from 'react-native';
+import { Text, Image, View, TouchableHighlight, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import {
     chatMessageBubbleStyle,
@@ -9,17 +9,23 @@ import {
     talkIconSign,
     chatMessageStyle,
     ellipsisMessageBubbleStyle,
-    videoContainerStyle
+    videoContainerStyle,
+    buttonStyle,
+    buttonTextStyle,
 } from './styles';
 import { MessageTypeConstants } from '../../lib/capability';
 import utils from '../../lib/utils';
 import AudioPlayer from '../AudioPlayer';
+import CachedImage from '../CachedImage';
+import ProfileImage from '../ProfileImage';
 import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
-import { FormMessage } from '../FormMessage';
 import TapToLoadImage from './TapToLoadImage';
 import AnimatedEllipsis from 'react-native-animated-ellipsis';
 import VideoPlayer from 'react-native-video-player';
+import Images from '../../config/images';
+import I18n from '../../config/i18n/i18n';
+import { ContactsCache } from '../../lib/ContactsCache';
 
 export default class ChatMessage extends React.Component {
 
@@ -33,8 +39,18 @@ export default class ChatMessage extends React.Component {
     }
 
     image() {
-        if (this.props.imageSource) {
-            return <Image source={this.props.imageSource} style={styles.profilePic} />;
+        let { message, isUserChat, alignRight } = this.props;
+        if (!alignRight) {
+            if (message.getCreatedBy() && isUserChat) {
+                return <ProfileImage
+                    uuid={message.getCreatedBy()}
+                    placeholder={Images.user_image}
+                    style={styles.profilePic}
+                    placeholderStyle={styles.placeholderProfilePic}
+                    resizeMode="cover"/>;
+            } else {
+                return <CachedImage source={this.props.imageSource} style={styles.profilePic} />;
+            }
         }
     }
 
@@ -80,7 +96,7 @@ export default class ChatMessage extends React.Component {
         var talkSign = <View style={talkIconSign(this.props.alignRight)}/>;
 
         return (
-            <View style={chatMessageStyle(this.props.alignRight)}>
+            <View style={[chatMessageStyle(this.props.alignRight)]}>
                 {this.props.alignRight ? favIcon : talkSign}
                 {component}
                 {this.props.alignRight ? talkSign : favIcon}
@@ -91,10 +107,8 @@ export default class ChatMessage extends React.Component {
     renderImageMessage(message) {
         const url = message.getMessage();
         let headers = utils.s3DownloadHeaders(url, this.props.user) || undefined;
-        const component = (
-            <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />
-        );
-
+        const imageComponent = <TapToLoadImage alignRight={this.props.alignRight} source={{ uri: url, headers: headers }} onImagePress={this.onImagePress.bind(this, headers)} />;
+        const component = this.wrapWithTitle(imageComponent);
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
@@ -145,6 +159,22 @@ export default class ChatMessage extends React.Component {
             });
     }
 
+    wrapWithTitle(component) {
+        let { message, shouldShowUserName } = this.props;
+        //console.log(shouldShowUserName, message.isMessageByBot())
+        if (shouldShowUserName && message.getCreatedBy()) {
+            let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            return (
+                <View style={{flexDirection: 'column'}}>
+                    <Text style={styles.userNameStyle}>{user ? user.screenName : I18n.t('Unknown')}</Text>
+                    {component}
+                </View>
+            )
+        } else {
+            return component;
+        }
+    }
+
     renderMessage() {
         let { message } = this.props;
 
@@ -154,7 +184,7 @@ export default class ChatMessage extends React.Component {
 
             const component = (
                 <View style={chatMessageBubbleStyle(this.props.alignRight, this.props.imageSource)}>
-                    <Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>
+                    {this.wrapWithTitle(<Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>)}
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
@@ -168,30 +198,36 @@ export default class ChatMessage extends React.Component {
             for (var i = 0; i < message.getMessage().length; i++) {
                 buttons.push(
                     <View style={styles.buttonMsgParent} key={i}>
-                        <TouchableHighlight
+                        <TouchableOpacity
                             underlayColor="white"
                             onPress={this.buttonResponseOnPress.bind(this, i, message.getMessage()[i])}
-                            style={styles.buttonMessage}>
-                            <Text>
+                            style={buttonStyle(message.getMessage()[i].style)}>
+                            <Text style={buttonTextStyle(message.getMessage()[i].style)}>
                                 {message.getMessage()[i].title}
                             </Text>
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
                 )
             }
 
             const component = (
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: 'column', width: '70%' }}>
                     {buttons}
                 </View>
             );
-            return this.wrapBetweenFavAndTalk(message, component);
+            return component;
 
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM) {
             const component = (
-                <FormMessage
-                    formData={message.getMessage()}
-                    onCTAClicked={this.formCTAClick.bind(this)} />
+                <View style={styles.formButtonWrapper} key={i}>
+                    <TouchableOpacity
+                        onPress={this.openForm.bind(this, message)}
+                        style={styles.formButton}>
+                        <Text style={styles.formButtonText}>
+                            {message.isCompleted() ? I18n.t('View_form') : I18n.t('Fill_form')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML) {
@@ -220,16 +256,24 @@ export default class ChatMessage extends React.Component {
         }
     }
 
+    openForm(message) {
+        const formMessage = message.getMessage();
+        Actions.form({ formData : formMessage,
+            onFormSubmit: this.onFormSubmit.bind(this),
+            editable: !message.isCompleted()})
+    }
+
+    onFormSubmit(items) {
+        let { message } = this.props;
+        this.props.onFormCTAClick(items, message);
+    }
+
     htmlResponseOnPress(htmlText) {
         Actions.webview({ htmlString: htmlText.htmlMsg });
     }
 
     buttonResponseOnPress(index, item) {
         this.props.onDoneBtnClick(item)
-    }
-
-    formCTAClick(items) {
-        this.props.onFormCTAClick(items)
     }
 
     renderMetadata() {
@@ -241,11 +285,15 @@ export default class ChatMessage extends React.Component {
         )
     }
 
+    onLayout(event) {
+        this.props.onLayout(event, this.props.message);
+    }
+
     render() {
         let { message } = this.props;
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             return (
-                <View style={styles.sessionStartMessage}>
+                <View onLayout={this.onLayout.bind(this)} style={styles.sessionStartMessage}>
                     <View style={styles.sessionStartHorizontalLine} />
                     <View>
                         <Text style={styles.sessionStartText}>{utils.sessionStartFormattedDate(message.getMessageDate())}</Text>
@@ -255,7 +303,7 @@ export default class ChatMessage extends React.Component {
             )
         } else {
             return (
-                <View>
+                <View onLayout={this.onLayout.bind(this)}>
                     <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
                         {this.image()}
                         {this.renderMessage()}

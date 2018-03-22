@@ -1,7 +1,7 @@
 import React from 'react';
-import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text } from 'react-native';
+import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text, NetInfo } from 'react-native';
 import { AudioRecorder, AudioUtils } from 'react-native-audio';
-import styles from './styles';
+import styles, { chatBarStyle } from './styles';
 import Images from '../../config/images';
 import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
@@ -254,7 +254,7 @@ export default class ChatInputBar extends React.Component {
             const minutes = String(Math.floor(seconds / 60));
             seconds = String(seconds);
             return (
-                <View style={styles.chatBar}>
+                <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={() => this._cancelRecording()} style={styles.cancelButton}>
                         {Icons.cancelRecording({style: styles.cancelRecordingIcon})}
                     </TouchableOpacity>
@@ -266,7 +266,7 @@ export default class ChatInputBar extends React.Component {
             );
         } else {
             return (
-                <View style={styles.chatBar}>
+                <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={this.showOptions.bind(this)}>
                         <Image source={Images.btn_more} style={styles.chatBarMoreButton}/>
                     </TouchableOpacity>

@@ -5,7 +5,7 @@ import NotificationEvents from './Notification';
 export {
     EventEmitter,
     AuthEvents,
-    NotificationEvents
+    NotificationEvents,
 };
 
 export default EventEmitter;

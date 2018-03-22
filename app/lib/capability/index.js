@@ -3,8 +3,10 @@ import DeviceStorage from './DeviceStorage';
 import Network from './Network';
 import Promise from './Promise';
 import Utils from './Utils';
+import Channel from './Channel';
 import Message from './Message';
-import { MessageTypeConstants }  from './Message';
+import Messages from './Messages';
+import { MessageTypeConstants, ButtonStyle }  from './Message';
 import { NetworkRequest, futureRequest } from './Network';
 import ConversationContext from './ConversationContext';
 import Auth from './Auth';
@@ -22,6 +24,7 @@ export {
     Promise,
     Utils,
     Message,
+    Messages,
     NetworkRequest,
     futureRequest,
     MessageTypeConstants,
@@ -32,5 +35,7 @@ export {
     Media,
     Resource,
     ResourceTypes,
+    ButtonStyle,
+    Channel,
     version
 };

@@ -5,6 +5,7 @@ import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack } from '../Header';
+import { MessageHandler } from '../../lib/message';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -16,10 +17,11 @@ export default class PeopleChat extends ChatBotScreen {
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
         } else {
-            navigationOptions.headerLeft = <HeaderBack onPress={() => {
+            navigationOptions.headerLeft = <HeaderBack onPress={async () => {
                 if (state.params.botDone) {
                     state.params.botDone();
                 }
+                await state.params.deleteConversation();
                 if (state.params.onBack) {
                     Actions.pop(); state.params.onBack();
                 } else {
@@ -32,6 +34,8 @@ export default class PeopleChat extends ChatBotScreen {
 
     constructor(props) {
         super(props);
+        this.newSession = false;
+        this.sentMessageCount = 0;
         // TODO: name or id? - what is constant across releases?
         this.botKey = null;
         // This means we have a list of participants to start the conversation with (new chat)
@@ -41,12 +45,21 @@ export default class PeopleChat extends ChatBotScreen {
         // Botkey is the id
         if (this.conversation) {
             this.botKey = this.conversation.conversationId;
+            this.newSession = false;
         }
     }
 
     // Implemented methods
     getBotKey = () => {
-        return this.botKey;
+        return this.conversation.conversationId;
+    }
+
+    setNavigationParams(context, user) {
+        this.props.navigation.setParams({
+            title: ConversationContext.getChatName(context, user),
+            botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
+            deleteConversation: this.deleteConversation.bind(this)
+        });
     }
 
     async getConversationContext(botContext, user) {
@@ -55,7 +68,7 @@ export default class PeopleChat extends ChatBotScreen {
             // Existing conversation - so pick from storage
             if (this.conversation) {
                 context = await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
-                this.props.navigation.setParams({ title: ConversationContext.getChatName(context, user) });
+                this.setNavigationParams(context, user);
                 return context;
             }
             // Else its a new conversation with participants.
@@ -69,17 +82,18 @@ export default class PeopleChat extends ChatBotScreen {
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
 
-            this.props.navigation.setParams({ title: ConversationContext.getChatName(context, user) });
-
-            // Save this conversation context (save has to happen after the botkey has been extracted)
-            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
+            this.setNavigationParams(context, user);
 
             // Create a conversation for this conversation id
             this.conversation = await Promise.resolve(Conversation.createIMConversation(context.conversationId));
 
+            // Save this conversation context (save has to happen after the botkey has been extracted)
+            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
+
+            this.newSession = true;
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for people chat');
+            console.log('Error getting a conversation context for people chat', error);
             throw error;
         }
     }
@@ -109,6 +123,59 @@ export default class PeopleChat extends ChatBotScreen {
 
     resetConversation() {
         // People chat should not reset conversation.
+    }
+
+    async createOrUpdateConversation(oldConversationId, newConversationId) {
+        let newConversation = await Conversation.getIMConversation(newConversationId);
+        console.log('New conversation : ', newConversation);
+        console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
+        if (newConversation) {
+            await Conversation.deleteConversation(oldConversationId);
+            this.conversation = newConversation
+        } else {
+            await Conversation.updateConversation(oldConversationId, newConversationId);
+            this.conversation = await Conversation.getIMConversation(newConversationId);
+        }
+        console.log(await Conversation.getIMConversation(newConversationId));
+    }
+
+    async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
+        let newContext = await ConversationContext.getBotConversationContextForId(newConversationId);
+        if (!newContext) {
+            this.conversationContext.conversationId = newConversationId;
+            await ConversationContext.saveConversationContext(this.conversationContext, this.botContext, this.user)
+        } else {
+            this.conversationContext = newContext;
+        }
+        console.log(await ConversationContext.getBotConversationContextForId(newConversationId));
+        await ConversationContext.deleteConversationContext(oldConversationId);
+    }
+
+    async updateConversationContextId(newConversationId) {
+        let oldConversationId = this.conversationContext.conversationId;
+
+        await this.createOrUpdateConversation(oldConversationId, newConversationId);
+        await MessageHandler.moveMessages(oldConversationId, newConversationId);
+        await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
+
+        this.botContext.setConversationContext(this.conversationContext);
+        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
+        this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+    }
+
+    isUserChat() {
+        return true
+    }
+
+    async onSendMessage(messageStr) {
+        this.sentMessageCount += 1;
+        return super.onSendMessage(messageStr);
+    }
+
+    async deleteConversation() {
+        if (this.newSession && this.sentMessageCount === 0) {
+            Conversation.deleteConversation(this.conversation.conversationId);
+        }
     }
 
 }

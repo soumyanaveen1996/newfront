@@ -1,8 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles'
 import Config from './config';
+import { ButtonStyle } from '../../lib/capability';
 
 const stylesheet = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: 'rgb(248, 248, 248)',
+    },
     container: {
         flex: 1,
         backgroundColor: GlobalColors.white,
@@ -25,6 +30,12 @@ const stylesheet = StyleSheet.create({
         height: 40,
         width: 30,
         marginHorizontal: 10
+    },
+    placeholderProfilePic: {
+        height: 30,
+        width: 30,
+        marginHorizontal: 10,
+        borderRadius: 15,
     },
     bubble: {
         maxWidth: '90%',
@@ -72,21 +83,6 @@ const stylesheet = StyleSheet.create({
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 8,
     },
-    buttonMsgParent: {
-        flexDirection: 'row',
-        marginTop: 20,
-        width: 200
-    },
-    buttonMessage: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'stretch',
-        borderWidth: 1,
-        borderColor: GlobalColors.botChatBubbleColor,
-        padding: 10,
-        borderRadius: 10
-    },
     message: {
         fontSize: 16,
         color: GlobalColors.white,
@@ -104,16 +100,6 @@ const stylesheet = StyleSheet.create({
     sender: {
         fontWeight: 'bold',
         paddingRight: 10,
-    },
-    chatBar: {
-        minHeight: 50,
-        maxHeight: 108,
-        flexDirection: 'row',
-        backgroundColor: 'rgb(248, 248, 248)',
-        alignItems: 'center',
-        paddingVertical: 7,
-        borderTopWidth: 1,
-        borderColor: 'rgb(202, 206, 204)',
     },
     chatTextInput: {
         paddingHorizontal: 20,
@@ -233,7 +219,8 @@ const stylesheet = StyleSheet.create({
         borderBottomColor: 'transparent',
     },
     chatMsg: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        width: '80%',
     },
     sessionStartMessage: {
         flexDirection: 'row',
@@ -261,8 +248,135 @@ const stylesheet = StyleSheet.create({
         fontWeight: 'bold',
         fontStyle: 'italic',
         fontSize: 12,
-    }
+    },
+    buttonMsgParent: {
+        flexDirection: 'row',
+        marginTop: 20,
+        width: '100%'
+    },
+    userNameStyle: {
+        display: 'flex',
+        color: GlobalColors.white,
+        fontWeight: '600',
+        fontSize: 12,
+        marginBottom: 3,
+        fontStyle: 'italic',
+        height: 15,
+    },
+    buttonMessage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+        padding: 10,
+    },
+    buttonBright: {
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderColor: GlobalColors.transparent,
+        borderRadius: 4,
+        shadowColor: GlobalColors.black,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+    },
+    buttonLight: {
+        borderColor: GlobalColors.botChatBubbleColor,
+        borderWidth: 1,
+        borderRadius: 4,
+    },
+    buttonLightText: {
+        color: GlobalColors.botChatBubbleColor,
+    },
+    buttonBrightText: {
+        color: GlobalColors.white,
+    },
+    formButtonWrapper: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '90%',
+        height: 54,
+    },
+    formButton: {
+        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderColor: GlobalColors.white,
+        borderWidth: 1,
+        borderRadius: 4,
+        width: '80%',
+        paddingVertical: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    formButtonText: {
+        color: GlobalColors.white,
+    },
+    closeButton: {
+        height:24,
+        width:24,
+        marginLeft:15,
+        paddingTop: 8
+    },
+    statusBarNetOn: {
+        flexDirection: 'row',
+        height: 30,
+        backgroundColor: 'rgb(255, 218, 185)',
+    },
+    statusBarNetOff: {
+        flexDirection: 'row',
+        height: 30,
+        backgroundColor: 'rgb(248, 248, 248)',
+    },
+    chatBar: {
+        minHeight: 50,
+        maxHeight: 108,
+        flexDirection: 'row',
+        backgroundColor: 'rgb(248, 248, 248)',
+        alignItems: 'center',
+        paddingVertical: 7,
+        borderTopWidth: 1,
+        borderColor: 'rgb(202, 206, 204)',
+    },
+    chatBarSatellite: {
+        backgroundColor: 'rgb(255, 218, 185)',
+    },
+    chatBarNoNetwork: {
+        backgroundColor: 'rgb(192, 201, 208)',
+    },
 });
+
+
+export function chatBarStyle(network) {
+    if (network === 'none') {
+        return [ stylesheet.chatBar, stylesheet.chatBarNoNetwork ];
+    } else if (network === 'satellite') {
+        return [ stylesheet.chatBar, stylesheet.chatBarSatellite ];
+    } else {
+        return [ stylesheet.chatBar ];
+    }
+}
+
+export function buttonStyle(style) {
+    if (style === ButtonStyle.bright) {
+        return [stylesheet.buttonMessage, stylesheet.buttonBright]
+    } else {
+        return [stylesheet.buttonMessage, stylesheet.buttonLight];
+    }
+}
+
+export function buttonTextStyle(style) {
+    if (style === ButtonStyle.bright) {
+        return [stylesheet.buttonBrightText]
+    } else {
+        return [stylesheet.buttonLightText];
+    }
+}
 
 export function chatMessageStyle(alignRight = false) {
     if (alignRight) {
@@ -362,6 +476,56 @@ export function ellipsisMessageBubbleStyle(alignRight = false, imageSource) {
         } else {
             return [stylesheet.ellipsisBubble, { marginLeft: 15 }];
         }
+    }
+}
+
+
+export const ChatStatusBarStyles = StyleSheet.create({
+    chatStatusBar: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 24,
+        flexDirection: 'row',
+        backgroundColor: 'rgb(192, 201, 208)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    chatStatusBarSatellite: {
+        backgroundColor: 'rgb(254, 214, 203)',
+    },
+    closeButton: {
+        height: 24,
+        width: 24,
+        position: 'absolute',
+        top: 2,
+        right: 3,
+    },
+    statusMessage: {
+        textAlign: 'center',
+        color: 'rgb(122, 127, 135)',
+    },
+    statusMessageSatellite: {
+        color: 'rgb(243, 115, 78)',
+    }
+})
+
+export function networkStatusBarStyle(network) {
+    if (network === 'none') {
+        return [ChatStatusBarStyles.chatStatusBar];
+    } else if (network === 'satellite') {
+        return [ChatStatusBarStyles.chatStatusBar, ChatStatusBarStyles.chatStatusBarSatellite];
+    } else {
+    }
+}
+
+export function networkStatusBarTextStyle(network) {
+    if (network === 'none') {
+        return [ChatStatusBarStyles.statusMessage];
+    } else if (network === 'satellite') {
+        return [ChatStatusBarStyles.statusMessage, ChatStatusBarStyles.statusMessageSatellite];
+    } else {
     }
 }
 

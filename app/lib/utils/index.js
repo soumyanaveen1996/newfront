@@ -6,7 +6,7 @@ import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 
 export function formattedDate(date) {
     if (!date) {
@@ -20,6 +20,30 @@ export function formattedDate(date) {
     } else {
         return moment(date).format('DD MMM YYYY [at] HH:mm A');
     }
+}
+
+export function botLogoUrl(logoUrl) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoUrl}`
+}
+
+export function channelLogoUrl(channelLogoName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${channelLogoName}`
+}
+
+function logoName(name) {
+    return _.toLower(name).replace(' ', '_');
+}
+
+export function categoryLogoUrl(categoryName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(categoryName)}.png`
+}
+
+export function developerLogoUrl(developerName) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(developerName)}.png`
+}
+
+export function userProfileUrl(userId) {
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
 }
 
 export function sessionStartFormattedDate(date) {
@@ -55,7 +79,7 @@ export async function copyFileAsync(uri, directory) {
 }
 
 
-export function s3DownloadHeaders(s3Url, user) {
+export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     const host = config.bot.baseUrl;
 
     // We dont care about urls that are not S3 based
@@ -63,7 +87,7 @@ export function s3DownloadHeaders(s3Url, user) {
         return null;
     }
     const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    const headers = Utils.createAuthHeader(host, 'GET', path, config.bot.s3ServiceApi, '', user);
+    const headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
 
     console.log(`Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`);
 
@@ -151,14 +175,14 @@ async function copyDir(fromDir, toDir, overwrite = false) {
         const toPath = toDir + '/' + stat.name;
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
-            if (!exists) {
+            if (!exists || overwrite) {
                 console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
-            if (!exists) {
+            if (!exists || overwrite) {
                 console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyDir(stat.path, toPath);
@@ -169,21 +193,57 @@ async function copyDir(fromDir, toDir, overwrite = false) {
     }
 }
 
-export async function copyIntialBots() {
+export async function copyIntialBots(overwrite) {
     console.log('Main Bundle Path : ', RNFS.MainBundlePath);
     console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
 
     const botFromDir = RNFS.MainBundlePath + '/bots';
     const botToDir = RNFS.DocumentDirectoryPath + '/bots';
     await RNFS.mkdir(botToDir);
-    await copyDir(botFromDir, botToDir);
+    await copyDir(botFromDir, botToDir, overwrite);
 
     const botDependenciesFromDir = RNFS.MainBundlePath + '/bot_dependencies';
     const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
     await RNFS.mkdir(botDependenciesToDir);
-    await copyDir(botDependenciesFromDir, botDependenciesToDir);
+    await copyDir(botDependenciesFromDir, botDependenciesToDir, overwrite);
 }
 
+export function isiPhoneX() {
+    const dimen = Dimensions.get('window');
+    return (
+        Platform.OS === 'ios' &&
+        !Platform.isPad &&
+        !Platform.isTVOS &&
+        (dimen.height === 812 || dimen.width === 812)
+    );
+}
+
+
+
+export function isEmail(email) {
+    var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-?\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+    if (!email || email.length > 254) {
+        return false;
+    }
+
+    var valid = tester.test(email);
+    if (!valid) {
+        return false;
+    }
+
+    // Further checking of some things regex can't handle
+    var parts = email.split('@');
+    if (parts[0].length > 64) {
+        return false;
+    }
+
+    var domainParts = parts[1].split('.');
+    if (domainParts.some(function(part) { return part.length > 63; })) {
+        return false;
+    }
+    return true;
+
+}
 
 export default {
     formattedDate,
@@ -193,5 +253,12 @@ export default {
     downloadFileAsync,
     sessionStartFormattedDate,
     addArrayToSqlResults,
-    copyIntialBots
+    copyIntialBots,
+    userProfileUrl,
+    isiPhoneX,
+    isEmail,
+    developerLogoUrl,
+    categoryLogoUrl,
+    botLogoUrl,
+    channelLogoUrl
 }

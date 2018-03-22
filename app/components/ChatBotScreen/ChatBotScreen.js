@@ -8,24 +8,18 @@ import {
     RefreshControl,
     View,
     Alert,
+    SafeAreaView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
+import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Message,
-    Contact,
-    MessageTypeConstants,
-    Auth,
-    ConversationContext,
-    Media,
-    Resource,
-    ResourceTypes } from '../../lib/capability';
+import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes } from '../../lib/capability';
 import dce from '../../lib/dce';
-import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
 import Constants from '../../config/constants';
@@ -83,7 +77,6 @@ export default class ChatBotScreen extends React.Component {
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false
-        this.canScrollToBottom = false
         this.firstUnreadIndex = -1
 
         // Create a new botcontext with this as the bot
@@ -208,9 +201,11 @@ export default class ChatBotScreen extends React.Component {
         }
 
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
+        Network.addConnectionChangeEventListener(this.handleConnectionChange)
     }
 
-    componentWillUnmount = () => {
+    async componentWillUnmount() {
         this.mounted = false;
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
@@ -219,12 +214,37 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardWillShowListener) {
             this.keyboardWillShowListener.remove();
         }
+        if (this.keyboardDidShowListener) {
+            this.keyboardDidShowListener.remove();
+        }
+        Network.removeConnectionChangeEventListener(this.handleConnectionChange)
+    }
+
+    handleConnectionChange = (connection) => {
+        console.log('Connection : ', connection);
+        if (connection === 'none') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'none'
+            })
+        } else {
+            if (this.state.network === 'none') {
+                this.setState({
+                    showNetworkStatusBar: false,
+                    network: 'connected',
+                })
+            }
+        }
     }
 
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
         }
+    }
+
+    keyboardDidShow = () => {
+        this.scrollToBottomIfNeeded();
     }
 
     handleAsyncMessageResult (event) {
@@ -240,6 +260,7 @@ export default class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
+        console.log('Bot Key :', this.getBotKey());
         Queue.selectCompletedNetworkRequests(this.getBotKey())
             .then((pendingAsyncResults) => {
                 pendingAsyncResults = pendingAsyncResults || [];
@@ -263,8 +284,7 @@ export default class ChatBotScreen extends React.Component {
         if (shouldWait) {
             let msg = new Message({addedByBot: true});
             msg.waitMessage();
-            this.appendMessageToChat(msg);
-            console.log(this.state.messages.count);
+            this.appendMessageToChat(msg, true);
         } else {
             this.stopWaiting();
         }
@@ -283,10 +303,10 @@ export default class ChatBotScreen extends React.Component {
         if (messages.length === 0 || this.isMessageBeforeToday(messages[messages.length - 1].message)) {
             let sMessage = new Message({addedByBot: true});
             sMessage.sessionStartMessage();
-            this.queueMessage(sMessage);
             // TODO: Should we do it in a timeout so that its displayed first?
             this.persistMessage(sMessage)
                 .then(() => {
+                    this.queueMessage(sMessage);
                     resolve();
                 })
                 .catch((err) => {
@@ -337,8 +357,10 @@ export default class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.queueMessage(message);
-        this.persistMessage(message);
+        this.persistMessage(message)
+            .then(() => {
+                this.queueMessage(message);
+            })
         // Has to be Immutable for react
     }
 
@@ -378,8 +400,19 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    onSliderOpen() {
+        // Comparing the chat list height with total scroll height to decide if to
+        // scroll to the end.
+        console.log('On Slider open : ', this.chatListHeight, this.scrollHeight);
+        if (this.chatListHeight < this.scrollHeight) {
+            setTimeout(() => {
+                this.scrollToBottomIfNeeded();
+            }, 1);
+        }
+    }
+
     scrollToBottomIfNeeded() {
-        if (this.canScrollToBottom) {
+        if (this.chatList) {
             this.chatList.scrollToEnd({ animated: true });
         }
     }
@@ -401,11 +434,28 @@ export default class ChatBotScreen extends React.Component {
         this.sendButtonResponseMessage(selectedItem);
     }
 
-    onFormDone = (formItems) => {
-        let message = new Message({ addedByBot: false });
-        message.formResponseMessage(formItems);
-        message.setCreatedBy(this.getUserUUID());
-        return this.sendMessage(message);
+    replaceUpdatedMessage = (updatedMessage) => {
+        const index = _.findIndex(this.state.messages, (item) => item.message.getMessageId() === updatedMessage.getMessageId());
+        if (index !== -1) {
+            const messages = this.state.messages.slice();
+            messages[index] = updatedMessage.toBotDisplay();
+            this.setState({
+                messages: messages
+            });
+        }
+    }
+
+    onFormDone = (formItems, formMessage) => {
+        formMessage.setCompleted(true);
+        formMessage.formMessage(formItems);
+        this.persistMessage(formMessage)
+            .then(() => {
+                this.replaceUpdatedMessage(formMessage);
+                let message = new Message({ addedByBot: false });
+                message.formResponseMessage(formItems);
+                message.setCreatedBy(this.getUserUUID());
+                return this.sendMessage(message);
+            });
     }
 
     updateMessages = (messages, callback) => {
@@ -414,7 +464,8 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
-    appendMessageToChat(message) {
+    appendMessageToChat(message, immediate = false) {
+        const timeout = immediate ? 0 : Config.ChatMessageOptions.messageTransitionTime
         return new Promise((resolve) => {
             setTimeout(() => {
                 // Potentially avoiding issues if the component is unmounted
@@ -426,7 +477,7 @@ export default class ChatBotScreen extends React.Component {
                         }
                     });
                 }
-            }, Config.ChatMessageOptions.messageTransitionTime)
+            }, timeout)
         });
     }
 
@@ -456,27 +507,78 @@ export default class ChatBotScreen extends React.Component {
         return msgs;
     }
 
+    isUserChat() {
+        return false;
+    }
+
+    shouldShowUserName() {
+        return false;
+    }
+
+    onChatListLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.chatListHeight = height;
+        //this.chatList.scrollToBottom({animated : true});
+    }
+
+    onMessageItemLayout = (event, message) => {
+        const key = message.getMessageId();
+        if (!this.scrollHeight) {
+            this.scrollHeight = 0;
+            this.itemHeights = {};
+        }
+        const { height } = event.nativeEvent.layout;
+        this.scrollHeight += height - (this.itemHeights[key] || 0);
+        this.itemHeights[key] = height;
+        if (_.keys(this.itemHeights) === this.state.messages.count &&
+            this.messages[this.messages.length - 1].getMessageId() === key &&
+            this.scrollToBottom) {
+            this.scrollToBottomIfNeeded();
+        }
+    }
+
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
-            return <ChatMessage message={message} user={this.user} imageSource={images[this.bot.logoSlug] || { uri: this.bot.logoUrl }}
+            return <ChatMessage message={message}
+                isUserChat={this.isUserChat()}
+                shouldShowUserName={this.shouldShowUserName()}
+                user={this.user}
+                imageSource={{ uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
-                onFormCTAClick={this.onFormDone.bind(this)}/>;
+                onFormCTAClick={this.onFormDone.bind(this)}
+                onLayout={this.onMessageItemLayout.bind(this)} />;
         } else {
             return (
-                <ChatMessage message={message} alignRight user={this.user} />
+                <ChatMessage message={message} alignRight user={this.user}
+                    onLayout={this.onMessageItemLayout.bind(this)}/>
             )
         }
+    }
+
+    waitForQueueProcessing() {
+        return new Promise((resolve, reject) => {
+            var self = this;
+            let interval = setInterval(function () {
+                if (self.processingMessageQueue === false) {
+                    clearInterval(interval);
+                    resolve()
+                }
+            }, Config.ChatMessageOptions.messageTransitionTime / 2);
+        })
     }
 
     sendMessage = async (message) => {
         this.updateChat(message)
         this.scrollToBottom = true;
-        return this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
+        this.waitForQueueProcessing()
+            .then(() => {
+                this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
+                this.scrollToBottomIfNeeded();
+            })
     }
 
-    onSendMessage = async (messageStr) => {
-
+    async onSendMessage (messageStr) {
         let self = this;
         // read message from component state
         let message = new Message();
@@ -588,6 +690,9 @@ export default class ChatBotScreen extends React.Component {
             });
     }
 
+    async updateConversationContextId(newConversationId) {
+    }
+
     resetConversation() {
         Keyboard.dismiss();
         // TODO: should the first parameter be message even?
@@ -617,7 +722,7 @@ export default class ChatBotScreen extends React.Component {
                     .then((context) => {
                         this.conversationContext = context;
                         let message = new Message();
-                        message.stringMessage(I18n.t('Slider_Response_Message', { lines: names.join('\n') }));
+                        message.stringMessage(I18n.t('Slider_Response', { lines: names.join('\n') }));
                         message.setCreatedBy(this.getUserUUID());
                         return this.sendMessage(message);
                     });
@@ -656,19 +761,17 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+
     onChatEndReached(info) {
-        if (info.distanceFromEnd > 0) {
-            this.canScrollToBottom = true;
-        }
-        if (this.scrollToBottom && info.distanceFromEnd > 0) {
-            this.chatList.scrollToEnd({ animated: true });
+        if (this.scrollToBottom) {
+            this.scrollToBottomIfNeeded();
         } else {
             if (this.firstUnreadIndex !== -1) {
                 // This can throw error sometimes https://github.com/facebook/react-native/issues/14198
                 try {
                     this.chatList.scrollToIndex({ index: this.firstUnreadIndex, viewPosition: 0 });
                 } catch (error) {
-                    this.chatList.scrollToEnd({ animated: true });
+                    this.scrollToBottomIfNeeded();
                 }
                 this.firstUnreadIndex = -1;
             }
@@ -693,18 +796,8 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
     }
 
-    onSliderOpen() {
-        // TODO(amal): Temporary fix for scrolling when there are not enough messages.
-        // Will have to fix it when we implement layout for FlatList
-        if (this.state.messages.length >= 4) {
-            setTimeout( () => {
-                this.chatList.scrollToEnd({ animated: true });
-            }, 1);
-        }
-    }
-
     addBotMessage = (message) => new Promise((resolve) => {
-        // TODO: Adding bot messages directly seems a bad choice. May be should have a new 
+        // TODO: Adding bot messages directly seems a bad choice. May be should have a new
         // Message type (Echo message) that contains a internal message for bot to process
         // and echo it back.
         this.persistMessage(message)
@@ -758,11 +851,25 @@ export default class ChatBotScreen extends React.Component {
 
         return (
             <ChatInputBar
+                network={this.state.network}
                 onSend={this.onSendMessage.bind(this)}
                 onSendAudio={this.onSendAudio.bind(this)}
                 options={moreOptions}
                 onOptionSelected={this.onOptionSelected.bind(this)} />
         );
+    }
+
+    onChatStatusBarClose = () => {
+        this.setState({
+            showNetworkStatusBar: false,
+        })
+    }
+
+    renderNetworkStatusBar = () => {
+        const { network, showNetworkStatusBar } = this.state;
+        if (showNetworkStatusBar && (network === 'none' || network === 'satellite')) {
+            return <ChatStatusBar network={this.state.network} onChatStatusBarClose={this.onChatStatusBarClose}/>;
+        }
     }
 
     render() {
@@ -777,21 +884,27 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <KeyboardAvoidingView style={chatStyles.container} behavior="padding" keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
-                <FlatList ref={(list) => {this.chatList = list}}
-                    data={this.state.messages}
-                    renderItem={this.renderItem.bind(this)}
-                    onEndReachedThreshold={10}
-                    onEndReached={this.onChatEndReached.bind(this)}
-                    refreshControl={
-                        <RefreshControl colors={['#9Bd35A', '#689F38']}
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh.bind(this)} />
-                    }
-                />
-                {this.state.showSlider ? this.renderSlider() : null}
-                {this.renderChatInputBar()}
-            </KeyboardAvoidingView>
+            <SafeAreaView style={chatStyles.safeArea}>
+                <KeyboardAvoidingView style={chatStyles.container}
+                    behavior="padding"
+                    keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
+                    <FlatList ref={(list) => {this.chatList = list}}
+                        data={this.state.messages}
+                        renderItem={this.renderItem.bind(this)}
+                        onEndReachedThreshold={10}
+                        onEndReached={this.onChatEndReached.bind(this)}
+                        onLayout={this.onChatListLayout.bind(this)}
+                        refreshControl={
+                            <RefreshControl colors={['#9Bd35A', '#689F38']}
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)} />
+                        }
+                    />
+                    {this.state.showSlider ? this.renderSlider() : null}
+                    {this.renderChatInputBar()}
+                    {this.renderNetworkStatusBar()}
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         );
     }
 }

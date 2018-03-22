@@ -6,13 +6,19 @@ const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
 import styles from './styles';
 import { DefaultUser } from '../../lib/user';
-import { NetworkPoller } from '../../lib/network';
-import { Auth, Notification, Utils } from '../../lib/capability';
+import { NetworkPoller, NetworkHandler } from '../../lib/network';
+import { DataManager } from '../../lib/DataManager';
+import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
-import SystemBot, { SYSTEM_BOT_MANIFEST_NAMES } from '../../lib/bot/SystemBot';
+import SystemBot from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import { DeviceStorage } from '../../lib/capability';
+import { ContactsCache } from '../../lib/ContactsCache';
+
+const VERSION = 7; // Corresponding to 2.4.0 build 2. Update this number every time we update initial_bots
+const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
 
@@ -22,25 +28,29 @@ export default class Splash extends React.Component {
     }
 
     async componentDidMount() {
+
         // Override logging in prod builds
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         console.log('Overrode console object. Now starting initialization');
 
-        await BotUtils.copyIntialBots();
+        DataManager.init();
+        ContactsCache.init();
+
+        let versionString = await DeviceStorage.get(VERSION_KEY);
+        let version = parseInt(versionString, 10);
+        let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
+
+
+        if (forceUpdate) {
+            console.log('Copying Bots');
+            await BotUtils.copyIntialBots(forceUpdate);
+            await DeviceStorage.save(VERSION_KEY, VERSION);
+        }
 
         // Chain all setup stuff
-        persist.createMessageTable()
-            .then(() => {
-                return persist.createNetworkRequestQueueTable()
-            })
-            .then(() => {
-                return persist.createConversationTable()
-            })
-            .then(() => {
-                return persist.createArrayStorageTable()
-            })
+        persist.runMigrations()
             .then(() => {
                 return Auth.getUser();
             })
@@ -96,6 +106,9 @@ export default class Splash extends React.Component {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
             }
         }
+        if (notification.foreground) {
+            NetworkHandler.readLambda();
+        }
     }
 
     userLoggedInHandler = async () => {
@@ -103,7 +116,7 @@ export default class Splash extends React.Component {
     }
 
     userLoggedOutHandler = async () => {
-        this.showOnboardingScreen();
+        //this.showOnboardingScreen();
     }
 
     showMainScreen = () => {
@@ -112,9 +125,10 @@ export default class Splash extends React.Component {
     }
 
     showOnboardingScreen = () => {
-        SystemBot.get(SYSTEM_BOT_MANIFEST_NAMES.OnboardingBot)
+        SystemBot.get(SystemBot.onboardingBotManifestName)
             .then((onboardingBot) => {
-                Actions.onboarding({ bot: onboardingBot, type: ActionConst.REPLACE, onBack: this.showMainScreen.bind(this) });
+                //Actions.lightbox({ type: ActionConst.REPLACE, duration: 0 });
+                Actions.onboarding({ bot: onboardingBot, type: ActionConst.REPLACE, onBack: this.showMainScreen.bind(this), duration: 0 });
             })
         return;
     }

@@ -12,6 +12,7 @@ export const GlobalColors = {
     orangeYellow: 'rgb(231,97,33)',
     red : 'rgb(255,78,66)',
     modalBackground: 'rgba(24,24,24,0.8)',
+    translucentDark: 'rgba(24,24,24,0.3)',
     white: 'rgb(255,255,255)',
     transparent: 'rgba(0, 0, 0, 0)',
     rightArrow: 'rgb(192, 192, 192)',
@@ -20,6 +21,7 @@ export const GlobalColors = {
     black: 'rgb(0, 0, 0)',
     headerTextInputBackground: 'rgb(56,194,212)',
     headerTextInputPlaceholder: 'rgb(210,210,210)',
+    statusBarBackgroundColor: 'rgb(255, 192, 203)',
 };
 
 export default GlobalColors;

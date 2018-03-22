@@ -1,5 +1,6 @@
 import { AssetFetcher } from '../dce';
 import Auth from './Auth';
+import ImageCache from '../../lib/image_cache';
 
 export const ResourceTypes = {
     Image: 'image',
@@ -17,10 +18,10 @@ export default class Resource {
      * @param filenameWithoutExtension object name in the bucket without extension
      * @param resourceType Either 'image', 'video', or 'audio'
      * @param user Authenticated user
-     * 
+     *
      * @return S3 URL of the file uploaded
      */
-    static async uploadFile(base64Data, fileUri, bucketName, filenameWithoutExtension, resourceType, user = undefined) {
+    static async uploadFile(base64Data, fileUri, bucketName, filenameWithoutExtension, resourceType, user = undefined, clearCache = false) {
         if (!user) {
             user = await Auth.getUser();
         }
@@ -45,6 +46,10 @@ export default class Resource {
         }
 
         let res = await AssetFetcher.uploadFileToS3(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user);
+        if (res && clearCache && resourceType === ResourceTypes.Image) {
+            await ImageCache.imageCacheManager.removeFromCache(res);
+        }
+        await ImageCache.imageCacheManager.storeIncache(res, fileUri);
         return res;
     }
 }

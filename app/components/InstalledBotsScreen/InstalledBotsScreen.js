@@ -1,5 +1,5 @@
 import React from 'react';
-import { View , Text , FlatList, TextInput, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { View , Text , FlatList, TextInput, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import styles from './styles'
 import { ListItem } from 'react-native-elements'
 import {GlobalColors} from '../../config/styles'
@@ -14,6 +14,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import dce from '../../lib/dce';
 import SystemBot from '../../lib/bot/SystemBot';
+import { MessageHandler } from '../../lib/message';
 
 export default class InstalledBotsScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -50,8 +51,8 @@ export default class InstalledBotsScreen extends React.Component {
         }
         // alert(JSON.stringify(bots))
         if (this.bots.length == 0 && this.state.firstTimeLoad) {
-          Actions.botStore({ onBack: this.refreshData.bind(this) });
-          this.setState({firstTimeLoad: false})
+            Actions.botStore({ onBack: this.refreshData.bind(this) });
+            this.setState({firstTimeLoad: false})
         }
     }
 
@@ -60,7 +61,20 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     onDeletePress = async (bot) => {
+        Alert.alert(
+            null,
+            I18n.t('Bot_uninstall_confirmation'),
+            [
+                { text: I18n.t('Yes'), onPress: () => this.deleteBot(bot) },
+                { text: I18n.t('Cancel'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
+    }
+
+    deleteBot = async (bot) => {
         try {
+            await MessageHandler.deleteBotMessages(bot.id);
             const dceBot = dce.bot(bot);
             await Bot.delete(dceBot);
             this.refreshData();
@@ -173,7 +187,6 @@ export default class InstalledBotsScreen extends React.Component {
         } else {
             return (
                 <View >
-                    {this.renderSearchBar()}
                     <FlatList
                         style = {styles.flatList}
                         keyExtractor = {(item, index) => item.id}

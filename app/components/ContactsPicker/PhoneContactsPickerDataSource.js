@@ -1,4 +1,5 @@
 import _ from 'lodash/core';
+import { Platform } from 'react-native';
 import Contacts from 'react-native-contacts';
 
 export default class ContactsPickerDataSource {

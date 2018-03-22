@@ -50,8 +50,6 @@ export default class ImageViewer extends React.Component {
         )
     }
 
-    
-
     /*
     render() {
         return (

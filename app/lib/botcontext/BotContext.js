@@ -39,6 +39,13 @@ export default class BotContext {
         return this.conversationContext;
     }
 
+    updateConversationContextId = (contextId) => {
+        //const previousConversaionContext = this.conversationContext;
+        //this.conversationContext = context;
+        console.log('New Context ID : ', contextId);
+        this.botScreen.updateConversationContextId(contextId);
+    }
+
     // Delegate back to the actual instance of the screen (people chat vs bot chat vs channel etc)
     getBotKey = () => {
         return this.botScreen.getBotKey();
