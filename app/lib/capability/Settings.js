@@ -1,4 +1,5 @@
 import DeviceStorage from './DeviceStorage';
+import { EventEmitter, PollingStrategyEvents } from '../events';
 
 export const PollingStrategyTypes = {
     manual: 'manual',
@@ -12,7 +13,7 @@ export default class Settings {
     static setPollingStrategy = (type) => new Promise((resolve, reject) => {
         DeviceStorage.save(POLLING_STRATEGY_SETTING_KEY, type)
             .then(() => {
-                // Emit Events
+                EventEmitter.emit(PollingStrategyEvents.changed);
                 resolve();
             })
             .catch(reject);
