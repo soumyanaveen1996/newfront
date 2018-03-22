@@ -365,7 +365,7 @@ export default class ChatBotScreen extends React.Component {
 
     addSessionStartMessage = (messages) => new Promise((resolve) => {
         if (messages.length === 0 || this.isMessageBeforeToday(messages[messages.length - 1].message)) {
-            let sMessage = new Message({addedByBot: true});
+            let sMessage = new Message({addedByBot: true, messageDate: moment().valueOf()});
             sMessage.sessionStartMessage();
             // TODO: Should we do it in a timeout so that its displayed first?
             this.persistMessage(sMessage)
@@ -828,22 +828,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
 
-    onChatEndReached(info) {
-        if (this.scrollToBottom) {
-            this.scrollToBottomIfNeeded();
-        } else {
-            if (this.firstUnreadIndex !== -1) {
-                // This can throw error sometimes https://github.com/facebook/react-native/issues/14198
-                try {
-                    this.chatList.scrollToIndex({ index: this.firstUnreadIndex, viewPosition: 0 });
-                } catch (error) {
-                    this.scrollToBottomIfNeeded();
-                }
-                this.firstUnreadIndex = -1;
-            }
-        }
-    }
-
     async onRefresh() {
         this.setState({
             refreshing: true
@@ -861,14 +845,8 @@ export default class ChatBotScreen extends React.Component {
     oldestLoadedDate() {
         let date = moment().valueOf();
         if (this.state.messages.length > 0) {
-            for (var i = 0; i < this.state.messages.length; i++) {
-                const message = this.state.messages[i];
-                if (message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT &&
-                    message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
-                    date = moment(message.message.getMessageDate()).valueOf();
-                    break;
-                }
-            }
+            const message = this.state.messages[0];
+            date = moment(message.message.getMessageDate()).valueOf();
         }
         return date;
     }
@@ -977,8 +955,6 @@ export default class ChatBotScreen extends React.Component {
                     <FlatList ref={(list) => {this.chatList = list}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
-                        onEndReachedThreshold={10}
-                        onEndReached={this.onChatEndReached.bind(this)}
                         onLayout={this.onChatListLayout.bind(this)}
                         refreshControl={
                             <RefreshControl colors={['#9Bd35A', '#689F38']}
