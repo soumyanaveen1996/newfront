@@ -173,36 +173,28 @@ export default class ChatBotScreen extends React.Component {
 
             if (!this.mounted) { return; }
 
-            // 4. Add Session Start message.
-            this.addSessionStartMessage(messages)
-                .then(() => {
-                    // 5. Update the state of the bot with the messages we have
-                    this.setState({ messages: messages, typing: '', showSlider: false }, function (err, res) {
-                        if (!err) {
-                            self.botLoaded = true;
-                            // 5. Kick things off by calling init on the bot
-                            this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+            // 4. Update the state of the bot with the messages we have
+            this.setState({ messages: this.addSessionStartMessages(messages), typing: '', showSlider: false }, function (err, res) {
+                if (!err) {
+                    self.botLoaded = true;
+                    // 5. Kick things off by calling init on the bot
+                    this.loadedBot.init(this.botState, this.state.messages, this.botContext);
 
-                            // 6. If there are async results waiting - pass them on to the bot
-                            self.flushPendingAsyncResults();
+                    // 6. If there are async results waiting - pass them on to the bot
+                    self.flushPendingAsyncResults();
 
-                            // 7. Now that bot is open - add a listener for async results coming in
-                            self.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, self.handleAsyncMessageResult.bind(self));
+                    // 7. Now that bot is open - add a listener for async results coming in
+                    self.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, self.handleAsyncMessageResult.bind(self));
 
-                            // 8. Mark new messages as read
-                            MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
+                    // 8. Mark new messages as read
+                    MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
 
-                            // 9. Stash the bot for nav back for on exit
-                            this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
-                        } else {
-                            console.log('Error setting state with messages', err);
-                        }
-                    });
-                })
-                .catch((err) => {
-                    console.log('Error persisting session message::', err);
-                    self.botLoaded = false;
-                });
+                    // 9. Stash the bot for nav back for on exit
+                    this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
+                } else {
+                    console.log('Error setting state with messages', err);
+                }
+            });
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors
@@ -221,6 +213,39 @@ export default class ChatBotScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this)
         });
         EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+    }
+
+    sessionStartMessageForDate = (momentObject) => {
+        let sMessage = new Message({addedByBot: true, messageDate: momentObject.valueOf()});
+        sMessage.sessionStartMessage();
+        return sMessage.toBotDisplay();
+    }
+
+    addSessionStartMessages(messages) {
+        //console.log('Adding session start messages : ', messages);
+        let filteredMessages = _.filter(messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START);
+        let resultMessages = [];
+        if (filteredMessages.length > 0) {
+            let currentDate = moment(filteredMessages[0].message.getMessageDate());
+            resultMessages.push(this.sessionStartMessageForDate(currentDate));
+            for (var i = 0; i < filteredMessages.length; i++) {
+                const botMessage = filteredMessages[i];
+                const message = botMessage.message;
+                const date = moment(message.getMessageDate());
+                if (date.dayOfYear() !== currentDate.dayOfYear() && date.year() !== currentDate.year()) {
+                    resultMessages.push(this.sessionStartMessageForDate(date));
+                    currentDate = date;
+                }
+                resultMessages.push(botMessage);
+            }
+            if (currentDate.dayOfYear() !== moment().dayOfYear() && moment().year() !== currentDate.year()) {
+                resultMessages.push(this.sessionStartMessageForDate(moment()));
+            }
+        } else {
+            let currentDate = moment();
+            resultMessages.push(this.sessionStartMessageForDate(currentDate));
+        }
+        return resultMessages;
     }
 
     readLambdaQueue() {
@@ -506,7 +531,7 @@ export default class ChatBotScreen extends React.Component {
             const messages = this.state.messages.slice();
             messages[index] = updatedMessage.toBotDisplay();
             this.setState({
-                messages: messages
+                messages: this.addSessionStartMessages(messages)
             });
         }
     }
@@ -526,7 +551,7 @@ export default class ChatBotScreen extends React.Component {
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
-            this.setState({ typing: '', messages: messages, overrideDoneFn: null }, callback);
+            this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, callback);
         }
     }
 
