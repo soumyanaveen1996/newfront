@@ -217,7 +217,7 @@
     let greeting = function (state, previousMessages, botContext) {
         const _ = botContext.getCapability('Utils').Lodash;
         if(_.isEmpty(previousMessages)) {
-            let greeting = 'To search for people already using the platform, select the "Find users" option. To invite your friends to start using FrontM, select one of the invite users options';
+            let greeting = 'Want to find out if you know anyone on the platform? Select ‘Search User’ and type in their name. If you want to invite a friend to use FrontM please select an invite option';
             tell(greeting, botContext);
         }
         return ask(botContext);
@@ -284,6 +284,7 @@
             let name = person.name || person.givenName + ' ' + (person.surname || person.familyName);
             return {
                 title: name,
+                uuid: person.uuid,
                 data: {
                     contact_info: [{
                         key: 'Name',
@@ -322,9 +323,9 @@
                 name: contact.data.contact_info[0].value,
                 emailAddress: contact.data.contact_info[1].value,
                 screenName: contact.data.contact_info[2].value,
-                uuid: contact.data.contact_info[3].value,
-                givenName: contact.data.contact_info[4].value,
-                surname: contact.data.contact_info[5].value
+                givenName: contact.data.contact_info[3].value,
+                surname: contact.data.contact_info[4].value,
+                uuid: contact.uuid
             };
         });
         return contactFormat;

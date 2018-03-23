@@ -25,10 +25,10 @@
         NETWORK_USAGE: 'NETWORK_USAGE'
     };
     const NETWORK_CONTROL_MENU = {
-        MANUAL: 'MANUAL',
-        SATELLITE: 'SATELLITE',
+        MANUAL: 'Manual',
+        SATELLITE: 'Satellite',
         GSM: 'GSM',
-        AUTO:'AUTO'
+        AUTO:'Automatic'
     };
 
     let botState = OnboardingStates.userNotLoggedIn;
@@ -42,8 +42,8 @@
                 return showMainMenu(botContext);
             } else {
                 botState = OnboardingStates.userNotLoggedIn;
-                tell('Welcome to the FrontM Platform!', botContext);
-                tell('Let me sign you in to get started', botContext);
+                tell('Hello There!', botContext);
+                tell('How would you like to sign in?', botContext);
                 return loginAsk(botContext);
             }
         });
@@ -97,10 +97,11 @@
                 authContext.login(botContext, sliderMsgId)
                 .then((user) => {
                     botState = OnboardingStates.userLoggedIn;
-                    tell('Hi ' + user.info.name, botContext);
-                    tell('You\'ve been successfully logged in', botContext);
-                    tell('Now touching the back button at the top left you can go to the timeline screen and start enjoying our chatbots or chatting with your friends and family', botContext);
-                    tell('You can come back to this conversation anytime and ask me any questions about the platform', botContext);
+                    tell('Hi ' + user.info.name + '! Welcome aboard!', botContext);
+                    tell('Success! You are now logged in', botContext);
+                    tell('You can press the back button to see your timeline and explore our chatbots', botContext);
+                    tell('Don’t worry. You can come back to this conversation at any time and ask me questions about the platform', botContext);
+                    tell('Have fun!', botContext);
                     showMainMenu(botContext);
                 })
                 .catch((error) => {
@@ -149,11 +150,14 @@
                         showNetworkControlMenu(botContext);
                         break;
                     case CONFIGURATION_MENU.NETWORK_USAGE:
+                        tell('This functionality is coming in next release', botContext);
+                        showMainMenu(botContext);
+                        break;
                     case NETWORK_CONTROL_MENU.MANUAL:
                     case NETWORK_CONTROL_MENU.AUTO:
                     case NETWORK_CONTROL_MENU.GSM:
                     case NETWORK_CONTROL_MENU.SATELLITE:
-                        tell('This functionality is coming in next release', botContext);
+                        changePollingStrategy(sliderMsgId, botContext);
                         break;
                 }
             }
@@ -166,6 +170,24 @@
             } else {
                 return processStringMsg(message, state, previousMessages, botContext);
             }
+        }
+    };
+
+    const changePollingStrategy = function(option, botContext) {
+        const PollingStrategyTypes = botContext.getCapability('PollingStrategyTypes');
+        const _ = botContext.getCapability('Utils').Lodash;
+
+        let chosenStrategy = _.get(PollingStrategyTypes, option.toLowerCase());
+        if(_.isUndefined(chosenStrategy) || _.isEmpty(chosenStrategy)) {
+            tell('This functionality is coming in next release', botContext);
+            return showMainMenu(botContext);
+        } else {
+            const Settings = botContext.getCapability('Settings');
+            return Settings.setPollingStrategy(chosenStrategy)
+            .then(function() {
+                tell('Network control has been updated to ' + option, botContext);
+                return showMainMenu(botContext);
+            });
         }
     };
 
@@ -202,6 +224,7 @@
             if(_.isEmpty(messages)) {
                 let strMsg = queryResp.speech || 'Unable to get results for the query';
                 tell(strMsg, botContext);
+                return showMainMenu(botContext);
             } else if(action === '1_configurationMenu') {
                 return showMainMenu(botContext);
             } else {
@@ -233,6 +256,8 @@
                     let message = new Message();
                     message.sliderMessage(sliderMsgList, {smartReply: true});
                     tell(message, botContext);
+                } else {
+                    return showMainMenu(botContext);
                 }
             }
         });
@@ -293,10 +318,11 @@
         })
         .then(function() {
             if (isFormMsg) {
-                return tell('Information updated', botContext);
+                tell('Information updated', botContext);
             } else {
-                return tell('You should now be able to access the featured partner\'s bot', botContext);
+                tell('You should now be able to access the featured partner\'s bot', botContext);
             }
+            return showMainMenu(botContext);
         })
         .catch(function(error) {
             console.error('Error occurred while updating user details: ', error);
@@ -332,6 +358,7 @@
             } else {
                 tell("Push notifications are deactivated for your device", botContext);
             }
+            return showMainMenu(botContext);
         });
     };
 
@@ -379,6 +406,7 @@
                 message.imageMessage(fileUrl);
                 tell(message, botContext);
             }
+            return showMainMenu(botContext);
         });
     };
 
@@ -399,16 +427,16 @@
         let Message = botContext.getCapability('Message');
         let message = new Message();
         message.sliderMessage([{
-            title: 'Manual',
+            title: NETWORK_CONTROL_MENU.MANUAL,
             id: NETWORK_CONTROL_MENU.MANUAL
         }, {
-            title: 'Satellite',
+            title: NETWORK_CONTROL_MENU.SATELLITE,
             id: NETWORK_CONTROL_MENU.SATELLITE
         }, {
-            title: 'GSM',
+            title: NETWORK_CONTROL_MENU.GSM,
             id: NETWORK_CONTROL_MENU.GSM
         }, {
-            title: 'Automatic',
+            title: NETWORK_CONTROL_MENU.AUTO,
             id: NETWORK_CONTROL_MENU.AUTO
         }], {smartReply: true});
         tell(message, botContext);

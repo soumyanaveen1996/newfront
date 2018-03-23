@@ -18,7 +18,7 @@ import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes } from '../../lib/capability';
+import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes, Settings, PollingStrategyTypes } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
@@ -28,14 +28,15 @@ import moment from 'moment';
 
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
 
-import { HeaderBack } from '../Header';
+import { HeaderBack, HeaderRightIcon } from '../Header';
 
 import { MessageHandler } from '../../lib/message';
 import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
-import { EventEmitter, SatelliteConnectionEvents } from '../../lib/events';
+import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents } from '../../lib/events';
+import { Icons } from '../../config/icons';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -56,6 +57,12 @@ export default class ChatBotScreen extends React.Component {
                     Actions.pop();
                 }
             }} />;
+        }
+
+        if (state.params.showRefresh) {
+            navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
+                state.params.refresh();
+            }} icon={Icons.refresh()}/>;
         }
         return navigationOptions;
     }
@@ -166,36 +173,29 @@ export default class ChatBotScreen extends React.Component {
 
             if (!this.mounted) { return; }
 
-            // 4. Add Session Start message.
-            this.addSessionStartMessage(messages)
-                .then(() => {
-                    // 5. Update the state of the bot with the messages we have
-                    this.setState({ messages: messages, typing: '', showSlider: false }, function (err, res) {
-                        if (!err) {
-                            self.botLoaded = true;
-                            // 5. Kick things off by calling init on the bot
-                            this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+            // 4. Update the state of the bot with the messages we have
+            this.setState({ messages: this.addSessionStartMessages(messages), typing: '', showSlider: false }, function (err, res) {
+                if (!err) {
+                    self.botLoaded = true;
+                    // 5. Kick things off by calling init on the bot
+                    this.loadedBot.init(this.botState, this.state.messages, this.botContext);
 
-                            // 6. If there are async results waiting - pass them on to the bot
-                            self.flushPendingAsyncResults();
+                    // 6. If there are async results waiting - pass them on to the bot
+                    self.flushPendingAsyncResults();
 
-                            // 7. Now that bot is open - add a listener for async results coming in
-                            self.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, self.handleAsyncMessageResult.bind(self));
+                    // 7. Now that bot is open - add a listener for async results coming in
+                    self.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, self.handleAsyncMessageResult.bind(self));
 
-                            // 8. Mark new messages as read
-                            MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
+                    // 8. Mark new messages as read
+                    MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
 
-                            // 9. Stash the bot for nav back for on exit
-                            this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
-                        } else {
-                            console.log('Error setting state with messages', err);
-                        }
-                    });
-                })
-                .catch((err) => {
-                    console.log('Error persisting session message::', err);
-                    self.botLoaded = false;
-                });
+                    // 9. Stash the bot for nav back for on exit
+                    this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
+
+                } else {
+                    console.log('Error setting state with messages', err);
+                }
+            });
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors
@@ -207,6 +207,71 @@ export default class ChatBotScreen extends React.Component {
         Network.addConnectionChangeEventListener(this.handleConnectionChange)
         EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+
+
+        this.checkPollingStrategy();
+        this.props.navigation.setParams({
+            refresh: this.readLambdaQueue.bind(this)
+        });
+        EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+    }
+
+    sessionStartMessageForDate = (momentObject) => {
+        let sMessage = new Message({addedByBot: true, messageDate: momentObject.valueOf()});
+        sMessage.sessionStartMessage();
+        return sMessage.toBotDisplay();
+    }
+
+    addSessionStartMessages(messages) {
+        let filteredMessages = _.filter(messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START);
+        let resultMessages = [];
+        if (filteredMessages.length > 0) {
+            let currentDate = moment(filteredMessages[0].message.getMessageDate());
+            resultMessages.push(this.sessionStartMessageForDate(currentDate));
+            for (var i = 0; i < filteredMessages.length; i++) {
+                const botMessage = filteredMessages[i];
+                const message = botMessage.message;
+                const date = moment(message.getMessageDate());
+                if (date.dayOfYear() !== currentDate.dayOfYear() || date.year() !== currentDate.year()) {
+                    resultMessages.push(this.sessionStartMessageForDate(date));
+                    currentDate = date;
+                }
+                resultMessages.push(botMessage);
+            }
+            if (currentDate.dayOfYear() !== moment().dayOfYear() && moment().year() !== currentDate.year()) {
+                resultMessages.push(this.sessionStartMessageForDate(moment()));
+            }
+        } else {
+            let currentDate = moment();
+            resultMessages.push(this.sessionStartMessageForDate(currentDate));
+        }
+        return resultMessages;
+    }
+
+    readLambdaQueue() {
+        NetworkHandler.readLambda();
+    }
+
+    showRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: true
+        });
+    }
+
+    hideRefreshButton() {
+        this.props.navigation.setParams({
+            showRefresh: false
+        });
+    }
+
+    async checkPollingStrategy() {
+        console.log('Polling strategy changed');
+        let pollingStrategy = await Settings.getPollingStrategy();
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.showRefreshButton();
+        } else {
+            this.hideRefreshButton();
+        }
     }
 
     async componentWillUnmount() {
@@ -224,6 +289,7 @@ export default class ChatBotScreen extends React.Component {
         Network.removeConnectionChangeEventListener(this.handleConnectionChange)
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+        EventEmitter.removeListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
     }
 
     satelliteConnectionHandler = () => {
@@ -324,7 +390,7 @@ export default class ChatBotScreen extends React.Component {
 
     addSessionStartMessage = (messages) => new Promise((resolve) => {
         if (messages.length === 0 || this.isMessageBeforeToday(messages[messages.length - 1].message)) {
-            let sMessage = new Message({addedByBot: true});
+            let sMessage = new Message({addedByBot: true, messageDate: moment().valueOf()});
             sMessage.sessionStartMessage();
             // TODO: Should we do it in a timeout so that its displayed first?
             this.persistMessage(sMessage)
@@ -436,9 +502,24 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    checkForScrolling() {
+        setTimeout(() => {
+            if (this.initialScrollDone) {
+                return;
+            }
+            if (this.firstUnreadIndex !== -1){
+                this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+            } else {
+                this.chatList.scrollToEnd({ animated: true })
+            }
+            this.initialScrollDone = true;
+        }, 300);
+    }
+
     scrollToBottomIfNeeded() {
         if (this.chatList) {
             this.chatList.scrollToEnd({ animated: true });
+            this.initialScrollDone = true;
         }
     }
 
@@ -465,7 +546,7 @@ export default class ChatBotScreen extends React.Component {
             const messages = this.state.messages.slice();
             messages[index] = updatedMessage.toBotDisplay();
             this.setState({
-                messages: messages
+                messages: this.addSessionStartMessages(messages)
             });
         }
     }
@@ -485,7 +566,7 @@ export default class ChatBotScreen extends React.Component {
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
-            this.setState({ typing: '', messages: messages, overrideDoneFn: null }, callback);
+            this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, callback);
         }
     }
 
@@ -787,22 +868,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
 
-    onChatEndReached(info) {
-        if (this.scrollToBottom) {
-            this.scrollToBottomIfNeeded();
-        } else {
-            if (this.firstUnreadIndex !== -1) {
-                // This can throw error sometimes https://github.com/facebook/react-native/issues/14198
-                try {
-                    this.chatList.scrollToIndex({ index: this.firstUnreadIndex, viewPosition: 0 });
-                } catch (error) {
-                    this.scrollToBottomIfNeeded();
-                }
-                this.firstUnreadIndex = -1;
-            }
-        }
-    }
-
     async onRefresh() {
         this.setState({
             refreshing: true
@@ -811,7 +876,7 @@ export default class ChatBotScreen extends React.Component {
         let combinedMsgs = messages.concat(this.state.messages)
         if (this.mounted) {
             this.setState({
-                messages: combinedMsgs,
+                messages: this.addSessionStartMessages(combinedMsgs),
                 refreshing: false
             });
         }
@@ -820,14 +885,8 @@ export default class ChatBotScreen extends React.Component {
     oldestLoadedDate() {
         let date = moment().valueOf();
         if (this.state.messages.length > 0) {
-            for (var i = 0; i < this.state.messages.length; i++) {
-                const message = this.state.messages[i];
-                if (message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT &&
-                    message.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
-                    date = moment(message.message.getMessageDate()).valueOf();
-                    break;
-                }
-            }
+            const message = this.state.messages[0];
+            date = moment(message.message.getMessageDate()).valueOf();
         }
         return date;
     }
@@ -933,11 +992,9 @@ export default class ChatBotScreen extends React.Component {
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior="padding"
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <FlatList ref={(list) => {this.chatList = list}}
+                    <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
-                        onEndReachedThreshold={10}
-                        onEndReached={this.onChatEndReached.bind(this)}
                         onLayout={this.onChatListLayout.bind(this)}
                         refreshControl={
                             <RefreshControl colors={['#9Bd35A', '#689F38']}

@@ -221,6 +221,7 @@ export default class Contact {
                     Contact.saveContacts(allContacts);
                 }
             })
+            .catch(reject);
     });
 
     static fetchAndAddContactForUser = (uuid) => new Promise((resolve, reject) => {

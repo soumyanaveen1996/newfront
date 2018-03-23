@@ -40,6 +40,7 @@ export const Icons = {
     delete: icon('md-trash', 'ionicon', 32, 'rgb(198, 198, 198)'),
     satelliteChatStatusClose: icon('ios-close', 'ionicon', 20, Colors.red, Colors.statusBarBackgroundColor, '500'),
     nonetworkChatStatusClose: icon('ios-close', 'ionicon', 20, Colors.black, Colors.statusBarBackgroundColor, '500'),
+    refresh: icon('ios-refresh', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
 };
 
 export default Icons;
