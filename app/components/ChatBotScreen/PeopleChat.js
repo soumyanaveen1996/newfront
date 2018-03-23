@@ -126,6 +126,9 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     async createOrUpdateConversation(oldConversationId, newConversationId) {
+        if (oldConversationId === newConversationId) {
+            return;
+        }
         let newConversation = await Conversation.getIMConversation(newConversationId);
         console.log('New conversation : ', newConversation);
         console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
@@ -140,6 +143,9 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
+        if (oldConversationId === newConversationId) {
+            return;
+        }
         let newContext = await ConversationContext.getBotConversationContextForId(newConversationId);
         if (!newContext) {
             this.conversationContext.conversationId = newConversationId;
