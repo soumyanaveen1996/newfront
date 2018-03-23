@@ -17,6 +17,7 @@ import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -122,7 +123,7 @@ export default class MainScreen extends React.Component {
     }
 
     handleAsyncMessageResult(event) {
-        if (event) {
+        if (event && Actions.currentScene === ROUTER_SCENE_KEYS.timeline) {
             this.refs.botList.refresh();
         }
     }
