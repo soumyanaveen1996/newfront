@@ -221,7 +221,7 @@ export default class ChannelChat extends ChatBotScreen {
         let combinedMsgs = messages.concat(this.state.messages)
         if (this.mounted) {
             this.setState({
-                messages: combinedMsgs,
+                messages: this.addSessionStartMessages(combinedMsgs),
                 refreshing: false
             });
         }

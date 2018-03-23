@@ -191,6 +191,7 @@ export default class ChatBotScreen extends React.Component {
 
                     // 9. Stash the bot for nav back for on exit
                     this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
+
                 } else {
                     console.log('Error setting state with messages', err);
                 }
@@ -222,7 +223,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
     addSessionStartMessages(messages) {
-        //console.log('Adding session start messages : ', messages);
         let filteredMessages = _.filter(messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START);
         let resultMessages = [];
         if (filteredMessages.length > 0) {
@@ -232,7 +232,7 @@ export default class ChatBotScreen extends React.Component {
                 const botMessage = filteredMessages[i];
                 const message = botMessage.message;
                 const date = moment(message.getMessageDate());
-                if (date.dayOfYear() !== currentDate.dayOfYear() && date.year() !== currentDate.year()) {
+                if (date.dayOfYear() !== currentDate.dayOfYear() || date.year() !== currentDate.year()) {
                     resultMessages.push(this.sessionStartMessageForDate(date));
                     currentDate = date;
                 }
@@ -502,9 +502,24 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    checkForScrolling() {
+        setTimeout(() => {
+            if (this.initialScrollDone) {
+                return;
+            }
+            if (this.firstUnreadIndex !== -1){
+                this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+            } else {
+                this.chatList.scrollToEnd({ animated: true })
+            }
+            this.initialScrollDone = true;
+        }, 300);
+    }
+
     scrollToBottomIfNeeded() {
         if (this.chatList) {
             this.chatList.scrollToEnd({ animated: true });
+            this.initialScrollDone = true;
         }
     }
 
@@ -861,7 +876,7 @@ export default class ChatBotScreen extends React.Component {
         let combinedMsgs = messages.concat(this.state.messages)
         if (this.mounted) {
             this.setState({
-                messages: combinedMsgs,
+                messages: this.addSessionStartMessages(combinedMsgs),
                 refreshing: false
             });
         }
@@ -977,7 +992,7 @@ export default class ChatBotScreen extends React.Component {
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior="padding"
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <FlatList ref={(list) => {this.chatList = list}}
+                    <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
                         onLayout={this.onChatListLayout.bind(this)}
