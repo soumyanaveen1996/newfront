@@ -8,6 +8,7 @@ import axios from 'axios';
 import Auth from '../capability/Auth';
 import utils from '../../lib/utils';
 import RNFS from 'react-native-fs';
+import { Platform } from 'react-native';
 
 const CACHE_DIR = RNFetchBlob.fs.dirs.DocumentDir + '/image-cache';
 const CACHE_SIZE = 200 * 1024 * 1024; // 200 MB
@@ -62,6 +63,9 @@ export default class ImageCacheManager {
         let path = this.getPath(uri);
         let exists = await RNFetchBlob.fs.exists(path);
         if (exists) {
+            if (Platform.OS === 'android') {
+                return 'file://' + path;
+            }
             return path;
         } else {
             return;

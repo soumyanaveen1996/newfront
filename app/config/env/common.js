@@ -25,6 +25,15 @@ const config = {
                 permissions: ['email', 'public_profile'] // Keep it in sorted order
             }
         },
+        android: {
+            google: {
+                scopes: ['profile', 'email'],
+                webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com'
+            },
+            facebook: {
+                permissions: ['public_profile', 'email'] // Keep it in sorted order
+            }
+        },
         cognito: {
             IdentityPoolId: 'us-east-1:28e68412-a071-43d7-ba52-560756ea3a9e',
             tokenRefreshTime: 2700000 // 2700s === 45 mins

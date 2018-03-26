@@ -94,15 +94,16 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.1"
 
     defaultConfig {
         applicationId "com.frontm.frontm"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -139,7 +140,7 @@ android {
 dependencies {
     compile project(':react-native-fbsdk')
     compile project(':react-native-push-notification')
-    compile project(':@yfuks/react-native-action-sheet')
+    compile project(':react-native-action-sheet')
     // Due to different versions of support library in the project and the one
     // used by this library. Look at https://github.com/react-native-community/react-native-svg/issues/465
     compile(project(':react-native-svg')) {

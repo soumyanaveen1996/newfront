@@ -17,7 +17,10 @@ if (Platform.OS === 'ios') {
     });
 } else {
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
-        GoogleSignin.configure({}).then(() => {
+        GoogleSignin.configure({
+            webClientId: Config.auth.android.google.webClientId,
+            offlineAccess: false
+        }).then(() => {
             console.log('Google signin configured');
         }).catch((err) => {
             console.log('Error while configuring Google-signin. Error:', err);
@@ -103,7 +106,8 @@ class FrontmAuth {
                     if (premissionsResult.isCancelled) {
                         return resolve({ type: 'cancel', msg: 'login canceled' });
                     }
-                    if (!_.isEqual(premissionsResult.grantedPermissions, Config.auth.ios.facebook.permissions)) {
+                    if (!_.isEqual(premissionsResult.grantedPermissions, Config.auth.ios.facebook.permissions)
+                        && !_.isEqual(premissionsResult.grantedPermissions, Config.auth.android.facebook.permissions)) {
                         return reject(new Error('Not granted requested permissions'))
                     }
                     console.log('Facebook response : ', premissionsResult);
