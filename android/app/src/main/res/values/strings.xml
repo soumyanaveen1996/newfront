@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">frontm_mobile</string>
+    <string name="app_name">FrontMApp</string>
+    <string name="facebook_app_id">150576769074284</string>
 </resources>

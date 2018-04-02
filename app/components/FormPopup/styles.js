@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import { Platform } from 'react-native';
 
 const Styles = StyleSheet.create({
     containerStyle: {
@@ -79,12 +80,20 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 20,
     },
-    formInputContainer: {
-        marginVertical: 5,
-        height: 60,
-        justifyContent: 'center',
-        paddingHorizontal: 20,
-    },
+    formInputContainer:Platform.select({
+        'ios': {
+            marginVertical: 5,
+            height: 60,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        },
+        'android': {
+            marginVertical: 5,
+            height: 72,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        }
+    }),
     titleContainer: {
         flex: 1,
         flexDirection: 'row'

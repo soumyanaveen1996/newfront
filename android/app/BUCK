@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.frontm_mobile",
+    package = "com.frontm.frontm",
 )
 
 android_resource(
     name = "res",
-    package = "com.frontm_mobile",
+    package = "com.frontm.frontm",
     res = "src/main/res",
 )
 

@@ -1,13 +1,13 @@
-package com.frontm_mobile;
+package com.frontm.frontm;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.actionsheet.ActionSheetPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.horcrux.svg.SvgPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -22,15 +22,24 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
+import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+
+  private  static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
+  protected  static CallbackManager getCallbackManager() {
+    return mCallbackManager;
+  }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -43,10 +52,10 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ImageResizerPackage(),
-            new FBSDKPackage(),
+            new RNGoogleSigninPackage(),
+            new FBSDKPackage(mCallbackManager),
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),
-            new RNGoogleSigninPackage(),
             new SvgPackage(),
             new ReactVideoPackage(),
             new VectorIconsPackage(),
@@ -60,7 +69,8 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeContacts(),
             new RCTCameraPackage(),
             new BackgroundTimerPackage(),
-            new ReactNativeAudioPackage()
+            new ReactNativeAudioPackage(),
+            new SQLitePluginPackage()
       );
     }
 
@@ -79,5 +89,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    FacebookSdk.sdkInitialize(getApplicationContext());
   }
 }

@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
@@ -6,13 +7,28 @@ import { GoogleSignin } from 'react-native-google-signin';
 import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import _ from 'lodash';
 
-GoogleSignin.configure({
-    scopes: Config.auth.ios.google.scopes,
-    iosClientId: Config.auth.ios.google.iosClientId,
-    webClientId: Config.auth.ios.google.iosClientId,
-    offlineAccess: false,
-    forceConsentPrompt: true,
-});
+if (Platform.OS === 'ios') {
+    GoogleSignin.configure({
+        scopes: Config.auth.ios.google.scopes,
+        iosClientId: Config.auth.ios.google.iosClientId,
+        webClientId: Config.auth.ios.google.iosClientId,
+        offlineAccess: false,
+        forceConsentPrompt: true,
+    });
+} else {
+    GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
+        GoogleSignin.configure({
+            webClientId: Config.auth.android.google.webClientId,
+            offlineAccess: false
+        }).then(() => {
+            console.log('Google signin configured');
+        }).catch((err) => {
+            console.log('Error while configuring Google-signin. Error:', err);
+        });
+    }).catch((error) => {
+        console.log('Error while resolving Google Play services. Error:', error);
+    });
+}
 
 class FrontmAuth {
     constructor() {
@@ -90,7 +106,8 @@ class FrontmAuth {
                     if (premissionsResult.isCancelled) {
                         return resolve({ type: 'cancel', msg: 'login canceled' });
                     }
-                    if (!_.isEqual(premissionsResult.grantedPermissions, Config.auth.ios.facebook.permissions)) {
+                    if (!_.isEqual(premissionsResult.grantedPermissions, Config.auth.ios.facebook.permissions)
+                        && !_.isEqual(premissionsResult.grantedPermissions, Config.auth.android.facebook.permissions)) {
                         return reject(new Error('Not granted requested permissions'))
                     }
                     console.log('Facebook response : ', premissionsResult);
@@ -118,7 +135,6 @@ class FrontmAuth {
     loginWithGoogle(conversationId, botName) {
         var self = this;
         return new Promise(function(resolve, reject) {
-
             GoogleSignin.signOut();
             GoogleSignin.signIn()
                 .then((user) => {
