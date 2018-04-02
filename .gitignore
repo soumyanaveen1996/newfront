@@ -52,3 +52,4 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 *.dSYM.zip
+ios/frontm_mobile.xcworkspace/xcshareddata/
