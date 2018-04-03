@@ -8,7 +8,8 @@ import {
     RefreshControl,
     View,
     Alert,
-    SafeAreaView
+    SafeAreaView,
+    Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -338,6 +339,9 @@ export default class ChatBotScreen extends React.Component {
 
     keyboardDidShow = () => {
         this.scrollToBottomIfNeeded();
+        if (Platform.OS === 'android' && this.slider) {
+            this.slider.close(undefined, true);
+        }
     }
 
     handleAsyncMessageResult (event) {
@@ -990,7 +994,7 @@ export default class ChatBotScreen extends React.Component {
         return (
             <SafeAreaView style={chatStyles.safeArea}>
                 <KeyboardAvoidingView style={chatStyles.container}
-                    behavior="padding"
+                    behavior={(Platform.OS === 'ios') ? "padding": null}
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
                     <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}
