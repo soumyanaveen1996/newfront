@@ -1,11 +1,13 @@
 import React from 'react';
-import { View,
+import {
+    View,
     Text,
     TouchableOpacity,
     TextInput,
     ScrollView,
     KeyboardAvoidingView,
-    Keyboard } from 'react-native';
+    Keyboard, Platform
+} from 'react-native';
 import Styles from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
@@ -256,7 +258,9 @@ export default class FormPopup extends React.Component {
     render(){
         return (
             <View style={Styles.containerStyle}>
-                <KeyboardAvoidingView behavior="position" style={Styles.formContainer}>
+                <KeyboardAvoidingView
+                    behavior={(Platform.OS === 'ios') ? "position": null}
+                    style={Styles.formContainer}>
                     <ScrollView style={Styles.formScrollView} keyboardShouldPersistTaps="handled">
                         {this.renderForm()}
                     </ScrollView>
