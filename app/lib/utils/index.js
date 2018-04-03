@@ -193,9 +193,63 @@ async function copyDir(fromDir, toDir, overwrite = false) {
     }
 }
 
+
+async function copyAssetFile(fromPath, toPath) {
+    await RNFS.copyFileAssets(fromPath, toPath);
+}
+
+async function copyAssetsDir(assetsPath, toDir, overwrite = false) {
+    const dirItems = await RNFS.readDirAssets(assetsPath);
+    if (dirItems.length === 0) {
+        return;
+    }
+
+    let fromResources = dirItems;
+
+    for (let i = 0; i < fromResources.length; ++i) {
+        let stat = fromResources[i];
+        console.log(`Checking for ${stat.path}`);
+        const toPath = toDir + '/' + stat.name;
+        const exists = await RNFS.exists(toPath);
+        if (stat.isFile()) {
+            if (!exists || overwrite) {
+                console.log(`File Copying ${stat.path} to ${toPath}`);
+                await copyAssetFile(stat.path, toPath);
+            } else {
+                console.log(`File ${toPath} exists`);
+            }
+        } else if (stat.isDirectory()) {
+            if (!exists || overwrite) {
+                console.log(`Copying ${stat.path} to ${toPath}`);
+                await RNFS.mkdir(toPath);
+                await copyAssetsDir(stat.path, toPath);
+            } else {
+                console.log(`${toPath} exists`);
+            }
+        }
+    }
+}
+
+export async function copyInitialBotsFromAssetsDirectory(overwrite) {
+    console.log('Documents Directory Path from Assets : ', RNFS.DocumentDirectoryPath);
+
+    const botToDir = RNFS.DocumentDirectoryPath + '/bots';
+    await RNFS.mkdir(botToDir);
+    await copyAssetsDir('bots/initial_bots/bots', botToDir, overwrite);
+
+    const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
+    await RNFS.mkdir(botDependenciesToDir);
+    await copyAssetsDir('bots/initial_bots/bot_dependencies', botDependenciesToDir, overwrite);
+}
+
 export async function copyIntialBots(overwrite) {
     console.log('Main Bundle Path : ', RNFS.MainBundlePath);
     console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
+
+    if (Platform.OS === 'android') {
+        copyInitialBotsFromAssetsDirectory(overwrite);
+        return;
+    }
 
     const botFromDir = RNFS.MainBundlePath + '/bots';
     const botToDir = RNFS.DocumentDirectoryPath + '/bots';

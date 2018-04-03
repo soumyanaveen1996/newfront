@@ -1,4 +1,3 @@
-import Promise from '../Promise';
 import _ from 'lodash';
 
 import RNFS from 'react-native-fs';
@@ -7,7 +6,7 @@ import config from '../../config/config.js';
 
 import AssetFetcher from './AssetFetcher';
 
-import { Auth, MessageTypeConstants } from '../capability';
+import { Auth, MessageTypeConstants, Promise } from '../capability';
 import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
