@@ -3,8 +3,8 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.actionsheet.ActionSheetPackage;
@@ -51,8 +51,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGoogleSignInPackage(),
             new ImageResizerPackage(),
-            new RNGoogleSigninPackage(),
             new FBSDKPackage(mCallbackManager),
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),

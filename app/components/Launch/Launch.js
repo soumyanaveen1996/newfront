@@ -31,8 +31,10 @@ export default class Splash extends React.Component {
     async componentDidMount() {
 
         // Override logging in prod builds
+
+        /*
         let truConsole = global.console;
-        global.console = overrideConsole(truConsole);
+        global.console = overrideConsole(truConsole); */
 
         console.log('Overrode console object. Now starting initialization');
 
@@ -47,8 +49,8 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
-            await DeviceStorage.save(VERSION_KEY, VERSION);
+            //await BotUtils.copyIntialBots(forceUpdate);
+            //await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
         // Chain all setup stuff

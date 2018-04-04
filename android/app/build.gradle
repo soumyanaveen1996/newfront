@@ -108,6 +108,20 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+        release {
+            if (project.hasProperty('FRONTM_RELEASE_STORE_FILE')) {
+                storeFile file(FRONTM_RELEASE_STORE_FILE)
+                storePassword FRONTM_RELEASE_STORE_PASSWORD
+                keyAlias FRONTM_RELEASE_KEY_ALIAS
+                keyPassword FRONTM_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
@@ -118,6 +132,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

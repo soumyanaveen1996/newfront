@@ -3,7 +3,7 @@ import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
 import UUID from 'uuid/v4';
-import { GoogleSignin } from 'react-native-google-signin';
+import GoogleSignin from 'react-native-google-signin';
 import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import _ from 'lodash';
 
@@ -14,8 +14,19 @@ if (Platform.OS === 'ios') {
         webClientId: Config.auth.ios.google.iosClientId,
         offlineAccess: false,
         forceConsentPrompt: true,
+        shouldFetchBasicProfile: true,
     });
-} else {
+} else {  
+    GoogleSignin.configure({
+        scopes: Config.auth.ios.google.scopes,
+        iosClientId: Config.auth.ios.google.iosClientId,
+        webClientId: Config.auth.ios.google.iosClientId,
+        offlineAccess: false,
+        forceConsentPrompt: true,
+        shouldFetchBasicProfile: true,
+        clientID: Config.auth.ios.google.iosClientId
+    });
+    /*
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
         GoogleSignin.configure({
             webClientId: Config.auth.android.google.webClientId,
@@ -27,7 +38,7 @@ if (Platform.OS === 'ios') {
         });
     }).catch((error) => {
         console.log('Error while resolving Google Play services. Error:', error);
-    });
+    }); */
 }
 
 class FrontmAuth {
@@ -134,10 +145,13 @@ class FrontmAuth {
 
     loginWithGoogle(conversationId, botName) {
         var self = this;
+        console.log('Google sign in');
         return new Promise(function(resolve, reject) {
-            GoogleSignin.signOut();
-            GoogleSignin.signIn()
+            GoogleSignin.signOutPromise();
+            GoogleSignin.signInPromise()
                 .then((user) => {
+                    console.log('Google user : ', user);
+                    throw 'hello';
                     const googleUser = user;
                     const data = {
                         user: {
@@ -185,6 +199,7 @@ class FrontmAuth {
                             return reject({ type: 'error', error: err });
                         });
                 }).catch((err) => {
+                    console.log('Google signin error : ', err);
                     if (err.code === -5) {
                         return resolve({ type: 'cancel', msg: 'login canceled' });
                     } else {

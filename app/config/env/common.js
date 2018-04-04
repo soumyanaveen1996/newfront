@@ -28,7 +28,7 @@ const config = {
         android: {
             google: {
                 scopes: ['profile', 'email'],
-                webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com'
+                webClientId: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com'
             },
             facebook: {
                 permissions: ['public_profile', 'email'] // Keep it in sorted order
