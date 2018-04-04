@@ -11,15 +11,26 @@ const Styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: 'rgba(32, 32, 32, 0.6)',
     },
-    formContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: GlobalColors.white,
-        paddingBottom: 5,
-        maxHeight: 340,
-    },
+    formContainer:Platform.select({
+        'ios': {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: GlobalColors.white,
+            paddingBottom: 5,
+            maxHeight: 340,
+        },
+        'android': {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: GlobalColors.white,
+            paddingBottom: 5,
+            maxHeight: 360,
+        }
+    }),
     headerContainer: {
         height: 58,
         flexDirection: 'row',
