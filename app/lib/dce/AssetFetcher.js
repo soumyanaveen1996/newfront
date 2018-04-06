@@ -79,7 +79,7 @@ class AssetFetcher {
                 const fileData = await AssetFetcher.getFile(filepath);
                 return fileData;
             } else {
-                throw new Error('Unable to fetch URL : ', url);
+                throw new Error(`Unable to fetch URL : ${url}`);
             }
         } catch (e) {
             console.log('Failed downloading', JSON.stringify(e, undefined, 2));
@@ -137,10 +137,10 @@ class AssetFetcher {
             const host = config.bot.baseUrl;
 
             const s3Config = {
+                accessKeyId: user.aws.accessKeyId,
                 endpoint: host,
                 region: config.aws.region,
                 secretAccessKey: user.aws.secretAccessKey,
-                accessKeyId: user.aws.accessKeyId,
                 sessionToken: user.aws.sessionToken
             };
             const s3 = new AWS.S3(s3Config);
@@ -159,8 +159,13 @@ class AssetFetcher {
                     'Content-Type': contentType
                 }
             };
+            console.log('PutData : ', putData.Bucket);
+            console.log('PutData : ', putData.Key);
+            console.log('PutData : ', s3Config);
+
             const putObjectPromise = s3.putObject(putData).promise();
-            await Promise.resolve(putObjectPromise);
+            let a = await Promise.resolve(putObjectPromise);
+            console.log('Put Result : ', a);
             const s3UrlToFile = config.bot.baseProtocol + host + '/' + config.bot.binaryS3Bucket + '/' + bucketName + '/' + filenameWithoutExtension + '.' + extension
 
             console.log(`AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`);

@@ -2,7 +2,7 @@ import moment from 'moment';
 import { MessageHandler } from '../message';
 import I18n from '../../config/i18n/i18n';
 import _ from 'lodash';
-import uuidV4 from 'uuid/v4';
+import { UUID } from './Utils';
 
 
 export const ButtonStyle = {
@@ -50,7 +50,7 @@ export default class Message {
         this._messageType = opts.messageType || null;
         this._options = opts.options || null;
         this._addedByBot = opts.addedByBot || false;
-        this._uuid = opts.uuid || uuidV4();
+        this._uuid = opts.uuid || UUID();
         // We will use moment in order manage local and remote times better
         this._messageDate = opts.messageDate ? moment(opts.messageDate).toDate() : moment().toDate();
         // Required only for persistence - to indicate which bot stored it

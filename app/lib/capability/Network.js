@@ -42,6 +42,7 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
+    console.log('Network options ', options);
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
@@ -74,11 +75,11 @@ Network.isCellular = () => new Promise((resolve, reject) => {
 });
 
 Network.addConnectionChangeEventListener = (handleConnectionChange) => {
-    NetInfo.addEventListener('change', handleConnectionChange);
+    NetInfo.addEventListener('connectionChange', handleConnectionChange);
 }
 
 Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
-    NetInfo.removeEventListener('change', handleConnectionChange);
+    NetInfo.removeEventListener('connectionChange', handleConnectionChange);
 }
 
 Network.isConnected = () => {

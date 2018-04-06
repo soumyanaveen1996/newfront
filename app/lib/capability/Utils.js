@@ -1,9 +1,8 @@
 // We are going to make lodash availalbe on the platform for making bot writing easier
 import Lodash from 'lodash';
-// const UUID = require('uuid/v4');
-import UUID from 'uuid/v4';
 import moment from 'moment';
 import AWSSignature from 'react-native-aws-signature';
+import ShortUUID from 'short-uuid';
 
 import config from '../../config/config';
 
@@ -52,5 +51,10 @@ const getAmzDate = function (dateStr) {
     dateStr = dateStr.split('.')[0] + 'Z';
     return dateStr;
 };
+
+export function UUID() {
+    let uuid = ShortUUID.uuid();
+    return ShortUUID().fromUUID(uuid);
+}
 
 export default { Lodash, UUID, moment, createAuthHeader };

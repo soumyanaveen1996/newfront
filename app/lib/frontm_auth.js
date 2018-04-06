@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
-import UUID from 'uuid/v4';
+import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-signin';
 import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import _ from 'lodash';
@@ -12,19 +12,24 @@ if (Platform.OS === 'ios') {
         scopes: Config.auth.ios.google.scopes,
         iosClientId: Config.auth.ios.google.iosClientId,
         webClientId: Config.auth.ios.google.iosClientId,
-        offlineAccess: false,
+        serverClientID: Config.auth.ios.google.iosClientId,
+        offlineAccess: true,
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
+        clientID: Config.auth.ios.google.iosClientId,
+        forceCodeForRefreshToken: true,
     });
 } else {  
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
         iosClientId: Config.auth.ios.google.iosClientId,
-        webClientId: Config.auth.ios.google.iosClientId,
-        offlineAccess: false,
+        webClientId: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com',
+        serverClientID: Config.auth.ios.google.iosClientId,
+        offlineAccess: true,
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
-        clientID: Config.auth.ios.google.iosClientId
+        clientID: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com',
+        forceCodeForRefreshToken: true,
     });
     /*
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
@@ -151,7 +156,7 @@ class FrontmAuth {
             GoogleSignin.signInPromise()
                 .then((user) => {
                     console.log('Google user : ', user);
-                    throw 'hello';
+                    //throw 'hello';
                     const googleUser = user;
                     const data = {
                         user: {

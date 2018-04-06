@@ -1,7 +1,7 @@
-const S3_HOST = 'localhost:3000';
-const CATALOG_HOST = 'localhost:3000';
-const QUEUE_HOST = 'localhost:3000';
-const PROXY_HOST = 'localhost:3000';
+const S3_HOST = '10.10.40.58:3000';
+const CATALOG_HOST = '10.10.40.58:3000';
+const QUEUE_HOST = '10.10.40.58:3000';
+const PROXY_HOST = '10.10.40.58:3000';
 
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.
 const config = {
@@ -16,7 +16,7 @@ const config = {
         ios: {
             google: {
                 behavior: 'web',
-                iosClientId: '948594463167-ek2t5ctm2jq6kia2bi1l9d5e6uvki5fp.apps.googleusercontent.com',
+                iosClientId: '705702062891-u7ej27vutmacues3htr8us9uimig906g.apps.googleusercontent.com',
                 callback: 'com.frontm.frontm:/oauth2redirect',
                 scopes: ['profile', 'email']
             },

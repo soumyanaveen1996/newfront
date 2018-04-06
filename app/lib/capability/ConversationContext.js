@@ -1,5 +1,5 @@
 import DeviceStorage from './DeviceStorage';
-import Utils from './Utils';
+import { UUID } from './Utils';
 import _ from 'lodash';
 
 /**
@@ -69,7 +69,6 @@ export default class ConversationContext {
     });
 
     static createNewConversationContext = (botContext, user)  => new Promise((resolve, reject) => {
-        const UUID = Utils.UUID;
         if (user) {
             const context = {
                 conversationId: UUID(),
@@ -94,7 +93,6 @@ export default class ConversationContext {
     });
 
     static createNewChannelConversationContext = (botContext, currentUser, channel, conversationId = undefined)  => new Promise((resolve, reject) => {
-        const UUID = Utils.UUID;
         if (currentUser && channel) {
             const context = {
                 conversationId: conversationId || UUID(),

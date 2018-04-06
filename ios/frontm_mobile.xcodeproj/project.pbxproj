@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -16,6 +17,10 @@
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
+		0485F1CA20769A8700D5525E /* RNGoogleSignInBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C520769A8600D5525E /* RNGoogleSignInBridge.m */; };
+		0485F1CB20769A8700D5525E /* RNGoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C620769A8700D5525E /* RNGoogleSignIn.swift */; };
+		0485F1CC20769A8700D5525E /* RNGoogleSignInEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C720769A8700D5525E /* RNGoogleSignInEvents.swift */; };
+		0485F1CD20769A8700D5525E /* RNGoogleSignInEventsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C820769A8700D5525E /* RNGoogleSignInEventsBridge.m */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
 		0486BED22008CC5F00DF553B /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
 		0CA770390734B837128F930A /* libPods-frontm_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */; };
@@ -304,13 +309,6 @@
 			remoteGlobalIDString = 94DDAC5C1F3D024300EED511;
 			remoteInfo = "RNSVG-tvOS";
 		};
-		040C5BD61FFDF1070071B62D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9FD355121D3E4A2900D06170;
-			remoteInfo = RNGoogleSignin;
-		};
 		0456339C205FF18C00F1B290 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */;
@@ -506,6 +504,12 @@
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
+		0485F18920769A8500D5525E /* frontm_mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "frontm_mobile-Bridging-Header.h"; sourceTree = "<group>"; };
+		0485F1C520769A8600D5525E /* RNGoogleSignInBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInBridge.m; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignInBridge.m"; sourceTree = "<group>"; };
+		0485F1C620769A8700D5525E /* RNGoogleSignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNGoogleSignIn.swift; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignIn.swift"; sourceTree = "<group>"; };
+		0485F1C720769A8700D5525E /* RNGoogleSignInEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNGoogleSignInEvents.swift; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignInEvents.swift"; sourceTree = "<group>"; };
+		0485F1C820769A8700D5525E /* RNGoogleSignInEventsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInEventsBridge.m; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignInEventsBridge.m"; sourceTree = "<group>"; };
+		0485F1C920769A8700D5525E /* RNGoogleSignIn-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RNGoogleSignIn-Bridging-Header.h"; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignIn-Bridging-Header.h"; sourceTree = "<group>"; };
 		0486BECF2008CC5F00DF553B /* bot_dependencies */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bot_dependencies; path = ../initial_bots/bot_dependencies; sourceTree = "<group>"; };
 		0486BED02008CC5F00DF553B /* bots */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bots; path = ../initial_bots/bots; sourceTree = "<group>"; };
 		04AE7CBBC3AE43B7B575695D /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
@@ -544,7 +548,6 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8379B8CA80E44F82A07D327F /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
 		8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-frontm_mobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontm_mobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile.debug.xcconfig"; sourceTree = "<group>"; };
@@ -853,14 +856,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		040C5BD31FFDF1070071B62D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				040C5BD71FFDF1070071B62D /* libRNGoogleSignin.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		0456338D205FF18C00F1B290 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -977,7 +972,6 @@
 				589408B63DAD437792285296 /* RNVectorIcons.xcodeproj */,
 				0148FD44A03F451D96DCF8FA /* RCTVideo.xcodeproj */,
 				183B3E8A9A004B05A794FA35 /* RNSVG.xcodeproj */,
-				8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */,
 				908D82F77DA347DE954FFFB4 /* RCTFBSDK.xcodeproj */,
 			);
 			name = Libraries;
@@ -995,6 +989,11 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				0485F1C920769A8700D5525E /* RNGoogleSignIn-Bridging-Header.h */,
+				0485F1C620769A8700D5525E /* RNGoogleSignIn.swift */,
+				0485F1C520769A8600D5525E /* RNGoogleSignInBridge.m */,
+				0485F1C720769A8700D5525E /* RNGoogleSignInEvents.swift */,
+				0485F1C820769A8700D5525E /* RNGoogleSignInEventsBridge.m */,
 				045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */,
 				13B07FAE1A68108700A75B9A /* frontm_mobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1004,6 +1003,7 @@
 				AA842CAA401B478A8BAAE3FF /* Resources */,
 				040C5A321FFCF9A40071B62D /* Recovered References */,
 				D3362C033AE81F21F8C363ED /* Pods */,
+				0485F18920769A8500D5525E /* frontm_mobile-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1105,6 +1105,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
+						LastSwiftMigration = 0930;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1223,10 +1224,6 @@
 				{
 					ProductGroup = 040C5A8D1FFCF9A50071B62D /* Products */;
 					ProjectRef = E3AEFFA1E33344519167462F /* RNFS.xcodeproj */;
-				},
-				{
-					ProductGroup = 040C5BD31FFDF1070071B62D /* Products */;
-					ProjectRef = 8934B9F5D4EA4A2981201BF7 /* RNGoogleSignin.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5A8F1FFCF9A50071B62D /* Products */;
@@ -1501,13 +1498,6 @@
 			fileType = archive.ar;
 			path = "libRNSVG-tvOS.a";
 			remoteRef = 040C5B0B1FFD0AFB0071B62D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		040C5BD71FFDF1070071B62D /* libRNGoogleSignin.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNGoogleSignin.a;
-			remoteRef = 040C5BD61FFDF1070071B62D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0456339D205FF18C00F1B290 /* libRCTImageResizer.a */ = {
@@ -1786,6 +1776,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0485F1CB20769A8700D5525E /* RNGoogleSignIn.swift in Sources */,
+				0485F1CA20769A8700D5525E /* RNGoogleSignInBridge.m in Sources */,
+				0485F1CD20769A8700D5525E /* RNGoogleSignInEventsBridge.m in Sources */,
+				0485F1CC20769A8700D5525E /* RNGoogleSignInEvents.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -1811,6 +1805,7 @@
 			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -1857,6 +1852,9 @@
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0b555495-4752-484a-9165-740e34b394d3";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1866,6 +1864,7 @@
 			baseConfigurationReference = AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
@@ -1911,6 +1910,8 @@
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "dfcfd0f9-51d7-431d-8c87-41506c62cdd2";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
