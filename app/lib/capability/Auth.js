@@ -14,7 +14,7 @@ const USER_SESSION = 'userSession';
 export const AUTH_PROVIDERS = {
     google: 'google',
     facebook: 'facebook',
-    frontm: 'frontm',
+    frontm: 'FrontM',
 };
 
 
@@ -165,7 +165,7 @@ export default class Auth {
                 if (result.data.success === 'true' || result.data.success === true) {
                     resolve();
                 } else {
-                    reject(new AuthError(98, result.message));
+                    reject(new AuthError(98, result.data.message));
                 }
             })
             .catch((error) => {

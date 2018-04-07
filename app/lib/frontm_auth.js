@@ -290,7 +290,8 @@ class FrontmAuth {
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
                 refresh_token: user.provider.refreshToken,
-                provider_name: user.provider.name
+                provider_name: user.provider.name,
+                email: user.info.emailAddress
             }
         };
         return new Promise(function (resolve, reject) {
