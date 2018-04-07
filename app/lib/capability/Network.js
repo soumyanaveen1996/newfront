@@ -42,7 +42,6 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
-    console.log('Network options ', options);
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
