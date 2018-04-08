@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, BackHandler } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
@@ -53,6 +53,7 @@ export default class MainScreen extends React.Component {
         this.state = {
             screenState: MainScreenStates.notLoaded
         };
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     async componentDidMount() {
@@ -64,6 +65,16 @@ export default class MainScreen extends React.Component {
         this.props.navigation.setParams({
             refresh: this.readLambdaQueue.bind(this)
         });
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'timeline') {
+            BackHandler.exitApp();
+        }
     }
 
     readLambdaQueue() {
@@ -105,6 +116,7 @@ export default class MainScreen extends React.Component {
         if (this.eventSubscription) {
             this.eventSubscription.remove();
         }
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
     }
 
     openContacts() {

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import { GlobalColors } from '../../config/styles'
 import Config from './config';
 import { ButtonStyle } from '../../lib/capability';
@@ -222,12 +222,19 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         width: '80%',
     },
-    sessionStartMessage: {
-        flexDirection: 'row',
-        marginTop: 25,
-        marginBottom: -5,
-        alignItems: 'center',
-    },
+    sessionStartMessage:Platform.select({
+        'ios': {
+            flexDirection: 'row',
+            marginTop: 25,
+            marginBottom: -5,
+            alignItems: 'center',
+        },
+        'android': {
+            flexDirection: 'row',
+            marginTop: 25,
+            alignItems: 'center',
+        }
+    }),
     sessionStartTextContainer: {
         borderBottomWidth: 1,
         borderColor: 'rgb(164, 164, 164)',
