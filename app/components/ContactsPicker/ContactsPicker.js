@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, SectionList, TextInput, KeyboardAvoidingView } from 'react-native';
+import {View, SectionList, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -190,7 +190,9 @@ export default class ContactsPicker extends React.Component {
     renderContactsList() {
         const sectionTitles = _.map(this.state.contactsData, (section) => section.title)
         return (
-            <KeyboardAvoidingView behavior="padding" style={styles.addressBookContainer}>
+            <KeyboardAvoidingView
+                behavior={(Platform.OS === 'ios') ? "padding": null}
+                style={styles.addressBookContainer}>
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={(sectionList) => { this.contactsList = sectionList; }}
