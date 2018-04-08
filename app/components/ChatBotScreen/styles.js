@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet} from 'react-native';
 import { GlobalColors } from '../../config/styles'
 import Config from './config';
 import { ButtonStyle } from '../../lib/capability';

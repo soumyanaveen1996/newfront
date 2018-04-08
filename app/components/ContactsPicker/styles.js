@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import { SECTION_HEADER_HEIGHT } from './config';
 
@@ -8,10 +8,16 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         flexDirection: 'column',
     },
-    searchBar: {
-        backgroundColor: GlobalColors.accent,
-        height: 36,
-    },
+    searchBar:Platform.select({
+        'ios': {
+            backgroundColor: GlobalColors.accent,
+            height: 36,
+        },
+        'android': {
+            backgroundColor: GlobalColors.accent,
+            height: 45,
+        }
+    }),
     searchTextInput: {
         marginHorizontal: 20,
         marginVertical: 5,
