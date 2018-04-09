@@ -6,6 +6,7 @@ import Images from '../../config/images';
 import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
+import Utils from '../../lib/utils';
 
 export default class ChatInputBar extends React.Component {
 
@@ -253,6 +254,9 @@ export default class ChatInputBar extends React.Component {
             let seconds = Math.floor(this.state.recordedTimeInSeconds);
             const minutes = String(Math.floor(seconds / 60));
             seconds = String(seconds);
+            if (Platform.OS === 'android') {
+                Utils.padStartForAndroid();
+            }
             return (
                 <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={() => this._cancelRecording()} style={styles.cancelButton}>
