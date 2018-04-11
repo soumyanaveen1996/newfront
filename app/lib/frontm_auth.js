@@ -6,6 +6,7 @@ import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-signin';
 import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import _ from 'lodash';
+import config from '../config/config';
 
 if (Platform.OS === 'ios') {
     GoogleSignin.configure({
@@ -214,13 +215,83 @@ class FrontmAuth {
         });
     }
 
+    signinWithFrontm(details, conversationId, botName) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            const signinOptions = {
+                'method': 'post',
+                'url': config.proxy.protocol + config.proxy.host + config.proxy.signinPath,
+                'data': {
+                    user: details
+                }
+            }
+            Network(signinOptions)
+                .then((response) => {
+                    const result = response.data;
+                    if (!(result.success === 'true' || result.success === true)) {
+                        return reject({type: 'error', error: result.message});
+                    }
+                    const frontmUser = result.data.user;
+                    const data = {
+                        user: {
+                            emailAddress: frontmUser.emailAddress,
+                            givenName: frontmUser.givenName,
+                            screenName: frontmUser.name ? frontmUser.name.replace(/ /g, '') : '',
+                            surname: frontmUser.surname,
+                            name: frontmUser.name,
+                            userId: frontmUser.userId,
+                        },
+                        conversation: {
+                            uuid: conversationId || UUID(),
+                            bot: 'onboarding-bot'
+                        },
+                        creatorInstanceId: UUID(),
+                    };
+                    let options = {
+                        'method': 'post',
+                        'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
+                        'headers': {
+                            token: result.data.id_token,
+                            provider_name: 'frontm'
+                        },
+                        'data': data
+                    };
+                    Network(options)
+                        .then((res) => {
+                            let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
+                            if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
+                                reject(new Error('Empty response from the server'));
+                                return;
+                            }
+                            self.credentials.frontm = {
+                                identityId: resData.creds.identityId,
+                                accessKeyId: resData.creds.accessKeyId,
+                                secretAccessKey: resData.creds.secretAccessKey,
+                                sessionToken: resData.creds.sessionToken,
+                                userUUID: resData.user.uuid,
+                                refreshToken: result.data.refresh_token,
+                                info: resData.user || data.user
+                            }
+                            console.log('Credentials ', self.credentials);
+                            return resolve({ type: 'success', credentials: self.credentials });
+                        }).catch((err) => {
+                            return reject({ type: 'error', error: err });
+                        });
+                })
+                .catch((error) => {
+                    reject({ type: 'error', error: error.code });
+                });
+        });
+    }
+
     refreshTokens(user) {
         let options = {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
                 refresh_token: user.provider.refreshToken,
-                provider_name: user.provider.name
+                provider_name: user.provider.name.toLowerCase(),
+                email: user.info.emailAddress
             }
         };
         return new Promise(function (resolve, reject) {

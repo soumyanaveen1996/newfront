@@ -7,12 +7,14 @@ import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
 import { ConversationDAO } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
+import { Network } from '../capability';
 
 const USER_SESSION = 'userSession';
 
 export const AUTH_PROVIDERS = {
     google: 'google',
-    facebook: 'facebook'
+    facebook: 'facebook',
+    frontm: 'FrontM',
 };
 
 
@@ -35,6 +37,7 @@ export class AuthError extends Error {
 export const AuthErrorCodes = {
     0: 'User cancelled',
     1: 'Error in saving Auth Session',
+    98: 'Custom Error',
     99: 'Unknown error',
 }
 
@@ -147,6 +150,70 @@ export default class Auth {
             });
     });
 
+    static signupWithFrontm = (userDetails) => new Promise((resolve, reject) => {
+        const options = {
+            'method': 'post',
+            'url': config.proxy.protocol + config.proxy.host + config.proxy.signupPath,
+            'data': {
+                user: userDetails
+            }
+        }
+        console.log('Signup options : ', options);
+        Network(options)
+            .then((result) => {
+                console.log('result : ', result.data);
+                if (result.data.success === 'true' || result.data.success === true) {
+                    resolve();
+                } else {
+                    reject(new AuthError(98, result.data.message));
+                }
+            })
+            .catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
+
+    static loginWithFrontm = (userDetails, conversationId, botName) => new Promise((resolve, reject) => {
+        let currentUser = null;
+        Auth.getUser()
+            .then((user) => {
+                currentUser = user;
+                return FrontmAuth.signinWithFrontm(userDetails, conversationId, botName);
+            })
+            .then((result) => {
+                if (result) {
+                    const creds = result.credentials.frontm;
+                    currentUser = new User({
+                        userUUID: creds.userUUID
+                    });
+                    currentUser.aws = {
+                        identityId: creds.identityId,
+                        accessKeyId: creds.accessKeyId,
+                        secretAccessKey: creds.secretAccessKey,
+                        sessionToken: creds.sessionToken
+                    };
+                    currentUser.provider = {
+                        name: AUTH_PROVIDERS.frontm,
+                        refreshToken: creds.refreshToken,
+                        lastRefreshTime: Date.now()
+                    };
+                    currentUser.info = creds.info;
+
+                    Auth.saveUser(currentUser)
+                        .then((user) => {
+                            EventEmitter.emit(AuthEvents.userLoggedIn, user);
+                            resolve(user);
+                        })
+                        .catch((error) => {
+                            reject(new AuthError(1, AuthErrorCodes[1]));
+                        });
+                } else {
+                    reject(new AuthError(0, AuthErrorCodes[0]));
+                }
+            }).catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
 
     /**
 	 * Invalidate the session for now

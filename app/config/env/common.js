@@ -1,7 +1,7 @@
-const S3_HOST = '10.10.40.58:3000';
-const CATALOG_HOST = '10.10.40.58:3000';
-const QUEUE_HOST = '10.10.40.58:3000';
-const PROXY_HOST = '10.10.40.58:3000';
+const S3_HOST = 'localhost:3000';
+const CATALOG_HOST = 'localhost:3000';
+const QUEUE_HOST = 'localhost:3000';
+const PROXY_HOST = 'localhost:3000';
 
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.
 const config = {
@@ -83,7 +83,9 @@ const config = {
         catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/refresh',
-        conversationPath: '/conversation'
+        conversationPath: '/conversation',
+        signupPath: '/signup/frontm',
+        signinPath: '/signin/frontm',
     }
 }
 
