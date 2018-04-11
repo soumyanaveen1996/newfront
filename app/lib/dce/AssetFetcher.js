@@ -153,7 +153,6 @@ class AssetFetcher {
                 Bucket: config.bot.binaryS3Bucket + '/' + bucketName,
                 Key: filenameWithoutExtension + '.' + extension,
                 Body: buf,
-                ContentEncoding: 'base64',
                 ContentType: contentType,
                 Metadata: {
                     'Content-Type': contentType
