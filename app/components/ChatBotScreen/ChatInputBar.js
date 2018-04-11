@@ -42,7 +42,9 @@ export default class ChatInputBar extends React.Component {
             buttonIndex => {
                 if (buttonIndex !== cancelButtonIndex) {
                     if (this.props.onOptionSelected) {
-                        this.props.onOptionSelected(this.props.options[buttonIndex].key);
+                        //On Android in case of a touch outside the ActionSheet or the button back is pressed the buttonIndex value is 'undefined'
+                        if(buttonIndex !== undefined)
+                            this.props.onOptionSelected(this.props.options[buttonIndex].key);
                     }
                 }
             }
