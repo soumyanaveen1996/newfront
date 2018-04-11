@@ -6,6 +6,7 @@ import Images from '../../config/images';
 import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
+import Utils from '../../lib/utils';
 
 export default class ChatInputBar extends React.Component {
 
@@ -41,7 +42,9 @@ export default class ChatInputBar extends React.Component {
             buttonIndex => {
                 if (buttonIndex !== cancelButtonIndex) {
                     if (this.props.onOptionSelected) {
-                        this.props.onOptionSelected(this.props.options[buttonIndex].key);
+                        //On Android in case of a touch outside the ActionSheet or the button back is pressed the buttonIndex value is 'undefined'
+                        if(buttonIndex !== undefined)
+                            this.props.onOptionSelected(this.props.options[buttonIndex].key);
                     }
                 }
             }
@@ -253,6 +256,9 @@ export default class ChatInputBar extends React.Component {
             let seconds = Math.floor(this.state.recordedTimeInSeconds);
             const minutes = String(Math.floor(seconds / 60));
             seconds = String(seconds);
+            if (Platform.OS === 'android') {
+                Utils.padStartForAndroid();
+            }
             return (
                 <View style={chatBarStyle(this.props.network)}>
                     <TouchableOpacity onPress={() => this._cancelRecording()} style={styles.cancelButton}>

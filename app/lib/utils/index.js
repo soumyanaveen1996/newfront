@@ -299,6 +299,26 @@ export function isEmail(email) {
 
 }
 
+export function padStartForAndroid() {
+    //padStart() is not available natively in android
+    if (!String.prototype.padStart) {
+        String.prototype.padStart = function padStart(targetLength,padString) {
+            targetLength = targetLength>>0;
+            padString = String((typeof padString !== 'undefined' ? padString : ' '));
+            if (this.length > targetLength) {
+                return String(this);
+            }
+            else {
+                targetLength = targetLength-this.length;
+                if (targetLength > padString.length) {
+                    padString += padString.repeat(targetLength/padString.length);
+                }
+                return padString.slice(0,targetLength) + String(this);
+            }
+        };
+    }
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -314,5 +334,6 @@ export default {
     developerLogoUrl,
     categoryLogoUrl,
     botLogoUrl,
-    channelLogoUrl
+    channelLogoUrl,
+    padStartForAndroid
 }
