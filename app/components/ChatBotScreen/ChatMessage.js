@@ -71,7 +71,7 @@ export default class ChatMessage extends React.Component {
                     this.setState({ read: success });
                 }
             }).catch((err) => {
-                console.log(err);
+                console.log('Marking form message as read : ', err);
             });
     }
 

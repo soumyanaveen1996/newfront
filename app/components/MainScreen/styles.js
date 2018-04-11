@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
 export const MainScreenStyles = StyleSheet.create({
@@ -101,23 +101,39 @@ export const BotListItemStyles = {
         width: 60,
         flexDirection: 'row-reverse',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     hidden: {
         display: 'none',
     },
-    count: {
-        color: BotListItemColors.countTextColor,
-        backgroundColor: BotListItemColors.countColor,
-        height: 24,
-        minWidth: 24,
-        maxWidth: 48,
-        lineHeight: 24,
-        textAlign: 'center',
-        borderRadius: 12,
-        paddingLeft: 4,
-        paddingRight: 4,
-        overflow: 'hidden'
-    },
+    count: Platform.select({
+        'ios': {
+            color: BotListItemColors.countTextColor,
+            backgroundColor: BotListItemColors.countColor,
+            height: 24,
+            minWidth: 24,
+            maxWidth: 48,
+            lineHeight: 24,
+            textAlign: 'center',
+            borderRadius: 12,
+            paddingLeft: 4,
+            paddingRight: 4,
+            overflow: 'hidden'
+        },
+        'android': {
+            color: BotListItemColors.countTextColor,
+            backgroundColor: BotListItemColors.countColor,
+            height: 24,
+            minWidth: 24,
+            maxWidth: 48,
+            textAlign: 'center',
+            borderRadius: 12,
+            paddingLeft: 4,
+            paddingRight: 4,
+            overflow: 'hidden',
+            textAlignVertical: 'center',
+        }
+    }),
     chatImage: {
         marginTop: 5,
         borderRadius: 7,

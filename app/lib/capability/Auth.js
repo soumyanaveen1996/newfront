@@ -12,8 +12,8 @@ import { Network } from '../capability';
 const USER_SESSION = 'userSession';
 
 export const AUTH_PROVIDERS = {
-    google: 'google',
-    facebook: 'facebook',
+    //google: 'google',
+    //facebook: 'facebook',
     frontm: 'FrontM',
 };
 

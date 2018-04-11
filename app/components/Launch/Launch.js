@@ -72,8 +72,8 @@ export default class Splash extends React.Component {
                 if (isUserLoggedIn) {
                     this.showMainScreen();
                 } else {
-                    this.showMainScreen();
-                    //this.showOnboardingScreen();
+                    //this.showMainScreen();
+                    this.showOnboardingScreen();
                 }
             })
             .then(() => {

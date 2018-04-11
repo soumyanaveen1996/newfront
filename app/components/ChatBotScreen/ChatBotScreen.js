@@ -532,6 +532,10 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    onScrollToIndexFailed() {
+        this.chatList.scrollToEnd({ animated: true });
+    }
+
     checkForScrolling() {
         setTimeout(() => {
             if (this.initialScrollDone) {
@@ -1031,6 +1035,7 @@ export default class ChatBotScreen extends React.Component {
                                 refreshing={this.state.refreshing}
                                 onRefresh={this.onRefresh.bind(this)} />
                         }
+                        onScrollToIndexFailed={this.onScrollToIndexFailed.bind(this)}
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
                     {this.renderChatInputBar()}
