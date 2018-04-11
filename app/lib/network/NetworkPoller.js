@@ -1,9 +1,9 @@
 import Auth from '../capability/Auth';
-import DeviceStorage from '../capability/DeviceStorage';
+import { DeviceStorage, Network } from '../capability';
 import { NetworkHandler } from './index';
 import config from '../../config/config';
 import BackgroundTimer from 'react-native-background-timer';
-import EventEmitter, { AuthEvents, PollingStrategyEvents } from '../events';
+import EventEmitter, { AuthEvents, PollingStrategyEvents, SatelliteConnectionEvents } from '../events';
 import { AppState } from 'react-native';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 
@@ -13,6 +13,7 @@ const KEEPALIVE_KEY = 'keepalive_key';
 
 class NetworkPoller {
     start = async () => {
+        this.connectedToSatellite = false;
         await this.listenToEvents();
         this.startPolling();
     }
@@ -21,8 +22,28 @@ class NetworkPoller {
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(PollingStrategyEvents.changed, this.pollingStrategyChanged);
+        Network.addConnectionChangeEventListener(this.handleConnectionChange);
+        EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
+        EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         AppState.addEventListener('change', this.handleAppStateChange);
     }
+
+    satelliteConnectionHandler = async () => {
+        if (!this.connectedToSatellite) {
+            this.connectedToSatellite = true;
+            await this.stopGSMPolling();
+            await this.startSatellitePolling();
+        }
+    }
+
+    satelliteDisconnectHandler = async () => {
+        if (this.connectedToSatellite) {
+            this.connectedToSatellite = false;
+            await this.stopSatellitePolling();
+            await this.startGSMPolling();
+        }
+    }
+
 
     handleAppStateChange = async (nextAppState) => {
         if (nextAppState === 'active') {
@@ -57,6 +78,8 @@ class NetworkPoller {
                 this.startGSMPolling();
             } else if (this.currentPollingStrategy === PollingStrategyTypes.satellite) {
                 this.startSatellitePolling();
+            } else if (this.currentPollingStrategy === PollingStrategyTypes.satellite) {
+                this.startGSMPolling();
             }
         }
     }

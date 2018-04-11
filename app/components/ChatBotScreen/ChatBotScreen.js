@@ -205,7 +205,7 @@ export default class ChatBotScreen extends React.Component {
 
         this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
-        Network.addConnectionChangeEventListener(this.handleConnectionChange)
+        Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
 
@@ -287,7 +287,7 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
-        Network.removeConnectionChangeEventListener(this.handleConnectionChange)
+        Network.removeConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         EventEmitter.removeListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
