@@ -28,6 +28,11 @@ const stylesheet = StyleSheet.create({
         marginHorizontal: 5,
         paddingHorizontal: 10,
     },
+    defaultHeaderRightIconImage: {
+        maxWidth: 40,
+        maxHeight: 40,
+        marginRight: 20,
+    },
 });
 
 export default stylesheet;

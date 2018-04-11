@@ -22,7 +22,7 @@ class NetworkPoller {
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(PollingStrategyEvents.changed, this.pollingStrategyChanged);
-        Network.addConnectionChangeEventListener(this.handleConnectionChange);
+        //Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         AppState.addEventListener('change', this.handleAppStateChange);

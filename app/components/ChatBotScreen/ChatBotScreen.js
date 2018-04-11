@@ -38,6 +38,7 @@ import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents } from '../../lib/events';
 import { Icons } from '../../config/icons';
+import images from '../../images';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -60,10 +61,18 @@ export default class ChatBotScreen extends React.Component {
             }} />;
         }
 
-        if (state.params.showRefresh) {
-            navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
-                state.params.refresh();
-            }} icon={Icons.refresh()}/>;
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
+                    state.params.refresh();
+                }} icon={Icons.refresh()}/>;
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
+            } else {
+                navigationOptions.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
+            }
         }
         return navigationOptions;
     }
@@ -123,7 +132,9 @@ export default class ChatBotScreen extends React.Component {
                 let botResponse = await this.loadBot();
                 self.loadedBot = botResponse;
                 break;
-            } catch (error) { }
+            } catch (error) {
+                console.log('Bot load error');
+            }
         }
 
         if (!self.loadedBot) {
@@ -209,13 +220,33 @@ export default class ChatBotScreen extends React.Component {
         EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
 
+        console.log('Checking polling strategy');
 
-        this.checkPollingStrategy();
         this.props.navigation.setParams({
-            refresh: this.readLambdaQueue.bind(this)
+            refresh: this.readLambdaQueue.bind(this),
+            showConnectionMessage: this.showConnectionMessage.bind(this)
         });
+        this.checkPollingStrategy();
         EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
     }
+
+    showConnectionMessage(connectionType) {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [
+                { text: I18n.t('Ok'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
+    }
+
 
     sessionStartMessageForDate = (momentObject) => {
         let sMessage = new Message({addedByBot: true, messageDate: momentObject.valueOf()});
@@ -253,26 +284,22 @@ export default class ChatBotScreen extends React.Component {
         NetworkHandler.readLambda();
     }
 
-    showRefreshButton() {
-        this.props.navigation.setParams({
-            showRefresh: true
-        });
-    }
-
-    hideRefreshButton() {
-        this.props.navigation.setParams({
-            showRefresh: false
-        });
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'refresh' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
     }
 
     async checkPollingStrategy() {
         console.log('Polling strategy changed');
         let pollingStrategy = await Settings.getPollingStrategy();
-        if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.showRefreshButton();
-        } else {
-            this.hideRefreshButton();
-        }
+        this.showButton(pollingStrategy);
     }
 
     async componentWillUnmount() {
@@ -357,7 +384,6 @@ export default class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
-        console.log('Bot Key :', this.getBotKey());
         Queue.selectCompletedNetworkRequests(this.getBotKey())
             .then((pendingAsyncResults) => {
                 pendingAsyncResults = pendingAsyncResults || [];

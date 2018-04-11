@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View, BackHandler } from 'react-native';
+import { ActivityIndicator, View, BackHandler, Alert } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
@@ -36,12 +36,18 @@ export default class MainScreen extends React.Component {
             ret.headerLeft = <HeaderLeftIcon config={Config.filterButtonConfig} onPress={state.params.openBotFilter} />;
         }
 
-        if (state.params.showRefresh) {
-            ret.headerRight = <HeaderRightIcon onPress={() => {
-                state.params.refresh();
-            }} icon={Icons.refresh()}/>;
-        } else {
-            ret.headerRight = undefined;
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                ret.headerRight = <HeaderRightIcon onPress={() => {
+                    state.params.refresh();
+                }} icon={Icons.refresh()}/>;
+            } else if (state.params.button === 'gsm') {
+                ret.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
+            } else if (state.params.button === 'satellite') {
+                ret.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
+            } else {
+                ret.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
+            }
         }
         return ret;
     }
@@ -56,6 +62,23 @@ export default class MainScreen extends React.Component {
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
+    showConnectionMessage(connectionType) {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [
+                { text: I18n.t('Ok'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
+    }
+
     async componentDidMount() {
         if (this.props.navigation) {
             this.props.navigation.setParams({ openBotFilter: this.openBotFilter.bind(this) });
@@ -63,7 +86,8 @@ export default class MainScreen extends React.Component {
         this.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, this.handleAsyncMessageResult.bind(this));
         this.update();
         this.props.navigation.setParams({
-            refresh: this.readLambdaQueue.bind(this)
+            refresh: this.readLambdaQueue.bind(this),
+            showConnectionMessage: this.showConnectionMessage.bind(this)
         });
     }
 
@@ -81,25 +105,22 @@ export default class MainScreen extends React.Component {
         NetworkHandler.readLambda();
     }
 
-    showRefreshButton() {
-        this.props.navigation.setParams({
-            showRefresh: true
-        });
-    }
-
-    hideRefreshButton() {
-        this.props.navigation.setParams({
-            showRefresh: false
-        });
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'refresh' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
     }
 
     async checkPollingStrategy() {
+        console.log('Polling strategy changed');
         let pollingStrategy = await Settings.getPollingStrategy();
-        if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.showRefreshButton();
-        } else {
-            this.hideRefreshButton();
-        }
+        this.showButton(pollingStrategy);
     }
 
     update = async () => {

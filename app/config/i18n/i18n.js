@@ -83,6 +83,11 @@ I18n.translations = {
         'Unknown': 'Unknown',
         'No_Network': 'No network connection',
         'Satellite_connection': 'Online over Satellite',
+        'Connection_Type': 'Connection Type',
+        'Satellite_Message': 'You are in a network mode optimised for satellite where messages appear near real time.',
+        'Gsm_Message': 'You are in Cellullar network mode prepared for real time communications on land',
+        'Auto_Message': 'You are in Automatic network mode which decides optimal strategy based on Satellite or Cellular connection',
+        'Ok': 'Ok'
     },
 }
 

@@ -61,6 +61,8 @@ export default class Splash extends React.Component {
                 if (!user) {
                     // Creating a DefaultUser session for OnBoarding Bot.
                     return Auth.saveUser(DefaultUser);
+                } else {
+                    return user;
                 }
             })
             .then(() => {
@@ -70,7 +72,8 @@ export default class Splash extends React.Component {
                 if (isUserLoggedIn) {
                     this.showMainScreen();
                 } else {
-                    this.showOnboardingScreen();
+                    this.showMainScreen();
+                    //this.showOnboardingScreen();
                 }
             })
             .then(() => {

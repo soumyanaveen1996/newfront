@@ -294,6 +294,7 @@ class FrontmAuth {
                 email: user.info.emailAddress
             }
         };
+        console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {

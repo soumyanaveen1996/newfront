@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './styles';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
 import Icons from '../../config/icons';
 
 export default class HeaderRightIcon extends React.Component {
     render() {
-        var { config, icon } = this.props;
+        var { config, icon, image } = this.props;
         if (config) {
             return (
                 <TouchableOpacity style={styles.defaultHeaderRightIcon} onPress={this.props.onPress}>
@@ -16,6 +16,12 @@ export default class HeaderRightIcon extends React.Component {
             return (
                 <TouchableOpacity style={styles.defaultHeaderRightIcon} onPress={this.props.onPress}>
                     {icon}
+                </TouchableOpacity>
+            );
+        } else if (image) {
+            return (
+                <TouchableOpacity style={styles.defaultHeaderRightIconImage} onPress={this.props.onPress}>
+                    <Image source={image} />
                 </TouchableOpacity>
             );
         } else {

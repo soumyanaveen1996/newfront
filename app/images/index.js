@@ -36,6 +36,8 @@ const images = {
     btn_info: require('./slider/btn_info.png'),
     icn_slider:require('./slider/icn_slider.png'),
     walkthrough_image: require('./walkthrough/image.png'),
+    gsm: require('./icons/gsm.png'),
+    satellite: require('./icons/satellite.png'),
     splash_page_logo: { uri: 'FM-logo-landing page' },
     user_image: { uri: 'user_image' }
 };
