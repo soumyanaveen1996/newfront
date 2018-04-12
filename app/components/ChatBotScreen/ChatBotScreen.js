@@ -9,7 +9,8 @@ import {
     View,
     Alert,
     SafeAreaView,
-    Platform
+    Platform,
+    BackHandler
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -121,6 +122,12 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    handleHardwareBackButtonClick() {
+        if (this.props.onBack) {
+            this.props.onBack();
+        }
+    }
+
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         this.mounted = true;
@@ -219,6 +226,7 @@ export default class ChatBotScreen extends React.Component {
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+        BackHandler.addEventListener('hardwareBackPress', this.handleHardwareBackButtonClick.bind(this));
 
         console.log('Checking polling strategy');
 
@@ -318,6 +326,7 @@ export default class ChatBotScreen extends React.Component {
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         EventEmitter.removeListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackButtonClick.bind(this));
     }
 
     satelliteConnectionHandler = () => {
