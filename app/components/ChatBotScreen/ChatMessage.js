@@ -21,11 +21,11 @@ import ProfileImage from '../ProfileImage';
 import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
 import TapToLoadImage from './TapToLoadImage';
-import AnimatedEllipsis from 'react-native-animated-ellipsis';
 import VideoPlayer from 'react-native-video-player';
 import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';
+import { DotIndicator } from 'react-native-indicators';
 
 export default class ChatMessage extends React.Component {
 
@@ -250,7 +250,7 @@ export default class ChatMessage extends React.Component {
         } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_WAIT) {
             const component = (
                 <View style={ellipsisMessageBubbleStyle(this.props.alignRight, this.props.imageSource)}>
-                    <AnimatedEllipsis style={styles.ellipsis} />
+                    <DotIndicator color="white" size={8} count={3}/>
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
