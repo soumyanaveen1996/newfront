@@ -6,7 +6,7 @@ import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
-import { Platform, Dimensions } from 'react-native';
+import {Platform, Dimensions, PermissionsAndroid} from 'react-native';
 
 export function formattedDate(date) {
     if (!date) {
@@ -319,6 +319,17 @@ export function padStartForAndroid() {
     }
 }
 
+export function requestReadContactsPermission() {
+    if (Platform.OS === 'ios') {
+        return Promise.resolve(true);
+    } else {
+        //Request runtime permission to access contacts
+        return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS).then((result) => {
+            return (result === 'granted' ? true : false);
+        });
+    }
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -335,5 +346,6 @@ export default {
     categoryLogoUrl,
     botLogoUrl,
     channelLogoUrl,
-    padStartForAndroid
+    padStartForAndroid,
+    requestReadContactsPermission
 }
