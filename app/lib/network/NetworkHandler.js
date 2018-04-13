@@ -10,7 +10,8 @@ import EventEmitter from '../events';
 import { SatelliteConnectionEvents } from '../events';
 import _ from 'lodash';
 import Message from '../capability/Message';
-import { MessageHandler } from '../../lib/message'
+import { MessageHandler } from '../../lib/message';
+import PushNotification from 'react-native-push-notification';
 
 /**
  * Polls the local queue for pending network request and makes them.
@@ -92,6 +93,7 @@ const readRemoteLambdaQueue = (user) => {
     console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
     readQueue(user)
         .then((res) => {
+            PushNotification.setApplicationIconBadgeNumber(0);
             return handleLambdaResponse(res, user);
         })
         .catch((error) => {

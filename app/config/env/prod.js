@@ -38,6 +38,8 @@ const stageConfig = {
         authPath: '/auth',
         refreshPath: '/refresh',
         conversationPath: '/conversation',
+        signupPath: '/signup/frontm',
+        signinPath: '/signin/frontm',
     }
 };
 

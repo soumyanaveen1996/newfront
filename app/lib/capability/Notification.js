@@ -1,7 +1,7 @@
 import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
-
+import config from '../../config/config';
 
 const NotificationKeys = {
     notification: 'notification',
@@ -31,6 +31,7 @@ export default class Notification {
                                     deviceId: response.token,
                                     isRegistered: true,
                                 }
+                                console.log('Notification device info : ', notificationDeviceInfo);
                                 DeviceStorage.save(NotificationKeys.notification, notificationDeviceInfo)
                                     .then(() => {
                                         EventEmitter.emit(NotificationEvents.registeredNotifications);
@@ -43,6 +44,7 @@ export default class Notification {
                                 reject(new Error('User cancelled'));
                             }
                         },
+                        senderID: config.gcm.senderID,
                         onError: (error) => {
                             console.log('onError', error);
                             reject(error);

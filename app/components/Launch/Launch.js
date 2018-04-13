@@ -1,6 +1,6 @@
 import React from 'react';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { View, Image } from 'react-native';
+import { View, Image, Platform, PushNotificationIOS } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
@@ -114,6 +114,9 @@ export default class Splash extends React.Component {
         }
         if (notification.foreground) {
             NetworkHandler.readLambda();
+        }
+        if (Platform.OS === 'ios') {
+            notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
     }
 

@@ -12,6 +12,9 @@ const config = {
     aws: {
         region: 'us-east-1'
     },
+    gcm: {
+        senderID: '705702062891'
+    },
     auth: {
         ios: {
             google: {
