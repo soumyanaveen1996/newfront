@@ -78,7 +78,7 @@ class NetworkPoller {
                 this.startGSMPolling();
             } else if (this.currentPollingStrategy === PollingStrategyTypes.satellite) {
                 this.startSatellitePolling();
-            } else if (this.currentPollingStrategy === PollingStrategyTypes.satellite) {
+            } else if (this.currentPollingStrategy === PollingStrategyTypes.automatic) {
                 this.startGSMPolling();
             }
         }
