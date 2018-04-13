@@ -64,7 +64,6 @@
 		DCC6B1A3AB014119B60F543F /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6455D14207044E8F88F76EC3 /* AddressBook.framework */; };
 		E0354B3D9DA2499CB8209B18 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398A80F2BB13450A8A3B3811 /* Entypo.ttf */; };
 		E477AD9AB06B49D68C085521 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 275A0AA2A043404A927CA969 /* SimpleLineIcons.ttf */; };
-		E56CE09B74DB4A0EA9E8167A /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1B959205B8A43FBB87BB84D /* libRNGoogleSignin.a */; };
 		EF81471F027141BCBA2CE564 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 256F5B9952B44327858F89C0 /* libRNKeychain.a */; };
 		F7FD2646A3894BA19AF5B6C7 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619956975FE040FE82D453AE /* libAirMaps.a */; };
 		F9A8DBC9DCE6498A8922838B /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 527FA991FBE9494095F65A4B /* libRNI18n.a */; };
@@ -570,7 +569,6 @@
 		D7EC8AEAA21A47649B6ED17A /* libRCTVideo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTVideo.a; sourceTree = "<group>"; };
 		DEDFE3AADCFB40338C03BF19 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		E0314A9C62FD4348BFE8F156 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		E1B959205B8A43FBB87BB84D /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = "<group>"; };
 		E3AEFFA1E33344519167462F /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		E87F5D84A7F74D639D64288B /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		EF5ACA0C65BA4BC39D9E4516 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
@@ -618,7 +616,6 @@
 				89DC4A73DF3D45179075391C /* libRNVectorIcons.a in Frameworks */,
 				320C7129065B4281992A3E0B /* libRCTVideo.a in Frameworks */,
 				9E1E2C7E649E4F9CA56AE820 /* libRNSVG.a in Frameworks */,
-				E56CE09B74DB4A0EA9E8167A /* libRNGoogleSignin.a in Frameworks */,
 				2D0BBCA1DA6F436D86AB0045 /* libz.tbd in Frameworks */,
 				319EFC1442A8414BA51CA7B7 /* SafariServices.framework in Frameworks */,
 				DCC6B1A3AB014119B60F543F /* AddressBook.framework in Frameworks */,
@@ -725,7 +722,6 @@
 				D7EC8AEAA21A47649B6ED17A /* libRCTVideo.a */,
 				429900950192486080C1A87E /* libRNSVG.a */,
 				E87F5D84A7F74D639D64288B /* libRNSVG-tvOS.a */,
-				E1B959205B8A43FBB87BB84D /* libRNGoogleSignin.a */,
 				AD4BF23652804675A540A09D /* libRCTFBSDK.a */,
 			);
 			name = "Recovered References";
