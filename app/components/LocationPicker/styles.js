@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import Utils from '../../lib/utils';
 
 const styles = StyleSheet.create({
     container: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: 10,
+        top: Utils.isiPhoneX() ? 30 : 10,
         left: 0,
         width: 45,
         height: 45,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 30,
         right: 5,
-        top: 10,
+        top: Utils.isiPhoneX() ? 30 : 10,
         backgroundColor: GlobalColors.transparent,
         flex: 1,
         justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
 import MapView from 'react-native-maps';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
@@ -55,11 +55,37 @@ export default class LocationPicker extends React.Component {
 
     renderMap() {
         return (
-            <MapView style={styles.mapView} onLongPress={this.onPress.bind(this)}>
+            <MapView ref={ref => { this.map = ref; }} style={styles.mapView} onLongPress={this.onPress.bind(this)} showsUserLocation>
                 {this.renderMarker()}
             </MapView>
         );
     }
+
+    /*
+    onMapReady() {
+        navigator.geolocation.getCurrentPosition((location) => {
+            console.log('Location : ', location);
+            this.map.animateToRegion({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                latitudeDelta: 0.3,
+                longitudeDelta: 0.3
+            })
+            this.setState({
+                region: {
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.3,
+                    longitudeDelta: 0.3
+                }
+            })
+
+        }, (error) => {
+            console.log('error in geolocation : ', error);
+        });
+    } */
+
+
 
     renderBottomLayer() {
         const message = this.state && this.state.coordinate ? I18n.t('Tap_on_Map_to_Change') : I18n.t('Tap_on_Map')
