@@ -165,32 +165,36 @@ export default class Contact {
     });
 
     static getAddressBookEmails = () => new Promise((resolve, reject) => {
-        RNContacts.getAllWithoutPhotos((error, contacts) => {
-            if (error === 'denied') {
-                reject(new Error('User rejected permissions'));
-            } else {
-                let emails = _.reduce(contacts, (emailsList, contact) => {
-                    let contactEmails = _.map(contact.emailAddresses, (emailObject) => {
-                        if (!Utils.isEmail(emailObject.email)) {
-                            return;
-                        }
-                        let givenName = contact.givenName;
-                        if (_.isEmpty(contact.givenName) && _.isEmpty(contact.familyName)) {
-                            givenName = emailObject.email
-                        }
-                        return {
-                            givenName: givenName,
-                            familyName: contact.familyName,
-                            middleName: contact.middleName,
-                            type: emailObject.label,
-                            emailAddress: emailObject.email
-                        }
-                    });
-                    return _.concat(emailsList, _.filter(contactEmails, (o) => o !== undefined));
-                }, []);
-                resolve(_.sortBy(emails, (o) => _.lowerCase(o.givenName + ' ' + o.familyName)));
+        Utils.requestReadContactsPermission().then((status) => {
+            if(status){
+                RNContacts.getAllWithoutPhotos((error, contacts) => {
+                    if (error === 'denied') {
+                        reject(new Error('User rejected permissions'));
+                    } else {
+                        let emails = _.reduce(contacts, (emailsList, contact) => {
+                            let contactEmails = _.map(contact.emailAddresses, (emailObject) => {
+                                if (!Utils.isEmail(emailObject.email)) {
+                                    return;
+                                }
+                                let givenName = contact.givenName;
+                                if (_.isEmpty(contact.givenName) && _.isEmpty(contact.familyName)) {
+                                    givenName = emailObject.email
+                                }
+                                return {
+                                    givenName: givenName,
+                                    familyName: contact.familyName,
+                                    middleName: contact.middleName,
+                                    type: emailObject.label,
+                                    emailAddress: emailObject.email
+                                }
+                            });
+                            return _.concat(emailsList, _.filter(contactEmails, (o) => o !== undefined));
+                        }, []);
+                        resolve(_.sortBy(emails, (o) => _.lowerCase(o.givenName + ' ' + o.familyName)));
+                    }
+                })
             }
-        })
+        });
     });
 
     static refreshContacts = () => new Promise((resolve, reject) => {
