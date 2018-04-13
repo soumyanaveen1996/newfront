@@ -9,7 +9,7 @@ import {
     View,
     Alert,
     SafeAreaView,
-    Platform
+    Platform, PermissionsAndroid
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -792,9 +792,25 @@ export default class ChatBotScreen extends React.Component {
 
     async takeVideo() {
         Keyboard.dismiss();
-        const result = await Media.recordVideo();
-        if (!result.cancelled) {
-            this.onVideoCaptured(result.uri);
+        this._hasRecordVideoPermission().then((status) => {
+            if(status){
+                //const result = await Media.recordVideo();
+                Media.recordVideo().then( (result) => {
+                    if (!result.cancelled) {
+                        this.onVideoCaptured(result.uri);
+                    }
+                });
+            }
+        });
+    }
+
+    _hasRecordVideoPermission() {
+        if (Platform.OS === 'ios') {
+            return Promise.resolve(true);
+        } else {
+            PermissionsAndroid.requestMultiple([PermissionsAndroid.PERMISSIONS.CAMERA,PermissionsAndroid.PERMISSIONS.RECORD_AUDIO]).then((result) => {
+                return (result === 'granted' ? true : false);
+            });
         }
     }
 
