@@ -128,18 +128,13 @@ export default class Splash extends React.Component {
         //this.showOnboardingScreen();
     }
 
-    showMainScreen = () => {
-        Actions.lightbox({ type: ActionConst.REPLACE });
+    showMainScreen = (moveToOnboarding = false) => {
+        Actions.main({ type: ActionConst.REPLACE, moveToOnboarding: moveToOnboarding });
         return;
     }
 
     showOnboardingScreen = () => {
-        this.showMainScreen();
-        SystemBot.get(SystemBot.onboardingBotManifestName)
-            .then((onboardingBot) => {
-                //Actions.lightbox({ type: ActionConst.REPLACE, duration: 0 });
-                Actions.onboarding({ bot: onboardingBot});
-            })
+        this.showMainScreen(true);
         return;
     }
 

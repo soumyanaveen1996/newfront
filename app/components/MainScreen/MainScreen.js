@@ -93,6 +93,9 @@ export default class MainScreen extends React.Component {
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+        if (this.props.moveToOnboarding) {
+            this.openOnboaringBot();
+        }
     }
 
     handleBackButtonClick() {
@@ -181,12 +184,16 @@ export default class MainScreen extends React.Component {
         Actions.botFilter();
     }
 
-    openConfigure() {
-        this.floatingButton.reset(true);
+    openOnboaringBot() {
         SystemBot.get(SystemBot.onboardingBotManifestName)
             .then((onboardingBot) => {
                 Actions.onboarding({ bot: onboardingBot, onBack: this.onBack.bind(this) });
             });
+    }
+
+    openConfigure() {
+        this.floatingButton.reset(true);
+        this.openOnboaringBot();
     }
 
     renderFloatingButton() {
