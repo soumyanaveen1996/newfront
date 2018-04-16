@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, SectionList, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
+import {View, SafeAreaView, SectionList, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -209,10 +209,10 @@ export default class ContactsPicker extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 {this.renderSearchBar()}
                 {this.renderContactsList()}
-            </View>
+            </SafeAreaView>
         );
     }
 }
