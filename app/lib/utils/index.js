@@ -125,8 +125,9 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
         // Download if not already downloaded
         if (!exists) {
             console.log('Utils::downloadFileAsync::downloading ' + fileName + ' from ', uri);
-            await AssetFetcher.downloadFile(decodeURI(filePath), uri, headers, true);
+            await AssetFetcher.downloadFile(decodeURI(filePath), uri, headers, true, false);
         }
+        console.log('File downloaded');
         return {
             uri: filePath,
             headers: headers

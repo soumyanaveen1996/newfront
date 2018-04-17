@@ -547,7 +547,9 @@ export default class ChatBotScreen extends React.Component {
                 return;
             }
             if (this.firstUnreadIndex !== -1){
-                this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+                if (this.chatList) {
+                    this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+                }
                 this.firstUnreadIndex = -1;
             } else {
                 if (this.chatList) {

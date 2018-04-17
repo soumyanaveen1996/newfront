@@ -14,6 +14,11 @@ const stylesheet = StyleSheet.create({
     button: {
         marginRight: 10,
     },
+    loadingIndicator: {
+        width: 30,
+        height: 30,
+        marginRight: 10,
+    },
     progress: {
         height: Config.CIRCLE_SIZE,
         flex: 1,

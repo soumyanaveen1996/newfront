@@ -12,7 +12,7 @@ class AssetFetcher {
 
     }
 
-    static async getFile(filename, encoding) {
+    static async getFile(filename, encoding, forceEncoding = true) {
         let fileExists = await AssetFetcher.existsOnDevice(filename);
 
         if (fileExists) {
@@ -53,7 +53,7 @@ class AssetFetcher {
     }
 
 
-    static async downloadFile(filepath, url, headers, background) {
+    static async downloadFile(filepath, url, headers, background, readFile = true) {
         try {
             console.log(`AssetFetcher::Downloading file via RNFS: ${filepath} from ${url}`);
 
@@ -76,8 +76,11 @@ class AssetFetcher {
               */
             let downloadResult = await rnfsJob.promise;
             if (downloadResult.statusCode === 200) {
-                const fileData = await AssetFetcher.getFile(filepath);
-                return fileData;
+                if (readFile) {
+                    const fileData = await AssetFetcher.getFile(filepath);
+                    return fileData;
+                }
+                return;
             } else {
                 throw new Error(`Unable to fetch URL : ${url}`);
             }
