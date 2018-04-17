@@ -404,13 +404,15 @@ export default class ChatBotScreen extends React.Component {
         if (shouldWait) {
             let msg = new Message({addedByBot: true});
             msg.waitMessage();
-            this.appendMessageToChat(msg, true);
+            this.queueMessage(msg);
         } else {
+            console.log('Stopping waiting');
             this.stopWaiting();
         }
     }
 
     stopWaiting = () => {
+        this.messageQueue = _.filter(this.messageQueue, (message) => message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         let messages = _.filter(this.state.messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         this.updateMessages(messages);
     }
@@ -479,10 +481,8 @@ export default class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.persistMessage(message)
-            .then(() => {
-                this.queueMessage(message);
-            })
+        this.queueMessage(message);
+        this.persistMessage(message);
         // Has to be Immutable for react
     }
 
@@ -600,6 +600,7 @@ export default class ChatBotScreen extends React.Component {
     onFormDone = (formItems, formMessage) => {
         formMessage.setCompleted(true);
         formMessage.formMessage(formItems);
+        formMessage.setRead(true);
         this.persistMessage(formMessage)
             .then(() => {
                 this.replaceUpdatedMessage(formMessage);

@@ -67,6 +67,7 @@ export default class ChatMessage extends React.Component {
         }
         MessageHandler.markBotMessageAsRead(message.getBotKey(), message.getMessageId())
             .then((success) => {
+                console.log('Marking message as read : ', success);
                 if (this.mounted) {
                     this.setState({ read: success });
                 }
