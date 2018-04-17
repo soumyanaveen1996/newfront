@@ -525,12 +525,14 @@ export default class ChatBotScreen extends React.Component {
     onSliderOpen() {
         // Comparing the chat list height with total scroll height to decide if to
         // scroll to the end.
+        this.scrollToBottomIfNeeded();
+        /*
         console.log('On Slider open : ', this.chatListHeight, this.scrollHeight);
         if (this.chatListHeight < this.scrollHeight) {
             setTimeout(() => {
-                this.scrollToBottomIfNeeded();
+
             }, 1);
-        }
+        }*/
     }
 
     onScrollToIndexFailed() {
@@ -539,11 +541,12 @@ export default class ChatBotScreen extends React.Component {
 
     checkForScrolling() {
         setTimeout(() => {
-            if (this.initialScrollDone) {
+            if (!this.initialScrollDone) {
                 return;
             }
             if (this.firstUnreadIndex !== -1){
                 this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+                this.firstUnreadIndex = -1;
             } else {
                 this.chatList.scrollToEnd({ animated: true })
             }
@@ -601,7 +604,12 @@ export default class ChatBotScreen extends React.Component {
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
-            this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, callback);
+            this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, () => {
+                //this.scrollToBottomIfNeeded();
+                if (callback) {
+                    callback();
+                }
+            });
         }
     }
 
@@ -614,6 +622,7 @@ export default class ChatBotScreen extends React.Component {
                     let msgs = this.addMessage(message);
                     this.updateMessages(msgs, (err, res) => {
                         if (!err) {
+                            //this.scrollToBottomIfNeeded();
                             resolve(res);
                         }
                     });
@@ -1025,7 +1034,7 @@ export default class ChatBotScreen extends React.Component {
         return (
             <SafeAreaView style={chatStyles.safeArea}>
                 <KeyboardAvoidingView style={chatStyles.container}
-                    behavior={(Platform.OS === 'ios') ? "padding": null}
+                    behavior={(Platform.OS === 'ios') ? 'padding': null}
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
                     <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}
