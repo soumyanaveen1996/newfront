@@ -536,7 +536,9 @@ export default class ChatBotScreen extends React.Component {
     }
 
     onScrollToIndexFailed() {
-        this.chatList.scrollToEnd({ animated: true });
+        if (this.chatList) {
+            this.chatList.scrollToEnd({ animated: true });
+        }
     }
 
     checkForScrolling() {
@@ -548,7 +550,9 @@ export default class ChatBotScreen extends React.Component {
                 this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
                 this.firstUnreadIndex = -1;
             } else {
-                this.chatList.scrollToEnd({ animated: true })
+                if (this.chatList) {
+                    this.chatList.scrollToEnd({ animated: true })
+                }
             }
             this.initialScrollDone = true;
         }, 300);
@@ -556,7 +560,9 @@ export default class ChatBotScreen extends React.Component {
 
     scrollToBottomIfNeeded() {
         if (this.chatList) {
-            this.chatList.scrollToEnd({ animated: true });
+            if (this.chatList) {
+                this.chatList.scrollToEnd({ animated: true });
+            }
             this.initialScrollDone = true;
         }
     }
