@@ -51,18 +51,121 @@ class FormTextInput extends React.Component {
         }
     }
 
+
+
     render() {
         const { formData, editable } = this.props;
         return <TextInput
             numberOfLines={this.props.numberOfLines}
             editable={editable}
             onChangeText={this.onChangeText.bind(this)}
+            onBlur={this.props.onBlur}
             style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
             placeholder={formData.title}
             defaultValue={this.value}
             containerStyle={Styles.noBorder}
             secureTextEntry={this.props.secureTextEntry}
+            keyboardType={this.props.keyboardType || 'default'}
+            autoCapitalize={this.props.autoCapitalize || 'none'}
         />;
+    }
+}
+
+
+class RetryFormTextInput extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { };
+    }
+
+    onPasswordChange(password) {
+        this.password = password;
+        if (this.password && this.password.length > 0) {
+            this.setState({
+                passwordError: false
+            })
+        }
+        this.checkPasswordAndRetrymatch();
+    }
+
+    checkPasswordAndRetrymatch() {
+        if (this.retryPassword && this.password !== this.retryPassword) {
+            this.setState({
+                retryPasswordError: true
+            })
+        }
+    }
+
+    onPasswordBlur() {
+        if (!this.password) {
+            this.setState({
+                passwordError: true
+            })
+        }
+    }
+
+    onRetryPasswordChange(retryPassword) {
+        if (this.password && this.password !== retryPassword) {
+            this.setState({
+                retryPasswordError: true
+            })
+        } else {
+            this.setState({
+                retryPasswordError: false
+            })
+            this.props.onPasswordMatch(retryPassword);
+        }
+    }
+
+    onRetryPasswordBlur() {
+        this.checkPasswordAndRetrymatch();
+    }
+
+    renderError(error, message) {
+        if (error) {
+            return (
+                <View style={Styles.titleContainer}>
+                    <Text style={Styles.formErrorLabel}>{message}</Text>
+                </View>
+            )
+        }
+    }
+
+    render() {
+        const { formData } = this.props;
+        return (
+            <View>
+                <View style={this.state.passwordError ? Styles.formTwoLineInputContainer : Styles.formInputContainer}>
+                    <View style={Styles.titleContainer}>
+                        <Text style={Styles.formInputLabel}>{formData.title ? formData.title.toLocaleUpperCase() : ''}</Text>
+                    </View>
+                    {this.renderError(this.state.passwordError, I18n.t('Password_error'))}
+                    <FormTextInput
+                        editable={this.props.editable}
+                        formData={formData}
+                        onChangeText={this.onPasswordChange.bind(this)}
+                        onBlur={this.onPasswordBlur.bind(this)}
+                        containerStyle={Styles.noBorder}
+                        secureTextEntry={true}
+                    />
+                </View>
+                <View style={this.state.retryPasswordError ? Styles.formTwoLineInputContainer : Styles.formInputContainer}>
+                    <View style={Styles.titleContainer}>
+                        <Text style={Styles.formInputLabel}>{formData.title ? 'RETRY ' + formData.title.toLocaleUpperCase() : ''}</Text>
+                    </View>
+                    {this.renderError(this.state.retryPasswordError, I18n.t('Retry_Password_error'))}
+                    <FormTextInput
+                        editable={this.props.editable}
+                        formData={formData}
+                        onChangeText={this.onRetryPasswordChange.bind(this)}
+                        onBlur={this.onRetryPasswordBlur.bind(this)}
+                        containerStyle={Styles.noBorder}
+                        secureTextEntry={true}
+                    />
+                </View>
+            </View>
+        )
     }
 }
 
@@ -178,7 +281,11 @@ export default class FormPopup extends React.Component {
     }
 
     onChangeText(i, text) {
-        this.formValuesArray[i] = text
+        this.formValuesArray[i] = text;
+    }
+
+    onPasswordMatch(index, password) {
+        this.formValuesArray[index] = password;
     }
 
     onCheckBoxValueChange(i, value) {
@@ -190,7 +297,7 @@ export default class FormPopup extends React.Component {
         var formData = this.props.formData
 
         for (var i = 0; i < formData.length; i++) {
-            if (formData[i].type === 'text') {
+            if (formData[i].type === 'title') {
                 buttons.push(
                     <View style={Styles.formTitleContainer} key={i}>
                         <Text style={Styles.formTitle}>{formData[i].title}</Text>
@@ -199,23 +306,35 @@ export default class FormPopup extends React.Component {
                         </TouchableOpacity>
                     </View>
                 )
-            } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field') {
-                this.formValuesArray[i] = formData[i].value;
+            } else if (formData[i].type === 'text') {
                 buttons.push(
-                    <View style={Styles.formInputContainer} key={i}>
-                        <View style={Styles.titleContainer}>
-                            <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
-                            <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
-                        </View>
-                        <FormTextInput
-                            editable={this.props.editable}
-                            formData={formData[i]}
-                            onChangeText={this.onChangeText.bind(this, i)}
-                            containerStyle={Styles.noBorder}
-                            secureTextEntry={formData[i].type === 'password_field'}
-                        />
+                    <View style={Styles.formTitleContainer} key={i}>
+                        <Text style={Styles.formTitle}>{formData[i].text}</Text>
                     </View>
                 )
+            } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {
+                this.formValuesArray[i] = formData[i].value;
+                if (formData[i].retry === true) {
+                    buttons.push(<RetryFormTextInput formData={formData[i]} key={i} keyIndex={i} onPasswordMatch={this.onPasswordMatch.bind(this, i)} />);
+                } else {
+                    this.formValuesArray[i] = formData[i].value;
+                    buttons.push(
+                        <View style={Styles.formInputContainer} key={i}>
+                            <View style={Styles.titleContainer}>
+                                <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                                <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
+                            </View>
+                            <FormTextInput
+                                editable={this.props.editable}
+                                formData={formData[i]}
+                                onChangeText={this.onChangeText.bind(this, i)}
+                                containerStyle={Styles.noBorder}
+                                secureTextEntry={formData[i].type === 'password_field'}
+                                keyboardType={formData[i].type === 'email_field' ? 'email-address' : 'default'}
+                            />
+                        </View>
+                    )
+                }
             } else if (formData[i].type === 'text_area') {
                 this.formValuesArray[i] = formData[i].value;
                 buttons.push(

@@ -87,7 +87,9 @@ I18n.translations = {
         'Satellite_Message': 'You are in a network mode optimised for satellite where messages appear near real time.',
         'Gsm_Message': 'You are in Cellullar network mode prepared for real time communications on land',
         'Auto_Message': 'You are in Automatic network mode which decides optimal strategy based on Satellite or Cellular connection',
-        'Ok': 'Ok'
+        'Ok': 'Ok',
+        'Password_error': 'Please enter a valid password value',
+        'Retry_Password_error': 'Password and retry password should match',
     },
 }
 

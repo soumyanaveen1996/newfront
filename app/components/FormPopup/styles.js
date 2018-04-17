@@ -105,6 +105,20 @@ const Styles = StyleSheet.create({
             paddingHorizontal: 20,
         }
     }),
+    formTwoLineInputContainer:Platform.select({
+        'ios': {
+            marginVertical: 5,
+            height: 70,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        },
+        'android': {
+            marginVertical: 5,
+            height: 84,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        }
+    }),
     titleContainer: {
         flex: 1,
         flexDirection: 'row'
