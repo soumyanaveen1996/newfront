@@ -271,7 +271,7 @@ export default class FormPopup extends React.Component {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
             var eachFormData = formData[i]
-            eachFormData.value = this.formValuesArray[i]
+            eachFormData.value = _.trim(this.formValuesArray[i]);
             formData[i] = eachFormData
         }
         if (this.props.onFormSubmit) {

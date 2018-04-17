@@ -44,7 +44,7 @@ export const SYSTEM_BOT_MANIFEST = {
         }
     },
     'onboarding-bot': {
-        'name': 'Onboarding Bot',
+        'name': 'M',
         'slug': 'onboarding-bot',
         'url': 'botfarm/onboardingBot.js',
         'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/AuthenticationLogo.png',

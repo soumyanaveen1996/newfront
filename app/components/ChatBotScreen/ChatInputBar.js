@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text, NetInfo } from 'react-native';
+import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text, NetInfo, Alert } from 'react-native';
 import { AudioRecorder, AudioUtils } from 'react-native-audio';
 import styles, { chatBarStyle } from './styles';
 import Images from '../../config/images';
@@ -7,6 +7,7 @@ import Icons from '../../config/icons';
 import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
 import Utils from '../../lib/utils';
+import Permissions from 'react-native-permissions';
 
 export default class ChatInputBar extends React.Component {
 
@@ -174,6 +175,8 @@ export default class ChatInputBar extends React.Component {
     }
 
     _requestRecordPermission() {
+        return Permissions.request('microphone');
+        /*
         if (Platform.OS === 'ios') {
             return Promise.resolve(true);
         } else {
@@ -185,33 +188,47 @@ export default class ChatInputBar extends React.Component {
             return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale).then((result) => {
                 return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
             });
-        }
+        } */
     }
 
     _hasRecordPermission() {
-        if (Platform.OS === 'ios') {
-            return Promise.resolve(true);
-        } else {
-            return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO).then((result) => {
-                return (result === true);
-            });
-        }
+        return Permissions.check('microphone')
     }
 
     _startRecording() {
         if (this.state.chatState === ChatInputBarState.READY_FOR_SPEECH) {
-            this._hasRecordPermission().then((status) => {
-                if (!status) {
-                    this._requestRecordPermission().then((granted) => {
-                        if (granted) {
+            this._hasRecordPermission().then((permission) => {
+                console.log('Permission : ', permission);
+                //AudioRecorder.requestAuthorization();
+
+                if (permission === 'undetermined') {
+                    this._requestRecordPermission().then((rp) => {
+                        if (rp === 'authorized') {
                             this._recordAudio();
                         }
                     });
-                } else {
+                } else if (permission === 'authorized') {
                     this._recordAudio();
+                } else {
+                    this._alertForRecordingPermission();
                 }
             });
         }
+    }
+
+    _alertForRecordingPermission() {
+        Alert.alert(
+            undefined,
+            'We need permission so you can record your voice',
+            [
+                {
+                    text: 'cancel',
+                    onPress: () => console.log('Permission denied'),
+                    style: 'cancel',
+                },
+                { text: 'Open Settings', onPress: Permissions.openSettings },
+            ],
+        )
     }
 
     rightButton() {

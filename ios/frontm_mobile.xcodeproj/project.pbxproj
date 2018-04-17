@@ -17,6 +17,7 @@
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
+		0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
 		0485F1CA20769A8700D5525E /* RNGoogleSignInBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C520769A8600D5525E /* RNGoogleSignInBridge.m */; };
 		0485F1CB20769A8700D5525E /* RNGoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C620769A8700D5525E /* RNGoogleSignIn.swift */; };
 		0485F1CC20769A8700D5525E /* RNGoogleSignInEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C720769A8700D5525E /* RNGoogleSignInEvents.swift */; };
@@ -315,6 +316,13 @@
 			remoteGlobalIDString = 5D72D2E81C16249000E22EC1;
 			remoteInfo = RCTImageResizer;
 		};
+		04848301208616E00051995F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
 		049D54551FFCE84F00A516BE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
@@ -503,6 +511,7 @@
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
+		048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		0485F18920769A8500D5525E /* frontm_mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "frontm_mobile-Bridging-Header.h"; sourceTree = "<group>"; };
 		0485F1C520769A8600D5525E /* RNGoogleSignInBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInBridge.m; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignInBridge.m"; sourceTree = "<group>"; };
 		0485F1C620769A8700D5525E /* RNGoogleSignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNGoogleSignIn.swift; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignIn/RNGoogleSignIn.swift"; sourceTree = "<group>"; };
@@ -582,6 +591,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */,
 				045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */,
 				040AA78920034A790057C959 /* libRCTPushNotification.a in Frameworks */,
 				8C52E5FF704F4F9F861A5DC6 /* SystemConfiguration.framework in Frameworks */,
@@ -860,6 +870,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		048482D2208616E00051995F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04848302208616E00051995F /* libReactNativePermissions.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,6 +957,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */,
 				0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */,
 				040AA74820034A630057C959 /* RCTPushNotification.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1101,7 +1120,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
-						LastSwiftMigration = 0930;
+						LastSwiftMigration = 930;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1204,6 +1223,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 048482D2208616E00051995F /* Products */;
+					ProjectRef = 048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5AA01FFCF9A50071B62D /* Products */;
@@ -1501,6 +1524,13 @@
 			fileType = archive.ar;
 			path = libRCTImageResizer.a;
 			remoteRef = 0456339C205FF18C00F1B290 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		04848302208616E00051995F /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = 04848301208616E00051995F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		049D54561FFCE84F00A516BE /* libRCTBlob-tvOS.a */ = {
