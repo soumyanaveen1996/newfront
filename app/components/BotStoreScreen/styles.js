@@ -43,6 +43,7 @@ export default StyleSheet.create({
         position: 'relative',
         borderBottomColor: GlobalColors.accent,
         paddingLeft: 0,
+        paddingBottom: 0,
     },
     headerInnerContainerStyles: {
         marginTop:30,
