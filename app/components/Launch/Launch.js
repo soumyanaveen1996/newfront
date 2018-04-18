@@ -12,13 +12,12 @@ import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
-import SystemBot from '../../lib/bot/SystemBot';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 
-const VERSION = 10; // Corresponding to 2.5.0 build 4. Update this number every time we update initial_bots
+const VERSION = 12; // Corresponding to 2.6.0 build 7. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -32,9 +31,8 @@ export default class Splash extends React.Component {
 
         // Override logging in prod builds
 
-        /*
         let truConsole = global.console;
-        global.console = overrideConsole(truConsole); */
+        global.console = overrideConsole(truConsole);
 
         console.log('Overrode console object. Now starting initialization');
 
@@ -48,8 +46,8 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            //await BotUtils.copyIntialBots(forceUpdate);
-            //await DeviceStorage.save(VERSION_KEY, VERSION);
+            await BotUtils.copyIntialBots(forceUpdate);
+            await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
         // Chain all setup stuff

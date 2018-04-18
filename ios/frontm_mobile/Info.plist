@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>7</string>
 	<key>FacebookAppID</key>
 	<string>150576769074284</string>
 	<key>FacebookDisplayName</key>
@@ -86,6 +86,16 @@
 	<string>Frontm requires Photo Library access</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Frontm requires Photo Library access</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Frontm requires Calendar access</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Frontm requires Bluetooth access</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Frontm requires Apple Music access</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Frontm requires Motion access</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Frontm requires Speech recognition access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
