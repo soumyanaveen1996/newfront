@@ -2,6 +2,7 @@ var ImagePicker = require('react-native-image-picker');
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import I18n from '../../config/i18n/i18n';
+import { Platform } from 'react-native';
 
 export const DefaultCameraOptions = {
     allowsEditing: false,
@@ -50,10 +51,13 @@ export default class Media {
     // Returns a promise that resolves to {cancelled: false, uri: 'uri' } on success.
     // On cancel, returns a promise that resolves to {cancelled: true}
     static recordVideo = () => new Promise((resolve, reject) => {
+        let filePath = '';
+        if (Platform.OS === 'ios')
+            filePath = filePath + 'file://';
         const onVideoCapture = (data) => {
             resolve({
                 cancelled: false,
-                uri: 'file://' + data.path,
+                uri: filePath + data.path,
             });
         };
 
