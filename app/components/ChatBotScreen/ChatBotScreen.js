@@ -26,6 +26,7 @@ import Config, { BOT_LOAD_RETRIES } from './config';
 import Constants from '../../config/constants';
 import Utils from '../../lib/utils';
 import moment from 'moment';
+import Permissions from 'react-native-permissions';
 
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
 
@@ -808,28 +809,73 @@ export default class ChatBotScreen extends React.Component {
         this.sendVideo(videoFileURL);
     }
 
-    async takeVideo() {
-        Keyboard.dismiss();
-        this._hasRecordVideoPermission().then((status) => {
-            if(status){
-                //const result = await Media.recordVideo();
-                Media.recordVideo().then( (result) => {
-                    if (!result.cancelled) {
-                        this.onVideoCaptured(result.uri);
-                    }
-                });
+    recordVideo() {
+        Media.recordVideo().then( (result) => {
+            if (!result.cancelled) {
+                this.onVideoCaptured(result.uri);
             }
         });
     }
 
-    _hasRecordVideoPermission() {
-        if (Platform.OS === 'ios') {
-            return Promise.resolve(true);
-        } else {
-            PermissionsAndroid.requestMultiple([PermissionsAndroid.PERMISSIONS.CAMERA,PermissionsAndroid.PERMISSIONS.RECORD_AUDIO]).then((result) => {
-                return (result === 'granted' ? true : false);
+    requestCameraPermissions(callback) {
+        return Permissions.request('camera')
+            .then((response) => {
+                if (response === 'authorized') {
+                    callback();
+                }
             });
+    }
+
+    requestAudioPermissions(callback) {
+        return Permissions.request('microphone')
+            .then((response) => {
+                if (response === 'authorized') {
+                    callback();
+                }
+            });
+    }
+
+    alertForRecordingPermission() {
+        Alert.alert(
+            undefined,
+            'We need audi and camera permission so we can record your video.',
+            [
+                {
+                    text: 'cancel',
+                    onPress: () => console.log('Permission denied'),
+                    style: 'cancel',
+                },
+                { text: 'Open Settings', onPress: Permissions.openSettings },
+            ],
+        )
+    }
+
+    async takeVideo() {
+        Keyboard.dismiss();
+        const response = await this._hasRecordVideoPermission();
+        const recordCallback = () => {
+            this.recordVideo();
         }
+
+        const requestAudioPermissionCallback = () => {
+            this.requestAudioPermissions(recordCallback);
+        }
+        if (response.camera === 'authorized' && response.microphone === 'authorized') {
+            this.recordVideo();
+        } else if (response.camera !== 'undetermined' && response.camera !== 'authorized' ||
+            response.microphone !== 'undetermined'  && response.microphone !== 'authorized') {
+            this.alertForRecordingPermission();
+        } else {
+            if (response.camera === 'undetermined') {
+                this.requestVideoPermissions(requestAudioPermissionCallback);
+            } else if (response.microphone === 'undetermined') {
+                requestAudioPermissionCallback();
+            }
+        }
+    }
+
+    _hasRecordVideoPermission() {
+        return Permissions.checkMultiple(['camera', 'microphone']);
     }
 
     async pickImage() {

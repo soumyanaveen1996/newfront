@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, PermissionsAndroid, TouchableOpacity, View, TextInput, Image, Text, NetInfo, Alert } from 'react-native';
+import { Platform, TouchableOpacity, View, TextInput, Image, Text, Alert } from 'react-native';
 import { AudioRecorder, AudioUtils } from 'react-native-audio';
 import styles, { chatBarStyle } from './styles';
 import Images from '../../config/images';
