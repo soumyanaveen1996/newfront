@@ -1,6 +1,6 @@
 const createChannelContactsTable = `
-    CREATE TABLE IF NOT EXISTS channel_contacts ( 
-        id text PRIMARY KEY, 
+    CREATE TABLE IF NOT EXISTS channel_contacts (
+        id text PRIMARY KEY,
         name text,
         email text,
         screenName text,
@@ -10,8 +10,8 @@ const createChannelContactsTable = `
 `;
 
 const insertChannelContact = `
-    INSERT INTO channel_contacts ( 
-        id, 
+    INSERT INTO channel_contacts (
+        id,
         name,
         email,
         screenName,
@@ -22,7 +22,7 @@ const insertChannelContact = `
 
 const deleteChannelContact = `
     DELETE FROM channel_contacts
-    WHERE 
+    WHERE
         id = ?
 `;
 
