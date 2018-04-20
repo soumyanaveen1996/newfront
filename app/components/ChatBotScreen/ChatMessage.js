@@ -120,10 +120,12 @@ export default class ChatMessage extends React.Component {
         const url = message.getMessage();
         let headers = utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
+        console.log('Video URL : ', headers);
         const component = (
             <View style={videoContainerStyle(this.props.alignRight)}>
                 <VideoPlayer
-                    video={{ uri: url, headers: headers }}
+                    video={{ uri: url, headers: headers, type: 'mp4' }}
+                    headers={headers}
                     videoWidth={300}
                     videoHeight={300}
                     autoplay={false}

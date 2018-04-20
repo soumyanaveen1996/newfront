@@ -162,6 +162,12 @@ dependencies {
     compile(project(':react-native-svg')) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
+    compile (project(':react-native-camera')) {
+        exclude group: "com.google.android.gms"
+    }
+    compile ("com.google.android.gms:play-services-vision:15.0.0") {
+        force = true;
+    }
     compile project(':react-native-video')
     compile project(':react-native-vector-icons')
     compile project(':react-native-sound')

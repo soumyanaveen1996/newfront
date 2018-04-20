@@ -231,8 +231,8 @@ class Bot {
             contentType = 'image/png';
             extension = 'png';
         } else if (type === MessageTypeConstants.MESSAGE_TYPE_AUDIO) {
-            contentType = 'audio/x-caf';
-            extension = 'caf';
+            contentType = 'audio/aac';
+            extension = 'aac';
         } else if (type === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
             contentType = 'video/mp4';
             extension = 'mov';

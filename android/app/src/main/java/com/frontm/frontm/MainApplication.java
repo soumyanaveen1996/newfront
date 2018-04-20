@@ -19,7 +19,7 @@ import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import org.reactnative.camera.RNCameraPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
 import org.pgsqlite.SQLitePluginPackage;
@@ -50,14 +50,14 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+              new MainReactPackage(),
             new RNGoogleSignInPackage(),
             new ImageResizerPackage(),
             new FBSDKPackage(mCallbackManager),
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),
             new SvgPackage(),
-            new ReactVideoPackage(),
+              new ReactVideoPackage(),
             new VectorIconsPackage(),
             new RNSoundPackage(),
             new MapsPackage(),
@@ -67,7 +67,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFSPackage(),
             new RNFetchBlobPackage(),
             new ReactNativeContacts(),
-            new RCTCameraPackage(),
+            new RNCameraPackage(),
             new BackgroundTimerPackage(),
             new ReactNativeAudioPackage(),
             new SQLitePluginPackage()

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Platform } from 'react-native';
 import styles from './styles';
 import Icons from '../../config/icons';
 import Config from './config.js';
@@ -55,21 +55,22 @@ export default class AudioPlayer extends React.Component {
         const audioSource = await utils.downloadFileAsync(uri, headers, Constants.AUDIO_DIRECTORY);
 
         var audioPath = audioSource.uri;
+        console.log(' Audio player : ', audioPath);
         if (_.startsWith(audioPath, 'file://')) {
             audioPath = audioPath.substr(6);
         }
 
-
         const callback = (error, sound) => {
+            console.log('Error in loading audio file : ', error);
             if (!error) {
                 this.setState({
                     audio: sound,
                 });
             } else {
-                //this.setState({ playerState: AudioPlayerStates.STOPPED });
+                this.setState({ playerState: AudioPlayerStates.STOPPED });
             }
         };
-
+        console.log(' Audio player : ', audioPath);
         const sound = new Sound(audioPath, '', (error) => callback(error, sound));
     }
 

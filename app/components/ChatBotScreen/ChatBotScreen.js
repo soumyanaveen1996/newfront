@@ -835,10 +835,19 @@ export default class ChatBotScreen extends React.Component {
             });
     }
 
+    requestStoragePermissions(callback) {
+        return Permissions.request('storage')
+            .then((response) => {
+                if (response === 'authorized') {
+                    callback();
+                }
+            });
+    }
+
     alertForRecordingPermission() {
         Alert.alert(
             undefined,
-            'We need audi and camera permission so we can record your video.',
+            'We need microphone, camera and storage permission so we can record your video.',
             [
                 {
                     text: 'cancel',
@@ -853,29 +862,35 @@ export default class ChatBotScreen extends React.Component {
     async takeVideo() {
         Keyboard.dismiss();
         const response = await this._hasRecordVideoPermission();
-        const recordCallback = () => {
+        const recordVideoCallback = () => {
             this.recordVideo();
         }
 
-        const requestAudioPermissionCallback = () => {
-            this.requestAudioPermissions(recordCallback);
+        const requestStoragePermissionsCallback = () => {
+            this.requestStoragePermissions(recordVideoCallback);
         }
-        if (response.camera === 'authorized' && response.microphone === 'authorized') {
+
+        const requestAudioPermissionCallback = () => {
+            this.requestAudioPermissions(requestStoragePermissionsCallback);
+        }
+        if (response.camera === 'authorized' && response.microphone === 'authorized' && response.storage === 'authorized') {
             this.recordVideo();
-        } else if (response.camera !== 'undetermined' && response.camera !== 'authorized' ||
-            response.microphone !== 'undetermined'  && response.microphone !== 'authorized') {
+        } else if (response.camera === 'denied' || response.camera === 'denied' ||
+            response.storage === 'denied') {
             this.alertForRecordingPermission();
         } else {
             if (response.camera === 'undetermined') {
-                this.requestVideoPermissions(requestAudioPermissionCallback);
+                this.requestCameraPermissions(requestAudioPermissionCallback);
             } else if (response.microphone === 'undetermined') {
-                requestAudioPermissionCallback();
+                this.requestAudioPermissions(requestStoragePermissionsCallback);
+            } else if (response.storate === 'undetermined') {
+                this.requestStoragePermissions(recordVideoCallback);
             }
         }
     }
 
     _hasRecordVideoPermission() {
-        return Permissions.checkMultiple(['camera', 'microphone']);
+        return Permissions.checkMultiple(['camera', 'microphone', 'storage']);
     }
 
     async pickImage() {

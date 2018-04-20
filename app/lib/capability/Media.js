@@ -52,8 +52,9 @@ export default class Media {
     // On cancel, returns a promise that resolves to {cancelled: true}
     static recordVideo = () => new Promise((resolve, reject) => {
         let filePath = '';
-        if (Platform.OS === 'ios')
+        if (Platform.OS === 'ios') {
             filePath = filePath + 'file://';
+        }
         const onVideoCapture = (data) => {
             resolve({
                 cancelled: false,

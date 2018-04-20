@@ -47,8 +47,8 @@ export default class Resource {
             contentType = 'image/jpeg';
             extension = 'jpg';
         } else if (resourceType === ResourceTypes.Audio) {
-            contentType = 'audio/x-caf';
-            extension = 'caf';
+            contentType = 'audio/aac';
+            extension = 'aac';
         } else if (resourceType === ResourceTypes.Video) {
             contentType = 'video/mp4';
             extension = 'mov';

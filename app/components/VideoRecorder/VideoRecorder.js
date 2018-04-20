@@ -126,6 +126,7 @@ export default class VideoRecorder extends React.Component {
     }
 
     useVideo = () => {
+        console.log('On Video captured : ', this.video);
         if (this.video && this.props.onVideoCaptured) {
             this.props.onVideoCaptured(this.video);
         } else if (this.props.onCancel) {
@@ -135,11 +136,13 @@ export default class VideoRecorder extends React.Component {
     }
 
     stopCaptureVideo = () => {
+        console.log('Stop Capturing video');
         this.setState({ currentState: VideoRecorderStates.recorded });
         this.camera.stopCapture();
     }
 
     captureVideo = () => {
+        console.log('Capturing video');
         const options = { audio: true };
         this.setState({ currentState: VideoRecorderStates.recording });
         this.camera.capture(options)

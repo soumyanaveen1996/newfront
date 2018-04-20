@@ -119,6 +119,7 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
     try {
         const fileName = uri.split('/').pop();
         const filePath = toDirectory + '/' + fileName;
+        RNFS.mkdir(toDirectory);
         const exists = await AssetFetcher.existsOnDevice(decodeURI(filePath));
         console.log('Utils::downloadFileAsync::fileName ' + fileName + ' exists = ', exists);
 

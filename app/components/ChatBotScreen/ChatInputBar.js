@@ -127,18 +127,12 @@ export default class ChatInputBar extends React.Component {
         };
 
         // Options borrowed from Expo
-        const platformOptions = Platform.select({
-            android: {
-                extension: '.3gp',
-                OutputFormat: 'three_gpp',
-                AudioEncoding: 'amr_nb'
-            },
-
-            ios: {
-                extension: '.caf',
-                AudioEncoding: 'ima4'
-            }
-        });
+        const platformOptions = {
+            extension: '.aac',
+            AudioEncoding: 'aac',
+            Channels: 1,
+            AudioQuality: 'Low',
+        }
         const options = {...commonOptions, ...platformOptions};
         // Generate file name using current time
         // Path will be like: /data/user/0/org.frontm.app/files/FrontM_1514101359570.3gp in Android
