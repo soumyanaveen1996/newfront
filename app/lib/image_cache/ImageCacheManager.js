@@ -63,10 +63,7 @@ export default class ImageCacheManager {
         let path = this.getPath(uri);
         let exists = await RNFetchBlob.fs.exists(path);
         if (exists) {
-            if (Platform.OS === 'android') {
-                return 'file://' + path;
-            }
-            return path;
+            return Platform.OS === 'android' ? 'file://' + path : path
         } else {
             return;
         }
@@ -192,6 +189,7 @@ export default class ImageCacheManager {
                 cache.path = path;
                 this.notifyImageDownloaded(uri);
             }).catch(() => {
+                console.log('ImageCacheManager Error downloading file : ');
                 cache.downloading = false;
                 // Removing the file in case parts were downloaded
                 RNFetchBlob.fs.unlink(path);
@@ -207,6 +205,7 @@ export default class ImageCacheManager {
      */
     get(uri) {
         const cache = this.cache[uri];
+        console.log('Image Cache manager : In get ');
         if (cache.path) {
             RNFetchBlob.fs.exists(cache.path).then((exists) => {
                 if (exists) {
@@ -224,7 +223,8 @@ export default class ImageCacheManager {
         const handlers = this.cache[uri].handlers;
         handlers.forEach(handler => {
             if (handler[handlerFunc]) {
-                handler[handlerFunc](this.cache[uri].path);
+                const path = this.cache[uri].path;
+                handler[handlerFunc](Platform.OS === 'android' ? 'file://' +  path : path);
             }
         });
     }

@@ -4,7 +4,8 @@ import EasyListView from 'react-native-easy-listview-gridview'
 import styles from './styles'
 import images from '../../../config/images'
 import {scrollViewConfig } from './config'
-import { Actions } from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux';
+import CachedImage from '../../CachedImage'
 
 export default class CategoriesTab extends React.Component {
     constructor(props){
@@ -19,7 +20,7 @@ export default class CategoriesTab extends React.Component {
         if (categorysData.logoSlug != null) {
             categoryImage = <Image source={images[categorysData.logoSlug]} style={styles.iconStyle}/>
         } else {
-            categoryImage = <Image source={{url : categorysData.logoUrl}} style={styles.iconStyle}/>
+            categoryImage = <CachedImage source={{uri : categorysData.logoUrl}} style={styles.iconStyle}/>
         }
         return categoryImage;
     }

@@ -4,7 +4,8 @@ import EasyListView from 'react-native-easy-listview-gridview'
 import styles from './styles'
 import images from '../../../config/images'
 import I18n from '../../../config/i18n/i18n';
-import { Actions } from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux';
+import CachedImage from '../../CachedImage';
 const NUMBER_COLUMNS = 2
 
 export default class DeveloperTab extends React.Component {
@@ -22,7 +23,7 @@ export default class DeveloperTab extends React.Component {
         if (botData.name === I18n.t('Authenticate')) { botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>}
         else {
             if (botData.logoSlug != null) {botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>}
-            else {botImage = <Image source={{url : botData.logoUrl}} style={styles.iconStyle}/>}
+            else {botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>}
         }
         return (
             botImage
