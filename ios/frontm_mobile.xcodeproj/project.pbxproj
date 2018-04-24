@@ -24,6 +24,7 @@
 		0485F1CD20769A8700D5525E /* RNGoogleSignInEventsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0485F1C820769A8700D5525E /* RNGoogleSignInEventsBridge.m */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
 		0486BED22008CC5F00DF553B /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
+		0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F4A9F2208A234300662D34 /* libRNCamera.a */; };
 		0CA770390734B837128F930A /* libPods-frontm_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */; };
 		12E0C1ECACE542C9ADE38BEB /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -590,6 +591,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */,
 				0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */,
 				045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */,
 				040AA78920034A790057C959 /* libRCTPushNotification.a in Frameworks */,
