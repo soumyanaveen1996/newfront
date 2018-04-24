@@ -55,7 +55,6 @@
 		9171D3BD719440D79ADFF370 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADB3CA7D1A6496C8CECFD75 /* libRNSound.a */; };
 		94752D561123481FA34CD30C /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7697C3983D264D1F814461AA /* libRCTContacts.a */; };
 		9E1E2C7E649E4F9CA56AE820 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 429900950192486080C1A87E /* libRNSVG.a */; };
-		9E371781D9444726864D8984 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF4196B376234F78A314980A /* libRCTCamera.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B714A0962E0C4733ACD83FA5 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F6339121E18646EEA793795C /* Feather.ttf */; };
 		BE114D8FCBFF46A18A831C57 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEDE13D034C54C3D96894D83 /* Ionicons.ttf */; };
@@ -612,7 +611,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				845CE37A7D624852A026C0E9 /* libRNAudio.a in Frameworks */,
 				12E0C1ECACE542C9ADE38BEB /* libRNBackgroundTimer.a in Frameworks */,
-				9E371781D9444726864D8984 /* libRCTCamera.a in Frameworks */,
 				94752D561123481FA34CD30C /* libRCTContacts.a in Frameworks */,
 				767BF4875569421CA17B31C8 /* libRNFetchBlob.a in Frameworks */,
 				89F3DC9224B142B4BACC9086 /* libRNFS.a in Frameworks */,
