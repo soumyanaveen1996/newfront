@@ -35,6 +35,13 @@ export default class ContactsPicker extends React.Component {
 
     componentDidMount() {
         this.props.navigation.setParams({ handleAddContact: this.handleAddContact.bind(this) });
+        Contact.getAddedContacts()
+            .then((contacts) => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                }
+            });
     }
 
     handleAddContact = () => {
@@ -189,13 +196,6 @@ export default class ContactsPicker extends React.Component {
     }
 
     renderContactsList() {
-        Contact.getAddedContacts()
-            .then((contacts) => {
-                if (contacts.length === 0) {
-                    //If no contacts are added then go directly to contacts bot
-                    this.handleAddContact();
-                }
-            });
         const sectionTitles = _.map(this.state.contactsData, (section) => section.title)
         return (
             <KeyboardAvoidingView
