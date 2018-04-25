@@ -812,6 +812,7 @@ export default class ChatBotScreen extends React.Component {
     recordVideo() {
         Media.recordVideo().then( (result) => {
             if (!result.cancelled) {
+                console.log('Recorded video : ', result);
                 this.onVideoCaptured(result.uri);
             }
         });

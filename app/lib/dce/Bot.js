@@ -235,7 +235,7 @@ class Bot {
             extension = 'aac';
         } else if (type === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
             contentType = 'video/mp4';
-            extension = 'mov';
+            extension = 'mp4';
         }
         // Get binary data as uploading to S3 expects that today
         // TODO: Can we switch this to RNFS to upload (with headers etc)

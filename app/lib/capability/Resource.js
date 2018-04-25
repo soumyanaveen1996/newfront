@@ -51,7 +51,7 @@ export default class Resource {
             extension = 'aac';
         } else if (resourceType === ResourceTypes.Video) {
             contentType = 'video/mp4';
-            extension = 'mov';
+            extension = 'mp4';
         }
         if (!base64Data) {
             fileUri = decodeURI(fileUri);

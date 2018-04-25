@@ -22,6 +22,7 @@ import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
 import TapToLoadImage from './TapToLoadImage';
 import VideoPlayer from 'react-native-video-player';
+import Video from 'react-native-video';
 import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';
@@ -120,19 +121,41 @@ export default class ChatMessage extends React.Component {
         const url = message.getMessage();
         let headers = utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
-        console.log('Video URL : ', headers);
+        console.log('Video URL : ', url, headers);
+
+        // http://techslides.com/demos/sample-videos/small.mp4
         const component = (
             <View style={videoContainerStyle(this.props.alignRight)}>
                 <VideoPlayer
-                    video={{ uri: url, headers: headers, type: 'mp4' }}
+                    video={{ uri: url + '?a=100', headers: headers }}
                     headers={headers}
+                    videoWidth={300}
+                    videoHeight={300}
+                    autoplay={false}
+                    loop={false}
+                    onError={(error) => console.log('AmalVideo: Error in loading file', error)}
+                    onLoad={() => console.log('AmalVideo: File loaded')}
+                    onLoadStart={() => console.log('AmalVideo: File load started')}
+                />
+            </View>
+        );
+
+
+
+        /*
+        const component = (
+            <View style={videoContainerStyle(this.props.alignRight)}>
+                <Video
+                    source={{ uri: url, headers: headers }}
+                    style={{width: 150, height: 150}}
+                    muted={false}
                     videoWidth={300}
                     videoHeight={300}
                     autoplay={false}
                     loop={false}
                 />
             </View>
-        );
+        ); */
 
         return this.wrapBetweenFavAndTalk(message, component);
     }

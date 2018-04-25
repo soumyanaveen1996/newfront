@@ -4945,7 +4945,7 @@ react-native-video-player@^0.9.1:
 
 "react-native-video@github:emrah88/react-native-video":
   version "2.0.0"
-  resolved "https://codeload.github.com/emrah88/react-native-video/tar.gz/270fdfb657bb298a2c381aa5ff0e455cb2a95423"
+  resolved "https://codeload.github.com/emrah88/react-native-video/tar.gz/12f93b5463a525562eb1edff9117d257de0220e8"
   dependencies:
     keymirror "0.1.1"
     prop-types "^15.5.10"
