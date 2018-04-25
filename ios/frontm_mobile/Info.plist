@@ -74,6 +74,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Frontm requires Apple Music access</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Frontm requires Bluetooth access</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Frontm requires Calendar access</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Frontm requires camera permission to take pictures</string>
 	<key>NSContactsUsageDescription</key>
@@ -82,18 +88,12 @@
 	<string>Frontm requires location permissions</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Frontm requires microphone for taking pictures and sending voice messages</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Frontm requires Motion access</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Frontm requires Photo Library access</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Frontm requires Photo Library access</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Frontm requires Calendar access</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Frontm requires Bluetooth access</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Frontm requires Apple Music access</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Frontm requires Motion access</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Frontm requires Speech recognition access</string>
 	<key>UIAppFonts</key>
@@ -109,6 +109,11 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>external-accessory</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
