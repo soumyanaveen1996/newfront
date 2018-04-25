@@ -23,7 +23,7 @@ export default class DeveloperTab extends React.Component {
         if (botData.name === I18n.t('Authenticate')) { botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>}
         else {
             if (botData.logoSlug != null) {botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>}
-            else {botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>}
+            else {botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle} loadingStyle={styles.loading}/>}
         }
         return (
             botImage

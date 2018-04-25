@@ -4,6 +4,7 @@ import styles from './styles';
 import Bot from '../../lib/bot/index';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
+import LogoImage from '../LogoImage';
 
 const subtitleNumberOfLines = 2;
 
@@ -89,7 +90,7 @@ export default class BotInstallListItem extends React.Component {
         const bot = this.props.bot;
         return (
             <View style={styles.container}>
-                <Image source={{ uri: bot.logoUrl } } style={ styles.image } resizeMode="contain"/>
+                <LogoImage source={{uri: bot.logoUrl}} imageStyle={ styles.image } loadingStyle={ styles.loading }/>
                 <View style={styles.textContainer}>
                     <Text style={ styles.title } >{ bot.name }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{bot.description}</Text>
