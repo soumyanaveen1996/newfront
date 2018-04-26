@@ -20,7 +20,7 @@
     "react-native": "0.51.0",
     "react-native-audio": "^3.5.1",
     "react-native-aws-signature": "github:shad0wfax/react-native-aws-signature",
-    "react-native-background-timer": "^1.2.0",
+    "react-native-background-timer": "^2.0.1",
     "react-native-camera": "^1.1.1",
     "react-native-contacts": "^2.1.1",
     "react-native-easy-listview-gridview": "https://github.com/rajamal/react-native-easy-listview-gridview.git#frontm",
