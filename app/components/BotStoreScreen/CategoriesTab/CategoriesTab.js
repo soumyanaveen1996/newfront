@@ -20,7 +20,7 @@ export default class CategoriesTab extends React.Component {
         if (categorysData.logoSlug != null) {
             categoryImage = <Image source={images[categorysData.logoSlug]} style={styles.iconStyle}/>
         } else {
-            categoryImage = <CachedImage source={{uri : categorysData.logoUrl}} style={styles.iconStyle} loadingStyle={styles.loading}/>
+            categoryImage = <CachedImage source={{uri : categorysData.logoUrl}} style={styles.iconStyle}/>
         }
         return categoryImage;
     }

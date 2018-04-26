@@ -71,7 +71,7 @@ export default class CachedImage extends React.Component {
             <LogoImage
                 source={this.state.source}
                 imageStyle={ this.props.style }
-                loadingStyle={( Platform.OS === 'ios') ? this.props.loadingStyle : null}
+                loadingStyle={( Platform.OS === 'android') ? null : undefined}
             />
         )
     }
