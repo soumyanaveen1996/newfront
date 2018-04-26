@@ -1,6 +1,7 @@
 import React from 'react';
-import { Image } from 'react-native';
 import ImageCache from '../../lib/image_cache';
+import LogoImage from '../LogoImage';
+import {Platform} from "react-native";
 
 
 const CachedImageStates = {
@@ -67,7 +68,11 @@ export default class CachedImage extends React.Component {
 
     render() {
         return (
-            <Image source={this.state.source} style={this.props.style} resizeMode={this.props.resizeMode} />
+            <LogoImage
+                source={this.state.source}
+                imageStyle={ this.props.style }
+                loadingStyle={( Platform.OS === 'android') ? null : undefined}
+            />
         )
     }
 }
