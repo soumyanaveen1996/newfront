@@ -872,7 +872,11 @@ export default class ChatBotScreen extends React.Component {
         }
 
         const requestAudioPermissionCallback = () => {
-            this.requestAudioPermissions(requestStoragePermissionsCallback);
+            if (Platform.OS === 'ios') {
+                this.requestAudioPermissions(recordVideoCallback);
+            } else {
+                this.requestAudioPermissions(requestStoragePermissionsCallback);
+            }
         }
         if (response.camera === 'authorized' && response.microphone === 'authorized' && response.storage === 'authorized') {
             this.recordVideo();
@@ -883,15 +887,23 @@ export default class ChatBotScreen extends React.Component {
             if (response.camera === 'undetermined') {
                 this.requestCameraPermissions(requestAudioPermissionCallback);
             } else if (response.microphone === 'undetermined') {
-                this.requestAudioPermissions(requestStoragePermissionsCallback);
-            } else if (response.storate === 'undetermined') {
+                if (Platform.OS === 'ios') {
+                    this.requestAudioPermissions(requestStoragePermissionsCallback);
+                } else {
+                    this.requestAudioPermissions(recordVideoCallback);
+                }
+            } else if (response.storage === 'undetermined') {
                 this.requestStoragePermissions(recordVideoCallback);
             }
         }
     }
 
     _hasRecordVideoPermission() {
-        return Permissions.checkMultiple(['camera', 'microphone', 'storage']);
+        if (Platform.OS === 'ios') {
+            return Permissions.checkMultiple(['camera', 'microphone']);
+        } else {
+            return Permissions.checkMultiple(['camera', 'microphone', 'storage']);
+        }
     }
 
     async pickImage() {

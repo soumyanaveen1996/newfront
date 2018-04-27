@@ -132,6 +132,7 @@ export default class ChatInputBar extends React.Component {
             AudioEncoding: 'aac',
             Channels: 1,
             AudioQuality: 'Low',
+            OutputFormat: 'aac'
         }
         const options = {...commonOptions, ...platformOptions};
         // Generate file name using current time
@@ -148,6 +149,7 @@ export default class ChatInputBar extends React.Component {
     }
 
     async _recordAudio() {
+        console.log('Starting recording audio');
         if (this.state.chatState === ChatInputBarState.READY_FOR_SPEECH) {
             this.setState({ chatState: ChatInputBarState.RECORDING_SPEECH });
             const prepared = await this._prepareAudioRecordingPath();
@@ -186,6 +188,7 @@ export default class ChatInputBar extends React.Component {
     }
 
     _hasRecordPermission() {
+        //return Promise.resolve('authorized');
         return Permissions.check('microphone')
     }
 

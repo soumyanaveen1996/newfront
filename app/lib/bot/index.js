@@ -5,7 +5,7 @@ import dce from '../dce';
 import { Bot as DceBot } from '../dce';
 import { Utils, Network, Auth, Promise } from '../capability';
 import { NetworkError } from '../network';
-import SystemBot from './SystemBot';
+import SystemBot, { SYSTEM_BOT_MANIFEST } from './SystemBot';
 import {MessageHandler} from '../message';
 import FrontmUtils from '../../lib/utils';
 
@@ -82,7 +82,8 @@ class Bot extends events.EventEmitter {
     static async unInstallBots() {
         try {
             const bots = await Bot.getInstalledBots();
-            _.each( bots , async (bot) => {
+            const toDeleteBots = _.filter(bots, (bot) => SYSTEM_BOT_MANIFEST[bot.id] === undefined);
+            _.each(toDeleteBots , async (bot) => {
                 await MessageHandler.deleteBotMessages(bot.id);
                 const dceBot = dce.bot(bot);
                 await Bot.delete(dceBot);
