@@ -50,7 +50,7 @@ export default class ChatMessage extends React.Component {
                     placeholderStyle={styles.placeholderProfilePic}
                     resizeMode="cover"/>;
             } else {
-                return <CachedImage source={this.props.imageSource} style={styles.profilePic} />;
+                return <CachedImage source={this.props.imageSource} style={styles.profilePic}/>;
             }
         }
     }

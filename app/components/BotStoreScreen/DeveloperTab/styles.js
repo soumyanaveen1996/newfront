@@ -46,8 +46,7 @@ export default StyleSheet.create({
     listViewContentContainerStyle : {
         width :scrollViewConfig.width ,
         alignSelf : 'center'
-    },
-
+    }
 })
 
 

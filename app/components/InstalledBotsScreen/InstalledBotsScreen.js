@@ -105,7 +105,7 @@ export default class InstalledBotsScreen extends React.Component {
                     titleContainerStyle={styles.titleContainerStyle}
                     subtitle={botData.description}
                     subtitleStyle={styles.subtitleStyle}
-                    avatar={botData.logoSlug  ? images[botData.logoSlug] : {url : botData.logoUrl} }
+                    avatar={botData.logoSlug  ? images[botData.logoSlug] : {uri : botData.logoUrl} }
                     avatarOverlayContainerStyle={styles.avatarOverlayContainerStyle}
                     subtitleNumberOfLines={subtitleNumberOfLines}
                     subtitleContainerStyle={styles.subtitleContainerStyle}

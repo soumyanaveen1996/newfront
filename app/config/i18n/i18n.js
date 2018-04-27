@@ -4,7 +4,7 @@ I18n.fallbacks = true
 
 I18n.translations = {
     'en': {
-        FrontM: 'Front M',
+        FrontM: 'FrontM',
         React_Native: 'React Native',
         Description: 'React Native helps us build cross platform native apps in Javascript.',
         WebM_Bot: 'WebM',
