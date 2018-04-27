@@ -132,7 +132,7 @@ export default class ChatInputBar extends React.Component {
             AudioEncoding: 'aac',
             Channels: 1,
             AudioQuality: 'Low',
-            OutputFormat: 'aac'
+            OutputFormat: 'aac_adts'
         }
         const options = {...commonOptions, ...platformOptions};
         // Generate file name using current time
