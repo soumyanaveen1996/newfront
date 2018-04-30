@@ -314,7 +314,7 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {
                 this.formValuesArray[i] = formData[i].value;
-                if (formData[i].retry === true) {
+                if (formData[i].retry === true && this.props.editable) {
                     buttons.push(<RetryFormTextInput formData={formData[i]} key={i} keyIndex={i} onPasswordMatch={this.onPasswordMatch.bind(this, i)} />);
                 } else {
                     this.formValuesArray[i] = formData[i].value;
@@ -351,9 +351,11 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'button') {
                 const buttonStyle = this.props.editable ? Styles.formButton : [Styles.formButton, Styles.formButtonDisabled];
+                const disableButton = this.props.editable ? false : true;
                 buttons.push(
                     <View style={Styles.formButtonContainer} key={i}>
                         <TouchableOpacity
+                            disabled={disableButton}
                             underlayColor="white"
                             onPress={this.CTAResponseOnPress.bind(this)}
                             style={buttonStyle}>
