@@ -91,7 +91,7 @@ export default class BotInstallListItem extends React.Component {
             <View style={styles.container}>
                 <Image source={{ uri: bot.logoUrl } } style={ styles.image } resizeMode="contain"/>
                 <View style={styles.textContainer}>
-                    <Text style={ styles.title } >{ bot.name }</Text>
+                    <Text style={ styles.title } >{ bot.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{bot.description}</Text>
                 </View>
                 { this.renderRightArea() }

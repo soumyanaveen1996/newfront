@@ -45,7 +45,7 @@ export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: state.params.botName,
+            headerTitle: state.params.bot.botName,
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;

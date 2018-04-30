@@ -26,7 +26,7 @@ export default class CategoriesTab extends React.Component {
     }
 
     onTileCilcked = (botsId) => {
-        let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.id) >= 0}))
+        let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
         Actions.botList({data : selectedBots});
     }
 

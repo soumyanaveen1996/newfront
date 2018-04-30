@@ -53,7 +53,7 @@ export default class FeaturedTabTab extends React.Component {
 
         return (
             <BotInstallListItem bot={bot}
-                key={bot.id}
+                key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
                 onBotInstallFailed={this.onBotInstallFailed}
                 installed={botStatus.installed}
@@ -68,7 +68,7 @@ export default class FeaturedTabTab extends React.Component {
 
     renderGridItem = ({item}) => {
         return (
-            <View key={item.id} style={styles.rowContainer}>
+            <View key={item.botId} style={styles.rowContainer}>
                 <View style={styles.rowContent}>
                     {this.renderBot(item)}
                 </View>
@@ -81,7 +81,7 @@ export default class FeaturedTabTab extends React.Component {
             <View>
                 <FlatList
                     style = {styles.flatList}
-                    keyExtractor = {(item, index) => item.id}
+                    keyExtractor = {(item, index) => item.botId}
                     data={this.state.botsData}
                     renderItem={this.renderGridItem.bind(this)}
                     extraData={this.state}

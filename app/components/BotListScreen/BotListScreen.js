@@ -68,7 +68,7 @@ export default class BotListScreen extends React.Component {
 
     renderRowItem = ({item}) => {
         return (
-            <View key={item.id} style={styles.rowContainer}>
+            <View key={item.botId} style={styles.rowContainer}>
                 <View style={styles.rowContent}>
                     {this.renderRow(item)}
                 </View>
@@ -81,7 +81,7 @@ export default class BotListScreen extends React.Component {
             <View>
                 <FlatList
                     style = {styles.flatList}
-                    keyExtractor = {(item, index) => item.id}
+                    keyExtractor = {(item, index) => item.botId}
                     data={this.state.botsData}
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
