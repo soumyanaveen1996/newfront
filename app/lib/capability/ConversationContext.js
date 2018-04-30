@@ -167,6 +167,21 @@ export default class ConversationContext {
             });
     });
 
+    static setConversationCreated = (botContext, created = true) => new Promise((resolve, reject) => {
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (!context) {
+                    return resolve();
+                }
+                context.created = created;
+                botContext.setConversationContext(context);
+                return resolve(DeviceStorage.save(ConversationContext._getStorageKey(botContext), context));
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
     static setParticipants = (participants, botContext) => new Promise((resolve, reject) => {
         if (!participants || participants.length < 1) {
             resolve();
