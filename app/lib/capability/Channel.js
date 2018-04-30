@@ -44,7 +44,7 @@ export default class Channel {
                             action: 'Subscribe',
                             userUuid: user.userUUID,
                             conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            botId: SystemBot.channelsBot.botId,
                             domainChannels: domainChannels
                         }
                     };
@@ -86,7 +86,7 @@ export default class Channel {
                             action: 'Create',
                             userUuid: user.userUUID,
                             conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            botId: SystemBot.channelsBot.botId,
                             name: name,
                             desc: description,
                             domain: domain
@@ -124,7 +124,7 @@ export default class Channel {
                             action: 'Edit',
                             userUuid: user.userUUID,
                             conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            botId: SystemBot.channelsBot.botId,
                             name: name,
                             desc: description,
                             domain: domain
@@ -161,7 +161,7 @@ export default class Channel {
                             action: 'Unsubscribe',
                             userUuid: user.userUUID,
                             conversationId: channel.conversationId || user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            botId: SystemBot.channelsBot.botId,
                             domain: channel.domain,
                             channel: channel.name,
                         }
@@ -199,7 +199,7 @@ export default class Channel {
                             action: 'Get',
                             userUuid: user.userUUID,
                             conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            botId: SystemBot.channelsBot.botId,
                             domains: user.info.domains
                         }
                     };

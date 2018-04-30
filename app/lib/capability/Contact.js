@@ -203,7 +203,7 @@ export default class Contact {
                 if (user) {
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.botId}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,
@@ -234,7 +234,7 @@ export default class Contact {
                 if (user) {
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.id}&uuid=${uuid}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.botId}&uuid=${uuid}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,

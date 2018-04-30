@@ -6,7 +6,7 @@ import ChannelDAO from '../../lib/persistence/ChannelDAO';
 
 const getMessageDataForBot = (bot) => new Promise((resolve, reject) => {
     // Bot id is the botkey for bot chats
-    return resolve(getMessageDataFor(bot.id));
+    return resolve(getMessageDataFor(bot.botId));
 });
 
 const getMessageDataForConversation = (conversation, user) => new Promise((resolve, reject) => {

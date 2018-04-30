@@ -23,10 +23,10 @@ class Bot extends events.EventEmitter {
         }
         // Check if the bot is already installed - if so, throw an error?
         const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, {botId: bot.id});
+        const present = _.findIndex(bots, {botId: bot.botId});
 
         if (present > -1) {
-            throw new Error('The supplied bot is already an installed bot:', bot.id);
+            throw new Error('The supplied bot is already an installed bot:', bot.botId);
         }
 
         await bot.Load();
@@ -38,7 +38,7 @@ class Bot extends events.EventEmitter {
         }
         // First delete the older version
         const bots = await Bot.getInstalledBots();
-        const currentBot = _.find(bots, { botId: bot.id });
+        const currentBot = _.find(bots, { botId: bot.botId });
         if (currentBot) {
             const dceBot = dce.bot(currentBot);
             await Bot.delete(dceBot);
@@ -55,10 +55,10 @@ class Bot extends events.EventEmitter {
 
         // Check if the bot to install is in list of installed bots:
         const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, {botId: bot.id});
+        const present = _.findIndex(bots, {botId: bot.botId});
 
         if (present < 0) {
-            throw new Error('The supplied bot is not an installed bot:', bot.id);
+            throw new Error('The supplied bot is not an installed bot:', bot.botId);
         }
 
         await bot.Delete();
@@ -83,7 +83,7 @@ class Bot extends events.EventEmitter {
         try {
             const bots = await Bot.getInstalledBots();
             _.each( bots , async (bot) => {
-                await MessageHandler.deleteBotMessages(bot.id);
+                await MessageHandler.deleteBotMessages(bot.botId);
                 const dceBot = dce.bot(bot);
                 await Bot.delete(dceBot);
             });

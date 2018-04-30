@@ -357,7 +357,7 @@ export default class ChatBotScreen extends React.Component {
     }
 
     getBotId() {
-        return this.props.bot.id;
+        return this.props.bot.botId;
     }
 
     keyboardWillShow = () => {
