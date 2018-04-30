@@ -201,9 +201,11 @@ export default class Contact {
         Auth.getUser()
             .then((user) => {
                 if (user) {
+                    console.log('user : ', user);
+                    console.log('Refresh contacts URL : ', `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`);
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.botId}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,
@@ -234,7 +236,7 @@ export default class Contact {
                 if (user) {
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userUuid=${user.userUUID}&conversationId=cid&botId=${SystemBot.contactsBot.botId}&uuid=${uuid}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}&uuid=${uuid}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,

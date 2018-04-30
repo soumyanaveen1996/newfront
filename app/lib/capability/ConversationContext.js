@@ -7,7 +7,7 @@ import _ from 'lodash';
  *   {
  *       conversationId: UUID(),
  *       creatorInstanceId: UUID(),
- *       participants: [user.userUUID, other_participant's_uuids],
+ *       participants: [user.userId, other_participant's_uuids],
  *       onChannels: [],
  *       closed: false
  *   };
@@ -72,10 +72,10 @@ export default class ConversationContext {
         if (user) {
             const context = {
                 conversationId: UUID(),
-                creatorInstanceId: user.userUUID,
-                creator: { name: user.info.screenName, uuid: user.userUUID },
-                participantsInfo: [{ name: user.info.screenName, uuid: user.userUUID }],
-                participants: [user.userUUID],
+                creatorInstanceId: user.userId,
+                creator: { name: user.info.screenName, uuid: user.userId },
+                participantsInfo: [{ name: user.info.screenName, uuid: user.userId }],
+                participants: [user.userId],
                 onChannels: [],
                 closed: false
             };
@@ -96,7 +96,7 @@ export default class ConversationContext {
         if (currentUser && channel) {
             const context = {
                 conversationId: conversationId || UUID(),
-                creatorInstanceId:currentUser.userUUID,
+                creatorInstanceId: currentUser.userId,
                 onChannels: [{
                     name: channel.name,
                     domain: channel.domain
@@ -237,7 +237,7 @@ export default class ConversationContext {
             return conversationContext.onChannels[0].name;
         } else {
             const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-                return p.uuid !== user.userUUID
+                return p.uuid !== user.userId
             });
             const names = _.map(otherParticipants, 'name');
             return names.join(',');
@@ -256,7 +256,7 @@ export default class ConversationContext {
 
     static getOtherUserId = function(conversationContext, user) {
         const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-            return p.uuid !== user.userUUID
+            return p.uuid !== user.userId
         });
         if (otherParticipants.length === 1) {
             return otherParticipants[0].uuid;

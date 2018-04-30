@@ -42,8 +42,7 @@ export default class Channel {
                         },
                         data: {
                             action: 'Subscribe',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
+                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             domainChannels: domainChannels
                         }
@@ -84,8 +83,7 @@ export default class Channel {
                         },
                         data: {
                             action: 'Create',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
+                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             name: name,
                             desc: description,
@@ -122,8 +120,7 @@ export default class Channel {
                         },
                         data: {
                             action: 'Edit',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
+                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             name: name,
                             desc: description,
@@ -159,8 +156,7 @@ export default class Channel {
                         },
                         data: {
                             action: 'Unsubscribe',
-                            userUuid: user.userUUID,
-                            conversationId: channel.conversationId || user.userUUID,
+                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             domain: channel.domain,
                             channel: channel.name,
@@ -197,8 +193,7 @@ export default class Channel {
                         },
                         data: {
                             action: 'Get',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
+                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             domains: user.info.domains
                         }

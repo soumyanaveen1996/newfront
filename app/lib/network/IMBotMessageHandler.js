@@ -208,7 +208,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
 const getConversationData = (conversationId, createdBy, user) => {
     let options = {
         'method': 'get',
-        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SystemBot.imBot.botId + '&createdBy=' + createdBy,
+        'url': getUrl() + '?userId=' + user.userId + '&conversationId=' + conversationId + '&botId=' + SystemBot.imBot.botId + '&createdBy=' + createdBy,
         'headers': getHeaders(user)
     };
 

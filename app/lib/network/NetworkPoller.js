@@ -48,7 +48,7 @@ class NetworkPoller {
     handleAppStateChange = async (nextAppState) => {
         if (nextAppState === 'active') {
             let user = await Auth.getUser();
-            if (user.userUUID !== 'default_user_uuid') {
+            if (user.userId !== 'default_user_uuid') {
                 console.log('Reading Lambda');
                 NetworkHandler.readLambda();
             }

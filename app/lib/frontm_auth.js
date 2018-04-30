@@ -72,11 +72,6 @@ class FrontmAuth {
                     name: fbDetails.name,
                     userId: fbDetails.id
                 },
-                conversation: {
-                    uuid: conversationId || UUID(),
-                    bot: botName
-                },
-                creatorInstanceId: UUID(),
             };
             AccessToken.getCurrentAccessToken()
                 .then((token) => {
@@ -102,7 +97,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 info: resData.user || data.user,
                                 refreshToken: resData.longTermToken
                             }
@@ -231,6 +226,7 @@ class FrontmAuth {
                     if (!(result.success === 'true' || result.success === true)) {
                         return reject({type: 'error', error: result.message});
                     }
+                    console.log('Signin result : ', result);
                     const frontmUser = result.data.user;
                     const defaultScreenName = frontmUser.userName ? frontmUser.userName.replace(/ /g, '') : '';
                     const data = {
@@ -240,13 +236,8 @@ class FrontmAuth {
                             screenName: frontmUser.screenName || defaultScreenName,
                             surname: frontmUser.surname,
                             name: frontmUser.userName,
-                            userId: frontmUser.userId,
+                            awsId: frontmUser.awsId,
                         },
-                        conversation: {
-                            uuid: conversationId || UUID(),
-                            bot: 'onboarding-bot'
-                        },
-                        creatorInstanceId: UUID(),
                     };
                     let options = {
                         'method': 'post',
@@ -257,6 +248,7 @@ class FrontmAuth {
                         },
                         'data': data
                     };
+                    console.log('network options : ', options);
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
