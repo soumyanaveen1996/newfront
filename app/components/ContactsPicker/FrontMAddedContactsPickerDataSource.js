@@ -32,6 +32,7 @@ export default class ContactsPickerDataSource {
             return data.userId;
         });
         _.each(contactsData, (data) => {
+            console.log('Contacts data : ', data);
             this.idToContacts[data.userId] = {
                 id: data.userId,
                 name: data.userName,

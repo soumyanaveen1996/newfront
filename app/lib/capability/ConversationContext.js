@@ -286,6 +286,6 @@ export default class ConversationContext {
         conversationContext.participantsInfo = conversationContext.participantsInfo || [];
         conversationContext.participants = conversationContext.participants || [];
         conversationContext.participantsInfo = conversationContext.participantsInfo.concat(filteredParticipants);
-        conversationContext.participants = conversationContext.participants.concat(_.map(filteredParticipants, 'uuid'));
+        conversationContext.participants = conversationContext.participants.concat(_.map(filteredParticipants, 'userId'));
     }
 }
