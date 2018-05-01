@@ -98,8 +98,8 @@ export default class ConversationContext {
                 conversationId: conversationId || UUID(),
                 creatorInstanceId: currentUser.userId,
                 onChannels: [{
-                    name: channel.name,
-                    domain: channel.domain
+                    channelName: channel.channelName,
+                    userDomain: channel.userDomain
                 }],
                 closed: false
             };
@@ -204,6 +204,7 @@ export default class ConversationContext {
         if (!participants || participants.length < 1) {
             resolve();
         }
+        console.log('Participants : ', participants);
         ConversationContext._getBotConversationContext(botContext)
             .then(function (context) {
                 if (!context) {
@@ -248,6 +249,7 @@ export default class ConversationContext {
     };
 
     static getChatName = function (conversationContext, user) {
+        console.log('In get chat name : ', conversationContext);
         if (conversationContext.onChannels.length > 0) {
             return conversationContext.onChannels[0].name;
         } else {
