@@ -73,8 +73,8 @@ export default class ConversationContext {
             const context = {
                 conversationId: UUID(),
                 creatorInstanceId: user.userId,
-                creator: { name: user.info.screenName, uuid: user.userId },
-                participantsInfo: [{ name: user.info.screenName, uuid: user.userId }],
+                creator: { userName: user.info.screenName, uuid: user.userId },
+                participantsInfo: [{ userName: user.info.screenName, userId: user.userId }],
                 participants: [user.userId],
                 onChannels: [],
                 closed: false
@@ -252,9 +252,9 @@ export default class ConversationContext {
             return conversationContext.onChannels[0].name;
         } else {
             const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-                return p.uuid !== user.userId
+                return p.userId !== user.userId
             });
-            const names = _.map(otherParticipants, 'name');
+            const names = _.map(otherParticipants, 'userName');
             return names.join(',');
         }
     };
@@ -271,17 +271,17 @@ export default class ConversationContext {
 
     static getOtherUserId = function(conversationContext, user) {
         const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-            return p.uuid !== user.userId
+            return p.userId !== user.userId
         });
         if (otherParticipants.length === 1) {
-            return otherParticipants[0].uuid;
+            return otherParticipants[0].userId;
         }
         return undefined;
     }
 
     static updateParticipants = function (conversationContext, participants) {
         let filteredParticipants = _.filter(participants, (participant) => {
-            return _.find(conversationContext.participants, (p) => p === participant.uuid) === undefined;
+            return _.find(conversationContext.participants, (p) => p === participant.userId) === undefined;
         });
         conversationContext.participantsInfo = conversationContext.participantsInfo || [];
         conversationContext.participants = conversationContext.participants || [];
