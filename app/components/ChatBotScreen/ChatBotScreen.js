@@ -948,7 +948,7 @@ export default class ChatBotScreen extends React.Component {
         if (selectedRows.length > 0) {
             try {
                 const uuids = _.map(selectedRows, (row) => {
-                    let uuid = _.find(row.data.contact_info, function (m) { return m.key === 'uuid' });
+                    let uuid = _.find(row.data.contact_info, function (m) { return m.key === 'userId' });
                     return uuid.value;
                 });
                 const names = _.map(selectedRows, (row) => {
