@@ -9,7 +9,7 @@ class ContactsCache {
         ChannelContactDAO.selectAllContacts()
             .then(contacts => {
                 _.forEach(contacts, (contact) => {
-                    this.contactsCache[contact.id] = contact;
+                    this.contactsCache[contact.userId] = contact;
                 })
                 this.loaded = true;
             });
@@ -19,7 +19,7 @@ class ContactsCache {
         Contact.fetchAndAddContactForUser(userId)
             .then(contact => {
                 if (contact) {
-                    this.contactsCache[contact.id] = contact;
+                    this.contactsCache[contact.userId] = contact;
                 }
                 resolve(contact);
             })

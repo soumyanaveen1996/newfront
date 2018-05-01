@@ -238,7 +238,7 @@ export default class Contact {
                 if (user) {
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userId=${userId}&botId=${SystemBot.contactsBot.botId}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,
@@ -249,9 +249,9 @@ export default class Contact {
                 }
             })
             .then((response) => {
-                console.log(response.data);
-                if (response.data && response.data.length > 0) {
-                    let contact = response.data[0];
+                console.log('Contact response data ', response.data);
+                if (response.data) {
+                    let contact = response.data;
                     return ChannelContactDAO.insertChannelContact(contact.userId, contact.userName, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
                 }
             })
