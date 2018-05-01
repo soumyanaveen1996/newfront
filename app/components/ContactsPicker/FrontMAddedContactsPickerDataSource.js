@@ -34,7 +34,7 @@ export default class ContactsPickerDataSource {
         _.each(contactsData, (data) => {
             this.idToContacts[data.userId] = {
                 id: data.userId,
-                name: data.name,
+                name: data.userName,
                 firstName: data.givenName,
                 middleName: data.middleName,
                 lastName: data.surname,

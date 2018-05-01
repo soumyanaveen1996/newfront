@@ -252,7 +252,7 @@ export default class Contact {
                 console.log(response.data);
                 if (response.data && response.data.length > 0) {
                     let contact = response.data[0];
-                    return ChannelContactDAO.insertChannelContact(contact.userId, contact.name, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
+                    return ChannelContactDAO.insertChannelContact(contact.userId, contact.userName, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
                 }
             })
             .then((contact) => {
@@ -270,11 +270,11 @@ export default class Contact {
         };
         const sliderFormat = contacts.map((person) => {
             return {
-                title: person.name,
+                title: person.userName,
                 data: {
                     contact_info: [{
                         key: I18n.t('Name'),
-                        value: person.name
+                        value: person.userName
                     }, {
                         key: I18n.t('Email'),
                         value: person.emailAddress
