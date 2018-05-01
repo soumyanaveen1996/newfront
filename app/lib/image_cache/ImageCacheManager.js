@@ -184,10 +184,14 @@ export default class ImageCacheManager {
             this.notifyImageDownloadStarted(uri);
             cache.downloading = true;
             cache.task = RNFetchBlob.config({ path }).fetch('GET', uri, headers);
-            cache.task.then(() => {
+            cache.task.then((response) => {
                 cache.downloading = false;
-                cache.path = path;
-                this.notifyImageDownloaded(uri);
+                if(response.respInfo.status === 200) {
+                    cache.path = path;
+                    this.notifyImageDownloaded(uri);
+                } else {
+                    RNFetchBlob.fs.unlink(path);
+                }
             }).catch(() => {
                 console.log('ImageCacheManager Error downloading file : ');
                 cache.downloading = false;
