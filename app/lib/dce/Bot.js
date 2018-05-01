@@ -12,6 +12,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 class Bot {
 
     constructor(manifest, context) {
+
         this.manifest = manifest;
         this.context = context;
 
@@ -176,6 +177,10 @@ class Bot {
     }
 
     get id() {
+        return this.manifest.botId
+    }
+
+    get botId() {
         return this.manifest.botId
     }
 

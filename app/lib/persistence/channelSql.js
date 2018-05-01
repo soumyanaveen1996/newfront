@@ -1,7 +1,7 @@
 const createChannelsTable = `
-    CREATE TABLE IF NOT EXISTS channel ( 
-        id integer primary key, 
-        name text NOT NULL, 
+    CREATE TABLE IF NOT EXISTS channel (
+        id integer primary key,
+        name text NOT NULL,
         desc text NOT NULL,
         logo text NOT NULL,
         domain text NOT NULL,
@@ -10,8 +10,8 @@ const createChannelsTable = `
 `;
 
 const insertChannel = `
-    INSERT INTO channel ( 
-        name, 
+    INSERT INTO channel (
+        name,
         desc,
         logo,
         domain
@@ -20,14 +20,14 @@ const insertChannel = `
 
 const deleteChannel = `
     DELETE FROM channel
-    WHERE 
+    WHERE
         id = ?
 
 `;
 
 const updateConversationForChannel = `
     UPDATE channel
-    SET 
+    SET
         conversationId = ?
     WHERE
         name = ?
@@ -36,7 +36,7 @@ const updateConversationForChannel = `
 
 const updateChannel = `
     UPDATE channel
-    SET 
+    SET
         desc = ?
     WHERE
         name = ?
@@ -87,7 +87,7 @@ const selectChannelByNameAndDomain = `
         logo,
         domain
     FROM channel
-    WHERE name = ? 
+    WHERE name = ?
     AND domain = ?
 `;
 

@@ -59,7 +59,7 @@ export default class Channel {
                 } else {
                     console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.desc, channel.logo, channel.userDomain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -86,8 +86,8 @@ export default class Channel {
                             userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             name: name,
-                            desc: description,
-                            domain: domain
+                            description: description,
+                            userDomain: domain
                         }
                     };
                     return Network(options);
@@ -123,8 +123,8 @@ export default class Channel {
                             userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             name: name,
-                            desc: description,
-                            domain: domain
+                            description: description,
+                            userDomain: domain
                         }
                     };
                     return Network(options);
@@ -206,7 +206,7 @@ export default class Channel {
                     let channels = response.data.content;
                     console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.desc, channel.logo, channel.userDomain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
                     })
                     return Promise.all(channelInsertPromises);
                 }
