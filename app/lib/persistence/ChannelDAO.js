@@ -84,11 +84,11 @@ const selectChannels = () => new Promise((resolve, reject) => {
 const channelDataFromDbResult = (dbResult) => {
     return {
         id: dbResult.id,
-        name: dbResult.name,
+        channelName: dbResult.name,
         desc: dbResult.desc,
         logo: dbResult.logo,
         conversationId: dbResult.conversationId,
-        domain: dbResult.domain
+        userDomain: dbResult.domain
     };
 }
 
