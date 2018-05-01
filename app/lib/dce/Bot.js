@@ -76,7 +76,7 @@ class Bot {
             if (_.isEmpty(o)) {
                 return false;
             }
-            const sysBot = _.find(systemBots, ['botId', o.id])
+            const sysBot = _.find(systemBots, ['botId', o.botId])
             // Remove the IMBot - this is for people chat and cannot be part of regular bot
             if (sysBot) {
                 return false;

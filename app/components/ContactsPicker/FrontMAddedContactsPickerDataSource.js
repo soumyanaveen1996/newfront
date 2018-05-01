@@ -29,11 +29,11 @@ export default class ContactsPickerDataSource {
 
     updateData(contactsData) {
         const contactIds = _.map(contactsData, (data) => {
-            return data.uuid;
+            return data.userId;
         });
         _.each(contactsData, (data) => {
-            this.idToContacts[data.uuid] = {
-                id: data.uuid,
+            this.idToContacts[data.userId] = {
+                id: data.userId,
                 name: data.name,
                 firstName: data.givenName,
                 middleName: data.middleName,

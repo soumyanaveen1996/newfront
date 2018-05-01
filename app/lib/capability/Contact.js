@@ -18,7 +18,7 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
  *     "screenName": "akshr",
  *     "surname": "Sharma",
  *     "name": "Akshay Sharma",
- *     "uuid": "11A2A680-7E76-4154-A811-2A6BAB2A3BF9",
+ *     "userId": "11A2A680-7E76-4154-A811-2A6BAB2A3BF9",
  * }
  */
 export default class Contact {
@@ -43,7 +43,7 @@ export default class Contact {
                 // Filter for uuidArr
                 uuidArr = uuidArr || []
                 let filteredContacts = _.filter(contacts, (contact) => {
-                    return (uuidArr.indexOf(contact.uuid) > -1);
+                    return (uuidArr.indexOf(contact.userId) > -1);
 
                 });
                 if (field) {
@@ -60,10 +60,11 @@ export default class Contact {
         if (!Array.isArray(contacts)) {
             contacts = [contacts];
         }
+        console.log('Added Contacts : ', contacts);
         Contact.getAddedContacts()
             .then(function (cts) {
                 cts = cts || [];
-                const notPresentContacts = _.differenceBy(contacts, cts, (contact) => contact.uuid);
+                const notPresentContacts = _.differenceBy(contacts, cts, (contact) => contact.userId);
                 const newContacts = cts.concat(notPresentContacts);
                 return Contact.saveContacts(newContacts);
             })
@@ -77,7 +78,7 @@ export default class Contact {
 
 
     /**
-     * Adds the ignore flag for the Contact. If no contact with uuid present,
+     * Adds the ignore flag for the Contact. If no contact with userId present,
      * it adds a contact with ignore flag true.
      */
     static ignoreContact = (contact) => new Promise((resolve, reject) => {
@@ -85,7 +86,7 @@ export default class Contact {
         Contact.getAddedContacts()
             .then(function (contacts) {
                 contacts = contacts || [];
-                var contactIndex = _.findIndex(contacts, { uuid: contact.uuid })
+                var contactIndex = _.findIndex(contacts, { userId: contact.userId })
                 if (contactIndex === -1) {
                     contacts = contacts.concat(contact);
                 } else {
@@ -102,14 +103,14 @@ export default class Contact {
     });
 
     /**
-     * Removes the ignore flag for the Contact  that is stored. If no contact with uuid present,
+     * Removes the ignore flag for the Contact  that is stored. If no contact with userId present,
      * does nothing.
      */
     static unignoreContact = (contact) => new Promise((resolve, reject) => {
         Contact.getAddedContacts()
             .then(function (contacts) {
                 contacts = contacts || [];
-                var contactIndex = _.findIndex(contacts, {uuid: contact.uuid})
+                var contactIndex = _.findIndex(contacts, {userId: contact.userId})
                 if (contactIndex !== -1) {
                     contacts[contactIndex].ignored = false;
                 }
@@ -166,7 +167,7 @@ export default class Contact {
 
     static getAddressBookEmails = () => new Promise((resolve, reject) => {
         Utils.requestReadContactsPermission().then((status) => {
-            if(status){
+            if (status){
                 RNContacts.getAllWithoutPhotos((error, contacts) => {
                     if (error === 'denied') {
                         reject(new Error('User rejected permissions'));
@@ -217,6 +218,7 @@ export default class Contact {
             })
             .then((response) => {
                 if (response.data) {
+                    console.log('Contacts Data : ', response.data.contacts);
                     var contacts = _.map(response.data.contacts, (contact) => {
                         return _.extend({}, contact, {ignored: false});
                     });
@@ -230,13 +232,13 @@ export default class Contact {
             .catch(reject);
     });
 
-    static fetchAndAddContactForUser = (uuid) => new Promise((resolve, reject) => {
+    static fetchAndAddContactForUser = (userId) => new Promise((resolve, reject) => {
         Auth.getUser()
             .then((user) => {
                 if (user) {
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}&uuid=${uuid}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.userDetailsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,
@@ -250,7 +252,7 @@ export default class Contact {
                 console.log(response.data);
                 if (response.data && response.data.length > 0) {
                     let contact = response.data[0];
-                    return ChannelContactDAO.insertChannelContact(contact.uuid, contact.name, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
+                    return ChannelContactDAO.insertChannelContact(contact.userId, contact.name, contact.emailAddress, contact.screenName, contact.givenName, contact.surname)
                 }
             })
             .then((contact) => {
@@ -281,7 +283,7 @@ export default class Contact {
                         value: person.screenName
                     }, {
                         key: I18n.t('UUID'),
-                        value: person.uuid
+                        value: person.userId
                     }, {
                         key: I18n.t('Given_Name'),
                         value: person.givenName

@@ -159,7 +159,7 @@ export default class ContactsPicker extends React.Component {
         let participants = contacts.map((contact) => {
             return {
                 name: contact.screenName,
-                uuid: contact.id
+                userId: contact.id
             }
         });
 

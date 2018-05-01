@@ -279,16 +279,16 @@ class FrontmAuth {
     }
 
     refreshTokens(user) {
+        console.log('Options for refresh : ', user);
         let options = {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
                 refresh_token: user.provider.refreshToken,
-                provider_name: user.provider.userName.toLowerCase(),
+                provider_name: user.info.userName.toLowerCase(),
                 email: user.info.emailAddress
             }
         };
-        console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
