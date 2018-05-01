@@ -25,11 +25,11 @@ export default class Channel {
         Auth.getUser()
             .then((user) => {
                 if (user) {
-                    let channelsGroup = _.groupBy(channels, 'domain')
+                    let channelsGroup = _.groupBy(channels, 'userDomain')
                     let domainChannels = _.map(channelsGroup, (value, key) => {
                         return {
-                            domain: key,
-                            channels: _.map(value, 'name'),
+                            userDomain: key,
+                            channels: _.map(value, 'channelName'),
                         }
                     });
                     let options = {
@@ -42,9 +42,8 @@ export default class Channel {
                         },
                         data: {
                             action: 'Subscribe',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            userId: user.userId,
+                            botId: SystemBot.channelsBot.botId,
                             domainChannels: domainChannels
                         }
                     };
@@ -60,7 +59,7 @@ export default class Channel {
                 } else {
                     console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.name, channel.desc, channel.logo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -84,12 +83,11 @@ export default class Channel {
                         },
                         data: {
                             action: 'Create',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            userId: user.userId,
+                            botId: SystemBot.channelsBot.botId,
                             name: name,
-                            desc: description,
-                            domain: domain
+                            description: description,
+                            userDomain: domain
                         }
                     };
                     return Network(options);
@@ -122,12 +120,11 @@ export default class Channel {
                         },
                         data: {
                             action: 'Edit',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            userId: user.userId,
+                            botId: SystemBot.channelsBot.botId,
                             name: name,
-                            desc: description,
-                            domain: domain
+                            description: description,
+                            userDomain: domain
                         }
                     };
                     return Network(options);
@@ -159,11 +156,10 @@ export default class Channel {
                         },
                         data: {
                             action: 'Unsubscribe',
-                            userUuid: user.userUUID,
-                            conversationId: channel.conversationId || user.userUUID,
-                            botId: SystemBot.channelsBot.id,
-                            domain: channel.domain,
-                            channel: channel.name,
+                            userId: user.userId,
+                            botId: SystemBot.channelsBot.botId,
+                            domain: channel.userDomain,
+                            channel: channel.channelName,
                         }
                     };
                     return Network(options);
@@ -197,9 +193,8 @@ export default class Channel {
                         },
                         data: {
                             action: 'Get',
-                            userUuid: user.userUUID,
-                            conversationId: user.userUUID,
-                            botId: SystemBot.channelsBot.id,
+                            userId: user.userId,
+                            botId: SystemBot.channelsBot.botId,
                             domains: user.info.domains
                         }
                     };
@@ -211,7 +206,7 @@ export default class Channel {
                     let channels = response.data.content;
                     console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.name, channel.desc, channel.logo, channel.domain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
                     })
                     return Promise.all(channelInsertPromises);
                 }

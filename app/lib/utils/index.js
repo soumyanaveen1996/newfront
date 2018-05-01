@@ -98,7 +98,7 @@ export function checkBotStatus(installedBots, newBot) {
     if (installedBots === undefined) {
         return { installed: true, update: false };
     }
-    const installedBot = _.find(installedBots, (botItem) => botItem.id === newBot.id);
+    const installedBot = _.find(installedBots, (botItem) => botItem.botId === newBot.botId);
     let installed = false;
     let update = false;
 

@@ -45,7 +45,7 @@ export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: state.params.botName,
+            headerTitle: state.params.bot.botName,
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
@@ -357,7 +357,7 @@ export default class ChatBotScreen extends React.Component {
     }
 
     getBotId() {
-        return this.props.bot.id;
+        return this.props.bot.botId;
     }
 
     keyboardWillShow = () => {
@@ -505,7 +505,7 @@ export default class ChatBotScreen extends React.Component {
 
     sendSliderResponseMessage(selectedRows) {
         let message = new Message({ addedByBot: false });
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
         message.sliderResponseMessage(selectedRows);
         return this.sendMessage(message);
     }
@@ -579,7 +579,7 @@ export default class ChatBotScreen extends React.Component {
     sendButtonResponseMessage(selectedItem) {
         let message = new Message({ addedByBot: false });
         message.buttonResponseMessage(selectedItem);
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
     }
 
@@ -607,7 +607,7 @@ export default class ChatBotScreen extends React.Component {
                 this.replaceUpdatedMessage(formMessage);
                 let message = new Message({ addedByBot: false });
                 message.formResponseMessage(formItems);
-                message.setCreatedBy(this.getUserUUID());
+                message.setCreatedBy(this.getUserId());
                 return this.sendMessage(message);
             });
     }
@@ -742,20 +742,20 @@ export default class ChatBotScreen extends React.Component {
         let self = this;
         // read message from component state
         let message = new Message();
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
         message.stringMessage(messageStr);
 
         return self.sendMessage(message);
     };
 
-    getUserUUID = () => {
-        return this.user.userUUID;
+    getUserId = () => {
+        return this.user.userId;
     }
 
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(imageUri, Constants.IMAGES_DIRECTORY);
         let message = new Message();
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(base64, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Image, this.user);
@@ -774,7 +774,7 @@ export default class ChatBotScreen extends React.Component {
 
         // TODO(amal): Upload Audio file
         let message = new Message();
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await this.dce_bot.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
@@ -789,7 +789,7 @@ export default class ChatBotScreen extends React.Component {
         const toUri = videoFileURL;
 
         let message = new Message();
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await this.dce_bot.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Video, this.user);
@@ -917,7 +917,7 @@ export default class ChatBotScreen extends React.Component {
 
     onBarcodeRead(barCodeData) {
         let message = new Message();
-        message.setCreatedBy(this.getUserUUID());
+        message.setCreatedBy(this.getUserId());
         message.stringMessage(barCodeData);
         return this.sendMessage(message);
     }
@@ -961,7 +961,7 @@ export default class ChatBotScreen extends React.Component {
         if (selectedRows.length > 0) {
             try {
                 const uuids = _.map(selectedRows, (row) => {
-                    let uuid = _.find(row.data.contact_info, function (m) { return m.key === 'uuid' });
+                    let uuid = _.find(row.data.contact_info, function (m) { return m.key === 'userId' });
                     return uuid.value;
                 });
                 const names = _.map(selectedRows, (row) => {
@@ -972,7 +972,7 @@ export default class ChatBotScreen extends React.Component {
                         this.conversationContext = context;
                         let message = new Message();
                         message.stringMessage(I18n.t('Slider_Response', { lines: names.join('\n') }));
-                        message.setCreatedBy(this.getUserUUID());
+                        message.setCreatedBy(this.getUserId());
                         return this.sendMessage(message);
                     });
             } catch (error) {

@@ -20,7 +20,7 @@ if (Platform.OS === 'ios') {
         clientID: Config.auth.ios.google.iosClientId,
         forceCodeForRefreshToken: true,
     });
-} else {  
+} else {
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
         iosClientId: Config.auth.ios.google.iosClientId,
@@ -72,11 +72,6 @@ class FrontmAuth {
                     name: fbDetails.name,
                     userId: fbDetails.id
                 },
-                conversation: {
-                    uuid: conversationId || UUID(),
-                    bot: botName
-                },
-                creatorInstanceId: UUID(),
             };
             AccessToken.getCurrentAccessToken()
                 .then((token) => {
@@ -102,7 +97,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 info: resData.user || data.user,
                                 refreshToken: resData.longTermToken
                             }
@@ -231,21 +226,18 @@ class FrontmAuth {
                     if (!(result.success === 'true' || result.success === true)) {
                         return reject({type: 'error', error: result.message});
                     }
+                    console.log('Signin result : ', result);
                     const frontmUser = result.data.user;
+                    const defaultScreenName = frontmUser.userName ? frontmUser.userName.replace(/ /g, '') : '';
                     const data = {
                         user: {
                             emailAddress: frontmUser.emailAddress,
                             givenName: frontmUser.givenName,
-                            screenName: frontmUser.name ? frontmUser.name.replace(/ /g, '') : '',
+                            screenName: frontmUser.screenName || defaultScreenName,
                             surname: frontmUser.surname,
-                            name: frontmUser.name,
-                            userId: frontmUser.userId,
+                            name: frontmUser.userName,
+                            awsId: frontmUser.awsId,
                         },
-                        conversation: {
-                            uuid: conversationId || UUID(),
-                            bot: 'onboarding-bot'
-                        },
-                        creatorInstanceId: UUID(),
                     };
                     let options = {
                         'method': 'post',
@@ -256,9 +248,11 @@ class FrontmAuth {
                         },
                         'data': data
                     };
+                    console.log('network options : ', options);
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
+                            console.log('resData : ', resData);
                             if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
                                 reject(new Error('Empty response from the server'));
                                 return;
@@ -268,7 +262,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 refreshToken: result.data.refresh_token,
                                 info: resData.user || data.user
                             }
@@ -285,16 +279,16 @@ class FrontmAuth {
     }
 
     refreshTokens(user) {
+        console.log('Options for refresh : ', user);
         let options = {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
                 refresh_token: user.provider.refreshToken,
-                provider_name: user.provider.name.toLowerCase(),
+                provider_name: user.info.userName.toLowerCase(),
                 email: user.info.emailAddress
             }
         };
-        console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {

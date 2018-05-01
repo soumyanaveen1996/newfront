@@ -115,9 +115,10 @@ export default class ContactsPicker extends React.Component {
             }
         } else {
             let participants = [{
-                uuid: contact.id,
+                userId: contact.id,
                 name: contact.screenName
             }];
+            console.log('Contacts picked :', participants, contact);
             SystemBot.get(SystemBot.imBotManifestName)
                 .then((imBot) => {
                     Actions.peopleChat({ bot: imBot, participants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
@@ -156,10 +157,11 @@ export default class ContactsPicker extends React.Component {
         // }]
         const contacts = this.state.selectedContacts || [];
 
+        console.log('Contacts picked :', contacts);
         let participants = contacts.map((contact) => {
             return {
                 name: contact.screenName,
-                uuid: contact.id
+                userId: contact.id
             }
         });
 

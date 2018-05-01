@@ -7,7 +7,7 @@ import _ from 'lodash';
  *   {
  *       conversationId: UUID(),
  *       creatorInstanceId: UUID(),
- *       participants: [user.userUUID, other_participant's_uuids],
+ *       participants: [user.userId, other_participant's_uuids],
  *       onChannels: [],
  *       closed: false
  *   };
@@ -72,10 +72,10 @@ export default class ConversationContext {
         if (user) {
             const context = {
                 conversationId: UUID(),
-                creatorInstanceId: user.userUUID,
-                creator: { name: user.info.screenName, uuid: user.userUUID },
-                participantsInfo: [{ name: user.info.screenName, uuid: user.userUUID }],
-                participants: [user.userUUID],
+                creatorInstanceId: user.userId,
+                creator: { userName: user.info.screenName, uuid: user.userId },
+                participantsInfo: [{ userName: user.info.screenName, userId: user.userId }],
+                participants: [user.userId],
                 onChannels: [],
                 closed: false
             };
@@ -96,10 +96,10 @@ export default class ConversationContext {
         if (currentUser && channel) {
             const context = {
                 conversationId: conversationId || UUID(),
-                creatorInstanceId:currentUser.userUUID,
+                creatorInstanceId: currentUser.userId,
                 onChannels: [{
-                    name: channel.name,
-                    domain: channel.domain
+                    channelName: channel.channelName,
+                    userDomain: channel.userDomain
                 }],
                 closed: false
             };
@@ -167,6 +167,21 @@ export default class ConversationContext {
             });
     });
 
+    static setConversationCreated = (botContext, created = true) => new Promise((resolve, reject) => {
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (!context) {
+                    return resolve();
+                }
+                context.created = created;
+                botContext.setConversationContext(context);
+                return resolve(DeviceStorage.save(ConversationContext._getStorageKey(botContext), context));
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
     static setParticipants = (participants, botContext) => new Promise((resolve, reject) => {
         if (!participants || participants.length < 1) {
             resolve();
@@ -189,6 +204,7 @@ export default class ConversationContext {
         if (!participants || participants.length < 1) {
             resolve();
         }
+        console.log('Participants : ', participants);
         ConversationContext._getBotConversationContext(botContext)
             .then(function (context) {
                 if (!context) {
@@ -233,13 +249,14 @@ export default class ConversationContext {
     };
 
     static getChatName = function (conversationContext, user) {
+        console.log('In get chat name : ', conversationContext);
         if (conversationContext.onChannels.length > 0) {
-            return conversationContext.onChannels[0].name;
+            return conversationContext.onChannels[0].channelName;
         } else {
             const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-                return p.uuid !== user.userUUID
+                return p.userId !== user.userId
             });
-            const names = _.map(otherParticipants, 'name');
+            const names = _.map(otherParticipants, 'userName');
             return names.join(',');
         }
     };
@@ -256,21 +273,21 @@ export default class ConversationContext {
 
     static getOtherUserId = function(conversationContext, user) {
         const otherParticipants = _.filter(conversationContext.participantsInfo, (p) => {
-            return p.uuid !== user.userUUID
+            return p.userId !== user.userId
         });
         if (otherParticipants.length === 1) {
-            return otherParticipants[0].uuid;
+            return otherParticipants[0].userId;
         }
         return undefined;
     }
 
     static updateParticipants = function (conversationContext, participants) {
         let filteredParticipants = _.filter(participants, (participant) => {
-            return _.find(conversationContext.participants, (p) => p === participant.uuid) === undefined;
+            return _.find(conversationContext.participants, (p) => p === participant.userId) === undefined;
         });
         conversationContext.participantsInfo = conversationContext.participantsInfo || [];
         conversationContext.participants = conversationContext.participants || [];
         conversationContext.participantsInfo = conversationContext.participantsInfo.concat(filteredParticipants);
-        conversationContext.participants = conversationContext.participants.concat(_.map(filteredParticipants, 'uuid'));
+        conversationContext.participants = conversationContext.participants.concat(_.map(filteredParticipants, 'userId'));
     }
 }

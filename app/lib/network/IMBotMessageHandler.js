@@ -97,8 +97,8 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
     const botKey = message.conversation;
     let participants = conversationData.participants;
 
-    console.log('Handling new IM Conversation');
-    Contact.getContactFieldForUUIDs([creator.uuid])
+    console.log('Handling new IM Conversation', conversationData, participants);
+    Contact.getContactFieldForUUIDs([creator.userId])
         .then((contacts) => {
             if (contacts && contacts.length > 0 && contacts[0].ignored) {
                 isUnignoredContact = false
@@ -108,11 +108,13 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
             }
         })
         .then((conversationContext) => {
+            console.log('Handling new IM Conversation', conversationContext);
             if (isUnignoredContact && conversationContext) {
                 conversationContext.conversationId = botKey;
                 ConversationContext.updateParticipants(conversationContext, participants);
-                conversationContext.creatorInstanceId = creator.uuid;
+                conversationContext.creatorInstanceId = creator.userId;
                 conversationContext.creator = creator;
+                console.log('Handling new IM Conversation', conversationContext);
                 return ConversationContext.saveConversationContext(conversationContext, botContext, user);
             }
         })
@@ -144,14 +146,14 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
         .then((conversationContext) => {
             conversationContext.conversationId = botKey;
             conversationContext.onChannels = conversationData.onChannels;
-            conversationContext.creatorInstanceId = creator.uuid;
+            conversationContext.creatorInstanceId = creator.userId;
             conversationContext.creator = creator;
             console.log('Conversation Context : ', conversationContext);
             return ConversationContext.saveConversationContext(conversationContext, botContext, user);
         })
         .then((conversationContext) => {
             console.log('Conversation Context in new message : ', conversationContext, channel, botKey);
-            return ChannelDAO.updateConversationForChannel(channel.name, channel.domain, botKey);
+            return ChannelDAO.updateConversationForChannel(channel.channelName, channel.userDomain, botKey);
         })
         .then(() => {
             return Conversation.createChannelConversation(botKey);
@@ -208,7 +210,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
 const getConversationData = (conversationId, createdBy, user) => {
     let options = {
         'method': 'get',
-        'url': getUrl() + '?userUuid=' + user.userUUID + '&conversationId=' + conversationId + '&botId=' + SystemBot.imBot.id + '&createdBy=' + createdBy,
+        'url': getUrl() + '?userId=' + user.userId + '&conversationId=' + conversationId + '&botId=' + SystemBot.imBot.botId + '&createdBy=' + createdBy,
         'headers': getHeaders(user)
     };
 
