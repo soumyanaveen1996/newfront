@@ -69,7 +69,7 @@ class FrontmAuth {
                     givenName: fbDetails.first_name,
                     screenName: fbDetails.name ? fbDetails.name.replace(/ /g, '') : '',
                     surname: fbDetails.last_name || '',
-                    name: fbDetails.name,
+                    userName: fbDetails.name,
                     userId: fbDetails.id
                 },
             };
@@ -160,7 +160,7 @@ class FrontmAuth {
                             givenName: googleUser.givenName,
                             screenName: googleUser.name ? googleUser.name.replace(/ /g, '') : '',
                             surname: googleUser.familyName || googleUser.surname,
-                            name: googleUser.name,
+                            userName: googleUser.name,
                             userId: googleUser.id
                         },
                         conversation: {
@@ -235,7 +235,7 @@ class FrontmAuth {
                             givenName: frontmUser.givenName,
                             screenName: frontmUser.screenName || defaultScreenName,
                             surname: frontmUser.surname,
-                            name: frontmUser.userName,
+                            userName: frontmUser.userName,
                             awsId: frontmUser.awsId,
                         },
                     };
