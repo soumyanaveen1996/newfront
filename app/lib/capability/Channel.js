@@ -47,17 +47,14 @@ export default class Channel {
                             domainChannels: domainChannels
                         }
                     };
-                    console.log('Options : ', options);
                     return Network(options);
                 }
             })
             .then((response) => {
-                console.log('response : ', response);
                 let err = _.get(response, 'data.error');
                 if (err !== '0' && err !== 0) {
                     reject(new ChannelError(+err));
                 } else {
-                    console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
                         ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
                     })
@@ -85,7 +82,7 @@ export default class Channel {
                             action: 'Create',
                             userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
-                            name: name,
+                            channelName: name,
                             description: description,
                             userDomain: domain
                         }
@@ -122,7 +119,7 @@ export default class Channel {
                             action: 'Edit',
                             userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
-                            name: name,
+                            channelName: name,
                             description: description,
                             userDomain: domain
                         }
@@ -158,8 +155,8 @@ export default class Channel {
                             action: 'Unsubscribe',
                             userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
-                            domain: channel.userDomain,
-                            channel: channel.channelName,
+                            userDomain: channel.userDomain,
+                            channelName: channel.channelName,
                         }
                     };
                     return Network(options);
