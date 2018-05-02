@@ -1,1 +1,30 @@
-{"name":"Address Book Management","slug":"contacts-bot","url":"botfarm/contactsBot.js","logoUrl":"AddressBookLogo.png","description":"Bot to manage your personal address book","systemBot":true,"id":"98ff14b8-6373-417f-bcdf-a9855ebdfbe7","version":"0.1.0","category":[],"vendor":"frontmai","dependencies":{"authContext":{"version":"1.0.0","remote":true,"url":"botfarm/rc/authContext.js"},"agentGuardService":{"version":"1.0.0","remote":true,"url":"botfarm/rc/agentGuardService.js"},"autoRenewConversationContext":{"version":"1.0.0","remote":true,"url":"botfarm/rc/autoRenewConversationContext.js"}}}
+{
+  "allowResetConversation": "false",
+  "botId": "98ff14b8-6373-417f-bcdf-a9855ebdfbe7",
+  "botName": "Address Book Management",
+  "botUrl": "botfarm/contactsBot.js",
+  "category": [],
+  "dependencies": {
+    "agentGuardService": {
+      "remote": "true",
+      "url": "botfarm/rc/agentGuardService.js",
+      "version": "1.0.0"
+    },
+    "authContext": {
+      "remote": "true",
+      "url": "botfarm/rc/authContext.js",
+      "version": "1.0.0"
+    },
+    "autoRenewConversationContext": {
+      "remote": "true",
+      "url": "botfarm/rc/autoRenewConversationContext.js",
+      "version": "1.0.0"
+    }
+  },
+  "description": "Bot to manage your personal address book",
+  "logoUrl": "AddressBookLogo.png",
+  "slug": "contacts-bot",
+  "systemBot": true,
+  "userDomain": "frontmai",
+  "version": "0.1.0"
+}
