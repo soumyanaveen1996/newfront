@@ -285,21 +285,25 @@ class FrontmAuth {
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
                 refresh_token: user.provider.refreshToken,
-                provider_name: user.info.userName.toLowerCase(),
+                provider_name: user.provider.name.toLowerCase(),
                 email: user.info.emailAddress
             }
         };
+        console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
+                    console.log('Results for refresh : ', res);
                     let resData = res ? res.data : {};
-                    const updatedCreds = {
-                        identityId: resData.identityId || undefined,
-                        accessKeyId: resData.accessKeyId,
-                        secretAccessKey: resData.secretAccessKey,
-                        sessionToken: resData.sessionToken,
+                    if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
+                        const updatedCreds = {
+                            identityId: resData.identityId,
+                            accessKeyId: resData.accessKeyId,
+                            secretAccessKey: resData.secretAccessKey,
+                            sessionToken: resData.sessionToken,
+                        }
+                        return resolve(updatedCreds);
                     }
-                    return resolve(updatedCreds);
                 }).catch((err) => {
                     console.log('Error making refresh token call::', err);
                     return reject(err);

@@ -116,6 +116,10 @@ class Bot extends events.EventEmitter {
             if (!catalog) {
                 throw new NetworkError('Error getting catalog');
             }
+            if (!_.isArray(catalog)) {
+                throw new NetworkError('Error getting catalog');
+            }
+
             catalog = _.map(catalog, (bot) => _.merge(bot, {logoUrl : FrontmUtils.botLogoUrl(bot.logoUrl)}));
 
             const catalogData = {

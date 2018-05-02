@@ -50,7 +50,7 @@ export default class InstalledBotsScreen extends React.Component {
             this.setState({bots: this.bots, loaded: true});
         }
         // alert(JSON.stringify(bots))
-        if (this.bots.length == 0 && this.state.firstTimeLoad) {
+        if (this.bots.length === 0 && this.state.firstTimeLoad) {
             Actions.botStore({ onBack: this.refreshData.bind(this) });
             this.setState({firstTimeLoad: false})
         }
