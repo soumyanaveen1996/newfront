@@ -71,8 +71,8 @@ export default class ChannelsListItem extends React.Component {
             <TouchableOpacity style={styles.container} onPress={this.onItemPressed.bind(this)}>
                 <CachedImage source={{ uri: Utils.channelLogoUrl(channel.logo) } } style={ styles.image } resizeMode="contain"/>
                 <View style={styles.textContainer}>
-                    <Text style={ styles.title } >{ channel.name }</Text>
-                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.desc}</Text>
+                    <Text style={ styles.title } >{ channel.channelName }</Text>
+                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.description}</Text>
                 </View>
                 { this.renderRightArea() }
             </TouchableOpacity>

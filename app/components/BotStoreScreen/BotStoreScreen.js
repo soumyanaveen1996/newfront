@@ -133,7 +133,7 @@ export default class BotStoreScreen extends React.Component{
         } if (this.state.selectedIndex === 1) {
             return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots}/>)
         } if (this.state.selectedIndex === 0) {
-            let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.id) >= 0}))
+            let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
             return (<FeaturedTab featuredBots={featuredBots}/>)
         }
     }

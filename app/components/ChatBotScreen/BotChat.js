@@ -6,7 +6,7 @@ export default class BotChat extends ChatBotScreen {
         super(props);
 
         // id is the key (not name) - this ties up with the backend too
-        this.botKey = props.bot.id;
+        this.botKey = props.bot.botId;
     }
 
     getBotKey = () => {

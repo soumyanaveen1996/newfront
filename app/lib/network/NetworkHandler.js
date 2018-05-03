@@ -141,7 +141,7 @@ const readQueue = (user) => new Promise((resolve, reject) => {
         'headers': getHeaders(user),
         'data': {
             stats: stats,
-            userUuid: user.userUUID,
+            userId: user.userId,
         }
     };
 
@@ -192,7 +192,7 @@ const requestMessagesBeforeDateFromLambda = (user, conversationId, botId, date) 
             sessionToken: user.aws.sessionToken
         },
         'data': {
-            userUuid: user.userUUID,
+            userId: user.userId,
             conversation: conversationId,
             botId: botId,
             timestamp: date,

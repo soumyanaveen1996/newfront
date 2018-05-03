@@ -42,7 +42,7 @@ export default class InstalledBotsScreen extends React.Component {
         const bots = await Bot.getInstalledBots();
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
 
-        this.bots = _.reject(bots, (bot) => _.find(defaultBots, { id: bot.id }));
+        this.bots = _.reject(bots, (bot) => _.find(defaultBots, { botId: bot.botId }));
         if (this.queryText && this.queryText.length > 0) {
             this.onSearchQueryChange(this.queryText);
             this.setstate({loaded: true});
@@ -50,7 +50,7 @@ export default class InstalledBotsScreen extends React.Component {
             this.setState({bots: this.bots, loaded: true});
         }
         // alert(JSON.stringify(bots))
-        if (this.bots.length == 0 && this.state.firstTimeLoad) {
+        if (this.bots.length === 0 && this.state.firstTimeLoad) {
             Actions.botStore({ onBack: this.refreshData.bind(this) });
             this.setState({firstTimeLoad: false})
         }
@@ -74,7 +74,7 @@ export default class InstalledBotsScreen extends React.Component {
 
     deleteBot = async (bot) => {
         try {
-            await MessageHandler.deleteBotMessages(bot.id);
+            await MessageHandler.deleteBotMessages(bot.botId);
             const dceBot = dce.bot(bot);
             await Bot.delete(dceBot);
             this.refreshData();
@@ -100,7 +100,7 @@ export default class InstalledBotsScreen extends React.Component {
                     avatarContainerStyle={styles.avatarContainerStyle}
                     avatarStyle={styles.avatarStyle}
                     containerStyle={styles.containerStyle}
-                    title={botData.name}
+                    title={botData.botName}
                     titleStyle={styles.titleStyle}
                     titleContainerStyle={styles.titleContainerStyle}
                     subtitle={botData.description}
@@ -119,7 +119,7 @@ export default class InstalledBotsScreen extends React.Component {
 
     renderGridItem = ({item}) => {
         return (
-            <View key={item.id} style={styles.rowContainer}>
+            <View key={item.botId} style={styles.rowContainer}>
                 <TouchableHighlight style={styles.gridStyle}>
                     <View style={styles.rowContent}>
                         {this.renderRow(item)}
@@ -145,7 +145,7 @@ export default class InstalledBotsScreen extends React.Component {
             return [];
         }
         text = text.toLowerCase();
-        let filterFunc = (bot) => bot.name.toLowerCase().indexOf(text) !== -1;
+        let filterFunc = (bot) => bot.botName.toLowerCase().indexOf(text) !== -1;
         return this.createBotDict(filterFunc);
     }
 
@@ -189,7 +189,7 @@ export default class InstalledBotsScreen extends React.Component {
                 <View >
                     <FlatList
                         style = {styles.flatList}
-                        keyExtractor = {(item, index) => item.id}
+                        keyExtractor = {(item, index) => item.botId}
                         data={this.state.bots}
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}

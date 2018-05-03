@@ -117,7 +117,7 @@ export default class BotFilter extends React.Component {
         return this.state.displayedBots.map((bot) => {
             const imageSource = bot.logoSlug && images[bot.logoSlug] ? images[bot.logoSlug] : {uri: bot.logoUrl}
             return (
-                <TouchableOpacity style={Styles.bot} key={bot.id}  onPress={ () => this.onBotSelected.bind(this)(bot)}>
+                <TouchableOpacity style={Styles.bot} key={bot.botId}  onPress={ () => this.onBotSelected.bind(this)(bot)}>
                     <Image style={Styles.botImage} source={imageSource} resizeMode="contain" defaultSource={images.front_bot_logo}/>
                     <Text style={Styles.botTitle} numberOfLines={1}>{bot.name}</Text>
                 </TouchableOpacity>

@@ -77,7 +77,7 @@ export default class Auth {
                 if (result && result.type === 'success') {
                     const creds = result.credentials.google;
                     currentUser = new User({
-                        userUUID: creds.userUUID
+                        userId: creds.userId
                     });
                     currentUser.aws = {
                         identityId: creds.identityId,
@@ -119,7 +119,7 @@ export default class Auth {
                 if (result && result.type === 'success') {
                     const creds = result.credentials.facebook;
                     currentUser = new User({
-                        userUUID: creds.userUUID
+                        userId: creds.userId
                     });
                     currentUser.aws = {
                         identityId: creds.identityId,
@@ -184,7 +184,7 @@ export default class Auth {
                 if (result) {
                     const creds = result.credentials.frontm;
                     currentUser = new User({
-                        userUUID: creds.userUUID
+                        userId: creds.userId
                     });
                     currentUser.aws = {
                         identityId: creds.identityId,

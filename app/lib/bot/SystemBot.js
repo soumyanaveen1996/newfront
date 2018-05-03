@@ -16,15 +16,15 @@ export const SYSTEM_BOT_MANIFEST_NAMES = {
 // The app still picks the latest from the server once the user visits the botstore once
 export const SYSTEM_BOT_MANIFEST = {
     'im-bot': {
-        'name': 'IMBot',
+        'botName': 'IMBot',
         'slug': 'im-bot',
-        'url': 'botfarm/imBot.js',
+        'botUrl': 'botfarm/imBot.js',
         'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/FrontBotLogo.png',
         'description': 'Instant Messenger',
-        'id': 'im-bot', // This should never change (permanent)
+        'botId': 'im-bot', // This should never change (permanent)
         'version': '0.1.0',
         'category': 'im, chat',
-        'vendor': 'frontm',
+        'userDomain': 'frontm',
         'dependencies': {
             'authContext': {
                 'version': '1.0.0',
@@ -44,15 +44,15 @@ export const SYSTEM_BOT_MANIFEST = {
         }
     },
     'onboarding-bot': {
-        'name': 'M',
+        'botName': 'M',
         'slug': 'onboarding-bot',
-        'url': 'botfarm/onboardingBot.js',
+        'botUrl': 'botfarm/onboardingBot.js',
         'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/AuthenticationLogo.png',
         'description': 'Onboarding bot for Frontm',
-        'id': 'onboarding-bot',
+        'botId': 'onboarding-bot',
         'version': '0.1.0',
         'category': 'onboarding, authentication',
-        'vendor': 'frontm',
+        'userDomain': 'frontm',
         'dependencies': {
             'authContext': {
                 'version': '1.0.0',
@@ -67,15 +67,15 @@ export const SYSTEM_BOT_MANIFEST = {
         }
     },
     'contacts-bot': {
-        'name': 'Address Book Management',
+        'botName': 'Address Book Management',
         'slug': 'contacts-bot',
-        'url': 'botfarm/contactsBot.js',
+        'botUrl': 'botfarm/contactsBot.js',
         'logoUrl': 'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/botLogos/AddressBookLogo.png',
         'description': 'Bot to manage your personal address book',
-        'id': '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
+        'botId': '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
         'version': '0.1.0',
         'category': 'im, chat',
-        'vendor': 'frontm',
+        'userDomain': 'frontm',
         'dependencies': {
             'authContext': {
                 'version': '1.0.0',
@@ -94,11 +94,11 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         }
     },
-    'channels-bot': { 'name': 'ChannelsBot',
-        'id': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
-        'vendor': 'frontmai',
+    'channels-bot': { 'botName': 'ChannelsBot',
+        'botId': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
+        'userDomain': 'frontmai',
         'slug': 'channels-bot',
-        'url': 'botfarm/channelsBot.js',
+        'botUrl': 'botfarm/channelsBot.js',
         'logoUrl': botLogoUrl('Survey_logopng.png'),
         'description': 'channels bot',
         'version': '0.1.0',

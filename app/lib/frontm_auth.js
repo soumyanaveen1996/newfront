@@ -20,7 +20,7 @@ if (Platform.OS === 'ios') {
         clientID: Config.auth.ios.google.iosClientId,
         forceCodeForRefreshToken: true,
     });
-} else {  
+} else {
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
         iosClientId: Config.auth.ios.google.iosClientId,
@@ -69,14 +69,9 @@ class FrontmAuth {
                     givenName: fbDetails.first_name,
                     screenName: fbDetails.name ? fbDetails.name.replace(/ /g, '') : '',
                     surname: fbDetails.last_name || '',
-                    name: fbDetails.name,
+                    userName: fbDetails.name,
                     userId: fbDetails.id
                 },
-                conversation: {
-                    uuid: conversationId || UUID(),
-                    bot: botName
-                },
-                creatorInstanceId: UUID(),
             };
             AccessToken.getCurrentAccessToken()
                 .then((token) => {
@@ -102,7 +97,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 info: resData.user || data.user,
                                 refreshToken: resData.longTermToken
                             }
@@ -165,7 +160,7 @@ class FrontmAuth {
                             givenName: googleUser.givenName,
                             screenName: googleUser.name ? googleUser.name.replace(/ /g, '') : '',
                             surname: googleUser.familyName || googleUser.surname,
-                            name: googleUser.name,
+                            userName: googleUser.name,
                             userId: googleUser.id
                         },
                         conversation: {
@@ -231,21 +226,18 @@ class FrontmAuth {
                     if (!(result.success === 'true' || result.success === true)) {
                         return reject({type: 'error', error: result.message});
                     }
+                    console.log('Signin result : ', result);
                     const frontmUser = result.data.user;
+                    const defaultScreenName = frontmUser.userName ? frontmUser.userName.replace(/ /g, '') : '';
                     const data = {
                         user: {
                             emailAddress: frontmUser.emailAddress,
                             givenName: frontmUser.givenName,
-                            screenName: frontmUser.name ? frontmUser.name.replace(/ /g, '') : '',
+                            screenName: frontmUser.screenName || defaultScreenName,
                             surname: frontmUser.surname,
-                            name: frontmUser.name,
-                            userId: frontmUser.userId,
+                            userName: frontmUser.userName,
+                            awsId: frontmUser.awsId,
                         },
-                        conversation: {
-                            uuid: conversationId || UUID(),
-                            bot: 'onboarding-bot'
-                        },
-                        creatorInstanceId: UUID(),
                     };
                     let options = {
                         'method': 'post',
@@ -256,9 +248,11 @@ class FrontmAuth {
                         },
                         'data': data
                     };
+                    console.log('network options : ', options);
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
+                            console.log('resData : ', resData);
                             if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
                                 reject(new Error('Empty response from the server'));
                                 return;
@@ -268,7 +262,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 refreshToken: result.data.refresh_token,
                                 info: resData.user || data.user
                             }
@@ -285,6 +279,7 @@ class FrontmAuth {
     }
 
     refreshTokens(user) {
+        console.log('Options for refresh : ', user);
         let options = {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
@@ -298,14 +293,17 @@ class FrontmAuth {
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
+                    console.log('Results for refresh : ', res);
                     let resData = res ? res.data : {};
-                    const updatedCreds = {
-                        identityId: resData.identityId || undefined,
-                        accessKeyId: resData.accessKeyId,
-                        secretAccessKey: resData.secretAccessKey,
-                        sessionToken: resData.sessionToken,
+                    if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
+                        const updatedCreds = {
+                            identityId: resData.identityId,
+                            accessKeyId: resData.accessKeyId,
+                            secretAccessKey: resData.secretAccessKey,
+                            sessionToken: resData.sessionToken,
+                        }
+                        return resolve(updatedCreds);
                     }
-                    return resolve(updatedCreds);
                 }).catch((err) => {
                     console.log('Error making refresh token call::', err);
                     return reject(err);

@@ -21,8 +21,8 @@ const insertChannelContact = (id, name, email, screenName, givenName, surname) =
     db.transaction(tx => {
         tx.executeSql(channelContactSql.insertChannelContact, args, function success(tx, res) {
             return resolve({
-                id: id,
-                name: name,
+                userId: id,
+                userName: name,
                 email: email,
                 screenName: screenName,
                 givenName: givenName,
@@ -47,8 +47,8 @@ const deleteChannelContact = (id) => new Promise((resolve, reject) => {
 
 const channelContactDataFromDbResult = (dbResult) => {
     return {
-        id: dbResult.id,
-        name: dbResult.name,
+        userId: dbResult.id,
+        userName: dbResult.name,
         email: dbResult.email,
         givenName: dbResult.givenName,
         surname: dbResult.surname,

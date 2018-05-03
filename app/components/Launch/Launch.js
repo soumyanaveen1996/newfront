@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification } from '../../lib/capability';
+import { Auth, Notification, Channel } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
@@ -17,7 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 
-const VERSION = 12; // Corresponding to 2.6.0 build 7. Update this number every time we update initial_bots
+const VERSION = 13; // Corresponding to 2.7.0 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -49,6 +49,14 @@ export default class Splash extends React.Component {
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
+
+        /*
+        Auth.getUser()
+            .then((user) => {
+                console.log('Auth user : ', user);
+            })
+
+       Channel.refreshChannels(); */
 
         // Chain all setup stuff
         persist.runMigrations()

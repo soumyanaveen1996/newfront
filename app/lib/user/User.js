@@ -1,12 +1,12 @@
 /**
  * A simple user class that can be persisted in device storage
  * Usage:
- * `let user = new User({userUUID: 'abc', ...});
- *  user.userUUID; // 'abc'
+ * `let user = new User({userId: 'abc', ...});
+ *  user.userId; // 'abc'
  */
 export default class User {
     constructor(options) {
-        this.userUUID = options.userUUID;
+        this.userId = options.userId;
         this.aws = options.aws || {
             identityId: '',
             accessKeyId: '',

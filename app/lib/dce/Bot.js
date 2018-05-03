@@ -12,10 +12,11 @@ import SystemBot from '../../lib/bot/SystemBot';
 class Bot {
 
     constructor(manifest, context) {
+
         this.manifest = manifest;
         this.context = context;
 
-        if (!this.manifest.url) {
+        if (!this.manifest.botUrl) {
             throw new Error('A bot requires valid bot url to load');
         }
         this.user;
@@ -76,7 +77,7 @@ class Bot {
             if (_.isEmpty(o)) {
                 return false;
             }
-            const sysBot = _.find(systemBots, ['id', o.id])
+            const sysBot = _.find(systemBots, ['botId', o.botId])
             // Remove the IMBot - this is for people chat and cannot be part of regular bot
             if (sysBot) {
                 return false;
@@ -172,16 +173,20 @@ class Bot {
     }
 
     get name() {
-        return this.manifest.name
+        return this.manifest.botName
     }
 
     get id() {
-        return this.manifest.id
+        return this.manifest.botId
+    }
+
+    get botId() {
+        return this.manifest.botId
     }
 
 
     get slug() {
-        return _.snakeCase(_.get(this.manifest, 'slug', this.manifest.name));
+        return _.snakeCase(_.get(this.manifest, 'slug', this.manifest.botName));
     }
 
     async storeManifest() {
@@ -209,9 +214,9 @@ class Bot {
             let user = await Promise.resolve(Auth.getUser());
 
             if (!bot_data) {
-                console.log('Bot::Did not find bot on the device. Downloading from the server: ', this.manifest.name);
+                console.log('Bot::Did not find bot on the device. Downloading from the server: ', this.manifest.botName);
 
-                let res = await AssetFetcher.downloadS3FileRest(bot_path, this.manifest.url, user);
+                let res = await AssetFetcher.downloadS3FileRest(bot_path, this.manifest.botUrl, user);
                 bot_data = res;
             }
             return bot_data;

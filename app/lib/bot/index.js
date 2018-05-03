@@ -23,10 +23,10 @@ class Bot extends events.EventEmitter {
         }
         // Check if the bot is already installed - if so, throw an error?
         const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, {id: bot.id});
+        const present = _.findIndex(bots, {botId: bot.botId});
 
         if (present > -1) {
-            throw new Error('The supplied bot is already an installed bot:', bot.id);
+            throw new Error('The supplied bot is already an installed bot:', bot.botId);
         }
 
         await bot.Load();
@@ -38,7 +38,7 @@ class Bot extends events.EventEmitter {
         }
         // First delete the older version
         const bots = await Bot.getInstalledBots();
-        const currentBot = _.find(bots, { id: bot.id });
+        const currentBot = _.find(bots, { botId: bot.botId });
         if (currentBot) {
             const dceBot = dce.bot(currentBot);
             await Bot.delete(dceBot);
@@ -55,10 +55,10 @@ class Bot extends events.EventEmitter {
 
         // Check if the bot to install is in list of installed bots:
         const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, {id: bot.id});
+        const present = _.findIndex(bots, {botId: bot.botId});
 
         if (present < 0) {
-            throw new Error('The supplied bot is not an installed bot:', bot.id);
+            throw new Error('The supplied bot is not an installed bot:', bot.botId);
         }
 
         await bot.Delete();
@@ -84,7 +84,7 @@ class Bot extends events.EventEmitter {
             const bots = await Bot.getInstalledBots();
             const toDeleteBots = _.filter(bots, (bot) => SYSTEM_BOT_MANIFEST[bot.id] === undefined);
             _.each(toDeleteBots , async (bot) => {
-                await MessageHandler.deleteBotMessages(bot.id);
+                await MessageHandler.deleteBotMessages(bot.botId);
                 const dceBot = dce.bot(bot);
                 await Bot.delete(dceBot);
             });
@@ -116,19 +116,23 @@ class Bot extends events.EventEmitter {
             if (!catalog) {
                 throw new NetworkError('Error getting catalog');
             }
+            if (!_.isArray(catalog)) {
+                throw new NetworkError('Error getting catalog');
+            }
+
             catalog = _.map(catalog, (bot) => _.merge(bot, {logoUrl : FrontmUtils.botLogoUrl(bot.logoUrl)}));
 
             const catalogData = {
                 bots: catalog
             }
-            catalogData.featured = _.map(_.filter(catalog, (bot) => (bot.featured === 'true' || bot.featured === true) && (bot.systemBot === false || bot.systemBot === 'false' || bot.systemBot === undefined)), 'id');
+            catalogData.featured = _.map(_.filter(catalog, (bot) => (bot.featured === 'true' || bot.featured === true) && (bot.systemBot === false || bot.systemBot === 'false' || bot.systemBot === undefined)), 'botId');
             catalogData.systemBots = _.keyBy(_.filter(catalog, (bot) => bot.systemBot === 'true' || bot.systemBot === true), 'slug');
             const developerBots = _.omit(_.groupBy(catalog, 'developer'), 'undefined');
             catalogData.developer = _.map(_.keys(developerBots), (developer) => {
                 return {
                     name: developer,
                     logoUrl: FrontmUtils.developerLogoUrl(developer),
-                    botIds: _.map(developerBots[developer], 'id')
+                    botIds: _.map(developerBots[developer], 'botId')
                 }
             });
             const categories = _.reduce(catalog, (result, bot) => {
@@ -142,7 +146,7 @@ class Bot extends events.EventEmitter {
                 return {
                     name: category,
                     logoUrl: FrontmUtils.developerLogoUrl(category),
-                    botIds: _.map(categories[category], 'id')
+                    botIds: _.map(categories[category], 'botId')
                 }
             });
 

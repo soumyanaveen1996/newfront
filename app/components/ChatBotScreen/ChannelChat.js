@@ -56,7 +56,7 @@ export default class ChannelChat extends ChatBotScreen {
 
     setNavigationParams(context, user) {
         this.props.navigation.setParams({
-            title: this.channel ? this.channel.name : '',
+            title: this.channel ? this.channel.channelName : '',
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
             deleteConversation: this.deleteConversation.bind(this)
         });
@@ -87,6 +87,7 @@ export default class ChannelChat extends ChatBotScreen {
             context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel, this.channel.conversationId));
             ConversationContext.updateParticipants(context, this.participants);
 
+            console.log('Conversation Context : ', context);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -96,7 +97,7 @@ export default class ChannelChat extends ChatBotScreen {
             // Create a conversation for this conversation id
             this.conversation = await Promise.resolve(Conversation.createChannelConversation(context.conversationId));
 
-            await ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, context.conversationId);
+            await ChannelDAO.updateConversationForChannel(this.channel.channelName, this.channel.userDomain, context.conversationId);
 
             // Save this conversation context (save has to happen after the botkey has been extracted)
             await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
@@ -170,7 +171,7 @@ export default class ChannelChat extends ChatBotScreen {
         await this.createOrUpdateConversation(oldConversationId, newConversationId);
         await MessageHandler.moveMessages(oldConversationId, newConversationId);
         await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
-        await ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, newConversationId);
+        await ChannelDAO.updateConversationForChannel(this.channel.channelName, this.channel.userDomain, newConversationId);
 
         this.botContext.setConversationContext(this.conversationContext);
         this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
@@ -196,7 +197,7 @@ export default class ChannelChat extends ChatBotScreen {
             let currentChannel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId);
             if (currentChannel && this.channel && this.channel.id === currentChannel.id) {
                 console.log('deleting conversation Id from channel');
-                await ChannelDAO.updateConversationForChannel(this.channel.name, this.channel.domain, null);
+                await ChannelDAO.updateConversationForChannel(this.channel.channelName, this.channel.userDomain, null);
             } else {
                 console.log('conversation got updated. So not upditng to null');
             }

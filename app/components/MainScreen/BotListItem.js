@@ -60,7 +60,7 @@ export default class BotListItem extends React.Component {
             <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
                 <CachedImage source={{ uri: bot.logoUrl }} style={ BotListItemStyles.image } resizeMode="contain"/>
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={ BotListItemStyles.title } >{bot.name}</Text>
+                    <Text style={ BotListItemStyles.title } >{bot.botName}</Text>
                     {this.renderSubview()}
                 </View>
                 <View style={BotListItemStyles.rightContainer}>

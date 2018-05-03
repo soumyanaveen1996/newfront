@@ -383,7 +383,7 @@ export default class Message {
         let options = {
             messageType: messageType,
             uuid: json.messageUuid,
-            addedByBot: user && (user.userUUID === json.createdBy) ? 0 : 1,
+            addedByBot: user && (user.userId === json.createdBy) ? 0 : 1,
             botKey: json.conversation,
             msg: json.content[0],
             isRead: true,

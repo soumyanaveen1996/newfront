@@ -129,6 +129,7 @@ export default class MainScreen extends React.Component {
     update = async () => {
         const userLoggedIn = await Auth.isUserLoggedIn();
         const botsList = userLoggedIn ? await Bot.getInstalledBots() : await Promise.resolve(SystemBot.getDefaultBots());
+        console.log('Installed bots : ', botsList);
         const authStatus = userLoggedIn ? MainScreenStates.authenticated : MainScreenStates.unauthenticated;
         this.setState({ screenState: authStatus, bots: botsList });
         this.refs.botList.refresh();

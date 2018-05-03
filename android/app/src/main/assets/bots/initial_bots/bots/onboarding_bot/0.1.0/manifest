@@ -1,1 +1,25 @@
-{"name":"M","slug":"onboarding-bot","url":"botfarm/onboardingBot.js","logoUrl":"AuthenticationLogo.png","description":"Onboarding bot for Frontm","id":"onboarding-bot","version":"0.1.0","category":[],"vendor":"frontmai","dependencies":{"authContext":{"version":"1.0.0","remote":true,"url":"botfarm/rc/authContext.js"},"agentGuardService":{"version":"1.0.0","remote":true,"url":"botfarm/rc/agentGuardService.js"}}}
+{
+  "allowResetConversation": "false",
+  "botId": "onboarding-bot",
+  "botName": "M",
+  "botUrl": "botfarm/onboardingBot.js",
+  "category": [],
+  "dependencies": {
+    "agentGuardService": {
+      "remote": "true",
+      "url": "botfarm/rc/agentGuardService.js",
+      "version": "1.0.0"
+    },
+    "authContext": {
+      "remote": "true",
+      "url": "botfarm/rc/authContext.js",
+      "version": "1.0.0"
+    }
+  },
+  "description": "Onboarding bot for Frontm",
+  "logoUrl": "AuthenticationLogo.png",
+  "slug": "onboarding-bot",
+  "systemBot": true,
+  "userDomain": "frontmai",
+  "version": "0.1.0"
+}
