@@ -19,7 +19,7 @@ export default class Channel {
 
     static getSubscribedChannels = ChannelDAO.selectChannels
 
-    static addToSubscribedChannel = (name, description, logo, domain) => ChannelDAO.insertIfNotPresent(name, description, logo, domain)
+    static addToSubscribedChannel = (channelId, name, description, logo, domain) => ChannelDAO.insertIfNotPresent(name, description, logo, domain, channelId)
 
     static subscribe = (channels) => new Promise((resolve, reject) => {
         Auth.getUser()
@@ -56,7 +56,7 @@ export default class Channel {
                     reject(new ChannelError(+err));
                 } else {
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain, channel.channelId);
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -96,7 +96,12 @@ export default class Channel {
                     reject(new ChannelError(+err));
                 } else {
                     // TODO(amal) : Hardcoded logo. remove later.
-                    return ChannelDAO.insertIfNotPresent(name, description, 'ChannelsBotLogo.png', domain);
+                    if (response.data && response.data.content && response.data.content.length > 0) {
+                        const channelId = response.data.content[0];
+                        return ChannelDAO.insertIfNotPresent(name, description, 'ChannelsBotLogo.png', domain, channelId);
+                    } else {
+                        reject(new ChannelError(99));
+                    }
                 }
             })
             .then(resolve)
@@ -201,9 +206,8 @@ export default class Channel {
             .then((response) => {
                 if (response.data && response.data.content) {
                     let channels = response.data.content;
-                    console.log('channels : ', channels);
                     let channelInsertPromises = _.map(channels, (channel) => {
-                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain);
+                        ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain, channel.channelId);
                     })
                     return Promise.all(channelInsertPromises);
                 }

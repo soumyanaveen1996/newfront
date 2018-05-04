@@ -15,9 +15,8 @@ const createChannelsTable = () => new Promise((resolve, reject) => {
 });
 
 
-const insertChannel = (name, description, logo, domain) => new Promise((resolve, reject) => {
-    const args = [name, description, logo, domain];
-    console.log('selected channels : ', name, description, logo, domain, args, channelSql.insertChannel);
+const insertChannel = (name, description, logo, domain, channelId) => new Promise((resolve, reject) => {
+    const args = [name, description, logo, domain, channelId];
     db.transaction(tx => {
         tx.executeSql(channelSql.insertChannel, args, function success(tx, res) {
             console.log('res : ', res);
@@ -89,8 +88,8 @@ const channelDataFromDbResult = (dbResult) => {
         channelName: dbResult.name,
         description: dbResult.desc,
         logo: dbResult.logo,
-        conversationId: dbResult.conversationId,
-        userDomain: dbResult.domain
+        userDomain: dbResult.domain,
+        channelId: dbResult.conversationId
     };
 }
 
@@ -142,12 +141,12 @@ const selectChannelByNameAndDomain = (name, domain) => new Promise((resolve, rej
     });
 });
 
-const insertIfNotPresent = (name, description, logo, domain) => new Promise((resolve, reject) => {
+const insertIfNotPresent = (name, description, logo, domain, channelId) => new Promise((resolve, reject) => {
     selectChannelByNameAndDomain(name, domain)
         .then((channel) => {
             console.log('selected channel : ', name, description, logo, domain);
             if (!channel) {
-                return insertChannel(name, description, logo, domain);
+                return insertChannel(name, description, logo, domain, channelId);
             } else {
                 resolve();
             }

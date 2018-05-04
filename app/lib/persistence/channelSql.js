@@ -14,8 +14,9 @@ const insertChannel = `
         name,
         desc,
         logo,
-        domain
-    ) VALUES (?, ?, ?, ?);
+        domain,
+        conversationId
+    ) VALUES (?, ?, ?, ?, ?);
 `;
 
 const deleteChannel = `
