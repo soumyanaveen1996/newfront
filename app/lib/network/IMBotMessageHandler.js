@@ -71,9 +71,10 @@ const handle = (message, user) => new Promise((resolve, reject) => {
 
 const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise((resolve, reject) => {
     var fetchedContact = false;
+    console.log('Processing message : ', message.details);
     ChannelContactDAO.selectChannelContact(message.createdBy)
         .then((contact) => {
-            console.log('Got contact for user : ', contact);
+            console.log('Processing message : ', contact, message.details);
             if (contact) {
                 return contact;
             } else {
@@ -85,11 +86,12 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
                 fetchedContact = true;
             }
             console.log('Fetched contact for user : ', contact);
-            Queue.completeAsyncQueueResponse(botKey, message);
+            console.log('Processing message : ', message);
+            return resolve(Queue.completeAsyncQueueResponse(botKey, message));
         })
         .catch(() => {
             if (!fetchedContact) {
-                Queue.completeAsyncQueueResponse(botKey, message);
+                return resolve(Queue.completeAsyncQueueResponse(botKey, message));
             }
         });
 });
