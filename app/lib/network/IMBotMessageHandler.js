@@ -70,13 +70,8 @@ const handle = (message, user) => new Promise((resolve, reject) => {
 });
 
 const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise((resolve, reject) => {
-    let returnObj = null;
-    Queue.completeAsyncQueueResponse(botKey, message)
-        .then((obj) => {
-            returnObj = obj;
-            console.log('Checking for user : ', message.createdBy);
-            return ChannelContactDAO.selectChannelContact(message.createdBy)
-        })
+    var fetchedContact = false;
+    ChannelContactDAO.selectChannelContact(message.createdBy)
         .then((contact) => {
             console.log('Got contact for user : ', contact);
             if (contact) {
@@ -86,10 +81,17 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             }
         })
         .then((contact) => {
+            if (contact) {
+                fetchedContact = true;
+            }
             console.log('Fetched contact for user : ', contact);
-            resolve(returnObj);
+            Queue.completeAsyncQueueResponse(botKey, message);
         })
-        .catch(reject);
+        .catch(() => {
+            if (!fetchedContact) {
+                Queue.completeAsyncQueueResponse(botKey, message);
+            }
+        });
 });
 
 const handleNewIMConversation = (conversationData, message, user, botContext, creator) => new Promise((resolve, reject) => {

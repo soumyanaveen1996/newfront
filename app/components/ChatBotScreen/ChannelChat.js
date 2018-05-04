@@ -22,6 +22,7 @@ export default class ChannelChat extends ChatBotScreen {
                 if (state.params.botDone) {
                     state.params.botDone();
                 }
+                await state.params.deleteConversation();
                 if (state.params.onBack) {
                     Actions.pop(); state.params.onBack();
                 } else {
@@ -57,6 +58,7 @@ export default class ChannelChat extends ChatBotScreen {
         this.props.navigation.setParams({
             title: this.channel ? this.channel.channelName : '',
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
+            deleteConversation: this.deleteConversation.bind(this)
         });
     }
 
@@ -146,6 +148,12 @@ export default class ChannelChat extends ChatBotScreen {
     async onSendMessage(messageStr) {
         this.sentMessageCount += 1;
         return super.onSendMessage(messageStr);
+    }
+
+    async deleteConversation() {
+        if (this.newSession && this.sentMessageCount === 0) {
+            await Conversation.deleteChannelConversation(this.conversation.conversationId);
+        }
     }
 
     async onRefresh() {

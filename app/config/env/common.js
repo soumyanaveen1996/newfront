@@ -66,7 +66,7 @@ const config = {
             keepAliveInterval: 120000,
         },
         gsm: {
-            pollingInterval: 60000,
+            pollingInterval: 30000,
         },
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
