@@ -5,6 +5,8 @@ import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
 import { Channel } from '../../lib/capability';
 import { Icons } from '../../config/icons';
+import { Conversation } from '../../lib/conversation';
+import { MessageDAO } from '../../lib/persistence';
 
 const subtitleNumberOfLines = 2;
 
@@ -27,7 +29,15 @@ export default class ChannelsListItem extends React.Component {
             status: ChannelsListItemStates.UNSUBSCRIBING
         });
 
+        const { channel } = this.props;
+
         Channel.unsubscribe(this.props.channel)
+            .then(() => {
+                return Conversation.deleteChannelConversation(channel.channelId);
+            })
+            .then(() => {
+                return MessageDAO.deleteBotMessages(channel.channelId);
+            })
             .then(() => {
                 this.props.onUnsubscribe(this.props.channel)
                 this.setState({

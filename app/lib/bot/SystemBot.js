@@ -94,7 +94,7 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         }
     },
-    'channels-bot': { 'botName': 'ChannelsBot',
+    'channels-bot': { 'botName': 'Channels',
         'botId': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
         'userDomain': 'frontmai',
         'slug': 'channels-bot',
