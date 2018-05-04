@@ -55,15 +55,16 @@ const handle = (message, user) => new Promise((resolve, reject) => {
             if (conversation) {
                 // Complete the queue call
                 if (Conversation.isChannelConversation(conversation)) {
-                    return resolve(checkForContactAndCompleteQueueResponse(botKey, message));
+                    return checkForContactAndCompleteQueueResponse(botKey, message);
                 } else {
-                    return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                    return Queue.completeAsyncQueueResponse(botKey, message);
                 }
             } else {
                 console.log('Handling new Conversation');
-                return resolve(handleNewConversation(message, user));
+                return handleNewConversation(message, user);
             }
         })
+        .then(resolve)
         .catch((err) => {
             console.log('Error handling the message for IMBot message ', err, message);
         });
@@ -87,11 +88,12 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             }
             console.log('Fetched contact for user : ', contact);
             console.log('Processing message : ', message);
-            return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+            return Queue.completeAsyncQueueResponse(botKey, message);
         })
+        .then(resolve)
         .catch(() => {
             if (!fetchedContact) {
-                return resolve(Queue.completeAsyncQueueResponse(botKey, message));
+                return Queue.completeAsyncQueueResponse(botKey, message).then(resolve);
             }
         });
 });
@@ -202,9 +204,7 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
                 }
             }
         })
-        .then(() => {
-            resolve();
-        })
+        .then(resolve)
         .catch((err) => {
             console.log('Error handling the new Message ', err, message);
         });
