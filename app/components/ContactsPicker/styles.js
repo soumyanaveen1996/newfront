@@ -61,7 +61,6 @@ const stylesheet = StyleSheet.create({
         borderRadius: 22,
         marginLeft: 10,
         marginRight: 12,
-        backgroundColor: 'rgb(222, 222, 222)',
     },
     contactItemDetailsContainer: {
         flexDirection: 'column',

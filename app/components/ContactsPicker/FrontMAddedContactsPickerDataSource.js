@@ -39,7 +39,6 @@ export default class ContactsPickerDataSource {
                 firstName: data.givenName,
                 middleName: data.middleName,
                 lastName: data.surname,
-                imageAvailable: true,
                 emails: [{email: data.emailAddress}], // Format based on phone contact from expo
                 phoneNumbers: data.phoneNumbers,
                 screenName: data.screenName

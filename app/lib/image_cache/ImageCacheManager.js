@@ -184,9 +184,15 @@ export default class ImageCacheManager {
             this.notifyImageDownloadStarted(uri);
             cache.downloading = true;
             cache.task = RNFetchBlob.config({ path }).fetch('GET', uri, headers);
-            cache.task.then(() => {
+            cache.task.then((response) => {
                 cache.downloading = false;
-                cache.path = path;
+                if(response.respInfo.status === 200) {
+                    cache.path = path;
+                } else if(response.respInfo.status === 403 || response.respInfo.status === 404){
+                    RNFetchBlob.fs.unlink(path);
+                    this.lastChecked[uri] = moment();
+                    cache.path = undefined;
+                }
                 this.notifyImageDownloaded(uri);
             }).catch(() => {
                 console.log('ImageCacheManager Error downloading file : ');
@@ -224,7 +230,7 @@ export default class ImageCacheManager {
         handlers.forEach(handler => {
             if (handler[handlerFunc]) {
                 const path = this.cache[uri].path;
-                handler[handlerFunc](Platform.OS === 'android' ? 'file://' +  path : path);
+                handler[handlerFunc]((Platform.OS === 'android' && path) ? 'file://' +  path : path);
             }
         });
     }

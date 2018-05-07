@@ -1,24 +1,16 @@
 import React from 'react';
-import { Image } from 'react-native';
+import {View, ActivityIndicator, Image} from 'react-native';
 import ImageCache from '../../lib/image_cache';
 import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
-
-const ProfileImageStates = {
-    IMAGE_NOT_LOADED: 'IMAGE_NOT_LOADED',
-    LOADING_USER_PROFILE: 'IMAGE_LOADED_FROM_CACHE',
-    LOADED_DEFAULT_PROFILE_IMAGE: 'LOADED_DEFAULT_PROFILE_IMAGE',
-    LOADED_USER_PROFILE: 'LOADED_USER_PROFILE'
-}
+import styles from './styles';
 
 export default class ProfileImage extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            state: ProfileImageStates.IMAGE_NOT_LOADED,
-            source: props.placeholder,
-            style: this.props.placeholderStyle,
+            loaded: false
         };
     }
 
@@ -37,24 +29,21 @@ export default class ProfileImage extends React.Component {
             let path = await this.getImagePathFromCache(uri);
             if (path) {
                 this.setState({
-                    state: ProfileImageStates.IMAGE_LOADED_FROM_CACHE,
-                    source: { uri: path }
+                    source: { uri: path },
+                    style: this.props.placeholderStyle
                 })
                 ImageCache.imageCacheManager.checkAndUpdateIfModified(uri, this, headers);
             } else {
-                this.setState({
-                    state: ProfileImageStates.LOADED_DEFAULT_PROFILE_IMAGE,
-                    source: this.props.placeholder,
-                    style: this.props.placeholderStyle,
-                });
-                ImageCache.imageCacheManager.fetch(uri, this, headers);
+                if(!ImageCache.imageCacheManager.isLastCheckedWithinThreshold(uri)){
+                    ImageCache.imageCacheManager.fetch(uri, this, headers);
+                } else {
+                    this.setState({
+                        source: this.props.placeholder,
+                        style: this.props.placeholderStyle,
+                        loaded: true
+                    });
+                }
             }
-        } else {
-            this.setState({
-                state: ProfileImageStates.LOADED_DEFAULT_PROFILE_IMAGE,
-                source: this.props.placeholder,
-                style: this.props.placeholderStyle,
-            });
         }
     }
 
@@ -64,11 +53,19 @@ export default class ProfileImage extends React.Component {
     }
 
     imageDownloaded(path) {
-        this.setState({
-            state: ProfileImageStates.LOADED_USER_PROFILE,
-            source: { uri: path },
-            style: this.props.placeholderStyle
-        });
+        if(path){
+            this.setState({
+                source: { uri: path },
+                style: this.props.placeholderStyle,
+                loaded: true
+            });
+        } else {
+            this.setState({
+                source: this.props.placeholder,
+                style: this.props.placeholderStyle,
+                loaded: true
+            });
+        }
     }
 
     isRemoteUri(uri) {
@@ -83,7 +80,23 @@ export default class ProfileImage extends React.Component {
 
     render() {
         return (
-            <Image source={this.state.source} style={this.state.style} resizeMode={this.props.resizeMode} />
+            <View>
+                <Image
+                    source={this.state.source}
+                    resizeMode={this.props.resizeMode}
+                    style={this.state.style}
+                    onLoad={this.onLoad} />
+                {!this.state.loaded && !this.state.source &&
+                <View style={styles.loading}>
+                    <ActivityIndicator size="small" />
+                </View>
+                }
+            </View>
         )
     }
+
+    onLoad = () => {
+        this.setState(() => ({ loaded: true }))
+    }
+
 }

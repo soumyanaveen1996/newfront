@@ -33,7 +33,7 @@ export default class Resource {
         // Resizing the image
         if (resourceType === ResourceTypes.Image) {
             try {
-                let imageResizeResponse = await ImageResizer.createResizedImage(fileUri, 800, 800, 'JPEG', 50, 0, null)
+                let imageResizeResponse = await ImageResizer.createResizedImage(fileUri, 800, 800, 'PNG', 50, 0, null)
                 fileUri = imageResizeResponse.uri;
                 base64Data = null;
             } catch (error) {
@@ -41,11 +41,11 @@ export default class Resource {
             }
         }
 
-        let contentType = 'image/jpeg';
-        let extension = 'jpg';
+        let contentType = 'image/png';
+        let extension = 'png';
         if (resourceType === ResourceTypes.Image) {
-            contentType = 'image/jpeg';
-            extension = 'jpg';
+            contentType = 'image/png';
+            extension = 'png';
         } else if (resourceType === ResourceTypes.Audio) {
             contentType = 'audio/aac';
             extension = 'aac';
