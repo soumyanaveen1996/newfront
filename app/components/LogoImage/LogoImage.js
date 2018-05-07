@@ -15,9 +15,6 @@ export default class LogoImage extends Component {
         if(this.props.source){
             this.setState({ loaded: true});
         }
-        if(this.props.botStore) {
-            this.setState({ loaded: false});
-        }
     }
 
     render() {

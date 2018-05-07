@@ -15,6 +15,7 @@ import I18n from '../../config/i18n/i18n';
 import dce from '../../lib/dce';
 import SystemBot from '../../lib/bot/SystemBot';
 import { MessageHandler } from '../../lib/message';
+import CachedImage from '../CachedImage'
 
 export default class InstalledBotsScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -105,7 +106,7 @@ export default class InstalledBotsScreen extends React.Component {
                     titleContainerStyle={styles.titleContainerStyle}
                     subtitle={botData.description}
                     subtitleStyle={styles.subtitleStyle}
-                    avatar={botData.logoSlug  ? images[botData.logoSlug] : {uri : botData.logoUrl} }
+                    avatar={this.renderBotImage(botData)}
                     avatarOverlayContainerStyle={styles.avatarOverlayContainerStyle}
                     subtitleNumberOfLines={subtitleNumberOfLines}
                     subtitleContainerStyle={styles.subtitleContainerStyle}
@@ -127,6 +128,16 @@ export default class InstalledBotsScreen extends React.Component {
                 </TouchableHighlight>
             </View>
         )
+    }
+
+    renderBotImage = (botData) => {
+        var botImage;
+        if (botData.logoSlug != null) {
+            return botImage = images[botData.logoSlug];
+        }
+        else {
+            return botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.image}/>
+        }
     }
 
     onSearchQueryChange(text) {
