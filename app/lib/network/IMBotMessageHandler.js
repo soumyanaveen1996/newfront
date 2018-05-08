@@ -148,7 +148,11 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
     let channel = conversationData.onChannels[0];
 
     console.log('Handling new Channel Conversation : ', conversationData, message, user, botContext, creator);
-    ConversationContext.createNewChannelConversationContext(botContext, user, channel)
+
+    ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain, channel.channelId)
+        .then(() => {
+            return ConversationContext.createNewChannelConversationContext(botContext, user, channel);
+        })
         .then((conversationContext) => {
             conversationContext.conversationId = botKey;
             conversationContext.onChannels = conversationData.onChannels;
@@ -156,10 +160,6 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
             conversationContext.creator = creator;
             console.log('Conversation Context : ', conversationContext);
             return ConversationContext.saveConversationContext(conversationContext, botContext, user);
-        })
-        .then((conversationContext) => {
-            console.log('Conversation Context in new message : ', conversationContext, channel, botKey);
-            return ChannelDAO.updateConversationForChannel(channel.channelName, channel.userDomain, botKey);
         })
         .then(() => {
             return Conversation.createChannelConversation(botKey);
