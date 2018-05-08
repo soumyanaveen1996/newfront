@@ -38,8 +38,8 @@ const images = {
     walkthrough_image: require('./walkthrough/image.png'),
     gsm: require('./icons/gsm.png'),
     satellite: require('./icons/satellite.png'),
-    splash_page_logo: { uri: 'FM-logo-landing page' },
-    user_image: { uri: 'user_image' }
+    user_image: require('./chat/user_image.png'),
+    splash_page_logo: { uri: 'FM-logo-landing page' }
 };
 
 export default images;

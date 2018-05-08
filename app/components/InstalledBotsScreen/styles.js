@@ -97,6 +97,11 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    image: {
+        height: 40,
+        width: 40,
+        marginTop: 5,
+    },
 })
 
 
