@@ -75,6 +75,7 @@ I18n.translations = {
         View_form : 'View the form details',
         Close: 'Close',
         Yes: 'Yes',
+        Confirm: 'Confirm',
         'Password_not_empty': 'Please enter a password',
         'Not_a_number': 'Please enter a number',
         'Field_mandatory': 'Field is mandatory',
