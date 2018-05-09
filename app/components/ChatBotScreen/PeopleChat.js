@@ -71,14 +71,14 @@ export default class PeopleChat extends ChatBotScreen {
                     throw new Error('At least one participant is required to start a chat');
                 }
                 const conversationId = Conversation.getIMConversationId(user.userId, this.otherParticipants[0].userId);
-                this.conversaion = await Conversation.getIMConversation(conversationId);
+                this.conversation = await Conversation.getIMConversation(conversationId);
                 if (this.conversation) {
                     this.botKey = this.conversation.conversationId;
                 }
             }
 
             if (this.conversation) {
-                context = await Promise.resolve(ConversationContext.getIMConversationContext(botContext, user, this.conversaion.conversationId));
+                context = await Promise.resolve(ConversationContext.getIMConversationContext(botContext, user, this.conversation.conversationId));
                 // TODO(amal); Should I check if participants are same in the conversation Context ?
                 this.setNavigationParams(context, user);
                 return context;
