@@ -27,6 +27,7 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_CHART: 'chart',
     MESSAGE_TYPE_WAIT: 'wait',
     MESSAGE_TYPE_SESSION_START: 'session_start',
+    MESSAGE_TYPE_BARCODE: 'barcode'
 };
 
 
@@ -112,6 +113,11 @@ export default class Message {
     listMessage = (arrayData) => {
         this._msg = JSON.stringify(arrayData);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_LIST;
+    };
+
+    barcodeMessage = (str) => {
+        this._msg = str;
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_BARCODE;
     };
 
     /**

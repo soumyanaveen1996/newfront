@@ -918,7 +918,7 @@ export default class ChatBotScreen extends React.Component {
     onBarcodeRead(barCodeData) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
-        message.stringMessage(barCodeData);
+        message.barcodeMessage(barCodeData);
         return this.sendMessage(message);
     }
 

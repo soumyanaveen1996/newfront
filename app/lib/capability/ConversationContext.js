@@ -90,11 +90,12 @@ export default class ConversationContext {
 
     static createNewConversationContext = (botContext, user, conversationId = undefined)  => new Promise((resolve, reject) => {
         if (user) {
+            console.log('User : ', user);
             const context = {
                 conversationId: conversationId || UUID(),
                 creatorInstanceId: user.userId,
-                creator: { userName: user.info.screenName, uuid: user.userId },
-                participantsInfo: [{ userName: user.info.screenName, userId: user.userId }],
+                creator: { userName: user.info.userName, uuid: user.userId },
+                participantsInfo: [{ userName: user.info.userName, userId: user.userId }],
                 participants: [user.userId],
                 onChannels: [],
                 closed: false

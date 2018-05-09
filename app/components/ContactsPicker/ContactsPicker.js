@@ -116,7 +116,7 @@ export default class ContactsPicker extends React.Component {
         } else {
             let participants = [{
                 userId: contact.id,
-                name: contact.screenName
+                userName: contact.name
             }];
             console.log('Contacts picked :', participants, contact);
             SystemBot.get(SystemBot.imBotManifestName)

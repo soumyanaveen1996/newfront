@@ -11,7 +11,7 @@ export default class Conversation {
 
     static getIMConversationId = (firstUserId, secondUserId) => {
         let userIds = [firstUserId, secondUserId];
-        const text = _.join(_.sortBy(userIds), '-')
+        const text = _.join(_.sortBy(userIds), '-');
         return sha1(text).substr(0, 22);
     }
 

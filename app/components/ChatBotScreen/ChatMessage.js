@@ -209,6 +209,7 @@ export default class ChatMessage extends React.Component {
 
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_STRING
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
+            || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BARCODE
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
 
             const component = (
@@ -330,7 +331,7 @@ export default class ChatMessage extends React.Component {
                     <View style={[styles.sessionStartHorizontalLine, styles.sessionStartHorizontalLineRight]} />
                 </View>
             )
-        } else {
+        } else if (message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE) {
             return (
                 <View onLayout={this.onLayout.bind(this)}>
                     <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
