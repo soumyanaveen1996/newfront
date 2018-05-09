@@ -121,7 +121,7 @@ export default class ContactsPicker extends React.Component {
             console.log('Contacts picked :', participants, contact);
             SystemBot.get(SystemBot.imBotManifestName)
                 .then((imBot) => {
-                    Actions.peopleChat({ bot: imBot, participants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
+                    Actions.peopleChat({ bot: imBot, otherParticipants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
                 });
         }
     }
@@ -168,7 +168,7 @@ export default class ContactsPicker extends React.Component {
         if (participants.length > 0) {
             SystemBot.get(SystemBot.imBotManifestName)
                 .then((imBot) => {
-                    Actions.peopleChat({ bot: imBot, participants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
+                    Actions.peopleChat({ bot: imBot, otherParticipants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
                 });
         }
     }

@@ -39,7 +39,7 @@ export default class PeopleChat extends ChatBotScreen {
         // TODO: name or id? - what is constant across releases?
         this.botKey = null;
         // This means we have a list of participants to start the conversation with (new chat)
-        this.participants = props.participants;
+        this.otherParticipants = props.otherParticipants;
         // This means we are picking up from an older conversation (existing chat)
         this.conversation = props.conversation;
         // Botkey is the id
@@ -66,18 +66,31 @@ export default class PeopleChat extends ChatBotScreen {
         try {
             let context = null;
             // Existing conversation - so pick from storage
+            if (!this.conversation) {
+                if (!this.otherParticipants) {
+                    throw new Error('At least one participant is required to start a chat');
+                }
+                const conversationId = Conversation.getIMConversationId(user.userId, this.otherParticipants[0].userId);
+                this.conversaion = await Conversation.getIMConversation(conversationId);
+                if (this.conversation) {
+                    this.botKey = this.conversation.conversationId;
+                }
+            }
+
             if (this.conversation) {
-                context = await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
+                context = await Promise.resolve(ConversationContext.getIMConversationContext(botContext, user, this.conversaion.conversationId));
+                // TODO(amal); Should I check if participants are same in the conversation Context ?
                 this.setNavigationParams(context, user);
                 return context;
             }
-            // Else its a new conversation with participants.
-            if (!this.participants) {
+
+            if (!this.otherParticipants) {
                 throw new Error('At least one participant is required to start a chat');
             }
 
-            context = await Promise.resolve(ConversationContext.createNewConversationContext(botContext, user));
-            ConversationContext.updateParticipants(context, this.participants);
+            const conversationId = Conversation.getIMConversationId(user.userId, this.otherParticipants[0].userId);
+            context = await Promise.resolve(ConversationContext.createNewConversationContext(botContext, user, conversationId));
+            ConversationContext.updateParticipants(context, this.otherParticipants);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -181,6 +194,7 @@ export default class PeopleChat extends ChatBotScreen {
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
             Conversation.deleteConversation(this.conversation.conversationId);
+            ConversationContext.deleteConversationContext(this.conversation.conversationId);
         }
     }
 

@@ -37,6 +37,26 @@ export default class ConversationContext {
             });
     });
 
+    static getIMConversationContext = (botContext, user, conversationId) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (context) {
+                    botContext.setConversationContext(context);
+                    return resolve(context);
+                }
+                return resolve(ConversationContext.createAndSaveNewConversationContext(botContext, user, conversationId))
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
     static getChannelConversationContext = (botContext, user, channel) => new Promise((resolve, reject) => {
         // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
         if (botContext.getConversationContext()) {
@@ -68,10 +88,10 @@ export default class ConversationContext {
             });
     });
 
-    static createNewConversationContext = (botContext, user)  => new Promise((resolve, reject) => {
+    static createNewConversationContext = (botContext, user, conversationId = undefined)  => new Promise((resolve, reject) => {
         if (user) {
             const context = {
-                conversationId: UUID(),
+                conversationId: conversationId || UUID(),
                 creatorInstanceId: user.userId,
                 creator: { userName: user.info.screenName, uuid: user.userId },
                 participantsInfo: [{ userName: user.info.screenName, userId: user.userId }],
@@ -82,7 +102,7 @@ export default class ConversationContext {
             resolve(context);
         } else {
             const context = {
-                conversationId: UUID(),
+                conversationId: conversationId || UUID(),
                 participantsInfo: [],
                 participants: [],
                 onChannels: [],
@@ -116,8 +136,8 @@ export default class ConversationContext {
         }
     });
 
-    static createAndSaveNewConversationContext = (botContext, user)  => new Promise((resolve, reject) => {
-        ConversationContext.createNewConversationContext(botContext, user)
+    static createAndSaveNewConversationContext = (botContext, user, conversationId)  => new Promise((resolve, reject) => {
+        ConversationContext.createNewConversationContext(botContext, user, conversationId)
             .then(function (ctx) {
                 return ConversationContext.saveConversationContext(ctx, botContext, user);
             })

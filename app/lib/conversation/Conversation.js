@@ -1,4 +1,6 @@
 import { ConversationDAO } from '../persistence';
+import sha1 from 'sha1';
+import _ from 'lodash';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 
@@ -6,6 +8,12 @@ export const CHANNEL_CHAT = 'channels';
  * Can be used for people chat - for person to person, peer to peer or channels
  */
 export default class Conversation {
+
+    static getIMConversationId = (firstUserId, secondUserId) => {
+        let userIds = [firstUserId, secondUserId];
+        const text = _.join(_.sortBy(userIds), '-')
+        return sha1(text).substr(0, 22);
+    }
 
     static getAllIMConversations = () => new Promise((resolve, reject) => {
         return resolve(ConversationDAO.selectConversationsByType(IM_CHAT));
