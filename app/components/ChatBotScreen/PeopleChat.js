@@ -6,6 +6,8 @@ import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
+import { Icons } from '../../config/icons';
+import images from '../../images';
 
 export default class PeopleChat extends ChatBotScreen {
 
