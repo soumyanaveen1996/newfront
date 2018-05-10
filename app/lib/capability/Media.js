@@ -80,18 +80,62 @@ export default class Media {
         );
     }
 
+    static hasCameraPermission() {
+        return Permissions.check('camera');
+    }
+
+    static requestCameraPermission() {
+        return Permissions.request('camera');
+    }
+
+    static alertForCameraPermission() {
+        Alert.alert(
+            undefined,
+            'We need Camera access to take pictures.',
+            [
+                {
+                    text: 'cancel',
+                    onPress: () => console.log('Permission denied'),
+                    style: 'cancel',
+                },
+                {text: 'Open Settings', onPress: (Platform.OS === 'ios')? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
+            ],
+        );
+    }
+
     // Returns a promise that resolves to {cancelled: false, uri: 'uri', base64: 'base64' } on success.
     // On cancel, returns a promise that resolves to {cancelled: true}
     static takePicture = (cameraOptions = DefaultCameraOptions) => new Promise((resolve, reject) => {
         var options = _.extend({ title : I18n.t('Take_picture') }, cameraOptions);
 
-        ImagePicker.launchCamera(options, (response) => {
-            if (response.didCancel) {
-                resolve({ cancelled: true });
-            } else if (response.error) {
-                resolve({ cancelled: true });
+        const ImagePicker = Platform.OS === 'ios' ? RNImagePicker : ImagePickerAndroidWrapper;
+        Media.hasCameraPermission().then((permission) => {
+            if (permission === 'undetermined') {
+                Media.requestCameraPermission().then((rp) => {
+                    if (rp === 'authorized') {
+                        ImagePicker.launchCamera(options, (response) => {
+                            if (response.didCancel) {
+                                resolve({ cancelled: true });
+                            } else if (response.error) {
+                                resolve({ cancelled: true });
+                            } else {
+                                resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                            }
+                        });
+                    }
+                });
+            } else if (permission === 'authorized') {
+                ImagePicker.launchCamera(options, (response) => {
+                    if (response.didCancel) {
+                        resolve({ cancelled: true });
+                    } else if (response.error) {
+                        resolve({ cancelled: true });
+                    } else {
+                        resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                    }
+                });
             } else {
-                resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                Media.alertForCameraPermission();
             }
         });
     });
