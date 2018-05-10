@@ -103,9 +103,11 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
     const botKey = message.conversation;
     let participants = conversationData.participants;
 
+    console.log('Message creator : ', message);
     console.log('Handling new IM Conversation', conversationData, participants);
-    Contact.getContactFieldForUUIDs([creator.userId])
+    Contact.getContactFieldForUUIDs([message.createdBy])
         .then((contacts) => {
+            console.log('Contacts for Creator : ', creator, contacts);
             if (contacts && contacts.length > 0 && contacts[0].ignored) {
                 isUnignoredContact = false
             } else {
