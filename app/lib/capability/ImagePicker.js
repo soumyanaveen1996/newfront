@@ -41,7 +41,7 @@ export default class ImagePicker {
                 permissionsPromises
                     .then(results => {
                         const granted = results.indexOf(false) === -1;
-
+                        console.log('Checking Image : permissions result : ', results);
                         if (granted) {
                             resolve();
                         }
@@ -49,6 +49,7 @@ export default class ImagePicker {
                             PermissionsAndroid
                                 .requestMultiple(permissions)
                                 .then(results => {
+                                    console.log('Checking Image : first permissions result : ', results);
                                     const granted = !(Object.values(results).some(value => value !== 'granted'));
 
                                     if (granted) {
@@ -104,7 +105,9 @@ export default class ImagePicker {
      */
     static launchCamera(options, callback) {
         ImagePicker
-            .checkAndRequest([PermissionsAndroid.PERMISSIONS.CAMERA], options)
+            .checkAndRequest([
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                PermissionsAndroid.PERMISSIONS.CAMERA], options)
             .then(() => {
                 RNImagePicker.launchCamera(options, callback);
             })
