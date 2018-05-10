@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-android-open-settings')
     compile project(':react-native-image-resizer')
     compile project(':react-native-fbsdk')
     compile project(':react-native-push-notification')

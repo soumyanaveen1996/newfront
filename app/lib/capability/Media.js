@@ -1,8 +1,12 @@
-var ImagePicker = require('react-native-image-picker');
+var RNImagePicker = require('react-native-image-picker');
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import I18n from '../../config/i18n/i18n';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
+import Permissions from 'react-native-permissions';
+import AndroidOpenSettings from 'react-native-android-open-settings';
+import ImagePickerAndroidWrapper from './ImagePicker';
+
 
 export const DefaultCameraOptions = {
     allowsEditing: false,
@@ -21,16 +25,60 @@ export default class Media {
     static pickMediaFromLibrary = (cameraOptions = DefaultCameraOptions) => new Promise((resolve, reject) => {
         var options = _.extend({ title : I18n.t('Select_image') }, cameraOptions);
 
-        ImagePicker.launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                resolve({ cancelled: true });
-            } else if (response.error) {
-                resolve({ cancelled: true });
+        const ImagePicker = Platform.OS === 'ios' ? RNImagePicker : ImagePickerAndroidWrapper;
+        Media.hasImageLibraryPermission().then((permission) => {
+            if (permission === 'undetermined') {
+                Media.requestImageLibraryPermission().then((rp) => {
+                    if (rp === 'authorized') {
+                        ImagePicker.launchImageLibrary(options, (response) => {
+                            if (response.didCancel) {
+                                resolve({ cancelled: true });
+                            } else if (response.error) {
+                                resolve({ cancelled: true });
+                            } else {
+                                resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                            }
+                        });
+                    }
+                });
+            } else if (permission === 'authorized') {
+                ImagePicker.launchImageLibrary(options, (response) => {
+                    if (response.didCancel) {
+                        resolve({ cancelled: true });
+                    } else if (response.error) {
+                        resolve({ cancelled: true });
+                    } else {
+                        resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                    }
+                });
             } else {
-                resolve({ cancelled: false, base64: response.data, uri: response.uri });
+                Media.alertForPhotoLibraryPermission();
             }
         });
     });
+
+    static hasImageLibraryPermission() {
+        return Permissions.check('photo');
+    }
+
+    static requestImageLibraryPermission() {
+        return Permissions.request('photo');
+    }
+
+    static alertForPhotoLibraryPermission() {
+        Alert.alert(
+            undefined,
+            'We need Photo Library access to set your profile picture.',
+            [
+                {
+                    text: 'cancel',
+                    onPress: () => console.log('Permission denied'),
+                    style: 'cancel',
+                },
+                {text: 'Open Settings', onPress: (Platform.OS === 'ios')? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
+            ],
+        );
+    }
 
     // Returns a promise that resolves to {cancelled: false, uri: 'uri', base64: 'base64' } on success.
     // On cancel, returns a promise that resolves to {cancelled: true}
