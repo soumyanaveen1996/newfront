@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
+import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -51,6 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new AndroidOpenSettingsPackage(),
             new RNGoogleSignInPackage(),
             new ImageResizerPackage(),
             new FBSDKPackage(mCallbackManager),
