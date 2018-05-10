@@ -181,6 +181,7 @@ export default class Auth {
                 return FrontmAuth.signinWithFrontm(userDetails, conversationId, botName);
             })
             .then((result) => {
+                console.log('frontm login result : ', result);
                 if (result) {
                     const creds = result.credentials.frontm;
                     currentUser = new User({
@@ -211,7 +212,12 @@ export default class Auth {
                     reject(new AuthError(0, AuthErrorCodes[0]));
                 }
             }).catch((error) => {
-                reject(new AuthError(99, 'Error in Authenticating the user'));
+                console.log('Login error message', error);
+                if (error.errorMessage) {
+                    reject(new AuthError(98, error.errorMessage));
+                } else {
+                    reject(new AuthError(99, 'Error in Authenticating the user'));
+                }
             });
     });
 

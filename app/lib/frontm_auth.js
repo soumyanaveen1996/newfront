@@ -224,7 +224,7 @@ class FrontmAuth {
                 .then((response) => {
                     const result = response.data;
                     if (!(result.success === 'true' || result.success === true)) {
-                        return reject({type: 'error', error: result.message});
+                        return reject({type: 'error', error: result.message, errorMessage: result.message});
                     }
                     console.log('Signin result : ', result);
                     const frontmUser = result.data.user;
@@ -252,7 +252,7 @@ class FrontmAuth {
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
-                            console.log('resData : ', resData);
+                            console.log('resData : ', res);
                             if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
                                 reject(new Error('Empty response from the server'));
                                 return;

@@ -4,12 +4,21 @@ import { Contact, Channel } from '../capability';
 
 class DataManager {
     init = async () => {
+        this.contactsFetched = false;
+        this.channelsFetched = false;
         await this.listenToEvents();
     }
 
     listenToEvents = async () => {
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+    }
+
+    checkDataFetched = () => {
+        console.log('Data fetched : ', this.channelsFetched, this.contactsFetched);
+        if (this.channelsFetched && this.contactsFetched) {
+            EventEmitter.emit(AuthEvents.userDataFetched);
+        }
     }
 
     userLoggedInHandler = async () => {
@@ -25,7 +34,15 @@ class DataManager {
     }
 
     refreshContacts = () => {
-        Contact.refreshContacts();
+        Contact.refreshContacts()
+            .then(() => {
+                this.contactsFetched = true;
+                this.checkDataFetched();
+            })
+            .catch(() => {
+                this.contactsFetched = true;
+                this.checkDataFetched();
+            })
     }
 
     deleteContacts = () => {
@@ -33,7 +50,15 @@ class DataManager {
     }
 
     refreshChannels = () => {
-        Channel.refreshChannels();
+        Channel.refreshChannels()
+            .then(() => {
+                this.channelsFetched = true;
+                this.checkDataFetched();
+            })
+            .catch(() => {
+                this.channelsFetched = true;
+                this.checkDataFetched();
+            })
     }
 
     deleteChannels = () => {

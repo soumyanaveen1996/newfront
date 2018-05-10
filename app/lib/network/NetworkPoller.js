@@ -20,7 +20,7 @@ class NetworkPoller {
     }
 
     listenToEvents = async () => {
-        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
+        EventEmitter.addListener(AuthEvents.userDataFetched, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(PollingStrategyEvents.changed, this.pollingStrategyChanged);
         //Network.addConnectionChangeEventListener(this.handleConnectionChange);

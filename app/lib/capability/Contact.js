@@ -227,6 +227,7 @@ export default class Contact {
                     });
                     var allContacts = _.concat(contacts, ignored);
                     Contact.saveContacts(allContacts);
+                    resolve();
                 }
             })
             .catch(reject);

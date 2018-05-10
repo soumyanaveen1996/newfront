@@ -4,9 +4,11 @@ import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
-import { HeaderBack } from '../Header';
+import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
+import { Icons } from '../../config/icons';
+import images from '../../images';
 
 export default class ChannelChat extends ChatBotScreen {
 
@@ -29,6 +31,19 @@ export default class ChannelChat extends ChatBotScreen {
                     Actions.pop();
                 }
             }} />;
+        }
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
+                    state.params.refresh();
+                }} icon={Icons.refresh()}/>;
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
+            } else {
+                navigationOptions.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
+            }
         }
         return navigationOptions;
     }
@@ -58,7 +73,9 @@ export default class ChannelChat extends ChatBotScreen {
         this.props.navigation.setParams({
             title: this.channel ? this.channel.channelName : '',
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
-            deleteConversation: this.deleteConversation.bind(this)
+            deleteConversation: this.deleteConversation.bind(this),
+            refresh: this.readLambdaQueue.bind(this),
+            showConnectionMessage: this.showConnectionMessage.bind(this)
         });
     }
 
