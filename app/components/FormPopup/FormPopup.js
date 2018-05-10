@@ -152,7 +152,7 @@ class RetryFormTextInput extends React.Component {
                 </View>
                 <View style={this.state.retryPasswordError ? Styles.formTwoLineInputContainer : Styles.formInputContainer}>
                     <View style={Styles.titleContainer}>
-                        <Text style={Styles.formInputLabel}>{formData.title ? I18n.t('Confirm') + ' ' + formData.title.toLocaleUpperCase() : ''}</Text>
+                        <Text style={Styles.formInputLabel}>{formData.title ? I18n.t('Confirm').toLocaleUpperCase() + ' ' + formData.title.toLocaleUpperCase() : ''}</Text>
                     </View>
                     {this.renderError(this.state.retryPasswordError, I18n.t('Retry_Password_error'))}
                     <FormTextInput
