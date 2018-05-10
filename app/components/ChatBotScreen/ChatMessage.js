@@ -342,5 +342,6 @@ export default class ChatMessage extends React.Component {
                 </View>
             );
         }
+        return null;
     }
 }
