@@ -127,7 +127,7 @@ export default class ChatMessage extends React.Component {
         const component = (
             <View style={videoContainerStyle(this.props.alignRight)}>
                 <VideoPlayer
-                    video={{ uri: url + '?a=100', headers: headers }}
+                    video={{ uri: url, headers: headers }}
                     headers={headers}
                     videoWidth={300}
                     videoHeight={300}
