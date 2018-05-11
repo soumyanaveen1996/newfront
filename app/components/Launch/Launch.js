@@ -17,7 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 
-const VERSION = 13; // Corresponding to 2.7.0 build 4. Update this number every time we update initial_bots
+const VERSION = 15; // Corresponding to 2.7.0 build 10. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -46,7 +46,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            //await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
