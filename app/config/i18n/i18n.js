@@ -86,7 +86,7 @@ I18n.translations = {
         'Satellite_connection': 'Online over Satellite',
         'Connection_Type': 'Connection Type',
         'Satellite_Message': 'You are in Satellite Network Mode which ensures minimum data consumption with a near real time message exchange.',
-        'Gsm_Message': 'You are in GSM Network Mode which provides a real time messaging experience.',
+        'Gsm_Message': 'You are in Terrestrial Network Mode which provides a real time messaging experience.',
         'Auto_Message': 'You are in Automatic Network Mode which ensures optimal data consumption when you switch between Terrestrial Cellular/GSM/Broadband network and Satellite networks.',
         'Ok': 'Ok',
         'Password_error': 'Please enter a valid password value',
