@@ -1084,7 +1084,7 @@ export default class ChatBotScreen extends React.Component {
     renderChatInputBar() {
         const moreOptions = [
             { key: BotInputBarCapabilities.camera, label: I18n.t('Chat_Input_Camera') },
-            //{ key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
+            { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
             { key: BotInputBarCapabilities.photo_library, label: I18n.t('Chat_Input_Photo_Library') },
             { key: BotInputBarCapabilities.bar_code_scanner, label: I18n.t('Chat_Input_BarCode') },
             { key: BotInputBarCapabilities.pick_location, label: I18n.t('Pick_Location') }
