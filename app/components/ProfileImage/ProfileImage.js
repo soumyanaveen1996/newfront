@@ -53,7 +53,7 @@ export default class ProfileImage extends React.Component {
     }
 
     imageDownloaded(path) {
-        if(path){
+        if (path){
             this.setState({
                 source: { uri: path },
                 style: this.props.placeholderStyle,

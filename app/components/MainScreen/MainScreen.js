@@ -110,7 +110,7 @@ export default class MainScreen extends React.Component {
 
     showButton(pollingStrategy) {
         if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.props.navigation.setParams({ button: 'refresh' });
+            this.props.navigation.setParams({ button: 'manual' });
         } else if (pollingStrategy === PollingStrategyTypes.automatic) {
             this.props.navigation.setParams({ button: 'none' });
         } else if (pollingStrategy === PollingStrategyTypes.gsm) {
