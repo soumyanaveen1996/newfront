@@ -101,8 +101,7 @@ const readRemoteLambdaQueue = (user) => {
         })
 }
 
-const prosessNetworkQueue = () => {
-    console.log('NetworkHandler::prosessNetworkQueue::called at ', new Date());
+const prosessNetworkQueueRequest = () => {
     let requestId = 0;
     let key = '';
     Queue.dequeueNetworkRequest()
@@ -126,9 +125,19 @@ const prosessNetworkQueue = () => {
         })
         .catch((err) => {
             console.log('Error making the api ai call ', err);
+            // TODO(amal): Do we have to reject request if it fails ?
             return Queue.handleNetworkRequestFailure(requestId, key);
         });
+}
 
+const prosessNetworkQueue = () => {
+    console.log('NetworkHandler::prosessNetworkQueue::called at ', new Date());
+    Network.isConnected()
+        .then((connected) => {
+            if (connected) {
+                prosessNetworkQueueRequest();
+            }
+        })
 }
 
 const readQueue = (user) => new Promise((resolve, reject) => {

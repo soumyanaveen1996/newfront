@@ -153,6 +153,9 @@ android {
 }
 
 dependencies {
+    compile ("com.facebook.react:react-native:0.51.0") {
+        force = true
+    } // From node_modules
     compile project(':react-native-android-open-settings')
     compile project(':react-native-image-resizer')
     compile project(':react-native-fbsdk')
@@ -185,7 +188,6 @@ dependencies {
     compile project(':react-native-sqlite-storage')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:27.0.2"
-    compile "com.facebook.react:react-native:+"  // From node_modules
     compile(project(":react-native-google-signin")) {
         exclude group: "com.google.android.gms"
     }
