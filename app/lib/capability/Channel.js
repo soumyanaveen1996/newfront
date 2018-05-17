@@ -42,7 +42,6 @@ export default class Channel {
                         },
                         data: {
                             action: 'Subscribe',
-                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             domainChannels: domainChannels
                         }
@@ -80,7 +79,6 @@ export default class Channel {
                         },
                         data: {
                             action: 'Create',
-                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             channelName: name,
                             description: description,
@@ -122,7 +120,6 @@ export default class Channel {
                         },
                         data: {
                             action: 'Edit',
-                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             channelName: name,
                             description: description,
@@ -158,7 +155,6 @@ export default class Channel {
                         },
                         data: {
                             action: 'Unsubscribe',
-                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             userDomain: channel.userDomain,
                             channelName: channel.channelName,
@@ -195,7 +191,6 @@ export default class Channel {
                         },
                         data: {
                             action: 'Get',
-                            userId: user.userId,
                             botId: SystemBot.channelsBot.botId,
                             domains: user.info.domains
                         }

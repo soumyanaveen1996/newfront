@@ -202,11 +202,9 @@ export default class Contact {
         Auth.getUser()
             .then((user) => {
                 if (user) {
-                    console.log('user : ', user);
-                    console.log('Refresh contacts URL : ', `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`);
                     let options = {
                         'method': 'get',
-                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?userId=${user.userId}&botId=${SystemBot.contactsBot.botId}`,
+                        'url': `${config.network.queueProtocol}${config.proxy.host}${config.network.contactsPath}?botId=${SystemBot.contactsBot.botId}`,
                         'headers': {
                             accessKeyId: user.aws.accessKeyId,
                             secretAccessKey: user.aws.secretAccessKey,

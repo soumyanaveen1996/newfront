@@ -25,7 +25,7 @@ const poll = () => {
             return Auth.refresh(authUser);
         })
         .then((refreshedUser) => {
-            prosessNetworkQueue();
+            processNetworkQueue();
             readRemoteLambdaQueue(refreshedUser);
         });
 };
@@ -37,7 +37,7 @@ const readLambda = () => {
             return Auth.refresh(authUser);
         })
         .then((refreshedUser) => {
-            prosessNetworkQueue();
+            processNetworkQueue();
             readRemoteLambdaQueue(refreshedUser);
         });
 }
@@ -101,7 +101,7 @@ const readRemoteLambdaQueue = (user) => {
         })
 }
 
-const prosessNetworkQueueRequest = () => {
+const processNetworkQueueRequest = () => {
     let requestId = 0;
     let key = '';
     Queue.dequeueNetworkRequest()
@@ -130,12 +130,12 @@ const prosessNetworkQueueRequest = () => {
         });
 }
 
-const prosessNetworkQueue = () => {
-    console.log('NetworkHandler::prosessNetworkQueue::called at ', new Date());
+const processNetworkQueue = () => {
+    console.log('NetworkHandler::processNetworkQueue::called at ', new Date());
     Network.isConnected()
         .then((connected) => {
             if (connected) {
-                prosessNetworkQueueRequest();
+                processNetworkQueueRequest();
             }
         })
 }
@@ -150,7 +150,6 @@ const readQueue = (user) => new Promise((resolve, reject) => {
         'headers': getHeaders(user),
         'data': {
             stats: stats,
-            userId: user.userId,
         }
     };
 
@@ -201,7 +200,6 @@ const requestMessagesBeforeDateFromLambda = (user, conversationId, botId, date) 
             sessionToken: user.aws.sessionToken
         },
         'data': {
-            userId: user.userId,
             conversation: conversationId,
             botId: botId,
             timestamp: date,
