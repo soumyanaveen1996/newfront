@@ -19,6 +19,7 @@ export const GlobalColors = {
     iosBlue: 'rgb(0, 122, 255)',
     disabledGray: 'rgb(228, 228, 228)',
     black: 'rgb(0, 0, 0)',
+    darkGray: 'rgb(169,169,169)',
     headerTextInputBackground: 'rgb(56,194,212)',
     headerTextInputPlaceholder: 'rgb(210,210,210)',
     statusBarBackgroundColor: 'rgb(255, 192, 203)',

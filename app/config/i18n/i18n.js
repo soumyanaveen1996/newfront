@@ -44,6 +44,8 @@ I18n.translations = {
         Bot_uninstall_failed: 'Bot uninstall failed',
         Bot_installed: 'Bot installed',
         Bot_install_failed: 'Bot install failed',
+        Bot_updated: 'Bot updated',
+        Bot_update_failed: 'Bot update failed',
         Bot_uninstall_confirmation: 'Are you sure you want to uninstall the bot ?',
         Install: 'INSTALL',
         Installed: 'INSTALLED',

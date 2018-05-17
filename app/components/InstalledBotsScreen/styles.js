@@ -102,6 +102,9 @@ export default StyleSheet.create({
         width: 40,
         marginTop: 5,
     },
+    swipeBtnStyle: {
+        marginTop: 38,
+    },
 })
 
 

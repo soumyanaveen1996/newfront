@@ -46,6 +46,7 @@
     "react-native-sound": "^0.10.4",
     "react-native-sqlite-storage": "^3.3.4",
     "react-native-svg": "^6.0.1-rc.1",
+    "react-native-swipeout": "^2.3.3",
     "react-native-vector-icons": "^4.4.2",
     "react-native-video": "github:emrah88/react-native-video",
     "react-native-video-player": "^0.9.1",
