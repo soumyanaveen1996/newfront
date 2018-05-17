@@ -63,6 +63,7 @@ export default class ChatBotScreen extends React.Component {
         }
 
         if (state.params.button) {
+            console
             if (state.params.button === 'manual') {
                 navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
                     state.params.refresh();
@@ -288,7 +289,7 @@ export default class ChatBotScreen extends React.Component {
 
     showButton(pollingStrategy) {
         if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.props.navigation.setParams({ button: 'refresh' });
+            this.props.navigation.setParams({ button: 'manual' });
         } else if (pollingStrategy === PollingStrategyTypes.automatic) {
             this.props.navigation.setParams({ button: 'none' });
         } else if (pollingStrategy === PollingStrategyTypes.gsm) {
@@ -299,8 +300,8 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async checkPollingStrategy() {
-        console.log('Polling strategy changed');
         let pollingStrategy = await Settings.getPollingStrategy();
+        console.log('Polling strategy changed : ', pollingStrategy);
         this.showButton(pollingStrategy);
     }
 
@@ -1083,7 +1084,7 @@ export default class ChatBotScreen extends React.Component {
     renderChatInputBar() {
         const moreOptions = [
             { key: BotInputBarCapabilities.camera, label: I18n.t('Chat_Input_Camera') },
-            //{ key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
+            { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
             { key: BotInputBarCapabilities.photo_library, label: I18n.t('Chat_Input_Photo_Library') },
             { key: BotInputBarCapabilities.bar_code_scanner, label: I18n.t('Chat_Input_BarCode') },
             { key: BotInputBarCapabilities.pick_location, label: I18n.t('Pick_Location') }

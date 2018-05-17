@@ -36,8 +36,12 @@ export class NetworkRequest {
         this.options = options;
     }
 
-    getNetworkRequestOptions = () => {
+    getNetworkRequestOptions() {
         return this.options;
+    }
+
+    isNetworkRequest() {
+        return true;
     }
 }
 
