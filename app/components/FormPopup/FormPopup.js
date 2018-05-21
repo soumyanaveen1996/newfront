@@ -314,8 +314,9 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {
                 this.formValuesArray[i] = formData[i].value;
+                let notEditable = !this.props.editable || formData[i].editable === false;
                 if (formData[i].retry === true && this.props.editable) {
-                    buttons.push(<RetryFormTextInput formData={formData[i]} key={i} keyIndex={i} onPasswordMatch={this.onPasswordMatch.bind(this, i)} />);
+                    buttons.push(<RetryFormTextInput editable={!notEditable} formData={formData[i]} key={i} keyIndex={i} onPasswordMatch={this.onPasswordMatch.bind(this, i)} />);
                 } else {
                     this.formValuesArray[i] = formData[i].value;
                     buttons.push(
@@ -325,7 +326,7 @@ export default class FormPopup extends React.Component {
                                 <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
                             </View>
                             <FormTextInput
-                                editable={this.props.editable}
+                                editable={!notEditable}
                                 formData={formData[i]}
                                 onChangeText={this.onChangeText.bind(this, i)}
                                 containerStyle={Styles.noBorder}
@@ -337,12 +338,13 @@ export default class FormPopup extends React.Component {
                 }
             } else if (formData[i].type === 'text_area') {
                 this.formValuesArray[i] = formData[i].value;
+                let notEditable = !this.props.editable || formData[i].editable === false;
                 buttons.push(
                     <View style={Styles.formInputContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
                         <FormTextInput
                             numberOfLines={3}
-                            editable={this.props.editable}
+                            editable={!notEditable}
                             formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}
                             containerStyle={Styles.noBorder}
@@ -380,7 +382,7 @@ export default class FormPopup extends React.Component {
         return (
             <View style={Styles.containerStyle}>
                 <KeyboardAvoidingView
-                    behavior={(Platform.OS === 'ios') ? "position": null}
+                    behavior={(Platform.OS === 'ios') ? 'position' : null}
                     style={Styles.formContainer}>
                     <ScrollView style={Styles.formScrollView} keyboardShouldPersistTaps="handled">
                         {this.renderForm()}
