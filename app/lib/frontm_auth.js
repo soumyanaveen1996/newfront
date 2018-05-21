@@ -284,9 +284,11 @@ class FrontmAuth {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
             'headers': {
-                refresh_token: user.provider.refreshToken,
+                accesskeyid: user.aws.accessKeyId,
                 provider_name: user.provider.name.toLowerCase(),
-                email: user.info.emailAddress
+                refresh_token: user.provider.refreshToken,
+                secretaccesskey: user.aws.secretAccessKey,
+                sessiontoken: user.aws.sessionToken,
             }
         };
         console.log('Options for refresh : ', options);
