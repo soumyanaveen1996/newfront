@@ -507,7 +507,7 @@ export default class ChatBotScreen extends React.Component {
     sendSliderResponseMessage(selectedRows) {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
-        message.sliderResponseMessage(selectedRows);
+        message.stringMessage(selectedRows[0].title);
         return this.sendMessage(message);
     }
 
