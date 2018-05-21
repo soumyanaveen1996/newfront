@@ -40,6 +40,7 @@ const devConfig = {
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
+        updateSigninPath: '/updateSignin/frontm',
     }
 }
 

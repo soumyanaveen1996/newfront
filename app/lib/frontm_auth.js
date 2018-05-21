@@ -278,6 +278,31 @@ class FrontmAuth {
         });
     }
 
+    updatePassword(payload, user) {
+        let options = {
+            method: 'POST',
+            url: Config.proxy.protocol + Config.proxy.host + Config.proxy.updateSigninPath,
+            headers: {
+                refresh_token: user.provider.refreshToken,
+            },
+            data: {
+                user: payload
+            }
+        };
+        return new Promise(function (resolve, reject) {
+            Network(options)
+                .then((res) => {
+                    if (res.success === 'true' || res.success === true) {
+                        resolve();
+                    } else {
+                        reject(new Error(res.message));
+                    }
+                }).catch(() => {
+                    reject();
+                });
+        })
+    }
+
     refreshTokens(user) {
         console.log('Options for refresh : ', user);
         let options = {
