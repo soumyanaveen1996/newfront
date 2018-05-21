@@ -63,7 +63,6 @@ export default class ChatBotScreen extends React.Component {
         }
 
         if (state.params.button) {
-            console
             if (state.params.button === 'manual') {
                 navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
                     state.params.refresh();
@@ -577,6 +576,17 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    onSliderTap = (selectedRow) => {
+        this.sendSliderTapResponseMessage(selectedRow);
+    }
+
+    sendSliderTapResponseMessage(selectedRow) {
+        let message = new Message({ addedByBot: false });
+        message.setCreatedBy(this.getUserId());
+        message.stringMessage(selectedRow.title);
+        return this.sendMessage(message);
+    }
+
     sendButtonResponseMessage(selectedItem) {
         let message = new Message({ addedByBot: false });
         message.buttonResponseMessage(selectedItem);
@@ -1064,7 +1074,7 @@ export default class ChatBotScreen extends React.Component {
         const doneFn = this.state.overrideDoneFn ? this.state.overrideDoneFn.bind(this) : this.onSliderDone.bind(this);
         const options = _.extend({}, message.getMessageOptions(), { doneFunction: doneFn });
         // If smart reply - the taps are sent back to the bot
-        const tapFn = options.smartReply === true ? this.onSliderDone.bind(this) : null;
+        const tapFn = options.smartReply === true ? this.onSliderTap.bind(this) : null;
 
         if (tapFn) {
             options.tapFunction = tapFn;

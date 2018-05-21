@@ -166,7 +166,7 @@ export default class Slider extends React.Component {
         if (option && option.smartReply === true && option.tapFunction) {
             const messageSelected = this.state.messageArray[index];
             this.closeSlider(function () {
-                option.tapFunction([messageSelected]);
+                option.tapFunction(messageSelected);
             });
             return;
         }
