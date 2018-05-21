@@ -1,7 +1,7 @@
 import React from 'react';
 import { View , Text , FlatList, TextInput, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import styles from './styles'
-import { ListItem } from 'react-native-elements'
+import { ListItem, Icon } from 'react-native-elements'
 import {GlobalColors} from '../../config/styles'
 import {headerConfig  , searchBarConfig , rightIconConfig} from './config'
 const subtitleNumberOfLines = 2;
@@ -15,7 +15,9 @@ import I18n from '../../config/i18n/i18n';
 import dce from '../../lib/dce';
 import SystemBot from '../../lib/bot/SystemBot';
 import { MessageHandler } from '../../lib/message';
-import CachedImage from '../CachedImage'
+import CachedImage from '../CachedImage';
+import Swipeout from 'react-native-swipeout';
+import utils from "../../lib/utils";
 
 export default class InstalledBotsScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -90,6 +92,18 @@ export default class InstalledBotsScreen extends React.Component {
         }
     }
 
+    onUpdatePress = async (bot) => {
+        try {
+            const dceBot = dce.bot(bot);
+            await Bot.update(dceBot);
+            this.refreshData();
+            this.refs.toast.show(I18n.t('Bot_updated'), DURATION.LENGTH_SHORT);
+        } catch (e) {
+            this.refs.toast.show(I18n.t('Bot_update_failed'), DURATION.LENGTH_SHORT);
+            throw e;
+        }
+    }
+
     onBotPress = async (bot) => {
         Actions.botChat({ bot: bot });
     }
@@ -98,26 +112,58 @@ export default class InstalledBotsScreen extends React.Component {
         <Text style = {styles.headerTitleStyle} >{headerConfig.headerTitle}</Text>
     )
 
+    checkBotStatus = (botData) => {
+        return utils.checkBotStatus(this.state.bots, botData);
+    }
+
+    getSwipeButtons = (botData) => {
+        const botStatus = this.checkBotStatus(botData);
+        let swipeBtns = [
+            {
+                component:(
+                    <View style={styles.swipeBtnStyle}>
+                        <Icon name='delete'/>
+                    </View>
+                ),
+                backgroundColor: GlobalColors.red,
+                onPress: () => { this.onDeletePress(botData) }
+            }
+        ];
+        if(botStatus.update){
+            swipeBtns.push({
+                component:(
+                    <View style={styles.swipeBtnStyle}>
+                        <Icon name='update'/>
+                    </View>
+                ),
+                backgroundColor: GlobalColors.darkGray,
+                onPress: () => { this.onUpdatePress(botData) }
+            });
+        }
+        return swipeBtns;
+    }
+
     renderRow = (botData)=>{
+        let swipeBtns = this.getSwipeButtons(botData);
         return (
             <View>
-                <ListItem
-                    avatarContainerStyle={styles.avatarContainerStyle}
-                    avatarStyle={styles.avatarStyle}
-                    containerStyle={styles.containerStyle}
-                    title={botData.botName}
-                    titleStyle={styles.titleStyle}
-                    titleContainerStyle={styles.titleContainerStyle}
-                    subtitle={botData.description}
-                    subtitleStyle={styles.subtitleStyle}
-                    avatar={this.renderBotImage(botData)}
-                    avatarOverlayContainerStyle={styles.avatarOverlayContainerStyle}
-                    subtitleNumberOfLines={subtitleNumberOfLines}
-                    subtitleContainerStyle={styles.subtitleContainerStyle}
-                    onPress={()=>{ this.onBotPress(botData) }}
-                    rightIcon ={{style:{alignSelf:'center'} , name : 'delete'}}
-                    onPressRightIcon = { () => { this.onDeletePress(botData) } }
-                />
+                <Swipeout right={swipeBtns} backgroundColor= {GlobalColors.transparent}>
+                    <ListItem
+                        avatarContainerStyle={styles.avatarContainerStyle}
+                        avatarStyle={styles.avatarStyle}
+                        containerStyle={styles.containerStyle}
+                        title={botData.botName}
+                        titleStyle={styles.titleStyle}
+                        titleContainerStyle={styles.titleContainerStyle}
+                        subtitle={botData.description}
+                        subtitleStyle={styles.subtitleStyle}
+                        avatar={this.renderBotImage(botData)}
+                        avatarOverlayContainerStyle={styles.avatarOverlayContainerStyle}
+                        subtitleNumberOfLines={subtitleNumberOfLines}
+                        subtitleContainerStyle={styles.subtitleContainerStyle}
+                        onPress={()=>{ this.onBotPress(botData) }}
+                    />
+                </Swipeout>
             </View>
         )
     }
