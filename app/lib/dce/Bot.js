@@ -93,7 +93,6 @@ class Bot {
     async Load(ctx) {
 
         try {
-            this.createRootDirectory();
             await this.storeManifest();
 
             // Get the user as we need the creds
