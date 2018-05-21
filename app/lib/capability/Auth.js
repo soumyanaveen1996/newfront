@@ -323,6 +323,26 @@ export default class Auth {
     })
 
 
+    static updatePassword = (payload) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    return FrontmAuth.updatePassword(payload, user);
+                } else {
+                    reject('No valid user session');
+                }
+            })
+            .then(resolve)
+            .catch((error) => {
+                if (error && error.message) {
+                    reject(new AuthError(98, error.message));
+                } else {
+                    reject(new AuthError(99, 'Error in updating the password for the user'));
+                }
+            });
+    });
+
+
     /**
 	 * Invalidate the session for now
 	 * @return {Promise}
