@@ -36,7 +36,7 @@ const devConfig = {
         pingPath: '/ping',
         catalogPath: '/catalog',
         authPath: '/auth',
-        refreshPath: '/refresh',
+        refreshPath: '/v2/refresh',
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
