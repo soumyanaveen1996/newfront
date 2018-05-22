@@ -292,10 +292,11 @@ class FrontmAuth {
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
-                    if (res.success === 'true' || res.success === true) {
+                    let resData = res.data || {};
+                    if (resData.success === 'true' || resData.success === true) {
                         resolve();
                     } else {
-                        reject(new Error(res.message));
+                        reject(new Error(resData.message));
                     }
                 }).catch(() => {
                     reject();
