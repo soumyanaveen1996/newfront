@@ -40,7 +40,7 @@ const stageConfig = {
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
-        updateSigninPath: '/updateSignin/frontm',
+        updateSigninPath: '/v2/updateSignin/frontm',
     }
 };
 
