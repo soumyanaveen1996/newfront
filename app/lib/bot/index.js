@@ -3,7 +3,7 @@ import _ from 'lodash';
 import config from '../../config/config';
 import dce from '../dce';
 import { Bot as DceBot } from '../dce';
-import { Utils, Network, Auth, Promise } from '../capability';
+import { Utils, Network, Auth, Promise, DeviceStorage } from '../capability';
 import { NetworkError } from '../network';
 import SystemBot, { SYSTEM_BOT_MANIFEST } from './SystemBot';
 import {MessageHandler} from '../message';
@@ -33,6 +33,7 @@ class Bot extends events.EventEmitter {
     }
 
     static update = async (bot) => {
+
         if (!bot) {
             throw new Error('A valid bot is required for updating a bot');
         }
@@ -40,6 +41,7 @@ class Bot extends events.EventEmitter {
         const bots = await Bot.getInstalledBots();
         const currentBot = _.find(bots, { botId: bot.botId });
         if (currentBot) {
+            console.log('Deleting : ', bot.botId, bot.botName);
             const dceBot = dce.bot(currentBot);
             await Bot.delete(dceBot);
         }
@@ -119,6 +121,8 @@ class Bot extends events.EventEmitter {
             if (!_.isArray(catalog)) {
                 throw new NetworkError('Error getting catalog');
             }
+
+            console.log('Catalog : ', catalog);
 
             catalog = _.map(catalog, (bot) => _.merge(bot, {logoUrl : FrontmUtils.botLogoUrl(bot.logoUrl)}));
 

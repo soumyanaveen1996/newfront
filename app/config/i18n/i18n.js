@@ -71,6 +71,8 @@ I18n.translations = {
         Web_content_shown: 'Web content shown',
         Bot_load_failed_title: 'Bot load failed',
         Bot_load_failed: 'It appears we are having trouble connecting to the internet. Please retry in some time.',
+        Bot_max_version_error: 'The current version is bot is incompatible with the app. Please visit the Installed bots screen to update the bot.',
+        Bot_min_version_error: 'The current version of the app cannot run the new version of the bot. Please update the app from the app store.',
         Take_picture: 'Take a picture',
         Select_image: 'Select an image',
         Fill_form : 'Please fill the form',

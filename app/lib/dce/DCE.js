@@ -11,7 +11,7 @@ class DCE {
 
         let bot = new Bot(options);
 
-        this.bots[bot.slug] = bot;
+        this.bots[bot.botId] = bot;
 
         return bot;
     }

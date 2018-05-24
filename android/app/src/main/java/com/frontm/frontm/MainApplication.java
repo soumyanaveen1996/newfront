@@ -3,6 +3,7 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
@@ -52,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNVersionCheckPackage(),
             new AndroidOpenSettingsPackage(),
             new RNGoogleSignInPackage(),
             new ImageResizerPackage(),
