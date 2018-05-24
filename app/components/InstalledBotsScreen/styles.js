@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { SCREEN_WIDTH , scrollViewConfig}  from './config';
 import { GlobalColors } from '../../config/styles';
+import BotListItemStyles from '../BotInstallListItem/styles'
 
 export default StyleSheet.create({
     tileContainer: {
@@ -12,11 +13,15 @@ export default StyleSheet.create({
         borderColor: 'transparent',
         borderRadius:15,
     },
+    separator: {
+        backgroundColor: GlobalColors.disabledGray,
+        height: 1,
+        width: '100%',
+        margin: 0
+    },
     rowContainer: {
         width: SCREEN_WIDTH ,
         height:105 ,
-        borderBottomWidth : 1,
-        borderColor: 'transparent',
         borderRadius:15,
     },
     rowContent: {
@@ -56,7 +61,7 @@ export default StyleSheet.create({
         padding:5
     },
     gridStyle :{
-        flex: 1
+        flex: 1,
     },
     headerTitleStyle: {
         fontSize:17,
@@ -103,9 +108,12 @@ export default StyleSheet.create({
         marginTop: 5,
     },
     swipeBtnStyle: {
-        marginTop: 38,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 })
 
-
-
+export {
+    BotListItemStyles
+}

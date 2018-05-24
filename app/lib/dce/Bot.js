@@ -26,10 +26,10 @@ class Bot {
     }
 
     /**
-     * Return the installed bots - based on the bots that are installed in the asset dir
+     * Return all the installed bots - based on the bots that are installed in the asset dir
      * @returns Array of manifests (that are basically the bot representation)
      */
-    static async installedBots() {
+    static async allInstalledBots() {
         console.log('Calling installedBots');
 
         let bots = [];
@@ -68,7 +68,15 @@ class Bot {
             console.log('Error reading manifests on devices', e);
             return [];
         });
+        return bots;
+    }
 
+    /**
+     * Return the installed bots that are not system bots. But add the default bots to the list.
+     * @returns Array of manifests (that are basically the bot representation)
+     */
+    static async installedBots() {
+        let bots = await Bot.allInstalledBots();
         // System bots are to be hidden - hush!
         const systemBots = await Promise.resolve(SystemBot.getAllSystemBots());
 
@@ -94,6 +102,7 @@ class Bot {
 
         try {
             this.createRootDirectory();
+
             await this.storeManifest();
 
             // Get the user as we need the creds
@@ -137,7 +146,7 @@ class Bot {
     async Delete(ctx) {
 
         try {
-            let botDirectoryPath = this.assetFolder;
+            let botDirectoryPath = this.botDirectory;
             console.log('Deleting the bot if it exists locally. botPath = ', botDirectoryPath);
 
             let existsOnDevice = await AssetFetcher.existsOnDevice(botDirectoryPath);
@@ -150,6 +159,9 @@ class Bot {
             await AssetFetcher.deleteFile(botDirectoryPath);
 
             //Delete dependencies?
+            // TODO : To delete dependencies that are not in use
+
+            /*
             let remoteDeps = _.pickBy(this.manifest.dependencies, function (dep) {
                 return dep.remote === true;
             });
@@ -158,7 +170,7 @@ class Bot {
             })).catch((e) => {
                 console.log('Catching delete dependency err', e);
                 throw e;
-            });
+            }); */
 
             return true;
         } catch (e) {

@@ -1,10 +1,11 @@
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View, Text, Image } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View, Text, Alert } from 'react-native';
 import styles from './styles';
 import Bot from '../../lib/bot/index';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import CachedImage from '../CachedImage';
+import utils from '../../lib/utils';
 
 const subtitleNumberOfLines = 2;
 
@@ -30,6 +31,30 @@ export default class BotInstallListItem extends React.Component {
         });
     }
 
+    async performBotInstallation(bot, update) {
+        if (!utils.isClientSupportedByBot(bot)) {
+            Alert.alert(
+                I18n.t('Bot_load_failed_title'),
+                I18n.t('Bot_min_version_error'),
+                [
+                    {text: 'OK'},
+                ],
+                { cancelable: true }
+            )
+            return;
+        }
+        try {
+            const dceBot = dce.bot(bot);
+            if (update) {
+                await Bot.update(dceBot);
+            } else {
+                await Bot.install(dceBot);
+            }
+        } catch (e) {
+            throw e;
+        }
+    }
+
     async installBot() {
         if (this.props.installed && !this.props.update) {
             return;
@@ -39,13 +64,7 @@ export default class BotInstallListItem extends React.Component {
         this.setState({ status: BotInstallListItemStates.INSTALLING });
         const bot = this.props.bot;
         try {
-            const dceBot = dce.bot(bot);
-            if (isUpdate) {
-                await Bot.update(dceBot);
-            } else {
-                await Bot.install(dceBot);
-            }
-
+            await this.performBotInstallation(bot, isUpdate);
             if (this.props.onBotInstalled) {
                 this.props.onBotInstalled();
             }

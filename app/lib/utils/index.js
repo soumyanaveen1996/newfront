@@ -7,6 +7,8 @@ import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
 import {Platform, Dimensions, PermissionsAndroid} from 'react-native';
+import VersionCheck from 'react-native-version-check';
+import versionCompare from 'semver-compare';
 
 export function formattedDate(date) {
     if (!date) {
@@ -111,6 +113,13 @@ export function checkBotStatus(installedBots, newBot) {
         }
     }
     return { installed, update };
+}
+
+export function isClientSupportedByBot(bot) {
+    if (!bot.minRequiredPlatformVersion ||  (versionCompare(VersionCheck.getCurrentVersion(), bot.minRequiredPlatformVersion) > -1)) {
+        return true;
+    }
+    return false;
 }
 
 // Note: need to use decodeURI on paths that Expo has created but not when pointing it back!
@@ -349,5 +358,6 @@ export default {
     botLogoUrl,
     channelLogoUrl,
     padStartForAndroid,
-    requestReadContactsPermission
+    requestReadContactsPermission,
+    isClientSupportedByBot
 }

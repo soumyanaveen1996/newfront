@@ -9,7 +9,7 @@ import {
     View,
     Alert,
     SafeAreaView,
-    Platform, PermissionsAndroid
+    Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -19,7 +19,17 @@ import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Network, Message, Contact, MessageTypeConstants, Auth, ConversationContext, Media, Resource, ResourceTypes, Settings, PollingStrategyTypes } from '../../lib/capability';
+import { Network,
+    Message,
+    Contact,
+    MessageTypeConstants,
+    Auth,
+    ConversationContext,
+    Media,
+    Resource,
+    ResourceTypes,
+    Settings,
+    PollingStrategyTypes } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
@@ -27,11 +37,8 @@ import Constants from '../../config/constants';
 import Utils from '../../lib/utils';
 import moment from 'moment';
 import Permissions from 'react-native-permissions';
-
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
-
 import { HeaderBack, HeaderRightIcon } from '../Header';
-
 import { MessageHandler } from '../../lib/message';
 import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
@@ -40,6 +47,8 @@ import { MessageCounter } from '../../lib/MessageCounter';
 import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents } from '../../lib/events';
 import { Icons } from '../../config/icons';
 import images from '../../images';
+import VersionCheck from 'react-native-version-check';
+import versionCompare from 'semver-compare';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -150,6 +159,19 @@ export default class ChatBotScreen extends React.Component {
             )
             return;
         }
+
+        if (this.bot.maxRequiredPlatformVersion && versionCompare(VersionCheck.getCurrentVersion(), this.bot.maxRequiredPlatformVersion) === 1) {
+            Alert.alert(
+                I18n.t('Bot_load_failed_title'),
+                I18n.t('Bot_max_version_error'),
+                [
+                    {text: 'OK', onPress: this.goBack},
+                ],
+                { cancelable: false }
+            )
+            return;
+        }
+
 
         try {
             // The order if calls is critical so that all resources are loaded correctly
