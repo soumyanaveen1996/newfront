@@ -14,7 +14,7 @@ export default class HeaderRightIcon extends React.Component {
             );
         } else if (icon) {
             return (
-                <TouchableOpacity style={styles.defaultHeaderRightIcon} onPress={this.props.onPress}>
+                <TouchableOpacity style={[styles.defaultHeaderRightIcon, this.props.style]} onPress={this.props.onPress}>
                     {icon}
                 </TouchableOpacity>
             );

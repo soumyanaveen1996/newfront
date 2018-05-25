@@ -356,6 +356,14 @@ const stylesheet = StyleSheet.create({
     chatBarNoNetwork: {
         backgroundColor: 'rgb(192, 201, 208)',
     },
+    headerRightView: {
+        flexDirection: 'row',
+        width: 85,
+        height: 40,
+        justifyContent: 'space-between',
+        paddingTop: 3,
+        marginRight: 5,
+    }
 });
 
 

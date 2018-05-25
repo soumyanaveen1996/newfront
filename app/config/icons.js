@@ -41,6 +41,7 @@ export const Icons = {
     satelliteChatStatusClose: icon('ios-close', 'ionicon', 20, Colors.red, Colors.statusBarBackgroundColor, '500'),
     nonetworkChatStatusClose: icon('ios-close', 'ionicon', 20, Colors.black, Colors.statusBarBackgroundColor, '500'),
     refresh: icon('ios-refresh', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
+    call: icon('ios-call', 'ionicon', 30, Colors.white, Colors.transparent, '500'),
     automatic: icon('ios-ionic', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
 };
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Alert } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
@@ -8,8 +9,35 @@ import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
 import images from '../../images';
+import I18n from '../../config/i18n/i18n';
+import chatStyles from './styles';
 
 export default class PeopleChat extends ChatBotScreen {
+
+    static connectionButton(params) {
+        if (params.button) {
+            if (params.button === 'manual') {
+                return <HeaderRightIcon onPress={() => { params.refresh(); }} icon={Icons.refresh()}/>;
+            } else if (params.button === 'gsm') {
+                return <HeaderRightIcon image={images.gsm} onPress={() => { params.showConnectionMessage('gsm'); }}/>;
+            } else if (params.button === 'satellite') {
+                return <HeaderRightIcon image={images.satellite} onPress={() => { params.showConnectionMessage('satellite'); }}/>;
+            } else {
+                return <HeaderRightIcon icon={Icons.automatic()} onPress={() => { params.showConnectionMessage('automatic'); }}/>;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    static rightHeaderView({ params }) {
+        return (
+            <View style={chatStyles.headerRightView}>
+                <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
+                {PeopleChat.connectionButton(params)}
+            </View>
+        )
+    }
 
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -31,19 +59,7 @@ export default class PeopleChat extends ChatBotScreen {
                 }
             }} />;
         }
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
-                    state.params.refresh();
-                }} icon={Icons.refresh()}/>;
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
-            } else {
-                navigationOptions.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
-            }
-        }
+        navigationOptions.headerRight = PeopleChat.rightHeaderView(state);
         return navigationOptions;
     }
 
@@ -75,8 +91,20 @@ export default class PeopleChat extends ChatBotScreen {
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
             deleteConversation: this.deleteConversation.bind(this),
             refresh: this.readLambdaQueue.bind(this),
-            showConnectionMessage: this.showConnectionMessage.bind(this)
+            showConnectionMessage: this.showConnectionMessage.bind(this),
+            showCallMessage: this.showCallMessage.bind(this),
         });
+    }
+
+    showCallMessage() {
+        Alert.alert(
+            null,
+            I18n.t('Call_Message'),
+            [
+                { text: I18n.t('Ok'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
     }
 
     async getConversationContext(botContext, user) {

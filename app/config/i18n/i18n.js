@@ -80,6 +80,7 @@ I18n.translations = {
         Close: 'Close',
         Yes: 'Yes',
         Confirm: 'Confirm',
+        Call_Message: 'Available when you connect over Satellite broadband (L-Band, Ka-Band)',
         'Password_not_empty': 'Please enter a password',
         'Not_a_number': 'Please enter a number',
         'Field_mandatory': 'Field is mandatory',
