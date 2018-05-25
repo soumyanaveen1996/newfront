@@ -2,17 +2,17 @@
   "allowResetConversation": "false",
   "botId": "onboarding-bot",
   "botName": "M",
-  "botUrl": "botfarm/onboardingBot.js",
+  "botUrl": "botfarm/frontmai/onboardingBot/1.0.0/onboardingBot.js",
   "category": [],
   "dependencies": {
     "agentGuardService": {
       "remote": "true",
-      "url": "botfarm/rc/agentGuardService.js",
+      "url": "botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js",
       "version": "1.0.0"
     },
     "authContext": {
       "remote": "true",
-      "url": "botfarm/rc/authContext.js",
+      "url": "botfarm/rc/frontmai/authContext/1.0.0/authContext.js",
       "version": "1.0.0"
     }
   },
@@ -21,5 +21,5 @@
   "slug": "onboarding-bot",
   "systemBot": true,
   "userDomain": "frontmai",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }

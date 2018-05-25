@@ -2,22 +2,22 @@
   "allowResetConversation": "false",
   "botId": "im-bot",
   "botName": "IMBot",
-  "botUrl": "botfarm/imBot.js",
+  "botUrl": "botfarm/frontmai/imBot/1.0.0/imBot.js",
   "category": [],
   "dependencies": {
     "agentGuardService": {
       "remote": "true",
-      "url": "botfarm/rc/agentGuardService.js",
+      "url": "botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js",
       "version": "1.0.0"
     },
     "authContext": {
       "remote": "true",
-      "url": "botfarm/rc/authContext.js",
+      "url": "botfarm/rc/frontmai/authContext/1.0.0/authContext.js",
       "version": "1.0.0"
     },
     "botUtils": {
       "remote": "true",
-      "url": "botfarm/rc/botUtils.js",
+      "url": "botfarm/rc/frontmai/botUtils/1.0.0/botUtils.js",
       "version": "1.0.0"
     }
   },
@@ -26,5 +26,5 @@
   "slug": "im-bot",
   "systemBot": true,
   "userDomain": "frontmai",
-  "version": "0.1.1"
+  "version": "1.0.0"
 }
