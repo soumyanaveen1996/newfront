@@ -3,6 +3,7 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
@@ -53,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNDeviceInfo(),
             new RNVersionCheckPackage(),
             new AndroidOpenSettingsPackage(),
             new RNGoogleSignInPackage(),

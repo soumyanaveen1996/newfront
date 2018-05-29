@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':react-native-version-check')
     compile ("com.facebook.react:react-native:0.51.0") {
         force = true
