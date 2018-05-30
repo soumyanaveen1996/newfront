@@ -12,7 +12,7 @@ const createConversationTable = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(conversationSql.createConversationTable, null, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -22,9 +22,9 @@ const insertConversation = (conversationId, type, createdAt = undefined) => new 
     const nowMilliSeconds = moment(createdAt).valueOf();
     const args = [conversationId, type, nowMilliSeconds];
     db.transaction(tx => {
-        tx.executeSql(conversationSql.insertConversation, args, function success(tx, res) {
+        tx.executeSql(conversationSql.insertConversation, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -33,9 +33,9 @@ const insertConversation = (conversationId, type, createdAt = undefined) => new 
 const deleteConversation = (conversationId, type) => new Promise((resolve, reject) => {
     const args = [conversationId, type];
     db.transaction(tx => {
-        tx.executeSql(conversationSql.deleteConversation, args, function success(tx, res) {
+        tx.executeSql(conversationSql.deleteConversation, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -44,9 +44,9 @@ const deleteConversation = (conversationId, type) => new Promise((resolve, rejec
 const updateConversationId = (oldConversationId, newConversationId) => new Promise((resolve, reject) => {
     const args = [newConversationId, oldConversationId];
     db.transaction(tx => {
-        tx.executeSql(conversationSql.updateConversation, args, function success(tx, res) {
+        tx.executeSql(conversationSql.updateConversation, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });

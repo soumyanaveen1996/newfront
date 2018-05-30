@@ -8,7 +8,7 @@ const createChannelsTable = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(channelSql.createChannelsTable, null, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -18,10 +18,10 @@ const createChannelsTable = () => new Promise((resolve, reject) => {
 const insertChannel = (name, description, logo, domain, channelId) => new Promise((resolve, reject) => {
     const args = [name, description, logo, domain, channelId];
     db.transaction(tx => {
-        tx.executeSql(channelSql.insertChannel, args, function success(tx, res) {
+        tx.executeSql(channelSql.insertChannel, args, function success(tx2, res) {
             console.log('res : ', res);
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -30,9 +30,9 @@ const insertChannel = (name, description, logo, domain, channelId) => new Promis
 const deleteChannel = (channelId) => new Promise((resolve, reject) => {
     const args = [channelId];
     db.transaction(tx => {
-        tx.executeSql(channelSql.deleteChannel, args, function success(tx, res) {
+        tx.executeSql(channelSql.deleteChannel, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -42,9 +42,9 @@ const deleteChannel = (channelId) => new Promise((resolve, reject) => {
 const updateConversationForChannel = (name, domain, conversationId) => new Promise((resolve, reject) => {
     const args = [conversationId, name, domain];
     db.transaction(tx => {
-        tx.executeSql(channelSql.updateConversationForChannel, args, function success(tx, res) {
+        tx.executeSql(channelSql.updateConversationForChannel, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -54,10 +54,10 @@ const updateChannel = (name, domain, desc) => new Promise((resolve, reject) => {
     const args = [desc, name, domain];
     console.log('ChannelDAO::updateChannel::', args);
     db.transaction(tx => {
-        tx.executeSql(channelSql.updateChannel, args, function success(tx, res) {
+        tx.executeSql(channelSql.updateChannel, args, function success(tx2, res) {
             console.log('ChannelDAO::updateChannel::', args);
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
