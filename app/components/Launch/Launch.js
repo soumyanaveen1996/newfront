@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification, Channel } from '../../lib/capability';
+import { Auth, Notification } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';

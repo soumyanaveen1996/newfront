@@ -1,5 +1,5 @@
 import Auth from '../capability/Auth';
-import { DeviceStorage, Network } from '../capability';
+import { DeviceStorage } from '../capability';
 import { NetworkHandler } from './index';
 import config from '../../config/config';
 import BackgroundTimer from 'react-native-background-timer';

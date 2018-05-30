@@ -12,7 +12,7 @@ export default class LogoImage extends Component {
     }
 
     componentWillMount() {
-        if(this.props.source){
+        if (this.props.source) {
             this.setState({ loaded: true});
         }
     }

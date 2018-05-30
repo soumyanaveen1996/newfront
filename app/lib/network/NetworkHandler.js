@@ -43,7 +43,6 @@ const readLambda = () => {
 }
 
 const handleLambdaResponse = (res, user) => {
-    const _ = Utils.Lodash;
 
     let resData = res.data.queueMsgs || []
 
@@ -76,7 +75,7 @@ const handleLambdaResponse = (res, user) => {
             // TODO: Should we handle IMBot differently here?
             let bot = message.bot;
             // Name of the bot is the key, unless its IMBot (one to many relationship)
-            if (bot === 'im-bot'|| bot === 'channels-bot') {
+            if (bot === 'im-bot' || bot === 'channels-bot') {
                 // return IMBotMessageHandler.handle(message, user);
                 imbotMessages.push(message);
             } else {

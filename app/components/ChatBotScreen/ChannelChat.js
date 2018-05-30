@@ -5,7 +5,6 @@ import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
-import { MessageHandler } from '../../lib/message';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import { Icons } from '../../config/icons';
 import images from '../../images';

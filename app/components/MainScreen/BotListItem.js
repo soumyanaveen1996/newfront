@@ -2,7 +2,6 @@ import React from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { BotListItemStyles } from './styles';
 import { Icons } from '../../config/icons';
-import images from '../../config/images';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';

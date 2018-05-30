@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
