@@ -1,5 +1,9 @@
-import GoogleAnalytics from './GoogleAnalytics';
+import { GoogleAnalytics as GA, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from './GoogleAnalytics';
+
+let GoogleAnalytics = new GA();
 
 export {
-    GoogleAnalytics
+    GoogleAnalytics,
+    GoogleAnalyticsCategories,
+    GoogleAnalyticsEvents
 };
