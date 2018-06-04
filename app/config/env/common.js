@@ -67,6 +67,7 @@ const config = {
         },
         gsm: {
             pollingInterval: 30000,
+            backgroundPollingInterval: 300000,
         },
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,

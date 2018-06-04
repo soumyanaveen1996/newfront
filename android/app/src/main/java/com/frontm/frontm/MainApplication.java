@@ -3,6 +3,7 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
@@ -53,6 +54,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new BackgroundTaskPackage(),
             new RNVersionCheckPackage(),
             new AndroidOpenSettingsPackage(),
             new RNGoogleSignInPackage(),
@@ -94,5 +96,6 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     FacebookSdk.sdkInitialize(getApplicationContext());
+    BackgroundTaskPackage.useContext(this);
   }
 }

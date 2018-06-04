@@ -17,7 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 
-const VERSION = 18; // Corresponding to 2.8.0 build 4. Update this number every time we update initial_bots
+const VERSION = 20; // Corresponding to 2.8.1 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {

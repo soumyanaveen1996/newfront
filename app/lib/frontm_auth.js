@@ -305,7 +305,6 @@ class FrontmAuth {
     }
 
     refreshTokens(user) {
-        console.log('Options for refresh : ', user);
         let options = {
             'method': 'post',
             'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
@@ -313,15 +312,12 @@ class FrontmAuth {
                 accesskeyid: user.aws.accessKeyId,
                 provider_name: user.provider.name.toLowerCase(),
                 refresh_token: user.provider.refreshToken,
-                secretaccesskey: user.aws.secretAccessKey,
-                sessiontoken: user.aws.sessionToken,
             }
         };
         console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
-                    console.log('Results for refresh : ', res);
                     let resData = res ? res.data : {};
                     if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
                         const updatedCreds = {
