@@ -90,6 +90,7 @@ const config = {
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
+        updateSigninPath: '/v2/updateSignin/frontm',
     }
 }
 
