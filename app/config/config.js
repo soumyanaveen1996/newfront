@@ -1,4 +1,4 @@
-import configToUse from './env/prod';
+import configToUse from './env/dev';
 
 // Point to the right environment config based on what is being released
 const config = configToUse;

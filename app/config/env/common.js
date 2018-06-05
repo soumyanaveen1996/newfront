@@ -30,8 +30,16 @@ const config = {
         },
         android: {
             google: {
-                scopes: ['profile', 'email'],
-                webClientId: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com'
+                dev: {
+                    scopes: ['profile', 'email'],
+                    webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
+                    clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
+                },
+                prod: {
+                    scopes: ['profile', 'email'],
+                    webClientId: '705702062891-ntfu1j7mkh26qhek648depdbrjsvkvmd.apps.googleusercontent.com',
+                    clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
+                }
             },
             facebook: {
                 permissions: ['public_profile', 'email'] // Keep it in sorted order
