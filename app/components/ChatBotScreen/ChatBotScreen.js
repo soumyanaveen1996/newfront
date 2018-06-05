@@ -49,7 +49,7 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
-import { GoogleAnalytics, GoogleAnalyticsCategories } from "../../lib/GoogleAnalytics";
+import { GoogleAnalytics, GoogleAnalyticsCategories } from '../../lib/GoogleAnalytics';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {

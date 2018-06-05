@@ -3,7 +3,7 @@ import DeviceInfo from 'react-native-device-info';
 import EventEmitter, { PollingStrategyEvents } from '../events';
 import { SatelliteConnectionEvents } from '../events';
 import config from '../../config/config';
-import Settings, { PollingStrategyTypes } from "../capability/Settings";
+import Settings, { PollingStrategyTypes } from '../capability/Settings';
 
 export const GoogleAnalyticsCategories = {
     APP_LAUNCHED: 'App Launched',

@@ -16,7 +16,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
-import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from "../../lib/GoogleAnalytics";
+import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 
 const VERSION = 20; // Corresponding to 2.8.1 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
