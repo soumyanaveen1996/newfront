@@ -53,7 +53,7 @@ export default class CategoriesTab extends React.Component {
         return (
             <View >
                 <EasyListView
-                    ref={component => this.gridview = component}
+                    ref={component => { this.gridview = component }}
                     column={scrollViewConfig.numberofColumn}
                     renderItem={this.renderGridItem}
                     contentContainerStyle = {styles.listViewContentContainerStyle}

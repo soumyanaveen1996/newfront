@@ -75,7 +75,7 @@ export default class Media {
                     onPress: () => console.log('Permission denied'),
                     style: 'cancel',
                 },
-                {text: 'Open Settings', onPress: (Platform.OS === 'ios')? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
+                {text: 'Open Settings', onPress: (Platform.OS === 'ios') ? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
             ],
         );
     }
@@ -98,7 +98,7 @@ export default class Media {
                     onPress: () => console.log('Permission denied'),
                     style: 'cancel',
                 },
-                {text: 'Open Settings', onPress: (Platform.OS === 'ios')? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
+                {text: 'Open Settings', onPress: (Platform.OS === 'ios') ? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
             ],
         );
     }

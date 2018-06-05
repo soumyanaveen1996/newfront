@@ -94,7 +94,7 @@ export default class ImagePicker {
             })
             .catch(error => ImagePicker.invokeError(callback, error))
             .done();
-    };
+    }
 
     /**
      * Overrides react-native-image-picker launchCamera()
@@ -113,7 +113,7 @@ export default class ImagePicker {
             })
             .catch(error => ImagePicker.invokeError(callback, error))
             .done();
-    };
+    }
 
     /**
      * Overrides react-native-image-picker launchImageLibrary()
@@ -135,5 +135,5 @@ export default class ImagePicker {
             })
             .catch(error => ImagePicker.invokeError(callback, error))
             .done();
-    };
+    }
 }

@@ -22,7 +22,6 @@ import { Actions } from 'react-native-router-flux';
 import { MessageHandler } from '../../lib/message';
 import TapToLoadImage from './TapToLoadImage';
 import VideoPlayer from 'react-native-video-player';
-import Video from 'react-native-video';
 import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';

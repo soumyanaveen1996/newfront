@@ -101,8 +101,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 4
-        versionName "2.8.0"
+        versionCode 5
+        versionName "2.8.1"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -154,6 +154,7 @@ android {
 
 dependencies {
     compile project(':react-native-device-info')
+    compile project(':react-native-background-task')
     compile project(':react-native-version-check')
     compile ("com.facebook.react:react-native:0.51.0") {
         force = true

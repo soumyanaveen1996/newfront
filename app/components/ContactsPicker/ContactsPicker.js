@@ -12,7 +12,7 @@ import { SECTION_HEADER_HEIGHT, searchBarConfig, addButtonConfig } from './confi
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import {Contact} from "../../lib/capability";
+import {Contact} from '../../lib/capability';
 
 export default class ContactsPicker extends React.Component {
 
@@ -201,7 +201,7 @@ export default class ContactsPicker extends React.Component {
         const sectionTitles = _.map(this.state.contactsData, (section) => section.title)
         return (
             <KeyboardAvoidingView
-                behavior={(Platform.OS === 'ios') ? "padding": null}
+                behavior={(Platform.OS === 'ios') ? 'padding' : null}
                 style={styles.addressBookContainer}>
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}

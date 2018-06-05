@@ -75,7 +75,7 @@ module.exports = {
         "no-else-return": 0,             // disallow else after a return in an if (off by default)
         "no-eq-null": 0,                 // disallow comparisons to null without a type-checking operator (off by default)
         "no-eval": 1,                    // disallow use of eval()
-        "no-extend-native": 1,           // disallow adding to native types
+        "no-extend-native": 0,           // disallow adding to native types
         "no-extra-bind": 1,              // disallow unnecessary function binding
         "no-fallthrough": 1,             // disallow fallthrough of case statements
         "no-floating-decimal": 1,        // disallow the use of leading or trailing decimal points in numeric literals (off by default)
@@ -115,7 +115,7 @@ module.exports = {
         "no-label-var": 1,               // disallow labels that share a name with a variable
         "no-shadow": 1,                  // disallow declaration of variables already declared in the outer scope
         "no-shadow-restricted-names": 1, // disallow shadowing of names such as arguments
-        "no-undef": 2,                   // disallow use of undeclared variables unless mentioned in a /*global */ block
+        "no-undef": 0,                   // disallow use of undeclared variables unless mentioned in a /*global */ block
         "no-undefined": 0,               // disallow use of undefined variable (off by default)
         "no-undef-init": 1,              // disallow use of undefined when initializing variables
         "no-unused-vars": [1, {"vars": "all", "args": "none"}], // disallow declaration of variables that are not used in the code
@@ -176,7 +176,7 @@ module.exports = {
         "max-len": 0,                    // specify the maximum length of a line in your program (off by default)
         "max-params": 0,                 // limits the number of parameters that can be used in the function declaration. (off by default)
         "max-statements": 0,             // specify the maximum number of statement allowed in a function (off by default)
-        "no-bitwise": 1,                 // disallow use of bitwise operators (off by default)
+        "no-bitwise": 0,                 // disallow use of bitwise operators (off by default)
         "no-plusplus": 0,                // disallow use of unary operators, ++ and -- (off by default)
 
         "react/display-name": 0,

@@ -34,7 +34,7 @@ export default class ProfileImage extends React.Component {
                 })
                 ImageCache.imageCacheManager.checkAndUpdateIfModified(uri, this, headers);
             } else {
-                if(!ImageCache.imageCacheManager.isLastCheckedWithinThreshold(uri)){
+                if (!ImageCache.imageCacheManager.isLastCheckedWithinThreshold(uri)) {
                     ImageCache.imageCacheManager.fetch(uri, this, headers);
                 } else {
                     this.setState({

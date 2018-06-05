@@ -62,7 +62,7 @@ export default class DeveloperTab extends React.Component {
         return (
             <View >
                 <EasyListView
-                    ref={component => this.gridview = component}
+                    ref={component => {this.gridview = component} }
                     column={NUMBER_COLUMNS}
                     renderItem={this.renderGridItem}
                     contentContainerStyle = {styles.listViewContentContainerStyle}

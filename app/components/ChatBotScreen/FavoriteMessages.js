@@ -1,33 +1,20 @@
 import React from 'react';
-import _ from 'lodash';
 import {
-    ActivityIndicator,
     FlatList,
-    Keyboard,
     KeyboardAvoidingView,
     RefreshControl,
-    View,
-    TouchableHighlight,
-    Text
 } from 'react-native';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
-import ChatInputBar from './ChatInputBar';
 import ChatMessage from './ChatMessage';
-import Slider from '../Slider/Slider';
-import { Message, Contact, MessageTypeConstants, Auth } from '../../lib/capability';
-import dce from '../../lib/dce';
-import images from '../../config/images';
-import I18n from '../../config/i18n/i18n';
+import { Auth } from '../../lib/capability';
 import Config from './config';
 import Constants from '../../config/constants';
-import PathParse from 'path-parse';
 
 import { HeaderBack } from '../Header';
 
 import { MessageHandler } from '../../lib/message';
-import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 
 export default class FavoriteMessages extends React.Component {
@@ -142,7 +129,7 @@ export default class FavoriteMessages extends React.Component {
         // we need a offset as per the header size
         return (
             <KeyboardAvoidingView style={chatStyles.container} behavior="padding" keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
-                <FlatList ref={(list) => this.chatList = list}
+                <FlatList ref={(list) => { this.chatList = list} }
                     inverted
                     data={this.state.messages}
                     renderItem={this.renderItem.bind(this)}

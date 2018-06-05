@@ -12,7 +12,7 @@ const createNetworkRequestQueueTable = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(networkSql.createNetworkQueueTable, null, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -32,9 +32,9 @@ const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CO
 
     const args = [key, status, requestFormatted, createdAtMilliSeconds, updatedAtMilliSeconds, resultFormatted];
     db.transaction(tx => {
-        tx.executeSql(networkSql.insertNetworkOperation, args, function success(tx, res) {
+        tx.executeSql(networkSql.insertNetworkOperation, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -51,7 +51,7 @@ const updateNetworkRequestStatus = (id, status, result) => new Promise((resolve,
     db.transaction(tx => {
         tx.executeSql(networkSql.updateRequest, args, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -62,7 +62,7 @@ const deleteNetworkRequest = (id) => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(networkSql.deleteNetworkOperation, args, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -71,7 +71,7 @@ const deleteNetworkRequest = (id) => new Promise((resolve, reject) => {
 const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => {
     const args = [];
     db.transaction(tx => {
-        tx.executeSql(networkSql.selectPendingEarliestNetworkRequest, args, function success(tx, res) {
+        tx.executeSql(networkSql.selectPendingEarliestNetworkRequest, args, function success(tx2, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -91,7 +91,7 @@ const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => 
                 };
                 return resolve(nw);
             }
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });
@@ -100,7 +100,7 @@ const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => 
 const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) => {
     const args = [key];
     db.transaction(tx => {
-        tx.executeSql(networkSql.selectCompletedtNetworkRequestForKey, args, function success(tx, res) {
+        tx.executeSql(networkSql.selectCompletedtNetworkRequestForKey, args, function success(tx2, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
 
@@ -121,7 +121,7 @@ const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) =>
                 };
             });
             return resolve(formattedResults);
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return reject(err);
         });
     });

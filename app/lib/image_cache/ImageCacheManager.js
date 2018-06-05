@@ -186,9 +186,9 @@ export default class ImageCacheManager {
             cache.task = RNFetchBlob.config({ path }).fetch('GET', uri, headers);
             cache.task.then((response) => {
                 cache.downloading = false;
-                if(response.respInfo.status === 200) {
+                if (response.respInfo.status === 200) {
                     cache.path = path;
-                } else if(response.respInfo.status === 403 || response.respInfo.status === 404){
+                } else if (response.respInfo.status === 403 || response.respInfo.status === 404) {
                     RNFetchBlob.fs.unlink(path);
                     this.lastChecked[uri] = moment();
                     cache.path = undefined;

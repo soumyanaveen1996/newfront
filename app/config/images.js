@@ -3,9 +3,8 @@
  *
  * var Images =require('./images')
  *
- * Images['logo'];  
+ * Images['logo'];
  */
-import { Platform } from 'react-native';
 import images_static from '../images';
 //import android_images from '../images/android';
 

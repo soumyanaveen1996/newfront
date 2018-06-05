@@ -13,7 +13,7 @@ const createVersionTable = (version) => new Promise((resolve, reject) => {
                 .catch((error) => {
                     reject(error);
                 })
-        }, function failure(tx, err) {
+        }, function failure(tx2, err) {
             return reject(err);
         });
     });
@@ -21,7 +21,7 @@ const createVersionTable = (version) => new Promise((resolve, reject) => {
 
 const getVersion = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
-        tx.executeSql(dbVersionSql.getVersion, [], function success(tx, res) {
+        tx.executeSql(dbVersionSql.getVersion, [], function success(tx2, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -29,7 +29,7 @@ const getVersion = () => new Promise((resolve, reject) => {
             } else {
                 return resolve(dbResults[0].version);
             }
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return resolve(-1);
         });
     });
@@ -37,7 +37,7 @@ const getVersion = () => new Promise((resolve, reject) => {
 
 const isVersionTablePresent = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
-        tx.executeSql(dbVersionSql.tableExists, [], function success(tx, res) {
+        tx.executeSql(dbVersionSql.tableExists, [], function success(tx2, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -45,7 +45,7 @@ const isVersionTablePresent = () => new Promise((resolve, reject) => {
             } else {
                 return resolve(dbResults[0].row_count > 0);
             }
-        }, function failure(tx, err) {
+        }, function failure(tx3, err) {
             return resolve(-1);
         });
     });

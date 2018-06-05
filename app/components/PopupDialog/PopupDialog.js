@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Styles, { dialogStyle } from './styles';
-import images from '../../config/images';
 import { Icons } from '../../config/icons';
 
 

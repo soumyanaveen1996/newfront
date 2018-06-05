@@ -13,6 +13,8 @@ import Message from '../capability/Message';
 import { MessageHandler } from '../../lib/message';
 import PushNotification from 'react-native-push-notification';
 
+// TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
+let processingFutureRequest = false;
 /**
  * Polls the local queue for pending network request and makes them.
  * TODO: Should there be retry here? How to validate there is data? etc - logic needs to be incoporated
@@ -43,7 +45,6 @@ const readLambda = () => {
 }
 
 const handleLambdaResponse = (res, user) => {
-    const _ = Utils.Lodash;
 
     let resData = res.data.queueMsgs || []
 
@@ -76,7 +77,7 @@ const handleLambdaResponse = (res, user) => {
             // TODO: Should we handle IMBot differently here?
             let bot = message.bot;
             // Name of the bot is the key, unless its IMBot (one to many relationship)
-            if (bot === 'im-bot'|| bot === 'channels-bot') {
+            if (bot === 'im-bot' || bot === 'channels-bot') {
                 // return IMBotMessageHandler.handle(message, user);
                 imbotMessages.push(message);
             } else {
@@ -102,32 +103,44 @@ const readRemoteLambdaQueue = (user) => {
 }
 
 const processNetworkQueueRequest = () => {
-    let requestId = 0;
-    let key = '';
-    Queue.dequeueNetworkRequest()
-        .then(function (res) {
-            if (res === null) {
-                // Nothing to do - no more pending requests in the queue
-                return;
-            }
-            requestId = res.id;
-            key = res.key;
-            let request = res.request;
-            return Network(request.getNetworkRequestOptions())
-        })
-        .then((res) => {
-            if (!res) {
-                return;
-            }
-            // Axios wraps the results in data
-            let results = res.data;
-            return Queue.completeNetworkRequest(requestId, key, results);
-        })
-        .catch((err) => {
-            console.log('Error making the api ai call ', err);
-            // TODO(amal): Do we have to reject request if it fails ?
-            return Queue.handleNetworkRequestFailure(requestId, key);
-        });
+    if (processingFutureRequest) {
+        return;
+    }
+    processingFutureRequest = true;
+    dequeueAndProcessQueueRequest();
+}
+
+const dequeueAndProcessQueueRequest = async () => {
+    let requestId = null;
+    let key = null;
+    try {
+        let res = await Queue.dequeueNetworkRequest();
+        if (!res) {
+            processingFutureRequest = false;
+            return;
+        }
+        requestId = res.id;
+        key = res.key;
+        let request = res.request;
+        const response = await Network(request.getNetworkRequestOptions());
+        if (response && response.data) {
+            let results = response.data;
+            await Queue.completeNetworkRequest(requestId, key, results);
+        }
+        dequeueAndProcessQueueRequest();
+    } catch (err) {
+        console.log('Error making the api ai call ', err);
+        // TODO(amal): Do we have to reject request if it fails ?
+        if (requestId) {
+            try {
+                await Queue.handleNetworkRequestFailure(requestId, key);
+            } catch (exception) { }
+
+            dequeueAndProcessQueueRequest();
+        } else {
+            processingFutureRequest = false;
+        }
+    }
 }
 
 const processNetworkQueue = () => {

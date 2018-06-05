@@ -3,7 +3,7 @@ import _ from 'lodash';
 import config from '../../config/config';
 import dce from '../dce';
 import { Bot as DceBot } from '../dce';
-import { Utils, Network, Auth, Promise, DeviceStorage } from '../capability';
+import { Utils, Network, Auth, Promise } from '../capability';
 import { NetworkError } from '../network';
 import SystemBot, { SYSTEM_BOT_MANIFEST } from './SystemBot';
 import {MessageHandler} from '../message';
@@ -94,7 +94,7 @@ class Bot extends events.EventEmitter {
             console.log('Error occurred while uninstalling bots !:', e);
             throw e;
         }
-    };
+    }
 
     static async getCatalog() {
         try {

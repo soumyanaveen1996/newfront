@@ -73,7 +73,7 @@ export default class ChannelsList extends React.Component {
             <ChannelsListItem
                 channel={channel}
                 onUnsubscribe={this.onChannelUnsubscribe.bind(this)}
-                onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)} 
+                onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)}
                 onChannelTapped={this.onChannelTapped.bind(this)}/>
         );
     }

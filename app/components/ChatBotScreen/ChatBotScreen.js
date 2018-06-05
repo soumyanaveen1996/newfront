@@ -781,7 +781,7 @@ export default class ChatBotScreen extends React.Component {
         message.stringMessage(messageStr);
 
         return self.sendMessage(message);
-    };
+    }
 
     getUserId = () => {
         return this.user.userId;
@@ -1168,7 +1168,7 @@ export default class ChatBotScreen extends React.Component {
         return (
             <SafeAreaView style={chatStyles.safeArea}>
                 <KeyboardAvoidingView style={chatStyles.container}
-                    behavior={(Platform.OS === 'ios') ? 'padding': null}
+                    behavior={(Platform.OS === 'ios') ? 'padding' : null}
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
                     <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}

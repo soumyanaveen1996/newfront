@@ -9,7 +9,7 @@ const createChannelContactsTable = () => new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(channelContactSql.createChannelContactsTable, null, function success() {
             return resolve();
-        }, function failure(tx, err) {
+        }, function failure(transaction, err) {
             return reject(err);
         });
     });
@@ -19,7 +19,7 @@ const createChannelContactsTable = () => new Promise((resolve, reject) => {
 const insertChannelContact = (id, name, email, screenName, givenName, surname) => new Promise((resolve, reject) => {
     const args = [id, name, email, screenName, givenName, surname];
     db.transaction(tx => {
-        tx.executeSql(channelContactSql.insertChannelContact, args, function success(tx, res) {
+        tx.executeSql(channelContactSql.insertChannelContact, args, function success(tx2, res) {
             return resolve({
                 userId: id,
                 userName: name,
@@ -28,7 +28,7 @@ const insertChannelContact = (id, name, email, screenName, givenName, surname) =
                 givenName: givenName,
                 surname: surname
             });
-        }, function failure(tx, err) {
+        }, function failure(transaction, err) {
             return reject(err);
         });
     });
@@ -37,9 +37,9 @@ const insertChannelContact = (id, name, email, screenName, givenName, surname) =
 const deleteChannelContact = (id) => new Promise((resolve, reject) => {
     const args = [id];
     db.transaction(tx => {
-        tx.executeSql(channelContactSql.deleteChannelContact, args, function success(tx, res) {
+        tx.executeSql(channelContactSql.deleteChannelContact, args, function success(tx2, res) {
             return resolve(id || 0);
-        }, function failure(tx, err) {
+        }, function failure(transaction, err) {
             return reject(err);
         });
     });

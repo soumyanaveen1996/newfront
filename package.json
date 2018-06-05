@@ -21,6 +21,8 @@
     "react-native-android-open-settings": "^1.0.1",
     "react-native-audio": "^3.5.1",
     "react-native-aws-signature": "github:shad0wfax/react-native-aws-signature",
+    "react-native-background-fetch": "2.0.x",
+    "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
     "react-native-camera": "^1.1.1",
     "react-native-contacts": "^2.1.1",

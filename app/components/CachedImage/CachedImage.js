@@ -1,7 +1,7 @@
 import React from 'react';
 import ImageCache from '../../lib/image_cache';
 import LogoImage from '../LogoImage';
-import {Platform} from "react-native";
+import { Platform } from 'react-native';
 
 
 const CachedImageStates = {
