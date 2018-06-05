@@ -41,7 +41,7 @@ export default class Splash extends React.Component {
         ContactsCache.init();
         await MessageCounter.init();
         GoogleAnalytics.init();
-        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED,GoogleAnalyticsEvents.APP_OPENED,null,0,null);
+        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED, GoogleAnalyticsEvents.APP_OPENED, null, 0, null);
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);

@@ -253,7 +253,7 @@ export default class ChatBotScreen extends React.Component {
         });
         this.checkPollingStrategy();
         EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
-        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.BOT_OPENED,this.props.bot.botName,null,0,null);
+        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.BOT_OPENED, this.props.bot.botName, null, 0, null);
     }
 
     showConnectionMessage(connectionType) {
