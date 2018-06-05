@@ -89,6 +89,7 @@ const config = {
         refreshPath: '/v2/refresh',
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
+        signupconfirmPath: '/v2/signupconfirm/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
     },
