@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import RNMapView from 'react-native-maps';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
@@ -64,8 +64,19 @@ export default class MapView extends React.Component {
         });
     }
 
+    __addDeltaValuesToMapData(mapData){
+        const { width, height } = Dimensions.get('window');
+        const aspectRatio = width / height;
+        const latitudeDelta = 0.0922;
+        const longitudeDelta = latitudeDelta + aspectRatio;
+        //latitudeDelta and longitudeDelta determines the zoom level
+        mapData.region.latitudeDelta = latitudeDelta;
+        mapData.region.longitudeDelta = longitudeDelta;
+        return mapData;
+    }
+
     _renderMap() {
-        const mapData = this.props.mapData;
+        const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
             <RNMapView region={mapData.region} style={styles.mapView}>
                 {this._renderMarkers(mapData.markers)}
