@@ -16,6 +16,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
+import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from "../../lib/GoogleAnalytics";
 
 const VERSION = 20; // Corresponding to 2.8.1 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -39,6 +40,8 @@ export default class Splash extends React.Component {
         DataManager.init();
         ContactsCache.init();
         await MessageCounter.init();
+        GoogleAnalytics.init();
+        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED, GoogleAnalyticsEvents.APP_OPENED, null, 0, null);
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);

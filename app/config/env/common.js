@@ -91,6 +91,9 @@ const config = {
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
+    },
+    googleAnalytics: {
+        trackingId: 'UA-37782731-2'
     }
 }
 

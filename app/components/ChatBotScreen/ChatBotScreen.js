@@ -49,6 +49,7 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
+import { GoogleAnalytics, GoogleAnalyticsCategories } from "../../lib/GoogleAnalytics";
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -252,6 +253,7 @@ export default class ChatBotScreen extends React.Component {
         });
         this.checkPollingStrategy();
         EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.BOT_OPENED, this.props.bot.botName, null, 0, null);
     }
 
     showConnectionMessage(connectionType) {
