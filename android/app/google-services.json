@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "705702062891",
+    "firebase_url": "https://fmnlpdev.firebaseio.com",
     "project_id": "fmnlpdev"
   },
   "client": [
@@ -13,6 +14,34 @@
       },
       "oauth_client": [
         {
+          "client_id": "705702062891-ntfu1j7mkh26qhek648depdbrjsvkvmd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.frontm",
+            "certificate_hash": "091ad6fb467b0f42fd62c09fcbdd3acfd6b1a816"
+          }
+        },
+        {
+          "client_id": "705702062891-m66qc0b738egbp54nnhoiipmbb4a6udi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.frontm",
+            "certificate_hash": "6dc3d26d4aacc71edc8ed65e69b5e44337c616b6"
+          }
+        },
+        {
+          "client_id": "705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.frontm",
+            "certificate_hash": "9bdd17639cdefaf321a4e75cf54b9498d69b2798"
+          }
+        },
+        {
+          "client_id": "705702062891-sf2beee3k77oepqucoi73tso9h7ioc8l.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com",
           "client_type": 3
         },
@@ -21,8 +50,12 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.frontm.frontm",
-            "certificate_hash": "6dc3d26d4aacc71edc8ed65e69b5e44337c616b6"
+            "certificate_hash": "245b883609a23fa9d22fc2e462fd0de6654d3ed1"
           }
+        },
+        {
+          "client_id": "705702062891-sf2beee3k77oepqucoi73tso9h7ioc8l.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -35,11 +68,23 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "705702062891-sf2beee3k77oepqucoi73tso9h7ioc8l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "705702062891-u7ej27vutmacues3htr8us9uimig906g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.frontm.frontm"
+              }
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

@@ -126,7 +126,7 @@ class Bot {
             });
 
             let botResp = await this.bot_data();
-
+            console.log('Bot data : ', botResp);
             botResp = eval(botResp);
             return botResp;
         } catch (e) {

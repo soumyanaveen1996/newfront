@@ -12,8 +12,8 @@ import { Network } from '../capability';
 const USER_SESSION = 'userSession';
 
 export const AUTH_PROVIDERS = {
-    //google: 'google',
-    //facebook: 'facebook',
+    google: 'google',
+    facebook: 'facebook',
     frontm: 'FrontM',
 };
 
@@ -91,7 +91,6 @@ export default class Auth {
                         lastRefreshTime: Date.now()
                     };
                     currentUser.info = creds.info;
-
                     Auth.saveUser(currentUser)
                         .then((user) => {
                             EventEmitter.emit(AuthEvents.userLoggedIn, user);
@@ -104,6 +103,7 @@ export default class Auth {
                     reject(new AuthError(0, AuthErrorCodes[0]));
                 }
             }).catch((error) => {
+                console.log('Error in google login : ', error);
                 reject(new AuthError(99, 'Error in Authenticating the user'));
             });
     });

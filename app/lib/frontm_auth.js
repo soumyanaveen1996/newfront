@@ -7,6 +7,7 @@ import GoogleSignin from 'react-native-google-signin';
 import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import _ from 'lodash';
 import config from '../config/config';
+import queryString from 'querystring';
 
 if (Platform.OS === 'ios') {
     GoogleSignin.configure({
@@ -23,13 +24,14 @@ if (Platform.OS === 'ios') {
 } else {
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
-        iosClientId: Config.auth.ios.google.iosClientId,
-        webClientId: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com',
-        serverClientID: Config.auth.ios.google.iosClientId,
+        //iosClientId: Config.auth.ios.google.iosClientId,
+        //webClientId: __DEV__ ? Config.auth.android.google.dev.webClientId : Config.auth.android.google.prod.webClientId,
+        serverClientID: Config.auth.android.google.dev.webClientId,
         offlineAccess: true,
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
-        clientID: '705702062891-jo8h886mg8t86qc6g4j5anla0tch8hib.apps.googleusercontent.com',
+        //clientID: __DEV__ ? Config.auth.android.google.dev.webClientId : Config.auth.android.google.prod.webClientId,
+        clientID: '705702062891-m66qc0b738egbp54nnhoiipmbb4a6udi.apps.googleusercontent.com',
         forceCodeForRefreshToken: true,
     });
     /*
@@ -144,6 +146,34 @@ class FrontmAuth {
         });
     }
 
+    fetchRefreshToken(user) {
+        return new Promise((resolve, reject) => {
+            if (user.refreshToken) {
+                resolve(user);
+            } else {
+                Network({
+                    'method': 'post',
+                    'url': 'https://www.googleapis.com/oauth2/v4/token',
+                    'headers' : {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    'data': queryString.stringify({
+                        'code': user.serverAuthCode,
+                        'grant_type': 'authorization_code',
+                        'client_id': Config.auth.android.google.dev.webClientId,
+                        'client_secret': Config.auth.android.google.dev.clientSecret
+                    })
+                }).then((res) => {
+                    user.idToken = res.data.id_token;
+                    user.refreshToken = res.data.refresh_token;
+                    user.accessToken = res.data.access_token;
+                    console.log('Google user after refresh token : ', user);
+                    resolve(user);
+                }).catch(reject);
+            }
+        });
+    }
+
     loginWithGoogle(conversationId, botName) {
         var self = this;
         console.log('Google sign in');
@@ -153,15 +183,16 @@ class FrontmAuth {
                 .then((user) => {
                     console.log('Google user : ', user);
                     //throw 'hello';
-                    const googleUser = user;
+                    return self.fetchRefreshToken(user);
+                }).then((user) => {
                     const data = {
                         user: {
-                            emailAddress: googleUser.email,
-                            givenName: googleUser.givenName,
-                            screenName: googleUser.name ? googleUser.name.replace(/ /g, '') : '',
-                            surname: googleUser.familyName || googleUser.surname,
-                            userName: googleUser.name,
-                            userId: googleUser.id
+                            emailAddress: user.email,
+                            givenName: user.givenName,
+                            screenName: user.name ? user.name.replace(/ /g, '') : '',
+                            surname: user.familyName || user.surname,
+                            userName: user.name,
+                            userId: user.id
                         },
                         conversation: {
                             uuid: conversationId || UUID(),
@@ -178,6 +209,7 @@ class FrontmAuth {
                         },
                         'data': data
                     };
+
                     Network(options)
                         .then((res) => {
                             let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
@@ -194,7 +226,7 @@ class FrontmAuth {
                                 refreshToken: user.refreshToken,
                                 info: resData.user || data.user
                             }
-
+                            console.log('Google credentials : ', self.credentials);
                             return resolve({ type: 'success', credentials: self.credentials });
                         }).catch((err) => {
                             return reject({ type: 'error', error: err });
