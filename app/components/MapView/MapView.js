@@ -67,6 +67,7 @@ export default class MapView extends React.Component {
     __addDeltaValuesToMapData(mapData){
         const { width, height } = Dimensions.get('window');
         const aspectRatio = width / height;
+        //Setting latitudeDelta to 0.0922 so that zoom radius is small
         const latitudeDelta = 0.0922;
         const longitudeDelta = latitudeDelta + aspectRatio;
         //latitudeDelta and longitudeDelta determines the zoom level
