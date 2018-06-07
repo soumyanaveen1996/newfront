@@ -18,6 +18,7 @@ import CachedImage from '../CachedImage';
 import Swipeout from 'react-native-swipeout';
 import utils from '../../lib/utils';
 import { Settings, Network, PollingStrategyTypes, DeviceStorage } from '../../lib/capability';
+import {Icons} from "../../config/icons";
 
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
@@ -247,6 +248,9 @@ export default class InstalledBotsScreen extends React.Component {
                     <Text style={ BotListItemStyles.title } >{ botData.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
                 </View>
+                <View style={ BotListItemStyles.rightContainer }>
+                    { Icons.listRightArrow() }
+                </View>
             </View>
         )
     }
@@ -256,7 +260,7 @@ export default class InstalledBotsScreen extends React.Component {
         return (
             <Swipeout right={swipeBtns} style={{flex: 1}} backgroundColor={GlobalColors.white} autoClose={true}>
                 <View key={item.botId} style={styles.rowContainer}>
-                    <TouchableHighlight style={styles.gridStyle}>
+                    <TouchableHighlight style={styles.gridStyle} onPress={()=>{ this.onBotPress(item) }}>
                         <View style={{flex: 1}}>
                             {this.renderRow(item)}
                         </View>
