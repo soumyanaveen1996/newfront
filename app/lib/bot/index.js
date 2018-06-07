@@ -139,14 +139,6 @@ class Bot extends events.EventEmitter {
                     botIds: _.map(developerBots[developer], 'botId')
                 }
             });
-            //Domain management bot to activate enterprise bots in developer tab of catalogue screen
-            const domainMgmtBot = catalogData.systemBots['domMgmt-bot'];
-            const domainMgmt = {
-                name: domainMgmtBot.botName,
-                logoUrl: domainMgmtBot.logoUrl,
-                botIds: [domainMgmtBot.botId]
-            };
-            catalogData.domainMgmtBot = domainMgmt;
             const categories = _.reduce(catalog, (result, bot) => {
                 _.forEach(bot.category, (category) => {
                     result[category] = _.concat(result[category] || [], bot);
