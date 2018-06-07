@@ -9,7 +9,8 @@ export const SYSTEM_BOT_MANIFEST_NAMES = {
     'im-bot': 'im-bot',
     'onboarding-bot': 'onboarding-bot',
     'contacts-bot': 'contacts-bot',
-    'channels-bot': 'channels-bot'
+    'channels-bot': 'channels-bot',
+    'domMgmt-bot': 'domMgmt-bot'
 };
 
 // This is initial configuration - every release make sure the versions are updated
@@ -125,6 +126,31 @@ export const SYSTEM_BOT_MANIFEST = {
         'systemBot': true,
         'userDomain': 'frontmai',
         'version': '1.0.0'
+    },
+    'domMgmt-bot': {
+        'allowResetConversation': 'false',
+        'botId': 'domMgmtBot',
+        'botName': 'Domain Management',
+        'botUrl': 'botfarm/frontmai/domMgmtBot/1.0.0/domMgmtBot.js',
+        'category': [],
+        'dependencies': {
+            'agentGuardService': {
+                'remote': true,
+                'url': 'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
+                'version': '1.0.0'
+            },
+            'authContext': {
+                'remote': true,
+                'url': 'botfarm/rc/frontmai/authContext/1.0.0/authContext.js',
+                'version': '1.0.0'
+            }
+        },
+        'description': 'Onboarding bot for Frontm',
+        'logoUrl': botLogoUrl('AuthenticationLogo.png'),
+        'slug': 'domMgmt-bot',
+        'systemBot': true,
+        'userDomain': 'frontmai',
+        'version': '1.0.0'
     }
 };
 
@@ -179,9 +205,11 @@ export default class SystemBot {
     static imBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['im-bot'];
     static contactsBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['contacts-bot'];
     static channelsBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['channels-bot'];
+    static domainMgmtBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['domMgmt-bot'];
 
     static onboardingBot = SYSTEM_BOT_MANIFEST['onboarding-bot'];
     static imBot = SYSTEM_BOT_MANIFEST['im-bot'];
     static contactsBot = SYSTEM_BOT_MANIFEST['contacts-bot'];
     static channelsBot = SYSTEM_BOT_MANIFEST['channels-bot'];
+    static domainMgmtBot = SYSTEM_BOT_MANIFEST['domMgmt-bot'];
 }

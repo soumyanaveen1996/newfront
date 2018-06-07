@@ -6,6 +6,7 @@ import images from '../../../config/images'
 import I18n from '../../../config/i18n/i18n';
 import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage';
+import _ from 'lodash';
 const NUMBER_COLUMNS = 2
 
 export default class DeveloperTab extends React.Component {
@@ -14,13 +15,16 @@ export default class DeveloperTab extends React.Component {
         this.state = {
             // Hide + for now until we have more auth sources
             // developerData : [...this.props.developerData , {name :I18n.t('Authenticate')}]
-            developerData: this.props.developerData
+            developerData: [ ...this.props.developerData, this.props.domainMgmtData ],
         }
     }
 
     renderBotImage = (botData)=>{
         var botImage;
-        if (botData.name === I18n.t('Authenticate')) { botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>}
+        if (botData.name === I18n.t('Authenticate') || botData.name === 'Activate Enterprise Bots')
+        {
+            botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>
+        }
         else {
             if (botData.logoSlug != null) {botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>}
             else {botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>}
@@ -34,9 +38,16 @@ export default class DeveloperTab extends React.Component {
         if (botsId == null) {
             return;
         }
-
-        let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
-        Actions.botList({data : selectedBots});
+        else if (botsId[0] === 'domMgmtBot'){
+            const domainMgmtBot = _.filter(this.props.botsData, (bot) => {
+                return bot.botName.toLowerCase().indexOf('Activate Enterprise Bots'.toLowerCase()) !== -1
+            });
+            // If activate enterprise bots is clicked
+            Actions.botChat({ bot: domainMgmtBot[0] });
+        } else {
+            let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
+            Actions.botList({ data : selectedBots });
+        }
     }
 
     renderGridItem = (index, rowData, sectionID, rowID, highlightRow) => {

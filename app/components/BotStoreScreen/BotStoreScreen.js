@@ -129,7 +129,7 @@ export default class BotStoreScreen extends React.Component{
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
-            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots}/>)
+            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} domainMgmtData = {this.state.catalogData.domainMgmtBot}/>)
         } if (this.state.selectedIndex === 1) {
             return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots}/>)
         } if (this.state.selectedIndex === 0) {
