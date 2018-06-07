@@ -18,7 +18,7 @@ import CachedImage from '../CachedImage';
 import Swipeout from 'react-native-swipeout';
 import utils from '../../lib/utils';
 import { Settings, Network, PollingStrategyTypes, DeviceStorage } from '../../lib/capability';
-import {Icons} from "../../config/icons";
+import {Icons} from '../../config/icons';
 
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
