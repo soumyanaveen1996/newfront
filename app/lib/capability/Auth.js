@@ -8,6 +8,7 @@ import EventEmitter, { AuthEvents } from '../events';
 import { ConversationDAO } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
+import { AsyncStorage } from 'react-native';
 
 const USER_SESSION = 'userSession';
 
@@ -37,6 +38,7 @@ export class AuthError extends Error {
 export const AuthErrorCodes = {
     0: 'User cancelled',
     1: 'Error in saving Auth Session',
+    2: 'Logout Error',
     98: 'Custom Error',
     99: 'Unknown error',
 }
@@ -244,6 +246,38 @@ export default class Auth {
             });
     });
 
+
+    static deleteUser = () => new Promise((resolve, reject) => {
+        Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    const options = {
+                        'method': 'post',
+                        'url': config.proxy.protocol + config.proxy.host + config.proxy.deleteUserPath,
+                        'headers': {
+                            accesskeyid: user.aws.accessKeyId,
+                            secretaccesskey: user.aws.secretAccessKey,
+                            sessiontoken: user.aws.sessionToken,
+                            refresh_token: user.provider.refreshToken,
+                        }
+                    }
+                    Network(options)
+                        .then((result) => {
+                            if (result.data.success === 'true' || result.data.success === true) {
+                                return Auth.logout();
+                            } else {
+                                throw new AuthError(98, result.data.message);
+                            }
+                        })
+                        .then(resolve)
+                        .catch(reject);
+                } else {
+                    resolve();
+                }
+            })
+            .catch(reject);
+    });
+
     /**
 	 * Invalidate the session for now
 	 * @return {Promise}
@@ -257,12 +291,15 @@ export default class Auth {
                 return ConversationDAO.deleteAllConversations();
             })
             .then(() => {
+                return AsyncStorage.clear();
+            })
+            .then(() => {
                 EventEmitter.emit(AuthEvents.userLoggedOut);
                 // Logging in as Default user for Onboarding bot
                 resolve(Auth.saveUser(DefaultUser));
             })
             .catch((error) => {
-                reject(error);
+                reject(new AuthError(2, AuthErrorCodes[2]));
             })
     });
 

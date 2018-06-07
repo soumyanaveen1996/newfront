@@ -100,6 +100,7 @@ const config = {
         signupconfirmPath: '/v2/signupconfirm/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
+        deleteUserPath: '/v2/deleteUser',
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
