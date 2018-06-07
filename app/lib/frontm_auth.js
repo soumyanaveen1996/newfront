@@ -118,6 +118,7 @@ class FrontmAuth {
         return new Promise((resolve, reject) => {
             LoginManager.logInWithReadPermissions(Config.auth.ios.facebook.permissions)
                 .then((premissionsResult) => {
+                    console.log('Facebook permission result : ', premissionsResult);
                     if (premissionsResult.isCancelled) {
                         return resolve({ type: 'cancel', msg: 'login canceled' });
                     }
@@ -236,7 +237,8 @@ class FrontmAuth {
                         });
                 }).catch((err) => {
                     console.log('Google signin error : ', err);
-                    if (err.code === -5) {
+                    if (err.code === -5 || err.code === 12501 ||
+                        (err.description && err.description.indexOf('cancel') !== -1)) {
                         return resolve({ type: 'cancel', msg: 'login canceled' });
                     } else {
                         reject({ type: 'error', error: err.code });

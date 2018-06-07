@@ -299,6 +299,7 @@ export default class Auth {
                 resolve(Auth.saveUser(DefaultUser));
             })
             .catch((error) => {
+                console.log('Error in logging out : ', error);
                 reject(new AuthError(2, AuthErrorCodes[2]));
             })
     });

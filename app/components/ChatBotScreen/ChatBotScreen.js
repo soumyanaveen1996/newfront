@@ -437,6 +437,10 @@ export default class ChatBotScreen extends React.Component {
     }
 
     stopWaiting = () => {
+        if (this.waitMessageTimeoutID) {
+            clearTimeout(this.waitMessageTimeoutID);
+            this.waitMessageTimeoutID = null;
+        }
         this.messageQueue = _.filter(this.messageQueue, (message) => message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         let messages = _.filter(this.state.messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         this.updateMessages(messages);
@@ -660,19 +664,26 @@ export default class ChatBotScreen extends React.Component {
 
     appendMessageToChat(message, immediate = false) {
         const timeout = immediate ? 0 : Config.ChatMessageOptions.messageTransitionTime
+        var self = this;
         return new Promise((resolve) => {
-            setTimeout(() => {
+            const timeoutID = setTimeout(() => {
                 // Potentially avoiding issues if the component is unmounted
                 if (this.addMessage && this.setState) {
                     let msgs = this.addMessage(message);
                     this.updateMessages(msgs, (err, res) => {
                         if (!err) {
                             //this.scrollToBottomIfNeeded();
+                            if (timeoutID === self.waitMessageTimeoutID) {
+                                self.waitMessageTimeoutID = null;
+                            }
                             resolve(res);
                         }
                     });
                 }
             }, timeout)
+            if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_WAIT) {
+                self.waitMessageTimeoutID = timeoutID;
+            }
         });
     }
 
