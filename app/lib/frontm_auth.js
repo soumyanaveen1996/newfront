@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network } from './capability';
@@ -83,7 +83,8 @@ class FrontmAuth {
                         'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
                         'headers': {
                             token: token.accessToken,
-                            provider_name: 'facebook'
+                            provider_name: 'facebook',
+                            platform: Platform.OS
                         },
                         'data': data
                     };
@@ -164,6 +165,7 @@ class FrontmAuth {
                         'client_secret': Config.auth.android.google.dev.clientSecret
                     })
                 }).then((res) => {
+                    console.log('res : ', res);
                     user.idToken = res.data.id_token;
                     user.refreshToken = res.data.refresh_token;
                     user.accessToken = res.data.access_token;
@@ -205,7 +207,8 @@ class FrontmAuth {
                         'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
                         'headers': {
                             token: user.idToken,
-                            provider_name: 'google'
+                            provider_name: 'google',
+                            platform: Platform.OS
                         },
                         'data': data
                     };
@@ -276,7 +279,8 @@ class FrontmAuth {
                         'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
                         'headers': {
                             token: result.data.id_token,
-                            provider_name: 'frontm'
+                            provider_name: 'frontm',
+                            platform: Platform.OS
                         },
                         'data': data
                     };
@@ -344,12 +348,14 @@ class FrontmAuth {
                 accesskeyid: user.aws.accessKeyId,
                 provider_name: user.provider.name.toLowerCase(),
                 refresh_token: user.provider.refreshToken,
+                platform: Platform.OS
             }
         };
         console.log('Options for refresh : ', options);
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
+                    console.log('Refresh results : ', res);
                     let resData = res ? res.data : {};
                     if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
                         const updatedCreds = {
@@ -361,6 +367,14 @@ class FrontmAuth {
                         return resolve(updatedCreds);
                     }
                 }).catch((err) => {
+                    Alert.alert(
+                        'Refresh Token Error',
+                        'Refresh token refresh failed ',
+                        [
+                            { text: 'OK' },
+                        ],
+                        { cancelable: true }
+                    )
                     console.log('Error making refresh token call::', err);
                     return reject(err);
                 });

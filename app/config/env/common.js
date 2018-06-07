@@ -37,7 +37,7 @@ const config = {
                 },
                 prod: {
                     scopes: ['profile', 'email'],
-                    webClientId: '705702062891-ntfu1j7mkh26qhek648depdbrjsvkvmd.apps.googleusercontent.com',
+                    webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
                     clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
                 }
             },
