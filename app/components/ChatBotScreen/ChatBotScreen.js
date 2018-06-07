@@ -682,6 +682,9 @@ export default class ChatBotScreen extends React.Component {
                 }
             }, timeout)
             if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_WAIT) {
+                if (self.waitMessageTimeoutID) {
+                    clearTimeout(self.waitMessageTimeoutID);
+                }
                 self.waitMessageTimeoutID = timeoutID;
             }
         });
