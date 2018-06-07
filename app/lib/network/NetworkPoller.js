@@ -29,6 +29,7 @@ class NetworkPoller {
         this.keepAliveCount = 0;
         this.appState = 'active';
         await this.listenToEvents();
+        console.log('Network Poller: Starting Polling On start');
         this.startPolling();
     }
 
@@ -47,8 +48,10 @@ class NetworkPoller {
             this.connectedToSatellite = true;
             const pollingStrategy = await Settings.getPollingStrategy();
             if (pollingStrategy === PollingStrategyTypes.automatic) {
-                await this.stopGSMPolling();
-                await this.startSatellitePolling();
+                if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
+                    await this.stopGSMPolling();
+                    await this.startSatellitePolling();
+                }
             }
         }
     }
@@ -58,13 +61,16 @@ class NetworkPoller {
             this.connectedToSatellite = false;
             const pollingStrategy = await Settings.getPollingStrategy();
             if (pollingStrategy === PollingStrategyTypes.automatic) {
-                await this.stopSatellitePolling();
-                await this.startGSMPolling();
+                if (this.currentPollingStrategy === NetworkPollerStates.satellite) {
+                    await this.stopSatellitePolling();
+                    await this.startGSMPolling();
+                }
             }
         }
     }
 
     pollingStrategyChanged = async () => {
+        console.log('Network Poller: Starting Polling on Strategy changed');
         this.restartPolling();
     }
 
@@ -78,6 +84,7 @@ class NetworkPoller {
             if (nextAppState !== 'inactive') {
                 await this.stopPolling();
                 this.appState = nextAppState;
+                console.log('Network Poller: Starting Polling on App State change');
                 this.startPolling();
             }
         }
@@ -85,6 +92,7 @@ class NetworkPoller {
 
     userLoggedInHandler = async () => {
         console.log('Network Poller: User Logged in');
+        console.log('Network Poller: Starting Polling on User Login');
         this.startPolling()
     }
 
@@ -99,6 +107,7 @@ class NetworkPoller {
     }
 
     startPolling = async () => {
+        console.log('Start polling');
         const isUserLoggedIn = await Auth.isUserLoggedIn()
         if (isUserLoggedIn) {
             const pollinStrategy = await Settings.getPollingStrategy();
@@ -117,6 +126,7 @@ class NetworkPoller {
     }
 
     stopPolling = async () => {
+        console.log('Stop polling');
         if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
             this.stopGSMPolling();
         } else if (this.currentPollingStrategy === NetworkPollerStates.satellite) {
@@ -131,6 +141,7 @@ class NetworkPoller {
                 BackgroundTimer.clearInterval(this.appleIntervalId);
                 this.appleIntervalId = null;
             }
+            //BackgroundTask.cancel();
         } else if (this.appState === 'background') {
             console.log('App is in background. Stopping polling');
             BackgroundTask.cancel();

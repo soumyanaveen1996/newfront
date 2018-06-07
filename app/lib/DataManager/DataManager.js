@@ -31,6 +31,8 @@ class DataManager {
         console.log('DataManager : User Loggedout');
         this.deleteContacts();
         this.deleteChannels();
+        this.contactsFetched = false;
+        this.channelsFetched = false;
     }
 
     refreshContacts = () => {
