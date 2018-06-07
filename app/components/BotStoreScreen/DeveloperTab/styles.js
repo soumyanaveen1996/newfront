@@ -37,7 +37,7 @@ export default StyleSheet.create({
     },
     plusText: {
         color: '#333333',
-        fontSize: 30,
+        fontSize: 50,
         fontWeight : 'normal'
     },
     gridStyle :{
