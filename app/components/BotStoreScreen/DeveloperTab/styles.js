@@ -22,12 +22,13 @@ export default StyleSheet.create({
         fontSize: 15,
         marginTop : 10
     },
-    iconStyle :{
+    iconStyle: {
         height:80,
         width:80,
         borderRadius : 40 ,
 
-    }, authenticateButton : {
+    },
+    authenticateButton : {
         backgroundColor : '#bbb',
         borderRadius : 60 ,
         width : 80 ,
