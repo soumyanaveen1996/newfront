@@ -106,6 +106,7 @@ class RetryFormTextInput extends React.Component {
     }
 
     onRetryPasswordChange(retryPassword) {
+        this.retryPassword = retryPassword;
         if (this.password && this.password !== retryPassword) {
             this.setState({
                 retryPasswordError: true
@@ -124,6 +125,7 @@ class RetryFormTextInput extends React.Component {
 
     renderError(error, message) {
         if (error) {
+            this.props.onPasswordMatch('');
             return (
                 <View style={Styles.titleContainer}>
                     <Text style={Styles.formErrorLabel}>{message}</Text>
