@@ -226,7 +226,7 @@ class FrontmAuth {
                                 accessKeyId: resData.creds.accessKeyId,
                                 secretAccessKey: resData.creds.secretAccessKey,
                                 sessionToken: resData.creds.sessionToken,
-                                userUUID: resData.user.uuid,
+                                userId: resData.user.userId,
                                 refreshToken: user.refreshToken,
                                 info: resData.user || data.user
                             }
@@ -367,6 +367,8 @@ class FrontmAuth {
                             sessionToken: resData.sessionToken,
                         }
                         return resolve(updatedCreds);
+                    } else {
+                        reject();
                     }
                 }).catch((err) => {
                     console.log('Error making refresh token call::', err);
