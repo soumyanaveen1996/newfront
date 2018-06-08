@@ -369,14 +369,6 @@ class FrontmAuth {
                         return resolve(updatedCreds);
                     }
                 }).catch((err) => {
-                    Alert.alert(
-                        'Refresh Token Error',
-                        'Refresh token refresh failed ',
-                        [
-                            { text: 'OK' },
-                        ],
-                        { cancelable: true }
-                    )
                     console.log('Error making refresh token call::', err);
                     return reject(err);
                 });

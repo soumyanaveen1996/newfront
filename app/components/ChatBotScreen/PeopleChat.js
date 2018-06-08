@@ -71,6 +71,7 @@ export default class PeopleChat extends ChatBotScreen {
         this.botKey = null;
         // This means we have a list of participants to start the conversation with (new chat)
         this.otherParticipants = props.otherParticipants;
+        console.log('Participants in People chat : ', this.otherParticipants);
         // This means we are picking up from an older conversation (existing chat)
         this.conversation = props.conversation;
         // Botkey is the id
