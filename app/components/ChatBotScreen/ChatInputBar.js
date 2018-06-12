@@ -8,6 +8,7 @@ import { AudioRecordingConfig, ChatInputBarState } from './config';
 import ActionSheet from '@yfuks/react-native-action-sheet';
 import Utils from '../../lib/utils';
 import Permissions from 'react-native-permissions';
+import AndroidOpenSettings from 'react-native-android-open-settings';
 
 export default class ChatInputBar extends React.Component {
 
@@ -223,7 +224,7 @@ export default class ChatInputBar extends React.Component {
                     onPress: () => console.log('Permission denied'),
                     style: 'cancel',
                 },
-                { text: 'Open Settings', onPress: Permissions.openSettings },
+                { text: 'Open Settings', onPress: (Platform.OS === 'ios') ? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings },
             ],
         )
     }
