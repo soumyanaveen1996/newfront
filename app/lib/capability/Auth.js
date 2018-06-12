@@ -198,6 +198,52 @@ export default class Auth {
             });
     });
 
+    static resetPassword = (userDetails) => new Promise((resolve, reject) => {
+        const options = {
+            'method': 'post',
+            'url': config.proxy.protocol + config.proxy.host + config.proxy.resetSigninPath,
+            'data': {
+                user: userDetails
+            }
+        };
+        console.log('confirmFrontmSignup options : ', options);
+        Network(options)
+            .then((result) => {
+                console.log('result : ', result.data);
+                if (result.data.success === 'true' || result.data.success === true) {
+                    resolve();
+                } else {
+                    reject(new AuthError(98, result.data.message));
+                }
+            })
+            .catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
+
+    static confirmReset = (userDetails) => new Promise((resolve, reject) => {
+        const options = {
+            'method': 'post',
+            'url': config.proxy.protocol + config.proxy.host + config.proxy.resetConfirmPath,
+            'data': {
+                user: userDetails
+            }
+        };
+        console.log('resetConfirmPath options : ', options);
+        Network(options)
+            .then((result) => {
+                console.log('result : ', result.data);
+                if (result.data.success === 'true' || result.data.success === true) {
+                    resolve();
+                } else {
+                    reject(new AuthError(98, result.data.message));
+                }
+            })
+            .catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
+
     static loginWithFrontm = (userDetails, conversationId, botName) => new Promise((resolve, reject) => {
         let currentUser = null;
         Auth.getUser()

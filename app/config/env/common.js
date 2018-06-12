@@ -101,6 +101,8 @@ const config = {
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
         deleteUserPath: '/v2/deleteUser',
+        resetConfirmPath: '/v2/confirmReset/frontm',
+        resetSigninPath: '/v2/resetSignin/frontm'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
