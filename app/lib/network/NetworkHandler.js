@@ -238,6 +238,7 @@ const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
     console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
     requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
         .then((res) => {
+            console.log('Messages before date : ', res, date);
             handleOnSatelliteResponse(res);
             handleLambdaResponse(res, user)
             let messages = handlePreviousMessages(res, conversationId, botId, date, user);

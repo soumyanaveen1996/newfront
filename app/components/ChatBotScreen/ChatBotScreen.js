@@ -173,7 +173,6 @@ export default class ChatBotScreen extends React.Component {
             return;
         }
 
-
         try {
             // The order if calls is critical so that all resources are loaded correctly
 
@@ -417,12 +416,6 @@ export default class ChatBotScreen extends React.Component {
                     self.handleAsyncMessageResult(pendingAsyncResult);
                 });
             })
-    }
-
-    async loadMessages() {
-        console.log('Oldest loaded date : ', this.oldestLoadedDate());
-        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.oldestLoadedDate())
-        return messages;
     }
 
     wait = (shouldWait) => {
@@ -1059,6 +1052,11 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    async loadMessages() {
+        console.log('Oldest loaded date : ', this.oldestLoadedDate());
+        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.oldestLoadedDate())
+        return messages;
+    }
 
     async onRefresh() {
         this.setState({

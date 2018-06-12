@@ -21,7 +21,7 @@ I18n.translations = {
         Favorites: 'Favorites',
         Contacts: 'Contacts',
         Channels: 'Channels',
-        ChatBots: 'ChatBots',
+        ChatBots: 'Chatbots',
         Configure: 'Configure',
         Authenticate : 'Authenticate',
         Bot_Store: 'Bot Directory',

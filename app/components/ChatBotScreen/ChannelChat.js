@@ -173,6 +173,7 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async onRefresh() {
+        console.log('Loading before : ', this.oldestLoadedDate());
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false

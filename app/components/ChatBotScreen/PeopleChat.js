@@ -245,6 +245,7 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     async onRefresh() {
+        console.log('Loading before : ', this.oldestLoadedDate());
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false
