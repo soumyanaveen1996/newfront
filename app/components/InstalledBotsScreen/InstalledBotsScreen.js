@@ -71,6 +71,10 @@ export default class InstalledBotsScreen extends React.Component {
             const dceBot = dce.bot(bot);
             await Bot.update(dceBot);
             this.refreshInstalledBots();
+            // After bot update hide the update button in swipe options
+            let botUpdateStatuses = this.state.botUpdateStatuses;
+            botUpdateStatuses[bot.botId] = false;
+            this.setState({ botUpdateStatuses: botUpdateStatuses });
             this.refs.toast.show(I18n.t('Bot_updated'), DURATION.LENGTH_SHORT);
         } catch (e) {
             this.refs.toast.show(I18n.t('Bot_update_failed'), DURATION.LENGTH_SHORT);
