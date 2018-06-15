@@ -19,6 +19,7 @@ export class LocationError extends Error {
 export const LocationErrorCodes = {
     0: 'Error in getting location',
     1: 'User rejected location permissions',
+    2: 'GPS is turned off'
 }
 
 export default class DeviceLocation {
@@ -39,10 +40,13 @@ export default class DeviceLocation {
                         };
                         resolve(deviceLocation);
                     }, (error) => {
-                        reject(new LocationErrorCodes(0, LocationErrorCodes[0]));
+                        if (error.code === 2) {
+                            reject(new LocationError(2, LocationErrorCodes[2]));
+                        }
+                        reject(new LocationError(0, LocationErrorCodes[0]));
                     });
                 } else {
-                    reject(new LocationErrorCodes(1, LocationErrorCodes[1]));
+                    reject(new LocationError(1, LocationErrorCodes[1]));
                 }
             });
 
