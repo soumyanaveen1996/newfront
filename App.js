@@ -1,3 +1,4 @@
+import './shim';
 import React from 'react';
 import { MainRouter } from './app/routes/';
 

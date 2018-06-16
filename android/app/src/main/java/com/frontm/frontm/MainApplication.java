@@ -3,6 +3,7 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.peel.react.TcpSocketsModule;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
@@ -55,6 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),
             new RNVersionCheckPackage(),
