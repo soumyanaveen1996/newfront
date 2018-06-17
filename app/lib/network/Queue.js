@@ -113,19 +113,16 @@ const handleNetworkRequestFailure = (id, key) => new Promise((resolve, reject) =
 });
 
 const deleteNetworkRequest = (id) => new Promise((resolve, reject) => {
-    return resolve(NetworkDAO.deleteNetworkRequest(id))
-        .catch(function(e) {
-            reject(e);
-        });
+    return NetworkDAO.deleteNetworkRequest(id)
+        .then(resolve)
+        .catch(reject);
 
 });
 
 const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) => {
-    return resolve(NetworkDAO.selectCompletedNetworkRequests(key))
-        .catch(function(e) {
-            reject(e);
-        });
-
+    return NetworkDAO.selectCompletedNetworkRequests(key)
+        .then(resolve)
+        .catch(reject);
 });
 
 

@@ -17,6 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
+import { Telnet } from '../../lib/telnet';
 
 const VERSION = 21; // Corresponding to 2.9.0 build 3. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -53,6 +54,7 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
+        this.connectToTelnet();
         // Chain all setup stuff
         persist.runMigrations()
             .then(() => {
@@ -150,6 +152,21 @@ export default class Splash extends React.Component {
         // EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
+    }
+
+    connectToTelnet = async () => {
+        console.log('Lama telnetting');
+        let connection = new Telnet()
+
+        let params = {
+            host: '74.125.24.102',
+            port: 80,
+            timeout: 1500
+        }
+        await connection.connect(params)
+        console.log('Lama Connected');
+        let res = await connection.exec('GET /')
+        console.log('async lama result:', res);
     }
 
     render() {
