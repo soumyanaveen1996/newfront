@@ -161,10 +161,12 @@ export default class Splash extends React.Component {
         let params = {
             host: '74.125.24.102',
             port: 80,
-            timeout: 1500
+            timeout: 1500,
+            debug: true,
+            negotiationMandatory: false,
         }
         await connection.connect(params)
-        console.log('Lama Connected');
+        console.log('Lama Connected -- ');
         let res = await connection.exec('GET /')
         console.log('async lama result:', res);
     }
