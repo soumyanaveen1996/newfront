@@ -77,10 +77,8 @@ export default class ChatMessage extends React.Component {
     }
 
     onImagePress(headers) {
-        // TODO(expo): Implement ImageViewer
-        /*
-        let { message } = this.props;
-        Actions.imageViewer({ uri: message.getMessage(), headers: headers }) */
+        const { message } = this.props;
+        Actions.imageViewer({ uri: message.getMessage(), headers: headers })
     }
 
     wrapBetweenFavAndTalk(message, component) {
