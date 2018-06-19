@@ -96,6 +96,8 @@ I18n.translations = {
         'Ok': 'Ok',
         'Password_error': 'Please enter a valid password value',
         'Retry_Password_error': 'Password and retry password should match',
+        'Enable_GPS_title': 'Enable GPS',
+        'Enable_GPS_to_view_currentLocation': 'GPS is disabled in your device. Please enable GPS to view your current location.'
     },
 }
 
