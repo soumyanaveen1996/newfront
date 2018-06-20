@@ -732,8 +732,7 @@ export default class ChatBotScreen extends React.Component {
         const { height } = event.nativeEvent.layout;
         this.scrollHeight += height - (this.itemHeights[key] || 0);
         this.itemHeights[key] = height;
-        if (_.keys(this.itemHeights) === this.state.messages.count &&
-            this.messages[this.messages.length - 1].getMessageId() === key &&
+        if (_.keys(this.itemHeights).length === this.state.messages.length &&
             this.scrollToBottom) {
             this.scrollToBottomIfNeeded();
         }
