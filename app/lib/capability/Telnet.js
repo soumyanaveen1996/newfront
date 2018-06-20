@@ -60,6 +60,6 @@ export default class Telnet {
     }
 
     close() {
-
+        this.client.destroy();
     }
 }
