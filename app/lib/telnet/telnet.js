@@ -5,7 +5,7 @@ import net from 'react-native-tcp';
 import { Duplex } from 'stream';
 import utils from './utils';
 
-module.exports = class Telnet extends events.EventEmitter {
+export default class TelnetClient extends events.EventEmitter {
     constructor() {
         super()
 
@@ -21,7 +21,6 @@ module.exports = class Telnet extends events.EventEmitter {
 
             // Set prompt regex defaults
             this.shellPrompt = (typeof opts.shellPrompt !== 'undefined' ? opts.shellPrompt : /(?:\/ )?#\s/)
-            console.log('Lama : Shell prompt : ', this.shellPrompt);
             this.loginPrompt = (typeof opts.loginPrompt !== 'undefined' ? opts.loginPrompt : /login[: ]*$/i)
             this.passwordPrompt = (typeof opts.passwordPrompt !== 'undefined' ? opts.passwordPrompt : /Password[: ]*$/i)
             this.failedLoginMatch = opts.failedLoginMatch
@@ -60,8 +59,6 @@ module.exports = class Telnet extends events.EventEmitter {
                 }
             })
             this.socket.on('connect', () => {
-                console.log('Lama : Connetected');
-                console.log('Lama : In connect callback')
                 this.state = 'start'
                 this.emit('connect')
 
@@ -157,7 +154,6 @@ module.exports = class Telnet extends events.EventEmitter {
                     } else {
                         reject(new Error('invalid response'))
                     }
-                    console.log('Lama Response : ', this.response);
 
                     /* reset stored response */
                     this.inputBuffer = ''
@@ -273,6 +269,10 @@ module.exports = class Telnet extends events.EventEmitter {
             }
         }
 
+        if (!chunk) {
+            return;
+        }
+
         if (this.state === 'start') {
             this.state = 'getprompt'
         }
@@ -281,7 +281,6 @@ module.exports = class Telnet extends events.EventEmitter {
             const stringData = chunk.toString()
 
             promptIndex = utils.search(stringData, this.shellPrompt) // Check
-            console.log('Lama Prompt data : ', stringData);
             if (utils.search(stringData, this.loginPrompt) !== -1) {
                 /* make sure we don't end up in an infinite loop */
                 if (!this.loginPromptReceived) {
@@ -318,8 +317,6 @@ module.exports = class Telnet extends events.EventEmitter {
                 return
             }
         } else if (this.state === 'response') {
-            console.log('Lama Chunk : ', chunk.toString());
-            console.log('Lama buffer lengths : ', this.inputBuffer.length, this.maxBufferLength);
             if (this.inputBuffer.length >= this.maxBufferLength) {
                 return this.emit('bufferexceeded')
             }

@@ -17,7 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
-import { Telnet } from '../../lib/telnet';
+import { Telnet } from '../../lib/capability';
 
 const VERSION = 21; // Corresponding to 2.9.0 build 3. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -54,7 +54,7 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
-        this.connectToTelnet();
+        //this.connectToTelnet();
         // Chain all setup stuff
         persist.runMigrations()
             .then(() => {
@@ -155,20 +155,31 @@ export default class Splash extends React.Component {
     }
 
     connectToTelnet = async () => {
-        console.log('Lama telnetting');
-        let connection = new Telnet()
+        let connection;
+        var delegate = {
+            commandResult: function (obj) {
+                console.log('Command : ', obj.command);
+                console.log('Result : ', obj.result);
 
+            },
+            clientReady: function () {
+                console.log('client is ready');
+                connection.exec('date')
+            }
+        }
+        connection = new Telnet(delegate);
         let params = {
-            host: '74.125.24.102',
-            port: 80,
+            host: '138.68.143.237',
+            port: 8080,
             timeout: 1500,
             debug: true,
             negotiationMandatory: false,
+            username: 'test',
+            password: 'magic:telnet:Password6767',
+            shellPrompt: 'test@frustoo-home:~$ ',
         }
-        await connection.connect(params)
-        console.log('Lama Connected -- ');
-        let res = await connection.exec('GET /')
-        console.log('async lama result:', res);
+
+        connection.connect(params);
     }
 
     render() {

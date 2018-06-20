@@ -1,4 +1,4 @@
-import Telnet from './telnet';
+import TelnetClient from './telnet';
 
 
-export { Telnet };
+export { TelnetClient };
