@@ -15,6 +15,24 @@ const TapToLoadImageStates = {
     IMAGE_DOWNLOADED: 'IMAGE_DOWNLOADED'
 }
 
+
+export class AndroidHackImage extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.uri === this.props.uri &&
+            nextProps.alignRight === this.props.alignRight) {
+            return false;
+        }
+        return true;
+    }
+
+    render() {
+        const key = Math.random();
+        return <Image
+            style={chatMessageImageStyle(this.props.alignRight)}
+            source={{ uri: `${this.props.uri}#r=${key}` }} />
+    }
+}
+
 export default class TapToLoadImage extends React.Component {
 
     constructor(props) {
@@ -75,9 +93,7 @@ export default class TapToLoadImage extends React.Component {
     renderLocalFile(uri) {
         return (
             <TouchableOpacity onPress={this.onImagePress.bind(this)}>
-                <Image
-                    style={chatMessageImageStyle(this.props.alignRight)}
-                    source={{ uri: uri }} />
+                <AndroidHackImage alignRight={this.props.alignRight} uri={uri} />
             </TouchableOpacity>
         );
     }
