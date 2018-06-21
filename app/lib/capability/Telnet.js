@@ -30,11 +30,11 @@ export default class Telnet {
     }
 
     async processCommandQueue() {
-        if (this.executingCommand || !this.ready) {
-            return;
-        }
         if (this.commandsQueue.length === 0) {
             this.executingCommand = false;
+            return;
+        }
+        if (this.executingCommand || !this.ready) {
             return;
         }
         console.log('Commands queue : ', this.commandsQueue);
