@@ -123,6 +123,7 @@ export default class FloatingButton extends React.Component {
     renderTappableBackground() {
         return (
             <TouchableOpacity
+                activeOpacity={1}
                 style={overlayTappableStyle(this.props)}
                 onPress={this.reset.bind(this)}
             />

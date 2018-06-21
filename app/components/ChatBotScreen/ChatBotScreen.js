@@ -920,7 +920,9 @@ export default class ChatBotScreen extends React.Component {
                 this.requestAudioPermissions(requestStoragePermissionsCallback);
             }
         }
-        if (response.camera === 'authorized' && response.microphone === 'authorized' && response.storage === 'authorized') {
+        if (response.camera === 'authorized' &&
+            response.microphone === 'authorized' &&
+            (Platform.OS === 'ios' || response.storage === 'authorized')) {
             this.recordVideo();
         } else if (response.camera === 'denied' || response.camera === 'denied' ||
             response.storage === 'denied') {
@@ -930,9 +932,9 @@ export default class ChatBotScreen extends React.Component {
                 this.requestCameraPermissions(requestAudioPermissionCallback);
             } else if (response.microphone === 'undetermined') {
                 if (Platform.OS === 'ios') {
-                    this.requestAudioPermissions(requestStoragePermissionsCallback);
-                } else {
                     this.requestAudioPermissions(recordVideoCallback);
+                } else {
+                    this.requestAudioPermissions(requestStoragePermissionsCallback);
                 }
             } else if (response.storage === 'undetermined') {
                 this.requestStoragePermissions(recordVideoCallback);
