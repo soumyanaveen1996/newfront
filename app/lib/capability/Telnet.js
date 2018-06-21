@@ -13,24 +13,20 @@ export default class Telnet {
     }
 
     connect(options) {
-        this.setupClient();
+        //this.setupClient();
         this.options = options;
-        this.client.connect(options);
-    }
-
-    setupClient() {
-        this.client.on('connect', this.onConnect.bind(this));
-        this.client.on('ready', this.onReady.bind(this));
-    }
-
-    onConnect() {
-
+        return new Promise((resolve) => {
+            this.client.connect(options);
+            this.client.on('ready', () => {
+                resolve();
+                this.onReady();
+            });
+        });
     }
 
     onReady() {
         this.ready = true;
         this.processCommandQueue();
-        this.observer.clientReady();
     }
 
     async processCommandQueue() {

@@ -54,7 +54,7 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
-        //this.connectToTelnet();
+        // this.connectToTelnet();
         // Chain all setup stuff
         persist.runMigrations()
             .then(() => {
@@ -155,19 +155,15 @@ export default class Splash extends React.Component {
     }
 
     connectToTelnet = async () => {
-        let connection;
         var delegate = {
             commandResult: function (obj) {
                 console.log('Command : ', obj.command);
                 console.log('Result : ', obj.result);
 
             },
-            clientReady: function () {
-                console.log('client is ready');
-                connection.exec('date')
-            }
         }
-        connection = new Telnet(delegate);
+        let connection = new Telnet(delegate);
+
         let params = {
             host: '138.68.143.237',
             port: 8080,
@@ -178,8 +174,8 @@ export default class Splash extends React.Component {
             password: 'magic:telnet:Password6767',
             shellPrompt: 'test@frustoo-home:~$ ',
         }
-
-        connection.connect(params);
+        await connection.connect(params);
+        connection.exec('date');
     }
 
     render() {
