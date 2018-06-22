@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import styles, {
     chatMessageImageStyle,
     tapToLoadTextContainerStyle
@@ -27,9 +27,10 @@ export class AndroidHackImage extends React.Component {
 
     render() {
         const key = Math.random();
+        const uri = Platform.OS === 'android' ? `${this.props.uri}#r=${key}` : this.props.uri;
         return <Image
             style={chatMessageImageStyle(this.props.alignRight)}
-            source={{ uri: `${this.props.uri}#r=${key}` }} />
+            source={{ uri: uri }} />
     }
 }
 
