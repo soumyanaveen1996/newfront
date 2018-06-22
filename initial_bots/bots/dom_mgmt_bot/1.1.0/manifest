@@ -2,7 +2,7 @@
   "allowResetConversation": "false",
   "botId": "domMgmtBot",
   "botName": "Activate Enterprise Bots",
-  "botUrl": "botfarm/frontmai/domMgmtBot/1.0.0/domMgmtBot.js",
+  "botUrl": "botfarm/frontmai/domMgmtBot/1.1.0/domMgmtBot.js",
   "category": [],
   "dependencies": {
     "agentGuardService": {
@@ -21,5 +21,5 @@
   "slug": "domMgmt-bot",
   "systemBot": true,
   "userDomain": "frontmai",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
