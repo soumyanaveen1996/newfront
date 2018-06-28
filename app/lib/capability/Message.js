@@ -37,6 +37,11 @@ export const IntToMessageTypeConstants = {
     40: MessageTypeConstants.MESSAGE_TYPE_VIDEO,
     60: MessageTypeConstants.MESSAGE_TYPE_AUDIO,
     140: MessageTypeConstants.MESSAGE_TYPE_HTML,
+    200: MessageTypeConstants.MESSAGE_TYPE_LIST,
+    210: MessageTypeConstants.MESSAGE_TYPE_SLIDER,
+    220: MessageTypeConstants.MESSAGE_TYPE_BUTTON,
+    230: MessageTypeConstants.MESSAGE_TYPE_FORM,
+    240: MessageTypeConstants.MESSAGE_TYPE_MAP
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants)
