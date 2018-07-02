@@ -98,7 +98,7 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     showCallMessage() {
-        this.refs.callModal.showCallModal(this.state.params.title);
+        this.refs.callModal.showCallModal();
     }
 
     async getConversationContext(botContext, user) {

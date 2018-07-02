@@ -41,7 +41,7 @@ export default class CallModal extends React.Component {
         });
     }
 
-    showCallModal = (modalTitle) => {
+    showCallModal = () => {
         this.setState({ modalVisible: true });
         this.refs.myModal.open();
     }
