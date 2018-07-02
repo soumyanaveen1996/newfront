@@ -17,6 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
+import { TwilioVoIP } from '../../lib/TwilioVoIP';
 import { Telnet } from '../../lib/capability';
 
 const VERSION = 21; // Corresponding to 2.9.0 build 3. Update this number every time we update initial_bots
@@ -43,6 +44,7 @@ export default class Splash extends React.Component {
         await MessageCounter.init();
         GoogleAnalytics.init();
         GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED, GoogleAnalyticsEvents.APP_OPENED, null, 0, null);
+        TwilioVoIP.init();
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);

@@ -17,6 +17,7 @@ import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
 import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
+import CallModal from './CallModal';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
 import { Network,
@@ -1167,6 +1168,13 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
+    renderCallModal = () => {
+        return(
+          <CallModal ref={'callModal'} parentFlatList={this} isVisible={false}>
+          </CallModal>
+        );
+    }
+
     render() {
         if (!this.botLoaded) {
             return (
@@ -1197,6 +1205,7 @@ export default class ChatBotScreen extends React.Component {
                     {this.state.showSlider ? this.renderSlider() : null}
                     {this.renderChatInputBar()}
                     {this.renderNetworkStatusBar()}
+                    {this.renderCallModal()}
                 </KeyboardAvoidingView>
             </SafeAreaView>
         );

@@ -3,6 +3,7 @@ package com.frontm.frontm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
 import com.peel.react.TcpSocketsModule;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -56,6 +57,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            //new TwilioVoicePackage(),
+            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
             new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),

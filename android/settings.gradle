@@ -1,4 +1,6 @@
 rootProject.name = 'frontm_mobile'
+include ':react-native-twilio-programmable-voice'
+project(':react-native-twilio-programmable-voice').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-twilio-programmable-voice/android')
 include ':react-native-tcp'
 project(':react-native-tcp').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-tcp/android')
 include ':react-native-device-info'
