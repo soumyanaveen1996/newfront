@@ -14,16 +14,20 @@ export default class Telnet {
 
     connect(options) {
         this.options = options;
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             this.client.connect(options);
-            this.client.on('ready', () => {
+            this.client.once('ready', () => {
                 resolve();
                 this.onReady();
             });
 
-            this.client.on('connect_error', () => {
+            this.client.once('connect_error', () => {
                 reject(new Error('Unable to connect to the server'));
-            })
+            });
+
+            this.client.once('error', () => {
+                reject(new Error('Unable to connect to the server'));
+            });
         });
     }
 
