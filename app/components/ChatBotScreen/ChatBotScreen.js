@@ -226,7 +226,7 @@ export default class ChatBotScreen extends React.Component {
                     MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
 
                     // 9. Stash the bot for nav back for on exit
-                    this.props.navigation.setParams({ botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext) });
+                    this.props.navigation.setParams({ botDone: this.botDone.bind(this) });
 
                 } else {
                     console.log('Error setting state with messages', err);
@@ -253,6 +253,10 @@ export default class ChatBotScreen extends React.Component {
         this.checkPollingStrategy();
         EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
         GoogleAnalytics.logEvents(GoogleAnalyticsCategories.BOT_OPENED, this.props.bot.botName, null, 0, null);
+    }
+
+    botDone = () => {
+        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
     }
 
     showConnectionMessage(connectionType) {
@@ -644,6 +648,20 @@ export default class ChatBotScreen extends React.Component {
             });
     }
 
+    onFormOpen = (formMessage) => {
+        let message = new Message({ addedByBot: false });
+        message.formOpenMessage();
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
+
+    onFormCancel = (formMessage) => {
+        let message = new Message({ addedByBot: false });
+        message.formCancelMessage(formMessage);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
+
     updateMessages = (messages, callback) => {
         if (this.mounted) {
             this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, () => {
@@ -748,6 +766,8 @@ export default class ChatBotScreen extends React.Component {
                 imageSource={{ uri: this.bot.logoUrl }}
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
+                onFormCancel={this.onFormCancel.bind(this)}
+                onFormOpen={this.onFormOpen.bind(this)}
                 onLayout={this.onMessageItemLayout.bind(this)} />;
         } else {
             return (

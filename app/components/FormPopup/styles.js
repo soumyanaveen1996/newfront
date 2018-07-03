@@ -105,6 +105,20 @@ const Styles = StyleSheet.create({
             paddingHorizontal: 20,
         }
     }),
+    formInputTextAreaContainer: Platform.select({
+        'ios': {
+            marginVertical: 5,
+            height: 100,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        },
+        'android': {
+            marginVertical: 5,
+            height: 112,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        }
+    }),
     formTwoLineInputContainer:Platform.select({
         'ios': {
             marginVertical: 5,

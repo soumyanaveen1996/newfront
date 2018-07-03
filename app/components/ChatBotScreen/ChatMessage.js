@@ -26,6 +26,7 @@ import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { DotIndicator } from 'react-native-indicators';
+import _ from 'lodash';
 
 export default class ChatMessage extends React.Component {
 
@@ -285,9 +286,24 @@ export default class ChatMessage extends React.Component {
 
     openForm(message) {
         const formMessage = message.getMessage();
+        this.onFormOpen(formMessage);
         Actions.form({ formData : formMessage,
             onFormSubmit: this.onFormSubmit.bind(this),
+            onFormCancel: this.onFormCancel.bind(this),
             editable: !message.isCompleted()})
+    }
+
+    onFormOpen(formMessage) {
+        if (this.props.onFormOpen) {
+            this.props.onFormOpen(formMessage);
+        }
+    }
+
+    onFormCancel(items) {
+        let { message } = this.props;
+        if (this.props.onFormCancel) {
+            this.props.onFormCancel(message.getMessage());
+        }
     }
 
     onFormSubmit(items) {
@@ -318,6 +334,14 @@ export default class ChatMessage extends React.Component {
 
     render() {
         let { message } = this.props;
+        const emptyMessages = [
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
+            MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
+            MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
+        ]
+        if (_.includes(emptyMessages, message.getMessageType())) {
+            return null;
+        }
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             return (
                 <View onLayout={this.onLayout.bind(this)} style={styles.sessionStartMessage}>

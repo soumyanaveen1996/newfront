@@ -27,7 +27,9 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_CHART: 'chart',
     MESSAGE_TYPE_WAIT: 'wait',
     MESSAGE_TYPE_SESSION_START: 'session_start',
-    MESSAGE_TYPE_BARCODE: 'barcode'
+    MESSAGE_TYPE_BARCODE: 'barcode',
+    MESSAGE_TYPE_FORM_OPEN: 'form_open',
+    MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
 };
 
 
@@ -170,6 +172,16 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM;
     };
 
+    formOpenMessage = (formData) => {
+        this._msg = JSON.stringify(formData || []);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN;
+    }
+
+    formCancelMessage = (formData) => {
+        this._msg = JSON.stringify(formData || []);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL;
+    }
+
     formResponseMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -223,6 +235,8 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
@@ -263,6 +277,10 @@ export default class Message {
             return 'Audio'
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
             return 'Video'
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN) {
+            return ''
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL) {
+            return ''
         } else {
             return this.getMessage();
         }
@@ -295,6 +313,8 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             try {
                 return JSON.parse(this._options);

@@ -57,10 +57,11 @@ class FormTextInput extends React.Component {
         const { formData, editable } = this.props;
         return <TextInput
             numberOfLines={this.props.numberOfLines}
+            multiline={this.props.multiline}
             editable={editable}
             onChangeText={this.onChangeText.bind(this)}
             onBlur={this.props.onBlur}
-            style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
+            style={[Styles.formTextField, {borderColor : this.state.borderColor}, this.props.style] }
             placeholder={formData.title}
             defaultValue={this.value}
             containerStyle={Styles.noBorder}
@@ -223,8 +224,8 @@ export default class FormPopup extends React.Component {
 
     onClose() {
         Keyboard.dismiss();
-        if (this.props.onClose) {
-            this.props.onClose();
+        if (this.props.onFormCancel && this.props.editable) {
+            this.props.onFormCancel();
         }
         Actions.pop();
     }
@@ -310,7 +311,7 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'text') {
                 buttons.push(
-                    <View style={Styles.formTitleContainer} key={i}>
+                    <View style={[Styles.formTitleContainer, {borderBottomWidth: 0}]} key={i}>
                         <Text style={Styles.formTitle}>{formData[i].text}</Text>
                     </View>
                 )
@@ -342,14 +343,16 @@ export default class FormPopup extends React.Component {
                 this.formValuesArray[i] = formData[i].value;
                 let notEditable = !this.props.editable || formData[i].editable === false;
                 buttons.push(
-                    <View style={Styles.formInputContainer} key={i}>
+                    <View style={Styles.formInputTextAreaContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
                         <FormTextInput
                             numberOfLines={3}
+                            multiline={true}
                             editable={!notEditable}
                             formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}
                             containerStyle={Styles.noBorder}
+                            style={{height: 70}}
                         />
                     </View>
                 )
