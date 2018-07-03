@@ -50,18 +50,18 @@ export const SYSTEM_BOT_MANIFEST = {
         'allowResetConversation': 'false',
         'botId': 'onboarding-bot',
         'botName': 'M',
-        'botUrl': 'botfarm/frontmai/onboardingBot/1.1.0/onboardingBot.js',
+        'botUrl': 'botfarm/frontmai/onboardingBot/1.2.0/onboardingBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
                 'remote': 'true',
-                'url': 'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                'version': '1.0.0'
+                'url': 'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js',
+                'version': '1.1.0'
             },
             'authContext': {
                 'remote': 'true',
-                'url': 'botfarm/rc/frontmai/authContext/1.1.0/authContext.js',
-                'version': '1.1.0'
+                'url': 'botfarm/rc/frontmai/authContext/1.2.0/authContext.js',
+                'version': '1.2.0'
             }
         },
         'description': 'Onboarding bot for Frontm',
@@ -69,7 +69,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'onboarding-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.1.0'
+        'version': '1.2.0'
     },
     'contacts-bot': {
         'allowResetConversation': 'false',
