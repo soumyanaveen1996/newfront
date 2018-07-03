@@ -52,7 +52,7 @@ export default class TelnetClient extends events.EventEmitter {
             this.socket.setTimeout(this.timeout, () => {
                 if (this.socket._connecting === true) {
                     /* if cannot connect, emit error and destroy */
-                    this.emit('error', 'Cannot connect')
+                    this.emit('connect_error', 'Cannot connect')
                     this.socket.destroy()
                 } else {
                     this.emit('timeout')
