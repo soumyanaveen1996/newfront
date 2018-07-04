@@ -1,11 +1,11 @@
 const createNetworkQueueTable = `
-    CREATE TABLE IF NOT EXISTS network_queue ( 
-        id integer primary key, 
-        key text NOT NULL, 
-        status text NOT NULL default 'pending', 
+    CREATE TABLE IF NOT EXISTS network_queue (
+        id integer primary key,
+        key text NOT NULL,
+        status text NOT NULL default 'pending',
         request text NOT NULL,
         result text,
-        created_at_date text NOT NULL, 
+        created_at_date text NOT NULL,
         updated_at_date text NOT NULL
     );
 `;
@@ -18,26 +18,28 @@ const createV2NetworkQueueTable = `
         request text NOT NULL,
         result text,
         created_at_date integer NOT NULL,
-        updated_at_date integer NOT NULL
+        updated_at_date integer NOT NULL,
+        message_id text
     );
 `;
 
 const insertNetworkOperation = `
-    INSERT INTO network_queue ( 
-        key, 
-        status, 
+    INSERT INTO network_queue (
+        key,
+        status,
         request,
-        created_at_date, 
+        created_at_date,
         updated_at_date,
-        result
-    ) VALUES (?, ?, ?, ?, ?, ?);
+        result,
+        message_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?);
 `;
 
 const updateRequest = `
-    UPDATE network_queue 
+    UPDATE network_queue
         SET status = ?,
             updated_at_date = ?,
-            result = ? 
+            result = ?
         WHERE id = ?;
 `;
 
@@ -46,28 +48,40 @@ const deleteNetworkOperation = `
 `;
 
 const selectPendingEarliestNetworkRequest = `
-    SELECT 
+    SELECT
         id,
         key,
         request
-    FROM 
-        network_queue 
-    WHERE status = 'pending' 
-    ORDER BY datetime(created_at_date) ASC 
+    FROM
+        network_queue
+    WHERE status = 'pending'
+    ORDER BY datetime(created_at_date) ASC
     LIMIT 1;
 `;
 
 const selectCompletedtNetworkRequestForKey = `
-    SELECT 
+    SELECT
         id,
         key,
         result,
         updated_at_date
-    FROM 
+    FROM
         network_queue
     WHERE status = 'complete'
         AND key = ?
     ORDER BY datetime(updated_at_date) ASC;
+`;
+
+const selectByMessageId = `
+    SELECT
+        id,
+        key,
+        result,
+        status,
+        updated_at_date
+    FROM
+        network_queue
+    WHERE message_id = ?
 `;
 
 const STATUS_CONSTANTS = {
@@ -84,5 +98,6 @@ export default {
     deleteNetworkOperation: deleteNetworkOperation,
     selectPendingEarliestNetworkRequest: selectPendingEarliestNetworkRequest,
     selectCompletedtNetworkRequestForKey: selectCompletedtNetworkRequestForKey,
+    selectByMessageId: selectByMessageId,
     STATUS_CONSTANTS: STATUS_CONSTANTS
 };

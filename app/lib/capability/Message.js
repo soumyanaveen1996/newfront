@@ -368,6 +368,7 @@ export default class Message {
             messageType: this.getMessageType(),
             options: this.getMessageOptions(),
             addedByBot: this.isMessageByBot(),
+            messageId: this.getMessageId(),
             uuid: this.getMessageId(),
             messageDate: this.getMessageDate(),
             botKey: this.getBotKey(),

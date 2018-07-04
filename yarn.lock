@@ -4904,6 +4904,10 @@ react-native-elements@^0.18.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
+react-native-event-source@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-event-source/-/react-native-event-source-1.0.1.tgz#7d063207d2d2d58f587bdd15f1783ebe4bc65c87"
+
 react-native-fbsdk@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.7.0.tgz#263dfe5845205de7b80efb0f18ed5c1ded025291"
@@ -5066,6 +5070,7 @@ react-native-tcp@^3.3.0:
     ip-regex "^1.0.3"
     process "^0.11.9"
     util "^0.10.3"
+
 "react-native-transformable-image@https://github.com/dflourusso/react-native-transformable-image.git":
   version "0.0.18"
   resolved "https://github.com/dflourusso/react-native-transformable-image.git#ffd77f250bc452c485bdd9ebe82ba1020bd04024"

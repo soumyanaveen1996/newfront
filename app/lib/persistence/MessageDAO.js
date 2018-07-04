@@ -102,9 +102,13 @@ const migrateToV2Messages = () => new Promise((resolve, reject) => {
         })
 });
 
-const selectMessageById = (message) => new Promise((resolve, reject) => {
+const selectMessage = (message) => {
+    return selectMessageById(message.getMessageId());
+}
+
+const selectMessageById = (messageId) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
-        transaction.executeSql(messageSql.selectMessageById, [message.getMessageId()], function success(tx, res) {
+        transaction.executeSql(messageSql.selectMessageById, [messageId], function success(tx, res) {
             res = res || {};
             res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
@@ -119,7 +123,7 @@ const selectMessageById = (message) => new Promise((resolve, reject) => {
 });
 
 const insertOrUpdateMessage = (message) => new Promise((resolve, reject) => {
-    selectMessageById(message)
+    selectMessage(message)
         .then((dbMessage) => {
             if (dbMessage) {
                 resolve(updateMessage(message));
@@ -421,5 +425,6 @@ export default {
     addCompletedColumn: addCompletedColumn,
     insertOrUpdateMessage: insertOrUpdateMessage,
     selectMessagesBeforeDate: selectMessagesBeforeDate,
-    createMessageDateIndex: createMessageDateIndex
+    createMessageDateIndex: createMessageDateIndex,
+    selectMessageById: selectMessageById
 };
