@@ -25,7 +25,9 @@ export default class Telnet {
                 reject(new Error('Unable to connect to the server'));
             });
 
-            this.client.once('error', () => {
+            // TODO(amal) : This has to be once and not on. But there are issues in android
+            // when using once.
+            this.client.on('error', () => {
                 reject(new Error('Unable to connect to the server'));
             });
         });
