@@ -27,6 +27,7 @@ import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { DotIndicator } from 'react-native-indicators';
 import _ from 'lodash';
+import Hyperlink from 'react-native-hyperlink'
 
 export default class ChatMessage extends React.Component {
 
@@ -210,9 +211,14 @@ export default class ChatMessage extends React.Component {
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BARCODE
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
 
+            const textComponent = (
+                <Hyperlink linkDefault={ true } linkStyle={{textDecorationLine: 'underline'}}>
+                    <Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>
+                </Hyperlink>
+            )
             const component = (
                 <View style={chatMessageBubbleStyle(this.props.alignRight, this.props.imageSource)}>
-                    {this.wrapWithTitle(<Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>)}
+                    {this.wrapWithTitle(textComponent)}
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
