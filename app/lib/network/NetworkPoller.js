@@ -7,6 +7,8 @@ import EventEmitter, { AuthEvents, PollingStrategyEvents, SatelliteConnectionEve
 import { AppState, Platform } from 'react-native';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 import BackgroundTask from 'react-native-background-task';
+import RNEventSource from 'react-native-event-source';
+import { MessageQueue } from '../message';
 
 
 const POLL_KEY = 'poll_key';
@@ -31,6 +33,7 @@ class NetworkPoller {
         await this.listenToEvents();
         console.log('Network Poller: Starting Polling On start');
         this.startPolling();
+        this.subscribeToServerEvents();
     }
 
     listenToEvents = async () => {
@@ -41,6 +44,32 @@ class NetworkPoller {
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
+    subscribeToServerEvents = async () => {
+        if (this.eventSource) {
+            this.unsubscribeFromServerEvents();
+        }
+        let user = await Auth.getUser();
+        if (user.userId === 'default_user_uuid') {
+            return;
+        }
+
+        let url = `${config.proxy.protocol}${config.proxy.host}${config.proxy.ssePath}?user=${user.userId}`;
+        console.log('Event source url : ', url)
+
+        this.eventSource = new RNEventSource(url);
+        this.eventSource.addEventListener(user.userId, (event) => {
+            console.log('Event : ', event);
+            const data = JSON.parse(event.data);
+            if (data) {
+                MessageQueue.push(data);
+            }
+        });
+    }
+    unsubscribeFromServerEvents = () => {
+        this.eventSource.removeAllListeners();
+        this.eventSource = null;
     }
 
     satelliteConnectionHandler = async () => {
@@ -79,10 +108,12 @@ class NetworkPoller {
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
                 NetworkHandler.readLambda();
+                this.subscribeToServerEvents();
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {
                 await this.stopPolling();
+                this.unsubscribeFromServerEvents();
                 this.appState = nextAppState;
                 console.log('Network Poller: Starting Polling on App State change');
                 this.startPolling();
@@ -94,11 +125,13 @@ class NetworkPoller {
         console.log('Network Poller: User Logged in');
         console.log('Network Poller: Starting Polling on User Login');
         this.startPolling()
+        this.subscribeToServerEvents();
     }
 
     userLoggedOutHandler = async () => {
         console.log('Network Poller: User Loggedout');
         this.stopPolling();
+        this.unsubscribeFromServerEvents();
     }
 
     restartPolling = async () => {

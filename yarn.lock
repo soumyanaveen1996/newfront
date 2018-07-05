@@ -3730,6 +3730,12 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+linkify-it@^1.2.0:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-1.2.4.tgz#0773526c317c8fd13bd534ee1d180ff88abf881a"
+  dependencies:
+    uc.micro "^1.0.1"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3975,6 +3981,10 @@ makeerror@1.0.x:
 marked@0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.6.tgz#b2c6c618fccece4ef86c4fc6cb8a7cbf5aeda8d7"
+
+mdurl@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -4904,6 +4914,10 @@ react-native-elements@^0.18.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
+react-native-event-source@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-event-source/-/react-native-event-source-1.0.1.tgz#7d063207d2d2d58f587bdd15f1783ebe4bc65c87"
+
 react-native-fbsdk@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.7.0.tgz#263dfe5845205de7b80efb0f18ed5c1ded025291"
@@ -4959,6 +4973,13 @@ react-native-google-analytics@^1.3.2:
 "react-native-google-sign-in@git+https://github.com/joonhocho/react-native-google-sign-in":
   version "1.0.16"
   resolved "git+https://github.com/joonhocho/react-native-google-sign-in#0d3d2ba10a8719c28d716939861308f8c0b0b045"
+
+react-native-hyperlink@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/react-native-hyperlink/-/react-native-hyperlink-0.0.14.tgz#138bbfe5b410667d1e37f04a2b4713163ab0ed81"
+  dependencies:
+    linkify-it "^1.2.0"
+    mdurl "^1.0.0"
 
 react-native-i18n@^2.0.4:
   version "2.0.10"
@@ -5066,6 +5087,7 @@ react-native-tcp@^3.3.0:
     ip-regex "^1.0.3"
     process "^0.11.9"
     util "^0.10.3"
+
 "react-native-transformable-image@https://github.com/dflourusso/react-native-transformable-image.git":
   version "0.0.18"
   resolved "https://github.com/dflourusso/react-native-transformable-image.git#ffd77f250bc452c485bdd9ebe82ba1020bd04024"
@@ -6120,6 +6142,10 @@ typedarray@^0.0.6:
 ua-parser-js@^0.7.9:
   version "0.7.17"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
+
+uc.micro@^1.0.1:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.5.tgz#0c65f15f815aa08b560a61ce8b4db7ffc3f45376"
 
 uglify-es@^3.1.8:
   version "3.3.4"

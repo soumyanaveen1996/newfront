@@ -74,7 +74,7 @@ const config = {
             keepAliveInterval: 120000,
         },
         gsm: {
-            pollingInterval: 30000,
+            pollingInterval: 180000,
             backgroundPollingInterval: 300000,
         },
         queueProtocol: 'http://',
@@ -102,7 +102,8 @@ const config = {
         updateSigninPath: '/v2/updateSignin/frontm',
         deleteUserPath: '/v2/deleteUser',
         resetConfirmPath: '/v2/confirmReset/frontm',
-        resetSigninPath: '/v2/resetSignin/frontm'
+        resetSigninPath: '/v2/resetSignin/frontm',
+        ssePath: '/chatSSE'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'

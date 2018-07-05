@@ -34,6 +34,10 @@ const handleMessageQueue = (messageQ, user) => {
     eachSeries(messageQ, handle);
 }
 
+const handleMessage = (message, user) => {
+    return handle(message, user);
+}
+
 /**
  * Check if the message has to be handled - single message. Queue calls this
  * @param {object} message
@@ -67,6 +71,7 @@ const handle = (message, user) => new Promise((resolve, reject) => {
         .then(resolve)
         .catch((err) => {
             console.log('Error handling the message for IMBot message ', err, message);
+            reject(err);
         });
 });
 
@@ -245,5 +250,6 @@ const getFakeBotKey = (botKey) => {
 }
 
 export default {
-    handleMessageQueue: handleMessageQueue
+    handleMessageQueue: handleMessageQueue,
+    handleMessage: handleMessage
 };

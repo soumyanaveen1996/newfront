@@ -10,7 +10,7 @@ import EventEmitter from '../events';
 import { SatelliteConnectionEvents } from '../events';
 import _ from 'lodash';
 import Message from '../capability/Message';
-import { MessageHandler } from '../../lib/message';
+import { MessageHandler, MessageQueue } from '../../lib/message';
 import PushNotification from 'react-native-push-notification';
 
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
@@ -50,43 +50,11 @@ const handleLambdaResponse = (res, user) => {
 
     if (resData.length > 0) {
         let messages = resData;
-
-        // Note: This is done to account for the agentGuardQueue which is not FIFO but LIFO
         messages = messages.reverse();
-
-        //    Sample message
-        //     { 'createdBy': 'test2',
-        //         'bot': 'IMBot',
-        //         'requestUuid': '',
-        //         'details': [
-        //         {
-        //             'options': [
-        //                 'op1',
-        //                 'op2'
-        //             ]
-        //         }
-        //     ],
-        //         'contentType': 2,
-        //         'createdOn': 1502381820277,
-        //         'conversation': 'uuid123'
-        // //}
-
-        //need to sequence messages for IM Bot - add it to a queue and flush it in series
-        let imbotMessages = [];
+        console.log('lama messages : ', messages);
         _.forEach(messages, function (message) {
-            // TODO: Should we handle IMBot differently here?
-            let bot = message.bot;
-            // Name of the bot is the key, unless its IMBot (one to many relationship)
-            if (bot === 'im-bot' || bot === 'channels-bot') {
-                // return IMBotMessageHandler.handle(message, user);
-                imbotMessages.push(message);
-            } else {
-                return Queue.completeAsyncQueueResponse(bot, message);
-            }
+            MessageQueue.push(message);
         });
-        if (imbotMessages.length > 0) {
-            return IMBotMessageHandler.handleMessageQueue(imbotMessages, user);
-        }
     }
 }
 
