@@ -88,7 +88,7 @@ const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => 
                     id: dbResults[0].id,
                     key: dbResults[0].key,
                     request: requestFormatted,
-                    messageId: dbResult.message_id,
+                    messageId: dbResults[0].message_id,
                 };
                 return resolve(nw);
             }
@@ -111,7 +111,7 @@ const selectByMessageId = (messageId) => new Promise((resolve, reject) => {
                 let nw = {
                     id: dbResults[0].id,
                     key: dbResults[0].key,
-                    messageId: dbResult.message_id,
+                    messageId: dbResults[0].message_id,
                 };
                 return resolve(nw);
             }
@@ -253,6 +253,16 @@ const migrateToV2NetworkQueue = () => new Promise((resolve, reject) => {
         })
 });
 
+const migrateToV3NetworkQueue = () => new Promise((resolve, reject) => {
+    db.transaction(tx => {
+        tx.executeSql(networkSql.createV3NetworkQueueTable, null, function success() {
+            return resolve();
+        }, function failure(tx2, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,
     insertNetworkRequest: insertNetworkRequest,
@@ -261,5 +271,6 @@ export default {
     selectFirstPendingNetworkRequest: selectFirstPendingNetworkRequest,
     selectCompletedNetworkRequests: selectCompletedNetworkRequests,
     selectByMessageId: selectByMessageId,
-    migrateToV2NetworkQueue: migrateToV2NetworkQueue
+    migrateToV2NetworkQueue: migrateToV2NetworkQueue,
+    migrateToV3NetworkQueue: migrateToV3NetworkQueue,
 };

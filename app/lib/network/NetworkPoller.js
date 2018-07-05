@@ -47,9 +47,8 @@ class NetworkPoller {
     }
 
     subscribeToServerEvents = async () => {
-        if (this.eventSource) {
-            this.unsubscribeFromServerEvents();
-        }
+
+        this.unsubscribeFromServerEvents();
         let user = await Auth.getUser();
         if (user.userId === 'default_user_uuid') {
             return;
@@ -68,7 +67,9 @@ class NetworkPoller {
         });
     }
     unsubscribeFromServerEvents = () => {
-        this.eventSource.removeAllListeners();
+        if (this.eventSource) {
+            this.eventSource.removeAllListeners();
+        }
         this.eventSource = null;
     }
 

@@ -18,8 +18,7 @@ const createV2NetworkQueueTable = `
         request text NOT NULL,
         result text,
         created_at_date integer NOT NULL,
-        updated_at_date integer NOT NULL,
-        message_id text
+        updated_at_date integer NOT NULL
     );
 `;
 
@@ -78,10 +77,15 @@ const selectByMessageId = `
         key,
         result,
         status,
-        updated_at_date
+        updated_at_date,
+        message_id
     FROM
         network_queue
     WHERE message_id = ?
+`;
+
+const createV3NetworkQueueTable = `
+    ALTER TABLE network_queue ADD COLUMN message_id text default '';
 `;
 
 const STATUS_CONSTANTS = {
@@ -93,6 +97,7 @@ const STATUS_CONSTANTS = {
 export default {
     createNetworkQueueTable: createNetworkQueueTable,
     createV2NetworkQueueTable: createV2NetworkQueueTable,
+    createV3NetworkQueueTable: createV3NetworkQueueTable,
     insertNetworkOperation: insertNetworkOperation,
     updateRequest: updateRequest,
     deleteNetworkOperation: deleteNetworkOperation,
