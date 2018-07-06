@@ -50,18 +50,18 @@ export const SYSTEM_BOT_MANIFEST = {
         'allowResetConversation': 'false',
         'botId': 'onboarding-bot',
         'botName': 'M',
-        'botUrl': 'botfarm/frontmai/onboardingBot/1.1.0/onboardingBot.js',
+        'botUrl': 'botfarm/frontmai/onboardingBot/1.2.0/onboardingBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
                 'remote': 'true',
-                'url': 'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                'version': '1.0.0'
+                'url': 'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js',
+                'version': '1.1.0'
             },
             'authContext': {
                 'remote': 'true',
-                'url': 'botfarm/rc/frontmai/authContext/1.1.0/authContext.js',
-                'version': '1.1.0'
+                'url': 'botfarm/rc/frontmai/authContext/1.2.0/authContext.js',
+                'version': '1.2.0'
             }
         },
         'description': 'Onboarding bot for Frontm',
@@ -69,13 +69,13 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'onboarding-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.1.0'
+        'version': '1.2.0'
     },
     'contacts-bot': {
         'allowResetConversation': 'false',
         'botId': '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
         'botName': 'Address Book Management',
-        'botUrl': 'botfarm/frontmai/contactsBot/1.0.0/contactsBot.js',
+        'botUrl': 'botfarm/frontmai/contactsBot/1.1.0/contactsBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
@@ -99,13 +99,13 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'contacts-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.0.0'
+        'version': '1.1.0'
     },
     'channels-bot': {
         'allowResetConversation': 'false',
         'botId': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
         'botName': 'Channels',
-        'botUrl': 'botfarm/frontmai/channelsBot/1.0.0/channelsBot.js',
+        'botUrl': 'botfarm/frontmai/channelsBot/1.1.0/channelsBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
@@ -125,7 +125,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'channels-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.0.0'
+        'version': '1.1.0'
     },
     'domMgmt-bot': {
         'allowResetConversation': 'false',
