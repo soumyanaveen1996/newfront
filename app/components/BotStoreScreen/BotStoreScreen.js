@@ -51,7 +51,7 @@ export default class BotStoreScreen extends React.Component{
     static renderHeader(state) {
         if (state.params.showSearchBar) {
             return ( <Header
-                innerContainerStyles={styles.headerinnerContainerForSearch}
+                innerContainerStyles={styles.headerInnerContainerForSearch}
                 outerContainerStyles={styles.headerOuterContainerStyles}
                 backgroundColor={GlobalColors.accent}>
 

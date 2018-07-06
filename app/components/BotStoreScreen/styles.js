@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './config'
 import { GlobalColors } from '../../config/styles';
 
@@ -48,7 +48,7 @@ export default StyleSheet.create({
     headerInnerContainerStyles: {
         marginTop:30,
     },
-    headerinnerContainerForSearch: {
+    headerInnerContainerForSearch: {
         marginTop: 50
     },
     loading: {

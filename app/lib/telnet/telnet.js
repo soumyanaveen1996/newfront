@@ -250,7 +250,9 @@ export default class TelnetClient extends events.EventEmitter {
 
     destroy() {
         return new Promise(resolve => {
-            this.socket.destroy()
+            if (this.socket && !this.socket._connecting) {
+                this.socket.destroy()
+            }
             resolve()
         })
     }

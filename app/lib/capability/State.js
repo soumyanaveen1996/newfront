@@ -45,7 +45,7 @@ export default class State {
             DeviceStorage.get(options.key)
                 .then((value) => {
                     if (value) {
-                        resolve(value, new BotStateHandler(options));
+                        resolve(new Proxy(value, new BotStateHandler(options)));
                     } else {
                         resolve(new Proxy({}, new BotStateHandler(options)));
                     }
