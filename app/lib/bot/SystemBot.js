@@ -49,7 +49,7 @@ export const SYSTEM_BOT_MANIFEST = {
     'onboarding-bot': {
         'allowResetConversation': 'false',
         'botId': 'onboarding-bot',
-        'botName': 'M',
+        'botName': 'FrontM',
         'botUrl': 'botfarm/frontmai/onboardingBot/1.2.0/onboardingBot.js',
         'category': [],
         'dependencies': {
@@ -69,7 +69,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'onboarding-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.2.0'
+        'version': '1.3.0'
     },
     'contacts-bot': {
         'allowResetConversation': 'false',
