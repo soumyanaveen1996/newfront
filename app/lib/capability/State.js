@@ -33,7 +33,7 @@ class BotStateHandler {
 }
 
 /*
-    var a = State.newState({key: 'amal'});
+    var a = await State.newState({key: 'amal'});
     a.b = 10;
     a.c = 20;
     delete a.b;
