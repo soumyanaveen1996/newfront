@@ -33,13 +33,13 @@ class BotStateHandler {
 }
 
 /*
-    var a = await State.newState({key: 'amal'});
+    var a = await BotState.newState({key: 'amal'});
     a.b = 10;
     a.c = 20;
     delete a.b;
 */
 
-export default class State {
+export default class BotState {
     static newState(options) {
         return new Promise((resolve) => {
             DeviceStorage.get(options.key)

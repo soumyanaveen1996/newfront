@@ -17,7 +17,7 @@ import Resource, { ResourceTypes } from './Resource';
 import { AUTH_PROVIDERS } from './Auth';
 import DeviceLocation from './DeviceLocation';
 import Telnet from './Telnet';
-import State from './State';
+import BotState from './BotState';
 
 const version = '1.0'; // Keeps getting bumped if new capabilities are added (after release 1)
 
@@ -47,5 +47,5 @@ export {
     version,
     DeviceLocation,
     Telnet,
-    State,
+    BotState,
 };
