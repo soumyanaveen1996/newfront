@@ -161,9 +161,6 @@ class AssetFetcher {
                     'Content-Type': contentType
                 }
             };
-            console.log('PutData : ', putData.Bucket);
-            console.log('PutData : ', putData.Key);
-            console.log('PutData : ', s3Config);
 
             const putObjectPromise = s3.putObject(putData).promise();
             let a = await Promise.resolve(putObjectPromise);
