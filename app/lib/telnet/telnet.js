@@ -65,6 +65,11 @@ export default class TelnetClient extends events.EventEmitter {
                 if (this.initialLFCR === true) {
                     this.socket.write('\r\n')
                 }
+                this.state = 'standby'
+                this.inputBuffer = ''
+                this.loginPromptReceived = false
+
+                this.emit('ready', this.shellPrompt)
                 if (this.negotiationMandatory === false) {
                     resolve()
                 }
