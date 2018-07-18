@@ -114,9 +114,7 @@ export default class Splash extends React.Component {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
             }
         }
-        if (notification.foreground) {
-            NetworkHandler.readLambda();
-        }
+        NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
