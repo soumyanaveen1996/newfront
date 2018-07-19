@@ -19,7 +19,7 @@ import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 import { Telnet } from '../../lib/capability';
 
-const VERSION = 25; // Corresponding to 2.11.1 build 4. Update this number every time we update initial_bots
+const VERSION = 26; // Corresponding to 2.12.0 build 1. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
