@@ -84,12 +84,18 @@ export async function copyFileAsync(uri, directory) {
 export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     const host = config.bot.baseUrl;
 
+    // TODO(amal): Check This.
     // We dont care about urls that are not S3 based
-    if (s3Url.indexOf(host) < 0) {
-        return null;
-    }
+    //if (s3Url.indexOf(host) < 0) {
+    //    return null;
+    //}
     const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    const headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
+    var headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
+    headers = _.merge(headers, {
+        'accesskeyid': user.aws.accessKeyId,
+        'secretaccesskey': user.aws.secretAccessKey,
+        'sessiontoken': user.aws.sessionToken,
+    });
 
     console.log(`Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`);
 
