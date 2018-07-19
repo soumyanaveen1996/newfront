@@ -21,6 +21,7 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_VIDEO: 'video',
     MESSAGE_TYPE_MAP: 'map',
     MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response',
+    MESSAGE_TYPE_SLIDER_CANCEL: 'slider_cancel',
     MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
     MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
     MESSAGE_TYPE_AUDIO: 'audio',
@@ -182,6 +183,11 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL;
     }
 
+    sliderCancelMessage = () => {
+        this._msg = JSON.stringify('');
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL;
+    }
+
     formResponseMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -236,6 +242,7 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
@@ -256,8 +263,12 @@ export default class Message {
         // TODO(amal): Have to handle other message types.
         if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE) {
             let items = this.getMessage();
-            let titles = _.map(items, (item) => item.title)
-            return I18n.t('Slider_Response', { lines: titles.join('\n') })
+            if (items.length > 0) {
+                let titles = _.map(items, (item) => item.title)
+                return I18n.t('Slider_Response', { lines: titles.join('\n') })
+            } else {
+                return null;
+            }
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
             let item = this.getMessage();
             return I18n.t('Slider_Response_Message', { lines: item.title })
@@ -280,6 +291,8 @@ export default class Message {
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN) {
             return ''
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL) {
+            return ''
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL) {
             return ''
         } else {
             return this.getMessage();
@@ -315,6 +328,7 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             try {
                 return JSON.parse(this._options);

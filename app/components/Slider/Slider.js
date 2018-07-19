@@ -117,8 +117,8 @@ export default class Slider extends React.Component {
     };
 
     headerRightButton = () => {
-        const { option } = this.props;
-        if (option != null && option.select === true && option.smartReply !== true) {
+        const { options } = this.props;
+        if (options != null && options.select === true && options.smartReply !== true) {
             return (
                 <View
                     style={styles.rightButton}
@@ -140,7 +140,7 @@ export default class Slider extends React.Component {
     }
 
     onDonePress = () => {
-        const { option } = this.props
+        const { options } = this.props
         let messageToSend = [];
 
         this.state.selectedRows.forEach((row) => {
@@ -148,7 +148,7 @@ export default class Slider extends React.Component {
                 messageToSend.push(this.state.messageArray[row.id[0]]);
             }
         });
-        let doneFunction = option.doneFunction;
+        let doneFunction = options.doneFunction;
         if (doneFunction != null) {
             doneFunction(messageToSend);
         }
@@ -161,18 +161,18 @@ export default class Slider extends React.Component {
         let rowID = {
             id: [index, i],
         };
-        const { option } = this.props
+        const { options } = this.props
 
-        if (option && option.smartReply === true && option.tapFunction) {
+        if (options && options.smartReply === true && options.tapFunction) {
             const messageSelected = this.state.messageArray[index];
             this.closeSlider(function () {
-                option.tapFunction(messageSelected);
+                options.tapFunction(messageSelected);
             });
             return;
         }
 
         let tempSelectedArray = [...this.state.selectedRows];
-        if (option && option.select === true && option.multiSelect === true) {
+        if (options && options.select === true && options.multiSelect === true) {
             for (let idx = 0; idx < this.state.selectedRows.length; idx++) {
                 if (this.state.selectedRows[idx].id[0] === index && this.state.selectedRows[idx].id[1] === i) {
                     tempSelectedArray[idx].isSelected = !tempSelectedArray[idx].isSelected
@@ -180,7 +180,7 @@ export default class Slider extends React.Component {
                     return
                 }
             }
-        } else if (option && option.select === true && option.multiSelect === false) {
+        } else if (options && options.select === true && options.multiSelect === false) {
             this.state.selectedRows.map((row, idx) => {
                 if (row.id[0] !== index && row.id[1] !== i) { tempSelectedArray[idx].isSelected = false; }
             });
@@ -193,13 +193,13 @@ export default class Slider extends React.Component {
                 }
             }
         }
-        if (option && option.select === true) {
+        if (options && options.select === true) {
             this.setState({ selectedRows: [...this.state.selectedRows, { ...rowID, isSelected: true }] });
         }
     }
 
     renderCheckbox = (index, i) => {
-        const { option } = this.props
+        const { options } = this.props
         let selected = false;
         this.state.selectedRows.map((row, idx) => {
             if (row.id[0] === index) {
@@ -207,7 +207,7 @@ export default class Slider extends React.Component {
             }
         });
 
-        if (option && option.select === true && option.smartReply !== true) {
+        if (options && options.select === true && options.smartReply !== true) {
             return (
                 <CheckBox
                     containerStyle={styles.checkboxContainer}
@@ -323,6 +323,14 @@ export default class Slider extends React.Component {
         }
     }
 
+    cancelSlider() {
+        const { options } = this.props;
+        if (options && options.cancelFunction) {
+            options.cancelFunction();
+        }
+        this.closeSlider();
+    }
+
     render() {
 
         return (
@@ -331,7 +339,7 @@ export default class Slider extends React.Component {
                     style={styles.headerView}
                 >
                     <View style={{ flex: 1 }}>
-                        <TouchableOpacity style={styles.closeButton} onPress={this.closeSlider.bind(this)}>
+                        <TouchableOpacity style={styles.closeButton} onPress={this.cancelSlider.bind(this)}>
                             {Icons.sliderClose()}
                         </TouchableOpacity>
                     </View>

@@ -211,6 +211,10 @@ export default class ChatMessage extends React.Component {
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BARCODE
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
 
+            if (!message.getDisplayMessage()) {
+                return null;
+            }
+
             const textComponent = (
                 <Hyperlink linkDefault={ true } linkStyle={{textDecorationLine: 'underline'}}>
                     <Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>
@@ -346,6 +350,7 @@ export default class ChatMessage extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
+            MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
         ]
         if (_.includes(emptyMessages, message.getMessageType())) {
             return null;
@@ -361,15 +366,20 @@ export default class ChatMessage extends React.Component {
                 </View>
             )
         } else if (message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE) {
-            return (
-                <View onLayout={this.onLayout.bind(this)}>
-                    <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
-                        {this.image()}
-                        {this.renderMessage()}
+            const renderedMessage = this.renderMessage();
+            if (renderedMessage) {
+                return (
+                    <View onLayout={this.onLayout.bind(this)}>
+                        <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
+                            {this.image()}
+                            {renderedMessage}
+                        </View>
+                        {this.renderMetadata()}
                     </View>
-                    {this.renderMetadata()}
-                </View>
-            );
+                );
+            } else {
+                return null;
+            }
         }
         return null;
     }

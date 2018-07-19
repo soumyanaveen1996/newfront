@@ -575,7 +575,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
     scrollToBottomIfNeeded() {
-        console.log('lama : scrollToBottomIfNeeded');
         if (this.chatList) {
             if (this.chatList) {
                 this.chatList.scrollToEnd({ animated: true });
@@ -585,9 +584,14 @@ export default class ChatBotScreen extends React.Component {
     }
 
     onSliderDone = (selectedRows) => {
-        if (selectedRows.length > 0) {
-            this.sendSliderResponseMessage(selectedRows);
-        }
+        this.sendSliderResponseMessage(selectedRows);
+    }
+
+    onSliderCancel = () => {
+        let message = new Message({ addedByBot: false });
+        message.setCreatedBy(this.getUserId());
+        message.sliderCancelMessage();
+        return this.sendMessage(message);
     }
 
     onSliderTap = (selectedRow) => {
@@ -1114,7 +1118,9 @@ export default class ChatBotScreen extends React.Component {
     renderSlider() {
         const message = this.state.message;
         const doneFn = this.state.overrideDoneFn ? this.state.overrideDoneFn.bind(this) : this.onSliderDone.bind(this);
-        const options = _.extend({}, message.getMessageOptions(), { doneFunction: doneFn });
+        const options = _.extend({}, message.getMessageOptions(), {
+            doneFunction: doneFn,
+            cancelFunction: this.onSliderCancel.bind(this) });
         // If smart reply - the taps are sent back to the bot
         const tapFn = options.smartReply === true ? this.onSliderTap.bind(this) : null;
 
@@ -1125,7 +1131,7 @@ export default class ChatBotScreen extends React.Component {
             <Slider ref={(slider) => { this.slider = slider }}
                 onClose={this.onSliderClose.bind(this)}
                 message={message.getMessage()}
-                option={options}
+                options={options}
                 containerStyle={chatStyles.slider}
                 onResize={this.onSliderResize.bind(this)}
                 onSliderOpen={this.onSliderOpen.bind(this)}
