@@ -150,7 +150,9 @@ const updateMessage = (message) => new Promise((resolve, reject) => {
 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.updateMessageById, args, function success(tx, res) {
-            return resolve();
+            selectMessageById(message.getMessageId())
+                .then(resolve)
+                .catch(reject);
         }, function failure(tx, err) {
             return reject(err);
         });
@@ -172,7 +174,9 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.insertMessage, args, function success(tx, res) {
-            return resolve();
+            selectMessageById(message.getMessageId())
+                .then(resolve)
+                .catch(reject);
         }, function failure(tx, err) {
             return reject(err);
         });

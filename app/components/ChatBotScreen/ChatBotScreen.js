@@ -434,10 +434,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
     stopWaiting = () => {
-        if (this.waitMessageTimeoutID) {
-            clearTimeout(this.waitMessageTimeoutID);
-            this.waitMessageTimeoutID = null;
-        }
         this.messageQueue = _.filter(this.messageQueue, (message) => message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         let messages = _.filter(this.state.messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
         this.updateMessages(messages);
@@ -507,8 +503,10 @@ export default class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.queueMessage(message);
-        this.persistMessage(message);
+        this.persistMessage(message)
+            .then(() => {
+                this.queueMessage(message);
+            });
         // Has to be Immutable for react
     }
 
@@ -674,31 +672,25 @@ export default class ChatBotScreen extends React.Component {
     }
 
     appendMessageToChat(message, immediate = false) {
-        const timeout = immediate ? 0 : Config.ChatMessageOptions.messageTransitionTime
-        var self = this;
         return new Promise((resolve) => {
-            const timeoutID = setTimeout(() => {
-                // Potentially avoiding issues if the component is unmounted
-                if (this.addMessage && this.setState) {
-                    let msgs = this.addMessage(message);
-                    this.updateMessages(msgs, (err, res) => {
-                        if (!err) {
-                            //this.scrollToBottomIfNeeded();
-                            if (timeoutID === self.waitMessageTimeoutID) {
-                                self.waitMessageTimeoutID = null;
-                            }
-                            resolve(res);
-                        }
-                    });
-                }
-            }, timeout)
-            if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_WAIT) {
-                if (self.waitMessageTimeoutID) {
-                    clearTimeout(self.waitMessageTimeoutID);
-                }
-                self.waitMessageTimeoutID = timeoutID;
+            if (this.addMessage && this.setState) {
+                let msgs = this.addMessage(message);
+                this.updateMessages(msgs, (err, res) => {
+                    if (!err) {
+                        this.scrollToBottomIfNeeded();
+                    }
+                    resolve(res);
+                });
             }
         });
+    }
+
+    sleep(waitTime) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, waitTime);
+        })
     }
 
     processMessageQueue() {
@@ -707,7 +699,10 @@ export default class ChatBotScreen extends React.Component {
             this.processingMessageQueue = true;
             this.appendMessageToChat(message)
                 .then(() => {
-                    this.processMessageQueue()
+                    return this.sleep(Config.ChatMessageOptions.messageTransitionTime)
+                })
+                .then(() => {
+                    this.processMessageQueue();
                 })
         } else {
             this.processingMessageQueue = false;
