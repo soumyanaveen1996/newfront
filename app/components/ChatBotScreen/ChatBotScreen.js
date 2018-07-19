@@ -546,16 +546,7 @@ export default class ChatBotScreen extends React.Component {
     }
 
     onSliderOpen() {
-        // Comparing the chat list height with total scroll height to decide if to
-        // scroll to the end.
         this.scrollToBottomIfNeeded();
-        /*
-        console.log('On Slider open : ', this.chatListHeight, this.scrollHeight);
-        if (this.chatListHeight < this.scrollHeight) {
-            setTimeout(() => {
-
-            }, 1);
-        }*/
     }
 
     onScrollToIndexFailed() {
@@ -566,9 +557,9 @@ export default class ChatBotScreen extends React.Component {
 
     checkForScrolling() {
         setTimeout(() => {
-            if (!this.initialScrollDone) {
-                return;
-            }
+            //if (!this.initialScrollDone) {
+            //    return;
+            //}
             if (this.firstUnreadIndex !== -1){
                 if (this.chatList) {
                     this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
@@ -584,6 +575,7 @@ export default class ChatBotScreen extends React.Component {
     }
 
     scrollToBottomIfNeeded() {
+        console.log('lama : scrollToBottomIfNeeded');
         if (this.chatList) {
             if (this.chatList) {
                 this.chatList.scrollToEnd({ animated: true });
@@ -676,7 +668,7 @@ export default class ChatBotScreen extends React.Component {
                 let msgs = this.addMessage(message);
                 this.updateMessages(msgs, (err, res) => {
                     if (!err) {
-                        this.scrollToBottomIfNeeded();
+                        //this.scrollToBottomIfNeeded();
                     }
                     resolve(res);
                 });
@@ -735,6 +727,7 @@ export default class ChatBotScreen extends React.Component {
         //this.chatList.scrollToBottom({animated : true});
     }
 
+    /*
     onMessageItemLayout = (event, message) => {
         const key = message.getMessageId();
         if (!this.scrollHeight) {
@@ -748,7 +741,7 @@ export default class ChatBotScreen extends React.Component {
             this.scrollToBottom) {
             this.scrollToBottomIfNeeded();
         }
-    }
+    } */
 
     renderItem({ item }) {
         const message = item.message;
@@ -761,12 +754,10 @@ export default class ChatBotScreen extends React.Component {
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
                 onFormCancel={this.onFormCancel.bind(this)}
-                onFormOpen={this.onFormOpen.bind(this)}
-                onLayout={this.onMessageItemLayout.bind(this)} />;
+                onFormOpen={this.onFormOpen.bind(this)} />;
         } else {
             return (
-                <ChatMessage message={message} alignRight user={this.user}
-                    onLayout={this.onMessageItemLayout.bind(this)}/>
+                <ChatMessage message={message} alignRight user={this.user} />
             )
         }
     }
@@ -789,7 +780,7 @@ export default class ChatBotScreen extends React.Component {
         this.waitForQueueProcessing()
             .then(() => {
                 this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
-                this.scrollToBottomIfNeeded();
+                //this.scrollToBottomIfNeeded();
             })
     }
 

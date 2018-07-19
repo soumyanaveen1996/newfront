@@ -335,7 +335,9 @@ export default class ChatMessage extends React.Component {
     }
 
     onLayout(event) {
-        this.props.onLayout(event, this.props.message);
+        if (this.props.onLayout) {
+            this.props.onLayout(event, this.props.message);
+        }
     }
 
     render() {
