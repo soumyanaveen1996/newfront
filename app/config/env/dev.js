@@ -13,7 +13,7 @@ const devConfig = {
         baseUrl: S3_HOST,
         s3bucket: 'frontm-contentdelivery-mobilehub-1030065648',
         s3ServiceApi: 's3',
-        binaryS3Bucket: 'frontm-contentdelivery-mobilehub-1030065648/conversationsFiles',
+        binaryS3Bucket: 'dev-frontm-conversations',
         catalogHost: CATALOG_HOST,
         catalogPath: '/Development/items',
         catalogServiceApi: 'execute-api',

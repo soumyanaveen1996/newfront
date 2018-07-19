@@ -56,9 +56,9 @@ const config = {
     bot: {
         baseProtocol: 'http://',
         baseUrl: S3_HOST,
-        s3bucket: 'v1',
+        s3bucket: 'frontm-contentdelivery-mobilehub-1030065648',
         s3ServiceApi: 's3',
-        binaryS3Bucket: 'bin',
+        binaryS3Bucket: 'dev-frontm-conversations',
         catalogHost: CATALOG_HOST,
         catalogPath: '/v1/catalog',
         catalogServiceApi: 'execute-api'
@@ -103,7 +103,9 @@ const config = {
         deleteUserPath: '/v2/deleteUser',
         resetConfirmPath: '/v2/confirmReset/frontm',
         resetSigninPath: '/v2/resetSignin/frontm',
-        ssePath: '/chatSSE'
+        ssePath: '/chatSSE',
+        uploadFilePath: '/v2/uploadfile',
+        downloadFilePath: '/v2/file'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'

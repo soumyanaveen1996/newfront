@@ -428,7 +428,6 @@ export default class ChatBotScreen extends React.Component {
             msg.waitMessage();
             this.queueMessage(msg);
         } else {
-            console.log('Stopping waiting');
             this.stopWaiting();
         }
     }
@@ -833,7 +832,7 @@ export default class ChatBotScreen extends React.Component {
         message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await this.dce_bot.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
+        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
 
         message.audioMessage(uploadedUrl);
         return this.sendMessage(message);
@@ -848,7 +847,7 @@ export default class ChatBotScreen extends React.Component {
         message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await this.dce_bot.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Video, this.user);
+        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Video, this.user);
         message.videoMessage(uploadedUrl);
         return this.sendMessage(message);
     }
