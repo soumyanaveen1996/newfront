@@ -45,7 +45,7 @@ export function developerLogoUrl(developerName) {
 }
 
 export function userProfileUrl(userId) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
+    return `${config.proxy.protocol}${config.proxy.host}${config.proxy.downloadFilePath}/profile-pics/${userId}.png`
 }
 
 export function sessionStartFormattedDate(date) {

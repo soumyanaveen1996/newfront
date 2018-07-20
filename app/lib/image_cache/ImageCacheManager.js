@@ -130,6 +130,9 @@ export default class ImageCacheManager {
                         url: uri,
                         headers: headHeaders,
                     }).then((response) => {
+                        if (!response.headers['last-modified']) {
+                            resolve(false);
+                        }
                         this.lastChecked[uri] = moment();
                         if (response.status === 200 &&
                             moment(stat.lastModified).diff(moment(response.headers['last-modified'])) < 0) {
