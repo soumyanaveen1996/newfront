@@ -5,6 +5,7 @@ import SystemBot from '../bot/SystemBot';
 import dce, { Bot } from '../../lib/dce';
 import { BotContext } from '../../lib/botcontext';
 import { Message, ConversationContext, Auth } from '../capability';
+import { MessageHandler } from '../message';
 
 class BackgroundTaskBotScreen {
     constructor(botId, conversationId, options) {
@@ -13,7 +14,7 @@ class BackgroundTaskBotScreen {
         this.options = options;
     }
 
-    getBotKey() {
+    getBotKey = () => {
         if (this.botId === SystemBot.imBot.botId) {
             return this.conversationId;
         } else {
@@ -21,19 +22,23 @@ class BackgroundTaskBotScreen {
         }
     }
 
-    updateConversationContextId() {
+    updateConversationContextId = () => {
 
     }
 
-    tell() {
+    persistMessage = (message) => {
+        return MessageHandler.persistOnDevice(this.getBotKey(), message);
+    }
+
+    tell = (message) => {
+        this.persistMessage(message);
+    }
+
+    done = () => {
 
     }
 
-    done() {
-
-    }
-
-    wait() {
+    wait = () => {
 
     }
 }

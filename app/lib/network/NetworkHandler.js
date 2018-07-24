@@ -51,7 +51,6 @@ const handleLambdaResponse = (res, user) => {
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
-        console.log('lama messages : ', messages);
         _.forEach(messages, function (message) {
             MessageQueue.push(message);
         });
