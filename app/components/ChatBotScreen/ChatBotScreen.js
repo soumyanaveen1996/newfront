@@ -1190,11 +1190,11 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={chatStyles.safeArea}>
+            <SafeAreaView style={chatStyles.safeArea} accessibilityLabel="Chat Input Bar" testID="chat-input-bar">
                 <KeyboardAvoidingView style={chatStyles.container}
                     behavior={(Platform.OS === 'ios') ? 'padding' : null}
                     keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <FlatList ref={(list) => {this.chatList = list; this.checkForScrolling()}}
+                    <FlatList  accessibilityLabel="Messages List" testID="messages-list" ref={(list) => {this.chatList = list; this.checkForScrolling()}}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
                         onLayout={this.onChatListLayout.bind(this)}
