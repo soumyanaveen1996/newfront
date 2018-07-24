@@ -198,6 +198,29 @@ export default class Auth {
             });
     });
 
+    static resendFrontmSignupCode = (userDetails) => new Promise((resolve, reject) => {
+        const options = {
+            'method': 'post',
+            'url': config.proxy.protocol + config.proxy.host + config.proxy.resendSignupCodePath,
+            'data': {
+                user: userDetails
+            }
+        }
+        console.log('resendFrontmSignupCode options : ', options);
+        Network(options)
+            .then((result) => {
+                console.log('result : ', result.data);
+                if (result.data.success === 'true' || result.data.success === true) {
+                    resolve();
+                } else {
+                    reject(new AuthError(98, result.data.message));
+                }
+            })
+            .catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
+
     static resetPassword = (userDetails) => new Promise((resolve, reject) => {
         const options = {
             'method': 'post',
