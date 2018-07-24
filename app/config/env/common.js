@@ -98,6 +98,7 @@ const config = {
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signupconfirmPath: '/v2/signupconfirm/frontm',
+        resendSignupCodePath: '/v2/resendSignupCode/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
         deleteUserPath: '/v2/deleteUser',
