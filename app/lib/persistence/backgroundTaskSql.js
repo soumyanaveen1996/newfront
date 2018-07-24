@@ -33,14 +33,14 @@ const deleteBackgroundTask = `
 `;
 
 const selectAllBackgroundTasks = `
-    SELECT,
+    SELECT
         key,
         bot_id,
         conversation_id,
         time_interval,
         options,
         last_run_time
-    FROM background_tasks
+    FROM background_tasks;
 `;
 
 const selectBackgroundTask = `

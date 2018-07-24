@@ -42,7 +42,6 @@ const insertBackgroundTask = (key, botId, conversationId, timeInterval, options,
         JSON.stringify(options),
         lastRunTime
     ];
-    console.log('lama : 2.1', args);
 
     db.transaction(transaction => {
         transaction.executeSql(backgroundTaskSql.insertBackgroundTask, args, function success(tx, res) {
@@ -78,7 +77,7 @@ const dbToBackgroundTask = (dbResult) => {
 
 const selectAllBackgroundTasks = () => new Promise((resolve, reject) => {
     db.transaction(transaction => {
-        transaction.executeSql(backgroundTaskSql.selectAllBackgroundTasks, [], function success(res) {
+        transaction.executeSql(backgroundTaskSql.selectAllBackgroundTasks, [], function success(tx, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -98,7 +97,7 @@ const selectAllBackgroundTasks = () => new Promise((resolve, reject) => {
 const selectBackgroundTask = (key, botId, conversationId) => new Promise((resolve, reject) => {
     const args = [key, botId, conversationId];
     db.transaction(transaction => {
-        transaction.executeSql(backgroundTaskSql.selectBackgroundTask, args, function success(res) {
+        transaction.executeSql(backgroundTaskSql.selectBackgroundTask, args, function success(tx, res) {
             res = Utils.addArrayToSqlResults(res);
             let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             if (dbResults.length === 0) {
@@ -107,7 +106,6 @@ const selectBackgroundTask = (key, botId, conversationId) => new Promise((resolv
                 return resolve(dbToBackgroundTask(dbResults[0]));
             }
         }, function failure(tx, err) {
-            console.log('lama Error : ', err);
             return reject(err);
         });
     });
@@ -115,14 +113,12 @@ const selectBackgroundTask = (key, botId, conversationId) => new Promise((resolv
 
 
 const insertBackgroundTaskIfNotPresent = (key, botId, conversationId, timeInterval, options, lastRunTime = 0) => new Promise((resolve, reject) => {
-    console.log('lama : 1');
     selectBackgroundTask(key, botId, conversationId)
         .then((task) => {
-            console.log('lama : 2');
             if (!task) {
                 return insertBackgroundTask(key, botId, conversationId, timeInterval, options, lastRunTime);
             } else {
-                return task;
+                return resolve(task);
             }
         })
         .then(resolve)
