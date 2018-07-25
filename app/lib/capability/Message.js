@@ -31,6 +31,7 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_BARCODE: 'barcode',
     MESSAGE_TYPE_FORM_OPEN: 'form_open',
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
+    MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
 };
 
 
@@ -225,6 +226,14 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_WAIT;
     }
 
+    backgroundEventMessage = (key, options) => {
+        this._msg = key;
+        options = options || {};
+        options.key = key;
+        this._options = JSON.stringify(options);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT;
+    }
+
     messageByBot = (option = true) => {
         this._addedByBot = option;
     };
@@ -293,7 +302,9 @@ export default class Message {
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL) {
             return ''
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL) {
-            return ''
+            return '';
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
+            return '';
         } else {
             return this.getMessage();
         }
@@ -329,7 +340,8 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
             try {
                 return JSON.parse(this._options);
             } catch (error) {

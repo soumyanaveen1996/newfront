@@ -357,7 +357,6 @@ class FrontmAuth {
         return new Promise(function (resolve, reject) {
             Network(options)
                 .then((res) => {
-                    console.log('Refresh results : ', res);
                     let resData = res ? res.data : {};
                     if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
                         const updatedCreds = {

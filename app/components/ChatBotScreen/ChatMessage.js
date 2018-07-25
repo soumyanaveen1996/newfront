@@ -351,6 +351,7 @@ export default class ChatMessage extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
         ]
         if (_.includes(emptyMessages, message.getMessageType())) {
             return null;

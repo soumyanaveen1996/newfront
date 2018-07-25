@@ -37,6 +37,22 @@ export default class ConversationContext {
             });
     });
 
+    static fetchConversationContext = (botContext, user, channel = false) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                return resolve(context);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
     static getIMConversationContext = (botContext, user, conversationId) => new Promise((resolve, reject) => {
         // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
         if (botContext.getConversationContext()) {
@@ -51,6 +67,25 @@ export default class ConversationContext {
                     return resolve(context);
                 }
                 return resolve(ConversationContext.createAndSaveNewConversationContext(botContext, user, conversationId))
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
+    static fetchIMConversationContext = (botContext, user, conversationId) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (context) {
+                    botContext.setConversationContext(context);
+                }
+                return resolve(context);
             })
             .catch((err) => {
                 reject(err);

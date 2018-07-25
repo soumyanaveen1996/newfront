@@ -1,6 +1,7 @@
 import { MessageDAO, NetworkDAO, ConversationDAO, ArrayStorageDAO, DbVersionDAO } from '../../lib/persistence';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import ChannelContactDAO from '../../lib/persistence/ChannelContactDAO';
+import BackgroundTaskDAO from '../../lib/persistence/BackgroundTaskDAO';
 
 const createMessageTable = MessageDAO.createMessageTable;
 const createNetworkRequestQueueTable = NetworkDAO.createNetworkRequestQueueTable;
@@ -79,6 +80,14 @@ function eightToNineMigration() {
         })
 }
 
+function nineToTenMigration() {
+    console.log('Nine to 10 migration : ');
+    return BackgroundTaskDAO.createBackgroundTaskTable()
+        .then(() => {
+            return DbVersionDAO.updateVersion(10);
+        })
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -148,6 +157,13 @@ function runMigrations() {
             .then((version) => {
                 if (version === 8) {
                     return eightToNineMigration()
+                } else {
+                    return version;
+                }
+            })
+            .then((version) => {
+                if (version === 9) {
+                    return nineToTenMigration()
                 } else {
                     return version;
                 }

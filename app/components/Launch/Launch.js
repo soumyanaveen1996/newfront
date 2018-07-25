@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification } from '../../lib/capability';
+import { Auth, Notification, BackgroundTaskQueue } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
@@ -53,6 +53,17 @@ export default class Splash extends React.Component {
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
+
+        BackgroundTaskQueue.enqueue({
+            key: 'hello',
+            botId: 'im-bot',
+            conversationId: '474fab0e-0b87-46a2-aa63-8ae28486ee1c',
+            timeInterval: 15 * 60000
+        }).then(() => {
+
+        }).catch((error) => {
+            console.log('BackgroundTaskQueue error : ', error);
+        })
 
         // Chain all setup stuff
         persist.runMigrations()
