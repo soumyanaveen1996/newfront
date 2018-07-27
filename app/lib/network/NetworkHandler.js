@@ -4,8 +4,6 @@
 import Queue from './Queue';
 import { Network, Utils, Auth } from '../capability';
 import config from '../../config/config';
-import IMBotMessageHandler from './IMBotMessageHandler';
-import { MessageCounter } from '../MessageCounter';
 import EventEmitter from '../events';
 import { SatelliteConnectionEvents } from '../events';
 import _ from 'lodash';
@@ -122,15 +120,11 @@ const processNetworkQueue = () => {
 
 const readQueue = (user) => new Promise((resolve, reject) => {
     const host = config.network.queueHost;
-    let stats = MessageCounter.getCounts();
 
     let options = {
         'method': 'post',
         'url': getUrl(),
         'headers': getHeaders(user),
-        'data': {
-            stats: stats,
-        }
     };
 
     function getUrl() {
@@ -155,7 +149,6 @@ const readQueue = (user) => new Promise((resolve, reject) => {
 
     return Network(options)
         .then((res) => {
-            MessageCounter.subtractCounts(stats);
             handleOnSatelliteResponse(res);
             resolve(res);
         })

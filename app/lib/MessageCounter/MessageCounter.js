@@ -48,7 +48,7 @@ class MessageCounter {
     }
 
     setMessageQuota = (quotas, counts) => {
-        this.quotas = quota;
+        this.quotas = quotas;
         this.subtractCounts(counts);
     }
 

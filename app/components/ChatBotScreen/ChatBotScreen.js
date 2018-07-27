@@ -464,8 +464,7 @@ export default class ChatBotScreen extends React.Component {
     tell = (message) => {
         // Removing the waiting message.
         this.stopWaiting();
-
-        MessageCounter.addCount(this.getBotId(), 1);
+        this.countMessage(message);
 
         // Update the bot interface
         // Push a new message to the end
@@ -778,7 +777,14 @@ export default class ChatBotScreen extends React.Component {
         })
     }
 
+    countMessage = (message) => {
+        if (!message.isEmptyMessage()) {
+            MessageCounter.addCount(this.getBotId(), 1);
+        }
+    }
+
     sendMessage = async (message) => {
+        this.countMessage(message);
         this.updateChat(message)
         this.scrollToBottom = true;
         this.waitForQueueProcessing()
