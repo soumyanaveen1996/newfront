@@ -2,12 +2,15 @@ import { DeviceStorage } from '../capability';
 import _ from 'lodash';
 
 const COUNTER_STORAGE_KEY = 'MessageCounter';
+const MESSAGE_QUOTA_KEY = 'message_quota';
 
 class MessageCounter {
 
     init = async () => {
         this.messageCounts = { };
+        this.quotas = { };
         this.readCountsFromStorage();
+        this.readQuotaFromStorage();
     }
 
     getCounts = () => {
@@ -36,8 +39,25 @@ class MessageCounter {
         });
     }
 
+    readQuotaFromStorage = async () => {
+        this.quotas = await DeviceStorage.get(MESSAGE_QUOTA_KEY);
+    }
+
     saveCountsToStorage = () => {
         DeviceStorage.update(COUNTER_STORAGE_KEY, this.getCounts());
+    }
+
+    setMessageQuota = (quotas, counts) => {
+        this.quotas = quota;
+        this.subtractCounts(counts);
+    }
+
+    getUsedMessageQuota = () => {
+        return this.getCounts();
+    }
+
+    getAvailableBotMessageQuota = (botId) => {
+        return this.quotas[botId] - this.counts[botId];
     }
 }
 
