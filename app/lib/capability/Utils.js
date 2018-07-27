@@ -1,6 +1,7 @@
 // We are going to make lodash availalbe on the platform for making bot writing easier
 import Lodash from 'lodash';
 import moment from 'moment';
+import sha1 from 'sha1';
 import AWSSignature from 'react-native-aws-signature';
 import ShortUUID from 'short-uuid';
 
@@ -57,4 +58,10 @@ export function UUID() {
     return ShortUUID().fromUUID(uuid);
 }
 
-export default { Lodash, UUID, moment, createAuthHeader };
+export function botConversationId(userId, botId) {
+    let ids = [userId, botId];
+    const text = Lodash.join(Lodash.sortBy(ids), '-');
+    return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+}
+
+export default { Lodash, UUID, moment, createAuthHeader, botConversationId };

@@ -192,7 +192,7 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
 //  - then complete Queue call
 const handleNewConversation = (message, user) => new Promise((resolve, reject) => {
     const botKey = message.conversation;
-    let fakeBotContext = getFakeBotKey(botKey);
+    let fakeBotContext = getFakeBotKey(message.bot, botKey);
     let creator = null;
 
     getConversationData(botKey, message.createdBy, user)
@@ -239,10 +239,13 @@ const getConversationData = (conversationId, createdBy, user) => {
     return Network(options);
 };
 
-const getFakeBotKey = (botKey) => {
+const getFakeBotKey = (botId, botKey) => {
     return new BotContext({
         getBotKey: function () {
             return botKey;
+        },
+        getBotId: function () {
+            return botId;
         }
     }, {
         name: 'netWorkPoll'

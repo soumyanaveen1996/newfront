@@ -47,8 +47,14 @@ export default class BotContext {
     }
 
     // Delegate back to the actual instance of the screen (people chat vs bot chat vs channel etc)
+    // Returns conversationId for channels and IM chat.
     getBotKey = () => {
         return this.botScreen.getBotKey();
+    }
+
+    // Actual botId.
+    getBotId = () => {
+        return this.botManifest.botId;
     }
 
     tell = (payload) => new Promise((resolve) => {
