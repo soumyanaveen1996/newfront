@@ -14,6 +14,7 @@ import I18n from '../../config/i18n/i18n';
 import { GlobalColors } from '../../config/styles';
 import _ from 'lodash';
 import { CheckBox } from 'react-native-elements';
+import { isEmail } from '../../lib/utils';
 
 
 export const CHECKBOX_CONFIG = {
@@ -261,6 +262,11 @@ export default class FormPopup extends React.Component {
                 this.errorMessages[i] = I18n.t('Password_not_empty')
                 return false;
             }
+
+            if (formData[i].type === 'email_field' && !isEmail(_.trim(this.formValuesArray[i]))) {
+                this.errorMessages[i] = I18n.t('Not_an_email');
+                return false;
+            }
             this.errorMessages[i] = undefined;
         }
         return true;
@@ -269,6 +275,7 @@ export default class FormPopup extends React.Component {
 
     CTAResponseOnPress() {
         if (!this.isValid() || !this.props.editable) {
+            this.setState({errorMessages : this.errorMessages});
             return;
         }
         var formData = this.props.formData
@@ -345,6 +352,7 @@ export default class FormPopup extends React.Component {
                 buttons.push(
                     <View style={Styles.formInputTextAreaContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                        <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
                         <FormTextInput
                             numberOfLines={3}
                             multiline={true}
