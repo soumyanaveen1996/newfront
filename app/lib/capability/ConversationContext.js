@@ -1,5 +1,6 @@
 import DeviceStorage from './DeviceStorage';
-import { UUID, botConversationId } from './Utils';
+import { UUID } from './Utils';
+import { newBotConversationId } from '../utils'
 import _ from 'lodash';
 
 /**
@@ -126,7 +127,7 @@ export default class ConversationContext {
     static createNewConversationContext = (botContext, user, conversationId = undefined)  => new Promise((resolve, reject) => {
         if (user) {
             const context = {
-                conversationId: conversationId || botConversationId(user.userId, botContext.getBotId()),
+                conversationId: conversationId || newBotConversationId(user.userId, botContext.getBotId()),
                 creatorInstanceId: user.userId,
                 creator: { userName: user.info.userName, uuid: user.userId },
                 participantsInfo: [{ userName: user.info.userName, userId: user.userId }],
@@ -137,7 +138,7 @@ export default class ConversationContext {
             resolve(context);
         } else {
             const context = {
-                conversationId: conversationId || botConversationId(user.userId, botContext.getBotId()),
+                conversationId: conversationId || newBotConversationId(user.userId, botContext.getBotId()),
                 participantsInfo: [],
                 participants: [],
                 onChannels: [],

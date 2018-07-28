@@ -9,6 +9,9 @@ import RNFS from 'react-native-fs';
 import {Platform, Dimensions, PermissionsAndroid} from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
+import SystemBot from '../bot/SystemBot.js';
+import { UUID } from '../capability/Utils.js';
+import sha1 from 'sha1';
 
 export function formattedDate(date) {
     if (!date) {
@@ -347,6 +350,16 @@ export function requestReadContactsPermission() {
     }
 }
 
+export function newBotConversationId(userId, botId) {
+    if (SystemBot.isSystemBot(botId)) {
+        return UUID();
+    } else {
+        let ids = [userId, botId];
+        const text = _.join(_.sortBy(ids), '-');
+        return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+    }
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -365,5 +378,6 @@ export default {
     channelLogoUrl,
     padStartForAndroid,
     requestReadContactsPermission,
-    isClientSupportedByBot
+    isClientSupportedByBot,
+    newBotConversationId
 }

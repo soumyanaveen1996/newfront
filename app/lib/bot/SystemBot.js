@@ -201,6 +201,8 @@ export default class SystemBot {
             });
     });
 
+    static isSystemBot = (botId) => SYSTEM_BOT_MANIFEST_NAMES[botId] !== undefined;
+
     static onboardingBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['onboarding-bot'];
     static imBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['im-bot'];
     static contactsBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['contacts-bot'];
