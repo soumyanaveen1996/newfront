@@ -382,6 +382,7 @@ export default class Auth {
         if (!user) {
             return reject('Valid user object required');
         }
+        EventEmitter.emit(AuthEvents.userChanged, user);
         return resolve(DeviceStorage.save(USER_SESSION, user));
     });
 

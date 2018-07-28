@@ -13,6 +13,8 @@ import FeaturedTab from './FeaturedTab/FeaturedTab';
 import { HeaderBack } from '../Header';
 import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
+import EventEmitter, { AuthEvents } from '../../lib/events';
+import { Auth } from '../../lib/capability';
 
 export default class BotStoreScreen extends React.Component{
 
@@ -87,11 +89,15 @@ export default class BotStoreScreen extends React.Component{
         };
     }
 
+    async updateCatalog() {
+        let catalog = await Bot.getCatalog();
+        this.setState({ showSearchBar: false, selectedIndex: 0, catalogData: catalog, catalogLoaded: true, networkError: false });
+    }
+
     async componentDidMount() {
         try {
-            let catalog = await Bot.getCatalog();
-            this.setState({ showSearchBar: false, selectedIndex: 0, catalogData: catalog, catalogLoaded: true, networkError: false });
-
+            EventEmitter.addListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+            await this.updateCatalog();
             if (this.props.navigation) {
                 this.props.navigation.setParams({
                     handleSearchClick: this.handleSearchClick.bind(this),
@@ -103,6 +109,16 @@ export default class BotStoreScreen extends React.Component{
             if (error instanceof NetworkError) {
                 this.setState({ showSearchBar: false, selectedIndex: 0, catalogLoaded: false, networkError: true });
             }
+        }
+    }
+
+    componentWillUnmount() {
+        EventEmitter.removeListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+    }
+
+    userChangedHandler() {
+        if (this.state && Auth.isUserLoggedIn()) {
+            this.updateCatalog();
         }
     }
 
