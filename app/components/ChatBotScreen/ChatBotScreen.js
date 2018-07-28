@@ -1168,6 +1168,7 @@ export default class ChatBotScreen extends React.Component {
                 onSend={this.onSendMessage.bind(this)}
                 onSendAudio={this.onSendAudio.bind(this)}
                 options={moreOptions}
+                botId={this.getBotId()}
                 onOptionSelected={this.onOptionSelected.bind(this)} />
         );
     }

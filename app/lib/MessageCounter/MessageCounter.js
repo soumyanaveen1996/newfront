@@ -57,7 +57,11 @@ class MessageCounter {
     }
 
     getAvailableBotMessageQuota = (botId) => {
-        return this.quotas[botId] - this.counts[botId];
+        if (!this.quotas[botId]) {
+            return Number.MAX_SAFE_INTEGER || 100000000;
+        } else {
+            return this.quotas[botId] - (this.counts[botId] || 0);
+        }
     }
 }
 
