@@ -7,6 +7,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import ChannelDAO from '../persistence/ChannelDAO';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import { ContactsCache } from '../ContactsCache';
+import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 
 /**
  * Guarantees ordering - first in first out
@@ -61,7 +62,7 @@ const handle = (message, user) => new Promise((resolve, reject) => {
                 if (Conversation.isChannelConversation(conversation)) {
                     return checkForContactAndCompleteQueueResponse(botKey, message);
                 } else {
-                    return Queue.completeAsyncQueueResponse(botKey, message);
+                    return  processMessage(message, botKey);
                 }
             } else {
                 console.log('Handling new Conversation');
@@ -93,12 +94,12 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             }
             console.log('Fetched contact for user : ', contact);
             console.log('Processing message : ', message);
-            return Queue.completeAsyncQueueResponse(botKey, message);
+            return processMessage(message, botKey);
         })
         .then(resolve)
         .catch(() => {
             if (!fetchedContact) {
-                return Queue.completeAsyncQueueResponse(botKey, message).then(resolve);
+                return processMessage(message, botKey).then(resolve);
             }
         });
 });
@@ -138,7 +139,7 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
         })
         .then((conv) => {
             if (isUnignoredContact && conv) {
-                return Queue.completeAsyncQueueResponse(botKey, message);
+                return processMessage(message, botKey);
             }
         })
         .then(() => {
@@ -250,6 +251,10 @@ const getFakeBotKey = (botId, botKey) => {
     }, {
         name: 'netWorkPoll'
     });
+}
+
+const processMessage = async (message, botKey) => {
+    return BackgroundTaskProcessor.sendBackgroundMessage(message, 'im-bot', botKey);
 }
 
 export default {

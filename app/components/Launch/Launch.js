@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification, BackgroundTaskQueue } from '../../lib/capability';
+import { Auth, Notification, BackgroundTaskQueue, Message } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
@@ -18,6 +18,7 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 import { Telnet } from '../../lib/capability';
+import BackgroundTaskProcessor from '../../lib/BackgroundTask/BackgroundTaskProcessor';
 
 const VERSION = 26; // Corresponding to 2.12.0 build 1. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -50,20 +51,9 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            //await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
-
-        BackgroundTaskQueue.enqueue({
-            key: 'hello',
-            botId: 'im-bot',
-            conversationId: '474fab0e-0b87-46a2-aa63-8ae28486ee1c',
-            timeInterval: 15 * 60000
-        }).then(() => {
-
-        }).catch((error) => {
-            console.log('BackgroundTaskQueue error : ', error);
-        })
 
         // Chain all setup stuff
         persist.runMigrations()
@@ -82,11 +72,9 @@ export default class Splash extends React.Component {
                 return Auth.isUserLoggedIn();
             })
             .then((isUserLoggedIn) => {
-                if (isUserLoggedIn) {
-                    this.showMainScreen();
-                } else {
-                    //this.showMainScreen();
-                    this.showOnboardingScreen();
+                this.showMainScreen();
+                if (!isUserLoggedIn) {
+                    this.sendOnboardingBackgroundMessage();
                 }
             })
             .then(() => {
@@ -102,6 +90,13 @@ export default class Splash extends React.Component {
                 // ignore
                 console.log(err);
             });
+    }
+
+    sendOnboardingBackgroundMessage = () => {
+        let message = new Message();
+        message.setCreatedBy({addedByBot: true});
+        message.backgroundEventMessage('onboarding_bot_new', {});
+        BackgroundTaskProcessor.sendBackgroundMessage(message, 'onboarding-bot');
     }
 
     configureNotifications = () => {
@@ -131,10 +126,6 @@ export default class Splash extends React.Component {
         }
     }
 
-    userLoggedInHandler = async () => {
-        this.showMainScreen();
-    }
-
     userLoggedOutHandler = async () => {
         //this.showOnboardingScreen();
     }
@@ -144,20 +135,13 @@ export default class Splash extends React.Component {
         return;
     }
 
-    showOnboardingScreen = () => {
-        this.showMainScreen(true);
-        return;
-    }
-
     listenToEvents = async () => {
         // For now the user should not be taken back
-        // EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
-        // EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
