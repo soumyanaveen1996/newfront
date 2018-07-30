@@ -44,7 +44,7 @@ import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queu
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
-import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents } from '../../lib/events';
+import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents, MessageEvents } from '../../lib/events';
 import { Icons } from '../../config/icons';
 import images from '../../images';
 import VersionCheck from 'react-native-version-check';
@@ -220,7 +220,7 @@ export default class ChatBotScreen extends React.Component {
                     self.flushPendingAsyncResults();
 
                     // 7. Now that bot is open - add a listener for async results coming in
-                    self.eventSubscription = AsyncResultEventEmitter.addListener(NETWORK_EVENTS_CONSTANTS.result, self.handleAsyncMessageResult.bind(self));
+                    self.eventSubscription = EventEmitter.addListener(MessageEvents.messageProcessed, this.handleMessageEvents.bind(this));
 
                     // 8. Mark new messages as read
                     MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
@@ -398,6 +398,14 @@ export default class ChatBotScreen extends React.Component {
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
         }
+    }
+
+    handleMessageEvents(event) {
+        if (!event || event.botId !== this.getBotId() ||
+        (event.conversationId !== undefined && event.conversationId !== this.getBotKey())) {
+            return;
+        }
+        this.loadedBot.asyncResult(event.message, this.botState, this.state.messages, this.botContext);
     }
 
     handleAsyncMessageResult (event) {

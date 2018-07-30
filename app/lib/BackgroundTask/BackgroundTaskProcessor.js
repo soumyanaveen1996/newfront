@@ -6,6 +6,8 @@ import dce, { Bot } from '../../lib/dce';
 import { BotContext } from '../../lib/botcontext';
 import { Message, ConversationContext, Auth } from '../capability';
 import { MessageHandler } from '../message';
+import EventEmitter, { MessageEvents } from '../events';
+
 
 class BackgroundTaskBotScreen {
     constructor(botId, conversationId, options) {
@@ -128,6 +130,7 @@ const sendBackgroundMessage = async (message, botId, conversationId = undefined)
         return;
     }
     await processMessage(message, botManifest, botContext);
+    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
 }
 
 export default {
