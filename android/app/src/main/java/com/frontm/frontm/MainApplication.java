@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.peel.react.TcpSocketsModule;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -59,7 +60,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-              new MainReactPackage(),
+            new MainReactPackage(),
+            new ReactNativeDocumentPicker(),
             new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),
@@ -71,7 +73,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),
             new SvgPackage(),
-              new ReactVideoPackage(),
+            new ReactVideoPackage(),
             new VectorIconsPackage(),
             new RNSoundPackage(),
             new MapsPackage(),
