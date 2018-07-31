@@ -44,7 +44,7 @@ export default class DeveloperTab extends React.Component {
     }
 
     onDomainMgmtTileClicked() {
-        Actions.botChat({ bot: this.domainMgmtChatBot });
+        Actions.botChat({ bot: this.domainMgmtChatBot, onBack: this.props.onBack });
     }
 
     getDomainMgmtBotData() {

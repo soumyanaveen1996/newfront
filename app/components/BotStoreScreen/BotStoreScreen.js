@@ -91,7 +91,7 @@ export default class BotStoreScreen extends React.Component{
 
     async updateCatalog() {
         let catalog = await Bot.getCatalog();
-        this.setState({ showSearchBar: false, selectedIndex: 0, catalogData: catalog, catalogLoaded: true, networkError: false });
+        this.setState({ showSearchBar: false, selectedIndex: this.state.selectedIndex || 0, catalogData: catalog, catalogLoaded: true, networkError: false });
     }
 
     async componentDidMount() {
@@ -116,10 +116,20 @@ export default class BotStoreScreen extends React.Component{
         EventEmitter.removeListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
     }
 
-    userChangedHandler() {
-        if (this.state && Auth.isUserLoggedIn()) {
+    async refresh() {
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        if (this.state && isUserLoggedIn) {
             this.updateCatalog();
         }
+    }
+
+    async userChangedHandler() {
+        this.refresh();
+    }
+
+    onBack() {
+        console.log('lama : refresh');
+        this.refresh();
     }
 
     handleSearchClick() {
@@ -145,12 +155,12 @@ export default class BotStoreScreen extends React.Component{
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
-            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots}/>)
+            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 1) {
-            return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots}/>)
+            return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 0) {
             let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
-            return (<FeaturedTab featuredBots={featuredBots}/>)
+            return (<FeaturedTab featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
         }
     }
 
