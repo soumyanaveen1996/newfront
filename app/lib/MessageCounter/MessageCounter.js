@@ -51,6 +51,8 @@ class MessageCounter {
     setMessageQuota = (quotas, counts) => {
         this.quotas = quotas;
         this.subtractCounts(counts);
+        console.log('MessageCounter::Quotas : ', this.quotas);
+        console.log('MessageCounter::Counts : ', this.messageCounts);
     }
 
     getUsedMessageQuota = () => {
@@ -61,7 +63,7 @@ class MessageCounter {
         if (!this.quotas[botId]) {
             return Number.MAX_SAFE_INTEGER || 100000000;
         } else {
-            return this.quotas[botId] - (this.counts[botId] || 0);
+            return this.quotas[botId] - (this.messageCounts[botId] || 0);
         }
     }
 }
