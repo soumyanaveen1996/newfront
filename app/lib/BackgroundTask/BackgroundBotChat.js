@@ -1,9 +1,9 @@
 import { ConversationContext, Auth } from '../../lib/capability';
 import { BotContext } from '../botcontext';
-import SystemBot from '../bot/SystemBot';
 import dce from '../../lib/dce';
 import { MessageHandler } from '../message';
 import moment from 'moment';
+import EventEmitter, { MessageEvents } from '../events';
 
 const BOT_LOAD_RETRIES = 2;
 const PAGE_SIZE = 5;
