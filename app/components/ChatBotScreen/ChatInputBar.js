@@ -264,9 +264,10 @@ export default class ChatInputBar extends React.Component {
         if (botId) {
             if (MessageCounter.getAvailableBotMessageQuota(botId) < 0) {
                 this.showQuotaAlert();
+                return;
             }
-            return;
         }
+
         const message = this.state.text && this.state.text.trim();
         if (!message || message === '') {
             return

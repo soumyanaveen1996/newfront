@@ -40,7 +40,7 @@ class MessageCounter {
     }
 
     readQuotaFromStorage = async () => {
-        this.quotas = await DeviceStorage.get(MESSAGE_QUOTA_KEY);
+        this.quotas = await DeviceStorage.get(MESSAGE_QUOTA_KEY) || {};
         console.log('Message quota : ', this.messageCounts);
     }
 
