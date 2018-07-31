@@ -10,6 +10,7 @@ import Utils from '../../lib/utils';
 import Permissions from 'react-native-permissions';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { MessageCounter } from '../../lib/MessageCounter';
+import I18n from '../../config/i18n/i18n';
 
 export default class ChatInputBar extends React.Component {
 
