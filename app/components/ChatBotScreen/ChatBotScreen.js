@@ -407,7 +407,6 @@ export default class ChatBotScreen extends React.Component {
         (event.conversationId !== undefined && event.conversationId !== this.getBotKey())) {
             return;
         }
-        console.log('Event Message : ', event.message);
         this.loadedBot.asyncResult(event.message, this.botState, this.state.messages, this.botContext);
     }
 

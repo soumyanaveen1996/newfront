@@ -158,7 +158,7 @@ const updateMessage = (message) => new Promise((resolve, reject) => {
                 .then(resolve)
                 .catch(reject);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -182,7 +182,7 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
                 .then(resolve)
                 .catch(reject);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -191,9 +191,9 @@ const markBotMessageAsRead = (botkey, messageId) => new Promise((resolve, reject
     const args = [messageId, botkey];
     db.transaction(transaction => {
         transaction.executeSql(messageSql.markAsRead, args, function success() {
-            return resolve(true);
+            resolve(true);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -408,7 +408,6 @@ const createMessageDateIndex = () => new Promise((resolve, reject) => {
         transaction.executeSql(messageSql.addMessageCreatedAtIndex, [], function success() {
             return resolve(true);
         }, function failure(tx, err) {
-            console.log('errror : ', err);
             return reject(new Error('Unable to add index on Message table'));
         });
     });

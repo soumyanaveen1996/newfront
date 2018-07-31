@@ -38,7 +38,11 @@ export default class BackgroundBotChat {
     persistMessage = async (message) => {
         try {
             await MessageHandler.persistOnDevice(this.getBotKey(), message);
-            EventEmitter.emit(MessageEvents.messagePersisted, {message : message});
+            if (this.conversationContext) {
+                EventEmitter.emit(MessageEvents.messagePersisted, { botId: this.bot.botId, conversationId: this.conversationContext.conversationId, message: message });
+            } else {
+                EventEmitter.emit(MessageEvents.messagePersisted, { botId: this.bot.botId, message: message });
+            }
         } catch (err) {
         }
     }
