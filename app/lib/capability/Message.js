@@ -305,6 +305,10 @@ export default class Message {
             return '';
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
             return '';
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON) {
+            let items = this.getMessage();
+            let titles = _.map(items, (item) => item.title)
+            return I18n.t('Button_Message', { lines: titles.join(' or ') })
         } else {
             return this.getMessage();
         }

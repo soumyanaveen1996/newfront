@@ -118,7 +118,7 @@ const processMessage = async(message, botManifest, botContext, createContext = f
 const processAsyncMessage = async(message, botManifest, botContext, createContext = false) => {
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
-    bot.async(message, {}, [], botContext);
+    bot.asyncResult(message, {}, [], botContext);
 }
 
 const sendBackgroundAsyncMessage = async (message, botId, conversationId = undefined, createContext = false) => {
