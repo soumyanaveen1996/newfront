@@ -254,7 +254,7 @@ const getFakeBotKey = (botId, botKey) => {
 }
 
 const processMessage = async (message, botKey) => {
-    return BackgroundTaskProcessor.sendBackgroundMessage(message, 'im-bot', botKey);
+    return BackgroundTaskProcessor.sendBackgroundMessage(message, message.bot, botKey);
 }
 
 export default {

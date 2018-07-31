@@ -2,6 +2,7 @@ import { Auth } from '../capability';
 import { Queue, IMBotMessageHandler } from '../network';
 import { MessageDAO, NetworkDAO } from '../persistence';
 import EventEmitter, { AuthEvents } from '../events';
+import { BackgroundTaskProcessor } from '../BackgroundTask';
 
 export default class MessageQueue {
     constructor(options = {}) {
@@ -101,7 +102,7 @@ export default class MessageQueue {
         if (bot === 'im-bot' || bot === 'channels-bot') {
             await IMBotMessageHandler.handleMessage(message, user);
         } else {
-            await Queue.completeAsyncQueueResponse(bot, message);
+            await BackgroundTaskProcessor.sendBackgroundMessage(message, message.bot, message.conversation);
         }
         return true;
     }
