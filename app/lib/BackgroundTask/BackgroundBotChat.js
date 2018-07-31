@@ -28,11 +28,7 @@ export default class BackgroundBotChat {
     }
 
     getBotKey = () => {
-        if (this.botId === SystemBot.imBot.botId) {
-            return this.conversationId;
-        } else {
-            return this.botId;
-        }
+        return this.bot.botId;
     }
 
     updateConversationContextId = () => {
