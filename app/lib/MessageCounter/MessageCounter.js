@@ -19,7 +19,6 @@ class MessageCounter {
 
     addCount = (botKey, count) => {
         this.messageCounts[botKey] = (this.messageCounts[botKey] || 0) + count;
-        console.log('Message Counts : ', this.messageCounts);
         this.saveCountsToStorage();
     }
 
@@ -37,10 +36,12 @@ class MessageCounter {
         _.forEach(_.keys(counts), (key) => {
             this.addCount(key, counts[key]);
         });
+        console.log('Message counts : ', this.messageCounts);
     }
 
     readQuotaFromStorage = async () => {
         this.quotas = await DeviceStorage.get(MESSAGE_QUOTA_KEY);
+        console.log('Message quota : ', this.messageCounts);
     }
 
     saveCountsToStorage = () => {

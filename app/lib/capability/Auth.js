@@ -5,7 +5,7 @@ import { User, DefaultUser, isDefaultUser } from '../../lib/user';
 import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
-import { ConversationDAO } from '../../lib/persistence';
+import { ConversationDAO, BackgroundTaskDAO } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
@@ -361,6 +361,9 @@ export default class Auth {
             })
             .then(() => {
                 return AsyncStorage.clear();
+            })
+            .then(() => {
+                return BackgroundTaskDAO.deleteAllTasks();
             })
             .then(() => {
                 EventEmitter.emit(AuthEvents.userLoggedOut);

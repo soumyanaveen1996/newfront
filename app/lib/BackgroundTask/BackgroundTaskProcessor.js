@@ -89,7 +89,8 @@ const processTask = async (task, user) => {
         let message = new Message();
         message.setCreatedBy({addedByBot: true, messageDate: moment().valueOf()});
         message.backgroundEventMessage(task.key, task.options);
-        await processMessage(message, botManifest, botContext)
+        await processMessage(message, botManifest, botContext);
+        await BackgroundTaskDAO.updateBackgroundTaskLastRun(task.key, task.botId, task.conversationId, moment().valueOf());
     }
 }
 
@@ -110,10 +111,10 @@ const getConversationContext = async (botId, user, botContext, botScreen, create
 const processMessage = async(message, botManifest, botContext, createContext = false) => {
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
-    bot.next(message, {}, [], botContext, createContext);
+    bot.next(message, {}, [], botContext);
 }
 
-const sendBackgroundMessage = async (message, botId, conversationId = undefined) => {
+const sendBackgroundMessage = async (message, botId, conversationId = undefined, createContext = false) => {
     const user = await Auth.getUser();
     if (!user) {
         return;
@@ -125,7 +126,7 @@ const sendBackgroundMessage = async (message, botId, conversationId = undefined)
 
     const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
     const botContext = new BotContext(botScreen, botManifest);
-    let conversationContext = await getConversationContext(botId, user, botContext, user);
+    let conversationContext = await getConversationContext(botId, user, botContext, user, createContext);
     if (!conversationContext) {
         return;
     }

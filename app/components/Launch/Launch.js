@@ -19,6 +19,8 @@ import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 import { Telnet } from '../../lib/capability';
 import BackgroundTaskProcessor from '../../lib/BackgroundTask/BackgroundTaskProcessor';
+import SystemBot from '../../lib/bot/SystemBot';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
 const VERSION = 26; // Corresponding to 2.12.0 build 1. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -51,7 +53,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            //await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -135,14 +137,33 @@ export default class Splash extends React.Component {
         return;
     }
 
+    userLoggedInHandler = () => {
+        this.createBackgroundTask();
+    }
+
+    createBackgroundTask = () => {
+        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
+        bgBotScreen.init();
+        /*
+        let bgTaskOptions = {
+            key: 'MessageUsageUpdate',
+            botId: '',
+            timeInterval: 15 * 60000,
+            conversationId: conversation.conversationId,
+        };
+        BackgroundTaskQueue.enqueue(bgTaskOptions); */
+    }
+
     listenToEvents = async () => {
         // For now the user should not be taken back
+        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
+        EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 

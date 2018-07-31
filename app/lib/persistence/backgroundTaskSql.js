@@ -24,8 +24,8 @@ const insertBackgroundTask = `
 
 const updateLastRunTime = `
     UPDATE background_tasks
-    SET last_run_time = ?,
-    WHERE key = ? AND bot_id = ? AND conversationId = ?
+    SET last_run_time = ?
+    WHERE key = ? AND bot_id = ? AND conversation_id = ?
 `;
 
 const deleteBackgroundTask = `
@@ -55,11 +55,16 @@ const selectBackgroundTask = `
     WHERE key = ? AND bot_id = ? AND conversation_id = ?
 `;
 
+const deleteAllTasks = `
+    DELETE FROM background_tasks;
+`
+
 export default {
     createBackgroundTaskTable,
     insertBackgroundTask,
     updateLastRunTime,
     deleteBackgroundTask,
     selectAllBackgroundTasks,
-    selectBackgroundTask
+    selectBackgroundTask,
+    deleteAllTasks
 };

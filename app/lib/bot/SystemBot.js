@@ -1,5 +1,7 @@
 import DeviceStorage from '../capability/DeviceStorage';
-import { botLogoUrl } from '../utils';
+import {
+    botLogoUrl
+} from '../utils';
 
 console.log('FrontmUtils : ', botLogoUrl);
 
@@ -10,7 +12,8 @@ export const SYSTEM_BOT_MANIFEST_NAMES = {
     'onboarding-bot': 'onboarding-bot',
     'contacts-bot': 'contacts-bot',
     'channels-bot': 'channels-bot',
-    'domMgmt-bot': 'domMgmt-bot'
+    'domMgmt-bot': 'domMgmt-bot',
+    'backgroundTask-bot': 'backgroundTask-bot'
 };
 
 // This is initial configuration - every release make sure the versions are updated
@@ -151,6 +154,35 @@ export const SYSTEM_BOT_MANIFEST = {
         'systemBot': true,
         'userDomain': 'frontmai',
         'version': '1.0.0'
+    },
+    'backgroundTask-bot': {
+        'allowResetConversation': 'false',
+        'botId': 'BackgroundTaskBot',
+        'botName': 'Background Task',
+        'botUrl': 'botfarm/frontmai/backgroundTaskBot/1.0.0/backgroundTaskBot.js',
+        'category': [
+            'Support'
+        ],
+        'developer': 'FrontM',
+        'dependencies': {
+            'agentGuardService': {
+                'remote': true,
+                'version': '1.1.0',
+                'url': 'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js'
+            },
+            'authContext': {
+                'remote': true,
+                'version': '1.2.0',
+                'url': 'botfarm/rc/frontmai/authContext/1.2.0/authContext.js'
+            }
+        },
+        'description': 'Bot that executes jobs in the backend',
+        'featured': true,
+        'logoUrl': 'Survey_logopng.png',
+        'slug': 'backgroundTask-bot',
+        'systemBot': true,
+        'userDomain': 'frontmai',
+        'version': '1.0.0',
     }
 };
 
@@ -208,10 +240,12 @@ export default class SystemBot {
     static contactsBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['contacts-bot'];
     static channelsBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['channels-bot'];
     static domainMgmtBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['domMgmt-bot'];
+    static backgroundTaskBotManifestName = SYSTEM_BOT_MANIFEST_NAMES['backgroundTask-bot'];
 
     static onboardingBot = SYSTEM_BOT_MANIFEST['onboarding-bot'];
     static imBot = SYSTEM_BOT_MANIFEST['im-bot'];
     static contactsBot = SYSTEM_BOT_MANIFEST['contacts-bot'];
     static channelsBot = SYSTEM_BOT_MANIFEST['channels-bot'];
     static domainMgmtBot = SYSTEM_BOT_MANIFEST['domMgmt-bot'];
+    static backgroundTaskBot = SYSTEM_BOT_MANIFEST['backgroundTask-bot'];
 }

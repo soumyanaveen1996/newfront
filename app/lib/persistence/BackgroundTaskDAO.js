@@ -18,7 +18,7 @@ const createBackgroundTaskTable = () => new Promise((resolve, reject) => {
 
 const updateBackgroundTaskLastRun = (key, botId, conversationId, lastRunTime) => new Promise((resolve, reject) => {
     const args = [
-        lastRunRime,
+        lastRunTime,
         key,
         botId,
         conversationId
@@ -125,6 +125,17 @@ const insertBackgroundTaskIfNotPresent = (key, botId, conversationId, timeInterv
         .catch(reject);
 });
 
+
+const deleteAllTasks = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(backgroundTaskSql.deleteAllTasks, args, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createBackgroundTaskTable: createBackgroundTaskTable,
     insertBackgroundTask: insertBackgroundTask,
@@ -132,5 +143,6 @@ export default {
     updateBackgroundTaskLastRun: updateBackgroundTaskLastRun,
     selectAllBackgroundTasks: selectAllBackgroundTasks,
     selectBackgroundTask: selectBackgroundTask,
-    insertBackgroundTaskIfNotPresent: insertBackgroundTaskIfNotPresent
+    insertBackgroundTaskIfNotPresent: insertBackgroundTaskIfNotPresent,
+    deleteAllTasks: deleteAllTasks,
 };
