@@ -65,13 +65,13 @@ const handle = (message, user) => new Promise((resolve, reject) => {
                     return  processMessage(message, botKey);
                 }
             } else {
-                console.log('Handling new Conversation');
+                console.log('Handling new Conversation : ', user);
                 return handleNewConversation(message, user);
             }
         })
         .then(resolve)
         .catch((err) => {
-            console.log('Error handling the message for IMBot message ', err, message);
+            console.log('Error in handling message for IMBot ', err, message);
             reject(err);
         });
 });
@@ -118,7 +118,7 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
                 isUnignoredContact = false
             } else {
                 isUnignoredContact = true;
-                return ConversationContext.createNewConversationContext(botContext);
+                return ConversationContext.createNewConversationContext(botContext, user, message.conversation);
             }
         })
         .then((conversationContext) => {
@@ -254,7 +254,7 @@ const getFakeBotKey = (botId, botKey) => {
 }
 
 const processMessage = async (message, botKey) => {
-    return BackgroundTaskProcessor.sendBackgroundMessage(message, message.bot, botKey);
+    return BackgroundTaskProcessor.sendBackgroundIMMessage(message, message.bot, botKey);
 }
 
 export default {

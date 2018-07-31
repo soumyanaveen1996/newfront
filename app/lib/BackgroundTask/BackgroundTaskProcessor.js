@@ -28,8 +28,9 @@ class BackgroundTaskBotScreen {
 
     }
 
-    persistMessage = (message) => {
-        return MessageHandler.persistOnDevice(this.getBotKey(), message);
+    persistMessage = async (message) => {
+        await MessageHandler.persistOnDevice(this.getBotKey(), message);
+        EventEmitter.emit(MessageEvents.messagePersisted);
     }
 
     tell = (message) => {
@@ -78,7 +79,7 @@ const processTask = async (task, user) => {
     const botScreen = new BackgroundTaskBotScreen(task.botId, task.conversationId, task.options);
     const botContext = new BotContext(botScreen, botManifest);
 
-    let conversationContext = await getConversationContext(task.botId, user, botContext, user);
+    let conversationContext = await getConversationContext(task.botId, user, botContext, botScreen);
 
     if (!conversationContext) {
         BackgroundTaskDAO.deleteBackgroundTask(task.key, task.botId, task.conversationId);
@@ -94,7 +95,7 @@ const processTask = async (task, user) => {
     }
 }
 
-const getConversationContext = async (botId, user, botContext, botScreen, createContext = false) => {
+const getConversationContext = async (botId, user, botContext, createContext = false) => {
     if (!createContext) {
         if (botId === SystemBot.imBot.botId) {
             return await Promise.resolve(ConversationContext.fetchIMConversationContext(botContext, user));
@@ -111,7 +112,35 @@ const getConversationContext = async (botId, user, botContext, botScreen, create
 const processMessage = async(message, botManifest, botContext, createContext = false) => {
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
+    const hello = botContext.getCapability('MessageTypeConstants');
+    console.log('lama : Hello ', hello);
     bot.next(message, {}, [], botContext);
+}
+
+const processAsyncMessage = async(message, botManifest, botContext, createContext = false) => {
+    const dceBot = dce.bot(botManifest, botContext);
+    const bot = await dceBot.Load(botContext);
+    bot.async(message, {}, [], botContext);
+}
+
+const sendBackgroundAsyncMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+    const user = await Auth.getUser();
+    if (!user) {
+        return;
+    }
+    const botManifest = await getBotManifest(botId);
+    if (!botManifest) {
+        return;
+    }
+
+    const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
+    const botContext = new BotContext(botScreen, botManifest);
+    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    if (!conversationContext) {
+        return;
+    }
+    await processAsyncMessage(message, botManifest, botContext);
+    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
 }
 
 const sendBackgroundMessage = async (message, botId, conversationId = undefined, createContext = false) => {
@@ -126,7 +155,24 @@ const sendBackgroundMessage = async (message, botId, conversationId = undefined,
 
     const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
     const botContext = new BotContext(botScreen, botManifest);
-    let conversationContext = await getConversationContext(botId, user, botContext, user, createContext);
+    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    if (!conversationContext) {
+        return;
+    }
+    console.log('Sending message : ', message);
+    await processMessage(message, botManifest, botContext);
+    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
+}
+
+
+const sendUnauthBackgroundMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+    const botManifest = await getBotManifest(botId);
+    if (!botManifest) {
+        return;
+    }
+    const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
+    const botContext = new BotContext(botScreen, botManifest);
+    let conversationContext = await getConversationContext(botId, undefined, botContext, createContext);
     if (!conversationContext) {
         return;
     }
@@ -134,7 +180,30 @@ const sendBackgroundMessage = async (message, botId, conversationId = undefined,
     EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
 }
 
+const sendBackgroundIMMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+    const user = await Auth.getUser();
+    if (!user) {
+        return;
+    }
+    const botManifest = await getBotManifest(botId);
+    if (!botManifest) {
+        return;
+    }
+
+    const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
+    const botContext = new BotContext(botScreen, botManifest);
+    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    if (!conversationContext) {
+        return;
+    }
+    await processAsyncMessage(message, botManifest, botContext);
+    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
+}
+
 export default {
     process: process,
-    sendBackgroundMessage: sendBackgroundMessage
+    sendBackgroundMessage: sendBackgroundMessage,
+    sendBackgroundIMMessage: sendBackgroundIMMessage,
+    sendBackgroundAsyncMessage: sendBackgroundAsyncMessage,
+    sendUnauthBackgroundMessage: sendUnauthBackgroundMessage
 };

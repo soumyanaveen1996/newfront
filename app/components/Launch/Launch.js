@@ -98,7 +98,7 @@ export default class Splash extends React.Component {
         let message = new Message();
         message.setCreatedBy({addedByBot: true});
         message.backgroundEventMessage('onboarding_bot_new', {});
-        BackgroundTaskProcessor.sendBackgroundMessage(message, 'onboarding-bot');
+        BackgroundTaskProcessor.sendUnauthBackgroundMessage(message, 'onboarding-bot', undefined, true);
     }
 
     configureNotifications = () => {

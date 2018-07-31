@@ -11,6 +11,7 @@ import { HeaderLeftIcon } from '../Header';
 import Config from './config';
 import appConfig from '../../config/config';
 import { AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, NetworkHandler } from '../../lib/network';
+import EventEmitter, { MessageEvents } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings } from '../../lib/capability';
 import Bot from '../../lib/bot';
@@ -89,6 +90,7 @@ export default class MainScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
+        EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
     }
 
     componentWillMount() {
@@ -141,6 +143,7 @@ export default class MainScreen extends React.Component {
             this.eventSubscription.remove();
         }
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+        EventEmitter.removeEventListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
     }
 
     openContacts() {

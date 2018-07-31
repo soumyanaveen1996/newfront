@@ -351,7 +351,7 @@ export function requestReadContactsPermission() {
 }
 
 export function newBotConversationId(userId, botId) {
-    if (SystemBot.isSystemBot(botId)) {
+    if (SystemBot.isSystemBot(botId) || !userId) {
         return UUID();
     } else {
         let ids = [userId, botId];

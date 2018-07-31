@@ -91,7 +91,7 @@ export default class MessageQueue {
     async handleMessage(message) {
         let user = await Auth.getUser();
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
-        console.log('Already processed : ', alreadyProcessed);
+        console.log('Already processed : ', user);
         if (alreadyProcessed) {
             return true;
         }
@@ -102,7 +102,7 @@ export default class MessageQueue {
         if (bot === 'im-bot' || bot === 'channels-bot') {
             await IMBotMessageHandler.handleMessage(message, user);
         } else {
-            await BackgroundTaskProcessor.sendBackgroundMessage(message, message.bot, message.conversation);
+            await BackgroundTaskProcessor.sendBackgroundAsyncMessage(message, message.bot, message.conversation);
         }
         return true;
     }

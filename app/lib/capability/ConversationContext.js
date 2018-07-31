@@ -138,7 +138,7 @@ export default class ConversationContext {
             resolve(context);
         } else {
             const context = {
-                conversationId: conversationId || newBotConversationId(user.userId, botContext.getBotId()),
+                conversationId: conversationId || newBotConversationId(undefined, botContext.getBotId()),
                 participantsInfo: [],
                 participants: [],
                 onChannels: [],
