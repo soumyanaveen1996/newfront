@@ -113,7 +113,7 @@ const processMessage = async(message, botManifest, botContext, createContext = f
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
     const hello = botContext.getCapability('MessageTypeConstants');
-    console.log('lama : Hello ', hello);
+    console.log('BotContext : Hello ', hello);
     bot.next(message, {}, [], botContext);
 }
 
