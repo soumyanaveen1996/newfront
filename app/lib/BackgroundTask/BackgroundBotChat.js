@@ -23,6 +23,10 @@ export default class BackgroundBotChat {
         this.conversationContext = null;
     }
 
+    getBotContext = () => {
+        return this.botContext;
+    }
+
     getBotKey = () => {
         if (this.botId === SystemBot.imBot.botId) {
             return this.conversationId;
@@ -52,7 +56,13 @@ export default class BackgroundBotChat {
 
     }
 
-    async init() {
+    next = (message, state, messages, botContext) => {
+        if (this.loadedBot) {
+            this.loadedBot.next(message, state, messages, botContext);
+        }
+    }
+
+    async initialize() {
         let self = this;
 
         // 0. load the bot
@@ -85,12 +95,14 @@ export default class BackgroundBotChat {
             this.messages = await this.loadMessages();
 
             self.botLoaded = true;
-            // 4. Call the init of the bot
-            this.loadedBot.init(this.botState, this.messages, this.botContext);
         } catch (e) {
             console.log('Error in loading the bot : ', e);
             throw new Error('Unable to load the bot');
         }
+    }
+
+    async init() {
+        this.loadedBot.init(this.botState, this.messages, this.botContext);
     }
 
     loadBot = async () => {

@@ -94,11 +94,15 @@ export default class Splash extends React.Component {
             });
     }
 
-    sendOnboardingBackgroundMessage = () => {
+    sendOnboardingBackgroundMessage = async () => {
         let message = new Message();
         message.setCreatedBy({addedByBot: true});
         message.backgroundEventMessage('onboarding_bot_new', {});
-        BackgroundTaskProcessor.sendUnauthBackgroundMessage(message, 'onboarding-bot', undefined, true);
+        //BackgroundTaskProcessor.sendUnauthBackgroundMessage(message, 'onboarding-bot', undefined, true);
+
+        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.onboardingBot });
+        await bgBotScreen.initialize();
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     }
 
     configureNotifications = () => {
@@ -141,8 +145,9 @@ export default class Splash extends React.Component {
         this.createBackgroundTask();
     }
 
-    createBackgroundTask = () => {
+    createBackgroundTask = async () => {
         var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
+        await bgBotScreen.initialize();
         bgBotScreen.init();
         /*
         let bgTaskOptions = {
