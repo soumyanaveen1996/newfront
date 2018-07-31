@@ -115,7 +115,11 @@ const selectMessageById = (messageId) => new Promise((resolve, reject) => {
             let messages = dbMessages.map((msg) => {
                 return messageFromDatabaseRow(msg);
             });
-            return resolve(messages[0]);
+            if (messages.length > 0) {
+                resolve(messages[0]);
+            } else {
+                resolve();
+            }
         }, function failure(tx, err) {
             return reject(err);
         });
@@ -126,9 +130,9 @@ const insertOrUpdateMessage = (message) => new Promise((resolve, reject) => {
     selectMessage(message)
         .then((dbMessage) => {
             if (dbMessage) {
-                resolve(updateMessage(message));
+                updateMessage(message).then(resolve).catch(reject);
             } else {
-                resolve(insertMessage(message));
+                insertMessage(message).then(resolve).catch(reject);
             }
         })
 });

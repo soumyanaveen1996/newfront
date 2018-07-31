@@ -30,7 +30,7 @@ class BackgroundTaskBotScreen {
 
     persistMessage = async (message) => {
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
-        EventEmitter.emit(MessageEvents.messagePersisted);
+        EventEmitter.emit(MessageEvents.messagePersisted, {message: message});
     }
 
     tell = (message) => {
