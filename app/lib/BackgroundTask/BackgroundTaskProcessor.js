@@ -90,7 +90,7 @@ const processTask = async (task, user) => {
         let message = new Message();
         message.setCreatedBy({addedByBot: true, messageDate: moment().valueOf()});
         message.backgroundEventMessage(task.key, task.options);
-        await processMessage(message, botManifest, botContext);
+        await processMessage(message, botManifest, botContext, true);
         await BackgroundTaskDAO.updateBackgroundTaskLastRun(task.key, task.botId, task.conversationId, moment().valueOf());
     }
 }
@@ -112,8 +112,6 @@ const getConversationContext = async (botId, user, botContext, createContext = f
 const processMessage = async(message, botManifest, botContext, createContext = false) => {
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
-    const hello = botContext.getCapability('MessageTypeConstants');
-    console.log('BotContext : Hello ', hello);
     bot.next(message, {}, [], botContext);
 }
 
