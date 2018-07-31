@@ -251,7 +251,7 @@ export default class ChatInputBar extends React.Component {
     showQuotaAlert = () => {
         Alert.alert(
             I18n.t('Quota'),
-            I18n.t('Quota_unvailable'),
+            I18n.t('Quota_unavailable'),
             [
                 {text: 'OK'},
             ],
@@ -263,7 +263,7 @@ export default class ChatInputBar extends React.Component {
     sendMessage = () => {
         const { botId } = this.props;
         if (botId) {
-            if (MessageCounter.getAvailableBotMessageQuota(botId) < 0) {
+            if (MessageCounter.getAvailableBotMessageQuota(botId) <= 0) {
                 this.showQuotaAlert();
                 return;
             }
