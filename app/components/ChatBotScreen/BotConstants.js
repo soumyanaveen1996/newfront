@@ -9,6 +9,7 @@ export const BOT_CONSTANTS = {
 export const BotInputBarCapabilities = {
     camera: 'camera',
     video: 'video',
+    file: 'file',
     photo_library: 'photo_library',
     bar_code_scanner: 'bar_code_scanner',
     add_contact: 'add_contact',

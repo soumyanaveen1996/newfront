@@ -50,6 +50,8 @@ import images from '../../images';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
 import { GoogleAnalytics, GoogleAnalyticsCategories } from '../../lib/GoogleAnalytics';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -980,6 +982,22 @@ export default class ChatBotScreen extends React.Component {
             this.sendImage(result.uri, result.base64);
         }
     }
+    async uploadFile(uri) {
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+
+        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
+    }
+
+    async pickFile() {
+        Keyboard.dismiss()
+        DocumentPicker.show({
+            filetype: [DocumentPickerUtil.allFiles()],
+        }, (error, res) => {
+            this.uploadFile()
+            console.log(res.uri, res.type, res.fileName, res.fileSize);
+        });
+    }
 
     onBarcodeRead(barCodeData) {
         let message = new Message();
@@ -1073,6 +1091,8 @@ export default class ChatBotScreen extends React.Component {
             this.resetConversation()
         } else if (key === BotInputBarCapabilities.pick_location) {
             this.pickLocation()
+        } else if (key === BotInputBarCapabilities.file) {
+            this.pickFile()
         }
     }
 
@@ -1157,6 +1177,7 @@ export default class ChatBotScreen extends React.Component {
         const moreOptions = [
             { key: BotInputBarCapabilities.camera, label: I18n.t('Chat_Input_Camera') },
             // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
+            { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
             { key: BotInputBarCapabilities.photo_library, label: I18n.t('Chat_Input_Photo_Library') },
             { key: BotInputBarCapabilities.bar_code_scanner, label: I18n.t('Chat_Input_BarCode') },
             { key: BotInputBarCapabilities.pick_location, label: I18n.t('Pick_Location') }
