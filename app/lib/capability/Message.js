@@ -413,7 +413,7 @@ export default class Message {
      * @return object
      */
     toBotDisplay = () => {
-        return { 'key': this.getMessageId(), 'message': this };
+        return { 'key': this.getMessageId(), 'message': this, showTime: false };
     };
 
     isRead = () => {

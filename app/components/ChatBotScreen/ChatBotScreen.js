@@ -287,6 +287,30 @@ export default class ChatBotScreen extends React.Component {
 
     addSessionStartMessages(messages) {
         let filteredMessages = _.filter(messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START);
+
+        if (filteredMessages.length > 0) {
+            for (var i = 0; i < filteredMessages.length; i++) {
+                var showTime = false;
+                if (i < filteredMessages.length - 1) {
+                    const currentMessage = filteredMessages[i].message;
+                    const nextMessage = filteredMessages[i + 1].message;
+                    const currentDate = moment(currentMessage.getMessageDate());
+                    const nextDate = moment(nextMessage.getMessageDate());
+                    console.log('Show Time : ', (nextDate.valueOf() - currentDate.valueOf()) / 1000);
+                    if (!((nextDate.valueOf() - currentDate.valueOf()) / 1000 < 60) ||
+                        nextMessage.isMessageByBot() !== currentMessage.isMessageByBot()) {
+                        showTime = true;
+                    }
+                } else if (i === filteredMessages.length - 1) {
+                    showTime = true;
+                }
+                console.log('Show Time : ', showTime);
+
+                filteredMessages[i].showTime = showTime;
+            }
+        }
+
+
         let resultMessages = [];
         if (filteredMessages.length > 0) {
             let currentDate = moment(filteredMessages[0].message.getMessageDate());
@@ -767,10 +791,11 @@ export default class ChatBotScreen extends React.Component {
                 onDoneBtnClick={this.onButtonDone.bind()}
                 onFormCTAClick={this.onFormDone.bind(this)}
                 onFormCancel={this.onFormCancel.bind(this)}
-                onFormOpen={this.onFormOpen.bind(this)} />;
+                onFormOpen={this.onFormOpen.bind(this)}
+                showTime={item.showTime}/>;
         } else {
             return (
-                <ChatMessage message={message} alignRight user={this.user} />
+                <ChatMessage showTime={item.showTime} message={message} alignRight user={this.user} />
             )
         }
     }

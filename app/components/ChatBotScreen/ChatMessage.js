@@ -345,7 +345,7 @@ export default class ChatMessage extends React.Component {
     }
 
     render() {
-        let { message } = this.props;
+        let { message, showTime } = this.props;
 
         if (message.isEmptyMessage()) {
             return null;
@@ -369,7 +369,7 @@ export default class ChatMessage extends React.Component {
                             {this.image()}
                             {renderedMessage}
                         </View>
-                        {this.renderMetadata()}
+                        {showTime ? this.renderMetadata() : null}
                     </View>
                 );
             } else {
