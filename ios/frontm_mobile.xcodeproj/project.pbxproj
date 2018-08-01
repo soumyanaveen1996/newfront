@@ -2135,7 +2135,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "0b555495-4752-484a-9165-740e34b394d3";
+				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2197,7 +2197,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "dfcfd0f9-51d7-431d-8c87-41506c62cdd2";
+				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
