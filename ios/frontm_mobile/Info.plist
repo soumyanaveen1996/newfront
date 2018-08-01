@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>FacebookAppID</key>
 	<string>150576769074284</string>
 	<key>FacebookDisplayName</key>
@@ -129,17 +129,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>NSUbiquitousContainers</key>
-  <dict>
-    <key>iCloud.com.frontm.frontm</key>
-    <dict>
-      <key>NSUbiquitousContainerIsDocumentScopePublic</key>
-      <true/>
-      <key>NSUbiquitousContainerSupportedFolderLevels</key>
-      <string>Any</string>
-      <key>NSUbiquitousContainerName</key>
-      <string>FrontM</string>
-    </dict>
-  </dict>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.frontm.frontm</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+			<key>NSUbiquitousContainerName</key>
+			<string>FrontM</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
