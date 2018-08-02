@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { scrollViewConfig }  from './config'
 export default StyleSheet.create({
-    tileContainer: {
-
-    },
     gridStyle :{
         width: scrollViewConfig.width * 0.5 - 1,
         height: scrollViewConfig.width * 0.5 - 1
