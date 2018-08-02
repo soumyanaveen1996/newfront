@@ -386,10 +386,7 @@ export default class Auth {
             return reject('Valid user object required');
         }
         DeviceStorage.save(USER_SESSION, user)
-            .then((u) => {
-                EventEmitter.emit(AuthEvents.userChanged, u);
-                resolve(u);
-            })
+            .then(resolve)
             .catch(reject);
     });
 

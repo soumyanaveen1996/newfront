@@ -155,12 +155,12 @@ export default class BotStoreScreen extends React.Component{
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
-            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
+            return (<DeveloperTab style={{flex: 1}} developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 1) {
-            return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
+            return (<CategoriesTab style={{flex: 1}} categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 0) {
             let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
-            return (<FeaturedTab featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
+            return (<FeaturedTab style={{flex: 1}} featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
         }
     }
 
@@ -199,7 +199,7 @@ export default class BotStoreScreen extends React.Component{
         }
 
         return (
-            <View>
+            <View style={{flex: 1}}>
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </View>

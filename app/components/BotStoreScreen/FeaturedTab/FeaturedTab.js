@@ -78,9 +78,9 @@ export default class FeaturedTabTab extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <FlatList
-                    style = {styles.flatList}
+                    style={styles.flatList}
                     keyExtractor = {(item, index) => item.botId}
                     data={this.state.botsData}
                     renderItem={this.renderGridItem.bind(this)}

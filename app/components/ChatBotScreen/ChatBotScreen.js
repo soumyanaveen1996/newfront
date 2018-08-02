@@ -296,7 +296,6 @@ export default class ChatBotScreen extends React.Component {
                     const nextMessage = filteredMessages[i + 1].message;
                     const currentDate = moment(currentMessage.getMessageDate());
                     const nextDate = moment(nextMessage.getMessageDate());
-                    console.log('Show Time : ', (nextDate.valueOf() - currentDate.valueOf()) / 1000);
                     if (!((nextDate.valueOf() - currentDate.valueOf()) / 1000 < 60) ||
                         nextMessage.isMessageByBot() !== currentMessage.isMessageByBot()) {
                         showTime = true;
@@ -304,12 +303,9 @@ export default class ChatBotScreen extends React.Component {
                 } else if (i === filteredMessages.length - 1) {
                     showTime = true;
                 }
-                console.log('Show Time : ', showTime);
-
                 filteredMessages[i].showTime = showTime;
             }
         }
-
 
         let resultMessages = [];
         if (filteredMessages.length > 0) {
