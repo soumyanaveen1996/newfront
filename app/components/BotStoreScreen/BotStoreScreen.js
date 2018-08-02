@@ -128,7 +128,6 @@ export default class BotStoreScreen extends React.Component{
     }
 
     onBack() {
-        console.log('lama : refresh');
         this.refresh();
     }
 

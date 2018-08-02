@@ -128,10 +128,10 @@ const insertBackgroundTaskIfNotPresent = (key, botId, conversationId, timeInterv
 
 const deleteAllTasks = () => new Promise((resolve, reject) => {
     db.transaction(transaction => {
-        transaction.executeSql(backgroundTaskSql.deleteAllTasks, args, function success() {
-            return resolve();
+        transaction.executeSql(backgroundTaskSql.deleteAllTasks, [], function success() {
+            resolve();
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
