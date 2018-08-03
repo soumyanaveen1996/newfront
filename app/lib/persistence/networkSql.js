@@ -88,6 +88,10 @@ const createV3NetworkQueueTable = `
     ALTER TABLE network_queue ADD COLUMN message_id text default '';
 `;
 
+const deleteAllRows = `
+    DELETE FROM network_queue;
+`
+
 const STATUS_CONSTANTS = {
     pending: 'pending',
     complete: 'complete',
@@ -104,5 +108,6 @@ export default {
     selectPendingEarliestNetworkRequest: selectPendingEarliestNetworkRequest,
     selectCompletedtNetworkRequestForKey: selectCompletedtNetworkRequestForKey,
     selectByMessageId: selectByMessageId,
+    deleteAllRows: deleteAllRows,
     STATUS_CONSTANTS: STATUS_CONSTANTS
 };

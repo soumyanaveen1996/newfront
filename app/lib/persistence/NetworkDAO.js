@@ -263,6 +263,16 @@ const migrateToV3NetworkQueue = () => new Promise((resolve, reject) => {
     });
 });
 
+const deleteAllRows = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(networkSql.deleteAllRows, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,
     insertNetworkRequest: insertNetworkRequest,
@@ -273,4 +283,5 @@ export default {
     selectByMessageId: selectByMessageId,
     migrateToV2NetworkQueue: migrateToV2NetworkQueue,
     migrateToV3NetworkQueue: migrateToV3NetworkQueue,
+    deleteAllRows: deleteAllRows
 };

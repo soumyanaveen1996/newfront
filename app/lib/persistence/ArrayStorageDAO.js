@@ -77,9 +77,20 @@ const deleteArrayValues = (key, value = null) => new Promise((resolve, reject) =
     });
 });
 
+const deleteAllRows = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(arrayStorageSql.deleteAllRows, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createArrayStorageTable: createArrayStorageTable,
     insertArrayValues: insertArrayValues,
     selectArrayValues: selectArrayValues,
-    deleteArrayValues: deleteArrayValues
+    deleteArrayValues: deleteArrayValues,
+    deleteAllRows: deleteAllRows,
 };

@@ -184,6 +184,10 @@ const addMessageCreatedAtIndex = `
     CREATE INDEX idx_bot_key_date ON messages (bot_key, message_date DESC);
 `;
 
+const deleteAllMessages = `
+    DELETE FROM messages;
+`
+
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -203,5 +207,6 @@ export default {
     updateMessageById: updateMessageById,
     addCompletedColumn: addCompletedColumn,
     selectMessageById: selectMessageById,
-    addMessageCreatedAtIndex: addMessageCreatedAtIndex
+    addMessageCreatedAtIndex: addMessageCreatedAtIndex,
+    deleteAllMessages: deleteAllMessages
 };

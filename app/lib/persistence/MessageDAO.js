@@ -413,6 +413,16 @@ const createMessageDateIndex = () => new Promise((resolve, reject) => {
     });
 });
 
+const deleteAllMessages = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.deleteAllMessages, [], function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(error);
+        });
+    });
+});
+
 
 export default {
     createMessageTable: createMessageTable,
@@ -433,5 +443,6 @@ export default {
     insertOrUpdateMessage: insertOrUpdateMessage,
     selectMessagesBeforeDate: selectMessagesBeforeDate,
     createMessageDateIndex: createMessageDateIndex,
-    selectMessageById: selectMessageById
+    selectMessageById: selectMessageById,
+    deleteAllMessages: deleteAllMessages
 };

@@ -5,10 +5,11 @@ import { User, DefaultUser, isDefaultUser } from '../../lib/user';
 import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
-import { ConversationDAO, BackgroundTaskDAO } from '../../lib/persistence';
+import { ConversationDAO, BackgroundTaskDAO, ChannelDAO, NetworkDAO, ArrayStorageDAO } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
+import { MessageHandler } from '../message';
 
 const USER_SESSION = 'userSession';
 
@@ -358,6 +359,18 @@ export default class Auth {
             })
             .then(() => {
                 return ConversationDAO.deleteAllConversations();
+            })
+            .then(() => {
+                return MessageHandler.deleteAllMessages();
+            })
+            .then(() => {
+                return ChannelDAO.deleteAllChannels();
+            })
+            .then(() => {
+                return NetworkDAO.deleteAllRows();
+            })
+            .then(() => {
+                return ArrayStorageDAO.deleteAllRows();
             })
             .then(() => {
                 return AsyncStorage.clear();
