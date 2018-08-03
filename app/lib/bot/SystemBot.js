@@ -160,10 +160,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'botId': 'BackgroundTaskBot',
         'botName': 'Background Task',
         'botUrl': 'botfarm/frontmai/backgroundTaskBot/1.0.0/backgroundTaskBot.js',
-        'category': [
-            'Support'
-        ],
-        'developer': 'FrontM',
+        'category': [],
         'dependencies': {
             'agentGuardService': {
                 'remote': true,
