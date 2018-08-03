@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification, BackgroundTaskQueue, Message } from '../../lib/capability';
+import { Auth, Notification, Message } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
@@ -18,11 +18,10 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 import { Telnet } from '../../lib/capability';
-import BackgroundTaskProcessor from '../../lib/BackgroundTask/BackgroundTaskProcessor';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 26; // Corresponding to 2.12.0 build 1. Update this number every time we update initial_bots
+const VERSION = 27; // Corresponding to 2.13.0 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -141,34 +140,14 @@ export default class Splash extends React.Component {
         return;
     }
 
-    userLoggedInHandler = () => {
-        this.createBackgroundTask();
-    }
-
-    createBackgroundTask = async () => {
-        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
-        await bgBotScreen.initialize();
-        bgBotScreen.init();
-        /*
-        let bgTaskOptions = {
-            key: 'MessageUsageUpdate',
-            botId: '',
-            timeInterval: 15 * 60000,
-            conversationId: conversation.conversationId,
-        };
-        BackgroundTaskQueue.enqueue(bgTaskOptions); */
-    }
-
     listenToEvents = async () => {
         // For now the user should not be taken back
-        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
-        EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 

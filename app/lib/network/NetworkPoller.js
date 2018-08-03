@@ -10,6 +10,8 @@ import BackgroundTask from 'react-native-background-task';
 import RNEventSource from 'react-native-event-source';
 import { MessageQueue } from '../message';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
+import { BackgroundBotChat } from '../BackgroundTask';
+import SystemBot from '../bot/SystemBot';
 
 
 const POLL_KEY = 'poll_key';
@@ -124,7 +126,14 @@ class NetworkPoller {
         }
     }
 
+    createBackgroundTasks = async () => {
+        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
+        await bgBotScreen.initialize();
+        bgBotScreen.init();
+    }
+
     userLoggedInHandler = async () => {
+        await this.createBackgroundTasks();
         console.log('Network Poller: User Logged in');
         console.log('Network Poller: Starting Polling on User Login');
         this.startPolling()
