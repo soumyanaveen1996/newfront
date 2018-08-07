@@ -1,7 +1,9 @@
-import { Platform, StyleSheet} from 'react-native';
+import { Platform, StyleSheet, Dimensions} from 'react-native';
 import { GlobalColors } from '../../config/styles'
 import Config from './config';
 import { ButtonStyle } from '../../lib/capability';
+
+var screen = Dimensions.get('window');
 
 const stylesheet = StyleSheet.create({
     safeArea: {
@@ -364,6 +366,13 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-between',
         paddingTop: 3,
         marginRight: 5,
+    },
+    callModal: {
+        justifyContent:'center',
+        borderRadius: Platform.OS === 'ios' ? 30 : 0,
+        shadowRadius: 10,
+        width: screen.width - 100,
+        height: 250
     }
 });
 

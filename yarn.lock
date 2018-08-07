@@ -5023,6 +5023,13 @@ react-native-maps@^0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.19.0.tgz#ce94fad1cf360e335cb4338a68c95f791e869074"
 
+react-native-modalbox@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-modalbox/-/react-native-modalbox-1.5.0.tgz#dd363027093b6a770a3455ecc0579760179819eb"
+  dependencies:
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
+
 react-native-permissions@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
@@ -5109,6 +5116,10 @@ react-native-tcp@^3.3.0:
   dependencies:
     prop-types "^15.6.1"
     react-native-view-transformer "https://github.com/dflourusso/react-native-view-transformer"
+
+react-native-twilio-programmable-voice@^3.20.1:
+  version "3.20.1"
+  resolved "https://registry.yarnpkg.com/react-native-twilio-programmable-voice/-/react-native-twilio-programmable-voice-3.20.1.tgz#9adee8d07ff96522061fe2a7abae985dcad23ee5"
 
 react-native-vector-icons@^4.4.2:
   version "4.4.3"

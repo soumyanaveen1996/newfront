@@ -98,14 +98,7 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     showCallMessage() {
-        Alert.alert(
-            null,
-            I18n.t('Call_Message'),
-            [
-                { text: I18n.t('Ok'), style: 'cancel'},
-            ],
-            { cancelable: false }
-        );
+        this.refs.callModal.showCallModal();
     }
 
     async getConversationContext(botContext, user) {

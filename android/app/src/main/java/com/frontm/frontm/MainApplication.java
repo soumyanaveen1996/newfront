@@ -8,6 +8,7 @@ import android.os.Build;
 
 import com.facebook.react.ReactApplication;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
 import com.peel.react.TcpSocketsModule;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -62,6 +63,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ReactNativeDocumentPicker(),
+            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
             new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),
