@@ -2,12 +2,15 @@ import { DeviceStorage } from '../capability';
 import _ from 'lodash';
 
 const COUNTER_STORAGE_KEY = 'MessageCounter';
+const MESSAGE_QUOTA_KEY = 'message_quota';
 
 class MessageCounter {
 
     init = async () => {
         this.messageCounts = { };
+        this.quotas = { };
         this.readCountsFromStorage();
+        this.readQuotaFromStorage();
     }
 
     getCounts = () => {
@@ -16,7 +19,6 @@ class MessageCounter {
 
     addCount = (botKey, count) => {
         this.messageCounts[botKey] = (this.messageCounts[botKey] || 0) + count;
-        console.log('Message Counts : ', this.messageCounts);
         this.saveCountsToStorage();
     }
 
@@ -34,10 +36,35 @@ class MessageCounter {
         _.forEach(_.keys(counts), (key) => {
             this.addCount(key, counts[key]);
         });
+        console.log('Message counts : ', this.messageCounts);
+    }
+
+    readQuotaFromStorage = async () => {
+        this.quotas = await DeviceStorage.get(MESSAGE_QUOTA_KEY) || {};
+        console.log('Message quota : ', this.messageCounts);
     }
 
     saveCountsToStorage = () => {
         DeviceStorage.update(COUNTER_STORAGE_KEY, this.getCounts());
+    }
+
+    setMessageQuota = (quotas, counts) => {
+        this.quotas = quotas;
+        this.subtractCounts(counts);
+        console.log('MessageCounter::Quotas : ', this.quotas);
+        console.log('MessageCounter::Counts : ', this.messageCounts);
+    }
+
+    getUsedMessageQuota = () => {
+        return this.getCounts();
+    }
+
+    getAvailableBotMessageQuota = (botId) => {
+        if (!this.quotas[botId]) {
+            return Number.MAX_SAFE_INTEGER || 100000000;
+        } else {
+            return this.quotas[botId] - (this.messageCounts[botId] || 0);
+        }
     }
 }
 

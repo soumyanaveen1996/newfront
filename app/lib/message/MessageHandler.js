@@ -32,7 +32,7 @@ export default class MessageHandler extends events.EventEmitter {
         }
         message.setBotKey(botKey);
 
-        return resolve(MessageDAO.insertOrUpdateMessage(message));
+        MessageDAO.insertOrUpdateMessage(message).then(resolve).catch(reject);
     });
 
     /**
@@ -237,5 +237,9 @@ export default class MessageHandler extends events.EventEmitter {
 
     moveMessages = (fromBotKey, toBotKey) => {
         return MessageDAO.moveMessagesToNewBotKey(fromBotKey, toBotKey);
+    }
+
+    deleteAllMessages = () => {
+        return MessageDAO.deleteAllMessages()
     }
 }

@@ -1,5 +1,6 @@
 import DeviceStorage from './DeviceStorage';
 import { UUID } from './Utils';
+import { newBotConversationId } from '../utils'
 import _ from 'lodash';
 
 /**
@@ -37,6 +38,22 @@ export default class ConversationContext {
             });
     });
 
+    static fetchConversationContext = (botContext, user, channel = false) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                return resolve(context);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
     static getIMConversationContext = (botContext, user, conversationId) => new Promise((resolve, reject) => {
         // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
         if (botContext.getConversationContext()) {
@@ -51,6 +68,25 @@ export default class ConversationContext {
                     return resolve(context);
                 }
                 return resolve(ConversationContext.createAndSaveNewConversationContext(botContext, user, conversationId))
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+
+    static fetchIMConversationContext = (botContext, user, conversationId) => new Promise((resolve, reject) => {
+        // Have we cached one in botContext? if so return it - for performance and repeat calls in bots:
+        if (botContext.getConversationContext()) {
+            return resolve(botContext.getConversationContext())
+        }
+
+        // Else get it from storage
+        ConversationContext._getBotConversationContext(botContext)
+            .then(function (context) {
+                if (context) {
+                    botContext.setConversationContext(context);
+                }
+                return resolve(context);
             })
             .catch((err) => {
                 reject(err);
@@ -90,9 +126,8 @@ export default class ConversationContext {
 
     static createNewConversationContext = (botContext, user, conversationId = undefined)  => new Promise((resolve, reject) => {
         if (user) {
-            console.log('User : ', user);
             const context = {
-                conversationId: conversationId || UUID(),
+                conversationId: conversationId || newBotConversationId(user.userId, botContext.getBotId()),
                 creatorInstanceId: user.userId,
                 creator: { userName: user.info.userName, uuid: user.userId },
                 participantsInfo: [{ userName: user.info.userName, userId: user.userId }],
@@ -103,7 +138,7 @@ export default class ConversationContext {
             resolve(context);
         } else {
             const context = {
-                conversationId: conversationId || UUID(),
+                conversationId: conversationId || newBotConversationId(undefined, botContext.getBotId()),
                 participantsInfo: [],
                 participants: [],
                 onChannels: [],

@@ -21,6 +21,7 @@
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
+		04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0454180E210C987800A658A2 /* libRNDocumentPicker.a */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
 		0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
@@ -332,6 +333,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNVersionCheck;
 		};
+		0454180D210C987800A658A2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E01DD9DB1D2311A600C39062;
+			remoteInfo = RNDocumentPicker;
+		};
 		0456339C205FF18C00F1B290 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */;
@@ -587,6 +595,7 @@
 		040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
 		040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
 		04143D6020B30D08001DDCE3 /* RNVersionCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVersionCheck.xcodeproj; path = "../node_modules/react-native-version-check/ios/RNVersionCheck.xcodeproj"; sourceTree = "<group>"; };
+		045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
@@ -675,6 +684,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				040848DB21201EBD006C45E4 /* libRNTwilioVoice.a in Frameworks */,
+				04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */,
 				B0D42C5020BD781600C8BE47 /* libRNDeviceInfo.a in Frameworks */,
 				B08A20AC20D8AA430059EA6C /* libRCTCameraRoll.a in Frameworks */,
 				04B52D3320C0AB6E00540193 /* libRNBackgroundFetch.a in Frameworks */,
@@ -971,6 +981,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		045417D3210C987800A658A2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0454180E210C987800A658A2 /* libRNDocumentPicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0456338D205FF18C00F1B290 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1084,6 +1102,7 @@
 			isa = PBXGroup;
 			children = (
 				040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */,
+				045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */,
 				B08A206320D8A6290059EA6C /* RCTCameraRoll.xcodeproj */,
 				B0D42C0A20BD77CC00C8BE47 /* RNDeviceInfo.xcodeproj */,
 				04CFE2F220C0993A009319B5 /* RNBackgroundFetch.xcodeproj */,
@@ -1292,6 +1311,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
 						};
 					};
 				};
@@ -1411,6 +1433,10 @@
 				{
 					ProductGroup = B0D42C0B20BD77CC00C8BE47 /* Products */;
 					ProjectRef = B0D42C0A20BD77CC00C8BE47 /* RNDeviceInfo.xcodeproj */;
+				},
+				{
+					ProductGroup = 045417D3210C987800A658A2 /* Products */;
+					ProjectRef = 045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5AA21FFCF9A50071B62D /* Products */;
@@ -1719,6 +1745,13 @@
 			fileType = archive.ar;
 			path = libRNVersionCheck.a;
 			remoteRef = 04143D9F20B30D08001DDCE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0454180E210C987800A658A2 /* libRNDocumentPicker.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNDocumentPicker.a;
+			remoteRef = 0454180D210C987800A658A2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0456339D205FF18C00F1B290 /* libRCTImageResizer.a */ = {
@@ -2135,7 +2168,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "0b555495-4752-484a-9165-740e34b394d3";
+				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2197,7 +2230,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
-				PROVISIONING_PROFILE = "dfcfd0f9-51d7-431d-8c87-41506c62cdd2";
+				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

@@ -1,11 +1,11 @@
 import React from 'react';
 import {View , Text ,Image, TouchableHighlight } from 'react-native';
-import EasyListView from 'react-native-easy-listview-gridview'
 import styles from './styles'
 import images from '../../../config/images'
 import {scrollViewConfig } from './config'
 import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage'
+import GridView from 'react-native-super-grid';
 
 export default class CategoriesTab extends React.Component {
     constructor(props){
@@ -30,40 +30,31 @@ export default class CategoriesTab extends React.Component {
         Actions.botList({data : selectedBots});
     }
 
-    renderGridItem = (index, rowData, sectionID, rowID, highlightRow) => {
+    renderGridItem = (rowData, index) => {
         return (
-            <View
+            <TouchableHighlight
                 key={index}
-                style={styles.tileContainer}>
-                <TouchableHighlight
-                    style={styles.gridStyle}
-                    onPress= {() => this.onTileCilcked(rowData.botIds)}>
-                    <View style={styles.tileContent}>
-                        {this.renderCategoryImage(rowData)}
-                        <Text style={styles.rowTitle}>
-                            {rowData.name}
-                        </Text>
-                    </View>
-                </TouchableHighlight>
-            </View>
+                style={styles.gridStyle}
+                onPress= {() => this.onTileCilcked(rowData.botIds)}>
+                <View style={styles.tileContent}>
+                    {this.renderCategoryImage(rowData)}
+                    <Text style={styles.rowTitle}>
+                        {rowData.name}
+                    </Text>
+                </View>
+            </TouchableHighlight>
         )
     }
 
     render() {
         return (
-            <View >
-                <EasyListView
-                    ref={component => { this.gridview = component }}
-                    column={scrollViewConfig.numberofColumn}
-                    renderItem={this.renderGridItem}
-                    contentContainerStyle = {styles.listViewContentContainerStyle}
-                    refreshHandler={this.onFetch}
-                    loadMoreHandler={this.onFetch}
-                    isDataFixed = {true}
-                    fixedData = {this.state.categoriesData}
-                />
-
-            </View>
+            <GridView
+                itemDimension={scrollViewConfig.width * 0.5 - 1}
+                spacing={5}
+                renderItem={this.renderGridItem}
+                style={styles.listViewContentContainerStyle}
+                items = {this.state.categoriesData}
+            />
         )
     }
 

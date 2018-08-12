@@ -21,13 +21,17 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_VIDEO: 'video',
     MESSAGE_TYPE_MAP: 'map',
     MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response',
+    MESSAGE_TYPE_SLIDER_CANCEL: 'slider_cancel',
     MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
     MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
     MESSAGE_TYPE_AUDIO: 'audio',
     MESSAGE_TYPE_CHART: 'chart',
     MESSAGE_TYPE_WAIT: 'wait',
     MESSAGE_TYPE_SESSION_START: 'session_start',
-    MESSAGE_TYPE_BARCODE: 'barcode'
+    MESSAGE_TYPE_BARCODE: 'barcode',
+    MESSAGE_TYPE_FORM_OPEN: 'form_open',
+    MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
+    MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
 };
 
 
@@ -37,6 +41,11 @@ export const IntToMessageTypeConstants = {
     40: MessageTypeConstants.MESSAGE_TYPE_VIDEO,
     60: MessageTypeConstants.MESSAGE_TYPE_AUDIO,
     140: MessageTypeConstants.MESSAGE_TYPE_HTML,
+    200: MessageTypeConstants.MESSAGE_TYPE_LIST,
+    210: MessageTypeConstants.MESSAGE_TYPE_SLIDER,
+    220: MessageTypeConstants.MESSAGE_TYPE_BUTTON,
+    230: MessageTypeConstants.MESSAGE_TYPE_FORM,
+    240: MessageTypeConstants.MESSAGE_TYPE_MAP
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants)
@@ -165,6 +174,21 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM;
     };
 
+    formOpenMessage = (formData) => {
+        this._msg = JSON.stringify(formData || []);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN;
+    }
+
+    formCancelMessage = (formData) => {
+        this._msg = JSON.stringify(formData || []);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL;
+    }
+
+    sliderCancelMessage = () => {
+        this._msg = JSON.stringify('');
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL;
+    }
+
     formResponseMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -202,6 +226,14 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_WAIT;
     }
 
+    backgroundEventMessage = (key, options) => {
+        this._msg = key;
+        options = options || {};
+        options.key = key;
+        this._options = JSON.stringify(options);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT;
+    }
+
     messageByBot = (option = true) => {
         this._addedByBot = option;
     };
@@ -218,6 +250,9 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
@@ -237,8 +272,12 @@ export default class Message {
         // TODO(amal): Have to handle other message types.
         if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE) {
             let items = this.getMessage();
-            let titles = _.map(items, (item) => item.title)
-            return I18n.t('Slider_Response', { lines: titles.join('\n') })
+            if (items.length > 0) {
+                let titles = _.map(items, (item) => item.title)
+                return I18n.t('Slider_Response', { lines: titles.join('\n') })
+            } else {
+                return null;
+            }
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
             let item = this.getMessage();
             return I18n.t('Slider_Response_Message', { lines: item.title })
@@ -258,6 +297,18 @@ export default class Message {
             return 'Audio'
         } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
             return 'Video'
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN) {
+            return ''
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL) {
+            return ''
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL) {
+            return '';
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
+            return '';
+        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON) {
+            let items = this.getMessage();
+            let titles = _.map(items, (item) => item.title)
+            return I18n.t('Button_Message', { lines: titles.join(' or ') })
         } else {
             return this.getMessage();
         }
@@ -290,7 +341,11 @@ export default class Message {
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST
             || this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
             try {
                 return JSON.parse(this._options);
             } catch (error) {
@@ -343,6 +398,7 @@ export default class Message {
             messageType: this.getMessageType(),
             options: this.getMessageOptions(),
             addedByBot: this.isMessageByBot(),
+            messageId: this.getMessageId(),
             uuid: this.getMessageId(),
             messageDate: this.getMessageDate(),
             botKey: this.getBotKey(),
@@ -357,7 +413,7 @@ export default class Message {
      * @return object
      */
     toBotDisplay = () => {
-        return { 'key': this.getMessageId(), 'message': this };
+        return { 'key': this.getMessageId(), 'message': this, showTime: false };
     };
 
     isRead = () => {
@@ -398,6 +454,21 @@ export default class Message {
             messageDate: parseInt(json.createdOn.$numberLong, 10)
         }
         return new Message(options);
+    }
+
+    isEmptyMessage() {
+        const emptyMessages = [
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
+            MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
+            MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
+            MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
+        ]
+        if (_.includes(emptyMessages, this.getMessageType())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

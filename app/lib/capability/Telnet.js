@@ -13,13 +13,22 @@ export default class Telnet {
     }
 
     connect(options) {
-        //this.setupClient();
         this.options = options;
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             this.client.connect(options);
-            this.client.on('ready', () => {
+            this.client.once('ready', () => {
                 resolve();
                 this.onReady();
+            });
+
+            this.client.once('connect_error', () => {
+                reject(new Error('Unable to connect to the server'));
+            });
+
+            // TODO(amal) : This has to be once and not on. But there are issues in android
+            // when using once.
+            this.client.on('error', () => {
+                reject(new Error('Unable to connect to the server'));
             });
         });
     }
@@ -56,6 +65,8 @@ export default class Telnet {
     }
 
     close() {
-        this.client.destroy();
+        if (this.client) {
+            this.client.destroy();
+        }
     }
 }

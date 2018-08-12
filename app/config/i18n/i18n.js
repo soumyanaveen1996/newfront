@@ -37,6 +37,7 @@ I18n.translations = {
         Image_Save_Failed: 'Saving the image to the Photo Album failed.',
         Image_Save_Success: 'Saved the image to the Photos Album',
         Slider_Response_Message: 'You selected : \n{{lines}}',
+        Button_Message: 'Select : \n{{lines}}',
         Slider_Response: '{{lines}}',
         SNR_Chart_title: 'Signal to Noise ratio',
         Conversations: 'Chats',
@@ -83,6 +84,7 @@ I18n.translations = {
         Call_Message: 'Available when you connect over Satellite broadband (L-Band, Ka-Band)',
         Password_not_empty: 'Please enter a password',
         Not_a_number: 'Please enter a number',
+        Not_an_email: 'Please enter a valid email',
         Field_mandatory: 'Field is mandatory',
         Channel_unsubscribed: 'Unsubscribed from the channel',
         Channel_unsubscribe_failed: 'Failed to unsubscribe from the channel',
@@ -97,7 +99,9 @@ I18n.translations = {
         Password_error: 'Please enter a valid password value',
         Retry_Password_error: 'Password and retry password should match',
         Enable_GPS_title: 'Enable GPS',
-        Enable_GPS_to_view_currentLocation: 'GPS is disabled in your device. Please enable GPS to view your current location.'
+        Enable_GPS_to_view_currentLocation: 'GPS is disabled in your device. Please enable GPS to view your current location.',
+        Quota: 'Quota',
+        Quota_unavailable: 'Currently, you don\'t have enough quota to send messages. Please ask your admin for more quota',
     },
 }
 

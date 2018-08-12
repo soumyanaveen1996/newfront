@@ -57,4 +57,5 @@ export function UUID() {
     return ShortUUID().fromUUID(uuid);
 }
 
+
 export default { Lodash, UUID, moment, createAuthHeader };

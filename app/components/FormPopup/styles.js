@@ -105,6 +105,20 @@ const Styles = StyleSheet.create({
             paddingHorizontal: 20,
         }
     }),
+    formInputTextAreaContainer: Platform.select({
+        'ios': {
+            marginVertical: 5,
+            height: 100,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        },
+        'android': {
+            marginVertical: 5,
+            height: 112,
+            justifyContent: 'center',
+            paddingHorizontal: 20,
+        }
+    }),
     formTwoLineInputContainer:Platform.select({
         'ios': {
             marginVertical: 5,
@@ -128,6 +142,8 @@ const Styles = StyleSheet.create({
         fontWeight: '600',
     },
     formErrorLabel: {
+        marginTop: 1,
+        marginLeft: 5,
         fontSize: 12,
         fontWeight: '300',
         color: GlobalColors.red,

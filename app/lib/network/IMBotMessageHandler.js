@@ -7,6 +7,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import ChannelDAO from '../persistence/ChannelDAO';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import { ContactsCache } from '../ContactsCache';
+import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 
 /**
  * Guarantees ordering - first in first out
@@ -34,6 +35,10 @@ const handleMessageQueue = (messageQ, user) => {
     eachSeries(messageQ, handle);
 }
 
+const handleMessage = (message, user) => {
+    return handle(message, user);
+}
+
 /**
  * Check if the message has to be handled - single message. Queue calls this
  * @param {object} message
@@ -57,16 +62,17 @@ const handle = (message, user) => new Promise((resolve, reject) => {
                 if (Conversation.isChannelConversation(conversation)) {
                     return checkForContactAndCompleteQueueResponse(botKey, message);
                 } else {
-                    return Queue.completeAsyncQueueResponse(botKey, message);
+                    return  processMessage(message, botKey);
                 }
             } else {
-                console.log('Handling new Conversation');
+                console.log('Handling new Conversation : ', user);
                 return handleNewConversation(message, user);
             }
         })
         .then(resolve)
         .catch((err) => {
-            console.log('Error handling the message for IMBot message ', err, message);
+            console.log('Error in handling message for IMBot ', err, message);
+            reject(err);
         });
 });
 
@@ -88,12 +94,12 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             }
             console.log('Fetched contact for user : ', contact);
             console.log('Processing message : ', message);
-            return Queue.completeAsyncQueueResponse(botKey, message);
+            return processMessage(message, botKey);
         })
         .then(resolve)
         .catch(() => {
             if (!fetchedContact) {
-                return Queue.completeAsyncQueueResponse(botKey, message).then(resolve);
+                return processMessage(message, botKey).then(resolve);
             }
         });
 });
@@ -112,7 +118,7 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
                 isUnignoredContact = false
             } else {
                 isUnignoredContact = true;
-                return ConversationContext.createNewConversationContext(botContext);
+                return ConversationContext.createNewConversationContext(botContext, user, message.conversation);
             }
         })
         .then((conversationContext) => {
@@ -133,7 +139,7 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
         })
         .then((conv) => {
             if (isUnignoredContact && conv) {
-                return Queue.completeAsyncQueueResponse(botKey, message);
+                return processMessage(message, botKey);
             }
         })
         .then(() => {
@@ -187,7 +193,7 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
 //  - then complete Queue call
 const handleNewConversation = (message, user) => new Promise((resolve, reject) => {
     const botKey = message.conversation;
-    let fakeBotContext = getFakeBotKey(botKey);
+    let fakeBotContext = getFakeBotKey(message.bot, botKey);
     let creator = null;
 
     getConversationData(botKey, message.createdBy, user)
@@ -234,16 +240,24 @@ const getConversationData = (conversationId, createdBy, user) => {
     return Network(options);
 };
 
-const getFakeBotKey = (botKey) => {
+const getFakeBotKey = (botId, botKey) => {
     return new BotContext({
         getBotKey: function () {
             return botKey;
+        },
+        getBotId: function () {
+            return botId;
         }
     }, {
         name: 'netWorkPoll'
     });
 }
 
+const processMessage = async (message, botKey) => {
+    return BackgroundTaskProcessor.sendBackgroundIMMessage(message, message.bot, botKey);
+}
+
 export default {
-    handleMessageQueue: handleMessageQueue
+    handleMessageQueue: handleMessageQueue,
+    handleMessage: handleMessage
 };

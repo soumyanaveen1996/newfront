@@ -3,6 +3,8 @@ import RNFS from 'react-native-fs';
 import config from '../../config/config.js';
 import AWS from 'aws-sdk';
 import { Utils, Promise, Auth } from '../capability';
+import axios from 'axios';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 class AssetFetcher {
 
@@ -161,9 +163,6 @@ class AssetFetcher {
                     'Content-Type': contentType
                 }
             };
-            console.log('PutData : ', putData.Bucket);
-            console.log('PutData : ', putData.Key);
-            console.log('PutData : ', s3Config);
 
             const putObjectPromise = s3.putObject(putData).promise();
             let a = await Promise.resolve(putObjectPromise);
@@ -175,6 +174,41 @@ class AssetFetcher {
             return s3UrlToFile;
         } catch (error) {
             console.log('Failed uploading for file to bucket: ', fileUri, bucketName, error);
+            throw error;
+        }
+    }
+
+    static async uploadFileToFileGateway(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user) {
+        try {
+            console.log(`AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`);
+            // return;
+            const uploadUrl = `${config.proxy.protocol}${config.proxy.host}${config.proxy.uploadFilePath}`
+            const filename = `${filenameWithoutExtension}.${extension}`;
+            const res = await RNFetchBlob.fetch('POST', uploadUrl, {
+                'accesskeyid': user.aws.accessKeyId,
+                'secretaccesskey': user.aws.secretAccessKey,
+                'sessiontoken': user.aws.sessionToken,
+                'Content-Type': 'multipart/form-data',
+            }, [
+                {name: 'folderName', data: bucketName },
+                {name: 'fileName', data: filename },
+                {name: 'file', filename: filename, data: base64Data, type: contentType },
+            ])
+
+            console.log({
+                'accesskeyid': user.aws.accessKeyId,
+                'secretaccesskey': user.aws.secretAccessKey,
+                'sessiontoken': user.aws.sessionToken,
+                'Content-Type': 'multipart/form-data',
+            });
+            console.log('AssetFetcher::');
+            console.log(res);
+
+            const s3UrlToFile = `${config.proxy.protocol}${config.proxy.host}${config.proxy.downloadFilePath}/${bucketName}/${filename}`;
+            console.log(`AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`);
+            return s3UrlToFile;
+        } catch (error) {
+            console.log('Failed uploading for file to gateway: ', fileUri, bucketName, error);
             throw error;
         }
     }

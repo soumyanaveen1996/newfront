@@ -14,6 +14,7 @@ import I18n from '../../config/i18n/i18n';
 import { GlobalColors } from '../../config/styles';
 import _ from 'lodash';
 import { CheckBox } from 'react-native-elements';
+import { isEmail } from '../../lib/utils';
 
 
 export const CHECKBOX_CONFIG = {
@@ -57,10 +58,11 @@ class FormTextInput extends React.Component {
         const { formData, editable } = this.props;
         return <TextInput
             numberOfLines={this.props.numberOfLines}
+            multiline={this.props.multiline}
             editable={editable}
             onChangeText={this.onChangeText.bind(this)}
             onBlur={this.props.onBlur}
-            style={[Styles.formTextField, {borderColor : this.state.borderColor}] }
+            style={[Styles.formTextField, {borderColor : this.state.borderColor}, this.props.style] }
             placeholder={formData.title}
             defaultValue={this.value}
             containerStyle={Styles.noBorder}
@@ -223,8 +225,8 @@ export default class FormPopup extends React.Component {
 
     onClose() {
         Keyboard.dismiss();
-        if (this.props.onClose) {
-            this.props.onClose();
+        if (this.props.onFormCancel && this.props.editable) {
+            this.props.onFormCancel();
         }
         Actions.pop();
     }
@@ -246,6 +248,7 @@ export default class FormPopup extends React.Component {
     isValid() {
         var formData = this.props.formData
         for (var i = 0; i < formData.length; i++) {
+            this.errorMessages[i] = undefined;
             if (formData[i].optional === false && _.trim(this.formValuesArray[i]) === '') {
                 this.errorMessages[i] = I18n.t('Field_mandatory');
                 return false;
@@ -260,7 +263,11 @@ export default class FormPopup extends React.Component {
                 this.errorMessages[i] = I18n.t('Password_not_empty')
                 return false;
             }
-            this.errorMessages[i] = undefined;
+
+            if (formData[i].type === 'email_field' && !isEmail(_.trim(this.formValuesArray[i]))) {
+                this.errorMessages[i] = I18n.t('Not_an_email');
+                return false;
+            }
         }
         return true;
     }
@@ -268,6 +275,7 @@ export default class FormPopup extends React.Component {
 
     CTAResponseOnPress() {
         if (!this.isValid() || !this.props.editable) {
+            this.setState({errorMessages : this.errorMessages});
             return;
         }
         var formData = this.props.formData
@@ -310,17 +318,17 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'text') {
                 buttons.push(
-                    <View style={Styles.formTitleContainer} key={i}>
+                    <View style={[Styles.formTitleContainer, {borderBottomWidth: 0}]} key={i}>
                         <Text style={Styles.formTitle}>{formData[i].text}</Text>
                     </View>
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {
-                this.formValuesArray[i] = formData[i].value;
+                this.formValuesArray[i] = this.formValuesArray[i] || formData[i].value;
                 let notEditable = !this.props.editable || formData[i].editable === false;
                 if (formData[i].retry === true && this.props.editable) {
                     buttons.push(<RetryFormTextInput editable={!notEditable} formData={formData[i]} key={i} keyIndex={i} onPasswordMatch={this.onPasswordMatch.bind(this, i)} />);
                 } else {
-                    this.formValuesArray[i] = formData[i].value;
+                    this.formValuesArray[i] = this.formValuesArray[i] || formData[i].value;
                     buttons.push(
                         <View style={Styles.formInputContainer} key={i}>
                             <View style={Styles.titleContainer}>
@@ -339,17 +347,20 @@ export default class FormPopup extends React.Component {
                     )
                 }
             } else if (formData[i].type === 'text_area') {
-                this.formValuesArray[i] = formData[i].value;
+                this.formValuesArray[i] = this.formValuesArray[i] || formData[i].value;
                 let notEditable = !this.props.editable || formData[i].editable === false;
                 buttons.push(
-                    <View style={Styles.formInputContainer} key={i}>
+                    <View style={Styles.formInputTextAreaContainer} key={i}>
                         <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                        <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
                         <FormTextInput
                             numberOfLines={3}
+                            multiline={true}
                             editable={!notEditable}
                             formData={formData[i]}
                             onChangeText={this.onChangeText.bind(this, i)}
                             containerStyle={Styles.noBorder}
+                            style={{height: 70}}
                         />
                     </View>
                 )
@@ -371,7 +382,7 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'checkbox') {
                 const data = formData[i];
-                this.formValuesArray[i] = true;
+                this.formValuesArray[i] = this.formValuesArray[i] || true;
                 buttons.push(
                     <FormCheckBox formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
                 )

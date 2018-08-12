@@ -52,7 +52,7 @@ export default class TelnetClient extends events.EventEmitter {
             this.socket.setTimeout(this.timeout, () => {
                 if (this.socket._connecting === true) {
                     /* if cannot connect, emit error and destroy */
-                    this.emit('error', 'Cannot connect')
+                    this.emit('connect_error', 'Cannot connect')
                     this.socket.destroy()
                 } else {
                     this.emit('timeout')
@@ -65,6 +65,11 @@ export default class TelnetClient extends events.EventEmitter {
                 if (this.initialLFCR === true) {
                     this.socket.write('\r\n')
                 }
+                this.state = 'standby'
+                this.inputBuffer = ''
+                this.loginPromptReceived = false
+
+                this.emit('ready', this.shellPrompt)
                 if (this.negotiationMandatory === false) {
                     resolve()
                 }
@@ -250,7 +255,9 @@ export default class TelnetClient extends events.EventEmitter {
 
     destroy() {
         return new Promise(resolve => {
-            this.socket.destroy()
+            if (this.socket && !this.socket._connecting) {
+                this.socket.destroy()
+            }
             resolve()
         })
     }

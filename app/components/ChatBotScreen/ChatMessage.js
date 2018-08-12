@@ -26,6 +26,8 @@ import Images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { DotIndicator } from 'react-native-indicators';
+import _ from 'lodash';
+import Hyperlink from 'react-native-hyperlink'
 
 export default class ChatMessage extends React.Component {
 
@@ -209,9 +211,18 @@ export default class ChatMessage extends React.Component {
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BARCODE
             || message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
 
+            if (!message.getDisplayMessage()) {
+                return null;
+            }
+
+            const textComponent = (
+                <Hyperlink linkDefault={ true } linkStyle={{textDecorationLine: 'underline'}}>
+                    <Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>
+                </Hyperlink>
+            )
             const component = (
                 <View style={chatMessageBubbleStyle(this.props.alignRight, this.props.imageSource)}>
-                    {this.wrapWithTitle(<Text style={chatMessageTextStyle(this.props.alignRight)}>{message.getDisplayMessage()}</Text>)}
+                    {this.wrapWithTitle(textComponent)}
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
@@ -285,9 +296,24 @@ export default class ChatMessage extends React.Component {
 
     openForm(message) {
         const formMessage = message.getMessage();
+        this.onFormOpen(formMessage);
         Actions.form({ formData : formMessage,
             onFormSubmit: this.onFormSubmit.bind(this),
+            onFormCancel: this.onFormCancel.bind(this),
             editable: !message.isCompleted()})
+    }
+
+    onFormOpen(formMessage) {
+        if (this.props.onFormOpen) {
+            this.props.onFormOpen(formMessage);
+        }
+    }
+
+    onFormCancel(items) {
+        let { message } = this.props;
+        if (this.props.onFormCancel) {
+            this.props.onFormCancel(message.getMessage());
+        }
     }
 
     onFormSubmit(items) {
@@ -313,11 +339,17 @@ export default class ChatMessage extends React.Component {
     }
 
     onLayout(event) {
-        this.props.onLayout(event, this.props.message);
+        if (this.props.onLayout) {
+            this.props.onLayout(event, this.props.message);
+        }
     }
 
     render() {
-        let { message } = this.props;
+        let { message, showTime } = this.props;
+
+        if (message.isEmptyMessage()) {
+            return null;
+        }
         if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
             return (
                 <View onLayout={this.onLayout.bind(this)} style={styles.sessionStartMessage}>
@@ -329,15 +361,20 @@ export default class ChatMessage extends React.Component {
                 </View>
             )
         } else if (message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE) {
-            return (
-                <View onLayout={this.onLayout.bind(this)}>
-                    <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
-                        {this.image()}
-                        {this.renderMessage()}
+            const renderedMessage = this.renderMessage();
+            if (renderedMessage) {
+                return (
+                    <View onLayout={this.onLayout.bind(this)}>
+                        <View style={[chatMessageContainerStyle(this.props.alignRight)]}>
+                            {this.image()}
+                            {renderedMessage}
+                        </View>
+                        {showTime ? this.renderMetadata() : null}
                     </View>
-                    {this.renderMetadata()}
-                </View>
-            );
+                );
+            } else {
+                return null;
+            }
         }
         return null;
     }

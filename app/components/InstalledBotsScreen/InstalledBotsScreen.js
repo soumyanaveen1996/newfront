@@ -148,7 +148,6 @@ export default class InstalledBotsScreen extends React.Component {
 
     async refreshInstalledBots() {
         const bots = await Bot.getInstalledBots();
-        console.log('Installed bots : ', bots);
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
         this.bots = _.reject(bots, (bot) => _.find(defaultBots, { botId: bot.botId }));
         if (this.queryText && this.queryText.length > 0) {

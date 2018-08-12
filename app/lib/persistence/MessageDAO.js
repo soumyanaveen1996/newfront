@@ -102,16 +102,24 @@ const migrateToV2Messages = () => new Promise((resolve, reject) => {
         })
 });
 
-const selectMessageById = (message) => new Promise((resolve, reject) => {
+const selectMessage = (message) => {
+    return selectMessageById(message.getMessageId());
+}
+
+const selectMessageById = (messageId) => new Promise((resolve, reject) => {
     db.transaction(transaction => {
-        transaction.executeSql(messageSql.selectMessageById, [message.getMessageId()], function success(tx, res) {
+        transaction.executeSql(messageSql.selectMessageById, [messageId], function success(tx, res) {
             res = res || {};
             res = Utils.addArrayToSqlResults(res);
             let dbMessages = res.rows ? (res.rows._array ? res.rows._array : []) : [];
             let messages = dbMessages.map((msg) => {
                 return messageFromDatabaseRow(msg);
             });
-            return resolve(messages[0]);
+            if (messages.length > 0) {
+                resolve(messages[0]);
+            } else {
+                resolve();
+            }
         }, function failure(tx, err) {
             return reject(err);
         });
@@ -119,12 +127,12 @@ const selectMessageById = (message) => new Promise((resolve, reject) => {
 });
 
 const insertOrUpdateMessage = (message) => new Promise((resolve, reject) => {
-    selectMessageById(message)
+    selectMessage(message)
         .then((dbMessage) => {
             if (dbMessage) {
-                resolve(updateMessage(message));
+                updateMessage(message).then(resolve).catch(reject);
             } else {
-                resolve(insertMessage(message));
+                insertMessage(message).then(resolve).catch(reject);
             }
         })
 });
@@ -146,9 +154,11 @@ const updateMessage = (message) => new Promise((resolve, reject) => {
 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.updateMessageById, args, function success(tx, res) {
-            return resolve();
+            selectMessageById(message.getMessageId())
+                .then(resolve)
+                .catch(reject);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -168,9 +178,11 @@ const insertMessage = (message) => new Promise((resolve, reject) => {
 
     db.transaction(transaction => {
         transaction.executeSql(messageSql.insertMessage, args, function success(tx, res) {
-            return resolve();
+            selectMessageById(message.getMessageId())
+                .then(resolve)
+                .catch(reject);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -179,9 +191,9 @@ const markBotMessageAsRead = (botkey, messageId) => new Promise((resolve, reject
     const args = [messageId, botkey];
     db.transaction(transaction => {
         transaction.executeSql(messageSql.markAsRead, args, function success() {
-            return resolve(true);
+            resolve(true);
         }, function failure(tx, err) {
-            return reject(err);
+            reject(err);
         });
     });
 });
@@ -396,8 +408,17 @@ const createMessageDateIndex = () => new Promise((resolve, reject) => {
         transaction.executeSql(messageSql.addMessageCreatedAtIndex, [], function success() {
             return resolve(true);
         }, function failure(tx, err) {
-            console.log('errror : ', err);
             return reject(new Error('Unable to add index on Message table'));
+        });
+    });
+});
+
+const deleteAllMessages = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(messageSql.deleteAllMessages, [], function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(error);
         });
     });
 });
@@ -421,5 +442,7 @@ export default {
     addCompletedColumn: addCompletedColumn,
     insertOrUpdateMessage: insertOrUpdateMessage,
     selectMessagesBeforeDate: selectMessagesBeforeDate,
-    createMessageDateIndex: createMessageDateIndex
+    createMessageDateIndex: createMessageDateIndex,
+    selectMessageById: selectMessageById,
+    deleteAllMessages: deleteAllMessages
 };

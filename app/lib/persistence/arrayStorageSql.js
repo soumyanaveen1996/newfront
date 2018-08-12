@@ -1,17 +1,17 @@
 const createArrayStorageTable = `
-    CREATE TABLE IF NOT EXISTS array_storage ( 
-        id integer primary key, 
-        key text NOT NULL, 
+    CREATE TABLE IF NOT EXISTS array_storage (
+        id integer primary key,
+        key text NOT NULL,
         value text NOT NULL
     );
 `;
 
 // Values will be added by DAO dynamically
 const insertArrayValues = `
-    INSERT INTO array_storage ( 
-        key, 
+    INSERT INTO array_storage (
+        key,
         value
-    ) 
+    )
 `;
 
 const selectArrayValues = `
@@ -33,10 +33,15 @@ const deleteArrayValue = `
     WHERE key = ? AND value = ?
 `;
 
+const deleteAllRows = `
+    DELETE FROM array_storage;
+`
+
 export default {
     createArrayStorageTable: createArrayStorageTable,
     insertArrayValues: insertArrayValues,
     selectArrayValues: selectArrayValues,
     deleteAllArrayValues: deleteAllArrayValues,
-    deleteArrayValue: deleteArrayValue
+    deleteArrayValue: deleteArrayValue,
+    deleteAllRows: deleteAllRows
 };

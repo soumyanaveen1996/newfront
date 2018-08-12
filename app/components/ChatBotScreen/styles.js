@@ -167,6 +167,7 @@ const stylesheet = StyleSheet.create({
     metadataRow: {
         flexDirection: 'row',
         alignItems: 'flex-end',
+        marginVertical: 3,
     },
     metadataRightRow: {
         flexDirection: 'row-reverse',

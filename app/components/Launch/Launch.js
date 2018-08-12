@@ -8,7 +8,7 @@ import styles from './styles';
 import { DefaultUser } from '../../lib/user';
 import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
-import { Auth, Notification } from '../../lib/capability';
+import { Auth, Notification, Message } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
 import { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
@@ -19,8 +19,10 @@ import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
 import { TwilioVoIP } from '../../lib/TwilioVoIP';
 import { Telnet } from '../../lib/capability';
+import SystemBot from '../../lib/bot/SystemBot';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 21; // Corresponding to 2.9.0 build 3. Update this number every time we update initial_bots
+const VERSION = 29; // Corresponding to 2.13.1 build 1. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -52,11 +54,10 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            //await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
-        // this.connectToTelnet();
         // Chain all setup stuff
         persist.runMigrations()
             .then(() => {
@@ -74,11 +75,9 @@ export default class Splash extends React.Component {
                 return Auth.isUserLoggedIn();
             })
             .then((isUserLoggedIn) => {
-                if (isUserLoggedIn) {
-                    this.showMainScreen();
-                } else {
-                    //this.showMainScreen();
-                    this.showOnboardingScreen();
+                this.showMainScreen();
+                if (!isUserLoggedIn) {
+                    this.sendOnboardingBackgroundMessage();
                 }
             })
             .then(() => {
@@ -94,6 +93,17 @@ export default class Splash extends React.Component {
                 // ignore
                 console.log(err);
             });
+    }
+
+    sendOnboardingBackgroundMessage = async () => {
+        let message = new Message();
+        message.setCreatedBy({addedByBot: true});
+        message.backgroundEventMessage('onboarding_bot_new', {});
+        //BackgroundTaskProcessor.sendUnauthBackgroundMessage(message, 'onboarding-bot', undefined, true);
+
+        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.onboardingBot });
+        await bgBotScreen.initialize();
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     }
 
     configureNotifications = () => {
@@ -117,16 +127,10 @@ export default class Splash extends React.Component {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
             }
         }
-        if (notification.foreground) {
-            NetworkHandler.readLambda();
-        }
+        NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
-    }
-
-    userLoggedInHandler = async () => {
-        this.showMainScreen();
     }
 
     userLoggedOutHandler = async () => {
@@ -138,20 +142,13 @@ export default class Splash extends React.Component {
         return;
     }
 
-    showOnboardingScreen = () => {
-        this.showMainScreen(true);
-        return;
-    }
-
     listenToEvents = async () => {
         // For now the user should not be taken back
-        // EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }
 
     removeListeners = () => {
-        // EventEmitter.removeListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.removeListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.removeListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }

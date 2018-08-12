@@ -18,7 +18,7 @@ const createNetworkRequestQueueTable = () => new Promise((resolve, reject) => {
     });
 });
 
-const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CONSTANTS.pending, result = '', createdAt = undefined, updatedAt = undefined) => new Promise((resolve, reject) => {
+const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CONSTANTS.pending, result = '', messageId = '', createdAt = undefined, updatedAt = undefined) => new Promise((resolve, reject) => {
     const createdAtMilliSeconds = moment(createdAt).valueOf();
     const updatedAtMilliSeconds = moment(updatedAt).valueOf();
     let requestFormatted = '';
@@ -30,7 +30,7 @@ const insertNetworkRequest = (key, requestOptions, status = networkSql.STATUS_CO
         return reject(error);
     }
 
-    const args = [key, status, requestFormatted, createdAtMilliSeconds, updatedAtMilliSeconds, resultFormatted];
+    const args = [key, status, requestFormatted, createdAtMilliSeconds, updatedAtMilliSeconds, resultFormatted, messageId];
     db.transaction(tx => {
         tx.executeSql(networkSql.insertNetworkOperation, args, function success(tx2, res) {
             return resolve(+res.insertId || 0);
@@ -87,7 +87,31 @@ const selectFirstPendingNetworkRequest = () => new Promise((resolve, reject) => 
                 let nw = {
                     id: dbResults[0].id,
                     key: dbResults[0].key,
-                    request: requestFormatted
+                    request: requestFormatted,
+                    messageId: dbResults[0].message_id,
+                };
+                return resolve(nw);
+            }
+        }, function failure(tx3, err) {
+            return reject(err);
+        });
+    });
+});
+
+const selectByMessageId = (messageId) => new Promise((resolve, reject) => {
+    const args = [messageId];
+    db.transaction(tx => {
+        tx.executeSql(networkSql.selectByMessageId, args, function success(tx2, res) {
+            res = Utils.addArrayToSqlResults(res);
+            let dbResults = res.rows ? (res.rows._array ? res.rows._array : []) : [];
+            console.log('Db results : ', dbResults);
+            if (dbResults.length === 0) {
+                return resolve();
+            } else {
+                let nw = {
+                    id: dbResults[0].id,
+                    key: dbResults[0].key,
+                    messageId: dbResults[0].message_id,
                 };
                 return resolve(nw);
             }
@@ -117,7 +141,8 @@ const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) =>
                 return {
                     id: dbResult.id,
                     key: dbResult.key,
-                    result: resultFormatted
+                    result: resultFormatted,
+                    messageId: dbResult.message_id,
                 };
             });
             return resolve(formattedResults);
@@ -143,6 +168,7 @@ const renameToTemp = () => new Promise((resolve, reject) => {
         transaction.executeSql('ALTER TABLE network_queue RENAME TO tmp_network_queue;', null, function success() {
             return resolve();
         }, function failure(tx, err) {
+            console.log('error : ', err);
             return reject(err);
         });
     });
@@ -211,7 +237,8 @@ const migrateToV2NetworkQueue = () => new Promise((resolve, reject) => {
                     operation.status,
                     operation.result,
                     operation.created_at_date,
-                    operation.updated_at_date
+                    operation.updated_at_date,
+                    ''
                 )
             }))
         })
@@ -226,6 +253,26 @@ const migrateToV2NetworkQueue = () => new Promise((resolve, reject) => {
         })
 });
 
+const migrateToV3NetworkQueue = () => new Promise((resolve, reject) => {
+    db.transaction(tx => {
+        tx.executeSql(networkSql.createV3NetworkQueueTable, null, function success() {
+            return resolve();
+        }, function failure(tx2, err) {
+            return reject(err);
+        });
+    });
+});
+
+const deleteAllRows = () => new Promise((resolve, reject) => {
+    db.transaction(transaction => {
+        transaction.executeSql(networkSql.deleteAllRows, null, function success() {
+            return resolve();
+        }, function failure(tx, err) {
+            return reject(err);
+        });
+    });
+});
+
 export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,
     insertNetworkRequest: insertNetworkRequest,
@@ -233,5 +280,8 @@ export default {
     deleteNetworkRequest: deleteNetworkRequest,
     selectFirstPendingNetworkRequest: selectFirstPendingNetworkRequest,
     selectCompletedNetworkRequests: selectCompletedNetworkRequests,
-    migrateToV2NetworkQueue: migrateToV2NetworkQueue
+    selectByMessageId: selectByMessageId,
+    migrateToV2NetworkQueue: migrateToV2NetworkQueue,
+    migrateToV3NetworkQueue: migrateToV3NetworkQueue,
+    deleteAllRows: deleteAllRows
 };

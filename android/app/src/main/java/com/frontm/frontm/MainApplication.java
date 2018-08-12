@@ -1,9 +1,14 @@
 package com.frontm.frontm;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.graphics.Color;
+import android.os.Build;
 
 import com.facebook.react.ReactApplication;
 import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.peel.react.TcpSocketsModule;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
@@ -56,9 +61,10 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-              new MainReactPackage(),
             //new TwilioVoicePackage(),
             new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
+            new MainReactPackage(),
+            new ReactNativeDocumentPicker(),
             new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),
@@ -70,7 +76,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativePushNotificationPackage(),
             new ActionSheetPackage(),
             new SvgPackage(),
-              new ReactVideoPackage(),
+            new ReactVideoPackage(),
             new VectorIconsPackage(),
             new RNSoundPackage(),
             new MapsPackage(),
@@ -104,5 +110,20 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     FacebookSdk.sdkInitialize(getApplicationContext());
     BackgroundTaskPackage.useContext(this);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+      NotificationManager notificationManager =
+              (NotificationManager) getSystemService(this.NOTIFICATION_SERVICE);
+
+      String channelId = "frontm";
+      CharSequence channelName = "FrontM";
+      NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+      notificationChannel.enableLights(true);
+      notificationChannel.setLightColor(Color.RED);
+      notificationChannel.enableVibration(true);
+      notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+      notificationManager.createNotificationChannel(notificationChannel);
+    }
   }
 }

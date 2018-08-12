@@ -9,6 +9,9 @@ import RNFS from 'react-native-fs';
 import {Platform, Dimensions, PermissionsAndroid} from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
+import SystemBot from '../bot/SystemBot.js';
+import { UUID } from '../capability/Utils.js';
+import sha1 from 'sha1';
 
 export function formattedDate(date) {
     if (!date) {
@@ -45,7 +48,7 @@ export function developerLogoUrl(developerName) {
 }
 
 export function userProfileUrl(userId) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.binaryS3Bucket}/profile-pics/${userId}.png`
+    return `${config.proxy.protocol}${config.proxy.host}${config.proxy.downloadFilePath}/profile-pics/${userId}.png`
 }
 
 export function sessionStartFormattedDate(date) {
@@ -84,12 +87,18 @@ export async function copyFileAsync(uri, directory) {
 export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     const host = config.bot.baseUrl;
 
+    // TODO(amal): Check This.
     // We dont care about urls that are not S3 based
-    if (s3Url.indexOf(host) < 0) {
-        return null;
-    }
+    //if (s3Url.indexOf(host) < 0) {
+    //    return null;
+    //}
     const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    const headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
+    var headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
+    headers = _.merge(headers, {
+        'accesskeyid': user.aws.accessKeyId,
+        'secretaccesskey': user.aws.secretAccessKey,
+        'sessiontoken': user.aws.sessionToken,
+    });
 
     console.log(`Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`);
 
@@ -341,6 +350,16 @@ export function requestReadContactsPermission() {
     }
 }
 
+export function newBotConversationId(userId, botId) {
+    if (SystemBot.isSystemBot(botId) || !userId) {
+        return UUID();
+    } else {
+        let ids = [userId, botId];
+        const text = _.join(_.sortBy(ids), '-');
+        return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+    }
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -359,5 +378,6 @@ export default {
     channelLogoUrl,
     padStartForAndroid,
     requestReadContactsPermission,
-    isClientSupportedByBot
+    isClientSupportedByBot,
+    newBotConversationId
 }

@@ -59,7 +59,7 @@ export default StyleSheet.create({
         flex: 1
     },
     flatList :{
-        height :'100%'
+        flex: 1,
     },
     toast: {
         position: 'absolute',

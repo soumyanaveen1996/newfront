@@ -5,10 +5,11 @@ import { User, DefaultUser, isDefaultUser } from '../../lib/user';
 import _ from 'lodash';
 import config from '../../config/config';
 import EventEmitter, { AuthEvents } from '../events';
-import { ConversationDAO } from '../../lib/persistence';
+import { ConversationDAO, BackgroundTaskDAO, ChannelDAO, NetworkDAO, ArrayStorageDAO } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
+import { MessageHandler } from '../message';
 
 const USER_SESSION = 'userSession';
 
@@ -198,6 +199,29 @@ export default class Auth {
             });
     });
 
+    static resendFrontmSignupCode = (userDetails) => new Promise((resolve, reject) => {
+        const options = {
+            'method': 'post',
+            'url': config.proxy.protocol + config.proxy.host + config.proxy.resendSignupCodePath,
+            'data': {
+                user: userDetails
+            }
+        }
+        console.log('resendFrontmSignupCode options : ', options);
+        Network(options)
+            .then((result) => {
+                console.log('result : ', result.data);
+                if (result.data.success === 'true' || result.data.success === true) {
+                    resolve();
+                } else {
+                    reject(new AuthError(98, result.data.message));
+                }
+            })
+            .catch((error) => {
+                reject(new AuthError(99, 'Error in Authenticating the user'));
+            });
+    });
+
     static resetPassword = (userDetails) => new Promise((resolve, reject) => {
         const options = {
             'method': 'post',
@@ -337,7 +361,22 @@ export default class Auth {
                 return ConversationDAO.deleteAllConversations();
             })
             .then(() => {
+                return MessageHandler.deleteAllMessages();
+            })
+            .then(() => {
+                return ChannelDAO.deleteAllChannels();
+            })
+            .then(() => {
+                return NetworkDAO.deleteAllRows();
+            })
+            .then(() => {
+                return ArrayStorageDAO.deleteAllRows();
+            })
+            .then(() => {
                 return AsyncStorage.clear();
+            })
+            .then(() => {
+                return BackgroundTaskDAO.deleteAllTasks();
             })
             .then(() => {
                 EventEmitter.emit(AuthEvents.userLoggedOut);
@@ -359,7 +398,9 @@ export default class Auth {
         if (!user) {
             return reject('Valid user object required');
         }
-        return resolve(DeviceStorage.save(USER_SESSION, user));
+        DeviceStorage.save(USER_SESSION, user)
+            .then(resolve)
+            .catch(reject);
     });
 
     /**
@@ -405,6 +446,29 @@ export default class Auth {
                     user.info.givenName = details.givenName || user.info.givenName;
                     user.info.name = user.info.givenName + ' ' + user.info.surname;
                     return resolve(Auth.saveUser(user));
+                } else {
+                    reject('No valid user session');
+                }
+            })
+    })
+
+    static setUserSetting = (key, value) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    user.info[key] = value
+                    return resolve(Auth.saveUser(user));
+                } else {
+                    reject('No valid user session');
+                }
+            })
+    })
+
+    static getUserSetting = (key, defaultValue = undefined) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    resolve(user.info[key] || defaultValue);
                 } else {
                     reject('No valid user session');
                 }

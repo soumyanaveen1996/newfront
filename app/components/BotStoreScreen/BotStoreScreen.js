@@ -13,6 +13,8 @@ import FeaturedTab from './FeaturedTab/FeaturedTab';
 import { HeaderBack } from '../Header';
 import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
+import EventEmitter, { AuthEvents } from '../../lib/events';
+import { Auth } from '../../lib/capability';
 
 export default class BotStoreScreen extends React.Component{
 
@@ -51,7 +53,7 @@ export default class BotStoreScreen extends React.Component{
     static renderHeader(state) {
         if (state.params.showSearchBar) {
             return ( <Header
-                innerContainerStyles={styles.headerinnerContainerForSearch}
+                innerContainerStyles={styles.headerInnerContainerForSearch}
                 outerContainerStyles={styles.headerOuterContainerStyles}
                 backgroundColor={GlobalColors.accent}>
 
@@ -87,11 +89,15 @@ export default class BotStoreScreen extends React.Component{
         };
     }
 
+    async updateCatalog() {
+        let catalog = await Bot.getCatalog();
+        this.setState({ showSearchBar: false, selectedIndex: this.state.selectedIndex || 0, catalogData: catalog, catalogLoaded: true, networkError: false });
+    }
+
     async componentDidMount() {
         try {
-            let catalog = await Bot.getCatalog();
-            this.setState({ showSearchBar: false, selectedIndex: 0, catalogData: catalog, catalogLoaded: true, networkError: false });
-
+            EventEmitter.addListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+            await this.updateCatalog();
             if (this.props.navigation) {
                 this.props.navigation.setParams({
                     handleSearchClick: this.handleSearchClick.bind(this),
@@ -104,6 +110,25 @@ export default class BotStoreScreen extends React.Component{
                 this.setState({ showSearchBar: false, selectedIndex: 0, catalogLoaded: false, networkError: true });
             }
         }
+    }
+
+    componentWillUnmount() {
+        EventEmitter.removeListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+    }
+
+    async refresh() {
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        if (this.state && isUserLoggedIn) {
+            this.updateCatalog();
+        }
+    }
+
+    async userChangedHandler() {
+        this.refresh();
+    }
+
+    onBack() {
+        this.refresh();
     }
 
     handleSearchClick() {
@@ -129,12 +154,12 @@ export default class BotStoreScreen extends React.Component{
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
-            return (<DeveloperTab developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots}/>)
+            return (<DeveloperTab style={{flex: 1}} developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 1) {
-            return (<CategoriesTab categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots}/>)
+            return (<CategoriesTab style={{flex: 1}} categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
         } if (this.state.selectedIndex === 0) {
             let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
-            return (<FeaturedTab featuredBots={featuredBots}/>)
+            return (<FeaturedTab style={{flex: 1}} featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
         }
     }
 
@@ -173,7 +198,7 @@ export default class BotStoreScreen extends React.Component{
         }
 
         return (
-            <View>
+            <View style={{flex: 1}}>
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </View>

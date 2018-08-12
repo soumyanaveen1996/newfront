@@ -9,6 +9,8 @@ import ActionSheet from '@yfuks/react-native-action-sheet';
 import Utils from '../../lib/utils';
 import Permissions from 'react-native-permissions';
 import AndroidOpenSettings from 'react-native-android-open-settings';
+import { MessageCounter } from '../../lib/MessageCounter';
+import I18n from '../../config/i18n/i18n';
 
 export default class ChatInputBar extends React.Component {
 
@@ -246,7 +248,27 @@ export default class ChatInputBar extends React.Component {
         }
     }
 
+    showQuotaAlert = () => {
+        Alert.alert(
+            I18n.t('Quota'),
+            I18n.t('Quota_unavailable'),
+            [
+                {text: 'OK'},
+            ],
+            { cancelable: true }
+        )
+        return;
+    }
+
     sendMessage = () => {
+        const { botId } = this.props;
+        if (botId) {
+            if (MessageCounter.getAvailableBotMessageQuota(botId) <= 0) {
+                this.showQuotaAlert();
+                return;
+            }
+        }
+
         const message = this.state.text && this.state.text.trim();
         if (!message || message === '') {
             return

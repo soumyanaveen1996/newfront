@@ -239,33 +239,6 @@ class Bot {
         }
     }
 
-    // TODO: This requires some review for android - around content types etc
-    async uploadFile(base64Data, fileUri, conversationId, messageId, type, user) {
-        let contentType = 'image/png';
-        let extension = '.png';
-        // TODO: this needs to be smarter - based on either container analysis or file extension
-        if (type === MessageTypeConstants.MESSAGE_TYPE_IMAGE) {
-            contentType = 'image/png';
-            extension = 'png';
-        } else if (type === MessageTypeConstants.MESSAGE_TYPE_AUDIO) {
-            contentType = 'audio/aac';
-            extension = 'aac';
-        } else if (type === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
-            contentType = 'video/mp4';
-            extension = 'mp4';
-        }
-        // Get binary data as uploading to S3 expects that today
-        // TODO: Can we switch this to RNFS to upload (with headers etc)
-        if (!base64Data) {
-            fileUri = decodeURI(fileUri);
-            base64Data = await AssetFetcher.getFile(fileUri, 'base64');
-        }
-
-        let res = await AssetFetcher.uploadToS3(base64Data, fileUri, conversationId, messageId, contentType, extension, user);
-        return res;
-    }
-
-
     get version() {
         return _.get(this.manifest, 'version', '0.0');
     }

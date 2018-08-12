@@ -80,7 +80,7 @@ const completeNetworkRequest = (id, key, result) => new Promise((resolve, reject
 });
 
 const completeAsyncQueueResponse = (key, result) => new Promise((resolve, reject) => {
-    return NetworkDAO.insertNetworkRequest(key, 'queueResult', STATUS_CONSTANTS.complete, result)
+    return NetworkDAO.insertNetworkRequest(key, 'queueResult', STATUS_CONSTANTS.complete, result, result.messageId)
         .then((id) => {
             let obj = {
                 id: id,

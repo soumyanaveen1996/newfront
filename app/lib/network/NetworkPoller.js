@@ -7,6 +7,11 @@ import EventEmitter, { AuthEvents, PollingStrategyEvents, SatelliteConnectionEve
 import { AppState, Platform } from 'react-native';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 import BackgroundTask from 'react-native-background-task';
+import RNEventSource from 'react-native-event-source';
+import { MessageQueue } from '../message';
+import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
+import { BackgroundBotChat } from '../BackgroundTask';
+import SystemBot from '../bot/SystemBot';
 
 
 const POLL_KEY = 'poll_key';
@@ -20,6 +25,7 @@ const NetworkPollerStates = {
 
 BackgroundTask.define(async () => {
     await NetworkHandler.poll();
+    await BackgroundTaskProcessor.process();
     BackgroundTask.finish()
 });
 
@@ -31,6 +37,7 @@ class NetworkPoller {
         await this.listenToEvents();
         console.log('Network Poller: Starting Polling On start');
         this.startPolling();
+        this.subscribeToServerEvents();
     }
 
     listenToEvents = async () => {
@@ -41,6 +48,33 @@ class NetworkPoller {
         EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
         EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
         AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
+    subscribeToServerEvents = async () => {
+
+        this.unsubscribeFromServerEvents();
+        let user = await Auth.getUser();
+        if (user.userId === 'default_user_uuid') {
+            return;
+        }
+
+        let url = `${config.proxy.protocol}${config.proxy.host}${config.proxy.ssePath}?user=${user.userId}`;
+        console.log('Event source url : ', url)
+
+        this.eventSource = new RNEventSource(url);
+        this.eventSource.addEventListener(user.userId, (event) => {
+            console.log('Event : ', event);
+            const data = JSON.parse(event.data);
+            if (data) {
+                MessageQueue.push(data);
+            }
+        });
+    }
+    unsubscribeFromServerEvents = () => {
+        if (this.eventSource) {
+            this.eventSource.removeAllListeners();
+        }
+        this.eventSource = null;
     }
 
     satelliteConnectionHandler = async () => {
@@ -79,10 +113,12 @@ class NetworkPoller {
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
                 NetworkHandler.readLambda();
+                this.subscribeToServerEvents();
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {
                 await this.stopPolling();
+                this.unsubscribeFromServerEvents();
                 this.appState = nextAppState;
                 console.log('Network Poller: Starting Polling on App State change');
                 this.startPolling();
@@ -90,15 +126,24 @@ class NetworkPoller {
         }
     }
 
+    createBackgroundTasks = async () => {
+        var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
+        await bgBotScreen.initialize();
+        bgBotScreen.init();
+    }
+
     userLoggedInHandler = async () => {
+        await this.createBackgroundTasks();
         console.log('Network Poller: User Logged in');
         console.log('Network Poller: Starting Polling on User Login');
         this.startPolling()
+        this.subscribeToServerEvents();
     }
 
     userLoggedOutHandler = async () => {
         console.log('Network Poller: User Loggedout');
         this.stopPolling();
+        this.unsubscribeFromServerEvents();
     }
 
     restartPolling = async () => {
@@ -151,12 +196,12 @@ class NetworkPoller {
     }
 
     startAppleGSMPolling = async () => {
-        NetworkHandler.poll();
+        this.process();
         if (this.appState === 'active') {
             console.log('App is active. So starting polling in GSM mode');
             BackgroundTimer.start();
             this.appleIntervalId = BackgroundTimer.setInterval(() => {
-                NetworkHandler.poll();
+                this.process();
             }, config.network.gsm.pollingInterval);
 
         } else if (this.appState === 'background') {
@@ -178,13 +223,13 @@ class NetworkPoller {
 
     startAppleSatellitePolling = async () => {
         console.log('Network Poller: Starting Satellite Polling');
-        NetworkHandler.poll();
+        this.process();
         if (this.appState === 'active') {
             console.log('App is active. So starting polling in satellite mode');
             this.appleIntervalId = BackgroundTimer.setInterval(() => {
                 if (this.keepAliveCount + 1 === 5) {
                     console.log('Network Poller: Satellite polling');
-                    NetworkHandler.poll();
+                    this.process();
                     this.keepAliveCount = 0;
                 } else {
                     console.log('Network Poller: Satellite keepAlive');
@@ -213,9 +258,9 @@ class NetworkPoller {
     startAndroidGSMPolling = async () => {
         const pollingInterval = this.appState === 'active' ? config.network.gsm.pollingInterval : config.network.gsm.backgroundPollingInterval;
         console.log('Network Poller: Starting GSM Polling with polling at ' + pollingInterval + ' millisecs');
-        NetworkHandler.poll();
+        this.process();
         const newIntervalId = BackgroundTimer.setInterval(() => {
-            NetworkHandler.poll();
+            this.process();
         }, pollingInterval);
 
         await DeviceStorage.save(POLL_KEY, newIntervalId);
@@ -234,9 +279,9 @@ class NetworkPoller {
 
     startAndroidSatellitePolling = async () => {
         console.log('Network Poller: Starting Satellite Polling');
-        NetworkHandler.poll();
+        this.process();
         const newIntervalId = BackgroundTimer.setInterval(() => {
-            NetworkHandler.poll();
+            this.process();
         }, config.network.satellite.pollingInterval)
 
         const keepAliveId = BackgroundTimer.setInterval(() => {
@@ -268,6 +313,11 @@ class NetworkPoller {
         this.currentPollingStrategy = NetworkPollerStates.satellite;
         const pollingFunction = Platform.OS === 'ios' ? this.startAppleSatellitePolling : this.startAndroidSatellitePolling
         pollingFunction();
+    }
+
+    process = () => {
+        NetworkHandler.poll();
+        BackgroundTaskProcessor.process();
     }
 }
 

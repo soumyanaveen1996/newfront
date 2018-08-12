@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image, TouchableHighlight } from 'react-native';
-import EasyListView from 'react-native-easy-listview-gridview'
+import GridView from 'react-native-super-grid';
 import styles from './styles'
 import images from '../../../config/images'
 import I18n from '../../../config/i18n/i18n';
@@ -8,7 +8,7 @@ import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage';
 import _ from 'lodash';
 import { SYSTEM_BOT_MANIFEST } from '../../../lib/bot/SystemBot';
-const NUMBER_COLUMNS = 2
+import { scrollViewConfig } from './config';
 
 export default class DeveloperTab extends React.Component {
     constructor(props){
@@ -26,12 +26,13 @@ export default class DeveloperTab extends React.Component {
         if (botData.name === I18n.t('Authenticate') || botData.name === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName) {
             botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>
         } else {
-            if (botData.logoSlug != null) {botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>}
-            else {botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>}
+            if (botData.logoSlug != null) {
+                botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>
+            } else {
+                botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>
+            }
         }
-        return (
-            botImage
-        )
+        return botImage;
     }
 
     onTileCilcked = (botsId)=>{
@@ -44,7 +45,7 @@ export default class DeveloperTab extends React.Component {
     }
 
     onDomainMgmtTileClicked() {
-        Actions.botChat({ bot: this.domainMgmtChatBot });
+        Actions.botChat({ bot: this.domainMgmtChatBot, onBack: this.props.onBack });
     }
 
     getDomainMgmtBotData() {
@@ -60,50 +61,36 @@ export default class DeveloperTab extends React.Component {
     }
 
 
-    renderGridItem = (index, rowData, sectionID, rowID, highlightRow) => {
+    renderGridItem = (rowData, index) => {
         let domainMgmtBot = false;
         if (rowData.name === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName) {
             domainMgmtBot = true;
         }
         return (
-            <View
+            <TouchableHighlight
                 key={index}
-                style={styles.tileContainer}>
-                <TouchableHighlight
-                    style={styles.gridStyle}
-                    onPress= {() => domainMgmtBot ? this.onDomainMgmtTileClicked() : this.onTileCilcked(rowData.botIds)}>
-                    <View style={styles.tileContent}>
-                        {this.renderBotImage(rowData)}
-                        <Text style={styles.rowTitle}>
-                            {rowData.name}
-                        </Text>
-                    </View>
-                </TouchableHighlight>
-            </View>
+                style={styles.gridStyle}
+                onPress= {() => domainMgmtBot ? this.onDomainMgmtTileClicked() : this.onTileCilcked(rowData.botIds)}>
+                <View style={styles.tileContent}>
+                    {this.renderBotImage(rowData)}
+                    <Text style={styles.rowTitle}>
+                        {rowData.name}
+                    </Text>
+                </View>
+            </TouchableHighlight>
         )
     }
 
     render() {
         return (
-            <View >
-                <EasyListView
-                    ref={component => {this.gridview = component} }
-                    column={NUMBER_COLUMNS}
-                    renderItem={this.renderGridItem}
-                    contentContainerStyle = {styles.listViewContentContainerStyle}
-                    refreshHandler={this.onFetch}
-                    loadMoreHandler={this.onFetch}
-                    isDataFixed = {true}
-                    fixedData = {this.state.developerData}
-                >
-                    <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>}
-                </EasyListView>
-            </View>
+            <GridView
+                itemDimension={scrollViewConfig.width * 0.5 - 1}
+                spacing={5}
+                renderItem={this.renderGridItem}
+                style={styles.listViewContentContainerStyle}
+                items = {this.state.developerData}
+            />
         )
-    }
-
-    _onFetch(pageNo, success, failure) {
-
     }
 }
 

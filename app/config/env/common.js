@@ -56,9 +56,9 @@ const config = {
     bot: {
         baseProtocol: 'http://',
         baseUrl: S3_HOST,
-        s3bucket: 'v1',
+        s3bucket: 'frontm-contentdelivery-mobilehub-1030065648',
         s3ServiceApi: 's3',
-        binaryS3Bucket: 'bin',
+        binaryS3Bucket: 'dev-frontm-conversations',
         catalogHost: CATALOG_HOST,
         catalogPath: '/v1/catalog',
         catalogServiceApi: 'execute-api'
@@ -74,7 +74,7 @@ const config = {
             keepAliveInterval: 120000,
         },
         gsm: {
-            pollingInterval: 30000,
+            pollingInterval: 180000,
             backgroundPollingInterval: 300000,
         },
         queueProtocol: 'http://',
@@ -98,11 +98,15 @@ const config = {
         conversationPath: '/conversation',
         signupPath: '/signup/frontm',
         signupconfirmPath: '/v2/signupconfirm/frontm',
+        resendSignupCodePath: '/v2/resendSignupCode/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
         deleteUserPath: '/v2/deleteUser',
         resetConfirmPath: '/v2/confirmReset/frontm',
-        resetSigninPath: '/v2/resetSignin/frontm'
+        resetSigninPath: '/v2/resetSignin/frontm',
+        ssePath: '/chatSSE',
+        uploadFilePath: '/v2/uploadfile',
+        downloadFilePath: '/v2/file'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'

@@ -58,11 +58,13 @@ export default class Resource {
             base64Data = await AssetFetcher.getFile(fileUri, 'base64');
         }
 
-        let res = await AssetFetcher.uploadFileToS3(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user);
-        if (res && clearCache && resourceType === ResourceTypes.Image) {
-            await ImageCache.imageCacheManager.removeFromCache(res);
+        let res = await AssetFetcher.uploadFileToFileGateway(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user);
+        if (res && resourceType === ResourceTypes.Image) {
+            if (clearCache) {
+                await ImageCache.imageCacheManager.removeFromCache(res);
+            }
+            await ImageCache.imageCacheManager.storeIncache(res, fileUri);
         }
-        await ImageCache.imageCacheManager.storeIncache(res, fileUri);
         return res;
     }
 }
