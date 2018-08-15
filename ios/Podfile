@@ -6,10 +6,8 @@ target 'frontm_mobile' do
   # use_frameworks!
 
   # Pods for frontm_mobile
-  pod 'FBSDKCoreKit'  
+  pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
-
-  pod 'TwilioVoice', '~> 2.0.0'
 
 end

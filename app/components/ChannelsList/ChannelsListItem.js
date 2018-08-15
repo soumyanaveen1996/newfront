@@ -45,7 +45,7 @@ export default class ChannelsListItem extends React.Component {
                 });
             })
             .catch((error) => {
-                this.props.onUnsubscribeFailed(this.props.channel);
+                this.props.onUnsubscribeFailed(this.props.channel, error.message);
                 this.setState({ status: ChannelsListItemStates.NONE });
             })
     }

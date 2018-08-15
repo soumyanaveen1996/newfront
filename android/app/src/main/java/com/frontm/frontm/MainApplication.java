@@ -61,10 +61,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-            //new TwilioVoicePackage(),
-            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
             new MainReactPackage(),
             new ReactNativeDocumentPicker(),
+            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
             new TcpSocketsModule(),
             new RNDeviceInfo(),
             new BackgroundTaskPackage(),

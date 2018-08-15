@@ -102,6 +102,7 @@ I18n.translations = {
         Enable_GPS_to_view_currentLocation: 'GPS is disabled in your device. Please enable GPS to view your current location.',
         Quota: 'Quota',
         Quota_unavailable: 'Currently, you don\'t have enough quota to send messages. Please ask your admin for more quota',
+        Channel_admin_unsubscribe: 'You are the only admin for this channel. Please make another user an admin and then unsubscribe'
     },
 }
 
