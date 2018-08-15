@@ -257,6 +257,7 @@ class FrontmAuth {
                     user: details
                 }
             }
+            console.log('Signin optons : ', signinOptions);
             Network(signinOptions)
                 .then((response) => {
                     const result = response.data;
@@ -311,6 +312,7 @@ class FrontmAuth {
                         });
                 })
                 .catch((error) => {
+                    console.log('Error in Authing server : ', err);
                     reject({ type: 'error', error: error.code });
                 });
         });

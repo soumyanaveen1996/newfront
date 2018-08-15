@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
+import { Twilio } from '../../lib/twilio';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
 import images from '../../images';
-import I18n from '../../config/i18n/i18n';
 import chatStyles from './styles';
+import TwilioVoice from 'react-native-twilio-programmable-voice';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -97,9 +98,22 @@ export default class PeopleChat extends ChatBotScreen {
         });
     }
 
-    showCallMessage() {
-        this.refs.callModal.showCallModal();
+
+    async showCallMessage() {
+        console.log('Other user id : ', ConversationContext.getOtherUserId(this.conversationContext, this.user))
+        try {
+            const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
+            const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
+            if (isVoIPEnabled && otherUserId) {
+                TwilioVoice.connect({To: `client:${otherUserId}`})
+            }
+        } catch (err) {
+            console.log('Unable to make the call : ', err);
+        }
+        //this.refs.callModal.showCallModal();
     }
+
+
 
     async getConversationContext(botContext, user) {
         try {

@@ -1,24 +1,24 @@
 import React from 'react';
-import Modal from "react-native-modalbox";
+import Modal from 'react-native-modalbox';
 import { Platform } from 'react-native';
 import chatStyles from './styles';
-import { createIconSet } from "react-native-vector-icons";
+import { createIconSet } from 'react-native-vector-icons';
 
 
 var glyphMap = {
-    speaker: "\uE600",
-    "mic-mute": "\uE601",
-    keypad: "\uE602",
-    "snd-mute": "\uE603",
-    phone: "\uE604",
-    hangup: "\uE605",
-    "flip-camera": "\uE606"
+    'speaker': '\uE600',
+    'mic-mute': '\uE601',
+    'keypad': '\uE602',
+    'snd-mute': '\uE603',
+    'phone': '\uE604',
+    'hangup': '\uE605',
+    'flip-camera': '\uE606'
 };
 
-if (Platform.OS == "ios") {
-    var Icon = createIconSet(glyphMap, "icomoon");
+if (Platform.OS == 'ios') {
+    Icon = createIconSet(glyphMap, 'icomoon');
 } else {
-    Icon = createIconSet(glyphMap, "Custom");
+    Icon = createIconSet(glyphMap, 'Custom');
 }
 
 const callStates = {
@@ -47,17 +47,15 @@ export default class CallModal extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <Modal
-                ref={"myModal"}
                 style={chatStyles.callModal}
-                position= 'center'
+                position="center"
                 backdrop={true}
                 onClosed={ () => {
                 }}
                 isVisible={this.state.modalVisible}
-            >
-            </Modal>
+            />
         );
     }
 }

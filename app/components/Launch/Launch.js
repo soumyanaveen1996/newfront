@@ -17,7 +17,7 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
-import { TwilioVoIP } from '../../lib/TwilioVoIP';
+import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
@@ -46,7 +46,6 @@ export default class Splash extends React.Component {
         await MessageCounter.init();
         GoogleAnalytics.init();
         GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED, GoogleAnalyticsEvents.APP_OPENED, null, 0, null);
-        TwilioVoIP.init();
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
@@ -78,6 +77,8 @@ export default class Splash extends React.Component {
                 this.showMainScreen();
                 if (!isUserLoggedIn) {
                     this.sendOnboardingBackgroundMessage();
+                } else {
+                    TwilioVoIP.init();
                 }
             })
             .then(() => {
@@ -133,6 +134,10 @@ export default class Splash extends React.Component {
         }
     }
 
+    userLoggedInHandler = async () => {
+        TwilioVoIP.init();
+    }
+
     userLoggedOutHandler = async () => {
         //this.showOnboardingScreen();
     }
@@ -144,6 +149,7 @@ export default class Splash extends React.Component {
 
     listenToEvents = async () => {
         // For now the user should not be taken back
+        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }

@@ -1239,8 +1239,7 @@ export default class ChatBotScreen extends React.Component {
 
     renderCallModal = () => {
         return(
-          <CallModal ref={'callModal'} parentFlatList={this} isVisible={false}>
-          </CallModal>
+            <CallModal ref={'callModal'} parentFlatList={this} isVisible={false} />
         );
     }
 

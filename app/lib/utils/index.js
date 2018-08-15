@@ -360,6 +360,20 @@ export function newBotConversationId(userId, botId) {
     }
 }
 
+export function objectToQueryString(obj) {
+    const results = [];
+    _.forOwn(obj, (value, key) => {
+        if (Array.isArray(value)) {
+            _.forOwn(value, (v) => {
+                results.push(`${key}=${encodeURI(v)}`);
+            });
+        } else {
+            results.push(`${key}=${encodeURI(value)}`);
+        }
+    });
+    return results.join('&');
+}
+
 export default {
     formattedDate,
     copyFileAsync,
@@ -379,5 +393,6 @@ export default {
     padStartForAndroid,
     requestReadContactsPermission,
     isClientSupportedByBot,
-    newBotConversationId
+    newBotConversationId,
+    objectToQueryString
 }
