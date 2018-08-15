@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import config from '../../config/config';
+import I18n from '../../config/i18n/i18n';
 import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
@@ -61,6 +62,7 @@ export default class Channel {
                 } else {
                     let channelInsertPromises = _.map(channels, (channel) => {
                         ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain, channel.channelId);
+
                     })
                     return Promise.all(channelInsertPromises);
                 }
@@ -70,7 +72,7 @@ export default class Channel {
     });
 
 
-    static create = (name, description, domain) => new Promise((resolve, reject) => {
+    static create = (channel) => new Promise((resolve, reject) => {
         Auth.getUser()
             .then((user) => {
                 if (user) {
@@ -85,9 +87,7 @@ export default class Channel {
                         data: {
                             action: 'Create',
                             botId: SystemBot.channelsBot.botId,
-                            channelName: name,
-                            description: description,
-                            userDomain: domain
+                            channel: channel
                         }
                     };
                     return Network(options);
@@ -101,7 +101,7 @@ export default class Channel {
                     // TODO(amal) : Hardcoded logo. remove later.
                     if (response.data && response.data.content && response.data.content.length > 0) {
                         const channelId = response.data.content[0];
-                        return ChannelDAO.insertIfNotPresent(name, description, 'ChannelsBotLogo.png', domain, channelId);
+                        return ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, 'ChannelsBotLogo.png', channel.userDomain, channelId);
                     } else {
                         reject(new ChannelError(99));
                     }
@@ -169,15 +169,23 @@ export default class Channel {
                 }
             })
             .then((response) => {
+                console.log('Channel unsubscribe : ', response);
                 let err = _.get(response, 'data.error');
+                let code = _.get(response, 'data.statusCode');
                 if (err !== '0' && err !== 0) {
-                    reject(new ChannelError(+err));
+                    if (code === 422) {
+                        reject(new ChannelError(+err, I18n.t('Channel_admin_unsubscribe')));
+                    } else {
+                        reject(new ChannelError(+err));
+                    }
+
                 } else {
                     return ChannelDAO.deleteChannel(channel.id);
                 }
             })
             .then(resolve)
             .catch(() => {
+                console.log('')
                 throw new ChannelError(99);
             });
     });

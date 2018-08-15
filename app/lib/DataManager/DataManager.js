@@ -9,6 +9,7 @@ class DataManager {
         this.contactsFetched = false;
         this.channelsFetched = false;
         await this.listenToEvents();
+        this.listenToAppEvents();
     }
 
     listenToAppEvents = async () => {
