@@ -1,6 +1,8 @@
 
 import EventEmitter, { AuthEvents } from '../events';
 import { Contact, Channel } from '../capability';
+import { AppState } from 'react-native';
+import Auth from '../capability/Auth';
 
 class DataManager {
     init = async () => {
@@ -9,11 +11,23 @@ class DataManager {
         await this.listenToEvents();
     }
 
+    listenToAppEvents = async () => {
+        AppState.addEventListener('change', this.handleAppStateChange);
+    }
+
     listenToEvents = async () => {
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
     }
 
+    handleAppStateChange = async (nextAppState) => {
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        if (isUserLoggedIn) {
+            if (nextAppState === 'active') {
+                this.refreshChannels();
+            }
+        }
+    }
     checkDataFetched = () => {
         console.log('Data fetched : ', this.channelsFetched, this.contactsFetched);
         if (this.channelsFetched && this.contactsFetched) {

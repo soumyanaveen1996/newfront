@@ -179,7 +179,7 @@ class FormCheckBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: props.formData.value
+            value: props.value
         }
     }
 
@@ -382,9 +382,12 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'checkbox') {
                 const data = formData[i];
-                this.formValuesArray[i] = this.formValuesArray[i] || true;
+                if (this.formValuesArray[i] === undefined) {
+                    const value = !!formData[i].value
+                    this.formValuesArray[i] = value;
+                }
                 buttons.push(
-                    <FormCheckBox formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
+                    <FormCheckBox value={this.formValuesArray[i]} formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
                 )
             }
         }

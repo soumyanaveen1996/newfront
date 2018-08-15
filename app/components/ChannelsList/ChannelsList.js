@@ -56,8 +56,12 @@ export default class ChannelsList extends React.Component {
         this.refs.toast.show(I18n.t('Channel_unsubscribed'), DURATION.LENGTH_SHORT);
     }
 
-    onChannelUnsubscribeFailed = (channel) => {
-        this.refs.toast.show(I18n.t('Channel_unsubscribe_failed'), DURATION.LENGTH_SHORT);
+    onChannelUnsubscribeFailed = (channel, message) => {
+        if (message) {
+            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+        } else {
+            this.refs.toast.show(I18n.t('Channel_unsubscribe_failed'), DURATION.LENGTH_LONG);
+        }
     }
 
 

@@ -17,7 +17,6 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
-import { TwilioVoIP } from '../../lib/TwilioVoIP';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
@@ -46,7 +45,6 @@ export default class Splash extends React.Component {
         await MessageCounter.init();
         GoogleAnalytics.init();
         GoogleAnalytics.logEvents(GoogleAnalyticsCategories.APP_LAUNCHED, GoogleAnalyticsEvents.APP_OPENED, null, 0, null);
-        TwilioVoIP.init();
 
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
@@ -54,7 +52,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            //await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 

@@ -5,13 +5,18 @@ import SystemBot from '../bot/SystemBot';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 
 export class ChannelError extends Error {
-    constructor(code) {
+    constructor(code, message) {
         super();
         this.code = code;
+        this.message = message;
     }
 
     get code() {
         return this.code;
+    }
+
+    get message() {
+        return this.message;
     }
 }
 
@@ -172,7 +177,9 @@ export default class Channel {
                 }
             })
             .then(resolve)
-            .catch(reject);
+            .catch(() => {
+                throw new ChannelError(99);
+            });
     });
 
     static clearChannels = ChannelDAO.deleteAllChannels
