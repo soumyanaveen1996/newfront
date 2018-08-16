@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
@@ -12,6 +12,7 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 import chatStyles from './styles';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
+import I18n from '../../config/i18n/i18n';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -98,14 +99,28 @@ export default class PeopleChat extends ChatBotScreen {
         });
     }
 
+    showVoipEnableAlert() {
+        Alert.alert(
+            'Alert!!',
+            'Other user has not installed VoIP enable FrontM app yet',
+            [
+                {text: 'OK'},
+            ],
+            { cancelable: false }
+        )
+    }
+
 
     async showCallMessage() {
         console.log('Other user id : ', ConversationContext.getOtherUserId(this.conversationContext, this.user))
         try {
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
             const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
+            console.log('is voip enabled : ', isVoIPEnabled);
             if (isVoIPEnabled && otherUserId) {
                 TwilioVoice.connect({To: `client:${otherUserId}`})
+            } else {
+                this.showVoipEnableAlert();
             }
         } catch (err) {
             console.log('Unable to make the call : ', err);

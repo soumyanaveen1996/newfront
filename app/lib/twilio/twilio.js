@@ -60,20 +60,17 @@ const enableVoIP = (user) => {
 const isVoIPEnabled = (otherUserId, user) => {
     let options = {
         'method': 'GET',
-        'url': `${config.network.queueProtocol}${config.proxy.host}${config.proxy.getVoIPStatusPath}`,
+        'url': `${config.network.queueProtocol}${config.proxy.host}${config.proxy.getVoIPStatusPath}?userId=${otherUserId}`,
         'headers': {
             accessKeyId: user.aws.accessKeyId,
             secretAccessKey: user.aws.secretAccessKey,
             sessionToken: user.aws.sessionToken
-        },
-        'params': {
-            userId: otherUserId
         }
     };
     return Network(options)
         .then((response) => {
             if (response.data && response.data.voipEnabled) {
-                return response.data.voidEnabled;
+                return response.data.voipEnabled;
             } else {
                 return false;
             }
