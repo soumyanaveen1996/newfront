@@ -206,7 +206,7 @@ export default class MainScreen extends React.Component {
                     {/* <FloatingButton.Item title={I18n.t('Favorites')} image={images.icn_fav} onPress={() => console.log('Favorites tapped!')} /> */}
                     <FloatingButton.Item title={I18n.t('Contacts')} image={images.icn_contact} onPress={this.openContacts.bind(this)} />
                     <FloatingButton.Item title={I18n.t('Channels')} image={images.icn_channel} onPress={this.openChannels.bind(this)} />
-                    <FloatingButton.Item title={I18n.t('ChatBots')} image={images.icn_chatbot} onPress={this.openBotStore.bind(this)} />
+                    <FloatingButton.Item title={I18n.t('Discover')} image={images.icn_chatbot} onPress={this.openBotStore.bind(this)} />
                     <FloatingButton.Item title={I18n.t('Configure')} image={images.icn_configure} onPress={this.openConfigure.bind(this)} />
                 </FloatingButton>
             );
