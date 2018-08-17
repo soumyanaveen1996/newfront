@@ -383,7 +383,7 @@ export default class FormPopup extends React.Component {
             } else if (formData[i].type === 'checkbox') {
                 const data = formData[i];
                 if (this.formValuesArray[i] === undefined) {
-                    const value = !!formData[i].value
+                    const value = formData[i].value === true || formData[i].value === 'true' ? true : false
                     this.formValuesArray[i] = value;
                 }
                 buttons.push(
