@@ -30,7 +30,6 @@ export default class Phone extends React.Component {
     componentDidMount() {
         console.log('FrontM VoIP : adding listeners. ', TwilioEvents.connectionDidDisconnect)
         this.connectionDidDisconnectListener = EventEmitter.addListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler.bind(this));
-        this.connectionDidDisconnectListener = EventEmitter.addListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler.bind(this));
     }
 
     componentWillUnmount() {
