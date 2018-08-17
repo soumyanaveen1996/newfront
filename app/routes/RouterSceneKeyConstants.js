@@ -25,7 +25,8 @@ const ROUTER_SCENE_KEYS = {
     'locationPicker': 'locationPicker',
     'onboarding': 'onboarding',
     'videoRecorder': 'videoRecorder',
-    'channelsList': 'channelsList'
+    'channelsList': 'channelsList',
+    'phone': 'phone'
 };
 
 export default ROUTER_SCENE_KEYS;

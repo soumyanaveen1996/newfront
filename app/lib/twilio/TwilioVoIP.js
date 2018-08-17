@@ -3,17 +3,20 @@ import { Platform } from 'react-native';
 import { Auth } from '../capability';
 import Twilio from './twilio';
 import Permissions from 'react-native-permissions';
+import EventEmitter, { TwilioEvents } from '../../lib/events';
+import { Actions } from 'react-native-router-flux';
+import { PhoneState } from '../../components/Phone'
 
-const TwilioEvents = {
-    deviceReady: 'deviceReady',
-    deviceNotReady: 'deviceNotReady',
-    connectionDidDisconnect: 'connectionDidDisconnect',
-    callRejected: 'callRejected',
-    deviceDidReceiveIncoming: 'deviceDidReceiveIncoming',
-    proximity: 'proximity',
-    wiredHeadset: 'wiredHeadset'
-};
-
+/*
+const _eventHandlers = {
+    deviceReady: new Map(),
+    deviceNotReady: new Map(),
+    deviceDidReceiveIncoming: new Map(),
+    connectionDidConnect: new Map(),
+    connectionDidDisconnect: new Map(),
+    //iOS specific
+    callRejected: new Map(),
+}*/
 
 export default class TwilioVoIP {
     init = async () => {
@@ -71,6 +74,7 @@ export default class TwilioVoIP {
     }
 
     listenToEvents = async () => {
+        console.log('Twilio Events : ', TwilioEvents, PhoneState);
         TwilioVoice.addEventListener(TwilioEvents.deviceReady, this.deviceReadyHandler);
         TwilioVoice.addEventListener(TwilioEvents.deviceNotReady, this.deviceNotReadyHandler);
         TwilioVoice.addEventListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler);
@@ -80,16 +84,21 @@ export default class TwilioVoIP {
             TwilioVoice.addEventListener(TwilioEvents.callRejected, this.callRejectedHandler);
         } else if (Platform.OS === 'android') {
             TwilioVoice.addEventListener(TwilioEvents.deviceDidReceiveIncoming, this.deviceDidReceiveIncomingHandler);
-            TwilioVoice.addEventListener(TwilioEvents.proximity, this.proximityHandler);
-            TwilioVoice.addEventListener(TwilioEvents.wiredHeadset, this.wiredHeadsetHandler);
+            //TwilioVoice.addEventListener(TwilioEvents.proximity, this.proximityHandler);
+            //TwilioVoice.addEventListener(TwilioEvents.wiredHeadset, this.wiredHeadsetHandler);
         }
 
         TwilioVoice.getActiveCall().then(incomingCall => {
             console.log('FrontM VoIP : getActiveCall : ', incomingCall);
             if (incomingCall){
-                _deviceDidReceiveIncoming(incomingCall);
+                this.handleIncomingCall(incomingCall);
             }
         })
+    }
+
+    handleIncomingCall = (data) => {
+        console.log('FrontM VoIP : in handle incoming call');
+        Actions.phone({state: PhoneState.incomingcall, data: data})
     }
 
     deviceReadyHandler = async (data) => {
@@ -100,19 +109,22 @@ export default class TwilioVoIP {
 
     deviceNotReadyHandler = (data) => {
         console.log('FrontM VoIP : deviceNotReadyHandler : ', data);
-
     }
 
     connectionDidDisconnectHandler = (data) => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
+        EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
     }
 
     callRejectedHandler = (data) => {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
+        EventEmitter.emit(TwilioEvents.callRejected, data);
     }
 
     deviceDidReceiveIncomingHandler = (data) => {
         console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
+        this.handleIncomingCall(data);
+        EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     }
 
     proximityHandler = (data) => {

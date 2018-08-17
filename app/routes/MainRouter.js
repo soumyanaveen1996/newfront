@@ -22,6 +22,7 @@ import { VideoRecorder } from  '../components/VideoRecorder';
 import { FormPopup } from  '../components/FormPopup';
 import { ChannelsList } from '../components/ChannelsList';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
+import { Phone } from  '../components/Phone';
 import Config from './config';
 
 const MainRouter = () => {
@@ -65,6 +66,7 @@ const MainRouter = () => {
                 </Scene>
                 <Scene key={ROUTER_SCENE_KEYS.form} component={FormPopup} hideNavBar/>
                 <Scene key={ROUTER_SCENE_KEYS.info} component={InfoPopup} hideNavBar/>
+                <Scene key={ROUTER_SCENE_KEYS.phone} component={Phone} hideNavBar/>
             </Lightbox>
         </Router>
     );

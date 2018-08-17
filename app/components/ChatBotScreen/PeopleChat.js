@@ -13,6 +13,7 @@ import images from '../../images';
 import chatStyles from './styles';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import I18n from '../../config/i18n/i18n';
+import { PhoneState } from '../Phone';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -112,12 +113,13 @@ export default class PeopleChat extends ChatBotScreen {
 
 
     async showCallMessage() {
-        console.log('Other user id : ', ConversationContext.getOtherUserId(this.conversationContext, this.user))
         try {
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
             const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
+            const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
             console.log('is voip enabled : ', isVoIPEnabled);
             if (isVoIPEnabled && otherUserId) {
+                Actions.phone({state: PhoneState.calling, data: {call_to: chatName || otherUserId} });
                 TwilioVoice.connect({To: `client:${otherUserId}`})
             } else {
                 this.showVoipEnableAlert();
@@ -125,7 +127,6 @@ export default class PeopleChat extends ChatBotScreen {
         } catch (err) {
             console.log('Unable to make the call : ', err);
         }
-        //this.refs.callModal.showCallModal();
     }
 
 

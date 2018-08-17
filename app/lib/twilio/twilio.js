@@ -49,7 +49,7 @@ const enableVoIP = (user) => {
     };
     return Network(options)
         .then((response) => {
-            if (response.data && response.data.accessToken) {
+            if (response.data && response.data.success) {
                 return true;
             } else {
                 throw new Error('Unable to enable VoIP for the user')
