@@ -120,7 +120,7 @@ export default class PeopleChat extends ChatBotScreen {
             console.log('is voip enabled : ', isVoIPEnabled);
             if (isVoIPEnabled && otherUserId) {
                 Actions.phone({state: PhoneState.calling, data: {call_to: chatName || otherUserId} });
-                TwilioVoice.connect({To: `client:${otherUserId}`})
+                TwilioVoice.connect({To: `client:${otherUserId}`, From: this.user.info.screenName})
             } else {
                 this.showVoipEnableAlert();
             }
