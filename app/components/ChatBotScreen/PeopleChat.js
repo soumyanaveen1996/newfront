@@ -34,9 +34,11 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     static rightHeaderView({ params }) {
+        const callButton = params.callDisabled ? <HeaderRightIcon icon={Icons.callDisabled()} style={{marginRight: 0, paddingHorizontal: 0}}/>
+            : <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
         return (
             <View style={chatStyles.headerRightView}>
-                <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
+                {callButton}
                 {PeopleChat.connectionButton(params)}
             </View>
         )
@@ -89,7 +91,7 @@ export default class PeopleChat extends ChatBotScreen {
         return this.conversation.conversationId;
     }
 
-    setNavigationParams(context, user) {
+    setNavigationParams(context, user, callDisabled = false) {
         this.props.navigation.setParams({
             title: ConversationContext.getChatName(context, user),
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
@@ -97,6 +99,7 @@ export default class PeopleChat extends ChatBotScreen {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this),
             showCallMessage: this.showCallMessage.bind(this),
+            callDisabled: callDisabled,
         });
     }
 
@@ -113,11 +116,13 @@ export default class PeopleChat extends ChatBotScreen {
 
 
     async showCallMessage() {
+        this.setNavigationParams(this.conversationContext, this.user, true);
         try {
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
             const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
             const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
             console.log('is voip enabled : ', isVoIPEnabled);
+            this.setNavigationParams(this.conversationContext, this.user, false);
             if (isVoIPEnabled && otherUserId) {
                 Actions.phone({state: PhoneState.calling, data: {call_to: chatName || otherUserId} });
                 TwilioVoice.connect({To: `client:${otherUserId}`, From: this.user.info.screenName})

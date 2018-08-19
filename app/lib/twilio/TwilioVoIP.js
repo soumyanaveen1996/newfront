@@ -77,6 +77,7 @@ export default class TwilioVoIP {
         console.log('Twilio Events : ', TwilioEvents, PhoneState);
         TwilioVoice.addEventListener(TwilioEvents.deviceReady, this.deviceReadyHandler);
         TwilioVoice.addEventListener(TwilioEvents.deviceNotReady, this.deviceNotReadyHandler);
+        TwilioVoice.addEventListener(TwilioEvents.connectionDidConnect, this.connectionDidConnectHandler);
         TwilioVoice.addEventListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler);
 
 
@@ -109,6 +110,11 @@ export default class TwilioVoIP {
 
     deviceNotReadyHandler = (data) => {
         console.log('FrontM VoIP : deviceNotReadyHandler : ', data);
+    }
+
+    connectionDidConnectHandler = (data) => {
+        console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
+        EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
     }
 
     connectionDidDisconnectHandler = (data) => {

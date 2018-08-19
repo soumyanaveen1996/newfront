@@ -18,6 +18,7 @@ export const GlobalColors = {
     rightArrow: 'rgb(192, 192, 192)',
     iosBlue: 'rgb(0, 122, 255)',
     disabledGray: 'rgb(228, 228, 228)',
+    disabledButton: 'rgba(255, 255, 255, 0.2)',
     black: 'rgb(0, 0, 0)',
     darkGray: 'rgb(169,169,169)',
     headerTextInputBackground: 'rgb(56,194,212)',

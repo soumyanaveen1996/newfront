@@ -12,6 +12,7 @@ import { EventEmitter, TwilioEvents } from '../../lib/events';
 
 export const PhoneState = {
     calling: 'calling',
+    calling_incall: 'calling_incall',
     incall: 'incall',
     incomingcall: 'incomingcall'
 }
@@ -23,23 +24,33 @@ export default class Phone extends React.Component {
         super(props);
         this.state = {
             state: props.state,
-            call_from: props.data.call_from
+            username: props.state === PhoneState.calling ? props.data.call_to : props.data.call_from
         }
     }
 
     componentDidMount() {
-        console.log('FrontM VoIP : adding listeners. ', TwilioEvents.connectionDidDisconnect)
         this.connectionDidDisconnectListener = EventEmitter.addListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler.bind(this));
+        this.connectionDidConnectListener = EventEmitter.addListener(TwilioEvents.connectionDidConnect, this.connectionDidConnectHandler.bind(this));
     }
 
     componentWillUnmount() {
         if (this.connectionDidDisconnectListener) {
             this.connectionDidDisconnectListener.remove();
         }
+        if (this.connectionDidConnectListener) {
+            this.connectionDidConnectListener.remove();
+        }
+    }
+
+    connectionDidConnectHandler(data) {
+        console.log('FrontM VoIP : Phone connectionDidConnect : ', data);
+        if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
+            this.setState({state : PhoneState.incall});
+        }
     }
 
     connectionDidDisconnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidDisconnect')
+        console.log('FrontM VoIP : Phone connectionDidDisconnect : ', data);
         Actions.pop();
     }
 
@@ -82,13 +93,7 @@ export default class Phone extends React.Component {
     }
 
     username() {
-        const { state } = this.state;
-        const { data } = this.props;
-        if (state === PhoneState.calling) {
-            return data.call_to;
-        } else {
-            return this.state.call_from
-        }
+        return this.state.username;
     }
 
     render(){

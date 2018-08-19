@@ -42,6 +42,7 @@ export const Icons = {
     nonetworkChatStatusClose: icon('ios-close', 'ionicon', 20, Colors.black, Colors.statusBarBackgroundColor, '500'),
     refresh: icon('ios-refresh', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
     call: icon('ios-call', 'ionicon', 30, Colors.white, Colors.transparent, '500'),
+    callDisabled: icon('ios-call', 'ionicon', 30, Colors.disabledButton, Colors.transparent, '500'),
     automatic: icon('ios-ionic', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
     greenCall: icon('ios-call', 'ionicon', 50, Colors.white, 'green', '500'),
     redClose: icon('ios-close', 'ionicon', 50, Colors.white, 'red', '500'),
