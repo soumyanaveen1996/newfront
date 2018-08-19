@@ -361,7 +361,7 @@ const stylesheet = StyleSheet.create({
     },
     headerRightView: {
         flexDirection: 'row',
-        width: 85,
+        width: 55,
         height: 40,
         justifyContent: 'space-between',
         paddingTop: 3,

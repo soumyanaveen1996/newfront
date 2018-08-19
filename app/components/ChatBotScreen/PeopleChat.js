@@ -31,9 +31,9 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     static rightHeaderView({ params }) {
+        // <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
         return (
             <View style={chatStyles.headerRightView}>
-                <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
                 {PeopleChat.connectionButton(params)}
             </View>
         )
