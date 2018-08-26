@@ -4,7 +4,7 @@ import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Twilio } from '../../lib/twilio';
+import { Twilio, TwilioVoIP } from '../../lib/twilio';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
@@ -118,19 +118,21 @@ export default class PeopleChat extends ChatBotScreen {
     async showCallMessage() {
         this.setNavigationParams(this.conversationContext, this.user, true);
         try {
+            await TwilioVoIP.initTelephony();
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
-            const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
+            //const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
             const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
-            console.log('is voip enabled : ', isVoIPEnabled);
+            //console.log('is voip enabled : ', isVoIPEnabled);
             this.setNavigationParams(this.conversationContext, this.user, false);
-            if (isVoIPEnabled && otherUserId) {
+            //if (isVoIPEnabled && otherUserId) {
                 Actions.phone({state: PhoneState.calling, data: {call_to: chatName || otherUserId} });
                 TwilioVoice.connect({To: `client:${otherUserId}`, From: this.user.info.screenName})
-            } else {
-                this.showVoipEnableAlert();
-            }
+            //} else {
+            //    this.showVoipEnableAlert();
+            //}
         } catch (err) {
             console.log('Unable to make the call : ', err);
+            Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
         }
     }
 

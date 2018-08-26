@@ -91,7 +91,7 @@ export default class MessageQueue {
     async handleMessage(message) {
         let user = await Auth.getUser();
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
-        console.log('Already processed : ', user);
+        console.log('Already processed : ', alreadyProcessed);
         if (alreadyProcessed) {
             return true;
         }

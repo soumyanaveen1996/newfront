@@ -73,26 +73,23 @@ export default class Splash extends React.Component {
             .then(() => {
                 return Auth.isUserLoggedIn();
             })
+            .then(() => {
+                return Promise.all([NetworkPoller.start(), this.listenToEvents(), this.configureNotifications()])
+            })
+            .then(() => {
+                return Auth.isUserLoggedIn();
+            })
             .then((isUserLoggedIn) => {
                 this.showMainScreen();
                 if (!isUserLoggedIn) {
-                    this.sendOnboardingBackgroundMessage();
+                    return this.sendOnboardingBackgroundMessage();
                 } else {
-                    TwilioVoIP.init();
+                    return TwilioVoIP.init();
                 }
-            })
-            .then(() => {
-                NetworkPoller.start();
-            })
-            .then(() => {
-                this.listenToEvents();
-            })
-            .then(() => {
-                this.configureNotifications();
             })
             .catch((err) => {
                 // ignore
-                console.log(err);
+                console.log('Error : ', err);
             });
     }
 
@@ -107,7 +104,7 @@ export default class Splash extends React.Component {
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     }
 
-    configureNotifications = () => {
+    configureNotifications = async () => {
         console.log('In Configurig Notifications');
         Notification.deviceInfo()
             .then((info) => {
@@ -148,6 +145,7 @@ export default class Splash extends React.Component {
     }
 
     listenToEvents = async () => {
+        console.log('listening to events');
         // For now the user should not be taken back
         EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);

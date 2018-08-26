@@ -1,5 +1,5 @@
 import TwilioVoice from 'react-native-twilio-programmable-voice';
-import { Platform } from 'react-native';
+import { Platform, Alert, AppState } from 'react-native';
 import { Auth } from '../capability';
 import Twilio from './twilio';
 import Permissions from 'react-native-permissions';
@@ -20,8 +20,25 @@ const _eventHandlers = {
 
 export default class TwilioVoIP {
     init = async () => {
-        await this.initTelephony();
+        try {
+            await this.initTelephony();
+            this.showAlertMessage('VoIP initialized');
+        } catch (err) {
+            this.showAlertMessage('VoIP initialization failed');
+        }
         this.listenToEvents();
+    }
+
+    showAlertMessage(message) {
+        Alert.alert(
+            null,
+            message,
+            [
+                {text: 'OK'},
+            ],
+            { cancelable: true }
+        )
+        return;
     }
 
     requestAudioPermissions() {
@@ -67,7 +84,7 @@ export default class TwilioVoIP {
                 }
                 return true;
             } catch (err) {
-                console.log(err)
+                console.log('initTelephony error : ', err)
                 throw err;
             }
         }
@@ -79,7 +96,7 @@ export default class TwilioVoIP {
         TwilioVoice.addEventListener(TwilioEvents.deviceNotReady, this.deviceNotReadyHandler);
         TwilioVoice.addEventListener(TwilioEvents.connectionDidConnect, this.connectionDidConnectHandler);
         TwilioVoice.addEventListener(TwilioEvents.connectionDidDisconnect, this.connectionDidDisconnectHandler);
-
+        AppState.addEventListener('change', this.handleAppStateChange);
 
         if (Platform.OS === 'ios') {
             TwilioVoice.addEventListener(TwilioEvents.callRejected, this.callRejectedHandler);
@@ -89,12 +106,26 @@ export default class TwilioVoIP {
             //TwilioVoice.addEventListener(TwilioEvents.wiredHeadset, this.wiredHeadsetHandler);
         }
 
-        TwilioVoice.getActiveCall().then(incomingCall => {
-            console.log('FrontM VoIP : getActiveCall : ', incomingCall);
-            if (incomingCall){
-                this.handleIncomingCall(incomingCall);
+        //TwilioVoice.getActiveCall().then(incomingCall => {
+        //    console.log('FrontM VoIP : getActiveCall : ', incomingCall);
+        //    if (incomingCall){
+        //        this.handleIncomingCall(incomingCall);
+        //    }
+        //})
+    }
+
+    handleAppStateChange = async (nextAppState) => {
+        let userLoggedIn = await Auth.isUserLoggedIn();
+        if (userLoggedIn) {
+            if (nextAppState === 'active') {
+                TwilioVoice.getActiveCall().then(incomingCall => {
+                    console.log('FrontM VoIP : getActiveCall : ', incomingCall);
+                    if (incomingCall){
+                        this.handleIncomingCall(incomingCall);
+                    }
+                })
             }
-        })
+        }
     }
 
     handleIncomingCall = (data) => {
@@ -104,6 +135,7 @@ export default class TwilioVoIP {
 
     deviceReadyHandler = async (data) => {
         console.log('FrontM VoIP : deviceReadyHandler : ', data);
+        this.showAlertMessage('Device is ready for VoIP Notifications');
         const user = await Auth.getUser();
         Twilio.enableVoIP(user)
     }

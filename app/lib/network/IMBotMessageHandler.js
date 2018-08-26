@@ -57,6 +57,7 @@ const handle = (message, user) => new Promise((resolve, reject) => {
     //  - then complete Queue call
     Conversation.getConversation(botKey)
         .then((conversation) => {
+            console.log('Handing conversation : ', conversation);
             if (conversation) {
                 // Complete the queue call
                 if (Conversation.isChannelConversation(conversation)) {
@@ -65,7 +66,6 @@ const handle = (message, user) => new Promise((resolve, reject) => {
                     return  processMessage(message, botKey);
                 }
             } else {
-                console.log('Handling new Conversation : ', user);
                 return handleNewConversation(message, user);
             }
         })
@@ -78,10 +78,8 @@ const handle = (message, user) => new Promise((resolve, reject) => {
 
 const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise((resolve, reject) => {
     var fetchedContact = false;
-    console.log('Processing message : ', message.details);
     ChannelContactDAO.selectChannelContact(message.createdBy)
         .then((contact) => {
-            console.log('Processing message : ', contact, message.details);
             if (contact) {
                 return contact;
             } else {
@@ -92,8 +90,6 @@ const checkForContactAndCompleteQueueResponse = (botKey, message) => new Promise
             if (contact) {
                 fetchedContact = true;
             }
-            console.log('Fetched contact for user : ', contact);
-            console.log('Processing message : ', message);
             return processMessage(message, botKey);
         })
         .then(resolve)
@@ -109,11 +105,8 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
     const botKey = message.conversation;
     let participants = conversationData.participants;
 
-    console.log('Message creator : ', message);
-    console.log('Handling new IM Conversation', conversationData, participants);
     Contact.getContactFieldForUUIDs([message.createdBy])
         .then((contacts) => {
-            console.log('Contacts for Creator : ', creator, contacts);
             if (contacts && contacts.length > 0 && contacts[0].ignored) {
                 isUnignoredContact = false
             } else {
@@ -122,13 +115,11 @@ const handleNewIMConversation = (conversationData, message, user, botContext, cr
             }
         })
         .then((conversationContext) => {
-            console.log('Handling new IM Conversation', conversationContext);
             if (isUnignoredContact && conversationContext) {
                 conversationContext.conversationId = botKey;
                 ConversationContext.updateParticipants(conversationContext, participants);
                 conversationContext.creatorInstanceId = creator.userId;
                 conversationContext.creator = creator;
-                console.log('Handling new IM Conversation', conversationContext);
                 return ConversationContext.saveConversationContext(conversationContext, botContext, user);
             }
         })
@@ -155,8 +146,6 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
     const botKey = message.conversation;
     let channel = conversationData.onChannels[0];
 
-    console.log('Handling new Channel Conversation : ', conversationData, message, user, botContext, creator);
-
     ChannelDAO.insertIfNotPresent(channel.channelName, channel.description, channel.logo, channel.userDomain, channel.channelId)
         .then(() => {
             return ConversationContext.createNewChannelConversationContext(botContext, user, channel);
@@ -166,7 +155,6 @@ const handleNewChannelConversation = (conversationData, message, user, botContex
             conversationContext.onChannels = conversationData.onChannels;
             conversationContext.creatorInstanceId = creator.userId;
             conversationContext.creator = creator;
-            console.log('Conversation Context : ', conversationContext);
             return ConversationContext.saveConversationContext(conversationContext, botContext, user);
         })
         .then(() => {
@@ -200,7 +188,6 @@ const handleNewConversation = (message, user) => new Promise((resolve, reject) =
         .then((conversationData) => {
             if (conversationData && conversationData.data) {
                 const data = conversationData.data;
-                console.log('Handling new conversation : ', data);
                 if (!data) {
                     return null;
                 }
