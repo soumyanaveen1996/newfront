@@ -69,6 +69,7 @@ class FormTextInput extends React.Component {
             secureTextEntry={this.props.secureTextEntry}
             keyboardType={this.props.keyboardType || 'default'}
             autoCapitalize={this.props.autoCapitalize || 'none'}
+            underlineColorAndroid="rgba(0,0,0,0)"
         />;
     }
 }

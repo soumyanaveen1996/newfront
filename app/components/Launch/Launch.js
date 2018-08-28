@@ -22,7 +22,7 @@ import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 29; // Corresponding to 2.13.1 build 1. Update this number every time we update initial_bots
+const VERSION = 30; // Corresponding to 2.14.0 build 4. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {

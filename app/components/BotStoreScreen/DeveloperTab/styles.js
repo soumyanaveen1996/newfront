@@ -37,7 +37,11 @@ export default StyleSheet.create({
     listViewContentContainerStyle : {
         flex: 1,
         paddingVertical: 0
+    },
+    rowTitle: {
+        textAlign: 'center'
     }
+
 })
 
 
