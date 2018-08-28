@@ -169,8 +169,7 @@ export default class MainScreen extends React.Component {
 
     openBotStore() {
         this.floatingButton.reset(true);
-        Actions.installedBots({ onBack: this.onBack.bind(this) });
-        //Actions.botStore()
+        Actions.botStore({ onBack: this.onBack.bind(this) });
     }
 
     openConversations() {

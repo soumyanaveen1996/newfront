@@ -6,6 +6,7 @@ import { GlobalColors } from '../../config/styles';
 import { rightIconConfig ,headerConfig ,tabConfig } from './config';
 import styles from './styles';
 import DeveloperTab from  './DeveloperTab/DeveloperTab';
+import { InstalledBotsScreen } from '../InstalledBotsScreen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import Bot from '../../lib/bot/index';
 import CategoriesTab from './CategoriesTab/CategoriesTab';
@@ -160,6 +161,8 @@ export default class BotStoreScreen extends React.Component{
         } if (this.state.selectedIndex === 0) {
             let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
             return (<FeaturedTab style={{flex: 1}} featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
+        } if (this.state.selectedIndex === 3) {
+            return (<InstalledBotsScreen />)
         }
     }
 

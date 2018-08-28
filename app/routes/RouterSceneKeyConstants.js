@@ -14,7 +14,6 @@ const ROUTER_SCENE_KEYS = {
     'botStore': 'botStore',
     'botFilter': 'botFilter',
     'botList': 'botList',
-    'installedBots' : 'installedBots',
     'barCodeScanner' : 'barCodeScanner',
     'launch': 'launch',
     'mapView': 'mapView',

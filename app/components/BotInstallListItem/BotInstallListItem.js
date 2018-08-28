@@ -84,7 +84,7 @@ export default class BotInstallListItem extends React.Component {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity style={styles.installButton} onPress={this.installBot.bind(this)}>
-                        <Text style={styles.installButtonText}>{status}</Text>
+                        <Text allowFontScaling={false} style={styles.installButtonText}>{status}</Text>
                     </TouchableOpacity>
                 </View>
             );
@@ -98,7 +98,7 @@ export default class BotInstallListItem extends React.Component {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity style={styles.installButton} onPress={this.props.onBotClick.bind(this, this.props.bot)}>
-                        <Text style={styles.installButtonText}>{I18n.t('OPEN')}</Text>
+                        <Text allowFontScaling={false} style={styles.installButtonText}>{I18n.t('OPEN')}</Text>
                     </TouchableOpacity>
                 </View>
             );

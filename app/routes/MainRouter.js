@@ -12,7 +12,6 @@ import WebViewScreen from '../components/WebViewScreen/WebViewScreen';
 import { BotListScreen } from '../components/BotListScreen';
 import { BotStoreScreen }  from '../components/BotStoreScreen';
 import { BotFilter }  from '../components/BotFilter';
-import { InstalledBotsScreen } from  '../components/InstalledBotsScreen';
 import { BarcodeScanner } from  '../components/BarcodeScanner';
 import { MapView } from  '../components/MapView';
 import { ImageViewer } from  '../components/ImageViewer';
@@ -50,7 +49,6 @@ const MainRouter = () => {
                             <Scene key={ROUTER_SCENE_KEYS.barCodeScanner} component={BarcodeScanner} hideNavBar/>
                             <Scene key={ROUTER_SCENE_KEYS.addContacts} headerStyle={Config.navBar.borderlessHeaderStyle} component={ContactsPicker} title={I18n.t('My_Contacts')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.conversations} component={ConversationList} title={I18n.t('Conversations')} back/>
-                            <Scene key={ROUTER_SCENE_KEYS.installedBots} headerStyle={Config.navBar.borderlessHeaderStyle} component={InstalledBotsScreen} title={I18n.t('Installed_bots')} />
                             <Scene key={ROUTER_SCENE_KEYS.imageViewer} component={ImageViewer} />
                             <Scene key={ROUTER_SCENE_KEYS.channelsList} component={ChannelsList} title={I18n.t('Channels')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.SNRChart} component={SNRChart}/>

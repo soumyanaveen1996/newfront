@@ -21,7 +21,8 @@ export default StyleSheet.create({
         borderColor: GlobalColors.white
     },
     tabTextStyle: {
-        color: GlobalColors.white
+        color: GlobalColors.white,
+        fontSize: 12
     },
     activeTabStyle: {
         backgroundColor: GlobalColors.white,

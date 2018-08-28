@@ -44,7 +44,7 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     async componentDidMount() {
-        this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
+        //this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
         this.refreshData();
         this.checkForBotUpdates();
         this.mounted = true

@@ -49,7 +49,7 @@ I18n.translations = {
         Bot_update_failed: 'Bot update failed',
         Bot_uninstall_confirmation: 'Are you sure you want to uninstall the bot ?',
         Install: 'INSTALL',
-        Installed: 'INSTALLED',
+        Installed: 'Installed',
         Update_Bot: 'UPDATE',
         Tap_To_Load: 'Tap to Load Image',
         Tap_on_Map: 'Long Press on the Map to select a location',
