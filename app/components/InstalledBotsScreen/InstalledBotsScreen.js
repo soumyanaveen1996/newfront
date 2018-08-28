@@ -37,7 +37,6 @@ export default class InstalledBotsScreen extends React.Component {
         super(props);
         this.state = {
             loaded: false,
-            firstTimeLoad: true,
             botUpdateStatuses: {},
             refreshing: false
         }
@@ -160,15 +159,6 @@ export default class InstalledBotsScreen extends React.Component {
 
     async refreshData() {
         await this.refreshInstalledBots();
-        if (this.bots.length === 0 && !this.state.firstTimeLoad){
-            Actions.pop();
-            this.props.onBack()
-        }
-        // alert(JSON.stringify(bots))
-        if (this.bots.length === 0 && this.state.firstTimeLoad) {
-            Actions.botStore({ onBack: this.refreshData.bind(this) });
-        }
-        this.setState({firstTimeLoad: false})
     }
 
     onAddClicked = ()=>{

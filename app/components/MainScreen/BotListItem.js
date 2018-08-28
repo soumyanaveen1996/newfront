@@ -64,7 +64,7 @@ export default class BotListItem extends React.Component {
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
                     { Icons.listRightArrow() }
-                    <Text style={ this.state.count > 0 ? BotListItemStyles.count : BotListItemStyles.hidden } >{ this.state.count }</Text>
+                    <Text allowFontScaling={false} style={ this.state.count > 0 ? BotListItemStyles.count : BotListItemStyles.hidden } >{ this.state.count }</Text>
                 </View>
                 <Text style={ BotListItemStyles.time } >{utils.formattedDate(this.state.date)}</Text>
             </TouchableOpacity>

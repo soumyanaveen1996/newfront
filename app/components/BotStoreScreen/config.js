@@ -27,7 +27,7 @@ export const rightIconConfig = {
 }
 
 export const tabConfig = {
-    tabeNames :[I18n.t('Featured'), I18n.t('Categories'), I18n.t('Developer'), I18n.t('Installed')],
+    tabNames :[I18n.t('Featured_Tab'), I18n.t('Categories_Tab'), I18n.t('Developer_Tab'), I18n.t('Installed')],
 }
 
 export const scrollViewConfig = {

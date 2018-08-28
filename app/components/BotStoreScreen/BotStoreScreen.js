@@ -175,7 +175,7 @@ export default class BotStoreScreen extends React.Component{
                     tabTextStyle = {styles.tabTextStyle}
                     activeTabStyle = {styles.activeTabStyle}
                     activeTabTextStyle = {styles.activeTabTextStyle}
-                    values={tabConfig.tabeNames}
+                    values={tabConfig.tabNames}
                     selectedIndex={this.state.selectedIndex}
                     onTabPress={this.onIndexChange.bind(this)} />
             </View>

@@ -105,25 +105,20 @@ export default class TwilioVoIP {
             //TwilioVoice.addEventListener(TwilioEvents.proximity, this.proximityHandler);
             //TwilioVoice.addEventListener(TwilioEvents.wiredHeadset, this.wiredHeadsetHandler);
         }
-
-        //TwilioVoice.getActiveCall().then(incomingCall => {
-        //    console.log('FrontM VoIP : getActiveCall : ', incomingCall);
-        //    if (incomingCall){
-        //        this.handleIncomingCall(incomingCall);
-        //    }
-        //})
     }
 
     handleAppStateChange = async (nextAppState) => {
         let userLoggedIn = await Auth.isUserLoggedIn();
         if (userLoggedIn) {
             if (nextAppState === 'active') {
-                TwilioVoice.getActiveCall().then(incomingCall => {
-                    console.log('FrontM VoIP : getActiveCall : ', incomingCall);
-                    if (incomingCall){
-                        this.handleIncomingCall(incomingCall);
-                    }
-                })
+                TwilioVoice.getActiveCall()
+                    .then(incomingCall => {
+                        console.log('FrontM VoIP : getActiveCall : ', incomingCall);
+                        if (incomingCall){
+                            this.handleIncomingCall(incomingCall);
+                        }
+                    })
+                    .catch((error) => {});
             }
         }
     }
