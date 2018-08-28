@@ -46,11 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-<<<<<<< HEAD
-	<string>5</string>
-=======
 	<string>6</string>
->>>>>>> aug_20_sprint
 	<key>FacebookAppID</key>
 	<string>150576769074284</string>
 	<key>FacebookDisplayName</key>
