@@ -5034,9 +5034,9 @@ react-native-permissions@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
-react-native-push-notification@^3.0.2:
+"react-native-push-notification@git+https://github.com/rajamal/react-native-push-notification.git#frontm":
   version "3.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.1.1.tgz#99ce426e78e95788c298f73750cc4e68db04d7ab"
+  resolved "git+https://github.com/rajamal/react-native-push-notification.git#5bd622d620e4ba679200f9007bf530f46b435158"
 
 react-native-router-flux@^4.0.0-beta.16:
   version "4.0.0-beta.25"

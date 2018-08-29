@@ -59,6 +59,13 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyCZXPvPsmWNbAEu-xNhdTeFFlsUXnrilYk" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
+            android:value="FrontM"/>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
+            android:value="FrontM notifications"/>
+        <!-- Change the resource name to your App's accent color - or any other color you want -->
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
+            android:resource="@android:color/white"/>
 
         <!--receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -85,9 +92,15 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service -->
+        </service>
         <service
             android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service-->
+        <service
+            android:name="com.frontm.frontm.FrontmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

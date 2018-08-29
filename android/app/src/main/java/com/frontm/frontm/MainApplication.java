@@ -109,20 +109,5 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     FacebookSdk.sdkInitialize(getApplicationContext());
     BackgroundTaskPackage.useContext(this);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-      NotificationManager notificationManager =
-              (NotificationManager) getSystemService(this.NOTIFICATION_SERVICE);
-
-      String channelId = "frontm";
-      CharSequence channelName = "FrontM";
-      NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
-      notificationChannel.enableLights(true);
-      notificationChannel.setLightColor(Color.RED);
-      notificationChannel.enableVibration(true);
-      notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-      notificationManager.createNotificationChannel(notificationChannel);
-    }
   }
 }
