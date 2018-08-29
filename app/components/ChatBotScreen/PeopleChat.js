@@ -118,18 +118,19 @@ export default class PeopleChat extends ChatBotScreen {
     async showCallMessage() {
         this.setNavigationParams(this.conversationContext, this.user, true);
         try {
-            await TwilioVoIP.initTelephony();
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
             //const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
             const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
             //console.log('is voip enabled : ', isVoIPEnabled);
             this.setNavigationParams(this.conversationContext, this.user, false);
-            //if (isVoIPEnabled && otherUserId) {
-                Actions.phone({state: PhoneState.calling, data: {call_to: chatName || otherUserId} });
-                TwilioVoice.connect({To: `client:${otherUserId}`, From: this.user.info.screenName})
-            //} else {
-            //    this.showVoipEnableAlert();
-            //}
+            Actions.phone({
+                state: PhoneState.init,
+                data: {
+                    call_to: chatName || otherUserId,
+                    otherUserId: otherUserId,
+                    from: this.user.info.screenName
+                }
+            });
         } catch (err) {
             console.log('Unable to make the call : ', err);
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));

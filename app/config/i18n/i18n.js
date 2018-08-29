@@ -108,6 +108,9 @@ I18n.translations = {
         Channel_admin_unsubscribe: 'You are the only admin for this channel. Please make another user an admin and then unsubscribe',
         Discover: 'Discover',
         Activate_Enterprise_Bots: 'Sign in to a new Provider',
+        Initializing: 'Initializing',
+        Calling: 'Calling',
+        From: 'From'
     },
 }
 
