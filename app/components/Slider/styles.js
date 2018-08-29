@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_HEIGHT }  from './config';
 import { GlobalColors } from '../../config/styles';
 
@@ -68,15 +68,27 @@ export default StyleSheet.create({
         color: GlobalColors.accent,
         fontWeight:'500'
     },
-    checkboxContainer: {
-        width: 22,
-        height: 22,
-        marginRight:12.5,
-        padding: 0,
-        marginLeft: 0,
-        marginVertical: 0,
-        backgroundColor: GlobalColors.transparent,
-    },
+    checkboxContainer: Platform.select({
+        'ios': {
+            width: 22,
+            height: 22,
+            marginRight:12.5,
+            padding: 0,
+            marginLeft: 0,
+            marginVertical: 0,
+            backgroundColor: GlobalColors.transparent,
+        },
+        'android': {
+            width: 24,
+            height: 25,
+            marginRight:12.5,
+            padding: 0,
+            marginLeft: 0,
+            marginVertical: 0,
+            backgroundColor: GlobalColors.transparent,
+            alignSelf: 'center'
+        }
+    }),
     checkboxIconStyle: {
         height:22,
         width:22,

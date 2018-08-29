@@ -133,8 +133,8 @@ export const SYSTEM_BOT_MANIFEST = {
     'domMgmt-bot': {
         'allowResetConversation': 'false',
         'botId': 'domMgmtBot',
-        'botName': 'Activate Enterprise Bots',
-        'botUrl': 'botfarm/frontmai/domMgmtBot/1.0.0/domMgmtBot.js',
+        'botName': 'Sign in to a new Provider',
+        'botUrl': 'botfarm/frontmai/domMgmtBot/1.1.0/domMgmtBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
@@ -153,7 +153,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'domMgmt-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.0.0'
+        'version': '1.1.0'
     },
     'backgroundTask-bot': {
         'allowResetConversation': 'false',

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { scrollViewConfig }  from './config'
 export default StyleSheet.create({
     gridStyle :{
@@ -29,11 +29,21 @@ export default StyleSheet.create({
         alignItems:'center',
         justifyContent :'center'
     },
-    plusText: {
-        color: '#333333',
-        fontSize: 50,
-        fontWeight : 'normal'
-    },
+    plusText: Platform.select({
+        'ios': {
+            color: '#333333',
+            fontSize: 50,
+            fontWeight : 'normal',
+            textAlign: 'center',
+            lineHeight: 50,
+        },
+        'android': {
+            color: '#333333',
+            fontSize: 50,
+            fontWeight : 'normal',
+            textAlign: 'center',
+        }
+    }),
     listViewContentContainerStyle : {
         flex: 1,
         paddingVertical: 0

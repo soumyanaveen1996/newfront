@@ -106,7 +106,8 @@ I18n.translations = {
         Quota: 'Quota',
         Quota_unavailable: 'Currently, you don\'t have enough quota to send messages. Please ask your admin for more quota',
         Channel_admin_unsubscribe: 'You are the only admin for this channel. Please make another user an admin and then unsubscribe',
-        Discover: 'Discover'
+        Discover: 'Discover',
+        Activate_Enterprise_Bots: 'Sign in to a new Provider',
     },
 }
 

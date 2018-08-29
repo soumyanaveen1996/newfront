@@ -1,6 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from './config'
+import { SCREEN_WIDTH } from './config'
 import { GlobalColors } from '../../config/styles';
+import Utils from '../../lib/utils';
 
 export default StyleSheet.create({
     headerTitleStyle: {
@@ -32,25 +33,42 @@ export default StyleSheet.create({
         color: GlobalColors.accent
     },
     tabsContainerStyle: {
-        marginBottom: 10,
         alignSelf: 'center',
         width: SCREEN_WIDTH * 0.95
     },
     segmentedControlTab: {
-        height: SCREEN_HEIGHT * 0.06,
-        backgroundColor: GlobalColors.accent
+        height: 40,
+        backgroundColor: GlobalColors.accent,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    headerOuterContainerStyles: {
-        position: 'relative',
-        borderBottomColor: GlobalColors.accent,
-        paddingLeft: 0,
-        paddingBottom: 0,
-    },
-    headerInnerContainerStyles: {
-        marginTop:30,
-    },
+    headerOuterContainerStyles: Platform.select({
+        'ios': {
+            position: 'relative',
+            borderBottomColor: GlobalColors.accent,
+            paddingLeft: 0,
+            paddingBottom: 0,
+            height: Utils.isiPhoneX() ? 70 : 50,
+        },
+        'android': {
+            position: 'relative',
+            borderBottomColor: GlobalColors.accent,
+            paddingLeft: 0,
+            paddingBottom: 0,
+            height: 40
+        }
+    }),
+    headerInnerContainerStyles: Platform.select({
+        'ios':  {
+            marginTop: 10,
+        },
+        'android':  {
+            marginBottom: 5,
+        }
+    }),
     headerInnerContainerForSearch: {
-        marginTop: 50
+        marginTop: 50,
     },
     loading: {
         position: 'absolute',
