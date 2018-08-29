@@ -91,7 +91,7 @@ export default StyleSheet.create({
         color: GlobalColors.white,
     },
     flatList: {
-        height :'100%'
+        flex: 1
     },
     loading: {
         position: 'absolute',

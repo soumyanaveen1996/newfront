@@ -1,5 +1,13 @@
 import React from 'react';
-import { View , Text , FlatList, TextInput, TouchableHighlight, ActivityIndicator, Alert, RefreshControl } from 'react-native';
+import { View,
+    Text,
+    FlatList,
+    TextInput,
+    TouchableHighlight,
+    TouchableOpacity,
+    ActivityIndicator,
+    Alert,
+    RefreshControl } from 'react-native';
 import styles, { BotListItemStyles } from './styles'
 import { Icon } from 'react-native-elements'
 import {GlobalColors} from '../../config/styles'
@@ -241,8 +249,10 @@ export default class InstalledBotsScreen extends React.Component {
                     <Text style={ BotListItemStyles.title } >{ botData.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
                 </View>
-                <View style={ BotListItemStyles.rightContainer }>
-                    { Icons.listRightArrow() }
+                <View style={BotListItemStyles.rightContainer}>
+                    <TouchableOpacity style={BotListItemStyles.installButton} onPress={this.onBotPress.bind(this, botData)}>
+                        <Text allowFontScaling={false} style={BotListItemStyles.installButtonText}>{I18n.t('OPEN')}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -253,11 +263,9 @@ export default class InstalledBotsScreen extends React.Component {
         return (
             <Swipeout right={swipeBtns} style={{flex: 1}} backgroundColor={GlobalColors.white} autoClose={true}>
                 <View key={item.botId} style={styles.rowContainer}>
-                    <TouchableHighlight style={styles.gridStyle} onPress={()=>{ this.onBotPress(item) }}>
-                        <View style={{flex: 1}}>
-                            {this.renderRow(item)}
-                        </View>
-                    </TouchableHighlight>
+                    <View style={{flex: 1}}>
+                        {this.renderRow(item)}
+                    </View>
                 </View>
             </Swipeout>
         )
@@ -328,10 +336,10 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View >
+                <View style={{flex: 1}}>
                     <FlatList
-                        style = {styles.flatList}
-                        keyExtractor = {(item, index) => item.botId}
+                        style={styles.flatList}
+                        keyExtractor={(item, index) => item.botId}
                         data={this.state.bots}
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}
