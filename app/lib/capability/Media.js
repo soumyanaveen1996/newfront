@@ -94,9 +94,9 @@ export default class Media {
             'We need Camera access to take pictures.',
             [
                 {
-                    text: 'cancel',
+                    text: 'Cancel',
                     onPress: () => console.log('Permission denied'),
-                    style: 'cancel',
+                    style: 'Cancel',
                 },
                 {text: 'Open Settings', onPress: (Platform.OS === 'ios') ? Permissions.openSettings : AndroidOpenSettings.appDetailsSettings},
             ],
