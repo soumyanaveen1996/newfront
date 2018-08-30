@@ -3,9 +3,10 @@
 
 import axios from 'axios';
 import { Queue } from '../network';
-import { NetInfo } from 'react-native';
+import { NetInfo, Platform } from 'react-native';
 import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
+import moment from 'moment';
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -46,11 +47,20 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
+    const start = moment().valueOf();
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
+                console.log('Time connected : ', moment().valueOf() - start);
                 if (connected) {
-                    return resolve(axios(options));
+                    console.log('Time connected : ', moment().valueOf() - start);
+                    axios(options)
+                        .then((data) => {
+                            const now = moment().valueOf();
+                            console.log('Time for network call : ', now - start);
+                            resolve(data);
+                        })
+                        .catch(reject);
                 } else {
                     if (queue) {
                         let key = SHA1(JSON.stringify(options.data)).toString();
@@ -87,7 +97,8 @@ Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
 
 Network.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
-        if (reachability.type === 'unknown') {
+        console.log('Time for isConnected : ', reachability);
+        if (reachability.type === 'unknown' && Platform.OS === 'ios') {
             return new Promise(resolve => {
                 const handleFirstConnectivityChangeIOS = isConnected => {
                     NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
@@ -95,8 +106,9 @@ Network.isConnected = () => {
                 };
                 NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
             });
+        } else {
+            return reachability.type !== 'none';
         }
-        return (reachability.type !== 'none' && reachability.type !== 'unknown')
     });
 }
 

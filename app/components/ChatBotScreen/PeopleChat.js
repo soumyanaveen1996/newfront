@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Keyboard } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
@@ -118,6 +118,7 @@ export default class PeopleChat extends ChatBotScreen {
     async showCallMessage() {
         this.setNavigationParams(this.conversationContext, this.user, true);
         try {
+            Keyboard.dismiss()
             const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
             //const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
             const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
