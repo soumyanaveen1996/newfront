@@ -12,6 +12,8 @@ import { Actions } from 'react-native-router-flux';
 import { EventEmitter, TwilioEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { Twilio, TwilioVoIP } from '../../lib/twilio';
+import { ContactsCache } from '../../lib/ContactsCache';
+import _ from 'lodash';
 
 export const PhoneState = {
     init: 'init',
@@ -39,15 +41,36 @@ export default class Phone extends React.Component {
 
         if (this.state.phoneState === PhoneState.init) {
             this.initialize();
+        } else if (this.state.phoneState === PhoneState.incomingcall) {
+            this.findCallerName();
+        }
+    }
+
+    findCallerName() {
+        const { username } = this.state;
+        if (username && _.startsWith(username, 'client:')) {
+            const clientId = username.substr(7);
+            const clientDetails = ContactsCache.getUserDetails(clientId);
+            if (clientDetails) {
+                if (this.mounted) {
+                    this.setState({username: clientDetails.userName});
+                }
+            } else {
+                ContactsCache.fetchContactDetailsForUser(clientId)
+                    .then((contactDetails) => {
+                        if (this.mounted) {
+                            this.setState({username: contactDetails.userName});
+                        }
+                    })
+            }
         }
     }
 
     async initialize() {
-        console.log('hello1 : ', this.props);
         try {
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                TwilioVoice.connect({To: `client:${this.props.data.otherUserId}`, From: this.props.data.from})
+                TwilioVoice.connect({To: `client:${this.props.data.otherUserId}`, FromName: this.props.data.from})
                 this.setState({phoneState : PhoneState.calling});
             }
         } catch (err) {
