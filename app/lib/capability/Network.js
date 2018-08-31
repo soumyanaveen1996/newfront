@@ -58,7 +58,7 @@ function converOptionsToFetchRequest(options) {
     const isGetRequest = _.lowerCase(options.method) === 'get'
     return {
         method: options.method || 'GET',
-        body: isGetRequest ? undefined : JSON.stringify(options.data),
+        body: isGetRequest ? undefined : (typeof options.data === 'string') ? options.data : JSON.stringify(options.data),
         headers: _.merge({'Content-Type': 'application/json'}, options.headers),
         redirect: 'follow'
     }
