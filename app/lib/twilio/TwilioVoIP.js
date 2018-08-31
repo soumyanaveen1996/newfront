@@ -22,9 +22,9 @@ export default class TwilioVoIP {
     init = async () => {
         try {
             await this.initTelephony();
-            this.showAlertMessage('VoIP initialized');
+            //this.showAlertMessage('VoIP initialized');
         } catch (err) {
-            this.showAlertMessage('VoIP initialization failed');
+            //this.showAlertMessage('VoIP initialization failed');
         }
         this.listenToEvents();
     }
@@ -130,7 +130,7 @@ export default class TwilioVoIP {
 
     deviceReadyHandler = async (data) => {
         console.log('FrontM VoIP : deviceReadyHandler : ', data);
-        this.showAlertMessage('Device is ready for VoIP Notifications');
+        //this.showAlertMessage('Device is ready for VoIP Notifications');
         const user = await Auth.getUser();
         Twilio.enableVoIP(user)
     }

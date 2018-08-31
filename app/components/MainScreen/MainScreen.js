@@ -90,7 +90,7 @@ export default class MainScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
-        EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        this.messageListener = EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
     }
 
     componentWillMount() {
@@ -143,7 +143,11 @@ export default class MainScreen extends React.Component {
             this.eventSubscription.remove();
         }
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-        EventEmitter.removeEventListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        if (this.messageListener) {
+            this.messageListener.remove();
+            this.messageListener = null;
+            // EventEmitter.removeEventListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        }
     }
 
     openContacts() {

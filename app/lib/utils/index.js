@@ -365,10 +365,10 @@ export function objectToQueryString(obj) {
     _.forOwn(obj, (value, key) => {
         if (Array.isArray(value)) {
             _.forOwn(value, (v) => {
-                results.push(`${key}=${encodeURI(v)}`);
+                results.push(`${key}=${encodeURIComponent(v)}`);
             });
         } else {
-            results.push(`${key}=${encodeURI(value)}`);
+            results.push(`${key}=${encodeURIComponent(value)}`);
         }
     });
     return results.join('&');

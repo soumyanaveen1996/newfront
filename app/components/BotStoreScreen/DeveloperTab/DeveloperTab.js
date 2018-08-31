@@ -23,7 +23,7 @@ export default class DeveloperTab extends React.Component {
 
     renderBotImage = (botData)=>{
         var botImage;
-        if (botData.name === I18n.t('Authenticate') || botData.name === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName) {
+        if (botData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
             botImage = (
                 <View style = {styles.authenticateButton}>
                     <Text allowFontScaling={false} style ={styles.plusText}>+</Text>
