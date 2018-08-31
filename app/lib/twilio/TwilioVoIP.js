@@ -46,9 +46,9 @@ export default class TwilioVoIP {
             Permissions.request('microphone')
                 .then((response) => {
                     if (response === 'authorized') {
-                        resolve();
+                        resolve(true);
                     } else {
-                        reject();
+                        resolve(false)
                     }
                 })
         })
@@ -73,7 +73,10 @@ export default class TwilioVoIP {
                 const user = await Auth.getUser();
                 const accessToken = await Twilio.getAccessToken(user)
                 if (!(__DEV__ && Platform.os === 'ios')) {
-                    await this.requestAudioPermissions();
+                    const isAudioEnabled = await this.requestAudioPermissions();
+                    if (!isAudioEnabled) {
+                        this.showAlertMessage('Audio Permissions required for VoIP calls. Please enable them in settings');
+                    }
                 }
 
                 await TwilioVoice.initWithToken(accessToken)

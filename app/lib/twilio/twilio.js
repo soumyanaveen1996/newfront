@@ -4,31 +4,40 @@ import { Platform } from 'react-native';
 import utils from '../utils';
 
 
+
 const getAccessToken = (user) => {
 
     const platform = Platform.OS;
     const env = __DEV__ ? 'dev' : 'prod'
+    console.log('Twilio VoIP token : ', !!user);
     if (!user) {
         return;
     }
+
+    const queryString = utils.objectToQueryString({
+        accessKeyId: user.aws.accessKeyId,
+        secretAccessKey: user.aws.secretAccessKey,
+        sessionToken: user.aws.sessionToken,
+        platform: platform,
+        env: env
+    })
+
     let options = {
         'method': 'get',
-        'url': `${config.network.queueProtocol}${config.proxy.host}${config.proxy.twilioPath}`,
+        'url': `${config.network.queueProtocol}${config.proxy.host}${config.proxy.twilioPath}?${queryString}`,
         'headers': {
             accessKeyId: user.aws.accessKeyId,
             secretAccessKey: user.aws.secretAccessKey,
             sessionToken: user.aws.sessionToken
         },
-        'params': {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken,
-            platform: platform,
-            env: env
-        }
     };
+    console.log('Twilio VoIP token : ', options.url);
+
+    /*
+    'params': */
     return Network(options)
         .then((response) => {
+            console.log('Twilio VoIP token : ', response);
             if (response.data && response.data.accessToken) {
                 return response.data.accessToken;
             } else {
