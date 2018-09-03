@@ -62,11 +62,11 @@ export default class BotListItem extends React.Component {
                     <Text style={ BotListItemStyles.title } >{bot.botName}</Text>
                     {this.renderSubview()}
                 </View>
-                <View style={BotListItemStyles.rightContainer}>
+                <View accessibilityLabel="List Element Right Arrow" testID="list-element-right-arrow" style={BotListItemStyles.rightContainer}>
                     { Icons.listRightArrow() }
                     <Text allowFontScaling={false} style={ this.state.count > 0 ? BotListItemStyles.count : BotListItemStyles.hidden } >{ this.state.count }</Text>
                 </View>
-                <Text style={ BotListItemStyles.time } >{utils.formattedDate(this.state.date)}</Text>
+                <Text accessibilityLabel="List Element Date" testID="list-element-date" style={ BotListItemStyles.time } >{utils.formattedDate(this.state.date)}</Text>
             </TouchableOpacity>
         );
     }

@@ -9,7 +9,7 @@ function icon(name, type, size, color, underlayColor = Colors.white, fontWeight 
 }
 
 function renderIcon(name, type, size, color, underlayColor = Colors.white, fontWeight = 'normal', options = {}) {
-    return ( <Icon name={name}
+    return ( <Icon accessibilityLabel={'Icon ' + name} testID={'icon-' + name} name={name}
         type={type}
         color={color}
         underlayColor={underlayColor}

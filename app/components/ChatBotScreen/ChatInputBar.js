@@ -234,14 +234,14 @@ export default class ChatInputBar extends React.Component {
     rightButton() {
         if (this.state.chatState === ChatInputBarState.READY_FOR_SPEECH) {
             return (
-                <TouchableOpacity onPress={() => this._startRecording()}>
+                <TouchableOpacity accessibilityLabel="Right Button Mic" testID="right-button-mic" onPress={() => this._startRecording()}>
                     <Image source={Images.btn_record} style={styles.chatBarSpeakButton}/>
                 </TouchableOpacity>
             );
         } else {
             const action = this.state.chatState === ChatInputBarState.TYPING ? this.sendMessage : this._stopRecording
             return (
-                <TouchableOpacity onPress={action}>
+                <TouchableOpacity accessibilityLabel="Right Button Send" testID="right-button-send" onPress={action}>
                     <Image source={Images.btn_send} style={styles.chatBarSendButton}/>
                 </TouchableOpacity>
             );
@@ -309,7 +309,7 @@ export default class ChatInputBar extends React.Component {
         } else {
             return (
                 <View style={chatBarStyle(this.props.network)}>
-                    <TouchableOpacity onPress={this.showOptions.bind(this)}>
+                    <TouchableOpacity accessibilityLabel="More Button" testID="more-button" onPress={this.showOptions.bind(this)}>
                         <Image source={Images.btn_more} style={styles.chatBarMoreButton}/>
                     </TouchableOpacity>
                     <TextInput

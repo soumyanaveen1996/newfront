@@ -67,8 +67,9 @@ export default class CachedImage extends React.Component {
     }
 
     render() {
+        console.log("CACHED " + this.state.source.split('/').pop())
         return (
-            <LogoImage
+            <LogoImage accessibilityLabel="Cached Image" testID="cached-image"
                 source={this.state.source}
                 imageStyle={ this.props.style }
                 loadingStyle={( Platform.OS === 'android') ? null : undefined}
