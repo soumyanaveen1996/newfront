@@ -33,12 +33,12 @@ const MainRouter = () => {
             <Lightbox>
                 <Scene>
                     <Scene key={ROUTER_SCENE_KEYS.launch} component={Launch} initial hideNavBar/>
-                    <Scene key={ROUTER_SCENE_KEYS.lightbox} inital hideNavBar>
+                    <Scene key={ROUTER_SCENE_KEYS.lightbox} hideNavBar>
                         <Scene key={ROUTER_SCENE_KEYS.main}
                             headerStyle={Config.navBar.headerStyle}
                             headerTintColor={Config.navBar.navigationBarTintColor}>
                             <Scene key={ROUTER_SCENE_KEYS.timeline} component={MainScreen} initial title={I18n.t('FrontM')}/>
-                            <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} inital/>
+                            <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} />
                             <Scene key={ROUTER_SCENE_KEYS.peopleChat} component={PeopleChat}/>
                             <Scene key={ROUTER_SCENE_KEYS.channelChat} component={ChannelChat}/>
                             <Scene key={ROUTER_SCENE_KEYS.slider} component={Slider} />
