@@ -244,7 +244,7 @@ export default class InstalledBotsScreen extends React.Component {
     renderRow = (botData)=>{
         return (
             <View style={BotListItemStyles.container}>
-                <CachedImage source={{uri: botData.logoUrl}} style={BotListItemStyles.image}/>
+                <CachedImage imageTag = "botLogo" source={{uri: botData.logoUrl}} style={BotListItemStyles.image}/>
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={ BotListItemStyles.title } >{ botData.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
@@ -275,7 +275,7 @@ export default class InstalledBotsScreen extends React.Component {
         if (botData.logoSlug) {
             return images[botData.logoSlug];
         } else {
-            return <CachedImage source={{uri : botData.logoUrl}} style={styles.image}/>;
+            return <CachedImage imageTag = "botLogo" source={{uri : botData.logoUrl}} style={styles.image}/>;
         }
     }
 

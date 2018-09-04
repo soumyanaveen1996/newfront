@@ -339,7 +339,7 @@ export default class Slider extends React.Component {
                     style={styles.headerView}
                 >
                     <View style={{ flex: 1 }}>
-                        <TouchableOpacity style={styles.closeButton} onPress={this.cancelSlider.bind(this)}>
+                        <TouchableOpacity accessibilityLabel="Slider Close Button" testID="slider-close-button" style={styles.closeButton} onPress={this.cancelSlider.bind(this)}>
                             {Icons.sliderClose()}
                         </TouchableOpacity>
                     </View>
