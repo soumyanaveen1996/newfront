@@ -109,7 +109,7 @@ export default class BotInstallListItem extends React.Component {
         const bot = this.props.bot;
         return (
             <View style={styles.container}>
-                <CachedImage source={{uri: bot.logoUrl}} style={styles.image}/>
+                <CachedImage imageTag = "botLogo" source={{uri: bot.logoUrl}} style={styles.image}/>
                 <View style={styles.textContainer}>
                     <Text style={ styles.title } >{ bot.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{bot.description}</Text>
