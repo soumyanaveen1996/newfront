@@ -94,7 +94,7 @@ export default class FloatingButton extends React.Component {
     }
 
     renderButtonIcon() {
-        return <Text style={styles.buttonText}>{this.props.buttonText}</Text>;
+        return <Text allowFontScaling={false} style={styles.buttonText}>{this.props.buttonText}</Text>;
     }
 
     renderItems() {

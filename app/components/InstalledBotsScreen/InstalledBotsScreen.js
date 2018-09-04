@@ -1,5 +1,13 @@
 import React from 'react';
-import { View , Text , FlatList, TextInput, TouchableHighlight, ActivityIndicator, Alert, RefreshControl } from 'react-native';
+import { View,
+    Text,
+    FlatList,
+    TextInput,
+    TouchableHighlight,
+    TouchableOpacity,
+    ActivityIndicator,
+    Alert,
+    RefreshControl } from 'react-native';
 import styles, { BotListItemStyles } from './styles'
 import { Icon } from 'react-native-elements'
 import {GlobalColors} from '../../config/styles'
@@ -37,14 +45,13 @@ export default class InstalledBotsScreen extends React.Component {
         super(props);
         this.state = {
             loaded: false,
-            firstTimeLoad: true,
             botUpdateStatuses: {},
             refreshing: false
         }
     }
 
     async componentDidMount() {
-        this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
+        //this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
         this.refreshData();
         this.checkForBotUpdates();
         this.mounted = true
@@ -160,15 +167,6 @@ export default class InstalledBotsScreen extends React.Component {
 
     async refreshData() {
         await this.refreshInstalledBots();
-        if (this.bots.length === 0 && !this.state.firstTimeLoad){
-            Actions.pop();
-            this.props.onBack()
-        }
-        // alert(JSON.stringify(bots))
-        if (this.bots.length === 0 && this.state.firstTimeLoad) {
-            Actions.botStore({ onBack: this.refreshData.bind(this) });
-        }
-        this.setState({firstTimeLoad: false})
     }
 
     onAddClicked = ()=>{
@@ -251,8 +249,10 @@ export default class InstalledBotsScreen extends React.Component {
                     <Text style={ BotListItemStyles.title } >{ botData.botName }</Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
                 </View>
-                <View style={ BotListItemStyles.rightContainer }>
-                    { Icons.listRightArrow() }
+                <View style={BotListItemStyles.rightContainer}>
+                    <TouchableOpacity style={BotListItemStyles.installButton} onPress={this.onBotPress.bind(this, botData)}>
+                        <Text allowFontScaling={false} style={BotListItemStyles.installButtonText}>{I18n.t('OPEN')}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -263,11 +263,9 @@ export default class InstalledBotsScreen extends React.Component {
         return (
             <Swipeout right={swipeBtns} style={{flex: 1}} backgroundColor={GlobalColors.white} autoClose={true}>
                 <View key={item.botId} style={styles.rowContainer}>
-                    <TouchableHighlight style={styles.gridStyle} onPress={()=>{ this.onBotPress(item) }}>
-                        <View style={{flex: 1}}>
-                            {this.renderRow(item)}
-                        </View>
-                    </TouchableHighlight>
+                    <View style={{flex: 1}}>
+                        {this.renderRow(item)}
+                    </View>
                 </View>
             </Swipeout>
         )
@@ -338,10 +336,10 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View >
+                <View style={{flex: 1}}>
                     <FlatList
-                        style = {styles.flatList}
-                        keyExtractor = {(item, index) => item.botId}
+                        style={styles.flatList}
+                        keyExtractor={(item, index) => item.botId}
                         data={this.state.bots}
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}

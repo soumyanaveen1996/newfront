@@ -71,7 +71,7 @@ export default class Media {
             'We need Photo Library access to set your profile picture.',
             [
                 {
-                    text: 'cancel',
+                    text: I18n.t('Cancel'),
                     onPress: () => console.log('Permission denied'),
                     style: 'cancel',
                 },
@@ -94,7 +94,7 @@ export default class Media {
             'We need Camera access to take pictures.',
             [
                 {
-                    text: 'cancel',
+                    text: I18n.t('Cancel'),
                     onPress: () => console.log('Permission denied'),
                     style: 'cancel',
                 },

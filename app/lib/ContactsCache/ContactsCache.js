@@ -3,7 +3,7 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import _ from 'lodash';
 
 class ContactsCache {
-    init = () =>{
+    init = () => {
         this.loaded = false
         this.contactsCache = {};
         ChannelContactDAO.selectAllContacts()

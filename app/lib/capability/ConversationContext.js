@@ -305,7 +305,6 @@ export default class ConversationContext {
     };
 
     static getChatName = function (conversationContext, user) {
-        console.log('In get chat name : ', conversationContext);
         if (conversationContext.onChannels.length > 0) {
             return conversationContext.onChannels[0].channelName;
         } else {

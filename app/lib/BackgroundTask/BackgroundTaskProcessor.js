@@ -1,7 +1,7 @@
 import BackgroundTaskDAO from '../persistence/BackgroundTaskDAO';
 import _ from 'lodash';
 import moment from 'moment';
-import SystemBot from '../bot/SystemBot';
+import SystemBot, { SYSTEM_BOT_MANIFEST } from '../bot/SystemBot';
 import dce, { Bot } from '../../lib/dce';
 import { BotContext } from '../../lib/botcontext';
 import { Message, ConversationContext, Auth } from '../capability';
@@ -69,7 +69,16 @@ const getBotManifest = async (botId) => {
     const botManifest = _.find(installedBots, (bot) => {
         return bot.botId === botId
     });
-    return botManifest;
+
+    if (botManifest) {
+        return botManifest;
+    }
+
+    const systemBots = SYSTEM_BOT_MANIFEST;
+    const systemBotManifest = _.find(systemBots, (bot) => {
+        return bot.botId === botId
+    });
+    return systemBotManifest;
 }
 
 const processTask = async (task, user) => {
@@ -116,7 +125,13 @@ const getConversationContext = async (botId, user, botContext, createContext = f
 
 const processMessage = async(message, botManifest, botContext, createContext = false) => {
     const dceBot = dce.bot(botManifest, botContext);
-    const bot = await dceBot.Load(botContext);
+    let bot;
+    for (let i = 0; i < 3; ++i) {
+        bot = await dceBot.Load(botContext);
+        if (bot) {
+            break;
+        }
+    }
     bot.next(message, {}, [], botContext);
 }
 
@@ -188,13 +203,16 @@ const sendBackgroundIMMessage = async (message, botId, conversationId = undefine
     if (!user) {
         return;
     }
+    console.log('helloo');
     const botManifest = await getBotManifest(botId);
     if (!botManifest) {
         return;
     }
-
+    console.log('hello');
     const botScreen = new BackgroundTaskBotScreen(botId, conversationId, message);
+    console.log('hello1');
     const botContext = new BotContext(botScreen, botManifest);
+    console.log('hello2');
     let conversationContext = await getConversationContext(botId, user, botContext, createContext);
     if (!conversationContext) {
         return;

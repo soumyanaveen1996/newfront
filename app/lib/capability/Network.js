@@ -3,9 +3,11 @@
 
 import axios from 'axios';
 import { Queue } from '../network';
-import { NetInfo } from 'react-native';
+import { NetInfo, Platform } from 'react-native';
 import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
+import moment from 'moment';
+import _ from 'lodash';
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -28,6 +30,78 @@ import SHA1 from 'crypto-js/sha1';
  * let nr = new NetworkRequest(options);
  * nr.getNetworkRequest(); // returns options object
  */
+
+
+export class NetworkError extends Error {
+    constructor(code, message) {
+        super();
+        this.code = code;
+        this.message = message;
+    }
+
+    get code() {
+        return this.code;
+    }
+
+    get message() {
+        return this.message;
+    }
+
+    get description() {
+        return `${this.code} : ${this.message}`
+    }
+}
+
+
+
+function converOptionsToFetchRequest(options) {
+    const isGetRequest = _.lowerCase(options.method) === 'get'
+    return {
+        method: options.method || 'GET',
+        body: isGetRequest ? undefined : (typeof options.data === 'string') ? options.data : JSON.stringify(options.data),
+        headers: _.merge({'Content-Type': 'application/json'}, options.headers),
+        redirect: 'follow'
+    }
+}
+
+/*
+function Network(options, queue = false) {
+    return new Promise((resolve, reject) => {
+        Network.isConnected()
+            .then((connected) => {
+                if (connected) {
+                    const requestOptions = converOptionsToFetchRequest(options);
+                    console.log('Request : ', options, requestOptions);
+                    fetch(options.url, requestOptions)
+                        .then((response) => {
+                            console.log('Response raw : ', response);
+                            if (response.status === 200) {
+                                response.json()
+                                    .then((json) => {
+                                        console.log('Response : ', json);
+                                        resolve({
+                                            data: json,
+                                            status: response.status,
+                                            statusText: response.statusText,
+                                        });
+                                    })
+                            } else {
+                                reject(new NetworkError(response.status, response.statusText));
+                            }
+                        });
+                    //return resolve(axios(options));
+                } else {
+                    if (queue) {
+                        let key = SHA1(JSON.stringify(options.data)).toString();
+                        return resolve(futureRequest(key, new NetworkRequest(options)));
+                    } else {
+                        reject(new NetworkError(99, 'No network connectivity'));
+                    }
+                }
+            })
+    });
+} */
+
 export class NetworkRequest {
     constructor(options) {
         if (!options) {
@@ -46,11 +120,41 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
+    const start = moment().valueOf();
     return new Promise((resolve, reject) => {
         Network.isConnected()
             .then((connected) => {
+                console.log('Time connected : ', connected, moment().valueOf() - start, options.url);
                 if (connected) {
-                    return resolve(axios(options));
+                    console.log('Time connected : ', moment().valueOf() - start);
+                    const requestOptions = converOptionsToFetchRequest(options);
+                    console.log('Request : ', options, requestOptions);
+                    fetch(options.url, requestOptions)
+                        .then((response) => {
+                            //console.log('Response raw : ', response);
+                            console.log('Time for network call : ', options.url, moment().valueOf() - start);
+                            if (response.status === 200) {
+                                response.json()
+                                    .then((json) => {
+                                        console.log('Response : ', json);
+                                        resolve({
+                                            data: json,
+                                            status: response.status,
+                                            statusText: response.statusText,
+                                        });
+                                    })
+                            } else {
+                                reject(new NetworkError(response.status, response.statusText));
+                            }
+                        });
+                    /*
+                    axios(options)
+                        .then((data) => {
+                            const now = moment().valueOf();
+                            console.log('Time for network call : ', options.url, now - start);
+                            resolve(data);
+                        })
+                        .catch(reject); */
                 } else {
                     if (queue) {
                         let key = SHA1(JSON.stringify(options.data)).toString();
@@ -87,7 +191,8 @@ Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
 
 Network.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
-        if (reachability.type === 'unknown') {
+        console.log('Time for isConnected : ', reachability);
+        if (reachability.type === 'unknown' && Platform.OS === 'ios') {
             return new Promise(resolve => {
                 const handleFirstConnectivityChangeIOS = isConnected => {
                     NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
@@ -95,8 +200,9 @@ Network.isConnected = () => {
                 };
                 NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
             });
+        } else {
+            return reachability.type !== 'none';
         }
-        return (reachability.type !== 'none' && reachability.type !== 'unknown')
     });
 }
 

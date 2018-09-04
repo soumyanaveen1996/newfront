@@ -16,10 +16,12 @@
 		0400FD7C20D4F73900AB3A78 /* RNGoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7720D4F73800AB3A78 /* RNGoogleSignIn.swift */; };
 		0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */; };
 		0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */; };
+		040848DB21201EBD006C45E4 /* libRNTwilioVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040848DA21201EAC006C45E4 /* libRNTwilioVoice.a */; };
 		040AA78920034A790057C959 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040AA75D20034A630057C959 /* libRCTPushNotification.a */; };
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
+		0453E623212045DA0078059D /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453E5DB212045DA0078059D /* CallKit.framework */; };
 		04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0454180E210C987800A658A2 /* libRNDocumentPicker.a */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
 		0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
@@ -128,6 +130,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
 			remoteInfo = RCTFBSDK;
+		};
+		040848D921201EAC006C45E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 38F71DF51E9C333F0067E86F;
+			remoteInfo = RNTwilioVoice;
 		};
 		040AA75C20034A630057C959 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -581,11 +590,13 @@
 		0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInEventsBridge.m; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignInEventsBridge.m"; sourceTree = "<group>"; };
 		0400FD7920D4F73800AB3A78 /* RNGoogleSignIn-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RNGoogleSignIn-Bridging-Header.h"; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignIn-Bridging-Header.h"; sourceTree = "<group>"; };
 		0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInBridge.m; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignInBridge.m"; sourceTree = "<group>"; };
+		040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNTwilioVoice.xcodeproj; path = "../node_modules/react-native-twilio-programmable-voice/ios/RNTwilioVoice.xcodeproj"; sourceTree = "<group>"; };
 		040AA74820034A630057C959 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignInDependencies.framework; sourceTree = "<group>"; };
 		040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
 		040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
 		04143D6020B30D08001DDCE3 /* RNVersionCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVersionCheck.xcodeproj; path = "../node_modules/react-native-version-check/ios/RNVersionCheck.xcodeproj"; sourceTree = "<group>"; };
+		0453E5DB212045DA0078059D /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
@@ -674,6 +685,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0453E623212045DA0078059D /* CallKit.framework in Frameworks */,
+				040848DB21201EBD006C45E4 /* libRNTwilioVoice.a in Frameworks */,
 				04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */,
 				B0D42C5020BD781600C8BE47 /* libRNDeviceInfo.a in Frameworks */,
 				B08A20AC20D8AA430059EA6C /* libRCTCameraRoll.a in Frameworks */,
@@ -799,6 +812,14 @@
 			isa = PBXGroup;
 			children = (
 				04028990202DB89C000E9BFA /* libRCTFBSDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		040848D621201EAC006C45E4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				040848DA21201EAC006C45E4 /* libRNTwilioVoice.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1083,6 +1104,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */,
 				045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */,
 				B08A206320D8A6290059EA6C /* RCTCameraRoll.xcodeproj */,
 				B0D42C0A20BD77CC00C8BE47 /* RNDeviceInfo.xcodeproj */,
@@ -1222,6 +1244,7 @@
 		C012FAE9CECA450BAC1F14F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0453E5DB212045DA0078059D /* CallKit.framework */,
 				040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */,
 				040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */,
 				040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */,
@@ -1448,6 +1471,10 @@
 					ProjectRef = 183B3E8A9A004B05A794FA35 /* RNSVG.xcodeproj */;
 				},
 				{
+					ProductGroup = 040848D621201EAC006C45E4 /* Products */;
+					ProjectRef = 040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */;
+				},
+				{
 					ProductGroup = 040C5A661FFCF9A50071B62D /* Products */;
 					ProjectRef = 589408B63DAD437792285296 /* RNVectorIcons.xcodeproj */;
 				},
@@ -1519,6 +1546,13 @@
 			fileType = archive.ar;
 			path = libRCTFBSDK.a;
 			remoteRef = 0402898F202DB89C000E9BFA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		040848DA21201EAC006C45E4 /* libRNTwilioVoice.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTwilioVoice.a;
+			remoteRef = 040848D921201EAC006C45E4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		040AA75D20034A630057C959 /* libRCTPushNotification.a */ = {
@@ -2040,9 +2074,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
+				"${PODS_ROOT}/TwilioVoice/TwilioVoice.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwilioVoice.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

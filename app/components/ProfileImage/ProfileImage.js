@@ -19,6 +19,7 @@ export default class ProfileImage extends React.Component {
     }
 
     async componentDidMount() {
+        this.mounted = true;
         const user = await Auth.getUser();
         if (!user) {
             return;
@@ -28,31 +29,39 @@ export default class ProfileImage extends React.Component {
         if (uri && this.isRemoteUri(uri)) {
             let path = await this.getImagePathFromCache(uri);
             if (path) {
-                this.setState({
-                    source: { uri: path },
-                    style: this.props.placeholderStyle
-                })
+                if (this.mounted) {
+                    this.setState({
+                        source: { uri: path },
+                        style: this.props.placeholderStyle
+                    })
+                }
                 ImageCache.imageCacheManager.checkAndUpdateIfModified(uri, this, headers);
             } else {
                 if (!ImageCache.imageCacheManager.isLastCheckedWithinThreshold(uri)) {
                     ImageCache.imageCacheManager.fetch(uri, this, headers);
                 } else {
-                    this.setState({
-                        source: this.props.placeholder,
-                        style: this.props.placeholderStyle,
-                        loaded: true
-                    });
+                    if (this.mounted) {
+                        this.setState({
+                            source: this.props.placeholder,
+                            style: this.props.placeholderStyle,
+                            loaded: true
+                        });
+                    }
                 }
             }
         }
     }
 
     componentWillUnmount() {
+        this.mounted = false;
         const uri = this.getUri();
         ImageCache.imageCacheManager.unsubscribe(uri, this);
     }
 
     imageDownloaded(path) {
+        if (!this.mounted) {
+            return;
+        }
         if (path){
             this.setState({
                 source: { uri: path },
@@ -96,7 +105,9 @@ export default class ProfileImage extends React.Component {
     }
 
     onLoad = () => {
-        this.setState(() => ({ loaded: true }))
+        if (this.mounted) {
+            this.setState(() => ({ loaded: true }))
+        }
     }
 
 }

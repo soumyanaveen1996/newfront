@@ -23,8 +23,12 @@ export default class DeveloperTab extends React.Component {
 
     renderBotImage = (botData)=>{
         var botImage;
-        if (botData.name === I18n.t('Authenticate') || botData.name === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName) {
-            botImage = <View style = {styles.authenticateButton}><Text style ={styles.plusText}>+</Text></View>
+        if (botData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
+            botImage = (
+                <View style = {styles.authenticateButton}>
+                    <Text allowFontScaling={false} style ={styles.plusText}>+</Text>
+                </View>
+            );
         } else {
             if (botData.logoSlug != null) {
                 botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>
@@ -50,12 +54,12 @@ export default class DeveloperTab extends React.Component {
 
     getDomainMgmtBotData() {
         const domainMgmtBotData = _.filter(this.props.botsData, (bot) => {
-            return bot.botName.toLowerCase().indexOf(SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName.toLowerCase()) !== -1
+            return bot.botId.indexOf(SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) !== -1
         });
         this.domainMgmtBotData = {
             name: domainMgmtBotData[0].botName,
             logoUrl: domainMgmtBotData[0].logoUrl,
-            botIds: [domainMgmtBotData[0].botId]
+            botId: domainMgmtBotData[0].botId
         }
         this.domainMgmtChatBot = domainMgmtBotData[0];
     }
@@ -63,7 +67,9 @@ export default class DeveloperTab extends React.Component {
 
     renderGridItem = (rowData, index) => {
         let domainMgmtBot = false;
-        if (rowData.name === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botName) {
+        let botName = rowData.name;
+        if (rowData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
+            botName = I18n.t('Activate_Enterprise_Bots');
             domainMgmtBot = true;
         }
         return (
@@ -74,7 +80,7 @@ export default class DeveloperTab extends React.Component {
                 <View style={styles.tileContent}>
                     {this.renderBotImage(rowData)}
                     <Text style={styles.rowTitle}>
-                        {rowData.name}
+                        {botName}
                     </Text>
                 </View>
             </TouchableHighlight>

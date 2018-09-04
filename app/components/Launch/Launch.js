@@ -17,11 +17,12 @@ import { DeviceStorage } from '../../lib/capability';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents } from '../../lib/GoogleAnalytics';
+import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 28; // Corresponding to 2.13.0 build 6. Update this number every time we update initial_bots
+const VERSION = 31; // Corresponding to 2.15.0 build 8. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -72,24 +73,23 @@ export default class Splash extends React.Component {
             .then(() => {
                 return Auth.isUserLoggedIn();
             })
+            .then(() => {
+                return Promise.all([NetworkPoller.start(), this.listenToEvents(), this.configureNotifications()])
+            })
+            .then(() => {
+                return Auth.isUserLoggedIn();
+            })
             .then((isUserLoggedIn) => {
                 this.showMainScreen();
                 if (!isUserLoggedIn) {
-                    this.sendOnboardingBackgroundMessage();
+                    return this.sendOnboardingBackgroundMessage();
+                } else {
+                    return TwilioVoIP.init();
                 }
-            })
-            .then(() => {
-                NetworkPoller.start();
-            })
-            .then(() => {
-                this.listenToEvents();
-            })
-            .then(() => {
-                this.configureNotifications();
             })
             .catch((err) => {
                 // ignore
-                console.log(err);
+                console.log('Error : ', err);
             });
     }
 
@@ -104,7 +104,7 @@ export default class Splash extends React.Component {
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     }
 
-    configureNotifications = () => {
+    configureNotifications = async () => {
         console.log('In Configurig Notifications');
         Notification.deviceInfo()
             .then((info) => {
@@ -131,6 +131,10 @@ export default class Splash extends React.Component {
         }
     }
 
+    userLoggedInHandler = async () => {
+        TwilioVoIP.init();
+    }
+
     userLoggedOutHandler = async () => {
         //this.showOnboardingScreen();
     }
@@ -141,7 +145,9 @@ export default class Splash extends React.Component {
     }
 
     listenToEvents = async () => {
+        console.log('listening to events');
         // For now the user should not be taken back
+        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
         EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
         EventEmitter.addListener(NotificationEvents.registeredNotifications, this.notificationRegistrationHandler);
     }

@@ -103,8 +103,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 16
-        versionName "2.13.0"
+        versionCode 23
+        versionName "2.15.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -156,6 +156,7 @@ android {
 
 dependencies {
     compile project(':react-native-document-picker')
+    compile project(':react-native-twilio-programmable-voice')
     compile project(':react-native-tcp')
     compile project(':react-native-device-info')
     compile project(':react-native-background-task')

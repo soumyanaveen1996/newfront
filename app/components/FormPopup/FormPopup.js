@@ -69,6 +69,7 @@ class FormTextInput extends React.Component {
             secureTextEntry={this.props.secureTextEntry}
             keyboardType={this.props.keyboardType || 'default'}
             autoCapitalize={this.props.autoCapitalize || 'none'}
+            underlineColorAndroid="rgba(0,0,0,0)"
         />;
     }
 }
@@ -130,7 +131,7 @@ class RetryFormTextInput extends React.Component {
             this.props.onPasswordMatch('');
             return (
                 <View style={Styles.titleContainer}>
-                    <Text style={Styles.formErrorLabel}>{message}</Text>
+                    <Text allowFontScaling={false} style={Styles.formErrorLabel}>{message}</Text>
                 </View>
             )
         }
@@ -142,7 +143,7 @@ class RetryFormTextInput extends React.Component {
             <View>
                 <View style={this.state.passwordError ? Styles.formTwoLineInputContainer : Styles.formInputContainer}>
                     <View style={Styles.titleContainer}>
-                        <Text style={Styles.formInputLabel}>{formData.title ? formData.title.toLocaleUpperCase() : ''}</Text>
+                        <Text sallowFontScaling={false} tyle={Styles.formInputLabel}>{formData.title ? formData.title.toLocaleUpperCase() : ''}</Text>
                     </View>
                     {this.renderError(this.state.passwordError, I18n.t('Password_error'))}
                     <FormTextInput
@@ -156,7 +157,7 @@ class RetryFormTextInput extends React.Component {
                 </View>
                 <View style={this.state.retryPasswordError ? Styles.formTwoLineInputContainer : Styles.formInputContainer}>
                     <View style={Styles.titleContainer}>
-                        <Text style={Styles.formInputLabel}>{formData.title ? I18n.t('Confirm').toLocaleUpperCase() + ' ' + formData.title.toLocaleUpperCase() : ''}</Text>
+                        <Text allowFontScaling={false} style={Styles.formInputLabel}>{formData.title ? I18n.t('Confirm').toLocaleUpperCase() + ' ' + formData.title.toLocaleUpperCase() : ''}</Text>
                     </View>
                     {this.renderError(this.state.retryPasswordError, I18n.t('Retry_Password_error'))}
                     <FormTextInput
@@ -179,7 +180,7 @@ class FormCheckBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: props.formData.value
+            value: props.value
         }
     }
 
@@ -207,7 +208,7 @@ class FormCheckBox extends React.Component {
                     checked={this.state.value}
                     onPress={this.onRowSelect.bind(this)}
                 />
-                <Text style={Styles.checkBoxText}>
+                <Text allowFontScaling={false} style={Styles.checkBoxText}>
                     {formData.title}
                 </Text>
             </TouchableOpacity>
@@ -310,16 +311,16 @@ export default class FormPopup extends React.Component {
             if (formData[i].type === 'title') {
                 buttons.push(
                     <View style={Styles.formTitleContainer} key={i}>
-                        <Text style={Styles.formTitle}>{formData[i].title}</Text>
+                        <Text allowFontScaling={false} style={Styles.formTitle}>{formData[i].title}</Text>
                         <TouchableOpacity style={Styles.formCloseButton} onPress={this.onClose.bind(this)}>
-                            <Text style={Styles.formCloseButtonText}>{I18n.t('Close').toLocaleUpperCase()}</Text>
+                            <Text allowFontScaling={false} style={Styles.formCloseButtonText}>{I18n.t('Close').toLocaleUpperCase()}</Text>
                         </TouchableOpacity>
                     </View>
                 )
             } else if (formData[i].type === 'text') {
                 buttons.push(
                     <View style={[Styles.formTitleContainer, {borderBottomWidth: 0}]} key={i}>
-                        <Text style={Styles.formTitle}>{formData[i].text}</Text>
+                        <Text allowFontScaling={false} style={Styles.formTitle}>{formData[i].text}</Text>
                     </View>
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {
@@ -332,8 +333,8 @@ export default class FormPopup extends React.Component {
                     buttons.push(
                         <View style={Styles.formInputContainer} key={i}>
                             <View style={Styles.titleContainer}>
-                                <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
-                                <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
+                                <Text allowFontScaling={false} style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                                <Text allowFontScaling={false} style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
                             </View>
                             <FormTextInput
                                 editable={!notEditable}
@@ -351,8 +352,8 @@ export default class FormPopup extends React.Component {
                 let notEditable = !this.props.editable || formData[i].editable === false;
                 buttons.push(
                     <View style={Styles.formInputTextAreaContainer} key={i}>
-                        <Text style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
-                        <Text style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
+                        <Text allowFontScaling={false} style={Styles.formInputLabel}>{formData[i].title ? formData[i].title.toLocaleUpperCase() : ''}</Text>
+                        <Text allowFontScaling={false} style={Styles.formErrorLabel}>{this.errorMessages[i] ? this.errorMessages[i] : ''}</Text>
                         <FormTextInput
                             numberOfLines={3}
                             multiline={true}
@@ -374,7 +375,7 @@ export default class FormPopup extends React.Component {
                             underlayColor="white"
                             onPress={this.CTAResponseOnPress.bind(this)}
                             style={buttonStyle}>
-                            <Text style={Styles.formButtonText}>
+                            <Text allowFontScaling={false} style={Styles.formButtonText}>
                                 {formData[i].title}
                             </Text>
                         </TouchableOpacity>
@@ -382,9 +383,12 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'checkbox') {
                 const data = formData[i];
-                this.formValuesArray[i] = this.formValuesArray[i] || true;
+                if (this.formValuesArray[i] === undefined) {
+                    const value = formData[i].value === true || formData[i].value === 'true' ? true : false
+                    this.formValuesArray[i] = value;
+                }
                 buttons.push(
-                    <FormCheckBox formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
+                    <FormCheckBox value={this.formValuesArray[i]} formData={data} key={i} id={i} onValueChange={this.onCheckBoxValueChange.bind(this, i)} />
                 )
             }
         }

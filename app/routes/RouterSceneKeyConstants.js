@@ -14,7 +14,6 @@ const ROUTER_SCENE_KEYS = {
     'botStore': 'botStore',
     'botFilter': 'botFilter',
     'botList': 'botList',
-    'installedBots' : 'installedBots',
     'barCodeScanner' : 'barCodeScanner',
     'launch': 'launch',
     'mapView': 'mapView',
@@ -25,7 +24,8 @@ const ROUTER_SCENE_KEYS = {
     'locationPicker': 'locationPicker',
     'onboarding': 'onboarding',
     'videoRecorder': 'videoRecorder',
-    'channelsList': 'channelsList'
+    'channelsList': 'channelsList',
+    'phone': 'phone'
 };
 
 export default ROUTER_SCENE_KEYS;

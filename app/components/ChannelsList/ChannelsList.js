@@ -40,24 +40,37 @@ export default class ChannelsList extends React.Component {
     }
 
     onBack = () => {
-        this.refresh();
+        this.refresh(true);
     }
 
 
-    async refresh() {
+    async refresh(onback = false, handleEmptyChannels = true) {
         const channels = await Channel.getSubscribedChannels();
-        this.setState({
-            channels: channels
-        });
+        if (handleEmptyChannels && channels.length === 0) {
+            if (onback) {
+                if (this.props.onBack) {
+                    this.props.onBack();
+                }
+                Actions.pop();
+            } else {
+                this.handleAddChannel();
+            }
+        } else {
+            this.setState({ channels: channels });
+        }
     }
 
     onChannelUnsubscribe = async (channel) => {
-        await this.refresh();
+        await this.refresh(false, false);
         this.refs.toast.show(I18n.t('Channel_unsubscribed'), DURATION.LENGTH_SHORT);
     }
 
-    onChannelUnsubscribeFailed = (channel) => {
-        this.refs.toast.show(I18n.t('Channel_unsubscribe_failed'), DURATION.LENGTH_SHORT);
+    onChannelUnsubscribeFailed = (channel, message) => {
+        if (message) {
+            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+        } else {
+            this.refs.toast.show(I18n.t('Channel_unsubscribe_failed'), DURATION.LENGTH_LONG);
+        }
     }
 
 
@@ -98,7 +111,7 @@ export default class ChannelsList extends React.Component {
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast"/>
+                <Toast ref="toast" positionValue={200}/>
             </View>
         )
     }

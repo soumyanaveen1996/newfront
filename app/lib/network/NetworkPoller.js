@@ -31,12 +31,20 @@ BackgroundTask.define(async () => {
 
 class NetworkPoller {
     start = async () => {
+        console.log('Network Poller: Starting Polling On start');
         this.connectedToSatellite = false;
         this.keepAliveCount = 0;
         this.appState = 'active';
         await this.listenToEvents();
-        console.log('Network Poller: Starting Polling On start');
         this.startPolling();
+        this.subscribeToServerEvents();
+    }
+
+    userLoggedInHandler = async () => {
+        await this.createBackgroundTasks();
+        console.log('Network Poller: User Logged in');
+        console.log('Network Poller: Starting Polling on User Login');
+        this.startPolling()
         this.subscribeToServerEvents();
     }
 
@@ -130,14 +138,6 @@ class NetworkPoller {
         var bgBotScreen = new BackgroundBotChat({ bot: SystemBot.backgroundTaskBot });
         await bgBotScreen.initialize();
         bgBotScreen.init();
-    }
-
-    userLoggedInHandler = async () => {
-        await this.createBackgroundTasks();
-        console.log('Network Poller: User Logged in');
-        console.log('Network Poller: Starting Polling on User Login');
-        this.startPolling()
-        this.subscribeToServerEvents();
     }
 
     userLoggedOutHandler = async () => {

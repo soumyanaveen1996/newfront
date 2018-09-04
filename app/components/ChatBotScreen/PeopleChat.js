@@ -1,16 +1,19 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Keyboard } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
+import { Twilio, TwilioVoIP } from '../../lib/twilio';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
 import images from '../../images';
-import I18n from '../../config/i18n/i18n';
 import chatStyles from './styles';
+import TwilioVoice from 'react-native-twilio-programmable-voice';
+import I18n from '../../config/i18n/i18n';
+import { PhoneState } from '../Phone';
 
 export default class PeopleChat extends ChatBotScreen {
 
@@ -31,9 +34,11 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     static rightHeaderView({ params }) {
+        const callButton = params.callDisabled ? <HeaderRightIcon icon={Icons.callDisabled()} style={{marginRight: 0, paddingHorizontal: 0}}/>
+            : <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
         return (
             <View style={chatStyles.headerRightView}>
-                <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
+                {callButton}
                 {PeopleChat.connectionButton(params)}
             </View>
         )
@@ -86,7 +91,7 @@ export default class PeopleChat extends ChatBotScreen {
         return this.conversation.conversationId;
     }
 
-    setNavigationParams(context, user) {
+    setNavigationParams(context, user, callDisabled = false) {
         this.props.navigation.setParams({
             title: ConversationContext.getChatName(context, user),
             botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
@@ -94,19 +99,46 @@ export default class PeopleChat extends ChatBotScreen {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this),
             showCallMessage: this.showCallMessage.bind(this),
+            callDisabled: callDisabled,
         });
     }
 
-    showCallMessage() {
+    showVoipEnableAlert() {
         Alert.alert(
-            null,
-            I18n.t('Call_Message'),
+            'Alert!!',
+            'Other user has not installed VoIP enable FrontM app yet',
             [
-                { text: I18n.t('Ok'), style: 'cancel'},
+                {text: 'OK'},
             ],
             { cancelable: false }
-        );
+        )
     }
+
+
+    async showCallMessage() {
+        this.setNavigationParams(this.conversationContext, this.user, true);
+        try {
+            Keyboard.dismiss()
+            const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
+            //const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
+            const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
+            //console.log('is voip enabled : ', isVoIPEnabled);
+            this.setNavigationParams(this.conversationContext, this.user, false);
+            Actions.phone({
+                state: PhoneState.init,
+                data: {
+                    call_to: chatName || otherUserId,
+                    otherUserId: otherUserId,
+                    from: this.user.info.screenName
+                }
+            });
+        } catch (err) {
+            console.log('Unable to make the call : ', err);
+            Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
+        }
+    }
+
+
 
     async getConversationContext(botContext, user) {
         try {

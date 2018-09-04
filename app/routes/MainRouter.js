@@ -12,7 +12,6 @@ import WebViewScreen from '../components/WebViewScreen/WebViewScreen';
 import { BotListScreen } from '../components/BotListScreen';
 import { BotStoreScreen }  from '../components/BotStoreScreen';
 import { BotFilter }  from '../components/BotFilter';
-import { InstalledBotsScreen } from  '../components/InstalledBotsScreen';
 import { BarcodeScanner } from  '../components/BarcodeScanner';
 import { MapView } from  '../components/MapView';
 import { ImageViewer } from  '../components/ImageViewer';
@@ -22,6 +21,7 @@ import { VideoRecorder } from  '../components/VideoRecorder';
 import { FormPopup } from  '../components/FormPopup';
 import { ChannelsList } from '../components/ChannelsList';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
+import { Phone } from  '../components/Phone';
 import Config from './config';
 
 const MainRouter = () => {
@@ -33,12 +33,12 @@ const MainRouter = () => {
             <Lightbox>
                 <Scene>
                     <Scene key={ROUTER_SCENE_KEYS.launch} component={Launch} initial hideNavBar/>
-                    <Scene key={ROUTER_SCENE_KEYS.lightbox} inital hideNavBar>
+                    <Scene key={ROUTER_SCENE_KEYS.lightbox} hideNavBar>
                         <Scene key={ROUTER_SCENE_KEYS.main}
                             headerStyle={Config.navBar.headerStyle}
                             headerTintColor={Config.navBar.navigationBarTintColor}>
                             <Scene key={ROUTER_SCENE_KEYS.timeline} component={MainScreen} initial title={I18n.t('FrontM')}/>
-                            <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} inital/>
+                            <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} />
                             <Scene key={ROUTER_SCENE_KEYS.peopleChat} component={PeopleChat}/>
                             <Scene key={ROUTER_SCENE_KEYS.channelChat} component={ChannelChat}/>
                             <Scene key={ROUTER_SCENE_KEYS.slider} component={Slider} />
@@ -50,7 +50,6 @@ const MainRouter = () => {
                             <Scene key={ROUTER_SCENE_KEYS.barCodeScanner} component={BarcodeScanner} hideNavBar/>
                             <Scene key={ROUTER_SCENE_KEYS.addContacts} headerStyle={Config.navBar.borderlessHeaderStyle} component={ContactsPicker} title={I18n.t('My_Contacts')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.conversations} component={ConversationList} title={I18n.t('Conversations')} back/>
-                            <Scene key={ROUTER_SCENE_KEYS.installedBots} headerStyle={Config.navBar.borderlessHeaderStyle} component={InstalledBotsScreen} title={I18n.t('Installed_bots')} />
                             <Scene key={ROUTER_SCENE_KEYS.imageViewer} component={ImageViewer} />
                             <Scene key={ROUTER_SCENE_KEYS.channelsList} component={ChannelsList} title={I18n.t('Channels')} back/>
                             <Scene key={ROUTER_SCENE_KEYS.SNRChart} component={SNRChart}/>
@@ -65,6 +64,7 @@ const MainRouter = () => {
                 </Scene>
                 <Scene key={ROUTER_SCENE_KEYS.form} component={FormPopup} hideNavBar/>
                 <Scene key={ROUTER_SCENE_KEYS.info} component={InfoPopup} hideNavBar/>
+                <Scene key={ROUTER_SCENE_KEYS.phone} component={Phone} hideNavBar/>
             </Lightbox>
         </Router>
     );

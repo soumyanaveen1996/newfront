@@ -90,7 +90,7 @@ export default class MainScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
-        EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        this.messageListener = EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
     }
 
     componentWillMount() {
@@ -143,7 +143,11 @@ export default class MainScreen extends React.Component {
             this.eventSubscription.remove();
         }
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-        EventEmitter.removeEventListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        if (this.messageListener) {
+            this.messageListener.remove();
+            this.messageListener = null;
+            // EventEmitter.removeEventListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        }
     }
 
     openContacts() {
@@ -169,8 +173,7 @@ export default class MainScreen extends React.Component {
 
     openBotStore() {
         this.floatingButton.reset(true);
-        Actions.installedBots({ onBack: this.onBack.bind(this) });
-        //Actions.botStore()
+        Actions.botStore({ onBack: this.onBack.bind(this) });
     }
 
     openConversations() {
@@ -206,7 +209,7 @@ export default class MainScreen extends React.Component {
                     {/* <FloatingButton.Item title={I18n.t('Favorites')} image={images.icn_fav} onPress={() => console.log('Favorites tapped!')} /> */}
                     <FloatingButton.Item title={I18n.t('Contacts')} image={images.icn_contact} onPress={this.openContacts.bind(this)} />
                     <FloatingButton.Item title={I18n.t('Channels')} image={images.icn_channel} onPress={this.openChannels.bind(this)} />
-                    <FloatingButton.Item title={I18n.t('ChatBots')} image={images.icn_chatbot} onPress={this.openBotStore.bind(this)} />
+                    <FloatingButton.Item title={I18n.t('Discover')} image={images.icn_chatbot} onPress={this.openBotStore.bind(this)} />
                     <FloatingButton.Item title={I18n.t('Configure')} image={images.icn_configure} onPress={this.openConfigure.bind(this)} />
                 </FloatingButton>
             );

@@ -106,7 +106,10 @@ const config = {
         resetSigninPath: '/v2/resetSignin/frontm',
         ssePath: '/chatSSE',
         uploadFilePath: '/v2/uploadfile',
-        downloadFilePath: '/v2/file'
+        downloadFilePath: '/v2/file',
+        twilioPath: '/twilio',
+        enableVoIPPath: '/enableVoip',
+        getVoIPStatusPath: '/getVoipStatus',
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
