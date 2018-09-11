@@ -39,7 +39,8 @@ const images = {
     gsm: require('./icons/gsm.png'),
     satellite: require('./icons/satellite.png'),
     user_image: require('./chat/user_image.png'),
-    splash_page_logo: { uri: 'FM-logo-landing page' }
+    splash_page_logo: { uri: 'FM-logo-landing page' },
+    trail_arrow: require('./map/trail_arrow.png')
 };
 
 export default images;
