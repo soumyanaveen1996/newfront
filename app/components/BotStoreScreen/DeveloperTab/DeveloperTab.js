@@ -39,13 +39,13 @@ export default class DeveloperTab extends React.Component {
         return botImage;
     }
 
-    onTileCilcked = (botsId)=>{
+    onTileCilcked = (botsId, title)=>{
         if (botsId == null) {
             return;
         }
 
         let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
-        Actions.botList({data : selectedBots});
+        Actions.botList({data : selectedBots, title: title});
     }
 
     onDomainMgmtTileClicked() {
@@ -76,7 +76,7 @@ export default class DeveloperTab extends React.Component {
             <TouchableHighlight
                 key={index}
                 style={styles.gridStyle}
-                onPress= {() => domainMgmtBot ? this.onDomainMgmtTileClicked() : this.onTileCilcked(rowData.botIds)}>
+                onPress= {() => domainMgmtBot ? this.onDomainMgmtTileClicked() : this.onTileCilcked(rowData.botIds, botName)}>
                 <View style={styles.tileContent}>
                     {this.renderBotImage(rowData)}
                     <Text style={styles.rowTitle}>

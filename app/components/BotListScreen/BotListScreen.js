@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import styles from './styles';
 import { headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
@@ -12,8 +12,9 @@ import utils from '../../lib/utils';
 
 export default class BotListScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
+        
         return {
-            headerTitle: headerConfig.headerTitle,
+            headerTitle: navigation.state.params.title || headerConfig.headerTitle,
             headerLeft: <HeaderBack onPress={Actions.pop} />,
         }
     }
@@ -34,6 +35,8 @@ export default class BotListScreen extends React.Component {
         this.setState({
             installedBots: bots
         });
+
+        
     }
 
     onBotInstalled = async () => {
@@ -49,9 +52,8 @@ export default class BotListScreen extends React.Component {
         return utils.checkBotStatus(this.state.installedBots, bot);
     }
 
-    renderRow = (bot) => {
+    renderRow = (bot) => {    
         const botStatus = this.checkBotStatus(bot);
-
         return (
             <BotInstallListItem
                 bot={bot}
@@ -67,6 +69,7 @@ export default class BotListScreen extends React.Component {
     }
 
     renderRowItem = ({item}) => {
+        
         return (
             <View key={item.botId} style={styles.rowContainer}>
                 <View style={styles.rowContent}>
