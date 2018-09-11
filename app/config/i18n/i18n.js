@@ -110,7 +110,9 @@ I18n.translations = {
         Activate_Enterprise_Bots: 'Sign in to a new Provider',
         Initializing: 'Initializing',
         Calling: 'Calling',
-        From: 'From'
+        From: 'From',
+        Dial: 'Dial',
+        Enter_valid_number: 'Please enter a valid phone number'
     },
 }
 

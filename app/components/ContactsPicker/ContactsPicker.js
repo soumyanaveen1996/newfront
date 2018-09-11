@@ -13,15 +13,27 @@ import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
 import {Contact} from '../../lib/capability';
+import { Icons } from '../../config/icons';
 
 export default class ContactsPicker extends React.Component {
 
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerRight: <HeaderRightIcon config={addButtonConfig} onPress={state.params.handleAddContact} />,
+            headerRight: ContactsPicker.rightHeaderView(state),
             headerLeft: <HeaderBack onPress={Actions.pop} />,
         }
+    }
+
+
+    static rightHeaderView({ params }) {
+        const callButton = <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showDialler(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>;
+        return (
+            <View style={styles.headerRightView}>
+                {callButton}
+                <HeaderRightIcon config={addButtonConfig} onPress={params.handleAddContact} />
+            </View>
+        )
     }
 
     constructor(props) {
@@ -34,7 +46,10 @@ export default class ContactsPicker extends React.Component {
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ handleAddContact: this.handleAddContact.bind(this) });
+        this.props.navigation.setParams({
+            handleAddContact: this.handleAddContact.bind(this),
+            showDialler: this.showDialler,
+        });
         Contact.getAddedContacts()
             .then((contacts) => {
                 if (contacts.length === 0) {
@@ -42,6 +57,10 @@ export default class ContactsPicker extends React.Component {
                     this.handleAddContact();
                 }
             });
+    }
+
+    showDialler = () => {
+        Actions.dialler();
     }
 
     handleAddContact = () => {
