@@ -79,6 +79,7 @@ export default class ConversationListItem extends React.Component {
                 resizeMode="cover"/>;
         } else {
             return <CachedImage
+                imageTag = "channelLogo"
                 source={{ uri: Utils.channelLogoUrl(this.props.chatData.channel.logo) } }
                 style={ BotListItemStyles.conversationImage }
                 resizeMode="contain"/>;

@@ -16,6 +16,7 @@ export default class CachedImage extends React.Component {
         super(props);
         this.state = {
             state: CachedImageStates.IMAGE_NOT_LOADED
+
         };
     }
 
@@ -38,7 +39,7 @@ export default class CachedImage extends React.Component {
         } else {
             this.setState({
                 state: CachedImageStates.IMAGE_LOADED,
-                source: this.props.source
+                source: this.props.source,
             });
         }
     }
@@ -68,7 +69,7 @@ export default class CachedImage extends React.Component {
 
     render() {
         return (
-            <LogoImage
+            <LogoImage accessibilityLabel={'Cached Image ' + this.props.imageTag} testID={'cached-image-' + this.props.imageTag}
                 source={this.state.source}
                 imageStyle={ this.props.style }
                 loadingStyle={( Platform.OS === 'android') ? null : undefined}

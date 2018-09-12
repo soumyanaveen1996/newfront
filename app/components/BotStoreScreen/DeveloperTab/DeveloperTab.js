@@ -33,7 +33,7 @@ export default class DeveloperTab extends React.Component {
             if (botData.logoSlug != null) {
                 botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>
             } else {
-                botImage = <CachedImage source={{uri : botData.logoUrl}} style={styles.iconStyle}/>
+                botImage = <CachedImage imageTag = "botLogo" source={{uri : botData.logoUrl}} style={styles.iconStyle}/>
             }
         }
         return botImage;
