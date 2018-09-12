@@ -146,7 +146,8 @@ function Network(options, queue = false) {
                             } else {
                                 reject(new NetworkError(response.status, response.statusText));
                             }
-                        });
+                        })
+                        .catch(reject);
                     /*
                     axios(options)
                         .then((data) => {
