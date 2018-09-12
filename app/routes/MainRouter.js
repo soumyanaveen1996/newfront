@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Linking } from 'react-native';
+import { StatusBar } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import { MainScreen, ConversationList } from '../components/MainScreen';
 import { BotChat, PeopleChat, FavoriteMessages, ChannelChat } from '../components/ChatBotScreen';
@@ -24,56 +24,50 @@ import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from  '../components/Phone';
 import Config from './config';
 
-// We want white network bar
-StatusBar.setBarStyle('light-content', true);
-class MainRouter extends React.Component {
-    constructor(props){
-        super(props);
-    }
-    
-    render(){
-        return (
-            <Router>
-                <Lightbox>
-                    <Scene>
-                        <Scene key={ROUTER_SCENE_KEYS.launch} component={Launch} initial hideNavBar/>
-                        <Scene key={ROUTER_SCENE_KEYS.lightbox} hideNavBar>
-                            <Scene key={ROUTER_SCENE_KEYS.main}
-                                headerStyle={Config.navBar.headerStyle}
-                                headerTintColor={Config.navBar.navigationBarTintColor}>
-                                <Scene key={ROUTER_SCENE_KEYS.timeline} component={MainScreen} initial title={I18n.t('FrontM')}/>
-                                <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} />
-                                <Scene key={ROUTER_SCENE_KEYS.peopleChat} component={PeopleChat}/>
-                                <Scene key={ROUTER_SCENE_KEYS.channelChat} component={ChannelChat}/>
-                                <Scene key={ROUTER_SCENE_KEYS.slider} component={Slider} />
-                                <Scene key={ROUTER_SCENE_KEYS.webview} component={WebViewScreen} hideNavBar/>
-                                <Scene key={ROUTER_SCENE_KEYS.botStore} component = {BotStoreScreen} title={I18n.t('Bot_Store')}/>
-                                <Scene key={ROUTER_SCENE_KEYS.botList} component = {BotListScreen} title={I18n.t('Bots')}/>
-                                <Scene key={ROUTER_SCENE_KEYS.favoriteMessage} component = {FavoriteMessages} title={I18n.t('Favorites')}/>
-                                <Scene key={ROUTER_SCENE_KEYS.videoRecorder} component = {VideoRecorder} hideNavBar/>
-                                <Scene key={ROUTER_SCENE_KEYS.barCodeScanner} component={BarcodeScanner} hideNavBar/>
-                                <Scene key={ROUTER_SCENE_KEYS.addContacts} headerStyle={Config.navBar.borderlessHeaderStyle} component={ContactsPicker} title={I18n.t('My_Contacts')} back/>
-                                <Scene key={ROUTER_SCENE_KEYS.conversations} component={ConversationList} title={I18n.t('Conversations')} back/>
-                                <Scene key={ROUTER_SCENE_KEYS.imageViewer} component={ImageViewer} />
-                                <Scene key={ROUTER_SCENE_KEYS.channelsList} component={ChannelsList} title={I18n.t('Channels')} back/>
-                                <Scene key={ROUTER_SCENE_KEYS.SNRChart} component={SNRChart}/>
-                            </Scene>
-                            <Scene key={ROUTER_SCENE_KEYS.botFilter} component={BotFilter} hideNavBar/>
-                            <Scene key={ROUTER_SCENE_KEYS.mapView} component={MapView} hideNavBar/>
-                            <Scene key={ROUTER_SCENE_KEYS.locationPicker} component={LocationPicker} hideNavBar/>
-                            <Scene key={ROUTER_SCENE_KEYS.onboarding} component={BotChat}
-                                headerStyle={Config.navBar.headerStyle}
-                                headerTintColor={Config.navBar.navigationBarTintColor} intial title={I18n.t('FrontM')} />
-                        </Scene>
-                    </Scene>
-                    <Scene key={ROUTER_SCENE_KEYS.form} component={FormPopup} hideNavBar/>
-                    <Scene key={ROUTER_SCENE_KEYS.info} component={InfoPopup} hideNavBar/>
-                    <Scene key={ROUTER_SCENE_KEYS.phone} component={Phone} hideNavBar/>
-                </Lightbox>
-            </Router>
-        );
-    }
+const MainRouter = () => {
+    // We want white network bar
+    StatusBar.setBarStyle('light-content', true);
 
+    return (
+        <Router>
+            <Lightbox>
+                <Scene>
+                    <Scene key={ROUTER_SCENE_KEYS.launch} component={Launch} initial hideNavBar/>
+                    <Scene key={ROUTER_SCENE_KEYS.lightbox} hideNavBar>
+                        <Scene key={ROUTER_SCENE_KEYS.main}
+                            headerStyle={Config.navBar.headerStyle}
+                            headerTintColor={Config.navBar.navigationBarTintColor}>
+                            <Scene key={ROUTER_SCENE_KEYS.timeline} component={MainScreen} initial title={I18n.t('FrontM')}/>
+                            <Scene key={ROUTER_SCENE_KEYS.botChat} component={BotChat} />
+                            <Scene key={ROUTER_SCENE_KEYS.peopleChat} component={PeopleChat}/>
+                            <Scene key={ROUTER_SCENE_KEYS.channelChat} component={ChannelChat}/>
+                            <Scene key={ROUTER_SCENE_KEYS.slider} component={Slider} />
+                            <Scene key={ROUTER_SCENE_KEYS.webview} component={WebViewScreen} hideNavBar/>
+                            <Scene key={ROUTER_SCENE_KEYS.botStore} component = {BotStoreScreen} title={I18n.t('Bot_Store')}/>
+                            <Scene key={ROUTER_SCENE_KEYS.botList} component = {BotListScreen} title={I18n.t('Bots')}/>
+                            <Scene key={ROUTER_SCENE_KEYS.favoriteMessage} component = {FavoriteMessages} title={I18n.t('Favorites')}/>
+                            <Scene key={ROUTER_SCENE_KEYS.videoRecorder} component = {VideoRecorder} hideNavBar/>
+                            <Scene key={ROUTER_SCENE_KEYS.barCodeScanner} component={BarcodeScanner} hideNavBar/>
+                            <Scene key={ROUTER_SCENE_KEYS.addContacts} headerStyle={Config.navBar.borderlessHeaderStyle} component={ContactsPicker} title={I18n.t('My_Contacts')} back/>
+                            <Scene key={ROUTER_SCENE_KEYS.conversations} component={ConversationList} title={I18n.t('Conversations')} back/>
+                            <Scene key={ROUTER_SCENE_KEYS.imageViewer} component={ImageViewer} />
+                            <Scene key={ROUTER_SCENE_KEYS.channelsList} component={ChannelsList} title={I18n.t('Channels')} back/>
+                            <Scene key={ROUTER_SCENE_KEYS.SNRChart} component={SNRChart}/>
+                        </Scene>
+                        <Scene key={ROUTER_SCENE_KEYS.botFilter} component={BotFilter} hideNavBar/>
+                        <Scene key={ROUTER_SCENE_KEYS.mapView} component={MapView} hideNavBar/>
+                        <Scene key={ROUTER_SCENE_KEYS.locationPicker} component={LocationPicker} hideNavBar/>
+                        <Scene key={ROUTER_SCENE_KEYS.onboarding} component={BotChat}
+                            headerStyle={Config.navBar.headerStyle}
+                            headerTintColor={Config.navBar.navigationBarTintColor} intial title={I18n.t('FrontM')} />
+                    </Scene>
+                </Scene>
+                <Scene key={ROUTER_SCENE_KEYS.form} component={FormPopup} hideNavBar/>
+                <Scene key={ROUTER_SCENE_KEYS.info} component={InfoPopup} hideNavBar/>
+                <Scene key={ROUTER_SCENE_KEYS.phone} component={Phone} hideNavBar/>
+            </Lightbox>
+        </Router>
+    );
 };
 
 export default MainRouter;

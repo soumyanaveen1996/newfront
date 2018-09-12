@@ -695,7 +695,6 @@
 				0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */,
 				0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */,
 				045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */,
-				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				040AA78920034A790057C959 /* libRCTPushNotification.a in Frameworks */,
 				8C52E5FF704F4F9F861A5DC6 /* SystemConfiguration.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -706,6 +705,7 @@
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */,
+				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
@@ -2226,7 +2226,6 @@
 					"\"$(SRCROOT)/frontm_mobile\"",
 					"\"$(SRCROOT)/frontm_mobile\"",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=*]" = "$(SRCROOT)/../node_modules/react-native/Libraries";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
