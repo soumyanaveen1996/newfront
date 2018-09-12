@@ -8,6 +8,7 @@ class DataManager {
     init = async () => {
         this.contactsFetched = false;
         this.channelsFetched = false;
+        this.userDataFetchedEventEmitted = false;
         await this.listenToEvents();
         this.listenToAppEvents();
     }
@@ -25,14 +26,15 @@ class DataManager {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (isUserLoggedIn) {
             if (nextAppState === 'active') {
-                this.refreshChannels();
+                this.userLoggedInHandler();
             }
         }
     }
+
     checkDataFetched = () => {
-        console.log('Data fetched : ', this.channelsFetched, this.contactsFetched);
-        if (this.channelsFetched && this.contactsFetched) {
+        if (this.channelsFetched && this.contactsFetched && !this.userDataFetchedEventEmitted) {
             EventEmitter.emit(AuthEvents.userDataFetched);
+            this.userDataFetchedEventEmitted = true;
         }
     }
 
