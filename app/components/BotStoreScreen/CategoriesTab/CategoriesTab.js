@@ -25,9 +25,9 @@ export default class CategoriesTab extends React.Component {
         return categoryImage;
     }
 
-    onTileCilcked = (botsId) => {
+    onTileCilcked = (botsId, title) => {
         let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
-        Actions.botList({data : selectedBots});
+        Actions.botList({data : selectedBots, title: title});
     }
 
     renderGridItem = (rowData, index) => {
@@ -35,7 +35,7 @@ export default class CategoriesTab extends React.Component {
             <TouchableHighlight
                 key={index}
                 style={styles.gridStyle}
-                onPress= {() => this.onTileCilcked(rowData.botIds)}>
+                onPress= {() => this.onTileCilcked(rowData.botIds, rowData.name)}>
                 <View style={styles.tileContent}>
                     {this.renderCategoryImage(rowData)}
                     <Text style={styles.rowTitle}>

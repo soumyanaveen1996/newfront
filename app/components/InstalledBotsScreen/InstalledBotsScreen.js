@@ -246,7 +246,7 @@ export default class InstalledBotsScreen extends React.Component {
             <View style={BotListItemStyles.container}>
                 <CachedImage imageTag = "botLogo" source={{uri: botData.logoUrl}} style={BotListItemStyles.image}/>
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={ BotListItemStyles.title } >{ botData.botName }</Text>
+                    <Text style={ BotListItemStyles.title } >{ botData.botName } </Text>
                     <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
                 </View>
                 <View style={BotListItemStyles.rightContainer}>

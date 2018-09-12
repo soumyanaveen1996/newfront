@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View, BackHandler, Alert } from 'react-native';
+import { ActivityIndicator, View, BackHandler, Alert, Text } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
@@ -221,7 +221,7 @@ export default class MainScreen extends React.Component {
             return <ActivityIndicator size="small" style={MainScreenStyles.activityIndicator}/>;
         } else {
             return (
-                <View style={MainScreenStyles.botListContainer}>
+                <View style={MainScreenStyles.botListContainer}>                    
                     <BotList ref="botList"
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots} />
