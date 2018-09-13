@@ -46,6 +46,11 @@ export const Icons = {
     automatic: icon('ios-ionic', 'ionicon', 30, Colors.white, Colors.translucentDark, '500'),
     greenCall: icon('ios-call', 'ionicon', 50, Colors.white, 'green', '500'),
     redClose: icon('ios-close', 'ionicon', 50, Colors.white, 'red', '500'),
+    mic: icon('ios-mic', 'ionicon', 50, Colors.darkGray, 'red', '500'),
+    micOff: icon('ios-mic-off', 'ionicon', 50, Colors.darkGray, 'red', '500'),
+    numdial: icon('ios-keypad', 'ionicon', 50, Colors.darkGray, 'red', '500'),
+    speakerOn: icon('ios-volume-up', 'ionicon', 50, Colors.darkGray, 'red', '500'),
+    speakerOff: icon('ios-volume-off', 'ionicon', 50, Colors.darkGray, 'red', '500'),
 };
 
 export default Icons;

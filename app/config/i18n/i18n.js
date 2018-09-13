@@ -112,7 +112,8 @@ I18n.translations = {
         Calling: 'Calling',
         From: 'From',
         Dial: 'Dial',
-        Enter_valid_number: 'Please enter a valid phone number'
+        Enter_valid_number: 'Please enter a valid phone number',
+        Delete: 'Delete'
     },
 }
 

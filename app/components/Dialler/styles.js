@@ -16,24 +16,32 @@ const Styles = StyleSheet.create({
 
     },
     callingText: {
-        color: GlobalColors.white,
+        color: GlobalColors.botChatBubbleColor,
         fontSize: 20,
         textAlign: 'center',
         height: 30
     },
-    nameText: {
+    diallerNumberText: {
         color: GlobalColors.white,
+        fontSize: 40,
+        textAlign: 'left',
+        height: 140,
+        marginTop: 20,
+        paddingHorizontal: 10,
+    },
+    callingNumberText: {
+        color: GlobalColors.black,
         fontSize: 40,
         textAlign: 'center',
         height: 50,
         marginTop: 20,
     },
-    buttonContainer: {
-        height: 50,
+    callButtonContainer: {
+        height: 70,
         flexDirection: 'row',
-        padding: 36,
         justifyContent: 'space-around',
-        marginBottom: 36,
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
     },
     button: {
         borderRadius: 36,
@@ -53,46 +61,69 @@ const Styles = StyleSheet.create({
         height: 60,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 30,
         marginVertical: 6,
         borderWidth: 1,
         borderColor: GlobalColors.white
     },
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     roundButtonText: {
-        color: GlobalColors.white,
-        fontSize: 24,
+        color: GlobalColors.black,
+        fontSize: 36,
         textAlign: 'center',
         flex: 0,
     },
+    swapButtonContainer: {
+        backgroundColor: GlobalColors.white
+    },
     closeButton: {
-        position: 'absolute',
-        bottom: 10,
-        right: 15,
         padding: 10,
     },
     closeButtonText: {
         fontSize: 17,
-        color: GlobalColors.white,
+        color: GlobalColors.black,
     },
     mainContainer: {
         paddingTop: 40,
         flex: 1,
         flexDirection: 'column',
         paddingBottom: 30,
+        backgroundColor: 'white'
+    },
+    initialMainContainer: {
+        backgroundColor: 'green',
+        flex: 1,
+        paddingTop: 40,
     },
     diallerContainer: {
-        paddingTop: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1,
+        height: 300,
+        backgroundColor: GlobalColors.white
     },
     diallerButtonContainer: {
-        width: 240,
+        flex: 1,
+        flexDirection: 'column',
+        //backgroundColor: 'red',
+    },
+    incallDiallerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    incallDiallerButtonContainer: {
         height: 300,
+        flexDirection: 'row',
+        width: '80%',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+    incallButtonContainer: {
+        height: 70,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
     }
 });
 

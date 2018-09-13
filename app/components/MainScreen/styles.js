@@ -92,7 +92,7 @@ export const BotListItemStyles = {
         top: 5,
         right: 20,
         color: BotListItemColors.dateColor,
-        fontSize: 11,
+        fontSize: 9,
         fontWeight: '600',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         textAlign: 'right'

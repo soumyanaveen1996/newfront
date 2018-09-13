@@ -16,9 +16,8 @@ import _ from 'lodash';
 
 export const DiallerState = {
     initial: 'initial',
-    connecting: 'connecting',
     incall: 'incall',
-    incall_digits: 'calling_incall',
+    incall_digits: 'incall_digits',
 }
 
 
@@ -28,7 +27,10 @@ export default class Dialler extends React.Component {
         super(props);
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '+',
+            dialledNumber: '+918971723492',
+            dialledDigits: '',
+            micOn: true,
+            speakerOn: false
         }
     }
 
@@ -44,7 +46,7 @@ export default class Dialler extends React.Component {
             return;
         }
         try {
-            this.setState({diallerState : DiallerState.connecting});
+            this.setState({diallerState : DiallerState.incall});
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
                 TwilioVoice.connect({To: `${this.state.dialledNumber}`})
@@ -111,34 +113,44 @@ export default class Dialler extends React.Component {
     statusMessage(state) {
         if (state === DiallerState.initial) {
             return I18n.t('Dial');
-        } else if (state === DiallerState.connecting) {
-            return I18n.t('Calling');
+        } else if (state === DiallerState.incall_digits) {
+            return '';
         } else if (state === DiallerState.incall) {
             return I18n.t('Calling');
         }
     }
 
-    phonenumber() {
-        return this.state.dialledNumber;
+    phonenumber(state) {
+        if (state === DiallerState.incall_digits) {
+            return this.state.dialledDigits;
+        } else {
+            return this.state.dialledNumber;
+        }
     }
 
     buttonPressed(char) {
         const { dialledNumber, diallerState } = this.state;
-        if (diallerState !== DiallerState.initial) {
-            return;
-        }
-        if (char === '<') {
-            const newNumber = dialledNumber.length > 0 ? dialledNumber.substr(0, dialledNumber.length - 1) : ''
-            this.setState({ dialledNumber: newNumber === '' ? '+' : newNumber });
-        } else if (char === '+') {
-            if (dialledNumber.length === 0) {
-                this.setState({ dialledNumber: this.state.dialledNumber + char });
+        if (diallerState === DiallerState.initial) {
+            if (char === '+') {
+                if (dialledNumber.length === 0) {
+                    this.setState({ dialledNumber: this.state.dialledNumber + char });
+                }
+            } else {
+                if (dialledNumber.length < 15) {
+                    this.setState({ dialledNumber: this.state.dialledNumber + char });
+                }
             }
-        } else {
-            if (dialledNumber.length < 15) {
-                this.setState({ dialledNumber: this.state.dialledNumber + char });
-            }
+        } else if (diallerState === DiallerState.incall_digits) {
+            this.setState({ dialledDigits: this.state.dialledDigits + char})
+            TwilioVoice.sendDigits(char);
         }
+
+    }
+
+    handleDelete() {
+        const { dialledNumber } = this.state;
+        const newNumber = dialledNumber.length > 0 ? dialledNumber.substr(0, dialledNumber.length - 1) : ''
+        this.setState({ dialledNumber: newNumber === '' ? '+' : newNumber });
     }
 
     renderButtonForChar(char) {
@@ -150,7 +162,10 @@ export default class Dialler extends React.Component {
     }
 
     renderButtons() {
-        return [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], [' ', '0', '<']].map((row, index) => {
+        const { diallerState } = this.state;
+        const digits  = diallerState === DiallerState.initial ? [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['0']] :
+            [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['*', '0', '+']]
+        return digits.map((row, index) => {
             return (
                 <View key={index} style={Styles.buttonRow}>
                     {
@@ -178,27 +193,107 @@ export default class Dialler extends React.Component {
         }
     }
 
+    renderDeleteButton() {
+        const { diallerState } = this.state;
+        if (diallerState === DiallerState.initial) {
+            return (
+                <TouchableOpacity style={Styles.closeButton} onPress={this.handleDelete.bind(this)}>
+                    <Text style={Styles.closeButtonText}>{I18n.t('Delete')}</Text>
+                </TouchableOpacity>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    closeDigits() {
+        this.setState({ diallerState: DiallerState.incall });
+    }
+
+    openDial() {
+        this.setState({ diallerState: DiallerState.incall_digits });
+    }
+
+    toggleMic() {
+        TwilioVoice.setMuted(!this.state.micOn);
+        this.setState({micOn : !this.state.micOn})
+    }
+
+    toggleSpeaker() {
+        TwilioVoice.setSpeakerPhone(!this.state.speakerOn);
+        this.setState({speakerOn : !this.state.speakerOn})
+    }
+
     render(){
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
-        return (
-            <View style={Styles.container}>
-                <View style={Styles.mainContainer}>
-                    <View style={Styles.nameContainer}>
-                        <Text style={Styles.callingText}>{message}</Text>
-                        <Text style={Styles.nameText}>{this.phonenumber()}</Text>
+        if (diallerState === DiallerState.initial) {
+            return (
+                <View style={Styles.container}>
+                    <View style={Styles.initialMainContainer}>
+                        <Text style={Styles.diallerNumberText}>{this.phonenumber(diallerState)}</Text>
                     </View>
                     <View style={Styles.diallerContainer}>
                         <View style={Styles.diallerButtonContainer}>
                             {this.renderButtons()}
                         </View>
                     </View>
-                    <View style={Styles.buttonContainer}>
+                    <View style={Styles.callButtonContainer}>
+                        {this.renderCloseButton()}
+                        {this.renderButton()}
+                        {this.renderDeleteButton()}
+                    </View>
+
+                </View>
+            );
+        } else if (diallerState === DiallerState.incall) {
+            return (
+                <View style={Styles.container}>
+                    <View style={Styles.mainContainer}>
+                        <View style={Styles.nameContainer}>
+                            <Text style={Styles.callingText}>{message}</Text>
+                            <Text style={Styles.callingNumberText}>{this.phonenumber(diallerState)}</Text>
+                        </View>
+                        <View style={Styles.incallDiallerContainer}>
+                            <View style={Styles.incallDiallerButtonContainer}>
+                                <TouchableOpacity style={[Styles.button]} onPress={this.toggleMic.bind(this)}>
+                                    {this.state.micOn ? Icons.mic() : Icons.micOff()}
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[Styles.button]} onPress={this.openDial.bind(this)}>
+                                    {Icons.numdial()}
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[Styles.button]} onPress={this.toggleSpeaker.bind(this)}>
+                                    {this.state.speakerOn ? Icons.speakerOn() : Icons.speakerOff()}
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={Styles.incallButtonContainer}>
+                            {this.renderButton()}
+                        </View>
+                    </View>
+                </View>
+            );
+        } else if (diallerState === DiallerState.incall_digits) {
+            return (
+                <View style={Styles.container}>
+                    <View style={Styles.initialMainContainer}>
+                        <Text style={Styles.diallerNumberText}>{this.phonenumber(diallerState)}</Text>
+                    </View>
+                    <View style={Styles.swapButtonContainer}>
+                        <TouchableOpacity style={Styles.closeButton} onPress={this.closeDigits.bind(this)}>
+                            <Text style={Styles.closeButtonText}>{I18n.t('Close')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={Styles.diallerContainer}>
+                        <View style={Styles.diallerButtonContainer}>
+                            {this.renderButtons()}
+                        </View>
+                    </View>
+                    <View style={Styles.callButtonContainer}>
                         {this.renderButton()}
                     </View>
-                    {this.renderCloseButton()}
                 </View>
-            </View>
-        );
+            );
+        }
     }
 }
