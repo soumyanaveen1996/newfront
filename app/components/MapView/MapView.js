@@ -50,12 +50,16 @@ export default class MapView extends React.Component {
     }
 
     RenderTrailArrows(polylines) {
-        return polylines[0].coordinates.map((coo, index, coos) => {
-            if (index === coos.length - 1) { return }
-            let deltaLatitute = coos[index + 1].latitude - coo.latitude
-            let deltaLongitude = coos[index + 1].longitude - coo.longitude
-            let angle = Math.atan2(deltaLatitute, deltaLongitude)
-            return (<RNMapView.Marker coordinate={coo} image={images.trail_arrow} anchor={{ x: 0.5, y: 0.5 }} rotation={-angle * (180 / Math.PI)} />)
+        return _.map(polylines, (polyline) => {
+            return polyline.coordinates.map((coo, index, coos) => {
+                if (index === coos.length - 1) { return }
+                let deltaLatitute = coos[index + 1].latitude - coo.latitude
+                let deltaLongitude = coos[index + 1].longitude - coo.longitude
+                let angle = Math.atan2(deltaLatitute, deltaLongitude)
+                return (
+                    <RNMapView.Marker coordinate={coo} image={images.trail_arrow} anchor={{ x: 0.5, y: 0.5 }} rotation={-angle * (180 / Math.PI)} />
+                )
+            })
         })
     }
 
