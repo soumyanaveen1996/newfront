@@ -5,7 +5,8 @@ import Twilio from './twilio';
 import Permissions from 'react-native-permissions';
 import EventEmitter, { TwilioEvents } from '../../lib/events';
 import { Actions } from 'react-native-router-flux';
-import { PhoneState } from '../../components/Phone'
+import { PhoneState } from '../../components/Phone';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants'
 
 /*
 const _eventHandlers = {
@@ -117,12 +118,25 @@ export default class TwilioVoIP {
                 TwilioVoice.getActiveCall()
                     .then(incomingCall => {
                         console.log('FrontM VoIP : getActiveCall : ', incomingCall);
-                        if (incomingCall){
+                        if (incomingCall.call_state === 'CANCELLED'){
+                            this.closePhoneScreen();
+                        } else {
                             this.handleIncomingCall(incomingCall);
                         }
                     })
-                    .catch((error) => {});
+                    .catch((error) => {
+                        //this.closePhoneScreen();
+                    });
+            } else {
+                this.closePhoneScreen();
             }
+        }
+    }
+
+    closePhoneScreen = () => {
+        console.log('FrontM VoIP : ', Actions.currentScene);
+        if (Actions.currentScene === ROUTER_SCENE_KEYS.phone) {
+            Actions.pop();
         }
     }
 
@@ -150,6 +164,7 @@ export default class TwilioVoIP {
     connectionDidDisconnectHandler = (data) => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
+        //this.closePhoneScreen();
     }
 
     callRejectedHandler = (data) => {
