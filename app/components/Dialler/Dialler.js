@@ -218,7 +218,7 @@ export default class Dialler extends React.Component {
     }
 
     toggleMic() {
-        TwilioVoice.setMuted(!this.state.micOn);
+        TwilioVoice.setMuted(this.state.micOn);
         this.setState({micOn : !this.state.micOn})
     }
 
