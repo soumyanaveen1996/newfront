@@ -55,9 +55,10 @@ export default class MapView extends React.Component {
                 if (index === coos.length - 1) { return }
                 let deltaLatitute = coos[index + 1].latitude - coo.latitude
                 let deltaLongitude = coos[index + 1].longitude - coo.longitude
-                let angle = Math.atan2(deltaLatitute, deltaLongitude)
+                let angle = -Math.atan2(deltaLatitute, deltaLongitude) * (180 / Math.PI)
+                let angleStringRad = angle + 'deg'
                 return (
-                    <RNMapView.Marker coordinate={coo} image={images.trail_arrow} anchor={{ x: 0.5, y: 0.5 }} rotation={-angle * (180 / Math.PI)} />
+                    <RNMapView.Marker coordinate={coo} image={images.trail_arrow} anchor={{ x: 0.5, y: 0.5 }} style={{ transform: [{ rotateZ: angleStringRad }] }} />
                 )
             })
         })
@@ -94,7 +95,7 @@ export default class MapView extends React.Component {
     _renderMap() {
         const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
-            <RNMapView region={mapData.region} style={styles.mapView}>
+            <RNMapView region={mapData.region} style={styles.mapView} rotateEnabled={false}>
                 {this._renderMarkers(mapData.markers)}
                 {this._renderPolygons(mapData.polygons)}
                 {this.RenderTrailArrows(mapData.polylines)}
