@@ -16,6 +16,7 @@ import _ from 'lodash';
 
 export const DiallerState = {
     initial: 'initial',
+    connecting: 'connecting',
     incall: 'incall',
     incall_digits: 'incall_digits',
 }
@@ -27,7 +28,7 @@ export default class Dialler extends React.Component {
         super(props);
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '+918971723492',
+            dialledNumber: '+',
             dialledDigits: '',
             micOn: true,
             speakerOn: false
@@ -46,7 +47,7 @@ export default class Dialler extends React.Component {
             return;
         }
         try {
-            this.setState({diallerState : DiallerState.incall});
+            this.setState({diallerState : DiallerState.connecting});
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
                 TwilioVoice.connect({To: `${this.state.dialledNumber}`})
@@ -211,7 +212,9 @@ export default class Dialler extends React.Component {
     }
 
     openDial() {
-        this.setState({ diallerState: DiallerState.incall_digits });
+        if (diallerState === DiallerState.incall) {
+            this.setState({ diallerState: DiallerState.incall_digits });
+        }
     }
 
     toggleMic() {
@@ -246,7 +249,7 @@ export default class Dialler extends React.Component {
 
                 </View>
             );
-        } else if (diallerState === DiallerState.incall) {
+        } else if (diallerState === DiallerState.incall || diallerState === DiallerState.connecting) {
             return (
                 <View style={Styles.container}>
                     <View style={Styles.mainContainer}>
