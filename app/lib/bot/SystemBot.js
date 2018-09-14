@@ -52,8 +52,8 @@ export const SYSTEM_BOT_MANIFEST = {
     'onboarding-bot': {
         'allowResetConversation': 'false',
         'botId': 'onboarding-bot',
-        'botName': 'FrontM',
-        'botUrl': 'botfarm/frontmai/onboardingBot/1.5.0/onboardingBot.js',
+        'botName': 'FrontM Assistant',
+        'botUrl': 'botfarm/frontmai/onboardingBot/1.6.0/onboardingBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
@@ -72,7 +72,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'onboarding-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.5.0'
+        'version': '1.6.0'
     },
     'contacts-bot': {
         'allowResetConversation': 'false',
@@ -108,7 +108,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'allowResetConversation': 'false',
         'botId': 'de3a7fe6-b2a7-4468-8099-40c57848387d',
         'botName': 'Channels',
-        'botUrl': 'botfarm/frontmai/channelsBot/1.2.0/channelsBot.js',
+        'botUrl': 'botfarm/frontmai/channelsBot/1.3.0/channelsBot.js',
         'category': [],
         'dependencies': {
             'agentGuardService': {
@@ -128,7 +128,7 @@ export const SYSTEM_BOT_MANIFEST = {
         'slug': 'channels-bot',
         'systemBot': true,
         'userDomain': 'frontmai',
-        'version': '1.2.0'
+        'version': '1.3.0'
     },
     'domMgmt-bot': {
         'allowResetConversation': 'false',
