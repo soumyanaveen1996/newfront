@@ -319,8 +319,8 @@ export default class FormPopup extends React.Component {
                 )
             } else if (formData[i].type === 'text') {
                 buttons.push(
-                    <View style={[Styles.formTitleContainer, {borderBottomWidth: 0}]} key={i}>
-                        <Text allowFontScaling={false} style={Styles.formTitle}>{formData[i].text}</Text>
+                    <View style={[Styles.formTextContainer, {borderBottomWidth: 0}]} key={i}>
+                        <Text allowFontScaling={false} style={Styles.formText}>{formData[i].text}</Text>
                     </View>
                 )
             } else if (formData[i].type === 'text_field' || formData[i].type === 'number_field' || formData[i].type === 'password_field' || formData[i].type === 'email_field') {

@@ -80,6 +80,21 @@ const Styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 15,
     },
+    formText: {
+        color: GlobalColors.black,
+        fontWeight: '500',
+        fontSize: 15,
+    },
+    formTextContainer: {
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.disabledGray,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
     formCloseButton: {
     },
     formCloseButtonText: {
