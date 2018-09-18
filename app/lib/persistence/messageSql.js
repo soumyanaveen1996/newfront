@@ -161,7 +161,7 @@ const selectMessageById = `
     WHERE message_id = ?
 `;
 
-const deleteMessage = "TBD";
+const deleteMessage = 'TBD';
 
 // Total Messages typed by the user, since a date string. Empty message_date ('') means since beginning.
 const totalUserMessageCountSince = `
@@ -197,25 +197,25 @@ const addStatusColumn = `
     ALTER TABLE messages ADD COLUMN status INTEGER NOT NULL DEFAULT 0
 `;
 export default {
-  createMessageTable: createMessageTable,
-  createV2MessageTable: createV2MessageTable,
-  insertMessage: insertMessage,
-  selectRecentMessages: selectRecentMessages,
-  selectMessagesBeforeDate: selectMessagesBeforeDate,
-  deleteMessage: deleteMessage,
-  markAsRead: markAsRead,
-  unreadCount: unreadCount,
-  totalUserMessageCountSince: totalUserMessageCountSince,
-  markAllBotMessagesAsRead: markAllBotMessagesAsRead,
-  selectFavoriteMessages: selectFavoriteMessages,
-  markAsUnFavorite: markAsUnFavorite,
-  markAsFavorite: markAsFavorite,
-  moveMessagesToNewBotKey: moveMessagesToNewBotKey,
-  deleteBotMessages: deleteBotMessages,
-  updateMessageById: updateMessageById,
-  addCompletedColumn: addCompletedColumn,
-  selectMessageById: selectMessageById,
-  addMessageCreatedAtIndex: addMessageCreatedAtIndex,
-  deleteAllMessages: deleteAllMessages,
-  addStatusColumn
+    createMessageTable: createMessageTable,
+    createV2MessageTable: createV2MessageTable,
+    insertMessage: insertMessage,
+    selectRecentMessages: selectRecentMessages,
+    selectMessagesBeforeDate: selectMessagesBeforeDate,
+    deleteMessage: deleteMessage,
+    markAsRead: markAsRead,
+    unreadCount: unreadCount,
+    totalUserMessageCountSince: totalUserMessageCountSince,
+    markAllBotMessagesAsRead: markAllBotMessagesAsRead,
+    selectFavoriteMessages: selectFavoriteMessages,
+    markAsUnFavorite: markAsUnFavorite,
+    markAsFavorite: markAsFavorite,
+    moveMessagesToNewBotKey: moveMessagesToNewBotKey,
+    deleteBotMessages: deleteBotMessages,
+    updateMessageById: updateMessageById,
+    addCompletedColumn: addCompletedColumn,
+    selectMessageById: selectMessageById,
+    addMessageCreatedAtIndex: addMessageCreatedAtIndex,
+    deleteAllMessages: deleteAllMessages,
+    addStatusColumn
 };
