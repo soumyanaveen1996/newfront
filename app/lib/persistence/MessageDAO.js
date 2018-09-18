@@ -7,7 +7,7 @@ import Utils from "../utils/index";
 import _ from "lodash";
 
 /**
- * Create the message table if it doesn't exist. Should be called during launch (each time is ok)
+ * Create the message table if it doesn't exist. Should be called during launch (each time is ok).
  */
 const createMessageTable = () =>
   new Promise((resolve, reject) => {

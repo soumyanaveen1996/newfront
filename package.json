@@ -6,8 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "react-devtools": "react-devtools",
     "test": "jest",
-    "postinstall": "rn-nodeify --install stream,process,util --hack",
-    "fix-code": "prettier-eslint --write 'app/components/ChatBotScreen/ChatBotScreen.js'"
+    "postinstall": "rn-nodeify --install stream,process,util --hack"
   },
   "dependencies": {
     "@yfuks/react-native-action-sheet": "^0.0.4",
