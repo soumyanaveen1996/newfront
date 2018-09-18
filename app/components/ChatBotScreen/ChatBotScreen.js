@@ -679,6 +679,9 @@ export default class ChatBotScreen extends React.Component {
 
   done = () => {
     // Done with the bot - navigate away?
+
+
+
     console.log("Done called from bot code");
   };
 
