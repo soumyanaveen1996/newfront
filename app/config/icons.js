@@ -190,7 +190,7 @@ export const Icons = {
   ),
   greenCall: icon("ios-call", "ionicon", 50, Colors.white, "green", "500"),
   redClose: icon("ios-close", "ionicon", 50, Colors.white, "red", "500"),
-  delivered: icon("check-circle-o", "font-awesome", 15, Colors.accent)
+  delivered: icon("check", "font-awesome", 15, Colors.accent)
 };
 
 export default Icons;
