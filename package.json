@@ -10,10 +10,17 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-     "*.js": [
+    "linters": {
+     "*.{js, json, jsx}": [
        "prettier-eslint --write",
        "git add"
       ]
+    },
+    "ignore": [
+      "initial_bots/**",
+      "node_modules/**"
+    ]
+
     },  
     "dependencies": {
     "@yfuks/react-native-action-sheet": "^0.0.4",

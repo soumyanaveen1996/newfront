@@ -16,17 +16,44 @@ import I18n from '../../config/i18n/i18n';
 import { PhoneState } from '../Phone';
 
 export default class PeopleChat extends ChatBotScreen {
-
     static connectionButton(params) {
         if (params.button) {
             if (params.button === 'manual') {
-                return <HeaderRightIcon onPress={() => { params.refresh(); }} icon={Icons.refresh()}/>;
+                return (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
             } else if (params.button === 'gsm') {
-                return <HeaderRightIcon image={images.gsm} onPress={() => { params.showConnectionMessage('gsm'); }}/>;
+                return (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
             } else if (params.button === 'satellite') {
-                return <HeaderRightIcon image={images.satellite} onPress={() => { params.showConnectionMessage('satellite'); }}/>;
+                return (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
             } else {
-                return <HeaderRightIcon icon={Icons.automatic()} onPress={() => { params.showConnectionMessage('automatic'); }}/>;
+                return (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
             }
         } else {
             return null;
@@ -34,35 +61,52 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     static rightHeaderView({ params }) {
-        const callButton = params.callDisabled ? <HeaderRightIcon icon={Icons.callDisabled()} style={{marginRight: 0, paddingHorizontal: 0}}/>
-            : <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showCallMessage(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>
+        const callButton = params.callDisabled ? (
+            <HeaderRightIcon
+                icon={Icons.callDisabled()}
+                style={{ marginRight: 0, paddingHorizontal: 0 }}
+            />
+        ) : (
+            <HeaderRightIcon
+                icon={Icons.call()}
+                onPress={() => {
+                    params.showCallMessage();
+                }}
+                style={{ marginRight: 0, paddingHorizontal: 0 }}
+            />
+        );
         return (
             <View style={chatStyles.headerRightView}>
                 {callButton}
                 {PeopleChat.connectionButton(params)}
             </View>
-        )
+        );
     }
 
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: state.params.title,
+            headerTitle: state.params.title
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
         } else {
-            navigationOptions.headerLeft = <HeaderBack onPress={async () => {
-                if (state.params.botDone) {
-                    state.params.botDone();
-                }
-                await state.params.deleteConversation();
-                if (state.params.onBack) {
-                    Actions.pop(); state.params.onBack();
-                } else {
-                    Actions.pop();
-                }
-            }} />;
+            navigationOptions.headerLeft = (
+                <HeaderBack
+                    onPress={async () => {
+                        if (state.params.botDone) {
+                            state.params.botDone();
+                        }
+                        await state.params.deleteConversation();
+                        if (state.params.onBack) {
+                            Actions.pop();
+                            state.params.onBack();
+                        } else {
+                            Actions.pop();
+                        }
+                    }}
+                />
+            );
         }
         navigationOptions.headerRight = PeopleChat.rightHeaderView(state);
         return navigationOptions;
@@ -89,17 +133,23 @@ export default class PeopleChat extends ChatBotScreen {
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId;
-    }
+    };
 
     setNavigationParams(context, user, callDisabled = false) {
         this.props.navigation.setParams({
             title: ConversationContext.getChatName(context, user),
-            botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
+            botDone: this.loadedBot.done.bind(
+                this,
+                null,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            ),
             deleteConversation: this.deleteConversation.bind(this),
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this),
             showCallMessage: this.showCallMessage.bind(this),
-            callDisabled: callDisabled,
+            callDisabled: callDisabled
         });
     }
 
@@ -107,23 +157,30 @@ export default class PeopleChat extends ChatBotScreen {
         Alert.alert(
             'Alert!!',
             'Other user has not installed VoIP enable FrontM app yet',
-            [
-                {text: 'OK'},
-            ],
+            [{ text: 'OK' }],
             { cancelable: false }
-        )
+        );
     }
-
 
     async showCallMessage() {
         this.setNavigationParams(this.conversationContext, this.user, true);
         try {
-            Keyboard.dismiss()
-            const otherUserId = ConversationContext.getOtherUserId(this.conversationContext, this.user);
+            Keyboard.dismiss();
+            const otherUserId = ConversationContext.getOtherUserId(
+                this.conversationContext,
+                this.user
+            );
             //const isVoIPEnabled = await Twilio.isVoIPEnabled(otherUserId, this.user);
-            const chatName = ConversationContext.getChatName(this.conversationContext, this.user);
+            const chatName = ConversationContext.getChatName(
+                this.conversationContext,
+                this.user
+            );
             //console.log('is voip enabled : ', isVoIPEnabled);
-            this.setNavigationParams(this.conversationContext, this.user, false);
+            this.setNavigationParams(
+                this.conversationContext,
+                this.user,
+                false
+            );
             Actions.phone({
                 state: PhoneState.init,
                 data: {
@@ -138,37 +195,62 @@ export default class PeopleChat extends ChatBotScreen {
         }
     }
 
-
-
     async getConversationContext(botContext, user) {
         try {
             let context = null;
             // Existing conversation - so pick from storage
             if (!this.conversation) {
                 if (!this.otherParticipants) {
-                    throw new Error('At least one participant is required to start a chat');
+                    throw new Error(
+                        'At least one participant is required to start a chat'
+                    );
                 }
-                const conversationId = Conversation.getIMConversationId(user.userId, this.otherParticipants[0].userId);
-                this.conversation = await Conversation.getIMConversation(conversationId);
+                const conversationId = Conversation.getIMConversationId(
+                    user.userId,
+                    this.otherParticipants[0].userId
+                );
+                this.conversation = await Conversation.getIMConversation(
+                    conversationId
+                );
                 if (this.conversation) {
                     this.botKey = this.conversation.conversationId;
                 }
             }
 
             if (this.conversation) {
-                context = await Promise.resolve(ConversationContext.getIMConversationContext(botContext, user, this.conversation.conversationId));
+                context = await Promise.resolve(
+                    ConversationContext.getIMConversationContext(
+                        botContext,
+                        user,
+                        this.conversation.conversationId
+                    )
+                );
                 // TODO(amal); Should I check if participants are same in the conversation Context ?
                 this.setNavigationParams(context, user);
                 return context;
             }
 
             if (!this.otherParticipants) {
-                throw new Error('At least one participant is required to start a chat');
+                throw new Error(
+                    'At least one participant is required to start a chat'
+                );
             }
 
-            const conversationId = Conversation.getIMConversationId(user.userId, this.otherParticipants[0].userId);
-            context = await Promise.resolve(ConversationContext.createNewConversationContext(botContext, user, conversationId));
-            ConversationContext.updateParticipants(context, this.otherParticipants);
+            const conversationId = Conversation.getIMConversationId(
+                user.userId,
+                this.otherParticipants[0].userId
+            );
+            context = await Promise.resolve(
+                ConversationContext.createNewConversationContext(
+                    botContext,
+                    user,
+                    conversationId
+                )
+            );
+            ConversationContext.updateParticipants(
+                context,
+                this.otherParticipants
+            );
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -176,22 +258,35 @@ export default class PeopleChat extends ChatBotScreen {
             this.setNavigationParams(context, user);
 
             // Create a conversation for this conversation id
-            this.conversation = await Promise.resolve(Conversation.createIMConversation(context.conversationId));
+            this.conversation = await Promise.resolve(
+                Conversation.createIMConversation(context.conversationId)
+            );
 
             // Save this conversation context (save has to happen after the botkey has been extracted)
-            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
+            await Promise.resolve(
+                ConversationContext.saveConversationContext(
+                    context,
+                    botContext,
+                    user
+                )
+            );
 
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for people chat', error);
+            console.log(
+                'Error getting a conversation context for people chat',
+                error
+            );
             throw error;
         }
     }
 
     async getCreatorContact() {
         if (!this.creatorContact) {
-            let contactsArray = await Contact.getContactFieldForUUIDs([this.conversationContext.creatorInstanceId]);
+            let contactsArray = await Contact.getContactFieldForUUIDs([
+                this.conversationContext.creatorInstanceId
+            ]);
             if (contactsArray.length > 0) {
                 this.creatorContact = contactsArray[0];
             }
@@ -199,14 +294,19 @@ export default class PeopleChat extends ChatBotScreen {
         return this.creatorContact;
     }
 
-    async handleAsyncMessageResult (event) {
+    async handleAsyncMessageResult(event) {
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
             return;
         }
         let contact = await this.getCreatorContact();
         if (!contact || !contact.ignored) {
-            this.loadedBot.asyncResult(event.result, this.botState, this.state.messages, this.botContext);
+            this.loadedBot.asyncResult(
+                event.result,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            );
         }
         // Delete the network result now
         return Queue.deleteNetworkRequest(event.id);
@@ -220,48 +320,86 @@ export default class PeopleChat extends ChatBotScreen {
         if (oldConversationId === newConversationId) {
             return;
         }
-        let newConversation = await Conversation.getIMConversation(newConversationId);
+        let newConversation = await Conversation.getIMConversation(
+            newConversationId
+        );
         console.log('New conversation : ', newConversation);
-        console.log('Old conversation : ', await Conversation.getIMConversation(oldConversationId))
+        console.log(
+            'Old conversation : ',
+            await Conversation.getIMConversation(oldConversationId)
+        );
         if (newConversation) {
             await Conversation.deleteConversation(oldConversationId);
-            this.conversation = newConversation
+            this.conversation = newConversation;
         } else {
-            await Conversation.updateConversation(oldConversationId, newConversationId);
-            this.conversation = await Conversation.getIMConversation(newConversationId);
+            await Conversation.updateConversation(
+                oldConversationId,
+                newConversationId
+            );
+            this.conversation = await Conversation.getIMConversation(
+                newConversationId
+            );
         }
         console.log(await Conversation.getIMConversation(newConversationId));
     }
 
-    async checkAndUpdateConversationContext(oldConversationId, newConversationId) {
+    async checkAndUpdateConversationContext(
+        oldConversationId,
+        newConversationId
+    ) {
         if (oldConversationId === newConversationId) {
             return;
         }
-        let newContext = await ConversationContext.getBotConversationContextForId(newConversationId);
+        let newContext = await ConversationContext.getBotConversationContextForId(
+            newConversationId
+        );
         if (!newContext) {
             this.conversationContext.conversationId = newConversationId;
-            await ConversationContext.saveConversationContext(this.conversationContext, this.botContext, this.user)
+            await ConversationContext.saveConversationContext(
+                this.conversationContext,
+                this.botContext,
+                this.user
+            );
         } else {
             this.conversationContext = newContext;
         }
-        console.log(await ConversationContext.getBotConversationContextForId(newConversationId));
+        console.log(
+            await ConversationContext.getBotConversationContextForId(
+                newConversationId
+            )
+        );
         await ConversationContext.deleteConversationContext(oldConversationId);
     }
 
     async updateConversationContextId(newConversationId) {
         let oldConversationId = this.conversationContext.conversationId;
 
-        await this.createOrUpdateConversation(oldConversationId, newConversationId);
+        await this.createOrUpdateConversation(
+            oldConversationId,
+            newConversationId
+        );
         await MessageHandler.moveMessages(oldConversationId, newConversationId);
-        await this.checkAndUpdateConversationContext(oldConversationId, newConversationId)
+        await this.checkAndUpdateConversationContext(
+            oldConversationId,
+            newConversationId
+        );
 
         this.botContext.setConversationContext(this.conversationContext);
-        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
-        this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+        this.loadedBot.done(
+            null,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
+        this.loadedBot.init(
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
     }
 
     isUserChat() {
-        return true
+        return true;
     }
 
     async onSendMessage(messageStr) {
@@ -272,7 +410,9 @@ export default class PeopleChat extends ChatBotScreen {
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
             Conversation.deleteConversation(this.conversation.conversationId);
-            ConversationContext.deleteConversationContext(this.conversation.conversationId);
+            ConversationContext.deleteConversationContext(
+                this.conversation.conversationId
+            );
         }
     }
 
@@ -281,23 +421,23 @@ export default class PeopleChat extends ChatBotScreen {
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false
-            })
+            });
             return;
         }
         this.setState({
             refreshing: true
-        })
-        let messages = await this.loadMessages()
+        });
+        let messages = await this.loadMessages();
         if (messages.length === 0) {
             this.allLocalMessagesLoaded = true;
         }
         if (this.allLocalMessagesLoaded) {
-            messages = await this.loadOldMessagesFromServer()
+            messages = await this.loadOldMessagesFromServer();
             if (messages.length === 0) {
                 this.allOldMessagesLoaded = true;
             }
         }
-        let combinedMsgs = messages.concat(this.state.messages)
+        let combinedMsgs = messages.concat(this.state.messages);
         if (this.mounted) {
             this.setState({
                 messages: this.addSessionStartMessages(combinedMsgs),
@@ -305,5 +445,4 @@ export default class PeopleChat extends ChatBotScreen {
             });
         }
     }
-
 }
