@@ -6,9 +6,16 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "react-devtools": "react-devtools",
     "test": "jest",
-    "postinstall": "rn-nodeify --install stream,process,util --hack"
+    "postinstall": "rn-nodeify --install stream,process,util --hack",
+    "precommit": "lint-staged"
   },
-  "dependencies": {
+  "lint-staged": {
+     "*.js": [
+       "prettier-eslint",
+       "git add"
+      ]
+    },  
+    "dependencies": {
     "@yfuks/react-native-action-sheet": "^0.0.4",
     "aws-sdk": "^2.94.0",
     "axios": "^0.16.2",

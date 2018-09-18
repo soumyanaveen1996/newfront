@@ -9,6 +9,7 @@ import _ from "lodash";
 /**
  * Create the message table if it doesn't exist. Should be called during launch (each time is ok).
  */
+
 const createMessageTable = () =>
   new Promise((resolve, reject) => {
     db.transaction(transaction => {
