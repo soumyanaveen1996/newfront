@@ -3,20 +3,17 @@ import ImageCache from '../../lib/image_cache';
 import LogoImage from '../LogoImage';
 import { Platform } from 'react-native';
 
-
 const CachedImageStates = {
     IMAGE_NOT_LOADED: 'IMAGE_NOT_LOADED',
     LOADING: 'LOADING',
     IMAGE_LOADED: 'IMAGE_LOADED'
-}
+};
 
 export default class CachedImage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             state: CachedImageStates.IMAGE_NOT_LOADED
-
         };
     }
 
@@ -27,19 +24,19 @@ export default class CachedImage extends React.Component {
             if (path) {
                 this.setState({
                     state: CachedImageStates.IMAGE_LOADED,
-                    source: { uri: path },
-                })
+                    source: { uri: path }
+                });
             } else {
                 this.setState({
                     state: CachedImageStates.LOADING,
-                    source: this.props.placeholderSource,
+                    source: this.props.placeholderSource
                 });
                 ImageCache.imageCacheManager.fetch(uri, this, headers);
             }
         } else {
             this.setState({
                 state: CachedImageStates.IMAGE_LOADED,
-                source: this.props.source,
+                source: this.props.source
             });
         }
     }
@@ -54,13 +51,13 @@ export default class CachedImage extends React.Component {
     imageDownloaded(path) {
         this.setState({
             state: CachedImageStates.IMAGE_LOADED,
-            source: { uri: path },
+            source: { uri: path }
         });
     }
 
     isRemoteUri(uri) {
         var pattern = /^((http|https):\/\/)/;
-        return pattern.test(uri)
+        return pattern.test(uri);
     }
 
     async getImagePathFromCache(uri) {
@@ -69,11 +66,13 @@ export default class CachedImage extends React.Component {
 
     render() {
         return (
-            <LogoImage accessibilityLabel={'Cached Image ' + this.props.imageTag} testID={'cached-image-' + this.props.imageTag}
+            <LogoImage
+                accessibilityLabel={'Cached Image ' + this.props.imageTag}
+                testID={'cached-image-' + this.props.imageTag}
                 source={this.state.source}
-                imageStyle={ this.props.style }
-                loadingStyle={( Platform.OS === 'android') ? null : undefined}
+                imageStyle={this.props.style}
+                loadingStyle={Platform.OS === 'android' ? null : undefined}
             />
-        )
+        );
     }
 }

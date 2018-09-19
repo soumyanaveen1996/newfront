@@ -1,5 +1,3 @@
-
-
 import { MessageDAO } from '../persistence';
 
 export default class Messages {
@@ -10,5 +8,5 @@ export default class Messages {
      *
      * @return returns a promise that resolves on success and rejects on failure.
      */
-    static removeMessages = (botKey) => MessageDAO.deleteBotMessages(botKey);
+    static removeMessages = botKey => MessageDAO.deleteBotMessages(botKey);
 }

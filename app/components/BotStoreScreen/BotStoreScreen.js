@@ -3,9 +3,9 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Header, Icon } from 'react-native-elements';
 import { GlobalColors } from '../../config/styles';
-import { rightIconConfig ,headerConfig ,tabConfig } from './config';
+import { rightIconConfig, headerConfig, tabConfig } from './config';
 import styles from './styles';
-import DeveloperTab from  './DeveloperTab/DeveloperTab';
+import DeveloperTab from './DeveloperTab/DeveloperTab';
 import { InstalledBotsScreen } from '../InstalledBotsScreen';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import Bot from '../../lib/bot/index';
@@ -17,65 +17,80 @@ import { NetworkError } from '../../lib/network';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { Auth } from '../../lib/capability';
 
-export default class BotStoreScreen extends React.Component{
-
+export default class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
             header: BotStoreScreen.renderHeader(state)
-        }
+        };
     }
 
     static renderHeaderTitle() {
-        return <Text style = {styles.headerTitleStyle} >{headerConfig.headerTitle}</Text>;
+        return (
+            <Text style={styles.headerTitleStyle}>
+                {headerConfig.headerTitle}
+            </Text>
+        );
     }
 
     static renderLeftIcon(state) {
         return (
             <HeaderBack
-                onPress={state.params.onBack ? () => { Actions.pop(); state.params.onBack() } : Actions.pop } />
+                onPress={
+                    state.params.onBack
+                        ? () => {
+                            Actions.pop();
+                            state.params.onBack();
+                        }
+                        : Actions.pop
+                }
+            />
         );
     }
 
     static renderRightIcon(state) {
         if (state.params.selectedIndex === 2) {
-            return ( <Icon
-                type={rightIconConfig.type}
-                name={rightIconConfig.name}
-                size={rightIconConfig.size}
-                underlayColor={rightIconConfig.underlayColor}
-                color={rightIconConfig.color}
-                fontWeight={rightIconConfig.fontWeight}
-                onPress={state.params.handleSearchClick}
-            />)
+            return (
+                <Icon
+                    type={rightIconConfig.type}
+                    name={rightIconConfig.name}
+                    size={rightIconConfig.size}
+                    underlayColor={rightIconConfig.underlayColor}
+                    color={rightIconConfig.color}
+                    fontWeight={rightIconConfig.fontWeight}
+                    onPress={state.params.handleSearchClick}
+                />
+            );
         }
     }
 
     static renderHeader(state) {
         if (state.params.showSearchBar) {
-            return ( <Header
-                innerContainerStyles={styles.headerInnerContainerForSearch}
-                outerContainerStyles={styles.headerOuterContainerStyles}
-                backgroundColor={GlobalColors.accent}>
-
-                {/* <SearchBar
+            return (
+                <Header
+                    innerContainerStyles={styles.headerInnerContainerForSearch}
+                    outerContainerStyles={styles.headerOuterContainerStyles}
+                    backgroundColor={GlobalColors.accent}
+                >
+                    {/* <SearchBar
                     lightTheme
                     ref={search => { this.search = search }}
                     onSubmitEditing={state.params.handleSearchSubmit}
                     inputStyle={{backgroundColor: GlobalColors.white }}
                     containerStyle={styles.searchBar}
                 /> */}
-
-            </Header>);
-
+                </Header>
+            );
         } else {
-            return ( <Header
-                innerContainerStyles={styles.headerInnerContainerStyles}
-                outerContainerStyles={styles.headerOuterContainerStyles}
-                backgroundColor={GlobalColors.accent}
-                centerComponent={BotStoreScreen.renderHeaderTitle()}
-                leftComponent={BotStoreScreen.renderLeftIcon(state)}
-            />);
+            return (
+                <Header
+                    innerContainerStyles={styles.headerInnerContainerStyles}
+                    outerContainerStyles={styles.headerOuterContainerStyles}
+                    backgroundColor={GlobalColors.accent}
+                    centerComponent={BotStoreScreen.renderHeaderTitle()}
+                    leftComponent={BotStoreScreen.renderLeftIcon(state)}
+                />
+            );
         }
     }
 
@@ -92,12 +107,21 @@ export default class BotStoreScreen extends React.Component{
 
     async updateCatalog() {
         let catalog = await Bot.getCatalog();
-        this.setState({ showSearchBar: false, selectedIndex: this.state.selectedIndex || 0, catalogData: catalog, catalogLoaded: true, networkError: false });
+        this.setState({
+            showSearchBar: false,
+            selectedIndex: this.state.selectedIndex || 0,
+            catalogData: catalog,
+            catalogLoaded: true,
+            networkError: false
+        });
     }
 
     async componentDidMount() {
         try {
-            EventEmitter.addListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+            EventEmitter.addListener(
+                AuthEvents.userChanged,
+                this.userChangedHandler.bind(this)
+            );
             await this.updateCatalog();
             if (this.props.navigation) {
                 this.props.navigation.setParams({
@@ -106,15 +130,27 @@ export default class BotStoreScreen extends React.Component{
                 });
             }
         } catch (error) {
-            console.log('Error occurred during componentWillMount getting catalogData; ', error, error instanceof NetworkError);
+            console.log(
+                'Error occurred during componentWillMount getting catalogData; ',
+                error,
+                error instanceof NetworkError
+            );
             if (error instanceof NetworkError) {
-                this.setState({ showSearchBar: false, selectedIndex: 0, catalogLoaded: false, networkError: true });
+                this.setState({
+                    showSearchBar: false,
+                    selectedIndex: 0,
+                    catalogLoaded: false,
+                    networkError: true
+                });
             }
         }
     }
 
     componentWillUnmount() {
-        EventEmitter.removeListener(AuthEvents.userChanged, this.userChangedHandler.bind(this));
+        EventEmitter.removeListener(
+            AuthEvents.userChanged,
+            this.userChangedHandler.bind(this)
+        );
     }
 
     async refresh() {
@@ -133,14 +169,14 @@ export default class BotStoreScreen extends React.Component{
     }
 
     handleSearchClick() {
-        this.setState({showSearchBar: true});
+        this.setState({ showSearchBar: true });
         if (this.props.navigation) {
             this.props.navigation.setParams({ showSearchBar: true });
         }
     }
 
     handleSearchSubmit() {
-        this.setState({showSearchBar : false});
+        this.setState({ showSearchBar: false });
         if (this.props.navigation) {
             this.props.navigation.setParams({ showSearchBar: false });
         }
@@ -155,29 +191,55 @@ export default class BotStoreScreen extends React.Component{
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
-            return (<DeveloperTab style={{flex: 1}} developerData={this.state.catalogData.developer} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
-        } if (this.state.selectedIndex === 1) {
-            return (<CategoriesTab style={{flex: 1}} categoriesData={this.state.catalogData.categories} botsData = {this.state.catalogData.bots} onBack={this.onBack.bind(this)}/>)
-        } if (this.state.selectedIndex === 0) {
-            let featuredBots = (this.state.catalogData.bots.filter((bot) => {return this.state.catalogData.featured.indexOf(bot.botId) >= 0}))
-            return (<FeaturedTab style={{flex: 1}} featuredBots={featuredBots} onBack={this.onBack.bind(this)}/>)
-        } if (this.state.selectedIndex === 3) {
-            return (<InstalledBotsScreen />)
+            return (
+                <DeveloperTab
+                    style={{ flex: 1 }}
+                    developerData={this.state.catalogData.developer}
+                    botsData={this.state.catalogData.bots}
+                    onBack={this.onBack.bind(this)}
+                />
+            );
+        }
+        if (this.state.selectedIndex === 1) {
+            return (
+                <CategoriesTab
+                    style={{ flex: 1 }}
+                    categoriesData={this.state.catalogData.categories}
+                    botsData={this.state.catalogData.bots}
+                    onBack={this.onBack.bind(this)}
+                />
+            );
+        }
+        if (this.state.selectedIndex === 0) {
+            let featuredBots = this.state.catalogData.bots.filter(bot => {
+                return this.state.catalogData.featured.indexOf(bot.botId) >= 0;
+            });
+            return (
+                <FeaturedTab
+                    style={{ flex: 1 }}
+                    featuredBots={featuredBots}
+                    onBack={this.onBack.bind(this)}
+                />
+            );
+        }
+        if (this.state.selectedIndex === 3) {
+            return <InstalledBotsScreen />;
         }
     }
 
     segmentedControlTab() {
         return (
-            <View style = {styles.segmentedControlTab}>
+            <View style={styles.segmentedControlTab}>
                 <SegmentedControlTab
                     tabsContainerStyle={styles.tabsContainerStyle}
-                    tabStyle = {styles.tabStyle}
-                    tabTextStyle = {styles.tabTextStyle}
-                    activeTabStyle = {styles.activeTabStyle}
-                    activeTabTextStyle = {styles.activeTabTextStyle}
+                    tabStyle={styles.tabStyle}
+                    tabTextStyle={styles.tabTextStyle}
+                    activeTabStyle={styles.activeTabStyle}
+                    activeTabTextStyle={styles.activeTabTextStyle}
                     values={tabConfig.tabNames}
                     selectedIndex={this.state.selectedIndex}
-                    onTabPress={this.onIndexChange.bind(this)} />
+                    onTabPress={this.onIndexChange.bind(this)}
+                />
             </View>
         );
     }
@@ -185,10 +247,12 @@ export default class BotStoreScreen extends React.Component{
     render() {
         if (this.state.networkError) {
             return (
-                <ErrorMessage onPress={() => {
-                    Actions.pop();
-                    Actions.botStore();
-                }} />
+                <ErrorMessage
+                    onPress={() => {
+                        Actions.pop();
+                        Actions.botStore();
+                    }}
+                />
             );
         }
 
@@ -201,7 +265,7 @@ export default class BotStoreScreen extends React.Component{
         }
 
         return (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </View>

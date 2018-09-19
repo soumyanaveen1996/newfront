@@ -4,7 +4,12 @@ import Config from '../config/config';
 import { Network } from './capability';
 import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-sign-in';
-import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import {
+    AccessToken,
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager
+} from 'react-native-fbsdk';
 import _ from 'lodash';
 import config from '../config/config';
 import queryString from 'querystring';
@@ -19,7 +24,7 @@ if (Platform.OS === 'ios') {
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
         clientID: Config.auth.ios.google.iosClientId,
-        forceCodeForRefreshToken: true,
+        forceCodeForRefreshToken: true
     });
 } else {
     GoogleSignin.configure({
@@ -31,8 +36,9 @@ if (Platform.OS === 'ios') {
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
         //clientID: __DEV__ ? Config.auth.android.google.dev.webClientId : Config.auth.android.google.prod.webClientId,
-        clientID: '705702062891-m66qc0b738egbp54nnhoiipmbb4a6udi.apps.googleusercontent.com',
-        forceCodeForRefreshToken: true,
+        clientID:
+            '705702062891-m66qc0b738egbp54nnhoiipmbb4a6udi.apps.googleusercontent.com',
+        forceCodeForRefreshToken: true
     });
     /*
     GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
@@ -69,62 +75,98 @@ class FrontmAuth {
                 user: {
                     emailAddress: fbDetails.email,
                     givenName: fbDetails.first_name,
-                    screenName: fbDetails.name ? fbDetails.name.replace(/ /g, '') : '',
+                    screenName: fbDetails.name
+                        ? fbDetails.name.replace(/ /g, '')
+                        : '',
                     surname: fbDetails.last_name || '',
                     userName: fbDetails.name,
                     userId: fbDetails.id
-                },
+                }
             };
-            AccessToken.getCurrentAccessToken()
-                .then((token) => {
-                    console.log('Access Token ', token);
-                    let options = {
-                        'method': 'post',
-                        'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
-                        'headers': {
-                            token: token.accessToken,
-                            provider_name: 'facebook',
-                            platform: Platform.OS
-                        },
-                        'data': data
-                    };
-                    Network(options)
-                        .then((res) => {
-                            let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
-                            if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
-                                reject(new Error('Empty response from the server'));
-                                return;
-                            }
-                            self.credentials.facebook = {
-                                identityId: resData.creds.identityId,
-                                accessKeyId: resData.creds.accessKeyId,
-                                secretAccessKey: resData.creds.secretAccessKey,
-                                sessionToken: resData.creds.sessionToken,
-                                userId: resData.user.userId,
-                                info: resData.user || data.user,
-                                refreshToken: resData.longTermToken
-                            }
-                            console.log('Facebook credentials : ', self.credentials.facebook);
+            AccessToken.getCurrentAccessToken().then(token => {
+                console.log('Access Token ', token);
+                let options = {
+                    method: 'post',
+                    url:
+                        Config.proxy.protocol +
+                        Config.proxy.host +
+                        Config.proxy.authPath,
+                    headers: {
+                        token: token.accessToken,
+                        provider_name: 'facebook',
+                        platform: Platform.OS
+                    },
+                    data: data
+                };
+                Network(options)
+                    .then(res => {
+                        let resData =
+                            res && res.data && res.data.creds
+                                ? res.data
+                                : { creds: {} };
+                        if (
+                            _.isEmpty(resData) ||
+                            _.isEmpty(resData.creds) ||
+                            _.isEmpty(resData.user)
+                        ) {
+                            reject(new Error('Empty response from the server'));
+                            return;
+                        }
+                        self.credentials.facebook = {
+                            identityId: resData.creds.identityId,
+                            accessKeyId: resData.creds.accessKeyId,
+                            secretAccessKey: resData.creds.secretAccessKey,
+                            sessionToken: resData.creds.sessionToken,
+                            userId: resData.user.userId,
+                            info: resData.user || data.user,
+                            refreshToken: resData.longTermToken
+                        };
+                        console.log(
+                            'Facebook credentials : ',
+                            self.credentials.facebook
+                        );
 
-                            return resolve({ type: 'success', credentials: self.credentials });
-                        }).catch((err) => {
-                            return reject({ type: 'error', error: err });
+                        return resolve({
+                            type: 'success',
+                            credentials: self.credentials
                         });
-                })
+                    })
+                    .catch(err => {
+                        return reject({ type: 'error', error: err });
+                    });
+            });
         }
     }
 
     loginWithFacebook(conversationId, botName) {
         return new Promise((resolve, reject) => {
-            LoginManager.logInWithReadPermissions(Config.auth.ios.facebook.permissions)
-                .then((premissionsResult) => {
-                    console.log('Facebook permission result : ', premissionsResult);
+            LoginManager.logInWithReadPermissions(
+                Config.auth.ios.facebook.permissions
+            ).then(
+                premissionsResult => {
+                    console.log(
+                        'Facebook permission result : ',
+                        premissionsResult
+                    );
                     if (premissionsResult.isCancelled) {
-                        return resolve({ type: 'cancel', msg: 'login canceled' });
+                        return resolve({
+                            type: 'cancel',
+                            msg: 'login canceled'
+                        });
                     }
-                    if (!_.isEqual(premissionsResult.grantedPermissions, Config.auth.ios.facebook.permissions)
-                        && !_.isEqual(premissionsResult.grantedPermissions, Config.auth.android.facebook.permissions)) {
-                        return reject(new Error('Not granted requested permissions'))
+                    if (
+                        !_.isEqual(
+                            premissionsResult.grantedPermissions,
+                            Config.auth.ios.facebook.permissions
+                        ) &&
+                        !_.isEqual(
+                            premissionsResult.grantedPermissions,
+                            Config.auth.android.facebook.permissions
+                        )
+                    ) {
+                        return reject(
+                            new Error('Not granted requested permissions')
+                        );
                     }
                     console.log('Facebook response : ', premissionsResult);
 
@@ -133,18 +175,26 @@ class FrontmAuth {
                         {
                             parameters: {
                                 fields: {
-                                    string: 'email,name,first_name,middle_name,last_name'
+                                    string:
+                                        'email,name,first_name,middle_name,last_name'
                                 }
                             }
                         },
-                        this.meRequestCallback.bind(this, conversationId, botName, resolve, reject),
+                        this.meRequestCallback.bind(
+                            this,
+                            conversationId,
+                            botName,
+                            resolve,
+                            reject
+                        )
                     );
                     new GraphRequestManager().addRequest(infoRequest).start();
-
-                }, (error) => {
+                },
+                error => {
                     console.log('Error with facebook : ', error);
-                    reject({ type: 'error', error: 'Facebook login failed' })
-                });
+                    reject({ type: 'error', error: 'Facebook login failed' });
+                }
+            );
         });
     }
 
@@ -154,25 +204,28 @@ class FrontmAuth {
                 resolve(user);
             } else {
                 Network({
-                    'method': 'post',
-                    'url': 'https://www.googleapis.com/oauth2/v4/token',
-                    'headers' : {
+                    method: 'post',
+                    url: 'https://www.googleapis.com/oauth2/v4/token',
+                    headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    'data': queryString.stringify({
-                        'code': user.serverAuthCode,
-                        'grant_type': 'authorization_code',
-                        'client_id': Config.auth.android.google.dev.webClientId,
-                        'client_secret': Config.auth.android.google.dev.clientSecret
+                    data: queryString.stringify({
+                        code: user.serverAuthCode,
+                        grant_type: 'authorization_code',
+                        client_id: Config.auth.android.google.dev.webClientId,
+                        client_secret:
+                            Config.auth.android.google.dev.clientSecret
                     })
-                }).then((res) => {
-                    console.log('res : ', res);
-                    user.idToken = res.data.id_token;
-                    user.refreshToken = res.data.refresh_token;
-                    user.accessToken = res.data.access_token;
-                    console.log('Google user after refresh token : ', user);
-                    resolve(user);
-                }).catch(reject);
+                })
+                    .then(res => {
+                        console.log('res : ', res);
+                        user.idToken = res.data.id_token;
+                        user.refreshToken = res.data.refresh_token;
+                        user.accessToken = res.data.access_token;
+                        console.log('Google user after refresh token : ', user);
+                        resolve(user);
+                    })
+                    .catch(reject);
             }
         });
     }
@@ -183,16 +236,19 @@ class FrontmAuth {
         return new Promise(function(resolve, reject) {
             GoogleSignin.signOutPromise();
             GoogleSignin.signInPromise()
-                .then((user) => {
+                .then(user => {
                     console.log('Google user : ', user);
                     //throw 'hello';
                     return self.fetchRefreshToken(user);
-                }).then((user) => {
+                })
+                .then(user => {
                     const data = {
                         user: {
                             emailAddress: user.email,
                             givenName: user.givenName,
-                            screenName: user.name ? user.name.replace(/ /g, '') : '',
+                            screenName: user.name
+                                ? user.name.replace(/ /g, '')
+                                : '',
                             surname: user.familyName || user.surname,
                             userName: user.name,
                             userId: user.id
@@ -201,24 +257,36 @@ class FrontmAuth {
                             uuid: conversationId || UUID(),
                             bot: botName
                         },
-                        creatorInstanceId: UUID(),
+                        creatorInstanceId: UUID()
                     };
                     let options = {
-                        'method': 'post',
-                        'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
-                        'headers': {
+                        method: 'post',
+                        url:
+                            Config.proxy.protocol +
+                            Config.proxy.host +
+                            Config.proxy.authPath,
+                        headers: {
                             token: user.idToken,
                             provider_name: 'google',
                             platform: Platform.OS
                         },
-                        'data': data
+                        data: data
                     };
 
                     Network(options)
-                        .then((res) => {
-                            let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
-                            if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
-                                reject(new Error('Empty response from the server'));
+                        .then(res => {
+                            let resData =
+                                res && res.data && res.data.creds
+                                    ? res.data
+                                    : { creds: {} };
+                            if (
+                                _.isEmpty(resData) ||
+                                _.isEmpty(resData.creds) ||
+                                _.isEmpty(resData.user)
+                            ) {
+                                reject(
+                                    new Error('Empty response from the server')
+                                );
                                 return;
                             }
                             self.credentials.google = {
@@ -229,21 +297,36 @@ class FrontmAuth {
                                 userId: resData.user.userId,
                                 refreshToken: user.refreshToken,
                                 info: resData.user || data.user
-                            }
-                            console.log('Google credentials : ', self.credentials);
-                            return resolve({ type: 'success', credentials: self.credentials });
-                        }).catch((err) => {
+                            };
+                            console.log(
+                                'Google credentials : ',
+                                self.credentials
+                            );
+                            return resolve({
+                                type: 'success',
+                                credentials: self.credentials
+                            });
+                        })
+                        .catch(err => {
                             return reject({ type: 'error', error: err });
                         });
-                }).catch((err) => {
+                })
+                .catch(err => {
                     console.log('Google signin error : ', err);
-                    if (err.code === -5 || err.code === 12501 ||
-                        (err.description && err.description.indexOf('cancel') !== -1)) {
-                        return resolve({ type: 'cancel', msg: 'login canceled' });
+                    if (
+                        err.code === -5 ||
+                        err.code === 12501 ||
+                        (err.description &&
+                            err.description.indexOf('cancel') !== -1)
+                    ) {
+                        return resolve({
+                            type: 'cancel',
+                            msg: 'login canceled'
+                        });
                     } else {
                         reject({ type: 'error', error: err.code });
                     }
-                })
+                });
         });
     }
 
@@ -251,50 +334,74 @@ class FrontmAuth {
         var self = this;
         return new Promise((resolve, reject) => {
             const signinOptions = {
-                'method': 'post',
-                'url': config.proxy.protocol + config.proxy.host + config.proxy.signinPath,
-                'data': {
+                method: 'post',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.signinPath,
+                data: {
                     user: details
                 }
-            }
+            };
             console.log('Signin optons : ', signinOptions);
             Network(signinOptions)
-                .then((response) => {
+                .then(response => {
                     console.log('signin result ', result);
                     const result = response.data;
-                    if (!(result.success === 'true' || result.success === true)) {
-                        return reject({type: 'error', error: result.message, errorMessage: result.message});
+                    if (
+                        !(result.success === 'true' || result.success === true)
+                    ) {
+                        return reject({
+                            type: 'error',
+                            error: result.message,
+                            errorMessage: result.message
+                        });
                     }
                     console.log('Signin result : ', result);
                     const frontmUser = result.data.user;
-                    const defaultScreenName = frontmUser.userName ? frontmUser.userName.replace(/ /g, '') : '';
+                    const defaultScreenName = frontmUser.userName
+                        ? frontmUser.userName.replace(/ /g, '')
+                        : '';
                     const data = {
                         user: {
                             emailAddress: frontmUser.emailAddress,
                             givenName: frontmUser.givenName,
-                            screenName: frontmUser.screenName || defaultScreenName,
+                            screenName:
+                                frontmUser.screenName || defaultScreenName,
                             surname: frontmUser.surname,
                             userName: frontmUser.userName,
-                            awsId: frontmUser.awsId,
-                        },
+                            awsId: frontmUser.awsId
+                        }
                     };
                     let options = {
-                        'method': 'post',
-                        'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.authPath,
-                        'headers': {
+                        method: 'post',
+                        url:
+                            Config.proxy.protocol +
+                            Config.proxy.host +
+                            Config.proxy.authPath,
+                        headers: {
                             token: result.data.id_token,
                             provider_name: 'frontm',
                             platform: Platform.OS
                         },
-                        'data': data
+                        data: data
                     };
                     console.log('network options : ', options);
                     Network(options)
-                        .then((res) => {
-                            let resData = res && res.data && res.data.creds ? res.data : { creds: {} };
+                        .then(res => {
+                            let resData =
+                                res && res.data && res.data.creds
+                                    ? res.data
+                                    : { creds: {} };
                             console.log('resData : ', res);
-                            if (_.isEmpty(resData) || _.isEmpty(resData.creds) || _.isEmpty(resData.user)) {
-                                reject(new Error('Empty response from the server'));
+                            if (
+                                _.isEmpty(resData) ||
+                                _.isEmpty(resData.creds) ||
+                                _.isEmpty(resData.user)
+                            ) {
+                                reject(
+                                    new Error('Empty response from the server')
+                                );
                                 return;
                             }
                             self.credentials.frontm = {
@@ -305,14 +412,18 @@ class FrontmAuth {
                                 userId: resData.user.userId,
                                 refreshToken: result.data.refresh_token,
                                 info: resData.user || data.user
-                            }
+                            };
                             console.log('Credentials ', self.credentials);
-                            return resolve({ type: 'success', credentials: self.credentials });
-                        }).catch((err) => {
+                            return resolve({
+                                type: 'success',
+                                credentials: self.credentials
+                            });
+                        })
+                        .catch(err => {
                             return reject({ type: 'error', error: err });
                         });
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log('Error in Authing server : ', error);
                     reject({ type: 'error', error: error.code });
                 });
@@ -322,34 +433,44 @@ class FrontmAuth {
     updatePassword(payload, user) {
         let options = {
             method: 'POST',
-            url: Config.proxy.protocol + Config.proxy.host + Config.proxy.updateSigninPath,
+            url:
+                Config.proxy.protocol +
+                Config.proxy.host +
+                Config.proxy.updateSigninPath,
             headers: {
-                refresh_token: user.provider.refreshToken,
+                refresh_token: user.provider.refreshToken
             },
             data: {
                 user: payload
             }
         };
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             Network(options)
-                .then((res) => {
+                .then(res => {
                     let resData = res.data || {};
-                    if (resData.success === 'true' || resData.success === true) {
+                    if (
+                        resData.success === 'true' ||
+                        resData.success === true
+                    ) {
                         resolve();
                     } else {
                         reject(new Error(resData.message));
                     }
-                }).catch(() => {
+                })
+                .catch(() => {
                     reject();
                 });
-        })
+        });
     }
 
     refreshTokens(user) {
         let options = {
-            'method': 'post',
-            'url': Config.proxy.protocol + Config.proxy.host + Config.proxy.refreshPath,
-            'headers': {
+            method: 'post',
+            url:
+                Config.proxy.protocol +
+                Config.proxy.host +
+                Config.proxy.refreshPath,
+            headers: {
                 accesskeyid: user.aws.accessKeyId,
                 provider_name: user.provider.name.toLowerCase(),
                 refresh_token: user.provider.refreshToken,
@@ -357,27 +478,33 @@ class FrontmAuth {
             }
         };
         console.log('Options for refresh : ', options);
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             Network(options)
-                .then((res) => {
+                .then(res => {
                     let resData = res ? res.data : {};
-                    if (resData.identityId && resData.accessKeyId && resData.secretAccessKey && resData.sessionToken) {
+                    if (
+                        resData.identityId &&
+                        resData.accessKeyId &&
+                        resData.secretAccessKey &&
+                        resData.sessionToken
+                    ) {
                         const updatedCreds = {
                             identityId: resData.identityId,
                             accessKeyId: resData.accessKeyId,
                             secretAccessKey: resData.secretAccessKey,
-                            sessionToken: resData.sessionToken,
-                        }
+                            sessionToken: resData.sessionToken
+                        };
                         return resolve(updatedCreds);
                     } else {
                         reject();
                     }
-                }).catch((err) => {
+                })
+                .catch(err => {
                     console.log('Error making refresh token call::', err);
                     return reject(err);
                 });
-        })
+        });
     }
 }
 
-export default new FrontmAuth()
+export default new FrontmAuth();

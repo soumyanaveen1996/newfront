@@ -7,18 +7,15 @@ import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
 
 class AssetFetcher {
-
     constructor(options) {
-
         console.log(`Making ${AssetFetcher.DependenciesDir}`);
-
     }
 
     static async getFile(filename, encoding, forceEncoding = true) {
         let fileExists = await AssetFetcher.existsOnDevice(filename);
 
         if (fileExists) {
-            let file = await RNFS.readFile(filename, encoding || 'utf8')
+            let file = await RNFS.readFile(filename, encoding || 'utf8');
             return file;
         }
 
@@ -54,18 +51,25 @@ class AssetFetcher {
         return contents || [];
     }
 
-
-    static async downloadFile(filepath, url, headers, background, readFile = true) {
+    static async downloadFile(
+        filepath,
+        url,
+        headers,
+        background,
+        readFile = true
+    ) {
         try {
-            console.log(`AssetFetcher::Downloading file via RNFS: ${filepath} from ${url}`);
+            console.log(
+                `AssetFetcher::Downloading file via RNFS: ${filepath} from ${url}`
+            );
 
             let downloadFileOptions = {
                 fromUrl: url,
                 toFile: filepath,
                 headers: headers || false,
                 background: background || true,
-                progress: () => { }
-            }
+                progress: () => {}
+            };
 
             let rnfsJob = RNFS.downloadFile(downloadFileOptions);
 
@@ -104,15 +108,30 @@ class AssetFetcher {
 
             // S3 hates invalid headers even for public files - found out the hard way :)
             if (isLoggedIn) {
-                headers = Utils.createAuthHeader(host, 'GET', path, config.bot.s3ServiceApi, '', user);
+                headers = Utils.createAuthHeader(
+                    host,
+                    'GET',
+                    path,
+                    config.bot.s3ServiceApi,
+                    '',
+                    user
+                );
             }
             const url = config.bot.baseProtocol + host + path;
 
-            const fileData = await AssetFetcher.downloadFile(filepath, url, headers, true);
+            const fileData = await AssetFetcher.downloadFile(
+                filepath,
+                url,
+                headers,
+                true
+            );
 
             return fileData;
         } catch (e) {
-            console.log('Failed downloading from s3', JSON.stringify(e, undefined, 2));
+            console.log(
+                'Failed downloading from s3',
+                JSON.stringify(e, undefined, 2)
+            );
             throw e;
         }
     }
@@ -135,9 +154,19 @@ class AssetFetcher {
     // TODO: improve for production. This is not a good solution as too much is loaded in memory and
     // data is being sent in one shot
     // Ideal algo: chunk data + compress (each chunk) + stream to http2 backend as chunks
-    static async uploadFileToS3(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user) {
+    static async uploadFileToS3(
+        base64Data,
+        fileUri,
+        bucketName,
+        filenameWithoutExtension,
+        contentType,
+        extension,
+        user
+    ) {
         try {
-            console.log(`AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`);
+            console.log(
+                `AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`
+            );
             // return;
             const host = config.bot.baseUrl;
 
@@ -152,7 +181,10 @@ class AssetFetcher {
 
             // Fix for upload binary data S3: https://github.com/benjreinhart/react-native-aws3/issues/14
             const Buffer = global.Buffer || require('buffer').Buffer;
-            const buf = new Buffer(base64Data.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+            const buf = new Buffer(
+                base64Data.replace(/^data:image\/\w+;base64,/, ''),
+                'base64'
+            );
 
             const putData = {
                 Bucket: config.bot.binaryS3Bucket + '/' + bucketName,
@@ -167,65 +199,130 @@ class AssetFetcher {
             const putObjectPromise = s3.putObject(putData).promise();
             let a = await Promise.resolve(putObjectPromise);
             console.log('Put Result : ', a);
-            const s3UrlToFile = config.bot.baseProtocol + host + '/' + config.bot.binaryS3Bucket + '/' + bucketName + '/' + filenameWithoutExtension + '.' + extension
+            const s3UrlToFile =
+                config.bot.baseProtocol +
+                host +
+                '/' +
+                config.bot.binaryS3Bucket +
+                '/' +
+                bucketName +
+                '/' +
+                filenameWithoutExtension +
+                '.' +
+                extension;
 
-            console.log(`AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`);
+            console.log(
+                `AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`
+            );
 
             return s3UrlToFile;
         } catch (error) {
-            console.log('Failed uploading for file to bucket: ', fileUri, bucketName, error);
+            console.log(
+                'Failed uploading for file to bucket: ',
+                fileUri,
+                bucketName,
+                error
+            );
             throw error;
         }
     }
 
-    static async uploadFileToFileGateway(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user) {
+    static async uploadFileToFileGateway(
+        base64Data,
+        fileUri,
+        bucketName,
+        filenameWithoutExtension,
+        contentType,
+        extension,
+        user
+    ) {
         try {
-            console.log(`AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`);
+            console.log(
+                `AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`
+            );
             // return;
-            const uploadUrl = `${config.proxy.protocol}${config.proxy.host}${config.proxy.uploadFilePath}`
+            const uploadUrl = `${config.proxy.protocol}${config.proxy.host}${
+                config.proxy.uploadFilePath
+            }`;
             const filename = `${filenameWithoutExtension}.${extension}`;
-            const res = await RNFetchBlob.fetch('POST', uploadUrl, {
-                'accesskeyid': user.aws.accessKeyId,
-                'secretaccesskey': user.aws.secretAccessKey,
-                'sessiontoken': user.aws.sessionToken,
-                'Content-Type': 'multipart/form-data',
-            }, [
-                {name: 'folderName', data: bucketName },
-                {name: 'fileName', data: filename },
-                {name: 'file', filename: filename, data: base64Data, type: contentType },
-            ])
+            const res = await RNFetchBlob.fetch(
+                'POST',
+                uploadUrl,
+                {
+                    accesskeyid: user.aws.accessKeyId,
+                    secretaccesskey: user.aws.secretAccessKey,
+                    sessiontoken: user.aws.sessionToken,
+                    'Content-Type': 'multipart/form-data'
+                },
+                [
+                    { name: 'folderName', data: bucketName },
+                    { name: 'fileName', data: filename },
+                    {
+                        name: 'file',
+                        filename: filename,
+                        data: base64Data,
+                        type: contentType
+                    }
+                ]
+            );
 
             console.log({
-                'accesskeyid': user.aws.accessKeyId,
-                'secretaccesskey': user.aws.secretAccessKey,
-                'sessiontoken': user.aws.sessionToken,
-                'Content-Type': 'multipart/form-data',
+                accesskeyid: user.aws.accessKeyId,
+                secretaccesskey: user.aws.secretAccessKey,
+                sessiontoken: user.aws.sessionToken,
+                'Content-Type': 'multipart/form-data'
             });
             console.log('AssetFetcher::');
             console.log(res);
 
-            const s3UrlToFile = `${config.proxy.protocol}${config.proxy.host}${config.proxy.downloadFilePath}/${bucketName}/${filename}`;
-            console.log(`AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`);
+            const s3UrlToFile = `${config.proxy.protocol}${config.proxy.host}${
+                config.proxy.downloadFilePath
+            }/${bucketName}/${filename}`;
+            console.log(
+                `AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`
+            );
             return s3UrlToFile;
         } catch (error) {
-            console.log('Failed uploading for file to gateway: ', fileUri, bucketName, error);
+            console.log(
+                'Failed uploading for file to gateway: ',
+                fileUri,
+                bucketName,
+                error
+            );
             throw error;
         }
     }
 
-    static async uploadToS3(base64Data, fileUri, conversationId, messageId, contentType, extension, user) {
-        console.log(`AssetFetcher::Uploading file ${fileUri} data with conversationId: ${conversationId}`);
-        return AssetFetcher.uploadFileToS3(base64Data, fileUri, conversationId, messageId, contentType, extension, user);
+    static async uploadToS3(
+        base64Data,
+        fileUri,
+        conversationId,
+        messageId,
+        contentType,
+        extension,
+        user
+    ) {
+        console.log(
+            `AssetFetcher::Uploading file ${fileUri} data with conversationId: ${conversationId}`
+        );
+        return AssetFetcher.uploadFileToS3(
+            base64Data,
+            fileUri,
+            conversationId,
+            messageId,
+            contentType,
+            extension,
+            user
+        );
     }
 
     static depPath(name, version) {
         let depSlug = _.snakeCase(name);
         let dir = `${AssetFetcher.DependenciesDir}${depSlug}/${version}/`,
-            path = `${dir}${depSlug}.js`
+            path = `${dir}${depSlug}.js`;
         RNFS.mkdir(`${dir}`);
         return path;
     }
-
 
     static async loadDependency(dep_options, user) {
         try {
@@ -237,9 +334,18 @@ class AssetFetcher {
                 data = await AssetFetcher.getFile(path);
 
             if (!data) {
-                console.log('AssetFetcher::loadDependency::Did not find on filesystem. Loading from url', depUrl, depName, version);
+                console.log(
+                    'AssetFetcher::loadDependency::Did not find on filesystem. Loading from url',
+                    depUrl,
+                    depName,
+                    version
+                );
 
-                let res = await AssetFetcher.downloadS3FileRest(path, depUrl, user)
+                let res = await AssetFetcher.downloadS3FileRest(
+                    path,
+                    depUrl,
+                    user
+                );
                 data = res;
             }
 
@@ -248,7 +354,6 @@ class AssetFetcher {
             console.error('Failed to loadDependency', e);
             throw e;
         }
-
     }
 
     static async deleteDependency(name, version = 'n.a') {
@@ -261,18 +366,15 @@ class AssetFetcher {
         } catch (e) {
             console.error('Failed to delete Dependency', name, e);
         }
-
     }
 
     static get DependenciesDir() {
         return `${this.RootDir}/${config.dce.botDependenciesDirName}/`;
-
     }
 
     static get RootDir() {
         return RNFS.DocumentDirectoryPath;
     }
-
 }
 console.log('Making DependenciesDir');
 RNFS.mkdir(AssetFetcher.DependenciesDir);

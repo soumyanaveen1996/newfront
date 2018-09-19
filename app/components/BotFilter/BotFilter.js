@@ -1,5 +1,6 @@
 import React from 'react';
-import { View,
+import {
+    View,
     ActivityIndicator,
     Animated,
     Text,
@@ -8,7 +9,8 @@ import { View,
     TouchableWithoutFeedback,
     Keyboard,
     TextInput,
-    Image } from 'react-native';
+    Image
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Styles from './styles';
 import Config from './config';
@@ -23,12 +25,18 @@ export default class BotFilter extends React.Component {
         this.onClose = this.onClose.bind(this);
         this.state = {
             loaded: false
-        }
+        };
     }
 
     componentWillMount() {
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
-        this.keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
+        this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardWillShow',
+            this.keyboardWillShow.bind(this)
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardWillHide',
+            this.keyboardWillHide.bind(this)
+        );
     }
 
     componentWillUnmount() {
@@ -36,24 +44,18 @@ export default class BotFilter extends React.Component {
         this.keyboardDidHideListener.remove();
     }
 
-    keyboardWillShow () {
-        Animated.timing(
-            this.state.slideAnim,
-            {
-                toValue: Config.BotFilter.deltaHeightWithKeyboard,
-                duration: Config.BotFilter.animationDuration,
-            }
-        ).start()
+    keyboardWillShow() {
+        Animated.timing(this.state.slideAnim, {
+            toValue: Config.BotFilter.deltaHeightWithKeyboard,
+            duration: Config.BotFilter.animationDuration
+        }).start();
     }
 
-    keyboardWillHide () {
-        Animated.timing(
-            this.state.slideAnim,
-            {
-                toValue: 0,
-                duration: Config.BotFilter.animationDuration,
-            }
-        ).start()
+    keyboardWillHide() {
+        Animated.timing(this.state.slideAnim, {
+            toValue: 0,
+            duration: Config.BotFilter.animationDuration
+        }).start();
     }
 
     async componentDidMount() {
@@ -62,28 +64,22 @@ export default class BotFilter extends React.Component {
             slideAnim: new Animated.Value(-1 * Config.BotFilter.height)
         });
 
-        Animated.timing(
-            this.state.slideAnim,
-            {
-                toValue: 0,
-                duration: Config.BotFilter.animationDuration,
-            }
-        ).start(() => {
+        Animated.timing(this.state.slideAnim, {
+            toValue: 0,
+            duration: Config.BotFilter.animationDuration
+        }).start(() => {
             this.setState({
                 loaded: true,
-                displayedBots: this.bots,
+                displayedBots: this.bots
             });
         });
     }
 
     close() {
-        Animated.timing(
-            this.state.slideAnim,
-            {
-                toValue: -1 * Config.BotFilter.height,
-                duration: Config.BotFilter.animationDuration,
-            }
-        ).start(Actions.pop);
+        Animated.timing(this.state.slideAnim, {
+            toValue: -1 * Config.BotFilter.height,
+            duration: Config.BotFilter.animationDuration
+        }).start(Actions.pop);
     }
 
     onClose() {
@@ -94,8 +90,10 @@ export default class BotFilter extends React.Component {
         if (!text || text === '') {
             this.setState({ displayedBots: this.bots });
         } else {
-            const selectedBots = _.filter(this.bots, (bot) => {
-                return bot.name.toLowerCase().indexOf(text.toLowerCase()) !== -1
+            const selectedBots = _.filter(this.bots, bot => {
+                return (
+                    bot.name.toLowerCase().indexOf(text.toLowerCase()) !== -1
+                );
             });
             this.setState({ displayedBots: selectedBots });
         }
@@ -114,35 +112,66 @@ export default class BotFilter extends React.Component {
                 </View>
             );
         }
-        return this.state.displayedBots.map((bot) => {
-            const imageSource = bot.logoSlug && images[bot.logoSlug] ? images[bot.logoSlug] : {uri: bot.logoUrl}
+        return this.state.displayedBots.map(bot => {
+            const imageSource =
+                bot.logoSlug && images[bot.logoSlug]
+                    ? images[bot.logoSlug]
+                    : { uri: bot.logoUrl };
             return (
-                <TouchableOpacity style={Styles.bot} key={bot.botId}  onPress={ () => this.onBotSelected.bind(this)(bot)}>
-                    <Image style={Styles.botImage} source={imageSource} resizeMode="contain" defaultSource={images.front_bot_logo}/>
-                    <Text style={Styles.botTitle} numberOfLines={1}>{bot.name}</Text>
+                <TouchableOpacity
+                    style={Styles.bot}
+                    key={bot.botId}
+                    onPress={() => this.onBotSelected.bind(this)(bot)}
+                >
+                    <Image
+                        style={Styles.botImage}
+                        source={imageSource}
+                        resizeMode="contain"
+                        defaultSource={images.front_bot_logo}
+                    />
+                    <Text style={Styles.botTitle} numberOfLines={1}>
+                        {bot.name}
+                    </Text>
                 </TouchableOpacity>
             );
         });
     }
 
-    render(){
+    render() {
         const animStyle = { bottom: this.state.slideAnim };
         return (
-            <TouchableOpacity activeOpacity={0.9} style={Styles.container} onPress={ this.close.bind(this) }>
-                <TouchableWithoutFeedback style={[ Styles.botfilterContainer ]}>
-                    <Animated.View style={[Styles.botfilterContainer, animStyle]}>
+            <TouchableOpacity
+                activeOpacity={0.9}
+                style={Styles.container}
+                onPress={this.close.bind(this)}
+            >
+                <TouchableWithoutFeedback style={[Styles.botfilterContainer]}>
+                    <Animated.View
+                        style={[Styles.botfilterContainer, animStyle]}
+                    >
                         <View style={Styles.header}>
-                            <Text style={Styles.headerText}>{I18n.t('Filters').toLocaleUpperCase()}</Text>
+                            <Text style={Styles.headerText}>
+                                {I18n.t('Filters').toLocaleUpperCase()}
+                            </Text>
                         </View>
                         <TextInput
                             style={Styles.searchTextInput}
-                            underlineColorAndroid={Config.SearchInput.underlineColor}
+                            underlineColorAndroid={
+                                Config.SearchInput.underlineColor
+                            }
                             placeholder={I18n.t('Search')}
                             selectionColor={Config.SearchInput.textColor}
-                            placeholderTextColor={Config.SearchInput.placeHolderTextColor}
-                            onChangeText={this.onSearchQueryChange.bind(this)}/>
-                        <ScrollView style={Styles.botScrollView} contentContainerStyle={Styles.botsContainer} pointerEvents="auto">
-                            { this.renderBots() }
+                            placeholderTextColor={
+                                Config.SearchInput.placeHolderTextColor
+                            }
+                            onChangeText={this.onSearchQueryChange.bind(this)}
+                        />
+                        <ScrollView
+                            style={Styles.botScrollView}
+                            contentContainerStyle={Styles.botsContainer}
+                            pointerEvents="auto"
+                        >
+                            {this.renderBots()}
                         </ScrollView>
                     </Animated.View>
                 </TouchableWithoutFeedback>

@@ -14,15 +14,15 @@ export default class BotListScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         return {
             headerTitle: headerConfig.headerTitle,
-            headerLeft: <HeaderBack onPress={Actions.pop} />,
-        }
+            headerLeft: <HeaderBack onPress={Actions.pop} />
+        };
     }
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            botsData : this.props.data
-        }
+            botsData: this.props.data
+        };
     }
 
     async componentWillMount() {
@@ -37,19 +37,22 @@ export default class BotListScreen extends React.Component {
     }
 
     onBotInstalled = async () => {
-        await this.refresh()
+        await this.refresh();
         this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
-    }
+    };
 
     onBotInstallFailed = () => {
-        this.refs.toast.show(I18n.t('Bot_install_failed'), DURATION.LENGTH_SHORT);
-    }
+        this.refs.toast.show(
+            I18n.t('Bot_install_failed'),
+            DURATION.LENGTH_SHORT
+        );
+    };
 
-    checkBotStatus = (bot) => {
+    checkBotStatus = bot => {
         return utils.checkBotStatus(this.state.installedBots, bot);
-    }
+    };
 
-    renderRow = (bot) => {
+    renderRow = bot => {
         const botStatus = this.checkBotStatus(bot);
 
         return (
@@ -58,41 +61,37 @@ export default class BotListScreen extends React.Component {
                 onBotInstalled={this.onBotInstalled}
                 installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update} />
+                update={botStatus.update}
+            />
         );
-    }
+    };
 
     onBotClick(item) {
         Actions.botChat({ bot: item });
     }
 
-    renderRowItem = ({item}) => {
+    renderRowItem = ({ item }) => {
         return (
             <View key={item.botId} style={styles.rowContainer}>
-                <View style={styles.rowContent}>
-                    {this.renderRow(item)}
-                </View>
+                <View style={styles.rowContent}>{this.renderRow(item)}</View>
             </View>
-        )
-    }
+        );
+    };
 
     render() {
         return (
             <View>
                 <FlatList
-                    style = {styles.flatList}
-                    keyExtractor = {(item, index) => item.botId}
+                    style={styles.flatList}
+                    keyExtractor={(item, index) => item.botId}
                     data={this.state.botsData}
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast"/>
+                <Toast ref="toast" />
             </View>
-        )
+        );
     }
 
-    _onFetch(pageNo, success, failure) {
-
-    }
+    _onFetch(pageNo, success, failure) {}
 }
-

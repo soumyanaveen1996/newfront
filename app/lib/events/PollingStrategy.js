@@ -1,5 +1,5 @@
 export const PollingStrategyEvents = {
-    changed: 'changed',
+    changed: 'changed'
 };
 
 export default PollingStrategyEvents;

@@ -1,4 +1,3 @@
-
 import { TelnetClient } from '../telnet';
 
 console.log('Telnet client : ', TelnetClient);
@@ -50,7 +49,7 @@ export default class Telnet {
         this.executingCommand = true;
         const command = this.commandsQueue.shift();
         if (command) {
-            let res = await this.client.exec(command)
+            let res = await this.client.exec(command);
             this.observer.commandResult({
                 command: command,
                 result: res

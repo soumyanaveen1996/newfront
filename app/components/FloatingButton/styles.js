@@ -8,16 +8,16 @@ const Styles = StyleSheet.create({
         left: 0,
         right: 0,
         top: 0,
-        backgroundColor: GlobalColors.transparent,
+        backgroundColor: GlobalColors.transparent
     },
     buttonText: {
         marginTop: -4,
         fontSize: 32,
         fontWeight: '300',
-        color: GlobalColors.white,
+        color: GlobalColors.white
     },
     orientation: {
-        alignItems: 'flex-end',
+        alignItems: 'flex-end'
     },
     itemButton: {
         justifyContent: 'center',
@@ -25,7 +25,7 @@ const Styles = StyleSheet.create({
         width: 56,
         height: 56,
         borderRadius: 28,
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.accent
     },
     mainButton: {
         justifyContent: 'center',
@@ -33,13 +33,13 @@ const Styles = StyleSheet.create({
         width: 56,
         height: 56,
         borderRadius: 28,
-        backgroundColor: GlobalColors.orangeYellow,
+        backgroundColor: GlobalColors.orangeYellow
     },
     itemContainer: {
         paddingHorizontal: 20,
         height: 80,
         flexDirection: 'row-reverse',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     itemTextContainer: {
         paddingHorizontal: 20,
@@ -50,35 +50,37 @@ const Styles = StyleSheet.create({
     itemText: {
         fontSize: 16,
         fontWeight: '500',
-        color: GlobalColors.white,
+        color: GlobalColors.white
     },
     itemImage: {
         width: 56,
-        height: 56,
+        height: 56
     },
     mainButtonContainer: {
         paddingHorizontal: 20,
         height: 80,
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingBottom: 12,
+        paddingBottom: 12
     }
 });
 
 export function itemAnimatedViewStyle(anim) {
-    return [{
-        marginBottom: -10,
-        alignItems: 'flex-end',
-        opacity: anim,
-        transform: [
-            {
-                translateY: anim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [40, 0]
-                })
-            }
-        ]
-    }];
+    return [
+        {
+            marginBottom: -10,
+            alignItems: 'flex-end',
+            opacity: anim,
+            transform: [
+                {
+                    translateY: anim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [40, 0]
+                    })
+                }
+            ]
+        }
+    ];
 }
 
 export function mainButtonAnimatedViewStyle(anim) {
@@ -100,7 +102,6 @@ export function mainButtonAnimatedViewStyle(anim) {
     };
 }
 
-
 export function overlayTappableStyle(props) {
     return [
         Styles.overlay,
@@ -119,7 +120,7 @@ export function overlayStyle(props) {
         {
             elevation: props.elevation,
             zIndex: props.zIndex,
-            justifyContent: 'flex-end',
+            justifyContent: 'flex-end'
         }
     ];
 }
@@ -130,7 +131,7 @@ export function actionStyle(props) {
         alignSelf: 'stretch',
         justifyContent: 'flex-end',
         paddingTop: 0,
-        zIndex: props.zIndex,
+        zIndex: props.zIndex
     };
 }
 

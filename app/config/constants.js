@@ -6,5 +6,5 @@ export default {
     DEFAULT_HEADER_HEIGHT: Platform.OS === 'ios' ? 64 : 54,
     IMAGES_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/images',
     AUDIO_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/audio',
-    VIDEO_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/video',
-}
+    VIDEO_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/video'
+};

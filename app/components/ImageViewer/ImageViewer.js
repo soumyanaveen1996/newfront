@@ -10,11 +10,10 @@ import { Actions } from 'react-native-router-flux';
 import ImageCache from '../../lib/image_cache';
 
 export default class ImageViewer extends React.Component {
-
     static navigationOptions({ navigation, screenProps }) {
         return {
-            headerLeft: <HeaderBack onPress={Actions.pop} />,
-        }
+            headerLeft: <HeaderBack onPress={Actions.pop} />
+        };
     }
 
     constructor(props) {
@@ -29,7 +28,7 @@ export default class ImageViewer extends React.Component {
         if (path) {
             this.setState({
                 uri: path
-            })
+            });
         } else {
             this.setState({
                 uri: this.props.uri
@@ -39,15 +38,20 @@ export default class ImageViewer extends React.Component {
 
     onImageSave() {
         this.setState({ saveDisabled: true });
-        CameraRoll.saveToCameraRoll(this.state.uri, 'photo')
-            .then((result) => {
-                if (result) {
-                    this.refs.toast.show(I18n.t('Image_Save_Success'), DURATION.LENGTH_SHORT);
-                } else {
-                    this.refs.toast.show(I18n.t('Image_Save_Failure'), DURATION.LENGTH_SHORT);
-                }
-                this.setState({ saveDisabled: false });
-            })
+        CameraRoll.saveToCameraRoll(this.state.uri, 'photo').then(result => {
+            if (result) {
+                this.refs.toast.show(
+                    I18n.t('Image_Save_Success'),
+                    DURATION.LENGTH_SHORT
+                );
+            } else {
+                this.refs.toast.show(
+                    I18n.t('Image_Save_Failure'),
+                    DURATION.LENGTH_SHORT
+                );
+            }
+            this.setState({ saveDisabled: false });
+        });
     }
 
     async getImagePathFromCache(uri) {
@@ -57,16 +61,25 @@ export default class ImageViewer extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.image} source={{uri: this.state.uri}} pixels={{width: 1920, height: 1080}}
+                <Image
+                    style={styles.image}
+                    source={{ uri: this.state.uri }}
+                    pixels={{ width: 1920, height: 1080 }}
                 />
                 <View style={styles.toolbar}>
-                    <TouchableOpacity disabled={this.state.saveDisabled} onPress={this.onImageSave.bind(this)}>
-                        {this.state.saveDisabled ? Icons.toolbarSaveDisbled({style: styles.saveIcon}) : Icons.toolbarSave({style: styles.saveIcon})}
+                    <TouchableOpacity
+                        disabled={this.state.saveDisabled}
+                        onPress={this.onImageSave.bind(this)}
+                    >
+                        {this.state.saveDisabled
+                            ? Icons.toolbarSaveDisbled({
+                                style: styles.saveIcon
+                            })
+                            : Icons.toolbarSave({ style: styles.saveIcon })}
                     </TouchableOpacity>
                 </View>
-                <Toast ref="toast"/>
+                <Toast ref="toast" />
             </View>
-        )
+        );
     }
 }
-

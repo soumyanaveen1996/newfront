@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, Image, TouchableHighlight } from 'react-native';
 import GridView from 'react-native-super-grid';
-import styles from './styles'
-import images from '../../../config/images'
+import styles from './styles';
+import images from '../../../config/images';
 import I18n from '../../../config/i18n/i18n';
 import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage';
@@ -11,59 +11,79 @@ import { SYSTEM_BOT_MANIFEST } from '../../../lib/bot/SystemBot';
 import { scrollViewConfig } from './config';
 
 export default class DeveloperTab extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.getDomainMgmtBotData();
         this.state = {
             // Hide + for now until we have more auth sources
             // developerData : [...this.props.developerData , {name :I18n.t('Authenticate')}]
-            developerData: [ ...this.props.developerData, this.domainMgmtBotData ]
-        }
+            developerData: [...this.props.developerData, this.domainMgmtBotData]
+        };
     }
 
-    renderBotImage = (botData)=>{
+    renderBotImage = botData => {
         var botImage;
         if (botData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
             botImage = (
-                <View style = {styles.authenticateButton}>
-                    <Text allowFontScaling={false} style ={styles.plusText}>+</Text>
+                <View style={styles.authenticateButton}>
+                    <Text allowFontScaling={false} style={styles.plusText}>
+                        +
+                    </Text>
                 </View>
             );
         } else {
             if (botData.logoSlug != null) {
-                botImage = <Image source={images[botData.logoSlug]} style={styles.iconStyle}/>
+                botImage = (
+                    <Image
+                        source={images[botData.logoSlug]}
+                        style={styles.iconStyle}
+                    />
+                );
             } else {
-                botImage = <CachedImage imageTag = "botLogo" source={{uri : botData.logoUrl}} style={styles.iconStyle}/>
+                botImage = (
+                    <CachedImage
+                        imageTag="botLogo"
+                        source={{ uri: botData.logoUrl }}
+                        style={styles.iconStyle}
+                    />
+                );
             }
         }
         return botImage;
-    }
+    };
 
-    onTileCilcked = (botsId)=>{
+    onTileCilcked = botsId => {
         if (botsId == null) {
             return;
         }
 
-        let selectedBots =  (this.props.botsData.filter((bot)=>{return botsId.indexOf(bot.botId) >= 0}))
-        Actions.botList({data : selectedBots});
-    }
+        let selectedBots = this.props.botsData.filter(bot => {
+            return botsId.indexOf(bot.botId) >= 0;
+        });
+        Actions.botList({ data: selectedBots });
+    };
 
     onDomainMgmtTileClicked() {
-        Actions.botChat({ bot: this.domainMgmtChatBot, onBack: this.props.onBack });
+        Actions.botChat({
+            bot: this.domainMgmtChatBot,
+            onBack: this.props.onBack
+        });
     }
 
     getDomainMgmtBotData() {
-        const domainMgmtBotData = _.filter(this.props.botsData, (bot) => {
-            return bot.botId.indexOf(SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) !== -1
+        const domainMgmtBotData = _.filter(this.props.botsData, bot => {
+            return (
+                bot.botId.indexOf(SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) !==
+                -1
+            );
         });
         this.domainMgmtBotData = {
             name: domainMgmtBotData[0].botName,
             logoUrl: domainMgmtBotData[0].logoUrl,
             botId: domainMgmtBotData[0].botId
-        }
+        };
         this.domainMgmtChatBot = domainMgmtBotData[0];
     }
-
 
     renderGridItem = (rowData, index) => {
         let domainMgmtBot = false;
@@ -76,16 +96,19 @@ export default class DeveloperTab extends React.Component {
             <TouchableHighlight
                 key={index}
                 style={styles.gridStyle}
-                onPress= {() => domainMgmtBot ? this.onDomainMgmtTileClicked() : this.onTileCilcked(rowData.botIds)}>
+                onPress={() =>
+                    domainMgmtBot
+                        ? this.onDomainMgmtTileClicked()
+                        : this.onTileCilcked(rowData.botIds)
+                }
+            >
                 <View style={styles.tileContent}>
                     {this.renderBotImage(rowData)}
-                    <Text style={styles.rowTitle}>
-                        {botName}
-                    </Text>
+                    <Text style={styles.rowTitle}>{botName}</Text>
                 </View>
             </TouchableHighlight>
-        )
-    }
+        );
+    };
 
     render() {
         return (
@@ -94,10 +117,8 @@ export default class DeveloperTab extends React.Component {
                 spacing={5}
                 renderItem={this.renderGridItem}
                 style={styles.listViewContentContainerStyle}
-                items = {this.state.developerData}
+                items={this.state.developerData}
             />
-        )
+        );
     }
 }
-
-

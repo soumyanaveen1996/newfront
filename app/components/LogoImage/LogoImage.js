@@ -3,7 +3,6 @@ import { Image, View, ActivityIndicator } from 'react-native';
 import styles from './styles';
 
 export default class LogoImage extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -13,7 +12,7 @@ export default class LogoImage extends Component {
 
     componentWillMount() {
         if (this.props.source) {
-            this.setState({ loaded: true});
+            this.setState({ loaded: true });
         }
     }
 
@@ -24,17 +23,24 @@ export default class LogoImage extends Component {
                     source={this.props.source}
                     resizeMode={'contain'}
                     style={this.props.imageStyle}
-                    onLoad={this.onLoad} />
-                {!this.state.loaded &&
-                <View style={this.props.loadingStyle === undefined ? styles.loading : this.props.loadingStyle}>
-                    <ActivityIndicator size="small" />
-                </View>
-                }
+                    onLoad={this.onLoad}
+                />
+                {!this.state.loaded && (
+                    <View
+                        style={
+                            this.props.loadingStyle === undefined
+                                ? styles.loading
+                                : this.props.loadingStyle
+                        }
+                    >
+                        <ActivityIndicator size="small" />
+                    </View>
+                )}
             </View>
-        )
+        );
     }
 
     onLoad = () => {
-        this.setState(() => ({ loaded: true }))
-    }
+        this.setState(() => ({ loaded: true }));
+    };
 }

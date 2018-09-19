@@ -10,28 +10,28 @@ const styles = StyleSheet.create({
         right: 0,
         left: 0,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     text: {
         fontSize: 18,
         fontWeight: 'bold',
         fontStyle: 'italic',
         textAlign: 'center',
-        color: GlobalColors.accent,
+        color: GlobalColors.accent
     },
     closeButton: {
         position: 'absolute',
         top: Utils.isiPhoneX() ? 30 : 10,
         left: 0,
         width: 45,
-        height: 45,
+        height: 45
     },
     mapView: {
         position: 'absolute',
         top: 0,
         left: 0,
         bottom: 0,
-        right: 0,
+        right: 0
     },
     bottomLayer: {
         position: 'absolute',
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     bottomLayerText: {
         fontSize: 14,
         color: GlobalColors.white,
-        textAlign: 'center',
+        textAlign: 'center'
     },
     doneButton: {
         position: 'absolute',
@@ -54,13 +54,13 @@ const styles = StyleSheet.create({
         backgroundColor: GlobalColors.transparent,
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'flex-end'
     },
     doneButtonText: {
         color: GlobalColors.accent,
         fontSize: 20,
         position: 'relative',
-        textAlign: 'right',
+        textAlign: 'right'
     }
 });
 

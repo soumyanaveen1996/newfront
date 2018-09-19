@@ -90,7 +90,7 @@ const createV3NetworkQueueTable = `
 
 const deleteAllRows = `
     DELETE FROM network_queue;
-`
+`;
 
 const STATUS_CONSTANTS = {
     pending: 'pending',

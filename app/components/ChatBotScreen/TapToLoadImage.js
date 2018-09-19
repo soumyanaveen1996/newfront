@@ -1,5 +1,11 @@
 import React from 'react';
-import { Text, Image, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import {
+    Text,
+    Image,
+    TouchableOpacity,
+    ActivityIndicator,
+    Platform
+} from 'react-native';
 import styles, {
     chatMessageImageStyle,
     tapToLoadTextContainerStyle
@@ -7,19 +13,19 @@ import styles, {
 import I18n from '../../config/i18n/i18n';
 import ImageCache from '../../lib/image_cache';
 
-
 const TapToLoadImageStates = {
     UNINITIALIZED: 'UNINITIALIZED',
     TAP_TO_LOAD_IMAGE: 'TAP_TO_LOAD_IMAGE',
     TAPPED: 'TAPPED',
     IMAGE_DOWNLOADED: 'IMAGE_DOWNLOADED'
-}
-
+};
 
 export class AndroidHackImage extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.uri === this.props.uri &&
-            nextProps.alignRight === this.props.alignRight) {
+        if (
+            nextProps.uri === this.props.uri &&
+            nextProps.alignRight === this.props.alignRight
+        ) {
             return false;
         }
         return true;
@@ -27,15 +33,20 @@ export class AndroidHackImage extends React.Component {
 
     render() {
         const key = Math.random();
-        const uri = Platform.OS === 'android' ? `${this.props.uri}#r=${key}` : this.props.uri;
-        return <Image
-            style={chatMessageImageStyle(this.props.alignRight)}
-            source={{ uri: uri }} />
+        const uri =
+            Platform.OS === 'android'
+                ? `${this.props.uri}#r=${key}`
+                : this.props.uri;
+        return (
+            <Image
+                style={chatMessageImageStyle(this.props.alignRight)}
+                source={{ uri: uri }}
+            />
+        );
     }
 }
 
 export default class TapToLoadImage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -49,11 +60,11 @@ export default class TapToLoadImage extends React.Component {
         if (path) {
             this.setState({
                 state: TapToLoadImageStates.IMAGE_DOWNLOADED,
-                path: path,
-            })
+                path: path
+            });
         } else {
             this.setState({
-                state: TapToLoadImageStates.TAP_TO_LOAD_IMAGE,
+                state: TapToLoadImageStates.TAP_TO_LOAD_IMAGE
             });
         }
     }
@@ -66,13 +77,13 @@ export default class TapToLoadImage extends React.Component {
     imageDownloaded(path) {
         this.setState({
             state: TapToLoadImageStates.IMAGE_DOWNLOADED,
-            path: path,
+            path: path
         });
     }
 
     isRemoteUri(uri) {
         var pattern = /^((http|https):\/\/)/;
-        return pattern.test(uri)
+        return pattern.test(uri);
     }
 
     onImagePress() {
@@ -94,7 +105,10 @@ export default class TapToLoadImage extends React.Component {
     renderLocalFile(uri) {
         return (
             <TouchableOpacity onPress={this.onImagePress.bind(this)}>
-                <AndroidHackImage alignRight={this.props.alignRight} uri={uri} />
+                <AndroidHackImage
+                    alignRight={this.props.alignRight}
+                    uri={uri}
+                />
             </TouchableOpacity>
         );
     }
@@ -106,18 +120,30 @@ export default class TapToLoadImage extends React.Component {
         }
 
         if (this.state.state === TapToLoadImageStates.UNINITIALIZED) {
-            return <TouchableOpacity style={tapToLoadTextContainerStyle(this.props.alignRight)} />
-        } else if (this.state.state === TapToLoadImageStates.TAP_TO_LOAD_IMAGE) {
             return (
-                <TouchableOpacity style={tapToLoadTextContainerStyle(this.props.alignRight)}
-                    onPress={this.onImageLoadTap.bind(this)}>
-                    <Text style={styles.tapToLoadText}>{I18n.t('Tap_To_Load')}</Text>
+                <TouchableOpacity
+                    style={tapToLoadTextContainerStyle(this.props.alignRight)}
+                />
+            );
+        } else if (
+            this.state.state === TapToLoadImageStates.TAP_TO_LOAD_IMAGE
+        ) {
+            return (
+                <TouchableOpacity
+                    style={tapToLoadTextContainerStyle(this.props.alignRight)}
+                    onPress={this.onImageLoadTap.bind(this)}
+                >
+                    <Text style={styles.tapToLoadText}>
+                        {I18n.t('Tap_To_Load')}
+                    </Text>
                 </TouchableOpacity>
             );
         } else if (this.state.state === TapToLoadImageStates.TAPPED) {
             return (
-                <TouchableOpacity style={tapToLoadTextContainerStyle(this.props.alignRight)}
-                    onPress={this.onImageLoadTap.bind(this)}>
+                <TouchableOpacity
+                    style={tapToLoadTextContainerStyle(this.props.alignRight)}
+                    onPress={this.onImageLoadTap.bind(this)}
+                >
                     <ActivityIndicator size="small" />
                 </TouchableOpacity>
             );

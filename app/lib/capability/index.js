@@ -6,7 +6,11 @@ import Utils from './Utils';
 import Channel from './Channel';
 import Message from './Message';
 import Messages from './Messages';
-import { MessageTypeConstants, ButtonStyle, MessageTypeConstantsToInt }  from './Message';
+import {
+    MessageTypeConstants,
+    ButtonStyle,
+    MessageTypeConstantsToInt
+} from './Message';
 import { NetworkRequest, futureRequest } from './Network';
 import ConversationContext from './ConversationContext';
 import Auth from './Auth';

@@ -8,7 +8,6 @@ import moment from 'moment';
  * Since we want the event emitter functionality on the class - which can also publish and subscribe to events
  */
 export default class MessageHandler extends events.EventEmitter {
-
     constructor() {
         super();
     }
@@ -22,18 +21,23 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves once persisted
      */
-    persistOnDevice = (botKey, message) => new Promise((resolve, reject) => {
-        if (!message || !botKey) {
-            reject('A valid message object and botkey is required to persist on local')
-        }
-        // Just return
-        if (!message.getMessage()) {
-            resolve(message);
-        }
-        message.setBotKey(botKey);
+    persistOnDevice = (botKey, message) =>
+        new Promise((resolve, reject) => {
+            if (!message || !botKey) {
+                reject(
+                    'A valid message object and botkey is required to persist on local'
+                );
+            }
+            // Just return
+            if (!message.getMessage()) {
+                resolve(message);
+            }
+            message.setBotKey(botKey);
 
-        MessageDAO.insertOrUpdateMessage(message).then(resolve).catch(reject);
-    });
+            MessageDAO.insertOrUpdateMessage(message)
+                .then(resolve)
+                .catch(reject);
+        });
 
     /**
      * Persist a favorited message onto the local device. A botkey is required to key the message.
@@ -44,18 +48,21 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves once persisted
      */
-    persistFavoriteMsgOnDevice = (botKey, message) => new Promise((resolve, reject) => {
-        if (!message || !botKey) {
-            reject('A valid message object and botkey is required to persist on local')
-        }
-        // Just return
-        if (!message.getMessage()) {
-            resolve(message);
-        }
-        message.setBotKey(botKey);
+    persistFavoriteMsgOnDevice = (botKey, message) =>
+        new Promise((resolve, reject) => {
+            if (!message || !botKey) {
+                reject(
+                    'A valid message object and botkey is required to persist on local'
+                );
+            }
+            // Just return
+            if (!message.getMessage()) {
+                resolve(message);
+            }
+            message.setBotKey(botKey);
 
-        return resolve(MessageDAO.insertMessage(message));
-    });
+            return resolve(MessageDAO.insertMessage(message));
+        });
 
     /**
      * Persist a given message onto the remote server. A botkey is required to key the message.
@@ -66,11 +73,11 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves once persisted
      */
-    persistOnServer = (botKey, message) => new Promise((resolve, reject) => {
-        // For now won't work
-        return resolve(false);
-    });
-
+    persistOnServer = (botKey, message) =>
+        new Promise((resolve, reject) => {
+            // For now won't work
+            return resolve(false);
+        });
 
     /**
      * Returns the top max (most recent) messages from the local/device storage
@@ -81,14 +88,23 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to an array of messages (sorted from least recent to most)
      */
-    fetchDeviceMessages = (botKey, max = 5, offset = 0, ignoreMessageOfType = []) => new Promise((resolve, reject) => {
-        MessageDAO.selectMessages(botKey, max, offset, ignoreMessageOfType)
-            .then((messages) => {
+    fetchDeviceMessages = (
+        botKey,
+        max = 5,
+        offset = 0,
+        ignoreMessageOfType = []
+    ) =>
+        new Promise((resolve, reject) => {
+            MessageDAO.selectMessages(
+                botKey,
+                max,
+                offset,
+                ignoreMessageOfType
+            ).then(messages => {
                 // we want in reverse order
                 resolve(messages.reverse());
             });
-    });
-
+        });
 
     /**
      * Returns the top max (most recent) messages from the local/device storage
@@ -100,13 +116,15 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to an array of messages (sorted from least recent to most)
      */
-    fetchDeviceMessagesBeforeDate = (botKey, max = 5, dateLimit) => new Promise((resolve, reject) => {
-        MessageDAO.selectMessagesBeforeDate(botKey, max, dateLimit)
-            .then((messages) => {
-                // we want in reverse order
-                resolve(messages.reverse());
-            });
-    });
+    fetchDeviceMessagesBeforeDate = (botKey, max = 5, dateLimit) =>
+        new Promise((resolve, reject) => {
+            MessageDAO.selectMessagesBeforeDate(botKey, max, dateLimit).then(
+                messages => {
+                    // we want in reverse order
+                    resolve(messages.reverse());
+                }
+            );
+        });
 
     /**
      * Returns the top max (most recent) messages from the local/device storage
@@ -117,13 +135,13 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to an array of messages (sorted from least recent to most)
      */
-    fetchFavoriteMessages = (max = 5, offset = 0) => new Promise((resolve, reject) => {
-        MessageDAO.selectFavoriteMessages(max, offset)
-            .then((messages) => {
+    fetchFavoriteMessages = (max = 5, offset = 0) =>
+        new Promise((resolve, reject) => {
+            MessageDAO.selectFavoriteMessages(max, offset).then(messages => {
                 // we want in reverse order
                 resolve(messages.reverse());
             });
-    });
+        });
 
     /**
      * Returns the count of unread messages for the particular bot
@@ -132,12 +150,12 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to count of unread messages of the bot.
      */
-    unreadMessageCount = (botKey) => new Promise((resolve, reject) => {
-        MessageDAO.unreadMessageCount(botKey)
-            .then((count) => {
+    unreadMessageCount = botKey =>
+        new Promise((resolve, reject) => {
+            MessageDAO.unreadMessageCount(botKey).then(count => {
                 resolve(count);
-            })
-    });
+            });
+        });
 
     /**
      * Returns the count of messages that the user has sent (response messages aren't counted)
@@ -153,27 +171,38 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to count of users messages of the bot.
      */
-    userMessageCountSince = (botKey, option) => new Promise((resolve, reject) => {
-        option = option || '';
-        let optStr = '';
+    userMessageCountSince = (botKey, option) =>
+        new Promise((resolve, reject) => {
+            option = option || '';
+            let optStr = '';
 
-        if (option instanceof Date) {
-            optStr = moment(option).format();
-        } else if (option.toLowerCase() === 'day') {
-            optStr = moment().subtract(1, 'days').format();
-        } else if (option.toLowerCase() === 'week') {
-            optStr = moment().subtract(7, 'days').format();
-        } else if (option.toLowerCase() === 'month') {
-            optStr = moment().subtract(1, 'months').format();
-        } else if (option.toLowerCase() === 'startofmonth') {
-            optStr = moment().subtract(1, 'months').endOf('month').format();
-        }
+            if (option instanceof Date) {
+                optStr = moment(option).format();
+            } else if (option.toLowerCase() === 'day') {
+                optStr = moment()
+                    .subtract(1, 'days')
+                    .format();
+            } else if (option.toLowerCase() === 'week') {
+                optStr = moment()
+                    .subtract(7, 'days')
+                    .format();
+            } else if (option.toLowerCase() === 'month') {
+                optStr = moment()
+                    .subtract(1, 'months')
+                    .format();
+            } else if (option.toLowerCase() === 'startofmonth') {
+                optStr = moment()
+                    .subtract(1, 'months')
+                    .endOf('month')
+                    .format();
+            }
 
-        MessageDAO.selectUserMessageCountSince(botKey, optStr)
-            .then((count) => {
-                resolve(count);
-            });
-    });
+            MessageDAO.selectUserMessageCountSince(botKey, optStr).then(
+                count => {
+                    resolve(count);
+                }
+            );
+        });
 
     /**
      * Returns the top max (most recent) messages from the local/device storage
@@ -184,10 +213,11 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to an array of messages (sorted from least recent to most)
      */
-    fetchServerMessages = (botKey, max = 5) => new Promise((resolve, reject) => {
-        // For now won't work
-        return resolve(false);
-    });
+    fetchServerMessages = (botKey, max = 5) =>
+        new Promise((resolve, reject) => {
+            // For now won't work
+            return resolve(false);
+        });
 
     /**
      * Marks all unread messages of a bot as read.
@@ -196,9 +226,9 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to a true on success.
      */
-    markUnreadMessagesAsRead = (botKey) => {
+    markUnreadMessagesAsRead = botKey => {
         return MessageDAO.markAllBotMessagesAsRead(botKey);
-    }
+    };
 
     /**
      * Marks the message as read
@@ -210,7 +240,7 @@ export default class MessageHandler extends events.EventEmitter {
      */
     markBotMessageAsRead = (botKey, messageId) => {
         return MessageDAO.markBotMessageAsRead(botKey, messageId);
-    }
+    };
 
     /**
      * Marks the message as Favorite
@@ -221,8 +251,10 @@ export default class MessageHandler extends events.EventEmitter {
      * @return Promise that resolves to a true on success or rejects with an error.
      */
     toggleFavorite = (botKey, messageId, isFavorite) => {
-        return isFavorite ? MessageDAO.markBotMessageAsFavorite(botKey, messageId) : MessageDAO.markBotMessageAsUnFavorite(botKey, messageId)
-    }
+        return isFavorite
+            ? MessageDAO.markBotMessageAsFavorite(botKey, messageId)
+            : MessageDAO.markBotMessageAsUnFavorite(botKey, messageId);
+    };
 
     /**
      * Deletes all the messages of the bot.
@@ -231,15 +263,15 @@ export default class MessageHandler extends events.EventEmitter {
      *
      * @return Promise that resolves to a true on success.
      */
-    deleteBotMessages = (botKey) => {
-        return MessageDAO.deleteBotMessages(botKey)
-    }
+    deleteBotMessages = botKey => {
+        return MessageDAO.deleteBotMessages(botKey);
+    };
 
     moveMessages = (fromBotKey, toBotKey) => {
         return MessageDAO.moveMessagesToNewBotKey(fromBotKey, toBotKey);
-    }
+    };
 
     deleteAllMessages = () => {
-        return MessageDAO.deleteAllMessages()
-    }
+        return MessageDAO.deleteAllMessages();
+    };
 }

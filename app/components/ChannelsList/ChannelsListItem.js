@@ -12,16 +12,15 @@ const subtitleNumberOfLines = 2;
 
 const ChannelsListItemStates = {
     UNSUBSCRIBING: 'unsubscribing',
-    NONE: 'none',
+    NONE: 'none'
 };
 
 export default class ChannelsListItem extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             status: ChannelsListItemStates.NONE
-        }
+        };
     }
 
     unsubscribeChannel() {
@@ -33,21 +32,26 @@ export default class ChannelsListItem extends React.Component {
 
         Channel.unsubscribe(this.props.channel)
             .then(() => {
-                return Conversation.deleteChannelConversation(channel.channelId);
+                return Conversation.deleteChannelConversation(
+                    channel.channelId
+                );
             })
             .then(() => {
                 return MessageDAO.deleteBotMessages(channel.channelId);
             })
             .then(() => {
-                this.props.onUnsubscribe(this.props.channel)
+                this.props.onUnsubscribe(this.props.channel);
                 this.setState({
                     status: ChannelsListItemStates.NONE
                 });
             })
-            .catch((error) => {
-                this.props.onUnsubscribeFailed(this.props.channel, error.message);
+            .catch(error => {
+                this.props.onUnsubscribeFailed(
+                    this.props.channel,
+                    error.message
+                );
                 this.setState({ status: ChannelsListItemStates.NONE });
-            })
+            });
     }
 
     renderRightArea() {
@@ -60,7 +64,9 @@ export default class ChannelsListItem extends React.Component {
         } else {
             return (
                 <View style={styles.rightContainer}>
-                    <TouchableOpacity onPress={this.unsubscribeChannel.bind(this)}>
+                    <TouchableOpacity
+                        onPress={this.unsubscribeChannel.bind(this)}
+                    >
                         {Icons.delete()}
                     </TouchableOpacity>
                 </View>
@@ -69,7 +75,7 @@ export default class ChannelsListItem extends React.Component {
     }
 
     onItemPressed() {
-        console.log('On Item pressed')
+        console.log('On Item pressed');
         if (this.props.onChannelTapped) {
             this.props.onChannelTapped(this.props.channel);
         }
@@ -78,13 +84,26 @@ export default class ChannelsListItem extends React.Component {
     render() {
         const channel = this.props.channel;
         return (
-            <TouchableOpacity style={styles.container} onPress={this.onItemPressed.bind(this)}>
-                <CachedImage imageTag = "channelLogo" source={{ uri: Utils.channelLogoUrl(channel.logo) } } style={ styles.image } resizeMode="contain"/>
+            <TouchableOpacity
+                style={styles.container}
+                onPress={this.onItemPressed.bind(this)}
+            >
+                <CachedImage
+                    imageTag="channelLogo"
+                    source={{ uri: Utils.channelLogoUrl(channel.logo) }}
+                    style={styles.image}
+                    resizeMode="contain"
+                />
                 <View style={styles.textContainer}>
-                    <Text style={ styles.title } >{ channel.channelName }</Text>
-                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{channel.description}</Text>
+                    <Text style={styles.title}>{channel.channelName}</Text>
+                    <Text
+                        numberOfLines={subtitleNumberOfLines}
+                        style={styles.subTitle}
+                    >
+                        {channel.description}
+                    </Text>
                 </View>
-                { this.renderRightArea() }
+                {this.renderRightArea()}
             </TouchableOpacity>
         );
     }

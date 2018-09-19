@@ -21,7 +21,6 @@ const insertBackgroundTask = `
     ) VALUES (?, ?, ?, ?, ?, ?);
 `;
 
-
 const updateLastRunTime = `
     UPDATE background_tasks
     SET last_run_time = ?
@@ -57,7 +56,7 @@ const selectBackgroundTask = `
 
 const deleteAllTasks = `
     DELETE FROM background_tasks;
-`
+`;
 
 export default {
     createBackgroundTaskTable,

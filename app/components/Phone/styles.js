@@ -8,13 +8,13 @@ const Styles = StyleSheet.create({
         right: 0,
         top: 0,
         bottom: 0,
-        backgroundColor: 'rgba(4, 4, 4, 0.9)',
+        backgroundColor: 'rgba(4, 4, 4, 0.9)'
     },
     nameContainer: {
         position: 'absolute',
         left: 0,
         right: 0,
-        top: 40,
+        top: 40
     },
     callingText: {
         color: GlobalColors.white,

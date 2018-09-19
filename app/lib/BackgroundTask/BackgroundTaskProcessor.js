@@ -8,7 +8,6 @@ import { Message, ConversationContext, Auth } from '../capability';
 import { MessageHandler } from '../message';
 import EventEmitter, { MessageEvents } from '../events';
 
-
 class BackgroundTaskBotScreen {
     constructor(botId, conversationId, message, options) {
         this.botId = botId;
@@ -23,33 +22,34 @@ class BackgroundTaskBotScreen {
         } else {
             return this.botId;
         }
-    }
+    };
 
-    updateConversationContextId = () => {
+    updateConversationContextId = () => {};
 
-    }
-
-    persistMessage = async (message) => {
+    persistMessage = async message => {
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
         if (this.receivedMessage) {
-            EventEmitter.emit(MessageEvents.messageProcessed, { botId: this.botId || this.receivedMessage.bot,
-                conversationId: this.conversationId || this.receivedMessage.conversation,
-                message: this.receivedMessage});
+            EventEmitter.emit(MessageEvents.messageProcessed, {
+                botId: this.botId || this.receivedMessage.bot,
+                conversationId:
+                    this.conversationId || this.receivedMessage.conversation,
+                message: this.receivedMessage
+            });
         }
-        EventEmitter.emit(MessageEvents.messagePersisted, { botId: this.botId, conversationId: this.conversationId, message: message});
-    }
+        EventEmitter.emit(MessageEvents.messagePersisted, {
+            botId: this.botId,
+            conversationId: this.conversationId,
+            message: message
+        });
+    };
 
-    tell = (message) => {
+    tell = message => {
         this.persistMessage(message);
-    }
+    };
 
-    done = () => {
+    done = () => {};
 
-    }
-
-    wait = () => {
-
-    }
+    wait = () => {};
 }
 
 const process = async () => {
@@ -59,15 +59,15 @@ const process = async () => {
     }
     const tasks = await BackgroundTaskDAO.selectAllBackgroundTasks();
     console.log('BackgroundProcessor::tasks::', tasks);
-    _.forEach(tasks, (task) => {
+    _.forEach(tasks, task => {
         processTask(task, user);
     });
 };
 
-const getBotManifest = async (botId) => {
+const getBotManifest = async botId => {
     const installedBots = await Bot.allInstalledBots();
-    const botManifest = _.find(installedBots, (bot) => {
-        return bot.botId === botId
+    const botManifest = _.find(installedBots, bot => {
+        return bot.botId === botId;
     });
 
     if (botManifest) {
@@ -75,11 +75,11 @@ const getBotManifest = async (botId) => {
     }
 
     const systemBots = SYSTEM_BOT_MANIFEST;
-    const systemBotManifest = _.find(systemBots, (bot) => {
-        return bot.botId === botId
+    const systemBotManifest = _.find(systemBots, bot => {
+        return bot.botId === botId;
     });
     return systemBotManifest;
-}
+};
 
 const processTask = async (task, user) => {
     console.log('BackgroundProcessor::poll::called at ', task);
@@ -87,43 +87,86 @@ const processTask = async (task, user) => {
     const botManifest = await getBotManifest(task.botId);
 
     if (!botManifest) {
-        BackgroundTaskDAO.deleteBackgroundTask(task.key, task.botId, task.conversationId);
+        BackgroundTaskDAO.deleteBackgroundTask(
+            task.key,
+            task.botId,
+            task.conversationId
+        );
     }
 
-    const botScreen = new BackgroundTaskBotScreen(task.botId, task.conversationId, task.options);
+    const botScreen = new BackgroundTaskBotScreen(
+        task.botId,
+        task.conversationId,
+        task.options
+    );
     const botContext = new BotContext(botScreen, botManifest);
 
-    let conversationContext = await getConversationContext(task.botId, user, botContext, botScreen);
+    let conversationContext = await getConversationContext(
+        task.botId,
+        user,
+        botContext,
+        botScreen
+    );
 
     if (!conversationContext) {
-        BackgroundTaskDAO.deleteBackgroundTask(task.key, task.botId, task.conversationId);
+        BackgroundTaskDAO.deleteBackgroundTask(
+            task.key,
+            task.botId,
+            task.conversationId
+        );
     }
 
-    if (task.lastRunTime + task.timeInterval < timeNow ||
-        (task.lastRunTime + task.timeInterval - timeNow) < 60000 * 5) {
+    if (
+        task.lastRunTime + task.timeInterval < timeNow ||
+        task.lastRunTime + task.timeInterval - timeNow < 60000 * 5
+    ) {
         let message = new Message();
-        message.setCreatedBy({addedByBot: true, messageDate: moment().valueOf()});
+        message.setCreatedBy({
+            addedByBot: true,
+            messageDate: moment().valueOf()
+        });
         message.backgroundEventMessage(task.key, task.options);
         await processMessage(message, botManifest, botContext, true);
-        await BackgroundTaskDAO.updateBackgroundTaskLastRun(task.key, task.botId, task.conversationId, moment().valueOf());
+        await BackgroundTaskDAO.updateBackgroundTaskLastRun(
+            task.key,
+            task.botId,
+            task.conversationId,
+            moment().valueOf()
+        );
     }
-}
+};
 
-const getConversationContext = async (botId, user, botContext, createContext = false) => {
+const getConversationContext = async (
+    botId,
+    user,
+    botContext,
+    createContext = false
+) => {
     if (!createContext) {
         if (botId === SystemBot.imBot.botId) {
-            return await Promise.resolve(ConversationContext.fetchIMConversationContext(botContext, user));
+            return await Promise.resolve(
+                ConversationContext.fetchIMConversationContext(botContext, user)
+            );
         } else {
-            return await Promise.resolve(ConversationContext.fetchConversationContext(botContext, user));
+            return await Promise.resolve(
+                ConversationContext.fetchConversationContext(botContext, user)
+            );
         }
     } else {
         if (botId !== SystemBot.imBot.botId) {
-            return await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
+            return await Promise.resolve(
+                ConversationContext.getConversationContext(botContext, user)
+            );
         }
     }
-}
+};
 
-const processMessage = async(message, botManifest, botContext, createContext = false) => {
+const processMessage = async (
+    message,
+    botManifest,
+    botContext,
+    createContext = false
+) => {
     const dceBot = dce.bot(botManifest, botContext);
     let bot;
     for (let i = 0; i < 3; ++i) {
@@ -133,10 +176,14 @@ const processMessage = async(message, botManifest, botContext, createContext = f
         }
     }
     bot.next(message, {}, [], botContext);
-}
+};
 
-
-const sendBackgroundMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+const sendBackgroundMessage = async (
+    message,
+    botId,
+    conversationId = undefined,
+    createContext = false
+) => {
     const user = await Auth.getUser();
     if (!user) {
         return;
@@ -148,38 +195,69 @@ const sendBackgroundMessage = async (message, botId, conversationId = undefined,
 
     const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
     const botContext = new BotContext(botScreen, botManifest);
-    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    let conversationContext = await getConversationContext(
+        botId,
+        user,
+        botContext,
+        createContext
+    );
     if (!conversationContext) {
         return;
     }
     await processMessage(message, botManifest, botContext);
-    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
-}
+    EventEmitter.emit(MessageEvents.messageProcessed, {
+        botId: botId,
+        conversationId: conversationId,
+        message: message
+    });
+};
 
-
-const sendUnauthBackgroundMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+const sendUnauthBackgroundMessage = async (
+    message,
+    botId,
+    conversationId = undefined,
+    createContext = false
+) => {
     const botManifest = await getBotManifest(botId);
     if (!botManifest) {
         return;
     }
     const botScreen = new BackgroundTaskBotScreen(botId, conversationId);
     const botContext = new BotContext(botScreen, botManifest);
-    let conversationContext = await getConversationContext(botId, undefined, botContext, createContext);
+    let conversationContext = await getConversationContext(
+        botId,
+        undefined,
+        botContext,
+        createContext
+    );
     if (!conversationContext) {
         return;
     }
     await processMessage(message, botManifest, botContext);
-    EventEmitter.emit(MessageEvents.messageProcessed, { botId: botId, conversationId: conversationId, message: message});
-}
+    EventEmitter.emit(MessageEvents.messageProcessed, {
+        botId: botId,
+        conversationId: conversationId,
+        message: message
+    });
+};
 
-
-const processAsyncMessage = async(message, botManifest, botContext, createContext = false) => {
+const processAsyncMessage = async (
+    message,
+    botManifest,
+    botContext,
+    createContext = false
+) => {
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
     bot.asyncResult(message, {}, [], botContext);
-}
+};
 
-const sendBackgroundAsyncMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+const sendBackgroundAsyncMessage = async (
+    message,
+    botId,
+    conversationId = undefined,
+    createContext = false
+) => {
     const user = await Auth.getUser();
     if (!user) {
         return;
@@ -189,16 +267,30 @@ const sendBackgroundAsyncMessage = async (message, botId, conversationId = undef
         return;
     }
 
-    const botScreen = new BackgroundTaskBotScreen(botId, conversationId, message);
+    const botScreen = new BackgroundTaskBotScreen(
+        botId,
+        conversationId,
+        message
+    );
     const botContext = new BotContext(botScreen, botManifest);
-    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    let conversationContext = await getConversationContext(
+        botId,
+        user,
+        botContext,
+        createContext
+    );
     if (!conversationContext) {
         return;
     }
     await processAsyncMessage(message, botManifest, botContext);
-}
+};
 
-const sendBackgroundIMMessage = async (message, botId, conversationId = undefined, createContext = false) => {
+const sendBackgroundIMMessage = async (
+    message,
+    botId,
+    conversationId = undefined,
+    createContext = false
+) => {
     const user = await Auth.getUser();
     if (!user) {
         return;
@@ -209,16 +301,25 @@ const sendBackgroundIMMessage = async (message, botId, conversationId = undefine
         return;
     }
     console.log('hello');
-    const botScreen = new BackgroundTaskBotScreen(botId, conversationId, message);
+    const botScreen = new BackgroundTaskBotScreen(
+        botId,
+        conversationId,
+        message
+    );
     console.log('hello1');
     const botContext = new BotContext(botScreen, botManifest);
     console.log('hello2');
-    let conversationContext = await getConversationContext(botId, user, botContext, createContext);
+    let conversationContext = await getConversationContext(
+        botId,
+        user,
+        botContext,
+        createContext
+    );
     if (!conversationContext) {
         return;
     }
     await processAsyncMessage(message, botManifest, botContext);
-}
+};
 
 export default {
     process: process,

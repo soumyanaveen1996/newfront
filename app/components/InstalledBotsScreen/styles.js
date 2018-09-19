@@ -1,17 +1,17 @@
 import { StyleSheet } from 'react-native';
-import { SCREEN_WIDTH , scrollViewConfig}  from './config';
+import { SCREEN_WIDTH, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
-import BotListItemStyles from '../BotInstallListItem/styles'
+import BotListItemStyles from '../BotInstallListItem/styles';
 
 export default StyleSheet.create({
     tileContainer: {
         width: scrollViewConfig.width * 0.5,
         height: SCREEN_WIDTH * 0.5,
         borderWidth: 4,
-        borderTopWidth : 8,
-        borderBottomWidth : 2,
+        borderTopWidth: 8,
+        borderBottomWidth: 2,
         borderColor: 'transparent',
-        borderRadius:15,
+        borderRadius: 15
     },
     separator: {
         backgroundColor: GlobalColors.disabledGray,
@@ -20,75 +20,75 @@ export default StyleSheet.create({
         margin: 0
     },
     rowContainer: {
-        width: SCREEN_WIDTH ,
-        height:105 ,
-        borderRadius:15,
+        width: SCREEN_WIDTH,
+        height: 105,
+        borderRadius: 15
     },
     rowContent: {
         flex: 1,
         justifyContent: 'center',
         backgroundColor: 'white'
     },
-    avatarContainerStyle:{
-        height:50 ,
-        width:40
+    avatarContainerStyle: {
+        height: 50,
+        width: 40
     },
-    avatarStyle:{
-        height:40 ,
-        width:30
+    avatarStyle: {
+        height: 40,
+        width: 30
     },
-    containerStyle:{
-        height:100,
-        borderBottomColor:'transparent',
-        justifyContent:'center'
+    containerStyle: {
+        height: 100,
+        borderBottomColor: 'transparent',
+        justifyContent: 'center'
     },
-    titleStyle:{
-        fontWeight:'bold',
-        color:GlobalColors.red,
-        fontSize:15
+    titleStyle: {
+        fontWeight: 'bold',
+        color: GlobalColors.red,
+        fontSize: 15
     },
-    titleContainerStyle:{
-        paddingLeft:5
+    titleContainerStyle: {
+        paddingLeft: 5
     },
-    subtitleStyle:{
-        fontWeight:'400',
-        fontSize:13
+    subtitleStyle: {
+        fontWeight: '400',
+        fontSize: 13
     },
-    avatarOverlayContainerStyle:{
-        backgroundColor:'transparent'
+    avatarOverlayContainerStyle: {
+        backgroundColor: 'transparent'
     },
-    subtitleContainerStyle:{
-        padding:5
+    subtitleContainerStyle: {
+        padding: 5
     },
-    gridStyle :{
-        flex: 1,
+    gridStyle: {
+        flex: 1
     },
     headerTitleStyle: {
-        fontSize:17,
+        fontSize: 17,
         color: GlobalColors.white,
-        fontWeight:'500'
+        fontWeight: '500'
     },
-    headerOuterContainerStyles:{
+    headerOuterContainerStyles: {
         position: 'relative',
-        borderBottomColor : GlobalColors.accent
+        borderBottomColor: GlobalColors.accent
     },
-    headerinnerContainerForSearch : {
-        marginTop:50
+    headerinnerContainerForSearch: {
+        marginTop: 50
     },
 
     searchBar: {
         backgroundColor: GlobalColors.accent,
-        height: 36,
+        height: 36
     },
     searchTextInput: {
         marginHorizontal: 20,
-        justifyContent : 'flex-start',
+        justifyContent: 'flex-start',
         fontSize: 13,
         paddingHorizontal: 5,
         backgroundColor: GlobalColors.headerTextInputBackground,
         borderRadius: 2,
         height: 27,
-        color: GlobalColors.white,
+        color: GlobalColors.white
     },
     flatList: {
         flex: 1
@@ -105,15 +105,13 @@ export default StyleSheet.create({
     image: {
         height: 40,
         width: 40,
-        marginTop: 5,
+        marginTop: 5
     },
     swipeBtnStyle: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    },
-})
+    }
+});
 
-export {
-    BotListItemStyles
-}
+export { BotListItemStyles };

@@ -1,12 +1,8 @@
 import React from 'react';
 import FloatingButtonItem from './FloatingButtonItem';
-import {
-    Text,
-    View,
-    Animated,
-    TouchableOpacity
-} from 'react-native';
-import styles, { overlayStyle,
+import { Text, View, Animated, TouchableOpacity } from 'react-native';
+import styles, {
+    overlayStyle,
     actionStyle,
     mainButtonAnimatedViewStyle,
     overlayTappableStyle
@@ -35,7 +31,10 @@ export default class FloatingButton extends React.Component {
                 Animated.spring(this.anim, { toValue: 0 }).start();
                 setTimeout(
                     () =>
-                        this.setState({ active: false, reset: nextProps.reset }),
+                        this.setState({
+                            active: false,
+                            reset: nextProps.reset
+                        }),
                     250
                 );
                 return;
@@ -54,19 +53,16 @@ export default class FloatingButton extends React.Component {
         }
     }
 
-
     render() {
         return (
             <View style={[overlayStyle(this.props)]} pointerEvents="box-none">
                 <View
                     pointerEvents="box-none"
-                    style={[
-                        overlayStyle(this.props),
-                        styles.orientation,
-                    ]}>
-                    { this.state.active && this.renderTappableBackground() }
-                    { this.props.children && this.renderItems()}
-                    { this.renderMainButton() }
+                    style={[overlayStyle(this.props), styles.orientation]}
+                >
+                    {this.state.active && this.renderTappableBackground()}
+                    {this.props.children && this.renderItems()}
+                    {this.renderMainButton()}
                 </View>
             </View>
         );
@@ -74,17 +70,29 @@ export default class FloatingButton extends React.Component {
 
     renderMainButton() {
         return (
-            <View style={[styles.mainButtonContainer, {zIndex: this.props.zIndex}]}>
+            <View
+                style={[
+                    styles.mainButtonContainer,
+                    { zIndex: this.props.zIndex }
+                ]}
+            >
                 <TouchableOpacity
                     onPress={() => {
                         if (this.props.onPress) {
                             this.props.onPress();
                         }
-                        if (this.props.children) {this.animateButton();}
-                    }}>
-                    <Animated.View
-                        style={[]}>
-                        <Animated.View style={[styles.mainButton, mainButtonAnimatedViewStyle(this.anim)]}>
+                        if (this.props.children) {
+                            this.animateButton();
+                        }
+                    }}
+                >
+                    <Animated.View style={[]}>
+                        <Animated.View
+                            style={[
+                                styles.mainButton,
+                                mainButtonAnimatedViewStyle(this.anim)
+                            ]}
+                        >
                             {this.renderButtonIcon()}
                         </Animated.View>
                     </Animated.View>
@@ -94,13 +102,19 @@ export default class FloatingButton extends React.Component {
     }
 
     renderButtonIcon() {
-        return <Text allowFontScaling={false} style={styles.buttonText}>{this.props.buttonText}</Text>;
+        return (
+            <Text allowFontScaling={false} style={styles.buttonText}>
+                {this.props.buttonText}
+            </Text>
+        );
     }
 
     renderItems() {
         const { children } = this.props;
 
-        if (!this.state.active) {return null;}
+        if (!this.state.active) {
+            return null;
+        }
 
         const actionButtons = !Array.isArray(children) ? [children] : children;
 
@@ -114,7 +128,8 @@ export default class FloatingButton extends React.Component {
                         {...button.props}
                         onPress={() => {
                             button.props.onPress();
-                        }}/>
+                        }}
+                    />
                 ))}
             </View>
         );
@@ -131,7 +146,9 @@ export default class FloatingButton extends React.Component {
     }
 
     animateButton(animate = true) {
-        if (this.state.active) {return this.reset();}
+        if (this.state.active) {
+            return this.reset();
+        }
 
         if (animate) {
             Animated.spring(this.anim, { toValue: 1 }).start();
@@ -159,5 +176,5 @@ export default class FloatingButton extends React.Component {
 FloatingButton.Item = FloatingButtonItem;
 
 FloatingButton.defaultProps = {
-    buttonText: '+',
+    buttonText: '+'
 };

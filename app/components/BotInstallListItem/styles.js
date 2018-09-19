@@ -8,7 +8,7 @@ export const BotListItemColors = {
     backgroundColor: GlobalColors.white,
     countColor: 'rgb(62,137,252)',
     countTextColor: GlobalColors.white,
-    button: GlobalColors.iosBlue,
+    button: GlobalColors.iosBlue
 };
 
 export const BotListItemStyles = StyleSheet.create({
@@ -18,7 +18,7 @@ export const BotListItemStyles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 24,
         alignItems: 'stretch',
-        backgroundColor: BotListItemColors.backgroundColor,
+        backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
         color: BotListItemColors.titleColor,
@@ -28,45 +28,44 @@ export const BotListItemStyles = StyleSheet.create({
     subTitle: {
         color: BotListItemColors.subTitleColor,
         fontSize: 15,
-        marginTop: 5,
+        marginTop: 5
     },
     image: {
         height: 40,
         width: 40,
-        marginTop: 5,
+        marginTop: 5
     },
     textContainer: {
         flex: 1,
-        marginHorizontal: 10,
+        marginHorizontal: 10
     },
     rightContainer: {
         flexDirection: 'row-reverse',
         alignItems: 'center',
-        alignContent: 'center',
+        alignContent: 'center'
     },
     hidden: {
-        display: 'none',
+        display: 'none'
     },
     chatImage: {
         marginTop: 5,
         borderRadius: 7,
         overflow: 'hidden',
         width: 40,
-        height: 40,
+        height: 40
     },
     installButton: {
         borderRadius: 3,
         borderColor: BotListItemColors.button,
         borderWidth: 2,
         width: 67,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     installButtonText: {
         color: BotListItemColors.button,
         fontSize: 12,
-        padding: 3,
+        padding: 3
     }
 });
-
 
 export default BotListItemStyles;

@@ -17,9 +17,8 @@ class CallOut extends React.Component {
 }
 
 export default class MapView extends React.Component {
-
     _close() {
-        Actions.pop()
+        Actions.pop();
     }
 
     _renderCallOut(callOut) {
@@ -42,29 +41,25 @@ export default class MapView extends React.Component {
 
     _renderPolygons(polygons) {
         return _.map(polygons, (polygon, index) => {
-            return (
-                <RNMapView.Polygon {...polygon} key={'polygon' + index}/>
-            );
+            return <RNMapView.Polygon {...polygon} key={'polygon' + index} />;
         });
     }
 
     _renderPolylines(polylines) {
         return _.map(polylines, (polyline, index) => {
             return (
-                <RNMapView.Polyline {...polyline} key={'polyline' + index}/>
+                <RNMapView.Polyline {...polyline} key={'polyline' + index} />
             );
         });
     }
 
     _renderCircles(circles) {
         return _.map(circles, (circle, index) => {
-            return (
-                <RNMapView.Circle {...circle} key={'circle' + index} />
-            );
+            return <RNMapView.Circle {...circle} key={'circle' + index} />;
         });
     }
 
-    __addDeltaValuesToMapData(mapData){
+    __addDeltaValuesToMapData(mapData) {
         const { width, height } = Dimensions.get('window');
         const aspectRatio = width / height;
         //Setting latitudeDelta to 0.0922 so that zoom radius is small
@@ -92,7 +87,10 @@ export default class MapView extends React.Component {
         return (
             <View style={styles.container}>
                 {this._renderMap()}
-                <TouchableOpacity style={styles.closeButton} onPress={this._close.bind(this)}>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={this._close.bind(this)}
+                >
                     {Icons.mapViewClose()}
                 </TouchableOpacity>
             </View>

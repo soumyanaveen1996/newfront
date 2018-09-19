@@ -1,5 +1,11 @@
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View, Text, Alert } from 'react-native';
+import {
+    ActivityIndicator,
+    TouchableOpacity,
+    View,
+    Text,
+    Alert
+} from 'react-native';
 import styles from './styles';
 import Bot from '../../lib/bot/index';
 import dce from '../../lib/dce';
@@ -17,17 +23,24 @@ const BotInstallListItemStates = {
 };
 
 export default class BotInstallListItem extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            status: props.installed ? (props.update ? BotInstallListItemStates.UPDATE : BotInstallListItemStates.INSTALLED) : BotInstallListItemStates.NOT_INSTALLED
-        }
+            status: props.installed
+                ? props.update
+                    ? BotInstallListItemStates.UPDATE
+                    : BotInstallListItemStates.INSTALLED
+                : BotInstallListItemStates.NOT_INSTALLED
+        };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            status: nextProps.installed ? (nextProps.update ? BotInstallListItemStates.UPDATE : BotInstallListItemStates.INSTALLED) : BotInstallListItemStates.NOT_INSTALLED
+            status: nextProps.installed
+                ? nextProps.update
+                    ? BotInstallListItemStates.UPDATE
+                    : BotInstallListItemStates.INSTALLED
+                : BotInstallListItemStates.NOT_INSTALLED
         });
     }
 
@@ -36,11 +49,9 @@ export default class BotInstallListItem extends React.Component {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
                 I18n.t('Bot_min_version_error'),
-                [
-                    {text: 'OK'},
-                ],
+                [{ text: 'OK' }],
                 { cancelable: true }
-            )
+            );
             return;
         }
         try {
@@ -78,13 +89,27 @@ export default class BotInstallListItem extends React.Component {
     }
 
     renderRightArea() {
-        if (this.state.status === BotInstallListItemStates.NOT_INSTALLED || this.state.status === BotInstallListItemStates.UPDATE) {
-            const status = this.state.status === BotInstallListItemStates.NOT_INSTALLED ? I18n.t('Install') : I18n.t('Update_Bot');
+        if (
+            this.state.status === BotInstallListItemStates.NOT_INSTALLED ||
+            this.state.status === BotInstallListItemStates.UPDATE
+        ) {
+            const status =
+                this.state.status === BotInstallListItemStates.NOT_INSTALLED
+                    ? I18n.t('Install')
+                    : I18n.t('Update_Bot');
 
             return (
                 <View style={styles.rightContainer}>
-                    <TouchableOpacity style={styles.installButton} onPress={this.installBot.bind(this)}>
-                        <Text allowFontScaling={false} style={styles.installButtonText}>{status}</Text>
+                    <TouchableOpacity
+                        style={styles.installButton}
+                        onPress={this.installBot.bind(this)}
+                    >
+                        <Text
+                            allowFontScaling={false}
+                            style={styles.installButtonText}
+                        >
+                            {status}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             );
@@ -97,8 +122,19 @@ export default class BotInstallListItem extends React.Component {
         } else {
             return (
                 <View style={styles.rightContainer}>
-                    <TouchableOpacity style={styles.installButton} onPress={this.props.onBotClick.bind(this, this.props.bot)}>
-                        <Text allowFontScaling={false} style={styles.installButtonText}>{I18n.t('OPEN')}</Text>
+                    <TouchableOpacity
+                        style={styles.installButton}
+                        onPress={this.props.onBotClick.bind(
+                            this,
+                            this.props.bot
+                        )}
+                    >
+                        <Text
+                            allowFontScaling={false}
+                            style={styles.installButtonText}
+                        >
+                            {I18n.t('OPEN')}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             );
@@ -109,12 +145,21 @@ export default class BotInstallListItem extends React.Component {
         const bot = this.props.bot;
         return (
             <View style={styles.container}>
-                <CachedImage imageTag = "botLogo" source={{uri: bot.logoUrl}} style={styles.image}/>
+                <CachedImage
+                    imageTag="botLogo"
+                    source={{ uri: bot.logoUrl }}
+                    style={styles.image}
+                />
                 <View style={styles.textContainer}>
-                    <Text style={ styles.title } >{ bot.botName }</Text>
-                    <Text numberOfLines={subtitleNumberOfLines} style={ styles.subTitle }>{bot.description}</Text>
+                    <Text style={styles.title}>{bot.botName}</Text>
+                    <Text
+                        numberOfLines={subtitleNumberOfLines}
+                        style={styles.subTitle}
+                    >
+                        {bot.description}
+                    </Text>
                 </View>
-                { this.renderRightArea() }
+                {this.renderRightArea()}
             </View>
         );
     }

@@ -7,9 +7,7 @@ import _ from 'lodash';
 import ProfileImage from '../ProfileImage';
 import Images from '../../config/images';
 
-
 export default class ContactsPickerRow extends React.Component {
-
     onItemPressed() {
         if (this.props.onContactSelected) {
             this.props.onContactSelected(this.props.contact);
@@ -20,21 +18,21 @@ export default class ContactsPickerRow extends React.Component {
         if (this.props.checkBoxEnabled) {
             return (
                 <CheckBox
-                    style = {styles.checkboxIconStyle}
-                    uncheckedIcon = {checkBoxConfig.uncheckedIcon}
-                    checkedIcon = {checkBoxConfig.checkedIcon}
-                    checkedColor = {checkBoxConfig.checkedColor}
-                    iconType = {checkBoxConfig.iconType}
+                    style={styles.checkboxIconStyle}
+                    uncheckedIcon={checkBoxConfig.uncheckedIcon}
+                    checkedIcon={checkBoxConfig.checkedIcon}
+                    checkedColor={checkBoxConfig.checkedColor}
+                    iconType={checkBoxConfig.iconType}
                     checked={this.props.selected}
                     onPress={this.onItemPressed.bind(this)}
                 />
             );
         }
-    }
+    };
 
     render() {
         const contact = this.props.contact;
-        const emails = _.map(contact.emails, (item) => item.email)
+        const emails = _.map(contact.emails, item => item.email);
         const uuid = contact.id;
         return (
             <TouchableOpacity onPress={this.onItemPressed.bind(this)}>
@@ -45,10 +43,15 @@ export default class ContactsPickerRow extends React.Component {
                         placeholder={Images.user_image}
                         style={styles.contactItemImage}
                         placeholderStyle={styles.contactItemImage}
-                        resizeMode="cover"/>
+                        resizeMode="cover"
+                    />
                     <View style={styles.contactItemDetailsContainer}>
-                        <Text style={styles.contactItemName}>{contact.name}</Text>
-                        <Text style={styles.contactItemEmail}>{contact.screenName + ' - ' + emails.join(',')}</Text>
+                        <Text style={styles.contactItemName}>
+                            {contact.name}
+                        </Text>
+                        <Text style={styles.contactItemEmail}>
+                            {contact.screenName + ' - ' + emails.join(',')}
+                        </Text>
                     </View>
                 </View>
             </TouchableOpacity>

@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
-import { scrollViewConfig }  from './config'
+import { scrollViewConfig } from './config';
 export default StyleSheet.create({
-    gridStyle :{
+    gridStyle: {
         width: scrollViewConfig.width * 0.5 - 1,
         height: scrollViewConfig.width * 0.5 - 1
     },
@@ -14,44 +14,41 @@ export default StyleSheet.create({
     tileTitle: {
         color: '#333333',
         fontSize: 15,
-        marginTop : 10
+        marginTop: 10
     },
     iconStyle: {
-        height:80,
-        width:80,
-        borderRadius : 40 ,
+        height: 80,
+        width: 80,
+        borderRadius: 40
     },
-    authenticateButton : {
-        backgroundColor : '#bbb',
-        borderRadius : 60 ,
-        width : 80 ,
-        height : 80,
-        alignItems:'center',
-        justifyContent :'center'
+    authenticateButton: {
+        backgroundColor: '#bbb',
+        borderRadius: 60,
+        width: 80,
+        height: 80,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     plusText: Platform.select({
-        'ios': {
+        ios: {
             color: '#333333',
             fontSize: 50,
-            fontWeight : 'normal',
+            fontWeight: 'normal',
             textAlign: 'center',
-            lineHeight: 50,
+            lineHeight: 50
         },
-        'android': {
+        android: {
             color: '#333333',
             fontSize: 50,
-            fontWeight : 'normal',
-            textAlign: 'center',
+            fontWeight: 'normal',
+            textAlign: 'center'
         }
     }),
-    listViewContentContainerStyle : {
+    listViewContentContainerStyle: {
         flex: 1,
         paddingVertical: 0
     },
     rowTitle: {
         textAlign: 'center'
     }
-
-})
-
-
+});

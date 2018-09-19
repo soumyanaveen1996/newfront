@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { CONTACTS_REQUEST_PAGE_SIZE } from './config';
 import { Contact } from '../../lib/capability';
-import images from '../../config/images'
+import images from '../../config/images';
 
 export default class ContactsPickerDataSource {
     constructor(delegate) {
@@ -18,20 +18,19 @@ export default class ContactsPickerDataSource {
     }
 
     loadData() {
-        Contact.getAddedContacts()
-            .then((contacts) => {
-                if (contacts.length > 0) {
-                    this.updateData(contacts)
-                }
-                this.pageLoaded += 1;
-            });
+        Contact.getAddedContacts().then(contacts => {
+            if (contacts.length > 0) {
+                this.updateData(contacts);
+            }
+            this.pageLoaded += 1;
+        });
     }
 
     updateData(contactsData) {
-        const contactIds = _.map(contactsData, (data) => {
+        const contactIds = _.map(contactsData, data => {
             return data.userId;
         });
-        _.each(contactsData, (data) => {
+        _.each(contactsData, data => {
             console.log('Contacts data : ', data);
             this.idToContacts[data.userId] = {
                 id: data.userId,
@@ -39,10 +38,10 @@ export default class ContactsPickerDataSource {
                 firstName: data.givenName,
                 middleName: data.middleName,
                 lastName: data.surname,
-                emails: [{email: data.emailAddress}], // Format based on phone contact from expo
+                emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
                 phoneNumbers: data.phoneNumbers,
                 screenName: data.screenName
-            }
+            };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));
         this.delegate.onDataUpdate();
@@ -50,24 +49,32 @@ export default class ContactsPickerDataSource {
 
     contactsDataBySection(contactsDict) {
         let alphabets = 'abcdefghijklmnopqrstuvwxyz#'.split('');
-        return _.map(alphabets, (alphabet) => {
-            const sortedContacts = _.sortBy(contactsDict[alphabet], (contact) => {
+        return _.map(alphabets, alphabet => {
+            const sortedContacts = _.sortBy(contactsDict[alphabet], contact => {
                 return contact.name;
-            })
-            return { data : sortedContacts, title: alphabet.toUpperCase() }
-
+            });
+            return { data: sortedContacts, title: alphabet.toUpperCase() };
         });
     }
 
     createContactsDict(filterFunc) {
-        return _.reduce(this.allContactIds, (result, contactId) => {
-            const contact = this.idToContacts[contactId];
-            if (filterFunc === undefined || filterFunc(contact)) {
-                let firstChar = contact.name.length > 0 ? contact.name[0].toLowerCase() : '#';
-                (result[firstChar] || (result[firstChar] = [])).push(contact);
-            }
-            return result;
-        }, {});
+        return _.reduce(
+            this.allContactIds,
+            (result, contactId) => {
+                const contact = this.idToContacts[contactId];
+                if (filterFunc === undefined || filterFunc(contact)) {
+                    let firstChar =
+                        contact.name.length > 0
+                            ? contact.name[0].toLowerCase()
+                            : '#';
+                    (result[firstChar] || (result[firstChar] = [])).push(
+                        contact
+                    );
+                }
+                return result;
+            },
+            {}
+        );
     }
 
     getData() {
@@ -82,7 +89,8 @@ export default class ContactsPickerDataSource {
             return [];
         }
         text = text.toLowerCase();
-        let filterFunc = (contact) => contact.name.toLowerCase().indexOf(text) !== -1;
+        let filterFunc = contact =>
+            contact.name.toLowerCase().indexOf(text) !== -1;
         return this.contactsDataBySection(this.createContactsDict(filterFunc));
     }
 
@@ -94,6 +102,9 @@ export default class ContactsPickerDataSource {
 class ContactsPickerDelegateNotImplemented extends Error {
     constructor(functionName = '', ...args) {
         super(functionName, ...args);
-        this.message = 'ContactsPickerDelegate : ' + functionName +  ' function has to be implemented.';
+        this.message =
+            'ContactsPickerDelegate : ' +
+            functionName +
+            ' function has to be implemented.';
     }
 }

@@ -11,17 +11,18 @@ export default class BotChat extends ChatBotScreen {
 
     getBotKey = () => {
         return this.botKey;
-    }
+    };
 
     // Can be overriden from sub classes (PeopleChat)
     async getConversationContext(botContext, user) {
         try {
-            let context = await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
+            let context = await Promise.resolve(
+                ConversationContext.getConversationContext(botContext, user)
+            );
             return context;
         } catch (error) {
             console.log('Error getting a conversation context for bot chat');
             throw error;
         }
     }
-
 }

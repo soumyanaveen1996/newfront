@@ -6,8 +6,8 @@ import ImageResizer from 'react-native-image-resizer';
 export const ResourceTypes = {
     Image: 'image',
     Video: 'video',
-    Audio: 'audio',
-}
+    Audio: 'audio'
+};
 
 export default class Resource {
     /**
@@ -22,7 +22,15 @@ export default class Resource {
      *
      * @return S3 URL of the file uploaded
      */
-    static async uploadFile(base64Data, fileUri, bucketName, filenameWithoutExtension, resourceType, user = undefined, clearCache = false) {
+    static async uploadFile(
+        base64Data,
+        fileUri,
+        bucketName,
+        filenameWithoutExtension,
+        resourceType,
+        user = undefined,
+        clearCache = false
+    ) {
         if (!user) {
             user = await Auth.getUser();
         }
@@ -33,7 +41,15 @@ export default class Resource {
         // Resizing the image
         if (resourceType === ResourceTypes.Image) {
             try {
-                let imageResizeResponse = await ImageResizer.createResizedImage(fileUri, 800, 800, 'PNG', 50, 0, null)
+                let imageResizeResponse = await ImageResizer.createResizedImage(
+                    fileUri,
+                    800,
+                    800,
+                    'PNG',
+                    50,
+                    0,
+                    null
+                );
                 fileUri = imageResizeResponse.uri;
                 base64Data = null;
             } catch (error) {
@@ -58,7 +74,15 @@ export default class Resource {
             base64Data = await AssetFetcher.getFile(fileUri, 'base64');
         }
 
-        let res = await AssetFetcher.uploadFileToFileGateway(base64Data, fileUri, bucketName, filenameWithoutExtension, contentType, extension, user);
+        let res = await AssetFetcher.uploadFileToFileGateway(
+            base64Data,
+            fileUri,
+            bucketName,
+            filenameWithoutExtension,
+            contentType,
+            extension,
+            user
+        );
         if (res && resourceType === ResourceTypes.Image) {
             if (clearCache) {
                 await ImageCache.imageCacheManager.removeFromCache(res);

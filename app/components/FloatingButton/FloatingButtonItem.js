@@ -1,12 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Text,
-    View,
-    Animated,
-    TouchableOpacity,
-    Image,
-} from 'react-native';
+import { Text, View, Animated, TouchableOpacity, Image } from 'react-native';
 import { FloatingButtonItemConfig } from './config';
 import styles, { itemAnimatedViewStyle } from './styles';
 
@@ -22,16 +16,24 @@ export default class FloatingButtonItem extends React.Component {
     }
 
     render() {
-        if (!this.props.active) { return undefined; }
+        if (!this.props.active) {
+            return undefined;
+        }
 
         return (
             <Animated.View
                 pointerEvents="box-none"
-                style={[itemAnimatedViewStyle(this.props.anim), styles.itemContainer]} >
-                <TouchableOpacity
-                    onPress={this.props.onPress}>
+                style={[
+                    itemAnimatedViewStyle(this.props.anim),
+                    styles.itemContainer
+                ]}
+            >
+                <TouchableOpacity onPress={this.props.onPress}>
                     <View style={[styles.itemButton]}>
-                        <Image source={this.props.image} style={styles.itemImage}/>
+                        <Image
+                            source={this.props.image}
+                            style={styles.itemImage}
+                        />
                     </View>
                 </TouchableOpacity>
                 {this.renderTitle()}
@@ -40,11 +42,12 @@ export default class FloatingButtonItem extends React.Component {
     }
 
     renderTitle() {
-        if (!this.props.title) { return undefined; }
+        if (!this.props.title) {
+            return undefined;
+        }
 
         return (
-            <TouchableOpacity
-                onPress={this.props.onPress} >
+            <TouchableOpacity onPress={this.props.onPress}>
                 <View style={styles.itemTextContainer}>
                     <Text style={[styles.itemText]}>{this.props.title}</Text>
                 </View>
@@ -52,4 +55,3 @@ export default class FloatingButtonItem extends React.Component {
         );
     }
 }
-

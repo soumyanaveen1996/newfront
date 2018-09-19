@@ -6,7 +6,7 @@ class BotStateHandler {
             throw new Error('key option is required');
         }
         this.persist = options.persist || true;
-        this.key = options.key
+        this.key = options.key;
     }
 
     get(obj, key) {
@@ -15,14 +15,14 @@ class BotStateHandler {
 
     set(obj, key, value) {
         obj[key] = value;
-        this.persistIfRequired(obj)
+        this.persistIfRequired(obj);
     }
 
     deleteProperty(obj, key) {
         if (key in obj) {
             delete obj[key];
         }
-        this.persistIfRequired(obj)
+        this.persistIfRequired(obj);
     }
 
     persistIfRequired(obj) {
@@ -41,15 +41,14 @@ class BotStateHandler {
 
 export default class BotState {
     static newState(options) {
-        return new Promise((resolve) => {
-            DeviceStorage.get(options.key)
-                .then((value) => {
-                    if (value) {
-                        resolve(new Proxy(value, new BotStateHandler(options)));
-                    } else {
-                        resolve(new Proxy({}, new BotStateHandler(options)));
-                    }
-                })
-        })
+        return new Promise(resolve => {
+            DeviceStorage.get(options.key).then(value => {
+                if (value) {
+                    resolve(new Proxy(value, new BotStateHandler(options)));
+                } else {
+                    resolve(new Proxy({}, new BotStateHandler(options)));
+                }
+            });
+        });
     }
 }

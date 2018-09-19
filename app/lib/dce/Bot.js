@@ -10,9 +10,7 @@ import { Auth, MessageTypeConstants, Promise } from '../capability';
 import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
-
     constructor(manifest, context) {
-
         this.manifest = manifest;
         this.context = context;
 
@@ -36,17 +34,19 @@ class Bot {
         const botsDir = `${AssetFetcher.RootDir}/${config.dce.botDirName}/`;
         let botsOnDevice = await AssetFetcher.readDir(botsDir);
 
-        let slugPaths = await Promise.all(_.map(botsOnDevice, async (botDir) => {
-            // Go down the slug path to get to the real manifest file path
-            const pathToSlug = botDir.path;
-            let pathContent = await AssetFetcher.readDir(pathToSlug);
+        let slugPaths = await Promise.all(
+            _.map(botsOnDevice, async botDir => {
+                // Go down the slug path to get to the real manifest file path
+                const pathToSlug = botDir.path;
+                let pathContent = await AssetFetcher.readDir(pathToSlug);
 
-            // Return the slug paths
-            let allPaths = _.map(pathContent, (slug) => {
-                return slug.path;
-            });
-            return allPaths;
-        })).catch((e) => {
+                // Return the slug paths
+                let allPaths = _.map(pathContent, slug => {
+                    return slug.path;
+                });
+                return allPaths;
+            })
+        ).catch(e => {
             console.log('Error reading bots on devices', e);
             return [];
         });
@@ -55,16 +55,23 @@ class Bot {
         slugPaths = _.flatten(slugPaths);
 
         // Finally iterate to read the manifest files and load them as bots
-        bots = await Promise.all(_.map(slugPaths, async (slugPath) => {
-            const manifestFile = `${slugPath}/${config.dce.manifestFileName}`;
-            let botManifest = await AssetFetcher.getFile(manifestFile);
-            try {
-                return JSON.parse(botManifest);
-            } catch (e) {
-                console.log("Bot:: installedBots:: Couldn't parse", botManifest);
-                return {};
-            }
-        })).catch((e) => {
+        bots = await Promise.all(
+            _.map(slugPaths, async slugPath => {
+                const manifestFile = `${slugPath}/${
+                    config.dce.manifestFileName
+                }`;
+                let botManifest = await AssetFetcher.getFile(manifestFile);
+                try {
+                    return JSON.parse(botManifest);
+                } catch (e) {
+                    console.log(
+                        "Bot:: installedBots:: Couldn't parse",
+                        botManifest
+                    );
+                    return {};
+                }
+            })
+        ).catch(e => {
             console.log('Error reading manifests on devices', e);
             return [];
         });
@@ -81,11 +88,11 @@ class Bot {
         const systemBots = await Promise.resolve(SystemBot.getAllSystemBots());
 
         // Remove all the system bots from the list and only add default ones
-        bots = _.filter(bots, (o) => {
+        bots = _.filter(bots, o => {
             if (_.isEmpty(o)) {
                 return false;
             }
-            const sysBot = _.find(systemBots, ['botId', o.botId])
+            const sysBot = _.find(systemBots, ['botId', o.botId]);
             // Remove the IMBot - this is for people chat and cannot be part of regular bot
             if (sysBot) {
                 return false;
@@ -99,7 +106,6 @@ class Bot {
     }
 
     async Load(ctx) {
-
         try {
             this.createRootDirectory();
 
@@ -108,19 +114,25 @@ class Bot {
             // Get the user as we need the creds
             this.user = await Promise.resolve(Auth.getUser());
 
-            let remoteDeps = _.pickBy(this.manifest.dependencies, function (dep) {
+            let remoteDeps = _.pickBy(this.manifest.dependencies, function(
+                dep
+            ) {
                 return dep.remote === true || dep.remote === 'true';
             });
-            await Promise.all(_.map(remoteDeps, async (dep, depName) => {
+            await Promise.all(
+                _.map(remoteDeps, async (dep, depName) => {
+                    dep.name = depName;
+                    let depResp = await AssetFetcher.loadDependency(
+                        dep,
+                        this.user
+                    );
 
-                dep.name = depName;
-                let depResp = await AssetFetcher.loadDependency(dep, this.user);
-
-                depResp = eval(depResp);
-                if (ctx) {
-                    ctx.addCapability(depName, depResp);
-                }
-            })).catch((e) => {
+                    depResp = eval(depResp);
+                    if (ctx) {
+                        ctx.addCapability(depName, depResp);
+                    }
+                })
+            ).catch(e => {
                 console.log('Catching load err', e);
                 throw e;
             });
@@ -143,16 +155,22 @@ class Bot {
      * @param {*} ctx bot context
      */
     async Delete(ctx) {
-
         try {
             let botDirectoryPath = this.botDirectory;
-            console.log('Deleting the bot if it exists locally. botPath = ', botDirectoryPath);
+            console.log(
+                'Deleting the bot if it exists locally. botPath = ',
+                botDirectoryPath
+            );
 
-            let existsOnDevice = await AssetFetcher.existsOnDevice(botDirectoryPath);
+            let existsOnDevice = await AssetFetcher.existsOnDevice(
+                botDirectoryPath
+            );
 
             // Did not find - just return
             if (!existsOnDevice) {
-                console.log('Deleting the bot: Did not find the bot on the device');
+                console.log(
+                    'Deleting the bot: Did not find the bot on the device'
+                );
                 return false;
             }
             await AssetFetcher.deleteFile(botDirectoryPath);
@@ -179,23 +197,21 @@ class Bot {
         }
     }
 
-
     get context() {
         return this.context;
     }
 
     get name() {
-        return this.manifest.botName
+        return this.manifest.botName;
     }
 
     get id() {
-        return this.manifest.botId
+        return this.manifest.botId;
     }
 
     get botId() {
-        return this.manifest.botId
+        return this.manifest.botId;
     }
-
 
     get slug() {
         return _.snakeCase(_.get(this.manifest, 'slug', this.manifest.botName));
@@ -203,15 +219,25 @@ class Bot {
 
     async storeManifest() {
         // Store if required
-        const manifest_file_path = `${this.assetFolder}/${config.dce.manifestFileName}`;
-        const manifest_data = await AssetFetcher.existsOnDevice(manifest_file_path);
+        const manifest_file_path = `${this.assetFolder}/${
+            config.dce.manifestFileName
+        }`;
+        const manifest_data = await AssetFetcher.existsOnDevice(
+            manifest_file_path
+        );
 
         if (!manifest_data) {
             try {
-                await AssetFetcher.writeFile(manifest_file_path, JSON.stringify(this.manifest));
+                await AssetFetcher.writeFile(
+                    manifest_file_path,
+                    JSON.stringify(this.manifest)
+                );
             } catch (error) {
                 // ignore saving for now
-                console.log('Error occurred saving the manifest to directory!:', error);
+                console.log(
+                    'Error occurred saving the manifest to directory!:',
+                    error
+                );
             }
         }
         return this.manifest;
@@ -226,9 +252,16 @@ class Bot {
             let user = await Promise.resolve(Auth.getUser());
 
             if (!bot_data) {
-                console.log('Bot::Did not find bot on the device. Downloading from the server: ', this.manifest.botName);
+                console.log(
+                    'Bot::Did not find bot on the device. Downloading from the server: ',
+                    this.manifest.botName
+                );
 
-                let res = await AssetFetcher.downloadS3FileRest(bot_path, this.manifest.botUrl, user);
+                let res = await AssetFetcher.downloadS3FileRest(
+                    bot_path,
+                    this.manifest.botUrl,
+                    user
+                );
                 bot_data = res;
             }
             return bot_data;
@@ -245,21 +278,21 @@ class Bot {
 
     get botDirectory() {
         let slug = this.slug;
-        return `${AssetFetcher.RootDir}/${config.dce.botDirName}/${slug}`
+        return `${AssetFetcher.RootDir}/${config.dce.botDirName}/${slug}`;
     }
-
 
     get assetFolder() {
         let slug = this.slug;
         let version = this.version;
 
-        let path = `${AssetFetcher.RootDir}/${config.dce.botDirName}/${slug}/${version}/`;
+        let path = `${AssetFetcher.RootDir}/${
+            config.dce.botDirName
+        }/${slug}/${version}/`;
 
         return path;
     }
 
     async createRootDirectory() {
-
         let assetFolder = this.assetFolder,
             exists = await RNFS.exists(assetFolder);
 
@@ -270,15 +303,11 @@ class Bot {
         console.log(this.slug, `${assetFolder}  exist`);
 
         return true;
-
-
     }
 
     async run() {
         console.log(this.slug, ' running context');
     }
-
-
 }
 
 export default Bot;

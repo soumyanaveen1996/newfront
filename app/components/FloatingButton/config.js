@@ -1,10 +1,10 @@
 export const FloatingButtonItemConfig = {
     defaultProps: {
-        active: true,
+        active: true
     },
-    buttonSize: 44,
+    buttonSize: 44
 };
 
 export default {
     FloatingButtonItemConfig
-}
+};
