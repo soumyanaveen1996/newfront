@@ -521,7 +521,7 @@ export default class ChatBotScreen extends React.Component {
     };
 
     handleConnectionChange = connection => {
-        if (connection === 'none') {
+        if (connection.type === 'none') {
             this.setState({
                 showNetworkStatusBar: true,
                 network: 'none'
@@ -554,12 +554,7 @@ export default class ChatBotScreen extends React.Component {
     };
 
     handleMessageEvents(event) {
-        if (
-            !event ||
-            event.botId !== this.getBotId() ||
-            (event.conversationId !== undefined &&
-                event.conversationId !== this.getBotKey())
-        ) {
+        if (!event || event.botId !== this.getBotId()) {
             return;
         }
         this.loadedBot.asyncResult(

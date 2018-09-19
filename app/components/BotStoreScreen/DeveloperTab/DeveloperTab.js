@@ -52,7 +52,7 @@ export default class DeveloperTab extends React.Component {
         return botImage;
     };
 
-    onTileCilcked = botsId => {
+    onTileCilcked = (botsId, title) => {
         if (botsId == null) {
             return;
         }
@@ -60,7 +60,7 @@ export default class DeveloperTab extends React.Component {
         let selectedBots = this.props.botsData.filter(bot => {
             return botsId.indexOf(bot.botId) >= 0;
         });
-        Actions.botList({ data: selectedBots });
+        Actions.botList({ data: selectedBots, title: title });
     };
 
     onDomainMgmtTileClicked() {
@@ -99,7 +99,7 @@ export default class DeveloperTab extends React.Component {
                 onPress={() =>
                     domainMgmtBot
                         ? this.onDomainMgmtTileClicked()
-                        : this.onTileCilcked(rowData.botIds)
+                        : this.onTileCilcked(rowData.botIds, botName)
                 }
             >
                 <View style={styles.tileContent}>

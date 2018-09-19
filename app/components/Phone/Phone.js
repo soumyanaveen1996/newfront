@@ -6,14 +6,13 @@ import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitter, TwilioEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
-import { Twilio, TwilioVoIP } from '../../lib/twilio';
+import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
 
 export const PhoneState = {
     init: 'init',
     calling: 'calling',
-    calling_incall: 'calling_incall',
     incall: 'incall',
     incomingcall: 'incomingcall'
 };
@@ -118,9 +117,12 @@ export default class Phone extends React.Component {
 
     close() {
         const { phoneState } = this.state;
-        if (phoneState === PhoneState.incall) {
+        if (
+            phoneState === PhoneState.incall ||
+            phoneState === PhoneState.calling
+        ) {
             TwilioVoice.disconnect();
-        } else if (phoneState !== PhoneState.init) {
+        } else if (phoneState === PhoneState.incomingcall) {
             TwilioVoice.reject();
         }
         Actions.pop();

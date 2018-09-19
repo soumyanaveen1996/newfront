@@ -24,6 +24,7 @@ export default class MessageQueue {
     }
 
     userLoggedInHandler() {
+        console.log('User data fetched : ');
         this.clear();
     }
 
@@ -39,7 +40,7 @@ export default class MessageQueue {
 
     top() {
         if (this.queueLength > 0) {
-            return this.queue[this.queueLength - 1];
+            return this.queue[0];
         } else {
             return undefined;
         }
@@ -133,6 +134,11 @@ export default class MessageQueue {
         this.processing = true;
         while (this.top()) {
             const message = this.top();
+            console.log(
+                'Processing Message : ',
+                message.details,
+                this.queueLength
+            );
             for (let i = 0; i < this.retryCount; ++i) {
                 try {
                     const success = await this.handleMessage(message);

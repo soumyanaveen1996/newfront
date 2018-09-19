@@ -14,7 +14,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH,
-        height: 105,
+        height: 85,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15

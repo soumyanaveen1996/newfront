@@ -295,7 +295,7 @@ export default class InstalledBotsScreen extends React.Component {
                 />
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={BotListItemStyles.title}>
-                        {botData.botName}
+                        {botData.botName}{' '}
                     </Text>
                     <Text
                         numberOfLines={subtitleNumberOfLines}

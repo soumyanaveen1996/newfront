@@ -27,6 +27,7 @@ import { FormPopup } from '../components/FormPopup';
 import { ChannelsList } from '../components/ChannelsList';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
+import { Dialler } from '../components/Dialler';
 import Config from './config';
 
 const MainRouter = () => {
@@ -173,6 +174,11 @@ const MainRouter = () => {
                 <Scene
                     key={ROUTER_SCENE_KEYS.phone}
                     component={Phone}
+                    hideNavBar
+                />
+                <Scene
+                    key={ROUTER_SCENE_KEYS.dialler}
+                    component={Dialler}
                     hideNavBar
                 />
             </Lightbox>

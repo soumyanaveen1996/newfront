@@ -1,5 +1,11 @@
 import React from 'react';
-import { ActivityIndicator, View, BackHandler, Alert } from 'react-native';
+import {
+    ActivityIndicator,
+    View,
+    BackHandler,
+    Alert,
+    Text
+} from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';

@@ -3,7 +3,7 @@ import { GlobalColors } from '../../config/styles';
 
 export const BotListItemColors = {
     titleColor: 'rgb(255, 82, 59)',
-    subTitleColor: 'rgb(71, 72, 78)',
+    subTitleColor: 'rgb(169,169,169)',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
     countColor: 'rgb(62,137,252)',
@@ -16,18 +16,18 @@ export const BotListItemStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingHorizontal: 10,
-        paddingVertical: 24,
+        paddingVertical: 12,
         alignItems: 'stretch',
         backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
         color: BotListItemColors.titleColor,
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: 'bold'
     },
     subTitle: {
         color: BotListItemColors.subTitleColor,
-        fontSize: 15,
+        fontSize: 14,
         marginTop: 5
     },
     image: {

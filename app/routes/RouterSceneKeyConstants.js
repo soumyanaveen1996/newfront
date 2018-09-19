@@ -25,7 +25,8 @@ const ROUTER_SCENE_KEYS = {
     onboarding: 'onboarding',
     videoRecorder: 'videoRecorder',
     channelsList: 'channelsList',
-    phone: 'phone'
+    phone: 'phone',
+    dialler: 'dialler'
 };
 
 export default ROUTER_SCENE_KEYS;

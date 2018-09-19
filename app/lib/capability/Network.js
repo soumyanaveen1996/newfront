@@ -139,32 +139,33 @@ function Network(options, queue = false) {
                 console.log('Time connected : ', moment().valueOf() - start);
                 const requestOptions = converOptionsToFetchRequest(options);
                 console.log('Request : ', options, requestOptions);
-                fetch(options.url, requestOptions).then(response => {
-                    //console.log('Response raw : ', response);
-                    console.log(
-                        'Time for network call : ',
-                        options.url,
-                        moment().valueOf() - start
-                    );
-                    if (response.status === 200) {
-                        response.json().then(json => {
-                            console.log('Response : ', json);
-                            resolve({
-                                data: json,
-                                status: response.status,
-                                statusText: response.statusText
-                            });
-                        });
-                    } else {
-                        reject(
-                            new NetworkError(
-                                response.status,
-                                response.statusText
-                            )
+                fetch(options.url, requestOptions)
+                    .then(response => {
+                        //console.log('Response raw : ', response);
+                        console.log(
+                            'Time for network call : ',
+                            options.url,
+                            moment().valueOf() - start
                         );
-                    }
-                });
-
+                        if (response.status === 200) {
+                            response.json().then(json => {
+                                console.log('Response : ', json);
+                                resolve({
+                                    data: json,
+                                    status: response.status,
+                                    statusText: response.statusText
+                                });
+                            });
+                        } else {
+                            reject(
+                                new NetworkError(
+                                    response.status,
+                                    response.statusText
+                                )
+                            );
+                        }
+                    })
+                    .catch(reject);
                 /*
                     axios(options)
                         .then((data) => {

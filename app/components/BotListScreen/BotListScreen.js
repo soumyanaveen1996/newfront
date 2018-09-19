@@ -13,7 +13,8 @@ import utils from '../../lib/utils';
 export default class BotListScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         return {
-            headerTitle: headerConfig.headerTitle,
+            headerTitle:
+                navigation.state.params.title || headerConfig.headerTitle,
             headerLeft: <HeaderBack onPress={Actions.pop} />
         };
     }
@@ -54,7 +55,6 @@ export default class BotListScreen extends React.Component {
 
     renderRow = bot => {
         const botStatus = this.checkBotStatus(bot);
-
         return (
             <BotInstallListItem
                 bot={bot}

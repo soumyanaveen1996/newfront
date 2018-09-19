@@ -90,7 +90,7 @@ class Bot extends events.EventEmitter {
             const bots = await Bot.getInstalledBots();
             const toDeleteBots = _.filter(
                 bots,
-                bot => SYSTEM_BOT_MANIFEST[bot.id] === undefined
+                bot => SYSTEM_BOT_MANIFEST[bot.botId] === undefined
             );
             _.each(toDeleteBots, async bot => {
                 await MessageHandler.deleteBotMessages(bot.botId);

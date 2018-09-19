@@ -4,6 +4,7 @@ import RNMapView from 'react-native-maps';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
 import Icons from '../../config/icons';
+import images from '../../config/images';
 import _ from 'lodash';
 
 class CallOut extends React.Component {
@@ -45,6 +46,30 @@ export default class MapView extends React.Component {
         });
     }
 
+    RenderTrailArrows(polylines) {
+        return _.map(polylines, polyline => {
+            return polyline.coordinates.map((coo, index, coos) => {
+                if (index === coos.length - 1) {
+                    return;
+                }
+                let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+                let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+                let angle =
+                    -Math.atan2(deltaLatitute, deltaLongitude) *
+                    (180 / Math.PI);
+                let angleStringRad = angle + 'deg';
+                return (
+                    <RNMapView.Marker
+                        coordinate={coo}
+                        image={images.trail_arrow}
+                        anchor={{ x: 0.5, y: 0.5 }}
+                        style={{ transform: [{ rotateZ: angleStringRad }] }}
+                    />
+                );
+            });
+        });
+    }
+
     _renderPolylines(polylines) {
         return _.map(polylines, (polyline, index) => {
             return (
@@ -74,9 +99,14 @@ export default class MapView extends React.Component {
     _renderMap() {
         const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
-            <RNMapView region={mapData.region} style={styles.mapView}>
+            <RNMapView
+                region={mapData.region}
+                style={styles.mapView}
+                rotateEnabled={false}
+            >
                 {this._renderMarkers(mapData.markers)}
                 {this._renderPolygons(mapData.polygons)}
+                {this.RenderTrailArrows(mapData.polylines)}
                 {this._renderPolylines(mapData.polylines)}
                 {this._renderCircles(mapData.circles)}
             </RNMapView>

@@ -14,6 +14,7 @@ class BackgroundTaskBotScreen {
         this.conversationId = conversationId;
         this.receivedMessage = message;
         this.options = options;
+        this.receivedMessageProcessed = false;
     }
 
     getBotKey = () => {
@@ -28,13 +29,14 @@ class BackgroundTaskBotScreen {
 
     persistMessage = async message => {
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
-        if (this.receivedMessage) {
+        if (this.receivedMessage && !this.receivedMessageProcessed) {
             EventEmitter.emit(MessageEvents.messageProcessed, {
                 botId: this.botId || this.receivedMessage.bot,
                 conversationId:
                     this.conversationId || this.receivedMessage.conversation,
                 message: this.receivedMessage
             });
+            this.receivedMessageProcessed = true;
         }
         EventEmitter.emit(MessageEvents.messagePersisted, {
             botId: this.botId,
@@ -97,6 +99,7 @@ const processTask = async (task, user) => {
     const botScreen = new BackgroundTaskBotScreen(
         task.botId,
         task.conversationId,
+        undefined,
         task.options
     );
     const botContext = new BotContext(botScreen, botManifest);
@@ -295,20 +298,16 @@ const sendBackgroundIMMessage = async (
     if (!user) {
         return;
     }
-    console.log('helloo');
     const botManifest = await getBotManifest(botId);
     if (!botManifest) {
         return;
     }
-    console.log('hello');
     const botScreen = new BackgroundTaskBotScreen(
         botId,
         conversationId,
         message
     );
-    console.log('hello1');
     const botContext = new BotContext(botScreen, botManifest);
-    console.log('hello2');
     let conversationContext = await getConversationContext(
         botId,
         user,

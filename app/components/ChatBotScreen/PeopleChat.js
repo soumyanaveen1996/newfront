@@ -4,15 +4,12 @@ import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Twilio, TwilioVoIP } from '../../lib/twilio';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
 import images from '../../images';
 import chatStyles from './styles';
-import TwilioVoice from 'react-native-twilio-programmable-voice';
-import I18n from '../../config/i18n/i18n';
 import { PhoneState } from '../Phone';
 
 export default class PeopleChat extends ChatBotScreen {

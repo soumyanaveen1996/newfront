@@ -110,6 +110,14 @@ const stylesheet = StyleSheet.create({
         color: 'rgb(87, 21, 195)',
         fontSize: 11,
         backgroundColor: GlobalColors.transparent
+    },
+    headerRightView: {
+        flexDirection: 'row',
+        width: 85,
+        height: 40,
+        justifyContent: 'space-between',
+        paddingTop: 3,
+        marginRight: 5
     }
 });
 

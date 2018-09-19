@@ -386,12 +386,12 @@ export default class FormPopup extends React.Component {
                 buttons.push(
                     <View
                         style={[
-                            Styles.formTitleContainer,
+                            Styles.formTextContainer,
                             { borderBottomWidth: 0 }
                         ]}
                         key={i}
                     >
-                        <Text allowFontScaling={false} style={Styles.formTitle}>
+                        <Text allowFontScaling={false} style={Styles.formText}>
                             {formData[i].text}
                         </Text>
                     </View>
