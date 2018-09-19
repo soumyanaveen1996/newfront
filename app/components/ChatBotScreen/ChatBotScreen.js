@@ -518,8 +518,8 @@ export default class ChatBotScreen extends React.Component {
         }
     };
 
-    handleConnectionChange = connection => {
-        if (connection === 'none') {
+    handleConnectionChange = (connection) => {
+        if (connection.type === 'none') {
             this.setState({
                 showNetworkStatusBar: true,
                 network: 'none'

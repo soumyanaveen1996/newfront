@@ -570,6 +570,24 @@ export default class Auth {
         });
 
     /**
+     * Method to add domains to the existing user.
+     * @param domains Either a single domain or a list of domains
+     *
+     * @return {Promise} user
+     */
+    static addDomains = (domains) => new Promise((resolve, reject) => {
+        return Auth.getUser()
+            .then((user) => {
+                if (user) {
+                    user.info.domains = _.concat(user.info.domains || [], domains);
+                    return resolve(Auth.saveUser(user));
+                } else {
+                    reject('No valid user session');
+                }
+            })
+    })
+
+    /**
      * Method to set domains to the existing user.
      * @param domains Either a single domain or a list of domains
      *
