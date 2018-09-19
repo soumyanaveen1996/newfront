@@ -3,29 +3,29 @@ import configToUse from './env/prod';
 // Point to the right environment config based on what is being released
 const config = configToUse;
 
-export const overrideConsole = (trueConsole) => {
+export const overrideConsole = trueConsole => {
     return {
-        'log': function() {
+        log: function() {
             if (global.__DEV__) {
-                trueConsole.log.apply(trueConsole, arguments)
+                trueConsole.log.apply(trueConsole, arguments);
             }
         },
-        'error': function() {
+        error: function() {
             if (global.__DEV__) {
-                trueConsole.log.apply(trueConsole, arguments)
+                trueConsole.log.apply(trueConsole, arguments);
             }
         },
-        'warn': function() {
+        warn: function() {
             if (global.__DEV__) {
-                trueConsole.log.apply(trueConsole, arguments)
+                trueConsole.log.apply(trueConsole, arguments);
             }
         },
-        'info': function() {
+        info: function() {
             if (global.__DEV__) {
-                trueConsole.log.apply(trueConsole, arguments)
+                trueConsole.log.apply(trueConsole, arguments);
             }
         }
     };
-}
+};
 
 export default config;

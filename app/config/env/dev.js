@@ -16,7 +16,7 @@ const devConfig = {
         binaryS3Bucket: 'dev-frontm-conversations',
         catalogHost: CATALOG_HOST,
         catalogPath: '/Development/items',
-        catalogServiceApi: 'execute-api',
+        catalogServiceApi: 'execute-api'
     },
     network: {
         queueProtocol: 'https://',
@@ -26,7 +26,7 @@ const devConfig = {
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        userDetailsPath: '/userDetails',
+        userDetailsPath: '/userDetails'
     },
     proxy: {
         enabled: true,
@@ -41,9 +41,9 @@ const devConfig = {
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
-        deleteUserPath: '/v2/deleteUser',
+        deleteUserPath: '/v2/deleteUser'
     }
-}
+};
 
 let config = {};
 

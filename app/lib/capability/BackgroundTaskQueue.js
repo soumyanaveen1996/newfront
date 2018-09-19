@@ -22,12 +22,11 @@ export const BackgroundTaskErrorCodes = {
     2: 'timeInterval  option is required',
     3: 'conversationId  option is required',
     4: 'Unable to enqueue background task',
-    5: 'Unable to dequeue background task',
-}
+    5: 'Unable to dequeue background task'
+};
 
 class BackgroundTaskQueue {
-    constructor() {
-    }
+    constructor() {}
 
     enqueue(options) {
         return new Promise((resolve, reject) => {
@@ -43,14 +42,19 @@ class BackgroundTaskQueue {
             if (!options.conversationId) {
                 reject(new BackgroundTaskError(3, BackgroundTaskErrorCodes[3]));
             }
-            BackgroundTaskDAO.insertBackgroundTaskIfNotPresent(options.key,
+            BackgroundTaskDAO.insertBackgroundTaskIfNotPresent(
+                options.key,
                 options.botId,
                 options.conversationId,
-                options.timeInterval, options)
+                options.timeInterval,
+                options
+            )
                 .then(resolve)
                 .catch(() => {
-                    reject(new BackgroundTaskError(4, BackgroundTaskErrorCodes[4]));
-                })
+                    reject(
+                        new BackgroundTaskError(4, BackgroundTaskErrorCodes[4])
+                    );
+                });
         });
     }
 

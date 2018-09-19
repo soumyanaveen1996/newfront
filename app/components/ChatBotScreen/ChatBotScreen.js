@@ -20,7 +20,8 @@ import ChatMessage from './ChatMessage';
 import CallModal from './CallModal';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
-import { Network,
+import {
+    Network,
     Message,
     Contact,
     MessageTypeConstants,
@@ -30,7 +31,8 @@ import { Network,
     Resource,
     ResourceTypes,
     Settings,
-    PollingStrategyTypes } from '../../lib/capability';
+    PollingStrategyTypes
+} from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import Config, { BOT_LOAD_RETRIES } from './config';
@@ -41,51 +43,97 @@ import Permissions from 'react-native-permissions';
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
-import { NetworkHandler, AsyncResultEventEmitter, NETWORK_EVENTS_CONSTANTS, Queue } from '../../lib/network';
+import {
+    NetworkHandler,
+    AsyncResultEventEmitter,
+    NETWORK_EVENTS_CONSTANTS,
+    Queue
+} from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
-import { EventEmitter, SatelliteConnectionEvents, PollingStrategyEvents, MessageEvents } from '../../lib/events';
+import {
+    EventEmitter,
+    SatelliteConnectionEvents,
+    PollingStrategyEvents,
+    MessageEvents
+} from '../../lib/events';
 import { Icons } from '../../config/icons';
 import images from '../../images';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
-import { GoogleAnalytics, GoogleAnalyticsCategories } from '../../lib/GoogleAnalytics';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsCategories
+} from '../../lib/GoogleAnalytics';
+import {
+    DocumentPicker,
+    DocumentPickerUtil
+} from 'react-native-document-picker';
 
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: state.params.bot.botName,
+            headerTitle: state.params.bot.botName
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
         } else {
-            navigationOptions.headerLeft = <HeaderBack onPress={() => {
-                if (state.params.botDone) {
-                    state.params.botDone();
-                }
-                if (state.params.onBack) {
-                    Actions.pop(); state.params.onBack();
-                } else {
-                    Actions.pop();
-                }
-            }} />;
+            navigationOptions.headerLeft = (
+                <HeaderBack
+                    onPress={() => {
+                        if (state.params.botDone) {
+                            state.params.botDone();
+                        }
+                        if (state.params.onBack) {
+                            Actions.pop();
+                            state.params.onBack();
+                        } else {
+                            Actions.pop();
+                        }
+                    }}
+                />
+            );
         }
 
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
-                    state.params.refresh();
-                }} icon={Icons.refresh()}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
             } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
             } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
             } else {
-                navigationOptions.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
             }
         }
         return navigationOptions;
@@ -97,20 +145,20 @@ export default class ChatBotScreen extends React.Component {
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
-        this.messageQueue = []
-        this.processingMessageQueue = false
-        this.camera = null
-        this.allLocalMessagesLoaded = false
+        this.messageQueue = [];
+        this.processingMessageQueue = false;
+        this.camera = null;
+        this.allLocalMessagesLoaded = false;
 
         this.state = {
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false,
+            refreshing: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
-        this.scrollToBottom = false
-        this.firstUnreadIndex = -1
+        this.scrollToBottom = false;
+        this.firstUnreadIndex = -1;
 
         // Create a new botcontext with this as the bot
         this.botContext = new BotContext(this, this.bot);
@@ -126,15 +174,14 @@ export default class ChatBotScreen extends React.Component {
     loadBot = async () => {
         let botResp = await this.dce_bot.Load(this.botContext);
         return botResp;
-    }
+    };
 
     goBack = () => {
         Actions.pop();
         if (this.props.onBack) {
             this.props.onBack();
         }
-    }
-
+    };
 
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
@@ -156,23 +203,25 @@ export default class ChatBotScreen extends React.Component {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
                 I18n.t('Bot_load_failed'),
-                [
-                    {text: 'OK', onPress: this.goBack},
-                ],
+                [{ text: 'OK', onPress: this.goBack }],
                 { cancelable: false }
-            )
+            );
             return;
         }
 
-        if (this.bot.maxRequiredPlatformVersion && versionCompare(VersionCheck.getCurrentVersion(), this.bot.maxRequiredPlatformVersion) === 1) {
+        if (
+            this.bot.maxRequiredPlatformVersion &&
+            versionCompare(
+                VersionCheck.getCurrentVersion(),
+                this.bot.maxRequiredPlatformVersion
+            ) === 1
+        ) {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
                 I18n.t('Bot_max_version_error'),
-                [
-                    {text: 'OK', onPress: this.goBack},
-                ],
+                [{ text: 'OK', onPress: this.goBack }],
                 { cancelable: false }
-            )
+            );
             return;
         }
 
@@ -190,7 +239,10 @@ export default class ChatBotScreen extends React.Component {
             self.user = await Promise.resolve(Auth.getUser());
 
             // 2. Get the conversation context
-            self.conversationContext = await this.getConversationContext(this.botContext, this.user);
+            self.conversationContext = await this.getConversationContext(
+                this.botContext,
+                this.user
+            );
 
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
@@ -210,42 +262,73 @@ export default class ChatBotScreen extends React.Component {
                 this.scrollToBottom = true;
             }
 
-            if (!this.mounted) { return; }
+            if (!this.mounted) {
+                return;
+            }
 
             // 4. Update the state of the bot with the messages we have
-            this.setState({ messages: this.addSessionStartMessages(messages), typing: '', showSlider: false }, function (err, res) {
-                if (!err) {
-                    self.botLoaded = true;
-                    // 5. Kick things off by calling init on the bot
-                    this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+            this.setState(
+                {
+                    messages: this.addSessionStartMessages(messages),
+                    typing: '',
+                    showSlider: false
+                },
+                function(err, res) {
+                    if (!err) {
+                        self.botLoaded = true;
+                        // 5. Kick things off by calling init on the bot
+                        this.loadedBot.init(
+                            this.botState,
+                            this.state.messages,
+                            this.botContext
+                        );
 
-                    // 6. If there are async results waiting - pass them on to the bot
-                    self.flushPendingAsyncResults();
+                        // 6. If there are async results waiting - pass them on to the bot
+                        self.flushPendingAsyncResults();
 
-                    // 7. Now that bot is open - add a listener for async results coming in
-                    self.eventSubscription = EventEmitter.addListener(MessageEvents.messageProcessed, this.handleMessageEvents.bind(this));
+                        // 7. Now that bot is open - add a listener for async results coming in
+                        self.eventSubscription = EventEmitter.addListener(
+                            MessageEvents.messageProcessed,
+                            this.handleMessageEvents.bind(this)
+                        );
 
-                    // 8. Mark new messages as read
-                    MessageHandler.markUnreadMessagesAsRead(this.getBotKey());
+                        // 8. Mark new messages as read
+                        MessageHandler.markUnreadMessagesAsRead(
+                            this.getBotKey()
+                        );
 
-                    // 9. Stash the bot for nav back for on exit
-                    this.props.navigation.setParams({ botDone: this.botDone.bind(this) });
-
-                } else {
-                    console.log('Error setting state with messages', err);
+                        // 9. Stash the bot for nav back for on exit
+                        this.props.navigation.setParams({
+                            botDone: this.botDone.bind(this)
+                        });
+                    } else {
+                        console.log('Error setting state with messages', err);
+                    }
                 }
-            });
+            );
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors
             self.botLoaded = false;
         }
 
-        this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
+        this.keyboardWillShowListener = Keyboard.addListener(
+            'keyboardWillShow',
+            this.keyboardWillShow.bind(this)
+        );
+        this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            this.keyboardDidShow.bind(this)
+        );
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
-        EventEmitter.addListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
-        EventEmitter.addListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.connectedToSatellite,
+            this.satelliteConnectionHandler
+        );
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.notConnectedToSatellite,
+            this.satelliteDisconnectHandler
+        );
 
         console.log('Checking polling strategy');
 
@@ -254,13 +337,27 @@ export default class ChatBotScreen extends React.Component {
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
         this.checkPollingStrategy();
-        EventEmitter.addListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
-        GoogleAnalytics.logEvents(GoogleAnalyticsCategories.BOT_OPENED, this.props.bot.botName, null, 0, null);
+        EventEmitter.addListener(
+            PollingStrategyEvents.changed,
+            this.checkPollingStrategy.bind(this)
+        );
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsCategories.BOT_OPENED,
+            this.props.bot.botName,
+            null,
+            0,
+            null
+        );
     }
 
     botDone = () => {
-        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
-    }
+        this.loadedBot.done(
+            null,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
+    };
 
     showConnectionMessage(connectionType) {
         let message = I18n.t('Auto_Message');
@@ -272,22 +369,27 @@ export default class ChatBotScreen extends React.Component {
         Alert.alert(
             I18n.t('Connection_Type'),
             message,
-            [
-                { text: I18n.t('Ok'), style: 'cancel'},
-            ],
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }
         );
     }
 
-
-    sessionStartMessageForDate = (momentObject) => {
-        let sMessage = new Message({addedByBot: true, messageDate: momentObject.valueOf()});
+    sessionStartMessageForDate = momentObject => {
+        let sMessage = new Message({
+            addedByBot: true,
+            messageDate: momentObject.valueOf()
+        });
         sMessage.sessionStartMessage();
         return sMessage.toBotDisplay();
-    }
+    };
 
     addSessionStartMessages(messages) {
-        let filteredMessages = _.filter(messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_SESSION_START);
+        let filteredMessages = _.filter(
+            messages,
+            item =>
+                item.message.getMessageType() !==
+                MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+        );
 
         if (filteredMessages.length > 0) {
             for (var i = 0; i < filteredMessages.length; i++) {
@@ -297,8 +399,15 @@ export default class ChatBotScreen extends React.Component {
                     const nextMessage = filteredMessages[i + 1].message;
                     const currentDate = moment(currentMessage.getMessageDate());
                     const nextDate = moment(nextMessage.getMessageDate());
-                    if (!((nextDate.valueOf() - currentDate.valueOf()) / 1000 < 60) ||
-                        nextMessage.isMessageByBot() !== currentMessage.isMessageByBot()) {
+                    if (
+                        !(
+                            (nextDate.valueOf() - currentDate.valueOf()) /
+                                1000 <
+                            60
+                        ) ||
+                        nextMessage.isMessageByBot() !==
+                            currentMessage.isMessageByBot()
+                    ) {
                         showTime = true;
                     }
                 } else if (i === filteredMessages.length - 1) {
@@ -310,19 +419,27 @@ export default class ChatBotScreen extends React.Component {
 
         let resultMessages = [];
         if (filteredMessages.length > 0) {
-            let currentDate = moment(filteredMessages[0].message.getMessageDate());
+            let currentDate = moment(
+                filteredMessages[0].message.getMessageDate()
+            );
             resultMessages.push(this.sessionStartMessageForDate(currentDate));
             for (var i = 0; i < filteredMessages.length; i++) {
                 const botMessage = filteredMessages[i];
                 const message = botMessage.message;
                 const date = moment(message.getMessageDate());
-                if (date.dayOfYear() !== currentDate.dayOfYear() || date.year() !== currentDate.year()) {
+                if (
+                    date.dayOfYear() !== currentDate.dayOfYear() ||
+                    date.year() !== currentDate.year()
+                ) {
                     resultMessages.push(this.sessionStartMessageForDate(date));
                     currentDate = date;
                 }
                 resultMessages.push(botMessage);
             }
-            if (currentDate.dayOfYear() !== moment().dayOfYear() && moment().year() !== currentDate.year()) {
+            if (
+                currentDate.dayOfYear() !== moment().dayOfYear() &&
+                moment().year() !== currentDate.year()
+            ) {
                 resultMessages.push(this.sessionStartMessageForDate(moment()));
             }
         } else {
@@ -366,10 +483,21 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
-        Network.removeConnectionChangeEventListener(this.handleConnectionChange);
-        EventEmitter.removeListener(SatelliteConnectionEvents.connectedToSatellite, this.satelliteConnectionHandler);
-        EventEmitter.removeListener(SatelliteConnectionEvents.notConnectedToSatellite, this.satelliteDisconnectHandler);
-        EventEmitter.removeListener(PollingStrategyEvents.changed, this.checkPollingStrategy.bind(this));
+        Network.removeConnectionChangeEventListener(
+            this.handleConnectionChange
+        );
+        EventEmitter.removeListener(
+            SatelliteConnectionEvents.connectedToSatellite,
+            this.satelliteConnectionHandler
+        );
+        EventEmitter.removeListener(
+            SatelliteConnectionEvents.notConnectedToSatellite,
+            this.satelliteDisconnectHandler
+        );
+        EventEmitter.removeListener(
+            PollingStrategyEvents.changed,
+            this.checkPollingStrategy.bind(this)
+        );
     }
 
     satelliteConnectionHandler = () => {
@@ -377,34 +505,34 @@ export default class ChatBotScreen extends React.Component {
             this.setState({
                 showNetworkStatusBar: true,
                 network: 'satellite'
-            })
+            });
         }
-    }
+    };
 
     satelliteDisconnectHandler = () => {
         if (this.state.network === 'satellite') {
             this.setState({
                 showNetworkStatusBar: false,
                 network: 'connected'
-            })
+            });
         }
-    }
+    };
 
-    handleConnectionChange = (connection) => {
+    handleConnectionChange = connection => {
         if (connection === 'none') {
             this.setState({
                 showNetworkStatusBar: true,
                 network: 'none'
-            })
+            });
         } else {
             if (this.state.network === 'none') {
                 this.setState({
                     showNetworkStatusBar: false,
-                    network: 'connected',
-                })
+                    network: 'connected'
+                });
             }
         }
-    }
+    };
 
     getBotId() {
         return this.props.bot.botId;
@@ -414,28 +542,38 @@ export default class ChatBotScreen extends React.Component {
         if (this.slider) {
             this.slider.close(undefined, true);
         }
-    }
+    };
 
     keyboardDidShow = () => {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
         }
-    }
+    };
 
     handleMessageEvents(event) {
         if (!event || event.botId !== this.getBotId()) {
             return;
         }
-        this.loadedBot.asyncResult(event.message, this.botState, this.state.messages, this.botContext);
+        this.loadedBot.asyncResult(
+            event.message,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
     }
 
-    handleAsyncMessageResult (event) {
+    handleAsyncMessageResult(event) {
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
             return;
         }
-        this.loadedBot.asyncResult(event.result, this.botState, this.state.messages, this.botContext);
+        this.loadedBot.asyncResult(
+            event.result,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
         // Delete the network result now
         return Queue.deleteNetworkRequest(event.id);
     }
@@ -443,62 +581,83 @@ export default class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
-        Queue.selectCompletedNetworkRequests(this.getBotKey())
-            .then((pendingAsyncResults) => {
+        Queue.selectCompletedNetworkRequests(this.getBotKey()).then(
+            pendingAsyncResults => {
                 pendingAsyncResults = pendingAsyncResults || [];
-                pendingAsyncResults.forEach((pendingAsyncResult) => {
+                pendingAsyncResults.forEach(pendingAsyncResult => {
                     self.handleAsyncMessageResult(pendingAsyncResult);
                 });
-            })
+            }
+        );
     }
 
-    wait = (shouldWait) => {
+    wait = shouldWait => {
         if (shouldWait) {
-            let msg = new Message({addedByBot: true});
+            let msg = new Message({ addedByBot: true });
             msg.waitMessage();
             this.queueMessage(msg);
         } else {
             this.stopWaiting();
         }
-    }
+    };
 
     stopWaiting = () => {
-        this.messageQueue = _.filter(this.messageQueue, (message) => message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
-        let messages = _.filter(this.state.messages, (item) => item.message.getMessageType() !== MessageTypeConstants.MESSAGE_TYPE_WAIT);
+        this.messageQueue = _.filter(
+            this.messageQueue,
+            message =>
+                message.getMessageType() !==
+                MessageTypeConstants.MESSAGE_TYPE_WAIT
+        );
+        let messages = _.filter(
+            this.state.messages,
+            item =>
+                item.message.getMessageType() !==
+                MessageTypeConstants.MESSAGE_TYPE_WAIT
+        );
         this.updateMessages(messages);
-    }
+    };
 
-    isMessageBeforeToday = (message) => {
+    isMessageBeforeToday = message => {
         return moment(message.getMessageDate()).isBefore(moment(), 'day');
-    }
+    };
 
-    addSessionStartMessage = (messages) => new Promise((resolve) => {
-        if (messages.length === 0 || this.isMessageBeforeToday(messages[messages.length - 1].message)) {
-            let sMessage = new Message({addedByBot: true, messageDate: moment().valueOf()});
-            sMessage.sessionStartMessage();
-            // TODO: Should we do it in a timeout so that its displayed first?
-            this.persistMessage(sMessage)
-                .then(() => {
-                    this.queueMessage(sMessage);
-                    resolve();
-                })
-                .catch((err) => {
-                    console.log('Error persisting session message::', err);
-                    resolve();
+    addSessionStartMessage = messages =>
+        new Promise(resolve => {
+            if (
+                messages.length === 0 ||
+                this.isMessageBeforeToday(messages[messages.length - 1].message)
+            ) {
+                let sMessage = new Message({
+                    addedByBot: true,
+                    messageDate: moment().valueOf()
                 });
-        } else {
-            resolve();
-        }
-    });
+                sMessage.sessionStartMessage();
+                // TODO: Should we do it in a timeout so that its displayed first?
+                this.persistMessage(sMessage)
+                    .then(() => {
+                        this.queueMessage(sMessage);
+                        resolve();
+                    })
+                    .catch(err => {
+                        console.log('Error persisting session message::', err);
+                        resolve();
+                    });
+            } else {
+                resolve();
+            }
+        });
 
-    tell = (message) => {
+    tell = message => {
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
 
         // Update the bot interface
         // Push a new message to the end
-        if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_SLIDER) {
+        if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SLIDER
+        ) {
             if (this.slider) {
                 this.slider.close(() => {
                     this.fireSlider(message);
@@ -506,52 +665,63 @@ export default class ChatBotScreen extends React.Component {
             } else {
                 this.fireSlider(message);
             }
-        } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP) {
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
+        ) {
             this.openMap(message);
-        } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_BUTTON) {
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_BUTTON
+        ) {
             this.queueMessage(message);
-        } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML) {
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
+        ) {
             this.updateChat(message);
-        } else if (message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART) {
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
+        ) {
             this.openChart(message);
         } else {
             this.updateChat(message);
         }
-    }
+    };
 
     done = () => {
         // Done with the bot - navigate away?
         console.log('Done called from bot code');
-    }
+    };
 
     // Retrun when the message has been persisted
-    persistMessage = (message) => {
+    persistMessage = message => {
         return MessageHandler.persistOnDevice(this.getBotKey(), message);
-    }
+    };
 
     // Promise based since setState is async
     updateChat(message) {
-        this.persistMessage(message)
-            .then(() => {
-                this.queueMessage(message);
-            });
+        this.persistMessage(message).then(() => {
+            this.queueMessage(message);
+        });
         // Has to be Immutable for react
     }
 
     fireSlider(message) {
         // Slider
-        Keyboard.dismiss()
+        Keyboard.dismiss();
         this.setState({ showSlider: true, message: message });
     }
 
     openMap(message) {
-        Keyboard.dismiss()
-        Actions.mapView({ mapData: message.getMessage() })
+        Keyboard.dismiss();
+        Actions.mapView({ mapData: message.getMessage() });
     }
 
     openChart(message) {
         Keyboard.dismiss();
-        Actions.SNRChart({ chartData: message.getMessage(), chartTitle: I18n.t('SNR_Chart_title') });
+        Actions.SNRChart({
+            chartData: message.getMessage(),
+            chartTitle: I18n.t('SNR_Chart_title')
+        });
     }
 
     sendSliderResponseMessage(selectedRows) {
@@ -572,7 +742,7 @@ export default class ChatBotScreen extends React.Component {
         if (scroll) {
             this.scrollToBottomIfNeeded();
         }
-    }
+    };
 
     onSliderOpen() {
         this.scrollToBottomIfNeeded();
@@ -589,14 +759,17 @@ export default class ChatBotScreen extends React.Component {
             //if (!this.initialScrollDone) {
             //    return;
             //}
-            if (this.firstUnreadIndex !== -1){
+            if (this.firstUnreadIndex !== -1) {
                 if (this.chatList) {
-                    this.chatList.scrollToIndex({index : this.firstUnreadIndex, animated: true})
+                    this.chatList.scrollToIndex({
+                        index: this.firstUnreadIndex,
+                        animated: true
+                    });
                 }
                 this.firstUnreadIndex = -1;
             } else {
                 if (this.chatList) {
-                    this.chatList.scrollToEnd({ animated: true })
+                    this.chatList.scrollToEnd({ animated: true });
                 }
             }
             this.initialScrollDone = true;
@@ -612,20 +785,20 @@ export default class ChatBotScreen extends React.Component {
         }
     }
 
-    onSliderDone = (selectedRows) => {
+    onSliderDone = selectedRows => {
         this.sendSliderResponseMessage(selectedRows);
-    }
+    };
 
     onSliderCancel = () => {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
         message.sliderCancelMessage();
         return this.sendMessage(message);
-    }
+    };
 
-    onSliderTap = (selectedRow) => {
+    onSliderTap = selectedRow => {
         this.sendSliderTapResponseMessage(selectedRow);
-    }
+    };
 
     sendSliderTapResponseMessage(selectedRow) {
         let message = new Message({ addedByBot: false });
@@ -641,12 +814,16 @@ export default class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    onButtonDone = (selectedItem) => {
+    onButtonDone = selectedItem => {
         this.sendButtonResponseMessage(selectedItem);
-    }
+    };
 
-    replaceUpdatedMessage = (updatedMessage) => {
-        const index = _.findIndex(this.state.messages, (item) => item.message.getMessageId() === updatedMessage.getMessageId());
+    replaceUpdatedMessage = updatedMessage => {
+        const index = _.findIndex(
+            this.state.messages,
+            item =>
+                item.message.getMessageId() === updatedMessage.getMessageId()
+        );
         if (index !== -1) {
             const messages = this.state.messages.slice();
             messages[index] = updatedMessage.toBotDisplay();
@@ -654,49 +831,55 @@ export default class ChatBotScreen extends React.Component {
                 messages: this.addSessionStartMessages(messages)
             });
         }
-    }
+    };
 
     onFormDone = (formItems, formMessage) => {
         formMessage.setCompleted(true);
         formMessage.formMessage(formItems);
         formMessage.setRead(true);
-        this.persistMessage(formMessage)
-            .then(() => {
-                this.replaceUpdatedMessage(formMessage);
-                let message = new Message({ addedByBot: false });
-                message.formResponseMessage(formItems);
-                message.setCreatedBy(this.getUserId());
-                return this.sendMessage(message);
-            });
-    }
+        this.persistMessage(formMessage).then(() => {
+            this.replaceUpdatedMessage(formMessage);
+            let message = new Message({ addedByBot: false });
+            message.formResponseMessage(formItems);
+            message.setCreatedBy(this.getUserId());
+            return this.sendMessage(message);
+        });
+    };
 
-    onFormOpen = (formMessage) => {
+    onFormOpen = formMessage => {
         let message = new Message({ addedByBot: false });
         message.formOpenMessage();
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
-    }
+    };
 
-    onFormCancel = (formMessage) => {
+    onFormCancel = formMessage => {
         let message = new Message({ addedByBot: false });
         message.formCancelMessage(formMessage);
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
-    }
+    };
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
-            this.setState({ typing: '', messages: this.addSessionStartMessages(messages), overrideDoneFn: null }, () => {
-                //this.scrollToBottomIfNeeded();
-                if (callback) {
-                    callback();
+            this.setState(
+                {
+                    typing: '',
+                    messages: this.addSessionStartMessages(messages),
+                    overrideDoneFn: null
+                },
+                () => {
+                    //this.scrollToBottomIfNeeded();
+                    if (callback) {
+                        callback();
+                    }
                 }
-            });
+            );
         }
-    }
+    };
 
     appendMessageToChat(message, immediate = false) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (this.addMessage && this.setState) {
                 let msgs = this.addMessage(message);
                 this.updateMessages(msgs, (err, res) => {
@@ -710,38 +893,40 @@ export default class ChatBotScreen extends React.Component {
     }
 
     sleep(waitTime) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             setTimeout(() => {
                 resolve();
             }, waitTime);
-        })
+        });
     }
 
     processMessageQueue() {
-        var message = this.messageQueue.shift()
+        var message = this.messageQueue.shift();
         if (message) {
             this.processingMessageQueue = true;
             this.appendMessageToChat(message)
                 .then(() => {
-                    return this.sleep(Config.ChatMessageOptions.messageTransitionTime)
+                    return this.sleep(
+                        Config.ChatMessageOptions.messageTransitionTime
+                    );
                 })
                 .then(() => {
                     this.processMessageQueue();
-                })
+                });
         } else {
             this.processingMessageQueue = false;
         }
     }
 
     queueMessage(message) {
-        this.messageQueue.push(message)
+        this.messageQueue.push(message);
         if (this.processingMessageQueue === false) {
-            this.processMessageQueue()
+            this.processMessageQueue();
         }
     }
 
     addMessage(message) {
-        let msgs = this.state.messages.slice()
+        let msgs = this.state.messages.slice();
         msgs.push(message.toBotDisplay());
         return msgs;
     }
@@ -754,11 +939,11 @@ export default class ChatBotScreen extends React.Component {
         return false;
     }
 
-    onChatListLayout = (event) => {
+    onChatListLayout = event => {
         const { height } = event.nativeEvent.layout;
         this.chatListHeight = height;
         //this.chatList.scrollToBottom({animated : true});
-    }
+    };
 
     /*
     onMessageItemLayout = (event, message) => {
@@ -779,53 +964,66 @@ export default class ChatBotScreen extends React.Component {
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
-            return <ChatMessage message={message}
-                isUserChat={this.isUserChat()}
-                shouldShowUserName={this.shouldShowUserName()}
-                user={this.user}
-                imageSource={{ uri: this.bot.logoUrl }}
-                onDoneBtnClick={this.onButtonDone.bind()}
-                onFormCTAClick={this.onFormDone.bind(this)}
-                onFormCancel={this.onFormCancel.bind(this)}
-                onFormOpen={this.onFormOpen.bind(this)}
-                showTime={item.showTime}/>;
+            return (
+                <ChatMessage
+                    message={message}
+                    isUserChat={this.isUserChat()}
+                    shouldShowUserName={this.shouldShowUserName()}
+                    user={this.user}
+                    imageSource={{ uri: this.bot.logoUrl }}
+                    onDoneBtnClick={this.onButtonDone.bind()}
+                    onFormCTAClick={this.onFormDone.bind(this)}
+                    onFormCancel={this.onFormCancel.bind(this)}
+                    onFormOpen={this.onFormOpen.bind(this)}
+                    showTime={item.showTime}
+                />
+            );
         } else {
             return (
-                <ChatMessage showTime={item.showTime} message={message} alignRight user={this.user} />
-            )
+                <ChatMessage
+                    showTime={item.showTime}
+                    message={message}
+                    alignRight
+                    user={this.user}
+                />
+            );
         }
     }
 
     waitForQueueProcessing() {
         return new Promise((resolve, reject) => {
             var self = this;
-            let interval = setInterval(function () {
+            let interval = setInterval(function() {
                 if (self.processingMessageQueue === false) {
                     clearInterval(interval);
-                    resolve()
+                    resolve();
                 }
             }, Config.ChatMessageOptions.messageTransitionTime / 2);
-        })
+        });
     }
 
-    countMessage = (message) => {
+    countMessage = message => {
         if (!message.isEmptyMessage()) {
             MessageCounter.addCount(this.getBotId(), 1);
         }
-    }
+    };
 
-    sendMessage = async (message) => {
+    sendMessage = async message => {
         this.countMessage(message);
-        this.updateChat(message)
+        this.updateChat(message);
         this.scrollToBottom = true;
-        this.waitForQueueProcessing()
-            .then(() => {
-                this.loadedBot.next(message, this.botState, this.state.messages, this.botContext);
-                //this.scrollToBottomIfNeeded();
-            })
-    }
+        this.waitForQueueProcessing().then(() => {
+            this.loadedBot.next(
+                message,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            );
+            //this.scrollToBottomIfNeeded();
+        });
+    };
 
-    async onSendMessage (messageStr) {
+    async onSendMessage(messageStr) {
         let self = this;
         // read message from component state
         let message = new Message();
@@ -837,40 +1035,59 @@ export default class ChatBotScreen extends React.Component {
 
     getUserId = () => {
         return this.user.userId;
-    }
+    };
 
     async sendImage(imageUri, base64) {
-        const toUri = await Utils.copyFileAsync(imageUri, Constants.IMAGES_DIRECTORY);
+        const toUri = await Utils.copyFileAsync(
+            imageUri,
+            Constants.IMAGES_DIRECTORY
+        );
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(base64, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Image, this.user);
+        const uploadedUrl = await Resource.uploadFile(
+            base64,
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            ResourceTypes.Image,
+            this.user
+        );
         message.imageMessage(uploadedUrl);
 
         return this.sendMessage(message);
     }
 
-
-    onSendAudio = (audioURI) => {
+    onSendAudio = audioURI => {
         this.sendAudio(audioURI);
-    }
+    };
 
-    sendAudio = async (audioURI) => {
-        const toUri = await Utils.copyFileAsync(audioURI, Constants.AUDIO_DIRECTORY);
+    sendAudio = async audioURI => {
+        const toUri = await Utils.copyFileAsync(
+            audioURI,
+            Constants.AUDIO_DIRECTORY
+        );
 
         // TODO(amal): Upload Audio file
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
+        const uploadedUrl = await Resource.uploadFile(
+            null,
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            ResourceTypes.Audio,
+            this.user
+        );
 
         message.audioMessage(uploadedUrl);
         return this.sendMessage(message);
-    }
+    };
 
-    sendVideo = async (videoFileURL) => {
+    sendVideo = async videoFileURL => {
         // TODO(amal): Copy the file to videos directory
         //const toPath = await Utils.copyFileInPathAsync(videoPath, Utils.fileUriToPath(Constants.VIDEO_DIRECTORY));
         const toUri = videoFileURL;
@@ -879,25 +1096,32 @@ export default class ChatBotScreen extends React.Component {
         message.setCreatedBy(this.getUserId());
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Video, this.user);
+        const uploadedUrl = await Resource.uploadFile(
+            null,
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            ResourceTypes.Video,
+            this.user
+        );
         message.videoMessage(uploadedUrl);
         return this.sendMessage(message);
-    }
+    };
 
     async takePicture() {
-        Keyboard.dismiss()
+        Keyboard.dismiss();
         let result = await Media.takePicture(Config.CameraOptions);
         if (!result.cancelled) {
             this.sendImage(result.uri, result.base64);
         }
     }
 
-    onVideoCaptured = (videoFileURL) => {
+    onVideoCaptured = videoFileURL => {
         this.sendVideo(videoFileURL);
-    }
+    };
 
     recordVideo() {
-        Media.recordVideo().then( (result) => {
+        Media.recordVideo().then(result => {
             if (!result.cancelled) {
                 console.log('Recorded video : ', result);
                 this.onVideoCaptured(result.uri);
@@ -906,30 +1130,27 @@ export default class ChatBotScreen extends React.Component {
     }
 
     requestCameraPermissions(callback) {
-        return Permissions.request('camera')
-            .then((response) => {
-                if (response === 'authorized') {
-                    callback();
-                }
-            });
+        return Permissions.request('camera').then(response => {
+            if (response === 'authorized') {
+                callback();
+            }
+        });
     }
 
     requestAudioPermissions(callback) {
-        return Permissions.request('microphone')
-            .then((response) => {
-                if (response === 'authorized') {
-                    callback();
-                }
-            });
+        return Permissions.request('microphone').then(response => {
+            if (response === 'authorized') {
+                callback();
+            }
+        });
     }
 
     requestStoragePermissions(callback) {
-        return Permissions.request('storage')
-            .then((response) => {
-                if (response === 'authorized') {
-                    callback();
-                }
-            });
+        return Permissions.request('storage').then(response => {
+            if (response === 'authorized') {
+                callback();
+            }
+        });
     }
 
     alertForRecordingPermission() {
@@ -940,11 +1161,11 @@ export default class ChatBotScreen extends React.Component {
                 {
                     text: 'cancel',
                     onPress: () => console.log('Permission denied'),
-                    style: 'cancel',
+                    style: 'cancel'
                 },
-                { text: 'Open Settings', onPress: Permissions.openSettings },
-            ],
-        )
+                { text: 'Open Settings', onPress: Permissions.openSettings }
+            ]
+        );
     }
 
     async takeVideo() {
@@ -952,11 +1173,11 @@ export default class ChatBotScreen extends React.Component {
         const response = await this._hasRecordVideoPermission();
         const recordVideoCallback = () => {
             this.recordVideo();
-        }
+        };
 
         const requestStoragePermissionsCallback = () => {
             this.requestStoragePermissions(recordVideoCallback);
-        }
+        };
 
         const requestAudioPermissionCallback = () => {
             if (Platform.OS === 'ios') {
@@ -964,13 +1185,18 @@ export default class ChatBotScreen extends React.Component {
             } else {
                 this.requestAudioPermissions(requestStoragePermissionsCallback);
             }
-        }
-        if (response.camera === 'authorized' &&
+        };
+        if (
+            response.camera === 'authorized' &&
             response.microphone === 'authorized' &&
-            (Platform.OS === 'ios' || response.storage === 'authorized')) {
+            (Platform.OS === 'ios' || response.storage === 'authorized')
+        ) {
             this.recordVideo();
-        } else if (response.camera === 'denied' || response.camera === 'denied' ||
-            response.storage === 'denied') {
+        } else if (
+            response.camera === 'denied' ||
+            response.camera === 'denied' ||
+            response.storage === 'denied'
+        ) {
             this.alertForRecordingPermission();
         } else {
             if (response.camera === 'undetermined') {
@@ -979,7 +1205,9 @@ export default class ChatBotScreen extends React.Component {
                 if (Platform.OS === 'ios') {
                     this.requestAudioPermissions(recordVideoCallback);
                 } else {
-                    this.requestAudioPermissions(requestStoragePermissionsCallback);
+                    this.requestAudioPermissions(
+                        requestStoragePermissionsCallback
+                    );
                 }
             } else if (response.storage === 'undetermined') {
                 this.requestStoragePermissions(recordVideoCallback);
@@ -991,12 +1219,16 @@ export default class ChatBotScreen extends React.Component {
         if (Platform.OS === 'ios') {
             return Permissions.checkMultiple(['camera', 'microphone']);
         } else {
-            return Permissions.checkMultiple(['camera', 'microphone', 'storage']);
+            return Permissions.checkMultiple([
+                'camera',
+                'microphone',
+                'storage'
+            ]);
         }
     }
 
     async pickImage() {
-        Keyboard.dismiss()
+        Keyboard.dismiss();
         let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
         // Have to filter out videos ?
         if (!result.cancelled) {
@@ -1007,17 +1239,27 @@ export default class ChatBotScreen extends React.Component {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
-        const uploadedUrl = await Resource.uploadFile(null, toUri, this.conversationContext.conversationId, message.getMessageId(), ResourceTypes.Audio, this.user);
+        const uploadedUrl = await Resource.uploadFile(
+            null,
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            ResourceTypes.Audio,
+            this.user
+        );
     }
 
     async pickFile() {
-        Keyboard.dismiss()
-        DocumentPicker.show({
-            filetype: [DocumentPickerUtil.allFiles()],
-        }, (error, res) => {
-            this.uploadFile()
-            console.log(res.uri, res.type, res.fileName, res.fileSize);
-        });
+        Keyboard.dismiss();
+        DocumentPicker.show(
+            {
+                filetype: [DocumentPickerUtil.allFiles()]
+            },
+            (error, res) => {
+                this.uploadFile();
+                console.log(res.uri, res.type, res.fileName, res.fileSize);
+            }
+        );
     }
 
     onBarcodeRead(barCodeData) {
@@ -1037,60 +1279,81 @@ export default class ChatBotScreen extends React.Component {
 
     addContactsToBot() {
         Keyboard.dismiss();
-        Contact.getAddedContacts()
-            .then((contacts) => {
-                let message = Contact.asSliderMessage(contacts);
-                this.setState({ showSlider: true, message, overrideDoneFn: this.addSelectedContactsToBot });
+        Contact.getAddedContacts().then(contacts => {
+            let message = Contact.asSliderMessage(contacts);
+            this.setState({
+                showSlider: true,
+                message,
+                overrideDoneFn: this.addSelectedContactsToBot
             });
+        });
     }
 
-    async updateConversationContextId(newConversationId) {
-    }
+    async updateConversationContextId(newConversationId) {}
 
     resetConversation() {
         Keyboard.dismiss();
         // TODO: should the first parameter be message even?
         // Maybe this should return a promise so we can chain things?
-        this.loadedBot.done(null, this.botState, this.state.messages, this.botContext);
-        ConversationContext.createAndSaveNewConversationContext(this.botContext, this.user)
-            .then((context) => {
+        this.loadedBot.done(
+            null,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
+        ConversationContext.createAndSaveNewConversationContext(
+            this.botContext,
+            this.user
+        )
+            .then(context => {
                 this.conversationContext = context;
-                this.loadedBot.init(this.botState, this.state.messages, this.botContext);
+                this.loadedBot.init(
+                    this.botState,
+                    this.state.messages,
+                    this.botContext
+                );
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log('Error resetting coversation ', err);
-            })
+            });
     }
 
-    addSelectedContactsToBot = (selectedRows) => {
+    addSelectedContactsToBot = selectedRows => {
         if (selectedRows.length > 0) {
             try {
-                const uuids = _.map(selectedRows, (row) => {
-                    let uuid = _.find(row.data.contact_info, function (m) { return m.key === 'userId' });
+                const uuids = _.map(selectedRows, row => {
+                    let uuid = _.find(row.data.contact_info, function(m) {
+                        return m.key === 'userId';
+                    });
                     return uuid.value;
                 });
-                const names = _.map(selectedRows, (row) => {
+                const names = _.map(selectedRows, row => {
                     return row.title;
                 });
-                ConversationContext.addParticipants(uuids, this.botContext)
-                    .then((context) => {
-                        this.conversationContext = context;
-                        let message = new Message();
-                        message.stringMessage(I18n.t('Slider_Response', { lines: names.join('\n') }));
-                        message.setCreatedBy(this.getUserId());
-                        return this.sendMessage(message);
-                    });
+                ConversationContext.addParticipants(
+                    uuids,
+                    this.botContext
+                ).then(context => {
+                    this.conversationContext = context;
+                    let message = new Message();
+                    message.stringMessage(
+                        I18n.t('Slider_Response', { lines: names.join('\n') })
+                    );
+                    message.setCreatedBy(this.getUserId());
+                    return this.sendMessage(message);
+                });
             } catch (error) {
                 // Ignore
             }
         } else {
-
         }
-    }
+    };
 
     pickLocation() {
         Keyboard.dismiss();
-        Actions.locationPicker({ onLocationPicked: this.onLocationPicked.bind(this) });
+        Actions.locationPicker({
+            onLocationPicked: this.onLocationPicked.bind(this)
+        });
     }
 
     onLocationPicked(locationData) {
@@ -1099,36 +1362,40 @@ export default class ChatBotScreen extends React.Component {
 
     onOptionSelected(key) {
         if (key === BotInputBarCapabilities.camera) {
-            this.takePicture()
+            this.takePicture();
         } else if (key === BotInputBarCapabilities.video) {
-            this.takeVideo()
+            this.takeVideo();
         } else if (key === BotInputBarCapabilities.bar_code_scanner) {
-            this.readBarCode()
+            this.readBarCode();
         } else if (key === BotInputBarCapabilities.photo_library) {
-            this.pickImage()
+            this.pickImage();
         } else if (key === BotInputBarCapabilities.add_contact) {
-            this.addContactsToBot()
+            this.addContactsToBot();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
-            this.resetConversation()
+            this.resetConversation();
         } else if (key === BotInputBarCapabilities.pick_location) {
-            this.pickLocation()
+            this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
-            this.pickFile()
+            this.pickFile();
         }
     }
 
     async loadMessages() {
         console.log('Oldest loaded date : ', this.oldestLoadedDate());
-        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), pageSize, this.oldestLoadedDate())
+        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
+            this.getBotKey(),
+            pageSize,
+            this.oldestLoadedDate()
+        );
         return messages;
     }
 
     async onRefresh() {
         this.setState({
             refreshing: true
-        })
-        let messages = await this.loadMessages()
-        let combinedMsgs = messages.concat(this.state.messages)
+        });
+        let messages = await this.loadMessages();
+        let combinedMsgs = messages.concat(this.state.messages);
         if (this.mounted) {
             this.setState({
                 messages: this.addSessionStartMessages(combinedMsgs),
@@ -1147,7 +1414,11 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async loadOldMessagesFromServer() {
-        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(this.conversationContext.conversationId, this.getBotId(), this.oldestLoadedDate());
+        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
+            this.conversationContext.conversationId,
+            this.getBotId(),
+            this.oldestLoadedDate()
+        );
         return messages;
     }
 
@@ -1155,92 +1426,133 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
     }
 
-    addBotMessage = (message) => new Promise((resolve) => {
-        // TODO: Adding bot messages directly seems a bad choice. May be should have a new
-        // Message type (Echo message) that contains a internal message for bot to process
-        // and echo it back.
-        this.persistMessage(message)
-            .then(() => {
-                this.queueMessage(message);
-                resolve();
-            })
-            .catch((err) => {
-                console.log('Error persisting session message::', err);
-                resolve();
-            });
-    });
+    addBotMessage = message =>
+        new Promise(resolve => {
+            // TODO: Adding bot messages directly seems a bad choice. May be should have a new
+            // Message type (Echo message) that contains a internal message for bot to process
+            // and echo it back.
+            this.persistMessage(message)
+                .then(() => {
+                    this.queueMessage(message);
+                    resolve();
+                })
+                .catch(err => {
+                    console.log('Error persisting session message::', err);
+                    resolve();
+                });
+        });
 
     renderSlider() {
         const message = this.state.message;
-        const doneFn = this.state.overrideDoneFn ? this.state.overrideDoneFn.bind(this) : this.onSliderDone.bind(this);
+        const doneFn = this.state.overrideDoneFn
+            ? this.state.overrideDoneFn.bind(this)
+            : this.onSliderDone.bind(this);
         const options = _.extend({}, message.getMessageOptions(), {
             doneFunction: doneFn,
-            cancelFunction: this.onSliderCancel.bind(this) });
+            cancelFunction: this.onSliderCancel.bind(this)
+        });
         // If smart reply - the taps are sent back to the bot
-        const tapFn = options.smartReply === true ? this.onSliderTap.bind(this) : null;
+        const tapFn =
+            options.smartReply === true ? this.onSliderTap.bind(this) : null;
 
         if (tapFn) {
             options.tapFunction = tapFn;
         }
         return (
-            <Slider ref={(slider) => { this.slider = slider }}
+            <Slider
+                ref={slider => {
+                    this.slider = slider;
+                }}
                 onClose={this.onSliderClose.bind(this)}
                 message={message.getMessage()}
                 options={options}
                 containerStyle={chatStyles.slider}
                 onResize={this.onSliderResize.bind(this)}
                 onSliderOpen={this.onSliderOpen.bind(this)}
-                maxHeight={SLIDER_HEIGHT}/>
+                maxHeight={SLIDER_HEIGHT}
+            />
         );
     }
 
     renderChatInputBar() {
         const moreOptions = [
-            { key: BotInputBarCapabilities.camera, label: I18n.t('Chat_Input_Camera') },
+            {
+                key: BotInputBarCapabilities.camera,
+                label: I18n.t('Chat_Input_Camera')
+            },
             // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
             // { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
-            { key: BotInputBarCapabilities.photo_library, label: I18n.t('Chat_Input_Photo_Library') },
-            { key: BotInputBarCapabilities.bar_code_scanner, label: I18n.t('Chat_Input_BarCode') },
-            { key: BotInputBarCapabilities.pick_location, label: I18n.t('Pick_Location') }
+            {
+                key: BotInputBarCapabilities.photo_library,
+                label: I18n.t('Chat_Input_Photo_Library')
+            },
+            {
+                key: BotInputBarCapabilities.bar_code_scanner,
+                label: I18n.t('Chat_Input_BarCode')
+            },
+            {
+                key: BotInputBarCapabilities.pick_location,
+                label: I18n.t('Pick_Location')
+            }
         ];
 
         if (this.bot.allowResetConversation) {
-            moreOptions.push({ key: BotInputBarCapabilities.reset_conversation, label: I18n.t('Reset_Conversation') })
+            moreOptions.push({
+                key: BotInputBarCapabilities.reset_conversation,
+                label: I18n.t('Reset_Conversation')
+            });
         }
         if (appConfig.app.hideAddContacts !== true) {
-            moreOptions.push({ key: BotInputBarCapabilities.add_contact, label: I18n.t('Add_Contact') })
+            moreOptions.push({
+                key: BotInputBarCapabilities.add_contact,
+                label: I18n.t('Add_Contact')
+            });
         }
 
         return (
             <ChatInputBar
-                accessibilityLabel="Chat Input Bar" testID="chat-input-bar"
+                accessibilityLabel="Chat Input Bar"
+                testID="chat-input-bar"
                 network={this.state.network}
                 onSend={this.onSendMessage.bind(this)}
                 onSendAudio={this.onSendAudio.bind(this)}
                 options={moreOptions}
                 botId={this.getBotId()}
-                onOptionSelected={this.onOptionSelected.bind(this)} />
+                onOptionSelected={this.onOptionSelected.bind(this)}
+            />
         );
     }
 
     onChatStatusBarClose = () => {
         this.setState({
-            showNetworkStatusBar: false,
-        })
-    }
+            showNetworkStatusBar: false
+        });
+    };
 
     renderNetworkStatusBar = () => {
         const { network, showNetworkStatusBar } = this.state;
-        if (showNetworkStatusBar && (network === 'none' || network === 'satellite')) {
-            return <ChatStatusBar network={this.state.network} onChatStatusBarClose={this.onChatStatusBarClose}/>;
+        if (
+            showNetworkStatusBar &&
+            (network === 'none' || network === 'satellite')
+        ) {
+            return (
+                <ChatStatusBar
+                    network={this.state.network}
+                    onChatStatusBarClose={this.onChatStatusBarClose}
+                />
+            );
         }
-    }
+    };
 
     renderCallModal = () => {
-        return(
-            <CallModal ref={'callModal'} parentFlatList={this} isVisible={false} />
+        return (
+            <CallModal
+                ref={'callModal'}
+                parentFlatList={this}
+                isVisible={false}
+            />
         );
-    }
+    };
 
     render() {
         if (!this.botLoaded) {
@@ -1254,20 +1566,39 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={chatStyles.safeArea} accessibilityLabel="Messages List" testID="messages-list">
-                <KeyboardAvoidingView style={chatStyles.container}
-                    behavior={(Platform.OS === 'ios') ? 'padding' : null}
-                    keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT + (Utils.isiPhoneX() ? 24 : 0)}>
-                    <FlatList  accessibilityLabel="Messages List" testID="messages-list" ref={(list) => {this.chatList = list; this.checkForScrolling()}}
+            <SafeAreaView
+                style={chatStyles.safeArea}
+                accessibilityLabel="Messages List"
+                testID="messages-list"
+            >
+                <KeyboardAvoidingView
+                    style={chatStyles.container}
+                    behavior={Platform.OS === 'ios' ? 'padding' : null}
+                    keyboardVerticalOffset={
+                        Constants.DEFAULT_HEADER_HEIGHT +
+                        (Utils.isiPhoneX() ? 24 : 0)
+                    }
+                >
+                    <FlatList
+                        accessibilityLabel="Messages List"
+                        testID="messages-list"
+                        ref={list => {
+                            this.chatList = list;
+                            this.checkForScrolling();
+                        }}
                         data={this.state.messages}
                         renderItem={this.renderItem.bind(this)}
                         onLayout={this.onChatListLayout.bind(this)}
                         refreshControl={
-                            <RefreshControl colors={['#9Bd35A', '#689F38']}
+                            <RefreshControl
+                                colors={['#9Bd35A', '#689F38']}
                                 refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)} />
+                                onRefresh={this.onRefresh.bind(this)}
+                            />
                         }
-                        onScrollToIndexFailed={this.onScrollToIndexFailed.bind(this)}
+                        onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
+                            this
+                        )}
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
                     {this.renderChatInputBar()}

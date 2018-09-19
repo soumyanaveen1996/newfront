@@ -12,7 +12,7 @@ export default class User {
             accessKeyId: '',
             secretAccessKey: '',
             sessionToken: ''
-        }
+        };
         this.provider = {
             name: 'dummy',
             refreshToken: '',
@@ -25,6 +25,6 @@ export default class User {
             screenName: '',
             surname: '',
             name: ''
-        }
+        };
     }
 }

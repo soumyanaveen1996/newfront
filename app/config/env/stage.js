@@ -26,7 +26,7 @@ const stageConfig = {
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        userDetailsPath: '/userDetails',
+        userDetailsPath: '/userDetails'
     },
     proxy: {
         enabled: true,
@@ -41,7 +41,7 @@ const stageConfig = {
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
-        deleteUserPath: '/v2/deleteUser',
+        deleteUserPath: '/v2/deleteUser'
     }
 };
 

@@ -10,28 +10,28 @@ const styles = StyleSheet.create({
         left: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'red',
+        backgroundColor: 'red'
     },
     text: {
         fontSize: 18,
         fontWeight: 'bold',
         fontStyle: 'italic',
         textAlign: 'center',
-        color: GlobalColors.accent,
+        color: GlobalColors.accent
     },
     closeButton: {
         position: 'absolute',
         top: 20,
         left: 0,
         width: 45,
-        height: 45,
+        height: 45
     },
     mapView: {
         position: 'absolute',
         top: 0,
         left: 0,
         bottom: 0,
-        right: 0,
+        right: 0
     },
     callOutContainer: {
         maxWidth: 200,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     },
     callOutText: {
         color: GlobalColors.accent,
-        fontSize: 16,
+        fontSize: 16
     }
 });
 

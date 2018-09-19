@@ -1,8 +1,6 @@
-
-import { MessageCounter } from '../MessageCounter'
+import { MessageCounter } from '../MessageCounter';
 
 class MessageQuota {
-
     static setQuota(quota, messageCounts) {
         console.log('MessageQuota :: In setQuota');
         MessageCounter.setMessageQuota(quota, messageCounts);
@@ -14,7 +12,10 @@ class MessageQuota {
     }
 
     static getAvailableBotMessageQuota(botId) {
-        console.log('MessageQuota :: In getAvailableBotMessageQuota for botId : ', botId);
+        console.log(
+            'MessageQuota :: In getAvailableBotMessageQuota for botId : ',
+            botId
+        );
         return MessageCounter.getAvailableBotMessageQuota(botId);
     }
 }

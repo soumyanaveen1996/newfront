@@ -4,14 +4,13 @@ import { Platform } from 'react-native';
 import chatStyles from './styles';
 import { createIconSet } from 'react-native-vector-icons';
 
-
 var glyphMap = {
-    'speaker': '\uE600',
+    speaker: '\uE600',
     'mic-mute': '\uE601',
-    'keypad': '\uE602',
+    keypad: '\uE602',
     'snd-mute': '\uE603',
-    'phone': '\uE604',
-    'hangup': '\uE605',
+    phone: '\uE604',
+    hangup: '\uE605',
     'flip-camera': '\uE606'
 };
 
@@ -27,15 +26,13 @@ const callStates = {
     CALL_DISCONNECTED: 'CALL_DISCONNECTED'
 };
 
-
 export default class CallModal extends React.Component {
-
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
-        this.setState( {
+        this.setState({
             modalVisible: this.props.isVisible,
             state: callStates.CALL_INITIATED
         });
@@ -44,7 +41,7 @@ export default class CallModal extends React.Component {
     showCallModal = () => {
         this.setState({ modalVisible: true });
         this.refs.myModal.open();
-    }
+    };
 
     render() {
         return (
@@ -52,8 +49,7 @@ export default class CallModal extends React.Component {
                 style={chatStyles.callModal}
                 position="center"
                 backdrop={true}
-                onClosed={ () => {
-                }}
+                onClosed={() => {}}
                 isVisible={this.state.modalVisible}
             />
         );

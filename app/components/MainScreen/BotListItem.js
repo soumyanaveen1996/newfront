@@ -8,7 +8,6 @@ import { MessageTypeConstants } from '../../lib/capability';
 import { CachedImage } from '../CachedImage';
 
 export default class BotListItem extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +15,7 @@ export default class BotListItem extends React.Component {
             date: '',
             count: 0,
             message: null
-        }
+        };
     }
 
     handleBotSelection() {
@@ -46,27 +45,66 @@ export default class BotListItem extends React.Component {
 
     renderSubview() {
         const { message } = this.state;
-        if (message && message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE) {
-            return <Image style={BotListItemStyles.chatImage} source={{ uri: message.getMessage()}}/>;
+        if (
+            message &&
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
+        ) {
+            return (
+                <Image
+                    style={BotListItemStyles.chatImage}
+                    source={{ uri: message.getMessage() }}
+                />
+            );
         } else {
-            return <Text numberOfLines={2} style={ BotListItemStyles.subTitle } >{this.state.subTitle}</Text>;
+            return (
+                <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
+                    {this.state.subTitle}
+                </Text>
+            );
         }
     }
 
     render() {
         const { bot } = this.props;
         return (
-            <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
-                <CachedImage imageTag = "botLogo" source={{ uri: bot.logoUrl }} style={ BotListItemStyles.image } resizeMode="contain"/>
+            <TouchableOpacity
+                style={BotListItemStyles.container}
+                onPress={this.handleBotSelection.bind(this)}
+            >
+                <CachedImage
+                    imageTag="botLogo"
+                    source={{ uri: bot.logoUrl }}
+                    style={BotListItemStyles.image}
+                    resizeMode="contain"
+                />
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={ BotListItemStyles.title } >{bot.botName}</Text>
+                    <Text style={BotListItemStyles.title}>{bot.botName}</Text>
                     {this.renderSubview()}
                 </View>
-                <View accessibilityLabel="List Element Right Arrow" testID="list-element-right-arrow" style={BotListItemStyles.rightContainer}>
-                    { Icons.listRightArrow() }
-                    <Text allowFontScaling={false} style={ this.state.count > 0 ? BotListItemStyles.count : BotListItemStyles.hidden } >{ this.state.count }</Text>
+                <View
+                    accessibilityLabel="List Element Right Arrow"
+                    testID="list-element-right-arrow"
+                    style={BotListItemStyles.rightContainer}
+                >
+                    {Icons.listRightArrow()}
+                    <Text
+                        allowFontScaling={false}
+                        style={
+                            this.state.count > 0
+                                ? BotListItemStyles.count
+                                : BotListItemStyles.hidden
+                        }
+                    >
+                        {this.state.count}
+                    </Text>
                 </View>
-                <Text accessibilityLabel="List Element Date" testID="list-element-date" style={ BotListItemStyles.time } >{utils.formattedDate(this.state.date)}</Text>
+                <Text
+                    accessibilityLabel="List Element Date"
+                    testID="list-element-date"
+                    style={BotListItemStyles.time}
+                >
+                    {utils.formattedDate(this.state.date)}
+                </Text>
             </TouchableOpacity>
         );
     }

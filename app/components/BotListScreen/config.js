@@ -1,15 +1,15 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 import I18n from '../../config/i18n/i18n';
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export const scrollViewConfig = {
-    width : SCREEN_WIDTH * 0.98
-}
+    width: SCREEN_WIDTH * 0.98
+};
 
 export const headerConfig = {
-    headerTitle : I18n.t('Bots'),
-}
+    headerTitle: I18n.t('Bots')
+};
 
 export const leftIconConfig = {
     type: 'ionicon',
@@ -18,7 +18,7 @@ export const leftIconConfig = {
     underlayColor: 'transparent',
     color: '#fff',
     fontWeight: '500'
-}
+};
 
 export const rightIconConfig = {
     type: 'ionicon',
@@ -27,4 +27,4 @@ export const rightIconConfig = {
     underlayColor: 'transparent',
     color: '#fff',
     fontWeight: '500'
-}
+};

@@ -6,15 +6,23 @@ import ShortUUID from 'short-uuid';
 
 import config from '../../config/config';
 
-const createAuthHeader = function (host, method, path, service, body = '', user) {
-    const EMPTY_HASHED_PAYLOAD = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+const createAuthHeader = function(
+    host,
+    method,
+    path,
+    service,
+    body = '',
+    user
+) {
+    const EMPTY_HASHED_PAYLOAD =
+        'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
     let options = {
         path: path,
         method: method,
         service: service,
         headers: {
             'X-Amz-Date': getAmzDate(new Date().toISOString()),
-            'host': host,
+            host: host,
             'X-Amz-Security-Token': user.aws.sessionToken
         },
         region: config.aws.region,
@@ -41,7 +49,7 @@ const createAuthHeader = function (host, method, path, service, body = '', user)
     return options.headers;
 };
 
-const getAmzDate = function (dateStr) {
+const getAmzDate = function(dateStr) {
     var chars = [':', '-'];
     for (var i = 0; i < chars.length; i++) {
         while (dateStr.indexOf(chars[i]) !== -1) {
@@ -56,6 +64,5 @@ export function UUID() {
     let uuid = ShortUUID.uuid();
     return ShortUUID().fromUUID(uuid);
 }
-
 
 export default { Lodash, UUID, moment, createAuthHeader };

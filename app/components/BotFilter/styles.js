@@ -5,14 +5,14 @@ import { TextColor, BotFilter } from './config';
 export default StyleSheet.create({
     container: {
         position: 'absolute',
-        top:0,
-        bottom:0,
-        left:0,
-        right:0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: GlobalColors.modalBackground,
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
     botfilterContainer: {
         position: 'absolute',
@@ -20,24 +20,24 @@ export default StyleSheet.create({
         left: 0,
         right: 0,
         height: BotFilter.height,
-        backgroundColor: GlobalColors.white,
+        backgroundColor: GlobalColors.white
     },
     header: {
         height: 55,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     headerText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: TextColor,
+        color: TextColor
     },
     searchTextInput: {
         fontSize: 13,
         height: 40,
         backgroundColor: GlobalColors.background,
         color: TextColor,
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     bot: {
         width: '49.9%',
@@ -47,22 +47,22 @@ export default StyleSheet.create({
         paddingTop: 15,
         paddingBottom: 17,
         marginBottom: 1,
-        backgroundColor: GlobalColors.white,
+        backgroundColor: GlobalColors.white
     },
     botImage: {
         height: 80,
         width: 80,
-        marginBottom: 10,
+        marginBottom: 10
     },
     botTitle: {
         fontSize: 14,
         fontWeight: '400',
         color: 'rgb(173, 185, 214)',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     botScrollView: {
         flex: 1,
-        backgroundColor: GlobalColors.background,
+        backgroundColor: GlobalColors.background
     },
     botsContainer: {
         flexDirection: 'row',

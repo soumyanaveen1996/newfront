@@ -11,7 +11,7 @@ export default class extends React.Component {
     }
 
     onClose() {
-        Actions.pop()
+        Actions.pop();
     }
 
     infoWebView(url) {
@@ -39,26 +39,27 @@ export default class extends React.Component {
         if (this.props.noSections) {
             return;
         }
-        return (
-            <View style={Styles.sectionDivider} />
-        );
+        return <View style={Styles.sectionDivider} />;
     }
 
     infoListView(dataList) {
         const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1.key !== r2.key || r1.value !== r2.value,
-            sectionHeaderHasChanged: (r1, r2) => true,
-
+            rowHasChanged: (r1, r2) =>
+                r1.key !== r2.key || r1.value !== r2.value,
+            sectionHeaderHasChanged: (r1, r2) => true
         });
         const dataSource = ds.cloneWithRowsAndSections(dataList);
         return (
             <ListView
                 style={Styles.listView}
                 dataSource={dataSource}
-                renderRow={ this.renderInfoListRow.bind(this) }
-                renderSeparator={ (sectionId, rowId) => <View key={rowId} style={Styles.separator} />}
+                renderRow={this.renderInfoListRow.bind(this)}
+                renderSeparator={(sectionId, rowId) => (
+                    <View key={rowId} style={Styles.separator} />
+                )}
                 renderSectionHeader={this.renderInfoListSection.bind(this)}
-                stickySectionHeadersEnabled={false} />
+                stickySectionHeadersEnabled={false}
+            />
         );
     }
 
@@ -71,14 +72,16 @@ export default class extends React.Component {
         }
     }
 
-    render(){
+    render() {
         return (
             <View style={Styles.container}>
-                <PopupDialog mainView={ this.mainView() }
+                <PopupDialog
+                    mainView={this.mainView()}
                     onClose={this.onClose}
                     width={this.props.width}
                     height={this.props.height}
-                    title={this.props.data.title}/>
+                    title={this.props.data.title}
+                />
             </View>
         );
     }

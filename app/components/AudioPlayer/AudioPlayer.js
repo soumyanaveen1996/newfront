@@ -13,16 +13,15 @@ const AudioPlayerStates = {
     LOADING: 'loading',
     PLAYING: 'playing',
     STOPPED: 'stopped'
-}
+};
 
 export default class AudioPlayer extends React.Component {
-
     constructor(props) {
         super(props);
         Sound.setCategory('Playback');
         this.state = {
             playerState: AudioPlayerStates.LOADING,
-            progress: 0,
+            progress: 0
         };
     }
 
@@ -52,7 +51,11 @@ export default class AudioPlayer extends React.Component {
 
     async downloadFile() {
         const { uri, headers } = this.props.audioSource;
-        const audioSource = await utils.downloadFileAsync(uri, headers, Constants.AUDIO_DIRECTORY);
+        const audioSource = await utils.downloadFileAsync(
+            uri,
+            headers,
+            Constants.AUDIO_DIRECTORY
+        );
 
         var audioPath = audioSource.uri;
         console.log(' Audio player : ', audioPath);
@@ -64,20 +67,23 @@ export default class AudioPlayer extends React.Component {
             console.log('Error in loading audio file : ', error);
             if (!error) {
                 this.setState({
-                    audio: sound,
+                    audio: sound
                 });
             } else {
                 this.setState({ playerState: AudioPlayerStates.STOPPED });
             }
         };
         console.log(' Audio player : ', audioPath);
-        const sound = new Sound(audioPath, '', (error) => callback(error, sound));
+        const sound = new Sound(audioPath, '', error => callback(error, sound));
     }
 
     _resetPlayer() {
         if (this.state.audio) {
             this.state.audio.setCurrentTime(0);
-            this.setState({ progress: 0, playerState: AudioPlayerStates.STOPPED });
+            this.setState({
+                progress: 0,
+                playerState: AudioPlayerStates.STOPPED
+            });
         }
         this._clearTrackProgessInterval();
     }
@@ -106,8 +112,8 @@ export default class AudioPlayer extends React.Component {
 
     async _playAudio() {
         this.setState({ playerState: AudioPlayerStates.PLAYING });
-        this.state.audio.play((success) => this._onPlayEnd(success));
-        this._trackProgress(this.state.audio.getDuration())
+        this.state.audio.play(success => this._onPlayEnd(success));
+        this._trackProgress(this.state.audio.getDuration());
     }
 
     _pauseAudio() {
@@ -122,7 +128,10 @@ export default class AudioPlayer extends React.Component {
     _renderPlayButton() {
         if (this.state.audio) {
             return (
-                <TouchableOpacity style={styles.button} onPress={() => this._playAudio()}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => this._playAudio()}
+                >
                     {Icons.playIcon({})}
                 </TouchableOpacity>
             );
@@ -131,13 +140,16 @@ export default class AudioPlayer extends React.Component {
                 <View style={styles.loadingIndicator}>
                     <UIActivityIndicator size={16} color="rgb(255,255,255)" />
                 </View>
-            )
+            );
         }
     }
 
     _renderPauseButton() {
         return (
-            <TouchableOpacity style={styles.button} onPress={() => this._pauseAudio()}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => this._pauseAudio()}
+            >
                 {Icons.pauseIcon({})}
             </TouchableOpacity>
         );
@@ -148,20 +160,22 @@ export default class AudioPlayer extends React.Component {
         return (
             <View style={styles.progress}>
                 <View style={styles.line} />
-                <View style={[styles.circle, {left: left}]} >
+                <View style={[styles.circle, { left: left }]}>
                     {Icons.audioCircle()}
                 </View>
             </View>
-        )
+        );
     }
 
     render() {
         return (
             <View style={styles.container}>
-                {this.state.playerState === AudioPlayerStates.STOPPED || this.state.playerState === AudioPlayerStates.LOADING ?
-                    this._renderPlayButton() : this._renderPauseButton()}
+                {this.state.playerState === AudioPlayerStates.STOPPED ||
+                this.state.playerState === AudioPlayerStates.LOADING
+                    ? this._renderPlayButton()
+                    : this._renderPauseButton()}
                 {this._renderProgress()}
             </View>
-        )
+        );
     }
 }

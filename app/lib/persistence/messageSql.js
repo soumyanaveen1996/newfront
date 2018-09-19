@@ -44,7 +44,6 @@ const insertMessage = `
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 `;
 
-
 const updateMessageById = `
     UPDATE messages
     SET bot_key = ?,
@@ -186,7 +185,7 @@ const addMessageCreatedAtIndex = `
 
 const deleteAllMessages = `
     DELETE FROM messages;
-`
+`;
 
 export default {
     createMessageTable: createMessageTable,

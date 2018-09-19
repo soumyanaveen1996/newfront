@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    FlatList,
-    KeyboardAvoidingView,
-    RefreshControl,
-} from 'react-native';
+import { FlatList, KeyboardAvoidingView, RefreshControl } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
@@ -21,8 +17,19 @@ export default class FavoriteMessages extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerLeft: <HeaderBack onPress={state.params.onBack ? () => { Actions.pop(); state.params.onBack() } : Actions.pop} />
-        }
+            headerLeft: (
+                <HeaderBack
+                    onPress={
+                        state.params.onBack
+                            ? () => {
+                                Actions.pop();
+                                state.params.onBack();
+                            }
+                            : Actions.pop
+                    }
+                />
+            )
+        };
     }
 
     constructor(props) {
@@ -31,10 +38,10 @@ export default class FavoriteMessages extends React.Component {
         this.state = {
             messages: [],
             offset: 0,
-            refreshing: false,
+            refreshing: false
         };
-        this.scrollToBottom = false
-        this.firstUnreadIndex = -1
+        this.scrollToBottom = false;
+        this.firstUnreadIndex = -1;
 
         this.user = null;
     }
@@ -55,7 +62,9 @@ export default class FavoriteMessages extends React.Component {
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
 
-            if (!this.mounted) { return; }
+            if (!this.mounted) {
+                return;
+            }
 
             // 4. Update the state of the bot with the messages we have
             this.setState({ messages: messages });
@@ -67,14 +76,17 @@ export default class FavoriteMessages extends React.Component {
 
     componentWillUnmount = () => {
         this.mounted = false;
-    }
+    };
 
     async loadMessages() {
-        let messages = await MessageHandler.fetchFavoriteMessages(pageSize, this.state.offset)
+        let messages = await MessageHandler.fetchFavoriteMessages(
+            pageSize,
+            this.state.offset
+        );
         if (this.mounted) {
             this.setState({
                 offset: this.state.offset + pageSize + 1
-            })
+            });
         }
         return messages;
     }
@@ -83,13 +95,20 @@ export default class FavoriteMessages extends React.Component {
         const message = item.message;
         if (message.isMessageByBot()) {
             return (
-                <ChatMessage message={message} hideFavoriteIcon={false}
-                    style={{ backgroundColor: 'red' }} />
-            )
+                <ChatMessage
+                    message={message}
+                    hideFavoriteIcon={false}
+                    style={{ backgroundColor: 'red' }}
+                />
+            );
         } else {
             return (
-                <ChatMessage message={message} alignRight hideFavoriteIcon={false} />
-            )
+                <ChatMessage
+                    message={message}
+                    alignRight
+                    hideFavoriteIcon={false}
+                />
+            );
         }
     }
 
@@ -100,7 +119,10 @@ export default class FavoriteMessages extends React.Component {
             if (this.firstUnreadIndex !== -1) {
                 // This can throw error sometimes https://github.com/facebook/react-native/issues/14198
                 try {
-                    this.chatList.scrollToIndex({ index: this.firstUnreadIndex, viewPosition: 0 });
+                    this.chatList.scrollToIndex({
+                        index: this.firstUnreadIndex,
+                        viewPosition: 0
+                    });
                 } catch (error) {
                     this.chatList.scrollToEnd({ animated: true });
                 }
@@ -112,9 +134,9 @@ export default class FavoriteMessages extends React.Component {
     async onRefresh() {
         this.setState({
             refreshing: true
-        })
-        let messages = await this.loadMessages()
-        let combinedMsgs = messages.concat(this.state.messages)
+        });
+        let messages = await this.loadMessages();
+        let combinedMsgs = messages.concat(this.state.messages);
         if (this.mounted) {
             this.setState({
                 messages: combinedMsgs,
@@ -124,19 +146,29 @@ export default class FavoriteMessages extends React.Component {
     }
 
     render() {
-
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <KeyboardAvoidingView style={chatStyles.container} behavior="padding" keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}>
-                <FlatList ref={(list) => { this.chatList = list} }
+            <KeyboardAvoidingView
+                style={chatStyles.container}
+                behavior="padding"
+                keyboardVerticalOffset={Constants.DEFAULT_HEADER_HEIGHT}
+            >
+                <FlatList
+                    ref={list => {
+                        this.chatList = list;
+                    }}
                     inverted
                     data={this.state.messages}
                     renderItem={this.renderItem.bind(this)}
                     onEndReachedThreshold={10}
                     onEndReached={this.onChatEndReached.bind(this)}
                     refreshControl={
-                        <RefreshControl colors={['#9Bd35A', '#689F38']} refreshing={this.state.refreshing} onRefresh={this.onRefresh.bind(this)} />
+                        <RefreshControl
+                            colors={['#9Bd35A', '#689F38']}
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.onRefresh.bind(this)}
+                        />
                     }
                 />
             </KeyboardAvoidingView>

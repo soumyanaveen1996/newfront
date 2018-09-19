@@ -14,7 +14,6 @@ const CACHE_DIR = RNFetchBlob.fs.dirs.DocumentDir + '/image-cache';
 const CACHE_SIZE = 200 * 1024 * 1024; // 200 MB
 
 export default class ImageCacheManager {
-
     constructor() {
         this.cache = {};
         this.lastChecked = {};
@@ -40,19 +39,24 @@ export default class ImageCacheManager {
     async purgeOldFilesIfNeeded() {
         try {
             let stats = await RNFetchBlob.fs.lstat(CACHE_DIR);
-            let totalCacheSize = _.sumBy(stats, (stat) => parseInt(stat.size, 10));
+            let totalCacheSize = _.sumBy(stats, stat =>
+                parseInt(stat.size, 10)
+            );
             if (totalCacheSize > CACHE_SIZE) {
                 let sortedStats = _.orderBy(stats, 'lastModified');
                 let totalDeletedSize = 0;
                 let index = 0;
-                while (index < sortedStats.length && totalCacheSize - totalDeletedSize > CACHE_SIZE) {
+                while (
+                    index < sortedStats.length &&
+                    totalCacheSize - totalDeletedSize > CACHE_SIZE
+                ) {
                     let stat = sortedStats[index];
                     RNFetchBlob.fs.unlink(stat.path);
                     totalDeletedSize += stat.size;
                     index += 1;
                 }
             }
-        } catch (error) { }
+        } catch (error) {}
     }
 
     /**
@@ -63,7 +67,7 @@ export default class ImageCacheManager {
         let path = this.getPath(uri);
         let exists = await RNFetchBlob.fs.exists(path);
         if (exists) {
-            return Platform.OS === 'android' ? 'file://' + path : path
+            return Platform.OS === 'android' ? 'file://' + path : path;
         } else {
             return;
         }
@@ -84,7 +88,7 @@ export default class ImageCacheManager {
     getPath(uri) {
         let uriComponents = URL.parse(uri);
         let pathComponents = PathParse(uriComponents.pathname);
-        let extension = pathComponents.ext === '' ? '.img' : pathComponents.ext
+        let extension = pathComponents.ext === '' ? '.img' : pathComponents.ext;
         return CACHE_DIR + '/' + SHA1(uri) + extension;
     }
 
@@ -94,13 +98,13 @@ export default class ImageCacheManager {
      * them when image download is started or ended.
      */
     fetch(uri, handler, headers = {}) {
-        headers = {...headers, ...{'Cache-Control' : 'no-store'}}
+        headers = { ...headers, ...{ 'Cache-Control': 'no-store' } };
         if (!this.cache[uri]) {
             this.cache[uri] = {
                 uri,
                 headers: headers,
                 downloading: false,
-                handlers: [ handler ],
+                handlers: [handler],
                 path: this.getPath(uri)
             };
         } else {
@@ -111,7 +115,10 @@ export default class ImageCacheManager {
 
     isLastCheckedWithinThreshold(uri) {
         // Not checking if previously checked in last 2 hours.
-        if (this.lastChecked[uri] && moment().diff(this.lastChecked[uri]) < 2 * 60 * 60 * 1000) {
+        if (
+            this.lastChecked[uri] &&
+            moment().diff(this.lastChecked[uri]) < 2 * 60 * 60 * 1000
+        ) {
             return true;
         } else {
             return false;
@@ -120,29 +127,37 @@ export default class ImageCacheManager {
 
     checkIfModified(path, user, uri, headers = {}) {
         var stat;
-        const headHeaders = utils.s3DownloadHeaders(uri, user, 'HEAD') || undefined;
+        const headHeaders =
+            utils.s3DownloadHeaders(uri, user, 'HEAD') || undefined;
         return new Promise((resolve, reject) => {
-            RNFetchBlob.fs.stat(path)
-                .then((res) => {
+            RNFetchBlob.fs
+                .stat(path)
+                .then(res => {
                     stat = res;
                     axios({
                         method: 'HEAD',
                         url: uri,
-                        headers: headHeaders,
-                    }).then((response) => {
-                        if (!response.headers['last-modified']) {
-                            resolve(false);
-                        }
-                        this.lastChecked[uri] = moment();
-                        if (response.status === 200 &&
-                            moment(stat.lastModified).diff(moment(response.headers['last-modified'])) < 0) {
-                            resolve(true);
-                        } else {
-                            resolve(false);
-                        }
-                    }).catch((error) => {
-                        console.log(error);
+                        headers: headHeaders
                     })
+                        .then(response => {
+                            if (!response.headers['last-modified']) {
+                                resolve(false);
+                            }
+                            this.lastChecked[uri] = moment();
+                            if (
+                                response.status === 200 &&
+                                moment(stat.lastModified).diff(
+                                    moment(response.headers['last-modified'])
+                                ) < 0
+                            ) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 })
                 .catch(reject);
         });
@@ -153,7 +168,12 @@ export default class ImageCacheManager {
         const user = await Auth.getUser();
         if (!this.isLastCheckedWithinThreshold(uri)) {
             const cachedImagePath = await this.getImagePathFromCache(uri);
-            const shouldUpdate = await this.checkIfModified(cachedImagePath, user, uri, headers);
+            const shouldUpdate = await this.checkIfModified(
+                cachedImagePath,
+                user,
+                uri,
+                headers
+            );
             if (shouldUpdate) {
                 await this.removeFromCache(uri);
                 this.fetch(uri, handler, headers);
@@ -186,23 +206,32 @@ export default class ImageCacheManager {
             const path = this.getPath(uri);
             this.notifyImageDownloadStarted(uri);
             cache.downloading = true;
-            cache.task = RNFetchBlob.config({ path }).fetch('GET', uri, headers);
-            cache.task.then((response) => {
-                cache.downloading = false;
-                if (response.respInfo.status >= 200 && response.respInfo.status < 300) {
-                    cache.path = path;
-                } else {
+            cache.task = RNFetchBlob.config({ path }).fetch(
+                'GET',
+                uri,
+                headers
+            );
+            cache.task
+                .then(response => {
+                    cache.downloading = false;
+                    if (
+                        response.respInfo.status >= 200 &&
+                        response.respInfo.status < 300
+                    ) {
+                        cache.path = path;
+                    } else {
+                        RNFetchBlob.fs.unlink(path);
+                        this.lastChecked[uri] = moment();
+                        cache.path = undefined;
+                    }
+                    this.notifyImageDownloaded(uri);
+                })
+                .catch(() => {
+                    console.log('ImageCacheManager Error downloading file : ');
+                    cache.downloading = false;
+                    // Removing the file in case parts were downloaded
                     RNFetchBlob.fs.unlink(path);
-                    this.lastChecked[uri] = moment();
-                    cache.path = undefined;
-                }
-                this.notifyImageDownloaded(uri);
-            }).catch(() => {
-                console.log('ImageCacheManager Error downloading file : ');
-                cache.downloading = false;
-                // Removing the file in case parts were downloaded
-                RNFetchBlob.fs.unlink(path);
-            });
+                });
         }
     }
 
@@ -216,7 +245,7 @@ export default class ImageCacheManager {
         const cache = this.cache[uri];
         console.log('Image Cache manager : In get ');
         if (cache.path) {
-            RNFetchBlob.fs.exists(cache.path).then((exists) => {
+            RNFetchBlob.fs.exists(cache.path).then(exists => {
                 if (exists) {
                     this.notifyImageFromCache(uri);
                 } else {
@@ -233,7 +262,9 @@ export default class ImageCacheManager {
         handlers.forEach(handler => {
             if (handler[handlerFunc]) {
                 const path = this.cache[uri].path;
-                handler[handlerFunc]((Platform.OS === 'android' && path) ? 'file://' +  path : path);
+                handler[handlerFunc](
+                    Platform.OS === 'android' && path ? 'file://' + path : path
+                );
             }
         });
     }

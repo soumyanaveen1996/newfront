@@ -63,11 +63,11 @@ export default class ContactsPickerDataSource {
     }
 
     updateData(contactsData) {
-        const contactIds = _.map(contactsData, (data) => {
+        const contactIds = _.map(contactsData, data => {
             return data.recordID;
-        })
+        });
         // In Android, the entire display name is passed in the givenName field. middleName and familyName will be ""
-        _.each(contactsData, (data) => {
+        _.each(contactsData, data => {
             this.idToContacts[data.recordID] = {
                 id: data.recordID,
                 name: data.givenName,
@@ -77,8 +77,8 @@ export default class ContactsPickerDataSource {
                 imageAvailable: data.hasThumbnail,
                 thumbnail: data.thumbnailPath,
                 emails: data.emailAddresses,
-                phoneNumbers: data.phoneNumbers,
-            }
+                phoneNumbers: data.phoneNumbers
+            };
         });
         this.allContactIds = this.allContactIds.concat(contactIds);
         this.delegate.onDataUpdate();
@@ -86,24 +86,32 @@ export default class ContactsPickerDataSource {
 
     contactsDataBySection(contactsDict) {
         let alphabets = 'abcdefghijklmnopqrstuvwxyz#'.split('');
-        return _.map(alphabets, (alphabet) => {
-            const sortedContacts = _.sortBy(contactsDict[alphabet], (contact) => {
+        return _.map(alphabets, alphabet => {
+            const sortedContacts = _.sortBy(contactsDict[alphabet], contact => {
                 return contact.name;
-            })
-            return { data : sortedContacts, title: alphabet.toUpperCase() }
-
+            });
+            return { data: sortedContacts, title: alphabet.toUpperCase() };
         });
     }
 
     createContactsDict(filterFunc) {
-        return _.reduce(this.allContactIds, (result, contactId) => {
-            const contact = this.idToContacts[contactId];
-            if (filterFunc === undefined || filterFunc(contact)) {
-                let firstChar = contact.name.length > 0 ? contact.name[0].toLowerCase() : '#';
-                (result[firstChar] || (result[firstChar] = [])).push(contact);
-            }
-            return result;
-        }, {});
+        return _.reduce(
+            this.allContactIds,
+            (result, contactId) => {
+                const contact = this.idToContacts[contactId];
+                if (filterFunc === undefined || filterFunc(contact)) {
+                    let firstChar =
+                        contact.name.length > 0
+                            ? contact.name[0].toLowerCase()
+                            : '#';
+                    (result[firstChar] || (result[firstChar] = [])).push(
+                        contact
+                    );
+                }
+                return result;
+            },
+            {}
+        );
     }
 
     getData() {
@@ -118,7 +126,8 @@ export default class ContactsPickerDataSource {
             return [];
         }
         text = text.toLowerCase();
-        let filterFunc = (contact) => contact.name.toLowerCase().indexOf(text) !== -1;
+        let filterFunc = contact =>
+            contact.name.toLowerCase().indexOf(text) !== -1;
         return this.contactsDataBySection(this.createContactsDict(filterFunc));
     }
 
@@ -138,6 +147,9 @@ export default class ContactsPickerDataSource {
 class ContactsPickerDelegateNotImplemented extends Error {
     constructor(functionName = '', ...args) {
         super(functionName, ...args);
-        this.message = 'ContactsPickerDelegate : ' + functionName +  ' function has to be implemented.';
+        this.message =
+            'ContactsPickerDelegate : ' +
+            functionName +
+            ' function has to be implemented.';
     }
 }

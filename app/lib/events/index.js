@@ -17,5 +17,3 @@ export {
 };
 
 export default EventEmitter;
-
-

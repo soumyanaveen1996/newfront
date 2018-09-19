@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { GlobalColors } from '../../config/styles'
+import { GlobalColors } from '../../config/styles';
 
 const stylesheet = StyleSheet.create({
-
     buttonMsgParent: {
         flexDirection: 'column',
         marginTop: 20,

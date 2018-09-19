@@ -49,11 +49,10 @@ const selectAllContacts = `
     FROM channel_contacts
 `;
 
-
 export default {
     createChannelContactsTable,
     insertChannelContact,
     deleteChannelContact,
     selectChannelContact,
-    selectAllContacts,
+    selectAllContacts
 };

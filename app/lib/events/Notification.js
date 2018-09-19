@@ -1,5 +1,5 @@
 export const NotificationEvents = {
-    registeredNotifications: 'registeredNotifications',
+    registeredNotifications: 'registeredNotifications'
 };
 
 export default NotificationEvents;

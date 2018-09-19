@@ -10,38 +10,68 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 
 export default class ChannelChat extends ChatBotScreen {
-
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: state.params.title,
+            headerTitle: state.params.title
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
         } else {
-            navigationOptions.headerLeft = <HeaderBack onPress={async () => {
-                if (state.params.botDone) {
-                    state.params.botDone();
-                }
-                await state.params.deleteConversation();
-                if (state.params.onBack) {
-                    Actions.pop(); state.params.onBack();
-                } else {
-                    Actions.pop();
-                }
-            }} />;
+            navigationOptions.headerLeft = (
+                <HeaderBack
+                    onPress={async () => {
+                        if (state.params.botDone) {
+                            state.params.botDone();
+                        }
+                        await state.params.deleteConversation();
+                        if (state.params.onBack) {
+                            Actions.pop();
+                            state.params.onBack();
+                        } else {
+                            Actions.pop();
+                        }
+                    }}
+                />
+            );
         }
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                navigationOptions.headerRight = <HeaderRightIcon onPress={() => {
-                    state.params.refresh();
-                }} icon={Icons.refresh()}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
             } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.gsm} onPress={() => { state.params.showConnectionMessage('gsm'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
             } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = <HeaderRightIcon image={images.satellite} onPress={() => { state.params.showConnectionMessage('satellite'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
             } else {
-                navigationOptions.headerRight = <HeaderRightIcon icon={Icons.automatic()} onPress={() => { state.params.showConnectionMessage('automatic'); }}/>;
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
             }
         }
         return navigationOptions;
@@ -53,7 +83,7 @@ export default class ChannelChat extends ChatBotScreen {
         this.sentMessageCount = 0;
         // TODO: name or id? - what is constant across releases?
         this.botKey = null;
-        this.channel = props.channel
+        this.channel = props.channel;
         // This means we are picking up from an older conversation (existing chat)
         this.conversation = props.conversation;
         // Botkey is the id
@@ -66,12 +96,18 @@ export default class ChannelChat extends ChatBotScreen {
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId || this.channel.channelId;
-    }
+    };
 
     setNavigationParams(context, user) {
         this.props.navigation.setParams({
             title: this.channel ? this.channel.channelName : '',
-            botDone: this.loadedBot.done.bind(this, null, this.botState, this.state.messages, this.botContext),
+            botDone: this.loadedBot.done.bind(
+                this,
+                null,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            ),
             deleteConversation: this.deleteConversation.bind(this),
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
@@ -82,16 +118,29 @@ export default class ChannelChat extends ChatBotScreen {
         try {
             let context = null;
             if (this.conversation) {
-                this.channel = await ChannelDAO.selectChannelByConversationId(this.conversation.conversationId)
+                this.channel = await ChannelDAO.selectChannelByConversationId(
+                    this.conversation.conversationId
+                );
             } else if (this.channel && this.channel.channelId) {
-                this.conversation = await Conversation.getChannelConversation(this.channel.channelId);
+                this.conversation = await Conversation.getChannelConversation(
+                    this.channel.channelId
+                );
             }
             if (this.channel) {
-                console.log('Conversation ID from channel : ', this.channel.channelId);
+                console.log(
+                    'Conversation ID from channel : ',
+                    this.channel.channelId
+                );
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {
-                context = await Promise.resolve(ConversationContext.getChannelConversationContext(botContext, user, this.channel));
+                context = await Promise.resolve(
+                    ConversationContext.getChannelConversationContext(
+                        botContext,
+                        user,
+                        this.channel
+                    )
+                );
                 this.setNavigationParams(context, user);
                 return context;
             }
@@ -100,7 +149,14 @@ export default class ChannelChat extends ChatBotScreen {
                 throw new Error('Channel Object is required');
             }
 
-            context = await Promise.resolve(ConversationContext.createNewChannelConversationContext(botContext, user, this.channel, this.channel.channelId));
+            context = await Promise.resolve(
+                ConversationContext.createNewChannelConversationContext(
+                    botContext,
+                    user,
+                    this.channel,
+                    this.channel.channelId
+                )
+            );
             ConversationContext.updateParticipants(context, this.participants);
 
             console.log('Conversation Context : ', context);
@@ -111,24 +167,41 @@ export default class ChannelChat extends ChatBotScreen {
             this.setNavigationParams(context, user);
 
             // Create a conversation for this conversation id
-            this.conversation = await Promise.resolve(Conversation.createChannelConversation(context.conversationId));
+            this.conversation = await Promise.resolve(
+                Conversation.createChannelConversation(context.conversationId)
+            );
 
-            await ChannelDAO.updateConversationForChannel(this.channel.channelName, this.channel.userDomain, context.conversationId);
+            await ChannelDAO.updateConversationForChannel(
+                this.channel.channelName,
+                this.channel.userDomain,
+                context.conversationId
+            );
 
             // Save this conversation context (save has to happen after the botkey has been extracted)
-            await Promise.resolve(ConversationContext.saveConversationContext(context, botContext, user));
+            await Promise.resolve(
+                ConversationContext.saveConversationContext(
+                    context,
+                    botContext,
+                    user
+                )
+            );
 
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log('Error getting a conversation context for channel chat', error);
+            console.log(
+                'Error getting a conversation context for channel chat',
+                error
+            );
             throw error;
         }
     }
 
     async getCreatorContact() {
         if (!this.creatorContact) {
-            let contactsArray = await Contact.getContactFieldForUUIDs([this.conversationContext.creatorInstanceId]);
+            let contactsArray = await Contact.getContactFieldForUUIDs([
+                this.conversationContext.creatorInstanceId
+            ]);
             if (contactsArray.length > 0) {
                 this.creatorContact = contactsArray[0];
             }
@@ -136,14 +209,19 @@ export default class ChannelChat extends ChatBotScreen {
         return this.creatorContact;
     }
 
-    async handleAsyncMessageResult (event) {
+    async handleAsyncMessageResult(event) {
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
             return;
         }
         let contact = await this.getCreatorContact();
         if (!contact || !contact.ignored) {
-            this.loadedBot.asyncResult(event.result, this.botState, this.state.messages, this.botContext);
+            this.loadedBot.asyncResult(
+                event.result,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            );
         }
         // Delete the network result now
         return Queue.deleteNetworkRequest(event.id);
@@ -154,11 +232,11 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     isUserChat() {
-        return true
+        return true;
     }
 
     shouldShowUserName() {
-        return true
+        return true;
     }
 
     async onSendMessage(messageStr) {
@@ -168,7 +246,9 @@ export default class ChannelChat extends ChatBotScreen {
 
     async deleteConversation() {
         if (this.newSession && this.sentMessageCount === 0) {
-            await Conversation.deleteChannelConversation(this.conversation.conversationId);
+            await Conversation.deleteChannelConversation(
+                this.conversation.conversationId
+            );
         }
     }
 
@@ -177,23 +257,23 @@ export default class ChannelChat extends ChatBotScreen {
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false
-            })
+            });
             return;
         }
         this.setState({
             refreshing: true
-        })
-        let messages = await this.loadMessages()
+        });
+        let messages = await this.loadMessages();
         if (messages.length === 0) {
             this.allLocalMessagesLoaded = true;
         }
         if (this.allLocalMessagesLoaded) {
-            messages = await this.loadOldMessagesFromServer()
+            messages = await this.loadOldMessagesFromServer();
             if (messages.length === 0) {
                 this.allOldMessagesLoaded = true;
             }
         }
-        let combinedMsgs = messages.concat(this.state.messages)
+        let combinedMsgs = messages.concat(this.state.messages);
         if (this.mounted) {
             this.setState({
                 messages: this.addSessionStartMessages(combinedMsgs),

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View,
+import {
+    View,
     Text,
     FlatList,
     TextInput,
@@ -7,11 +8,12 @@ import { View,
     TouchableOpacity,
     ActivityIndicator,
     Alert,
-    RefreshControl } from 'react-native';
-import styles, { BotListItemStyles } from './styles'
-import { Icon } from 'react-native-elements'
-import {GlobalColors} from '../../config/styles'
-import {headerConfig  , searchBarConfig , rightIconConfig} from './config'
+    RefreshControl
+} from 'react-native';
+import styles, { BotListItemStyles } from './styles';
+import { Icon } from 'react-native-elements';
+import { GlobalColors } from '../../config/styles';
+import { headerConfig, searchBarConfig, rightIconConfig } from './config';
 import images from '../../config/images';
 import { Actions } from 'react-native-router-flux';
 import Bot from '../../lib/bot/index';
@@ -25,9 +27,13 @@ import { MessageHandler } from '../../lib/message';
 import CachedImage from '../CachedImage';
 import Swipeout from 'react-native-swipeout';
 import utils from '../../lib/utils';
-import { Settings, Network, PollingStrategyTypes, DeviceStorage } from '../../lib/capability';
-import {Icons} from '../../config/icons';
-
+import {
+    Settings,
+    Network,
+    PollingStrategyTypes,
+    DeviceStorage
+} from '../../lib/capability';
+import { Icons } from '../../config/icons';
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
 const subtitleNumberOfLines = 2;
@@ -36,25 +42,42 @@ export default class InstalledBotsScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerRight: <HeaderRightIcon config={rightIconConfig} onPress={state.params.fireBotSore} />,
-            headerLeft: <HeaderBack onPress={state.params.onBack ? () => { Actions.pop(); state.params.onBack() } : Actions.pop } refresh={true}/>,
-        }
+            headerRight: (
+                <HeaderRightIcon
+                    config={rightIconConfig}
+                    onPress={state.params.fireBotSore}
+                />
+            ),
+            headerLeft: (
+                <HeaderBack
+                    onPress={
+                        state.params.onBack
+                            ? () => {
+                                Actions.pop();
+                                state.params.onBack();
+                            }
+                            : Actions.pop
+                    }
+                    refresh={true}
+                />
+            )
+        };
     }
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             loaded: false,
             botUpdateStatuses: {},
             refreshing: false
-        }
+        };
     }
 
     async componentDidMount() {
         //this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
         this.refreshData();
         this.checkForBotUpdates();
-        this.mounted = true
+        this.mounted = true;
     }
 
     componentWillUnmount() {
@@ -66,11 +89,9 @@ export default class InstalledBotsScreen extends React.Component {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
                 I18n.t('Bot_min_version_error'),
-                [
-                    {text: 'OK'},
-                ],
+                [{ text: 'OK' }],
                 { cancelable: true }
-            )
+            );
             return;
         }
         console.log('New bot manifest for upload : ', bot);
@@ -84,13 +105,22 @@ export default class InstalledBotsScreen extends React.Component {
             this.setState({ botUpdateStatuses: botUpdateStatuses });
             this.refs.toast.show(I18n.t('Bot_updated'), DURATION.LENGTH_SHORT);
         } catch (e) {
-            this.refs.toast.show(I18n.t('Bot_update_failed'), DURATION.LENGTH_SHORT);
+            this.refs.toast.show(
+                I18n.t('Bot_update_failed'),
+                DURATION.LENGTH_SHORT
+            );
             throw e;
         }
     }
 
     checkIfClientSupportsBot(bot) {
-        if (bot.minRequiredPlatformVersion && versionCompare(VersionCheck.getCurrentVersion(), bot.minRequiredPlatformVersion) > -1) {
+        if (
+            bot.minRequiredPlatformVersion &&
+            versionCompare(
+                VersionCheck.getCurrentVersion(),
+                bot.minRequiredPlatformVersion
+            ) > -1
+        ) {
             return true;
         }
         return false;
@@ -99,15 +129,15 @@ export default class InstalledBotsScreen extends React.Component {
     async checkAndUpdateBots(autoUpdate) {
         const catalogData = await Bot.getCatalog();
         this.newBotManifests = {};
-        catalogData.bots.forEach((bot) => {
+        catalogData.bots.forEach(bot => {
             this.newBotManifests[bot.botId] = bot;
-        })
+        });
         const bots = await Bot.getInstalledBots();
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
 
-        const botUpdateStatuses = { };
-        bots.forEach((bot) => {
-            const isSystemBot = _.find(defaultBots,  { botId: bot.botId });
+        const botUpdateStatuses = {};
+        bots.forEach(bot => {
+            const isSystemBot = _.find(defaultBots, { botId: bot.botId });
             const newBotData = _.find(catalogData.bots, { botId: bot.botId });
             const status = utils.checkBotStatus(bots, newBotData);
             console.log('bot data old and new : ', newBotData, bot);
@@ -117,14 +147,15 @@ export default class InstalledBotsScreen extends React.Component {
             } else {
                 botUpdateStatuses[bot.botId] = status.update === true;
             }
-        })
+        });
         this.setState({ botUpdateStatuses: botUpdateStatuses });
     }
 
     async checkForBotUpdates() {
         const pollingStrategy = await Settings.getPollingStrategy();
         const isGSM = await Network.isCellular();
-        const autoUpdate = pollingStrategy === PollingStrategyTypes.gsm ||
+        const autoUpdate =
+            pollingStrategy === PollingStrategyTypes.gsm ||
             (pollingStrategy === PollingStrategyTypes.automatic && isGSM);
 
         if (autoUpdate) {
@@ -132,7 +163,8 @@ export default class InstalledBotsScreen extends React.Component {
         } else {
             const lastCheckTime = await DeviceStorage.get(LAST_CHECK_TIME_KEY);
             const currentTime = new Date().valueOf();
-            if (lastCheckTime && currentTime - lastCheckTime < 86400000) { // && !global.__DEV__
+            if (lastCheckTime && currentTime - lastCheckTime < 86400000) {
+                // && !global.__DEV__
                 return;
             }
             this.checkAndUpdateBots(false);
@@ -145,7 +177,7 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     async onRefresh() {
-        this.setState({ refreshing: true })
+        this.setState({ refreshing: true });
         this.checkAndUpdateBots(false);
         if (this.mounted) {
             this.setState({ refreshing: false });
@@ -156,12 +188,14 @@ export default class InstalledBotsScreen extends React.Component {
     async refreshInstalledBots() {
         const bots = await Bot.getInstalledBots();
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
-        this.bots = _.reject(bots, (bot) => _.find(defaultBots, { botId: bot.botId }));
+        this.bots = _.reject(bots, bot =>
+            _.find(defaultBots, { botId: bot.botId })
+        );
         if (this.queryText && this.queryText.length > 0) {
             this.onSearchQueryChange(this.queryText);
-            this.setstate({loaded: true});
+            this.setstate({ loaded: true });
         } else {
-            this.setState({bots: this.bots, loaded: true});
+            this.setState({ bots: this.bots, loaded: true });
         }
     }
 
@@ -169,124 +203,162 @@ export default class InstalledBotsScreen extends React.Component {
         await this.refreshInstalledBots();
     }
 
-    onAddClicked = ()=>{
+    onAddClicked = () => {
         Actions.botStore({ onBack: this.refreshData.bind(this) });
-    }
+    };
 
-    onDeletePress = async (bot) => {
+    onDeletePress = async bot => {
         Alert.alert(
             null,
             I18n.t('Bot_uninstall_confirmation'),
             [
                 { text: I18n.t('Yes'), onPress: () => this.deleteBot(bot) },
-                { text: I18n.t('Cancel'), style: 'cancel'},
+                { text: I18n.t('Cancel'), style: 'cancel' }
             ],
             { cancelable: false }
         );
-    }
+    };
 
-    deleteBot = async (bot) => {
+    deleteBot = async bot => {
         try {
             await MessageHandler.deleteBotMessages(bot.botId);
             const dceBot = dce.bot(bot);
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
-            this.refs.toast.show(I18n.t('Bot_uninstalled'), DURATION.LENGTH_SHORT);
+            this.refs.toast.show(
+                I18n.t('Bot_uninstalled'),
+                DURATION.LENGTH_SHORT
+            );
         } catch (e) {
-            this.refs.toast.show(I18n.t('Bot_uninstall_failed'), DURATION.LENGTH_SHORT);
+            this.refs.toast.show(
+                I18n.t('Bot_uninstall_failed'),
+                DURATION.LENGTH_SHORT
+            );
             throw e;
         }
-    }
+    };
 
-    onUpdatePress = async (bot) => {
+    onUpdatePress = async bot => {
         this.updateBot(bot);
-    }
+    };
 
-    onBotPress = async (bot) => {
+    onBotPress = async bot => {
         Actions.botChat({ bot: bot });
-    }
+    };
 
     headerTitle = () => (
-        <Text style = {styles.headerTitleStyle} >{headerConfig.headerTitle}</Text>
-    )
+        <Text style={styles.headerTitleStyle}>{headerConfig.headerTitle}</Text>
+    );
 
-    checkBotStatus = (botData) => {
+    checkBotStatus = botData => {
         return utils.checkBotStatus(this.state.bots, botData);
-    }
+    };
 
-    getSwipeButtons = (botData) => {
+    getSwipeButtons = botData => {
         const shouldUpdate = this.state.botUpdateStatuses[botData.botId];
         let swipeBtns = [
             {
-                component:(
+                component: (
                     <View style={styles.swipeBtnStyle}>
                         <Icon name="delete" color="white" />
                     </View>
                 ),
                 backgroundColor: GlobalColors.red,
-                onPress: () => { this.onDeletePress(botData) }
+                onPress: () => {
+                    this.onDeletePress(botData);
+                }
             }
         ];
-        if (shouldUpdate){
+        if (shouldUpdate) {
             swipeBtns.push({
-                component:(
+                component: (
                     <View style={styles.swipeBtnStyle}>
-                        <Icon name="update" color="white"/>
+                        <Icon name="update" color="white" />
                     </View>
                 ),
                 backgroundColor: GlobalColors.darkGray,
-                onPress: () => { this.onUpdatePress(this.newBotManifests[botData.botId]) }
+                onPress: () => {
+                    this.onUpdatePress(this.newBotManifests[botData.botId]);
+                }
             });
         }
         return swipeBtns;
-    }
+    };
 
-    renderRow = (botData)=>{
+    renderRow = botData => {
         return (
             <View style={BotListItemStyles.container}>
-                <CachedImage imageTag = "botLogo" source={{uri: botData.logoUrl}} style={BotListItemStyles.image}/>
+                <CachedImage
+                    imageTag="botLogo"
+                    source={{ uri: botData.logoUrl }}
+                    style={BotListItemStyles.image}
+                />
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={ BotListItemStyles.title } >{ botData.botName } </Text>
-                    <Text numberOfLines={subtitleNumberOfLines} style={ BotListItemStyles.subTitle }>{botData.description}</Text>
+                    <Text style={BotListItemStyles.title}>
+                        {botData.botName}{' '}
+                    </Text>
+                    <Text
+                        numberOfLines={subtitleNumberOfLines}
+                        style={BotListItemStyles.subTitle}
+                    >
+                        {botData.description}
+                    </Text>
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
-                    <TouchableOpacity style={BotListItemStyles.installButton} onPress={this.onBotPress.bind(this, botData)}>
-                        <Text allowFontScaling={false} style={BotListItemStyles.installButtonText}>{I18n.t('OPEN')}</Text>
+                    <TouchableOpacity
+                        style={BotListItemStyles.installButton}
+                        onPress={this.onBotPress.bind(this, botData)}
+                    >
+                        <Text
+                            allowFontScaling={false}
+                            style={BotListItemStyles.installButtonText}
+                        >
+                            {I18n.t('OPEN')}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>
-        )
-    }
+        );
+    };
 
-    renderGridItem = ({item}) => {
+    renderGridItem = ({ item }) => {
         let swipeBtns = this.getSwipeButtons(item);
         return (
-            <Swipeout right={swipeBtns} style={{flex: 1}} backgroundColor={GlobalColors.white} autoClose={true}>
+            <Swipeout
+                right={swipeBtns}
+                style={{ flex: 1 }}
+                backgroundColor={GlobalColors.white}
+                autoClose={true}
+            >
                 <View key={item.botId} style={styles.rowContainer}>
-                    <View style={{flex: 1}}>
-                        {this.renderRow(item)}
-                    </View>
+                    <View style={{ flex: 1 }}>{this.renderRow(item)}</View>
                 </View>
             </Swipeout>
-        )
-    }
+        );
+    };
 
-    renderBotImage = (botData) => {
+    renderBotImage = botData => {
         if (botData.logoSlug) {
             return images[botData.logoSlug];
         } else {
-            return <CachedImage imageTag = "botLogo" source={{uri : botData.logoUrl}} style={styles.image}/>;
+            return (
+                <CachedImage
+                    imageTag="botLogo"
+                    source={{ uri: botData.logoUrl }}
+                    style={styles.image}
+                />
+            );
         }
-    }
+    };
 
     onSearchQueryChange(text) {
         text = _.trim(text);
         this.queryText = text;
         if (text === '') {
-            this.setState({bots: this.bots});
+            this.setState({ bots: this.bots });
         } else {
             let filteredBots = this.getFilteredData(text).bots;
-            this.setState({bots: filteredBots});
+            this.setState({ bots: filteredBots });
         }
     }
 
@@ -295,20 +367,23 @@ export default class InstalledBotsScreen extends React.Component {
             return [];
         }
         text = text.toLowerCase();
-        let filterFunc = (bot) => bot.botName.toLowerCase().indexOf(text) !== -1;
+        let filterFunc = bot => bot.botName.toLowerCase().indexOf(text) !== -1;
         return this.createBotDict(filterFunc);
     }
 
     createBotDict(filterFunc) {
-        return _.reduce(this.state.bots, (result, bot) => {
-            if (filterFunc === undefined || filterFunc(bot)) {
-                let firstChar = 'bots';
-                (result[firstChar] || (result[firstChar] = [])).push(bot);
-            }
-            return result;
-        }, {});
+        return _.reduce(
+            this.state.bots,
+            (result, bot) => {
+                if (filterFunc === undefined || filterFunc(bot)) {
+                    let firstChar = 'bots';
+                    (result[firstChar] || (result[firstChar] = [])).push(bot);
+                }
+                return result;
+            },
+            {}
+        );
     }
-
 
     renderSearchBar() {
         return (
@@ -325,8 +400,7 @@ export default class InstalledBotsScreen extends React.Component {
         );
     }
 
-
-    render(){
+    render() {
         const { loaded } = this.state;
         if (!loaded) {
             return (
@@ -336,23 +410,27 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     <FlatList
                         style={styles.flatList}
                         keyExtractor={(item, index) => item.botId}
                         data={this.state.bots}
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}
-                        ItemSeparatorComponent={() => <View style={[styles.separator]} />}
+                        ItemSeparatorComponent={() => (
+                            <View style={[styles.separator]} />
+                        )}
                         refreshControl={
-                            <RefreshControl colors={['#9Bd35A', '#689F38']}
+                            <RefreshControl
+                                colors={['#9Bd35A', '#689F38']}
                                 refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)} />
+                                onRefresh={this.onRefresh.bind(this)}
+                            />
                         }
                     />
-                    <Toast ref="toast"/>
+                    <Toast ref="toast" />
                 </View>
-            )
+            );
         }
     }
 }

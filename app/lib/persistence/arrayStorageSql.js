@@ -35,7 +35,7 @@ const deleteArrayValue = `
 
 const deleteAllRows = `
     DELETE FROM array_storage;
-`
+`;
 
 export default {
     createArrayStorageTable: createArrayStorageTable,

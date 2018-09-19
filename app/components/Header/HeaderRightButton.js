@@ -7,7 +7,9 @@ export default class HeaderRightButton extends React.Component {
     render() {
         return (
             <TouchableOpacity onPress={this.props.onPress}>
-                <Text style={styles.defaultHeaderRightButton}>{this.props.buttonTitle || I18n.t('Button')}</Text>
+                <Text style={styles.defaultHeaderRightButton}>
+                    {this.props.buttonTitle || I18n.t('Button')}
+                </Text>
             </TouchableOpacity>
         );
     }

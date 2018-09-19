@@ -4,11 +4,10 @@ import I18n from '../../config/i18n/i18n';
 import _ from 'lodash';
 import { UUID } from './Utils';
 
-
 export const ButtonStyle = {
     light: 0,
-    bright: 1,
-}
+    bright: 1
+};
 
 export const MessageTypeConstants = {
     MESSAGE_TYPE_STRING: 'string',
@@ -31,9 +30,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_BARCODE: 'barcode',
     MESSAGE_TYPE_FORM_OPEN: 'form_open',
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
-    MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
+    MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event'
 };
-
 
 export const IntToMessageTypeConstants = {
     10: MessageTypeConstants.MESSAGE_TYPE_STRING,
@@ -48,7 +46,7 @@ export const IntToMessageTypeConstants = {
     240: MessageTypeConstants.MESSAGE_TYPE_MAP
 };
 
-export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants)
+export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
 
 export default class Message {
     constructor(opts) {
@@ -62,7 +60,9 @@ export default class Message {
         this._addedByBot = opts.addedByBot || false;
         this._uuid = opts.uuid || UUID();
         // We will use moment in order manage local and remote times better
-        this._messageDate = opts.messageDate ? moment(opts.messageDate).toDate() : moment().toDate();
+        this._messageDate = opts.messageDate
+            ? moment(opts.messageDate).toDate()
+            : moment().toDate();
         // Required only for persistence - to indicate which bot stored it
         this._botKey = opts.botKey || null;
         this._isRead = opts.isRead;
@@ -87,44 +87,47 @@ export default class Message {
      *
      * @return Promise that resolves to count of users messages of the bot.
      */
-    static userMessageCountSince = (botKey, option) => new Promise((resolve, reject) => {
-        return resolve(MessageHandler.userMessageCountSince(botKey, option));
-    });
+    static userMessageCountSince = (botKey, option) =>
+        new Promise((resolve, reject) => {
+            return resolve(
+                MessageHandler.userMessageCountSince(botKey, option)
+            );
+        });
 
-    stringMessage = (str) => {
+    stringMessage = str => {
         this._msg = str;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_STRING;
     };
 
-    imageMessage = (imageUrl) => {
+    imageMessage = imageUrl => {
         // TODO: validate a valid url? - string for now
         this._msg = imageUrl;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_IMAGE;
     };
 
-    videoMessage = (videoUrl) => {
+    videoMessage = videoUrl => {
         // TODO: validate a valid url? - string for now
         this._msg = videoUrl;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_VIDEO;
     };
 
-    audioMessage = (audioUrl) => {
+    audioMessage = audioUrl => {
         // TODO: validate a valid url? - string for now
         this._msg = audioUrl;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_AUDIO;
     };
 
-    sessionStartMessage = (data) => {
+    sessionStartMessage = data => {
         this._msg = JSON.stringify(data || {});
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SESSION_START;
     };
 
-    listMessage = (arrayData) => {
+    listMessage = arrayData => {
         this._msg = JSON.stringify(arrayData);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_LIST;
     };
 
-    barcodeMessage = (str) => {
+    barcodeMessage = str => {
         this._msg = str;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_BARCODE;
     };
@@ -174,20 +177,20 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM;
     };
 
-    formOpenMessage = (formData) => {
+    formOpenMessage = formData => {
         this._msg = JSON.stringify(formData || []);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN;
-    }
+    };
 
-    formCancelMessage = (formData) => {
+    formCancelMessage = formData => {
         this._msg = JSON.stringify(formData || []);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL;
-    }
+    };
 
     sliderCancelMessage = () => {
         this._msg = JSON.stringify('');
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL;
-    }
+    };
 
     formResponseMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
@@ -211,7 +214,7 @@ export default class Message {
             this._options = JSON.stringify(options);
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_MAP;
-    }
+    };
 
     chartMessage = (data, options) => {
         this._msg = JSON.stringify(data || []);
@@ -219,12 +222,12 @@ export default class Message {
             this._options = JSON.stringify(options);
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_CHART;
-    }
+    };
 
     waitMessage = () => {
         this._msg = JSON.stringify('');
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_WAIT;
-    }
+    };
 
     backgroundEventMessage = (key, options) => {
         this._msg = key;
@@ -232,7 +235,7 @@ export default class Message {
         options.key = key;
         this._options = JSON.stringify(options);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT;
-    }
+    };
 
     messageByBot = (option = true) => {
         this._addedByBot = option;
@@ -240,23 +243,31 @@ export default class Message {
 
     getMessageString = () => {
         return this._msg;
-    }
+    };
 
     getMessage = () => {
-        if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
+        if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+        ) {
             try {
                 return JSON.parse(this._msg);
             } catch (error) {
@@ -270,49 +281,91 @@ export default class Message {
 
     getDisplayMessage = () => {
         // TODO(amal): Have to handle other message types.
-        if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE) {
+        if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
+        ) {
             let items = this.getMessage();
             if (items.length > 0) {
-                let titles = _.map(items, (item) => item.title)
-                return I18n.t('Slider_Response', { lines: titles.join('\n') })
+                let titles = _.map(items, item => item.title);
+                return I18n.t('Slider_Response', { lines: titles.join('\n') });
             } else {
                 return null;
             }
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE) {
+        } else if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
+        ) {
             let item = this.getMessage();
-            return I18n.t('Slider_Response_Message', { lines: item.title })
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE) {
+            return I18n.t('Slider_Response_Message', { lines: item.title });
+        } else if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+        ) {
             let items = this.getMessage();
-            let titles = _.map(items, (item) => item.value !== undefined ? item.title + ':' + item.value : '')
-            return I18n.t('Slider_Response_Message', { lines: titles.join('\n') })
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML) {
-            return this.getMessage().actionText
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM) {
-            return 'form'
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT) {
-            return ''
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START) {
-            return ''
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_AUDIO) {
-            return 'Audio'
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO) {
-            return 'Video'
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN) {
-            return ''
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL) {
-            return ''
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL) {
+            let titles = _.map(
+                items,
+                item =>
+                    item.value !== undefined
+                        ? item.title + ':' + item.value
+                        : ''
+            );
+            return I18n.t('Slider_Response_Message', {
+                lines: titles.join('\n')
+            });
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
+        ) {
+            return this.getMessage().actionText;
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
+        ) {
+            return 'form';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
+        ) {
             return '';
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
+        } else if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+        ) {
             return '';
-        } else if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON) {
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_AUDIO
+        ) {
+            return 'Audio';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO
+        ) {
+            return 'Video';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
+        ) {
+            return '';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
+        ) {
+            return '';
+        } else if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
+        ) {
+            return '';
+        } else if (
+            this._messageType ===
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+        ) {
+            return '';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON
+        ) {
             let items = this.getMessage();
-            let titles = _.map(items, (item) => item.title)
-            return I18n.t('Button_Message', { lines: titles.join(' or ') })
+            let titles = _.map(items, item => item.title);
+            return I18n.t('Button_Message', { lines: titles.join(' or ') });
         } else {
             return this.getMessage();
         }
-    }
+    };
 
     getMessageType = () => {
         return this._messageType;
@@ -326,26 +379,35 @@ export default class Message {
             return this._options;
         }
         return JSON.stringify(this._options);
-    }
+    };
 
     getMessageOptions = () => {
         if (!this._options) {
             return null;
         }
-        if (this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_SESSION_START
-            || this._messageType === MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT) {
+        if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+        ) {
             try {
                 return JSON.parse(this._options);
             } catch (error) {
@@ -370,7 +432,7 @@ export default class Message {
     };
 
     // Only for persistence
-    setBotKey = (botKey) => {
+    setBotKey = botKey => {
         this._botKey = botKey;
     };
 
@@ -378,7 +440,7 @@ export default class Message {
         return this._botKey;
     };
 
-    setCreatedBy = (byUuid) => {
+    setCreatedBy = byUuid => {
         this._createdBy = byUuid;
     };
 
@@ -413,12 +475,12 @@ export default class Message {
      * @return object
      */
     toBotDisplay = () => {
-        return { 'key': this.getMessageId(), 'message': this, showTime: false };
+        return { key: this.getMessageId(), message: this, showTime: false };
     };
 
     isRead = () => {
         return this._isRead;
-    }
+    };
 
     setRead(read = true) {
         this._isRead = read;
@@ -426,7 +488,7 @@ export default class Message {
 
     isFavorite = () => {
         return this._isFavorite;
-    }
+    };
 
     setFavorite(favorite = false) {
         this._isFavorite = favorite;
@@ -445,14 +507,14 @@ export default class Message {
         let options = {
             messageType: messageType,
             uuid: json.messageUuid,
-            addedByBot: user && (user.userId === json.createdBy) ? 0 : 1,
+            addedByBot: user && user.userId === json.createdBy ? 0 : 1,
             botKey: json.conversation,
             msg: json.content[0],
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
             messageDate: parseInt(json.createdOn.$numberLong, 10)
-        }
+        };
         return new Message(options);
     }
 
@@ -462,8 +524,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
-            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
-        ]
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+        ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;
         } else {
@@ -471,4 +533,3 @@ export default class Message {
         }
     }
 }
-

@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, Text ,TouchableOpacity} from 'react-native';
-import { ChatStatusBarStyles, networkStatusBarStyle, networkStatusBarTextStyle } from './styles';
+import { View, Text, TouchableOpacity } from 'react-native';
+import {
+    ChatStatusBarStyles,
+    networkStatusBarStyle,
+    networkStatusBarTextStyle
+} from './styles';
 import { Icons } from '../../config/icons';
 import I18n from '../../config/i18n/i18n';
 
 export default class ChatStatusBar extends React.Component {
-    componentWillMount() {
-    }
+    componentWillMount() {}
 
     closeStatus() {
         this.props.onChatStatusBarClose();
@@ -34,12 +37,16 @@ export default class ChatStatusBar extends React.Component {
         const { network } = this.props;
         return (
             <View style={networkStatusBarStyle(network)}>
-                <Text style={networkStatusBarTextStyle(network)}>{this.message()}</Text>
-                <TouchableOpacity style={ChatStatusBarStyles.closeButton} onPress={this.closeStatus.bind(this)} >
+                <Text style={networkStatusBarTextStyle(network)}>
+                    {this.message()}
+                </Text>
+                <TouchableOpacity
+                    style={ChatStatusBarStyles.closeButton}
+                    onPress={this.closeStatus.bind(this)}
+                >
                     {this.icon()}
                 </TouchableOpacity>
             </View>
         );
     }
 }
-

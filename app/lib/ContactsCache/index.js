@@ -1,5 +1,3 @@
 import ContactsCache from './ContactsCache';
 
-export {
-    ContactsCache
-};
+export { ContactsCache };

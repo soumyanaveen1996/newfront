@@ -8,7 +8,7 @@
  */
 
 import { NetworkRequest, Promise } from '../capability';
-import { NetworkDAO, STATUS_CONSTANTS } from '../persistence'
+import { NetworkDAO, STATUS_CONSTANTS } from '../persistence';
 import AsyncResultEventEmitter from './AsyncResultEventEmitter';
 import { NETWORK_EVENTS_CONSTANTS } from './index';
 
@@ -18,21 +18,27 @@ import { NETWORK_EVENTS_CONSTANTS } from './index';
  * @param  {NetworkRequest} networkRequest The request to be made later
  * @return {Promise} empty promises is all this method makes - find a better partner :)
  */
-const queueNetworkRequest = (key, networkRequest) => new Promise((resolve, reject) => {
-    if (!key || !networkRequest) {
-        throw new Error('A valid key and networkRequest are required to queue');
-    }
-    // We will only cache the options - getNetworkRequest()
-    // First add it to the sql store to get an id
-    // Use the botkey:id to store as key in async storage (better for json)
-    return NetworkDAO.insertNetworkRequest(key, networkRequest.getNetworkRequestOptions())
-        .then((id) => {
-            resolve(networkRequest);
-        })
-        .catch(function(e) {
-            reject(e);
-        });
-});
+const queueNetworkRequest = (key, networkRequest) =>
+    new Promise((resolve, reject) => {
+        if (!key || !networkRequest) {
+            throw new Error(
+                'A valid key and networkRequest are required to queue'
+            );
+        }
+        // We will only cache the options - getNetworkRequest()
+        // First add it to the sql store to get an id
+        // Use the botkey:id to store as key in async storage (better for json)
+        return NetworkDAO.insertNetworkRequest(
+            key,
+            networkRequest.getNetworkRequestOptions()
+        )
+            .then(id => {
+                resolve(networkRequest);
+            })
+            .catch(function(e) {
+                reject(e);
+            });
+    });
 
 /**
  * Returns the next network request from the queue. Its a queue - so FIFO :).
@@ -42,89 +48,110 @@ const queueNetworkRequest = (key, networkRequest) => new Promise((resolve, rejec
  * @param  {key} string This is a simple key to store with the network request. A bot can use bot's name for example.
  * @return {Promise} that resolves to a NetworkRequest object and id of the request in the db
  */
-const dequeueNetworkRequest = () => new Promise((resolve, reject) => {
-    return NetworkDAO.selectFirstPendingNetworkRequest()
-        .then((res) => {
-            if (!res || !res.request) {
-                return resolve(null);
-            }
-            const result = {
-                id: res.id,
-                key: res.key,
-                request: new NetworkRequest(res.request)
-            };
-            return resolve(result);
-        })
-        .catch(function(e) {
-            reject(e);
-        });
-
-});
-
-const completeNetworkRequest = (id, key, result) => new Promise((resolve, reject) => {
-    return NetworkDAO.updateNetworkRequestStatus(id, STATUS_CONSTANTS.complete, result)
-        .then(() => {
-            let obj = {
-                id: id,
-                key: key,
-                result: result
-            };
-            // Notify any event listeners if subscribed
-            AsyncResultEventEmitter.emit(NETWORK_EVENTS_CONSTANTS.result, obj);
-            resolve(obj);
-        })
-        .catch(function(e) {
-            reject(e);
-        });
-
-});
-
-const completeAsyncQueueResponse = (key, result) => new Promise((resolve, reject) => {
-    return NetworkDAO.insertNetworkRequest(key, 'queueResult', STATUS_CONSTANTS.complete, result, result.messageId)
-        .then((id) => {
-            let obj = {
-                id: id,
-                key: key,
-                result: result
-            };
-            // Notify any event listeners if subscribed
-            AsyncResultEventEmitter.emit(NETWORK_EVENTS_CONSTANTS.result, obj);
-            resolve(obj);
-        })
-        .catch(function(e) {
-            reject(e);
-        });
-
-});
-
-const handleNetworkRequestFailure = (id, key) => new Promise((resolve, reject) => {
-    // TODO: should we retry?
-    return NetworkDAO.updateNetworkRequestStatus(id, STATUS_CONSTANTS.failure, '')
-        .then(() => {
-            // Notify any event listeners if subscribed?
-            resolve({
-                id: id,
-                key: key
+const dequeueNetworkRequest = () =>
+    new Promise((resolve, reject) => {
+        return NetworkDAO.selectFirstPendingNetworkRequest()
+            .then(res => {
+                if (!res || !res.request) {
+                    return resolve(null);
+                }
+                const result = {
+                    id: res.id,
+                    key: res.key,
+                    request: new NetworkRequest(res.request)
+                };
+                return resolve(result);
+            })
+            .catch(function(e) {
+                reject(e);
             });
-        })
-        .catch(function(e) {
-            reject(e);
-        });
-});
+    });
 
-const deleteNetworkRequest = (id) => new Promise((resolve, reject) => {
-    return NetworkDAO.deleteNetworkRequest(id)
-        .then(resolve)
-        .catch(reject);
+const completeNetworkRequest = (id, key, result) =>
+    new Promise((resolve, reject) => {
+        return NetworkDAO.updateNetworkRequestStatus(
+            id,
+            STATUS_CONSTANTS.complete,
+            result
+        )
+            .then(() => {
+                let obj = {
+                    id: id,
+                    key: key,
+                    result: result
+                };
+                // Notify any event listeners if subscribed
+                AsyncResultEventEmitter.emit(
+                    NETWORK_EVENTS_CONSTANTS.result,
+                    obj
+                );
+                resolve(obj);
+            })
+            .catch(function(e) {
+                reject(e);
+            });
+    });
 
-});
+const completeAsyncQueueResponse = (key, result) =>
+    new Promise((resolve, reject) => {
+        return NetworkDAO.insertNetworkRequest(
+            key,
+            'queueResult',
+            STATUS_CONSTANTS.complete,
+            result,
+            result.messageId
+        )
+            .then(id => {
+                let obj = {
+                    id: id,
+                    key: key,
+                    result: result
+                };
+                // Notify any event listeners if subscribed
+                AsyncResultEventEmitter.emit(
+                    NETWORK_EVENTS_CONSTANTS.result,
+                    obj
+                );
+                resolve(obj);
+            })
+            .catch(function(e) {
+                reject(e);
+            });
+    });
 
-const selectCompletedNetworkRequests = (key) => new Promise((resolve, reject) => {
-    return NetworkDAO.selectCompletedNetworkRequests(key)
-        .then(resolve)
-        .catch(reject);
-});
+const handleNetworkRequestFailure = (id, key) =>
+    new Promise((resolve, reject) => {
+        // TODO: should we retry?
+        return NetworkDAO.updateNetworkRequestStatus(
+            id,
+            STATUS_CONSTANTS.failure,
+            ''
+        )
+            .then(() => {
+                // Notify any event listeners if subscribed?
+                resolve({
+                    id: id,
+                    key: key
+                });
+            })
+            .catch(function(e) {
+                reject(e);
+            });
+    });
 
+const deleteNetworkRequest = id =>
+    new Promise((resolve, reject) => {
+        return NetworkDAO.deleteNetworkRequest(id)
+            .then(resolve)
+            .catch(reject);
+    });
+
+const selectCompletedNetworkRequests = key =>
+    new Promise((resolve, reject) => {
+        return NetworkDAO.selectCompletedNetworkRequests(key)
+            .then(resolve)
+            .catch(reject);
+    });
 
 export default {
     queueNetworkRequest: queueNetworkRequest,

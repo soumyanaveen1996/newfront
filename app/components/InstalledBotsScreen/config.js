@@ -1,17 +1,16 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 import I18n from '../../config/i18n/i18n';
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const SCREEN_WIDTH = Dimensions.get('window').width;
 import { GlobalColors } from '../../config/styles';
 
 export const scrollViewConfig = {
-    width : SCREEN_WIDTH * 0.98
-}
+    width: SCREEN_WIDTH * 0.98
+};
 
 export const headerConfig = {
-    headerTitle : I18n.t('Installed_bots'),
-}
-
+    headerTitle: I18n.t('Installed_bots')
+};
 
 export const rightIconConfig = {
     type: 'Content',
@@ -20,8 +19,7 @@ export const rightIconConfig = {
     underlayColor: 'transparent',
     color: '#fff',
     fontWeight: '500'
-}
-export const searchBarConfig = {
-    placeholderTextColor: GlobalColors.headerTextInputPlaceholder,
 };
-
+export const searchBarConfig = {
+    placeholderTextColor: GlobalColors.headerTextInputPlaceholder
+};

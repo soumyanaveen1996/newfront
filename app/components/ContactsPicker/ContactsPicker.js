@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, SafeAreaView, SectionList, TextInput, KeyboardAvoidingView, Platform} from 'react-native';
+import {
+    View,
+    SafeAreaView,
+    SectionList,
+    TextInput,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -8,32 +15,45 @@ import ContactsPickerRow from './ContactsPickerRow';
 import ContactsPickerIndexView from './ContactsPickerIndexView';
 import ContactsPickerSectionHeader from './ContactsPickerSectionHeader';
 import ContactsPickerItemSeparator from './ContactsPickerItemSeparator';
-import { SECTION_HEADER_HEIGHT, searchBarConfig, addButtonConfig } from './config';
+import {
+    SECTION_HEADER_HEIGHT,
+    searchBarConfig,
+    addButtonConfig
+} from './config';
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import {Contact} from '../../lib/capability';
+import { Contact } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 
 export default class ContactsPicker extends React.Component {
-
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
             headerRight: ContactsPicker.rightHeaderView(state),
-            headerLeft: <HeaderBack onPress={Actions.pop} />,
-        }
+            headerLeft: <HeaderBack onPress={Actions.pop} />
+        };
     }
 
-
     static rightHeaderView({ params }) {
-        const callButton = <HeaderRightIcon icon={Icons.call()} onPress={() => { params.showDialler(); }} style={{marginRight: 0, paddingHorizontal: 0}}/>;
+        const callButton = (
+            <HeaderRightIcon
+                icon={Icons.call()}
+                onPress={() => {
+                    params.showDialler();
+                }}
+                style={{ marginRight: 0, paddingHorizontal: 0 }}
+            />
+        );
         return (
             <View style={styles.headerRightView}>
                 {callButton}
-                <HeaderRightIcon config={addButtonConfig} onPress={params.handleAddContact} />
+                <HeaderRightIcon
+                    config={addButtonConfig}
+                    onPress={params.handleAddContact}
+                />
             </View>
-        )
+        );
     }
 
     constructor(props) {
@@ -41,46 +61,44 @@ export default class ContactsPicker extends React.Component {
         this.dataSource = new FrontMAddedContactsPickerDataSource(this);
         this.state = {
             contactsData: [],
-            selectedContacts: [],
+            selectedContacts: []
         };
     }
 
     componentDidMount() {
         this.props.navigation.setParams({
             handleAddContact: this.handleAddContact.bind(this),
-            showDialler: this.showDialler,
+            showDialler: this.showDialler
         });
-        Contact.getAddedContacts()
-            .then((contacts) => {
-                if (contacts.length === 0) {
-                    //If no contacts are added then go directly to contacts bot
-                    this.handleAddContact();
-                }
-            });
+        Contact.getAddedContacts().then(contacts => {
+            if (contacts.length === 0) {
+                //If no contacts are added then go directly to contacts bot
+                this.handleAddContact();
+            }
+        });
     }
 
     showDialler = () => {
         Actions.dialler();
-    }
+    };
 
     handleAddContact = () => {
-        SystemBot.get(SystemBot.contactsBotManifestName)
-            .then((contactBot) => {
-                Actions.botChat({ bot: contactBot, onBack: this.onBack });
-            });
-    }
+        SystemBot.get(SystemBot.contactsBotManifestName).then(contactBot => {
+            Actions.botChat({ bot: contactBot, onBack: this.onBack });
+        });
+    };
 
     onBack = () => {
         this.refresh();
-    }
+    };
 
     refresh = () => {
         this.dataSource.loadData();
-    }
+    };
 
     updateList = () => {
         this.setState({ contactsData: this.dataSource.getData() });
-    }
+    };
 
     onDataUpdate() {
         this.updateList();
@@ -91,17 +109,21 @@ export default class ContactsPicker extends React.Component {
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
         }
-        return (<ContactsPickerRow key={contact.id}
-            contact={contact}
-            selected={this.findSelectedContact(contact) !== undefined}
-            checkBoxEnabled={!!this.props.multiSelect}
-            onContactSelected={this.onContactSelected.bind(this)}/>);
+        return (
+            <ContactsPickerRow
+                key={contact.id}
+                contact={contact}
+                selected={this.findSelectedContact(contact) !== undefined}
+                checkBoxEnabled={!!this.props.multiSelect}
+                onContactSelected={this.onContactSelected.bind(this)}
+            />
+        );
     }
 
     findSelectedContact(contact) {
-        return _.find(this.state.selectedContacts, (item) => {
+        return _.find(this.state.selectedContacts, item => {
             return item.id === contact.id;
-        })
+        });
     }
 
     onSearchQueryChange(text) {
@@ -120,12 +142,12 @@ export default class ContactsPicker extends React.Component {
         if (this.props.multiSelect) {
             const selectedContact = this.findSelectedContact(contact);
             if (selectedContact) {
-                const contacts = _.remove(this.state.selectedContacts, (item) => {
+                const contacts = _.remove(this.state.selectedContacts, item => {
                     return item.id !== contact.id;
-                })
+                });
                 this.setState({
                     selectedContacts: contacts
-                })
+                });
             } else {
                 this.state.selectedContacts.push(contact);
                 this.setState({
@@ -133,15 +155,21 @@ export default class ContactsPicker extends React.Component {
                 });
             }
         } else {
-            let participants = [{
-                userId: contact.id,
-                userName: contact.name
-            }];
+            let participants = [
+                {
+                    userId: contact.id,
+                    userName: contact.name
+                }
+            ];
             console.log('Contacts picked :', participants, contact);
-            SystemBot.get(SystemBot.imBotManifestName)
-                .then((imBot) => {
-                    Actions.peopleChat({ bot: imBot, otherParticipants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
+            SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+                Actions.peopleChat({
+                    bot: imBot,
+                    otherParticipants: participants,
+                    type: ActionConst.REPLACE,
+                    onBack: this.props.onBack
                 });
+            });
         }
     }
 
@@ -177,27 +205,34 @@ export default class ContactsPicker extends React.Component {
         const contacts = this.state.selectedContacts || [];
 
         console.log('Contacts picked :', contacts);
-        let participants = contacts.map((contact) => {
+        let participants = contacts.map(contact => {
             return {
                 name: contact.screenName,
                 userId: contact.id
-            }
+            };
         });
 
         if (participants.length > 0) {
-            SystemBot.get(SystemBot.imBotManifestName)
-                .then((imBot) => {
-                    Actions.peopleChat({ bot: imBot, otherParticipants: participants, type: ActionConst.REPLACE, onBack: this.props.onBack });
+            SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+                Actions.peopleChat({
+                    bot: imBot,
+                    otherParticipants: participants,
+                    type: ActionConst.REPLACE,
+                    onBack: this.props.onBack
                 });
+            });
         }
     }
 
     onSideIndexItemPressed(item) {
-        const sectionIndex = _.findIndex(this.state.contactsData, (section) => section.title === item);
+        const sectionIndex = _.findIndex(
+            this.state.contactsData,
+            section => section.title === item
+        );
         this.contactsList.scrollToLocation({
             sectionIndex: sectionIndex,
             itemIndex: 0,
-            viewOffset: SECTION_HEADER_HEIGHT,
+            viewOffset: SECTION_HEADER_HEIGHT
         });
     }
 
@@ -217,21 +252,32 @@ export default class ContactsPicker extends React.Component {
     }
 
     renderContactsList() {
-        const sectionTitles = _.map(this.state.contactsData, (section) => section.title)
+        const sectionTitles = _.map(
+            this.state.contactsData,
+            section => section.title
+        );
         return (
             <KeyboardAvoidingView
-                behavior={(Platform.OS === 'ios') ? 'padding' : null}
-                style={styles.addressBookContainer}>
+                behavior={Platform.OS === 'ios' ? 'padding' : null}
+                style={styles.addressBookContainer}
+            >
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
-                    ref={(sectionList) => { this.contactsList = sectionList; }}
+                    ref={sectionList => {
+                        this.contactsList = sectionList;
+                    }}
                     style={styles.addressBook}
-                    renderItem={ this.renderItem.bind(this) }
-                    renderSectionHeader={({section}) => <ContactsPickerSectionHeader title={section.title}/>}
+                    renderItem={this.renderItem.bind(this)}
+                    renderSectionHeader={({ section }) => (
+                        <ContactsPickerSectionHeader title={section.title} />
+                    )}
                     sections={this.state.contactsData}
                     keyExtractor={(item, index) => item.id}
                 />
-                <ContactsPickerIndexView onItemPressed={this.onSideIndexItemPressed.bind(this)} items={sectionTitles}/>
+                <ContactsPickerIndexView
+                    onItemPressed={this.onSideIndexItemPressed.bind(this)}
+                    items={sectionTitles}
+                />
             </KeyboardAvoidingView>
         );
     }

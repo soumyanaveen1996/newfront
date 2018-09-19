@@ -6,7 +6,7 @@ import _ from 'lodash';
 import cmp from 'semver-compare';
 import { AssetFetcher } from '../dce';
 import RNFS from 'react-native-fs';
-import {Platform, Dimensions, PermissionsAndroid} from 'react-native';
+import { Platform, Dimensions, PermissionsAndroid } from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
 import SystemBot from '../bot/SystemBot.js';
@@ -28,11 +28,15 @@ export function formattedDate(date) {
 }
 
 export function botLogoUrl(logoUrl) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoUrl}`
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${
+        config.bot.s3bucket
+    }/botLogos/${logoUrl}`;
 }
 
 export function channelLogoUrl(channelLogoName) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${channelLogoName}`
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${
+        config.bot.s3bucket
+    }/botLogos/${channelLogoName}`;
 }
 
 function logoName(name) {
@@ -40,15 +44,21 @@ function logoName(name) {
 }
 
 export function categoryLogoUrl(categoryName) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(categoryName)}.png`
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${
+        config.bot.s3bucket
+    }/botLogos/${logoName(categoryName)}.png`;
 }
 
 export function developerLogoUrl(developerName) {
-    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${config.bot.s3bucket}/botLogos/${logoName(developerName)}.png`
+    return `${config.bot.baseProtocol}${config.bot.baseUrl}/${
+        config.bot.s3bucket
+    }/botLogos/${logoName(developerName)}.png`;
 }
 
 export function userProfileUrl(userId) {
-    return `${config.proxy.protocol}${config.proxy.host}${config.proxy.downloadFilePath}/profile-pics/${userId}.png`
+    return `${config.proxy.protocol}${config.proxy.host}${
+        config.proxy.downloadFilePath
+    }/profile-pics/${userId}.png`;
 }
 
 export function sessionStartFormattedDate(date) {
@@ -72,7 +82,10 @@ export async function copyFileAsync(uri, directory) {
         await RNFS.mkdir(directory);
     }
     const parsedPath = PathParse(uri);
-    const toUri = directory[directory.length - 1] === '/' ? directory + parsedPath.base : directory + '/' + parsedPath.base;
+    const toUri =
+        directory[directory.length - 1] === '/'
+            ? directory + parsedPath.base
+            : directory + '/' + parsedPath.base;
 
     const destExists = await RNFS.exists(toUri);
     if (destExists) {
@@ -83,7 +96,6 @@ export async function copyFileAsync(uri, directory) {
     return toUri;
 }
 
-
 export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     const host = config.bot.baseUrl;
 
@@ -93,14 +105,23 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     //    return null;
     //}
     const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    var headers = Utils.createAuthHeader(host, method, path, config.bot.s3ServiceApi, '', user);
+    var headers = Utils.createAuthHeader(
+        host,
+        method,
+        path,
+        config.bot.s3ServiceApi,
+        '',
+        user
+    );
     headers = _.merge(headers, {
-        'accesskeyid': user.aws.accessKeyId,
-        'secretaccesskey': user.aws.secretAccessKey,
-        'sessiontoken': user.aws.sessionToken,
+        accesskeyid: user.aws.accessKeyId,
+        secretaccesskey: user.aws.secretAccessKey,
+        sessiontoken: user.aws.sessionToken
     });
 
-    console.log(`Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`);
+    console.log(
+        `Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`
+    );
 
     return headers;
 }
@@ -109,7 +130,10 @@ export function checkBotStatus(installedBots, newBot) {
     if (installedBots === undefined) {
         return { installed: true, update: false };
     }
-    const installedBot = _.find(installedBots, (botItem) => botItem.botId === newBot.botId);
+    const installedBot = _.find(
+        installedBots,
+        botItem => botItem.botId === newBot.botId
+    );
     let installed = false;
     let update = false;
 
@@ -125,7 +149,13 @@ export function checkBotStatus(installedBots, newBot) {
 }
 
 export function isClientSupportedByBot(bot) {
-    if (!bot.minRequiredPlatformVersion ||  (versionCompare(VersionCheck.getCurrentVersion(), bot.minRequiredPlatformVersion) > -1)) {
+    if (
+        !bot.minRequiredPlatformVersion ||
+        versionCompare(
+            VersionCheck.getCurrentVersion(),
+            bot.minRequiredPlatformVersion
+        ) > -1
+    ) {
         return true;
     }
     return false;
@@ -139,19 +169,30 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
         const filePath = toDirectory + '/' + fileName;
         RNFS.mkdir(toDirectory);
         const exists = await AssetFetcher.existsOnDevice(decodeURI(filePath));
-        console.log('Utils::downloadFileAsync::fileName ' + fileName + ' exists = ', exists);
+        console.log(
+            'Utils::downloadFileAsync::fileName ' + fileName + ' exists = ',
+            exists
+        );
 
         // Download if not already downloaded
         if (!exists) {
-            console.log('Utils::downloadFileAsync::downloading ' + fileName + ' from ', uri);
-            await AssetFetcher.downloadFile(decodeURI(filePath), uri, headers, true, false);
+            console.log(
+                'Utils::downloadFileAsync::downloading ' + fileName + ' from ',
+                uri
+            );
+            await AssetFetcher.downloadFile(
+                decodeURI(filePath),
+                uri,
+                headers,
+                true,
+                false
+            );
         }
         console.log('File downloaded');
         return {
             uri: filePath,
             headers: headers
-        }
-
+        };
     } catch (error) {
         console.log('Error getting file from source url' + uri, error);
         return { uri, headers };
@@ -159,12 +200,12 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
 }
 
 export function addArrayToSqlResults(results) {
-    var returnRes = {}
+    var returnRes = {};
     if (!results || !results.rows) {
         return results;
     }
     returnRes.rows = results.rows;
-    returnRes.rows._array = []
+    returnRes.rows._array = [];
     var len = results.rows.length;
     for (let i = 0; i < len; i++) {
         let row = results.rows.item(i);
@@ -213,7 +254,6 @@ async function copyDir(fromDir, toDir, overwrite = false) {
     }
 }
 
-
 async function copyAssetFile(fromPath, toPath) {
     await RNFS.copyFileAssets(fromPath, toPath);
 }
@@ -251,15 +291,23 @@ async function copyAssetsDir(assetsPath, toDir, overwrite = false) {
 }
 
 export async function copyInitialBotsFromAssetsDirectory(overwrite) {
-    console.log('Documents Directory Path from Assets : ', RNFS.DocumentDirectoryPath);
+    console.log(
+        'Documents Directory Path from Assets : ',
+        RNFS.DocumentDirectoryPath
+    );
 
     const botToDir = RNFS.DocumentDirectoryPath + '/bots';
     await RNFS.mkdir(botToDir);
     await copyAssetsDir('bots/initial_bots/bots', botToDir, overwrite);
 
-    const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
+    const botDependenciesToDir =
+        RNFS.DocumentDirectoryPath + '/bot_dependencies';
     await RNFS.mkdir(botDependenciesToDir);
-    await copyAssetsDir('bots/initial_bots/bot_dependencies', botDependenciesToDir, overwrite);
+    await copyAssetsDir(
+        'bots/initial_bots/bot_dependencies',
+        botDependenciesToDir,
+        overwrite
+    );
 }
 
 export async function copyIntialBots(overwrite) {
@@ -277,7 +325,8 @@ export async function copyIntialBots(overwrite) {
     await copyDir(botFromDir, botToDir, overwrite);
 
     const botDependenciesFromDir = RNFS.MainBundlePath + '/bot_dependencies';
-    const botDependenciesToDir = RNFS.DocumentDirectoryPath + '/bot_dependencies';
+    const botDependenciesToDir =
+        RNFS.DocumentDirectoryPath + '/bot_dependencies';
     await RNFS.mkdir(botDependenciesToDir);
     await copyDir(botDependenciesFromDir, botDependenciesToDir, overwrite);
 }
@@ -291,8 +340,6 @@ export function isiPhoneX() {
         (dimen.height === 812 || dimen.width === 812)
     );
 }
-
-
 
 export function isEmail(email) {
     var tester = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-?\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
@@ -312,28 +359,34 @@ export function isEmail(email) {
     }
 
     var domainParts = parts[1].split('.');
-    if (domainParts.some(function(part) { return part.length > 63; })) {
+    if (
+        domainParts.some(function(part) {
+            return part.length > 63;
+        })
+    ) {
         return false;
     }
     return true;
-
 }
 
 export function padStartForAndroid() {
     //padStart() is not available natively in android
     if (!String.prototype.padStart) {
-        String.prototype.padStart = function padStart(targetLength,padString) {
+        String.prototype.padStart = function padStart(targetLength, padString) {
             targetLength = targetLength >> 0;
-            padString = String((typeof padString !== 'undefined' ? padString : ' '));
+            padString = String(
+                typeof padString !== 'undefined' ? padString : ' '
+            );
             if (this.length > targetLength) {
                 return String(this);
-            }
-            else {
+            } else {
                 targetLength = targetLength - this.length;
                 if (targetLength > padString.length) {
-                    padString += padString.repeat(targetLength / padString.length);
+                    padString += padString.repeat(
+                        targetLength / padString.length
+                    );
                 }
-                return padString.slice(0,targetLength) + String(this);
+                return padString.slice(0, targetLength) + String(this);
             }
         };
     }
@@ -344,8 +397,10 @@ export function requestReadContactsPermission() {
         return Promise.resolve(true);
     } else {
         //Request runtime permission to access contacts
-        return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS).then((result) => {
-            return (result === 'granted' ? true : false);
+        return PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+        ).then(result => {
+            return result === 'granted' ? true : false;
         });
     }
 }
@@ -364,7 +419,7 @@ export function objectToQueryString(obj) {
     const results = [];
     _.forOwn(obj, (value, key) => {
         if (Array.isArray(value)) {
-            _.forOwn(value, (v) => {
+            _.forOwn(value, v => {
                 results.push(`${key}=${encodeURIComponent(v)}`);
             });
         } else {
@@ -395,4 +450,4 @@ export default {
     isClientSupportedByBot,
     newBotConversationId,
     objectToQueryString
-}
+};
