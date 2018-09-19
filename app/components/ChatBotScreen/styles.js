@@ -181,6 +181,9 @@ const stylesheet = StyleSheet.create({
     dataNoMargin: {
         marginHorizontal: 0
     },
+    datawMargin: {
+        marginHorizontal: 5
+    },
     tapToLoadText: {
         textAlign: 'center',
         color: GlobalColors.accent

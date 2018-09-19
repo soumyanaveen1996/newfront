@@ -70,6 +70,7 @@ export default class Message {
         // userUUID or the botUUID for tracking in conversations
         this._createdBy = opts.createdBy;
         this._completed = opts.completed || false;
+        this._status = opts.status || 0;
     }
 
     /**
@@ -448,6 +449,8 @@ export default class Message {
         return this._createdBy;
     };
 
+    getStatus = () => this._status;
+    setStatus = status => (this._status = status);
     /**
      * Return a JSON object representing the message - for persistence / to send to remote server etc
      *
@@ -464,7 +467,8 @@ export default class Message {
             uuid: this.getMessageId(),
             messageDate: this.getMessageDate(),
             botKey: this.getBotKey(),
-            createdBy: this.getCreatedBy()
+            createdBy: this.getCreatedBy(),
+            status: this.getStatus()
         };
     };
 

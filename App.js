@@ -4,8 +4,6 @@ import { MainRouter } from './app/routes/';
 
 export default class App extends React.Component {
     render() {
-        return (
-            <MainRouter />
-        );
+        return <MainRouter />;
     }
 }
