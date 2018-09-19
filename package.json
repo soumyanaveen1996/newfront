@@ -6,7 +6,20 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "postinstall": "rn-nodeify --install stream,process,util --hack",
-    "fix-code": "prettier-eslint --write 'app/**/*.{js,jsx}' "
+    "fix-code": "prettier-eslint --write 'app/**/*.{js,jsx}' ",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{js, json, jsx}": [
+        "prettier-eslint --write",
+        "git add"
+      ]
+    },
+    "ignore": [
+      "initial_bots/**",
+      "node_modules/**"
+    ]
   },
   "dependencies": {
     "@yfuks/react-native-action-sheet": "^0.0.4",
@@ -86,7 +99,9 @@
     "eslint-plugin-jest": "^20.0.3",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.1.0",
+    "husky": "^0.14.3",
     "jest": "22.0.4",
+    "lint-staged": "^7.2.2",
     "mock-async-storage": "^1.0.3",
     "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^4.7.1",
