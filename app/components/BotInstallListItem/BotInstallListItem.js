@@ -44,6 +44,10 @@ export default class BotInstallListItem extends React.Component {
         });
     }
 
+    componentDidMount() {
+        console.log('BOT >>>>>>>>>' + JSON.stringify(this.props.bot, undefined, 2))
+    }
+
     async performBotInstallation(bot, update) {
         if (!utils.isClientSupportedByBot(bot)) {
             Alert.alert(

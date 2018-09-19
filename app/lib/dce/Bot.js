@@ -11,6 +11,8 @@ import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
     constructor(manifest, context) {
+        console.log('bot constructor >>>> ' + JSON.stringify(manifest, undefined, 2) + '  >>> ' + JSON.stringify(context, undefined, 2))
+
         this.manifest = manifest;
         this.context = context;
 
