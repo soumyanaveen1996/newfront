@@ -85,7 +85,12 @@ function nineToTenMigration() {
         return DbVersionDAO.updateVersion(10);
     });
 }
-
+function tenToEleven() {
+    console.log('Ten to Eleven Migration');
+    return MessageDAO.addStatusColumn().then(() => {
+        return DbVersionDAO.updateVersion(11);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -162,6 +167,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 9) {
                     return nineToTenMigration();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 10) {
+                    return tenToEleven();
                 } else {
                     return version;
                 }

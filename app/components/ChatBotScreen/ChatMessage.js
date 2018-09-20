@@ -34,6 +34,7 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import { DotIndicator } from 'react-native-indicators';
 import _ from 'lodash';
 import Hyperlink from 'react-native-hyperlink';
+import { Icons } from '../../config/icons';
 
 export default class ChatMessage extends React.Component {
     constructor(props) {
@@ -443,6 +444,11 @@ export default class ChatMessage extends React.Component {
                     metadataContainerStyle(alignRight, !!this.props.imageSource)
                 ]}
             >
+                {message.getStatus() === 1 ? (
+                    <View style={{ paddingLeft: 5, opacity: 0.7 }}>
+                        {Icons.delivered()}
+                    </View>
+                ) : null}
                 <Text style={[styles.date, styles.dataNoMargin]}>
                     {utils.formattedDate(message.getMessageDate())}
                 </Text>

@@ -71,6 +71,8 @@ import {
     DocumentPickerUtil
 } from 'react-native-document-picker';
 
+const R = require('ramda');
+
 export default class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -518,7 +520,7 @@ export default class ChatBotScreen extends React.Component {
         }
     };
 
-    handleConnectionChange = (connection) => {
+    handleConnectionChange = connection => {
         if (connection.type === 'none') {
             this.setState({
                 showNetworkStatusBar: true,
@@ -689,6 +691,7 @@ export default class ChatBotScreen extends React.Component {
 
     done = () => {
         // Done with the bot - navigate away?
+
         console.log('Done called from bot code');
     };
 
@@ -926,9 +929,24 @@ export default class ChatBotScreen extends React.Component {
     }
 
     addMessage(message) {
-        let msgs = this.state.messages.slice();
-        msgs.push(message.toBotDisplay());
-        return msgs;
+        const { messages } = this.state;
+        const incomingMessage = message.toBotDisplay();
+        const messageIndex = R.findIndex(R.propEq('key', incomingMessage.key))(
+            this.state.messages
+        );
+        if (messageIndex > 0) {
+            const updatedMessage = R.update(
+                messageIndex,
+                incomingMessage,
+                this.state.messages
+            );
+            return updatedMessage;
+        } else {
+            return [...this.state.messages, incomingMessage];
+        }
+        // let msgs = this.state.messages.slice();
+        // msgs.push(message.toBotDisplay());
+        // return msgs;
     }
 
     isUserChat() {
@@ -1013,12 +1031,22 @@ export default class ChatBotScreen extends React.Component {
         this.updateChat(message);
         this.scrollToBottom = true;
         this.waitForQueueProcessing().then(() => {
-            this.loadedBot.next(
-                message,
-                this.botState,
-                this.state.messages,
-                this.botContext
-            );
+            console.log('Sending my mESSSSAGE', message);
+            this.loadedBot
+                .next(
+                    message,
+                    this.botState,
+                    this.state.messages,
+                    this.botContext
+                )
+                .then(response => {
+                    console.log('Acknowledgement from BOT is...', response);
+                    console.log(this.state.messages);
+                    if (response.status === 200) {
+                        message.setStatus(1);
+                        this.updateChat(message);
+                    }
+                });
             //this.scrollToBottomIfNeeded();
         });
     };
