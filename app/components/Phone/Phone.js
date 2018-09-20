@@ -22,6 +22,8 @@ export default class Phone extends React.Component {
         super(props);
         this.state = {
             phoneState: props.state,
+            micOn: true,
+            speakerOn: false,
             username:
                 props.state === PhoneState.calling ||
                 props.state === PhoneState.init
@@ -73,6 +75,8 @@ export default class Phone extends React.Component {
 
     async initialize() {
         try {
+            console.log('Initializing VOIP');
+
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
                 TwilioVoice.connect({
@@ -115,6 +119,16 @@ export default class Phone extends React.Component {
         this.setState({ phoneState: PhoneState.incall });
     }
 
+    toggleMic = () => {
+        TwilioVoice.setMuted(this.state.micOn);
+        this.setState({ micOn: !this.state.micOn });
+    };
+
+    toggleSpeaker = () => {
+        TwilioVoice.setSpeakerPhone(!this.state.speakerOn);
+        this.setState({ speakerOn: !this.state.speakerOn });
+    };
+
     close() {
         const { phoneState } = this.state;
         if (
@@ -144,13 +158,13 @@ export default class Phone extends React.Component {
         }
     }
 
-    statusMessage(state) {
+    statusMessage({ state, userName = 'Unknown' }) {
         if (state === PhoneState.incall) {
-            return '';
+            return `${userName}`;
         } else if (state === PhoneState.calling) {
-            return I18n.t('Calling');
+            return `${I18n.t('Calling')} ${userName}`;
         } else if (state === PhoneState.init) {
-            return I18n.t('Initializing');
+            return I18n.t('Initiating Call');
         } else {
             return I18n.t('From');
         }
@@ -163,12 +177,21 @@ export default class Phone extends React.Component {
     render() {
         const { phoneState } = this.state;
 
-        const message = this.statusMessage(phoneState);
+        const message = this.statusMessage(phoneState, this.username());
         return (
             <View style={Styles.containerStyle}>
                 <View style={Styles.nameContainer}>
                     <Text style={Styles.callingText}>{message}</Text>
-                    <Text style={Styles.nameText}>{this.username()}</Text>
+                </View>
+                <View style={Styles.buttonContainer}>
+                    <TouchableOpacity onPress={this.toggleMic}>
+                        {this.state.micOn ? Icons.mic() : Icons.micOff()}
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.toggleSpeaker}>
+                        {this.state.speakerOn
+                            ? Icons.speakerOn()
+                            : Icons.speakerOff()}
+                    </TouchableOpacity>
                 </View>
                 <View style={Styles.buttonContainer}>
                     <TouchableOpacity
