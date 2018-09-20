@@ -75,8 +75,6 @@ export default class Phone extends React.Component {
 
     async initialize() {
         try {
-            console.log('Initializing VOIP');
-
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
                 TwilioVoice.connect({
@@ -86,7 +84,6 @@ export default class Phone extends React.Component {
                 this.setState({ phoneState: PhoneState.calling });
             }
         } catch (err) {
-            console.log('Unable to make the call : ', err);
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             Actions.pop();
         }
@@ -103,14 +100,12 @@ export default class Phone extends React.Component {
     }
 
     connectionDidConnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidConnect : ', data);
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             this.setState({ phoneState: PhoneState.incall });
         }
     }
 
     connectionDidDisconnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidDisconnect : ', data);
         Actions.pop();
     }
 
@@ -164,7 +159,7 @@ export default class Phone extends React.Component {
         } else if (state === PhoneState.calling) {
             return `${I18n.t('Calling')} ${userName}`;
         } else if (state === PhoneState.init) {
-            return I18n.t('Initiating Call');
+            return 'Initiating Call';
         } else {
             return I18n.t('From');
         }
@@ -176,22 +171,30 @@ export default class Phone extends React.Component {
 
     render() {
         const { phoneState } = this.state;
-
-        const message = this.statusMessage(phoneState, this.username());
+        const message = this.statusMessage({
+            state: phoneState,
+            userName: this.username()
+        });
         return (
             <View style={Styles.containerStyle}>
                 <View style={Styles.nameContainer}>
                     <Text style={Styles.callingText}>{message}</Text>
                 </View>
                 <View style={Styles.buttonContainer}>
-                    <TouchableOpacity onPress={this.toggleMic}>
-                        {this.state.micOn ? Icons.mic() : Icons.micOff()}
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.toggleSpeaker}>
-                        {this.state.speakerOn
-                            ? Icons.speakerOn()
-                            : Icons.speakerOff()}
-                    </TouchableOpacity>
+                    {phoneState === PhoneState.incall ? (
+                        <View style={Styles.buttonContainer}>
+                            <TouchableOpacity onPress={this.toggleMic}>
+                                {this.state.micOn
+                                    ? Icons.mic()
+                                    : Icons.micOff()}
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={this.toggleSpeaker}>
+                                {this.state.speakerOn
+                                    ? Icons.speakerOn()
+                                    : Icons.speakerOff()}
+                            </TouchableOpacity>
+                        </View>
+                    ) : null}
                 </View>
                 <View style={Styles.buttonContainer}>
                     <TouchableOpacity

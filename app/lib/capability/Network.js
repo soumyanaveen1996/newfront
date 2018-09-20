@@ -126,30 +126,15 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
-    const start = moment().valueOf();
     return new Promise((resolve, reject) => {
         Network.isConnected().then(connected => {
-            console.log(
-                'Time connected : ',
-                connected,
-                moment().valueOf() - start,
-                options.url
-            );
             if (connected) {
-                console.log('Time connected : ', moment().valueOf() - start);
                 const requestOptions = converOptionsToFetchRequest(options);
-                console.log('Request : ', options, requestOptions);
                 fetch(options.url, requestOptions)
                     .then(response => {
                         //console.log('Response raw : ', response);
-                        console.log(
-                            'Time for network call : ',
-                            options.url,
-                            moment().valueOf() - start
-                        );
                         if (response.status === 200) {
                             response.json().then(json => {
-                                console.log('Response : ', json);
                                 resolve({
                                     data: json,
                                     status: response.status,
@@ -157,6 +142,10 @@ function Network(options, queue = false) {
                                 });
                             });
                         } else {
+                            console.log(
+                                '>>>>>>NETWORK ERROR CODE NE 200',
+                                response.statusText
+                            );
                             reject(
                                 new NetworkError(
                                     response.status,
@@ -165,7 +154,10 @@ function Network(options, queue = false) {
                             );
                         }
                     })
-                    .catch(reject);
+                    .catch(err => {
+                        console.log('>>>>>>>>>>>>>Network in Catch', err);
+                        reject();
+                    });
                 /*
                     axios(options)
                         .then((data) => {
