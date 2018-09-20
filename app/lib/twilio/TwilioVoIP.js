@@ -49,18 +49,19 @@ export default class TwilioVoIP {
 
     initTelephony = async () => {
         if (Platform.OS === 'ioss') {
-            TwilioVoice.initWithTokenUrl(Twilio.getAccessTokenURL());
-            try {
-                TwilioVoice.configureCallKit({
-                    appName: 'FrontM' // Required param
-                    // imageName:     'my_image_name_in_bundle',             // OPTIONAL
-                    // ringtoneSound: 'my_ringtone_sound_filename_in_bundle' // OPTIONAL
-                });
-                return true;
-            } catch (err) {
-                console.err(err);
-                throw err;
-            }
+            // Not Required
+            // TwilioVoice.initWithTokenUrl(Twilio.getAccessTokenURL());
+            // try {
+            //     TwilioVoice.configureCallKit({
+            //         appName: 'FrontM' // Required param
+            //         // imageName:     'my_image_name_in_bundle',             // OPTIONAL
+            //         // ringtoneSound: 'my_ringtone_sound_filename_in_bundle' // OPTIONAL
+            //     });
+            //     return true;
+            // } catch (err) {
+            //     console.err(err);
+            //     throw err;
+            // }
         } else {
             try {
                 const user = await Auth.getUser();
@@ -75,6 +76,7 @@ export default class TwilioVoIP {
                 }
 
                 await TwilioVoice.initWithToken(accessToken);
+                console.log("Access Token for TWILIO>>>>>>>>>>>", accessToken)
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
                         appName: 'FrontM' // Required param
