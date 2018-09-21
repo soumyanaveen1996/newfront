@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import Dimensions from 'Dimensions';
 
 const Styles = StyleSheet.create({
     container: {
@@ -84,7 +85,7 @@ const Styles = StyleSheet.create({
         color: GlobalColors.black
     },
     mainContainer: {
-        paddingTop: 40,
+        paddingTop: 30,
         flex: 1,
         flexDirection: 'column',
         paddingBottom: 30,
@@ -93,11 +94,31 @@ const Styles = StyleSheet.create({
     initialMainContainer: {
         backgroundColor: 'green',
         flex: 1,
-        paddingTop: 40
+        paddingTop: 30
     },
     diallerContainer: {
-        height: 300,
+        height: Dimensions.get('window').height * 0.5,
         backgroundColor: GlobalColors.white
+    },
+    callQuotaContainer: {
+        flexDirection: 'row',
+        margin: 10
+    },
+    callQuotaText: {
+        fontSize: 20,
+        fontWeight: '800',
+        marginLeft: 10
+    },
+    horizontalRuler: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        opacity: 0.5
+    },
+    callQuotaPrice: {
+        fontSize: 20,
+        marginLeft: 'auto',
+        fontWeight: '500',
+        opacity: 0.7
     },
     diallerButtonContainer: {
         flex: 1,
@@ -110,7 +131,7 @@ const Styles = StyleSheet.create({
         alignItems: 'center'
     },
     incallDiallerButtonContainer: {
-        height: 300,
+        height: 500,
         flexDirection: 'row',
         width: '80%',
         justifyContent: 'space-around',

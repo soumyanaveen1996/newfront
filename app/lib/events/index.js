@@ -5,6 +5,7 @@ import SatelliteConnectionEvents from './SatelliteConnection';
 import PollingStrategyEvents from './PollingStrategy';
 import MessageEvents from './Message';
 import TwilioEvents from './Twilio';
+import CallQuotaEvents from './CallQuota';
 
 export {
     EventEmitter,
@@ -13,7 +14,8 @@ export {
     SatelliteConnectionEvents,
     PollingStrategyEvents,
     MessageEvents,
-    TwilioEvents
+    TwilioEvents,
+    CallQuotaEvents
 };
 
 export default EventEmitter;

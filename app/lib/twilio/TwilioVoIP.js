@@ -76,7 +76,7 @@ export default class TwilioVoIP {
                 }
 
                 await TwilioVoice.initWithToken(accessToken);
-                console.log("Access Token for TWILIO>>>>>>>>>>>", accessToken)
+                console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
                         appName: 'FrontM' // Required param
@@ -174,6 +174,8 @@ export default class TwilioVoIP {
     };
 
     connectionDidConnectHandler = data => {
+        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
+
         console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
     };
