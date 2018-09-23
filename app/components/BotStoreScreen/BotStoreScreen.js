@@ -16,6 +16,7 @@ import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { Auth } from '../../lib/capability';
+import BotInstall from '../../lib/BotInstall';
 
 export default class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -122,6 +123,7 @@ export default class BotStoreScreen extends React.Component {
                 AuthEvents.userChanged,
                 this.userChangedHandler.bind(this)
             );
+            await BotInstall.InstallAllSubscribedBots()
             await this.updateCatalog();
             if (this.props.navigation) {
                 this.props.navigation.setParams({

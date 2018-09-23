@@ -1554,7 +1554,7 @@ export default class ChatBotScreen extends React.Component {
         );
     };
 
-    render() {
+    render() {        
         if (!this.botLoaded) {
             return (
                 <View style={chatStyles.loading}>
