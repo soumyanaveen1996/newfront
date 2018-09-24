@@ -27,7 +27,7 @@ export default class Dialler extends React.Component {
         super(props);
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '+',
+            dialledNumber: '+919880433199',
             dialledDigits: '919880433199',
             micOn: true,
             speakerOn: false,
