@@ -1,169 +1,179 @@
-import { MessageDAO, NetworkDAO, ConversationDAO, ArrayStorageDAO, DbVersionDAO } from '../../lib/persistence';
+import {
+    MessageDAO,
+    NetworkDAO,
+    ConversationDAO,
+    ArrayStorageDAO,
+    DbVersionDAO
+} from '../../lib/persistence';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import ChannelContactDAO from '../../lib/persistence/ChannelContactDAO';
 import BackgroundTaskDAO from '../../lib/persistence/BackgroundTaskDAO';
 
 const createMessageTable = MessageDAO.createMessageTable;
-const createNetworkRequestQueueTable = NetworkDAO.createNetworkRequestQueueTable;
+const createNetworkRequestQueueTable =
+    NetworkDAO.createNetworkRequestQueueTable;
 const createConversationTable = ConversationDAO.createConversationTable;
 const createArrayStorageTable = ArrayStorageDAO.createArrayStorageTable;
 
 function zeroToOneMigration() {
     return createMessageTable()
         .then(() => {
-            return createNetworkRequestQueueTable()
+            return createNetworkRequestQueueTable();
         })
         .then(() => {
-            return createConversationTable()
+            return createConversationTable();
         })
         .then(() => {
-            return createArrayStorageTable()
+            return createArrayStorageTable();
         })
         .then(() => {
             return DbVersionDAO.updateVersion(1);
-        })
+        });
 }
 
 function oneToTwoMigration() {
-    return MessageDAO.migrateToV2Messages()
-        .then(() => {
-            return DbVersionDAO.updateVersion(2);
-        })
+    return MessageDAO.migrateToV2Messages().then(() => {
+        return DbVersionDAO.updateVersion(2);
+    });
 }
 
 function twoToThreeMigration() {
-    return ConversationDAO.migrateToV2Conversations()
-        .then(() => {
-            return DbVersionDAO.updateVersion(3);
-        })
+    return ConversationDAO.migrateToV2Conversations().then(() => {
+        return DbVersionDAO.updateVersion(3);
+    });
 }
 
 function threeToFourMigration() {
-    return NetworkDAO.migrateToV2NetworkQueue()
-        .then(() => {
-            return DbVersionDAO.updateVersion(4);
-        })
+    return NetworkDAO.migrateToV2NetworkQueue().then(() => {
+        return DbVersionDAO.updateVersion(4);
+    });
 }
 
 function fourToFiveMigration() {
-    return MessageDAO.addCompletedColumn()
-        .then(() => {
-            return DbVersionDAO.updateVersion(5);
-        })
+    return MessageDAO.addCompletedColumn().then(() => {
+        return DbVersionDAO.updateVersion(5);
+    });
 }
 
 function fiveToSixMigration() {
-    return ChannelDAO.createChannelsTable()
-        .then(() => {
-            return DbVersionDAO.updateVersion(6);
-        })
+    return ChannelDAO.createChannelsTable().then(() => {
+        return DbVersionDAO.updateVersion(6);
+    });
 }
 
 function sixToSevenMigration() {
-    return ChannelContactDAO.createChannelContactsTable()
-        .then(() => {
-            return DbVersionDAO.updateVersion(7);
-        })
+    return ChannelContactDAO.createChannelContactsTable().then(() => {
+        return DbVersionDAO.updateVersion(7);
+    });
 }
 
 function sevenToEightMigration() {
-    return MessageDAO.createMessageDateIndex()
-        .then(() => {
-            return DbVersionDAO.updateVersion(8);
-        })
+    return MessageDAO.createMessageDateIndex().then(() => {
+        return DbVersionDAO.updateVersion(8);
+    });
 }
 
 function eightToNineMigration() {
-    return NetworkDAO.migrateToV3NetworkQueue()
-        .then(() => {
-            return DbVersionDAO.updateVersion(9);
-        })
+    return NetworkDAO.migrateToV3NetworkQueue().then(() => {
+        return DbVersionDAO.updateVersion(9);
+    });
 }
 
 function nineToTenMigration() {
     console.log('Nine to 10 migration : ');
-    return BackgroundTaskDAO.createBackgroundTaskTable()
-        .then(() => {
-            return DbVersionDAO.updateVersion(10);
-        })
+    return BackgroundTaskDAO.createBackgroundTaskTable().then(() => {
+        return DbVersionDAO.updateVersion(10);
+    });
 }
-
+function tenToEleven() {
+    console.log('Ten to Eleven Migration');
+    return MessageDAO.addStatusColumn().then(() => {
+        return DbVersionDAO.updateVersion(11);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
-            .then((exists) => {
+            .then(exists => {
                 if (exists) {
                     return DbVersionDAO.getVersion();
                 } else {
                     return DbVersionDAO.createVersionTable(0);
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 0) {
-                    return zeroToOneMigration()
+                    return zeroToOneMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 1) {
-                    return oneToTwoMigration()
+                    return oneToTwoMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 2) {
-                    return twoToThreeMigration()
+                    return twoToThreeMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 3) {
-                    return threeToFourMigration()
+                    return threeToFourMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 4) {
-                    return fourToFiveMigration()
+                    return fourToFiveMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 5) {
-                    return fiveToSixMigration()
+                    return fiveToSixMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 6) {
-                    return sixToSevenMigration()
+                    return sixToSevenMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 7) {
-                    return sevenToEightMigration()
+                    return sevenToEightMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 8) {
-                    return eightToNineMigration()
+                    return eightToNineMigration();
                 } else {
                     return version;
                 }
             })
-            .then((version) => {
+            .then(version => {
                 if (version === 9) {
-                    return nineToTenMigration()
+                    return nineToTenMigration();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 10) {
+                    return tenToEleven();
                 } else {
                     return version;
                 }
@@ -171,9 +181,9 @@ function runMigrations() {
             .then(() => {
                 resolve();
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log('Migration Error : ', error);
-            })
+            });
     });
 }
 
@@ -182,5 +192,5 @@ export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,
     createConversationTable: createConversationTable,
     createArrayStorageTable: createArrayStorageTable,
-    runMigrations: runMigrations,
+    runMigrations: runMigrations
 };

@@ -21,10 +21,10 @@ let processingFutureRequest = false;
 const poll = () => {
     console.log('NetworkHandler::poll::called at ', new Date());
     Auth.getUser()
-        .then((authUser) => {
+        .then(authUser => {
             return Auth.refresh(authUser);
         })
-        .then((refreshedUser) => {
+        .then(refreshedUser => {
             processNetworkQueue();
             readRemoteLambdaQueue(refreshedUser);
         });
@@ -33,39 +33,41 @@ const poll = () => {
 const readLambda = () => {
     console.log('NetworkHandler::readLambda::called at ', new Date());
     Auth.getUser()
-        .then((authUser) => {
+        .then(authUser => {
             return Auth.refresh(authUser);
         })
-        .then((refreshedUser) => {
+        .then(refreshedUser => {
             processNetworkQueue();
             readRemoteLambdaQueue(refreshedUser);
         });
-}
+};
 
 const handleLambdaResponse = (res, user) => {
-
-    let resData = res.data.queueMsgs || []
+    let resData = res.data.queueMsgs || [];
 
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
-        _.forEach(messages, function (message) {
+        _.forEach(messages, function(message) {
             MessageQueue.push(message);
         });
     }
-}
+};
 
-const readRemoteLambdaQueue = (user) => {
-    console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
+const readRemoteLambdaQueue = user => {
+    console.log(
+        'NetworkHandler::readRemoteLambdaQueue::called at ',
+        new Date()
+    );
     readQueue(user)
-        .then((res) => {
+        .then(res => {
             PushNotification.setApplicationIconBadgeNumber(0);
             return handleLambdaResponse(res, user);
         })
-        .catch((error) => {
+        .catch(error => {
             console.log('Error in Reading Lambda queue', error);
-        })
-}
+        });
+};
 
 const processNetworkQueueRequest = () => {
     if (processingFutureRequest) {
@@ -73,7 +75,7 @@ const processNetworkQueueRequest = () => {
     }
     processingFutureRequest = true;
     dequeueAndProcessQueueRequest();
-}
+};
 
 const dequeueAndProcessQueueRequest = async () => {
     let requestId = null;
@@ -99,141 +101,188 @@ const dequeueAndProcessQueueRequest = async () => {
         if (requestId) {
             try {
                 await Queue.handleNetworkRequestFailure(requestId, key);
-            } catch (exception) { }
+            } catch (exception) {}
 
             dequeueAndProcessQueueRequest();
         } else {
             processingFutureRequest = false;
         }
     }
-}
+};
 
 const processNetworkQueue = () => {
     console.log('NetworkHandler::processNetworkQueue::called at ', new Date());
-    Network.isConnected()
-        .then((connected) => {
-            if (connected) {
-                processNetworkQueueRequest();
+    Network.isConnected().then(connected => {
+        if (connected) {
+            processNetworkQueueRequest();
+        }
+    });
+};
+
+const readQueue = user =>
+    new Promise((resolve, reject) => {
+        const host = config.network.queueHost;
+
+        let options = {
+            method: 'post',
+            url: getUrl(),
+            headers: getHeaders(user)
+        };
+
+        function getUrl() {
+            if (config.proxy.enabled) {
+                return (
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.queuePath
+                );
+            } else {
+                return (
+                    config.network.queueProtocol +
+                    host +
+                    config.network.queuePath
+                );
             }
-        })
-}
-
-const readQueue = (user) => new Promise((resolve, reject) => {
-    const host = config.network.queueHost;
-
-    let options = {
-        'method': 'post',
-        'url': getUrl(),
-        'headers': getHeaders(user),
-    };
-
-    function getUrl() {
-        if (config.proxy.enabled) {
-            return config.proxy.protocol + config.proxy.host + config.proxy.queuePath;
-        } else {
-            return config.network.queueProtocol + host + config.network.queuePath;
         }
-    }
 
-    function getHeaders() {
-        if (config.proxy.enabled) {
-            return {
-                accessKeyId: user.aws.accessKeyId,
-                secretAccessKey: user.aws.secretAccessKey,
-                sessionToken: user.aws.sessionToken
-            };
-        } else {
-            return Utils.createAuthHeader(host, 'get', config.network.queuePath, config.network.queueServiceApi, null, user);
+        function getHeaders() {
+            if (config.proxy.enabled) {
+                return {
+                    accessKeyId: user.aws.accessKeyId,
+                    secretAccessKey: user.aws.secretAccessKey,
+                    sessionToken: user.aws.sessionToken
+                };
+            } else {
+                return Utils.createAuthHeader(
+                    host,
+                    'get',
+                    config.network.queuePath,
+                    config.network.queueServiceApi,
+                    null,
+                    user
+                );
+            }
         }
-    }
 
-    return Network(options)
-        .then((res) => {
-            handleOnSatelliteResponse(res);
-            resolve(res);
-        })
-        .catch(reject)
-});
+        return Network(options)
+            .then(res => {
+                handleOnSatelliteResponse(res);
+                resolve(res);
+            })
+            .catch(reject);
+    });
 
-const handleOnSatelliteResponse = (res) => {
+const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
         EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
     } else {
         EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
     }
-}
+};
 
-const requestMessagesBeforeDateFromLambda = (user, conversationId, botId, date) => new Promise((resolve, reject) => {
-    let options = {
-        'method': 'post',
-        'url': config.proxy.protocol + config.proxy.host + config.proxy.queuePath,
-        'headers': {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken
-        },
-        'data': {
-            conversation: conversationId,
-            botId: botId,
-            timestamp: date,
-        }
-    };
-    console.log('Options : ', options);
+const requestMessagesBeforeDateFromLambda = (
+    user,
+    conversationId,
+    botId,
+    date
+) =>
+    new Promise((resolve, reject) => {
+        let options = {
+            method: 'post',
+            url:
+                config.proxy.protocol +
+                config.proxy.host +
+                config.proxy.queuePath,
+            headers: {
+                accessKeyId: user.aws.accessKeyId,
+                secretAccessKey: user.aws.secretAccessKey,
+                sessionToken: user.aws.sessionToken
+            },
+            data: {
+                conversation: conversationId,
+                botId: botId,
+                timestamp: date
+            }
+        };
+        console.log('Options : ', options);
 
-    return resolve(Network(options));
-});
+        return resolve(Network(options));
+    });
 
 const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.previousMsgs;
     let messages = [];
-    _.each(prevMessagesData, (mData) => {
+    _.each(prevMessagesData, mData => {
         let message = Message.from(mData, user);
         MessageHandler.persistOnDevice(conversationId, message);
         messages.push(message.toBotDisplay());
-    })
+    });
     return messages.reverse();
 };
 
-const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) => new Promise((resolve, reject) => {
-    console.log('NetworkHandler::readRemoteLambdaQueue::called at ', new Date());
-    requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
-        .then((res) => {
-            console.log('Messages before date : ', res, date);
-            handleOnSatelliteResponse(res);
-            handleLambdaResponse(res, user)
-            let messages = handlePreviousMessages(res, conversationId, botId, date, user);
-            resolve(messages);
-        })
-        .catch((error) => {
-            console.log('Error in fetching old messages from lambda before date', error);
-        })
-});
+const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
+    new Promise((resolve, reject) => {
+        console.log(
+            'NetworkHandler::readRemoteLambdaQueue::called at ',
+            new Date()
+        );
+        requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
+            .then(res => {
+                console.log('Messages before date : ', res, date);
+                handleOnSatelliteResponse(res);
+                handleLambdaResponse(res, user);
+                let messages = handlePreviousMessages(
+                    res,
+                    conversationId,
+                    botId,
+                    date,
+                    user
+                );
+                resolve(messages);
+            })
+            .catch(error => {
+                console.log(
+                    'Error in fetching old messages from lambda before date',
+                    error
+                );
+            });
+    });
 
-const fetchOldMessagesBeforeDate = (conversationId, botId, date) => new Promise((resolve, reject) => {
-    console.log('NetworkHandler::readOldQueueMessages::called at ', new Date());
-    Auth.getUser()
-        .then((authUser) => {
-            return Auth.refresh(authUser);
-        })
-        .then((refreshedUser) => {
-            resolve(fetchMessagesBeforeDateFromLambda(refreshedUser, conversationId, botId, date));
-        });
-});
+const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
+    new Promise((resolve, reject) => {
+        console.log(
+            'NetworkHandler::readOldQueueMessages::called at ',
+            new Date()
+        );
+        Auth.getUser()
+            .then(authUser => {
+                return Auth.refresh(authUser);
+            })
+            .then(refreshedUser => {
+                resolve(
+                    fetchMessagesBeforeDateFromLambda(
+                        refreshedUser,
+                        conversationId,
+                        botId,
+                        date
+                    )
+                );
+            });
+    });
 
-const ping = (user) => {
+const ping = user => {
     console.log('NetworkHandler::ping::called at ', new Date());
     let options = {
-        'method': 'get',
-        'url': config.proxy.protocol + config.proxy.host + config.proxy.pingPath,
+        method: 'get',
+        url: config.proxy.protocol + config.proxy.host + config.proxy.pingPath
     };
     return Network(options);
 };
 
 const keepAlive = () => {
-    Auth.getUser()
-        .then((authUser) => {
-            ping();
-        });
+    Auth.getUser().then(authUser => {
+        ping();
+    });
 };
 
 export default {

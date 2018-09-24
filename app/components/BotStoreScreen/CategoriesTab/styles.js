@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { scrollViewConfig }  from './config'
+import { scrollViewConfig } from './config';
 export default StyleSheet.create({
     tileContent: {
         flex: 1,
@@ -10,21 +10,19 @@ export default StyleSheet.create({
     tileTitle: {
         color: '#333333',
         fontSize: 15,
-        marginTop : 10
+        marginTop: 10
     },
-    iconStyle :{
-        height:80,
-        width:80,
-        borderRadius : 40 ,
+    iconStyle: {
+        height: 80,
+        width: 80,
+        borderRadius: 40
     },
-    gridStyle :{
+    gridStyle: {
         width: scrollViewConfig.width * 0.5 - 1,
         height: scrollViewConfig.width * 0.5 - 1
     },
-    listViewContentContainerStyle : {
+    listViewContentContainerStyle: {
         flex: 1,
         paddingVertical: 0
     }
-})
-
-
+});

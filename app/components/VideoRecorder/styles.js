@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     preview: {
         flex: 1,
@@ -21,7 +20,7 @@ const styles = StyleSheet.create({
         right: 0,
         left: 0,
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     topBar: {
         position: 'absolute',
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
         left: 0,
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingTop: 20
     },
     bottomButton: {
         flex: 0,
@@ -48,11 +47,11 @@ const styles = StyleSheet.create({
     },
     useButton: {
         marginRight: 20,
-        textAlign: 'right',
+        textAlign: 'right'
     },
     cancelButton: {
         marginLeft: 20,
-        textAlign: 'left',
+        textAlign: 'left'
     },
     recordButtonContainer: {
         width: 60,

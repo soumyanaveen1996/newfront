@@ -34,7 +34,7 @@ const images = {
     checkmark_selected: require('./contact/checkmark_selected.png'),
     btn_close_slider: { uri: 'purple_btn_close' },
     btn_info: require('./slider/btn_info.png'),
-    icn_slider:require('./slider/icn_slider.png'),
+    icn_slider: require('./slider/icn_slider.png'),
     walkthrough_image: require('./walkthrough/image.png'),
     gsm: require('./icons/gsm.png'),
     satellite: require('./icons/satellite.png'),
@@ -48,4 +48,3 @@ const images = {
 };
 
 export default images;
-

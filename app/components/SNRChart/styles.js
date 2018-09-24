@@ -14,9 +14,8 @@ export const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: 10,
         color: GlobalColors.white
-    },
+    }
 });
-
 
 export const chartStyles = {
     axis: {
@@ -27,12 +26,12 @@ export const chartStyles = {
         axisLabel: {
             fill: GlobalColors.accent,
             stroke: 'none',
-            fontSize: 15,
+            fontSize: 15
         },
         tickLabels: {
             fill: GlobalColors.accent,
             stroke: 'none',
-            fontSize: 10,
+            fontSize: 10
         }
     },
     line: {
@@ -43,8 +42,7 @@ export const chartStyles = {
     }
 };
 
-
 export default {
     styles: styles,
-    chartStyles: chartStyles,
-}
+    chartStyles: chartStyles
+};

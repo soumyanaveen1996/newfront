@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
-import { SCREEN_HEIGHT }  from './config';
+import { SCREEN_HEIGHT } from './config';
 import { GlobalColors } from '../../config/styles';
 
 export const HEADER_HEIGHT = 50;
@@ -13,75 +13,75 @@ export default StyleSheet.create({
         borderTopWidth: 1,
         borderColor: 'lightgrey',
         backgroundColor: 'rgb(242, 242, 242)',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     closeButton: {
-        height:24,
-        width:24,
-        marginLeft:15,
+        height: 24,
+        width: 24,
+        marginLeft: 15
     },
     closeImg: {
-        height:24,
-        width:24
+        height: 24,
+        width: 24
     },
     sliderIconView: {
-        flex:1,
-        alignItems:'center'
+        flex: 1,
+        alignItems: 'center'
     },
     listContainer1: {
-        paddingLeft:15,
+        paddingLeft: 15
     },
     scrollView: {
-        backgroundColor: 'rgb(232, 232, 232)',
+        backgroundColor: 'rgb(232, 232, 232)'
     },
     listcontainer2: {
-        flex:1,
-        borderBottomWidth:1,
-        borderColor:'lightgrey',
-        flexDirection:'row',
-        paddingVertical: 12,
+        flex: 1,
+        borderBottomWidth: 1,
+        borderColor: 'lightgrey',
+        flexDirection: 'row',
+        paddingVertical: 12
     },
     textContainer: {
-        flex:1,
-        justifyContent:'center'
+        flex: 1,
+        justifyContent: 'center'
     },
     textStyle: {
-        fontSize:16,
-        color:'#24282f'
+        fontSize: 16,
+        color: '#24282f'
     },
     infoImageContainer: {
-        width:52,
-        justifyContent:'center',
-        alignItems:'center'
+        width: 52,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     infoIconStyle: {
-        height:22,
-        width:22
+        height: 22,
+        width: 22
     },
     rightButton: {
-        flex:1,
-        paddingRight:15,
-        alignItems:'flex-end'
+        flex: 1,
+        paddingRight: 15,
+        alignItems: 'flex-end'
     },
     rightButtonText: {
-        fontSize:17,
+        fontSize: 17,
         color: GlobalColors.accent,
-        fontWeight:'500'
+        fontWeight: '500'
     },
     checkboxContainer: Platform.select({
-        'ios': {
+        ios: {
             width: 22,
             height: 22,
-            marginRight:12.5,
+            marginRight: 12.5,
             padding: 0,
             marginLeft: 0,
             marginVertical: 0,
-            backgroundColor: GlobalColors.transparent,
+            backgroundColor: GlobalColors.transparent
         },
-        'android': {
+        android: {
             width: 24,
             height: 25,
-            marginRight:12.5,
+            marginRight: 12.5,
             padding: 0,
             marginLeft: 0,
             marginVertical: 0,
@@ -90,18 +90,16 @@ export default StyleSheet.create({
         }
     }),
     checkboxIconStyle: {
-        height:22,
-        width:22,
+        height: 22,
+        width: 22
     },
     animatedView: {
         backgroundColor: 'white',
         height: SCREEN_HEIGHT / 1.6,
-        width : '100%'
+        width: '100%'
     },
     sliderIconImg: {
         height: 18,
-        width: 42,
+        width: 42
     }
-})
-
-
+});

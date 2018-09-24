@@ -1,6 +1,6 @@
 export const SatelliteConnectionEvents = {
     connectedToSatellite: 'connectedToSatellite',
-    notConnectedToSatellite: 'notConnectedToSatellite',
+    notConnectedToSatellite: 'notConnectedToSatellite'
 };
 
 export default SatelliteConnectionEvents;

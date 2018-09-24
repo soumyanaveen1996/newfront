@@ -3,7 +3,7 @@ import User from './User';
 const DEFAULT_USER_UUID = 'default_user_uuid';
 
 const defaultUser = new User({
-    userId: DEFAULT_USER_UUID,
+    userId: DEFAULT_USER_UUID
 });
 
 export function isDefaultUser(user) {

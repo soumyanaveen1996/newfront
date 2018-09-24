@@ -1,12 +1,11 @@
 import React from 'react';
-import {View, ActivityIndicator, Image} from 'react-native';
+import { View, ActivityIndicator, Image } from 'react-native';
 import ImageCache from '../../lib/image_cache';
 import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
 import styles from './styles';
 
 export default class ProfileImage extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -33,11 +32,19 @@ export default class ProfileImage extends React.Component {
                     this.setState({
                         source: { uri: path },
                         style: this.props.placeholderStyle
-                    })
+                    });
                 }
-                ImageCache.imageCacheManager.checkAndUpdateIfModified(uri, this, headers);
+                ImageCache.imageCacheManager.checkAndUpdateIfModified(
+                    uri,
+                    this,
+                    headers
+                );
             } else {
-                if (!ImageCache.imageCacheManager.isLastCheckedWithinThreshold(uri)) {
+                if (
+                    !ImageCache.imageCacheManager.isLastCheckedWithinThreshold(
+                        uri
+                    )
+                ) {
                     ImageCache.imageCacheManager.fetch(uri, this, headers);
                 } else {
                     if (this.mounted) {
@@ -62,7 +69,7 @@ export default class ProfileImage extends React.Component {
         if (!this.mounted) {
             return;
         }
-        if (path){
+        if (path) {
             this.setState({
                 source: { uri: path },
                 style: this.props.placeholderStyle,
@@ -79,11 +86,13 @@ export default class ProfileImage extends React.Component {
 
     isRemoteUri(uri) {
         var pattern = /^((http|https):\/\/)/;
-        return pattern.test(uri)
+        return pattern.test(uri);
     }
 
     async getImagePathFromCache(uri) {
-        const path = await ImageCache.imageCacheManager.getImagePathFromCache(uri);
+        const path = await ImageCache.imageCacheManager.getImagePathFromCache(
+            uri
+        );
         return path;
     }
 
@@ -94,20 +103,21 @@ export default class ProfileImage extends React.Component {
                     source={this.state.source}
                     resizeMode={this.props.resizeMode}
                     style={this.state.style}
-                    onLoad={this.onLoad} />
-                {!this.state.loaded && !this.state.source &&
-                <View style={styles.loading}>
-                    <ActivityIndicator size="small" />
-                </View>
-                }
+                    onLoad={this.onLoad}
+                />
+                {!this.state.loaded &&
+                    !this.state.source && (
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="small" />
+                        </View>
+                    )}
             </View>
-        )
+        );
     }
 
     onLoad = () => {
         if (this.mounted) {
-            this.setState(() => ({ loaded: true }))
+            this.setState(() => ({ loaded: true }));
         }
-    }
-
+    };
 }

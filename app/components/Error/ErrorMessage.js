@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text, } from 'react-native';
+import { Text } from 'react-native';
 import Styles from './styles';
 import I18n from '../../config/i18n/i18n';
-import { Card, Button } from 'react-native-elements'
+import { Card, Button } from 'react-native-elements';
 
 export default class extends React.Component {
     constructor(props) {

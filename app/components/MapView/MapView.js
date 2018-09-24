@@ -18,9 +18,8 @@ class CallOut extends React.Component {
 }
 
 export default class MapView extends React.Component {
-
     _close() {
-        Actions.pop()
+        Actions.pop();
     }
 
     _renderCallOut(callOut) {
@@ -43,25 +42,32 @@ export default class MapView extends React.Component {
 
     _renderPolygons(polygons) {
         return _.map(polygons, (polygon, index) => {
-            return (
-                <RNMapView.Polygon {...polygon} key={'polygon' + index} />
-            );
+            return <RNMapView.Polygon {...polygon} key={'polygon' + index} />;
         });
     }
 
     RenderTrailArrows(polylines) {
-        return _.map(polylines, (polyline) => {
+        return _.map(polylines, polyline => {
             return polyline.coordinates.map((coo, index, coos) => {
-                if (index === coos.length - 1) { return }
-                let deltaLatitute = coos[index + 1].latitude - coo.latitude
-                let deltaLongitude = coos[index + 1].longitude - coo.longitude
-                let angle = -Math.atan2(deltaLatitute, deltaLongitude) * (180 / Math.PI)
-                let angleStringRad = angle + 'deg'
+                if (index === coos.length - 1) {
+                    return;
+                }
+                let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+                let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+                let angle =
+                    -Math.atan2(deltaLatitute, deltaLongitude) *
+                    (180 / Math.PI);
+                let angleStringRad = angle + 'deg';
                 return (
-                    <RNMapView.Marker coordinate={coo} image={images.trail_arrow} anchor={{ x: 0.5, y: 0.5 }} style={{ transform: [{ rotateZ: angleStringRad }] }} />
-                )
-            })
-        })
+                    <RNMapView.Marker
+                        coordinate={coo}
+                        image={images.trail_arrow}
+                        anchor={{ x: 0.5, y: 0.5 }}
+                        style={{ transform: [{ rotateZ: angleStringRad }] }}
+                    />
+                );
+            });
+        });
     }
 
     _renderPolylines(polylines) {
@@ -74,9 +80,7 @@ export default class MapView extends React.Component {
 
     _renderCircles(circles) {
         return _.map(circles, (circle, index) => {
-            return (
-                <RNMapView.Circle {...circle} key={'circle' + index} />
-            );
+            return <RNMapView.Circle {...circle} key={'circle' + index} />;
         });
     }
 
@@ -95,7 +99,11 @@ export default class MapView extends React.Component {
     _renderMap() {
         const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
-            <RNMapView region={mapData.region} style={styles.mapView} rotateEnabled={false}>
+            <RNMapView
+                region={mapData.region}
+                style={styles.mapView}
+                rotateEnabled={false}
+            >
                 {this._renderMarkers(mapData.markers)}
                 {this._renderPolygons(mapData.polygons)}
                 {this.RenderTrailArrows(mapData.polylines)}
@@ -109,7 +117,10 @@ export default class MapView extends React.Component {
         return (
             <View style={styles.container}>
                 {this._renderMap()}
-                <TouchableOpacity style={styles.closeButton} onPress={this._close.bind(this)}>
+                <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={this._close.bind(this)}
+                >
                     {Icons.mapViewClose()}
                 </TouchableOpacity>
             </View>

@@ -31,7 +31,6 @@ import _ from 'lodash';
  * nr.getNetworkRequest(); // returns options object
  */
 
-
 export class NetworkError extends Error {
     constructor(code, message) {
         super();
@@ -48,20 +47,25 @@ export class NetworkError extends Error {
     }
 
     get description() {
-        return `${this.code} : ${this.message}`
+        return `${this.code} : ${this.message}`;
     }
 }
 
-
-
 function converOptionsToFetchRequest(options) {
-    const isGetRequest = _.lowerCase(options.method) === 'get'
+    const isGetRequest = _.lowerCase(options.method) === 'get';
     return {
         method: options.method || 'GET',
-        body: isGetRequest ? undefined : (typeof options.data === 'string') ? options.data : JSON.stringify(options.data),
-        headers: _.merge({'Content-Type': 'application/json'}, options.headers),
+        body: isGetRequest
+            ? undefined
+            : typeof options.data === 'string'
+                ? options.data
+                : JSON.stringify(options.data),
+        headers: _.merge(
+            { 'Content-Type': 'application/json' },
+            options.headers
+        ),
         redirect: 'follow'
-    }
+    };
 }
 
 /*
@@ -105,7 +109,9 @@ function Network(options, queue = false) {
 export class NetworkRequest {
     constructor(options) {
         if (!options) {
-            throw new Error('Developer error - NetworkRequest requires a valid options object')
+            throw new Error(
+                'Developer error - NetworkRequest requires a valid options object'
+            );
         }
         this.options = options;
     }
@@ -122,33 +128,45 @@ export class NetworkRequest {
 function Network(options, queue = false) {
     const start = moment().valueOf();
     return new Promise((resolve, reject) => {
-        Network.isConnected()
-            .then((connected) => {
-                console.log('Time connected : ', connected, moment().valueOf() - start, options.url);
-                if (connected) {
-                    console.log('Time connected : ', moment().valueOf() - start);
-                    const requestOptions = converOptionsToFetchRequest(options);
-                    console.log('Request : ', options, requestOptions);
-                    fetch(options.url, requestOptions)
-                        .then((response) => {
-                            //console.log('Response raw : ', response);
-                            console.log('Time for network call : ', options.url, moment().valueOf() - start);
-                            if (response.status === 200) {
-                                response.json()
-                                    .then((json) => {
-                                        console.log('Response : ', json);
-                                        resolve({
-                                            data: json,
-                                            status: response.status,
-                                            statusText: response.statusText,
-                                        });
-                                    })
-                            } else {
-                                reject(new NetworkError(response.status, response.statusText));
-                            }
-                        })
-                        .catch(reject);
-                    /*
+        Network.isConnected().then(connected => {
+            console.log(
+                'Time connected : ',
+                connected,
+                moment().valueOf() - start,
+                options.url
+            );
+            if (connected) {
+                console.log('Time connected : ', moment().valueOf() - start);
+                const requestOptions = converOptionsToFetchRequest(options);
+                console.log('Request : ', options, requestOptions);
+                fetch(options.url, requestOptions)
+                    .then(response => {
+                        //console.log('Response raw : ', response);
+                        console.log(
+                            'Time for network call : ',
+                            options.url,
+                            moment().valueOf() - start
+                        );
+                        if (response.status === 200) {
+                            response.json().then(json => {
+                                console.log('Response : ', json);
+                                resolve({
+                                    data: json,
+                                    status: response.status,
+                                    statusText: response.statusText
+                                });
+                            });
+                        } else {
+                            reject(
+                                new NetworkError(
+                                    response.status,
+                                    response.statusText
+                                )
+                            );
+                        }
+                    })
+                    .catch(reject);
+                /*
                     axios(options)
                         .then((data) => {
                             const now = moment().valueOf();
@@ -156,39 +174,43 @@ function Network(options, queue = false) {
                             resolve(data);
                         })
                         .catch(reject); */
+            } else {
+                if (queue) {
+                    let key = SHA1(JSON.stringify(options.data)).toString();
+                    return resolve(
+                        futureRequest(key, new NetworkRequest(options))
+                    );
                 } else {
-                    if (queue) {
-                        let key = SHA1(JSON.stringify(options.data)).toString();
-                        return resolve(futureRequest(key, new NetworkRequest(options)));
-                    } else {
-                        reject(new Error('No network connectivity'));
-                    }
+                    reject(new Error('No network connectivity'));
                 }
-            })
+            }
+        });
     });
 }
 
-Network.getNetworkInfo = () => NetInfo.getConnectionInfo()
+Network.getNetworkInfo = () => NetInfo.getConnectionInfo();
 
-Network.isWiFi = () => new Promise((resolve, reject) => {
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-        resolve(connectionInfo.type === 'wifi');
+Network.isWiFi = () =>
+    new Promise((resolve, reject) => {
+        NetInfo.getConnectionInfo().then(connectionInfo => {
+            resolve(connectionInfo.type === 'wifi');
+        });
     });
-});
 
-Network.isCellular = () => new Promise((resolve, reject) => {
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-        resolve(connectionInfo.type === 'cellular');
+Network.isCellular = () =>
+    new Promise((resolve, reject) => {
+        NetInfo.getConnectionInfo().then(connectionInfo => {
+            resolve(connectionInfo.type === 'cellular');
+        });
     });
-});
 
-Network.addConnectionChangeEventListener = (handleConnectionChange) => {
+Network.addConnectionChangeEventListener = handleConnectionChange => {
     NetInfo.addEventListener('connectionChange', handleConnectionChange);
-}
+};
 
-Network.removeConnectionChangeEventListener = (handleConnectionChange) => {
+Network.removeConnectionChangeEventListener = handleConnectionChange => {
     NetInfo.removeEventListener('connectionChange', handleConnectionChange);
-}
+};
 
 Network.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
@@ -196,16 +218,22 @@ Network.isConnected = () => {
         if (reachability.type === 'unknown' && Platform.OS === 'ios') {
             return new Promise(resolve => {
                 const handleFirstConnectivityChangeIOS = isConnected => {
-                    NetInfo.isConnected.removeEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+                    NetInfo.isConnected.removeEventListener(
+                        'connectionChange',
+                        handleFirstConnectivityChangeIOS
+                    );
                     resolve(isConnected);
                 };
-                NetInfo.isConnected.addEventListener('connectionChange', handleFirstConnectivityChangeIOS);
+                NetInfo.isConnected.addEventListener(
+                    'connectionChange',
+                    handleFirstConnectivityChangeIOS
+                );
             });
         } else {
             return reachability.type !== 'none';
         }
     });
-}
+};
 
 export default Network;
 
@@ -217,7 +245,9 @@ export default Network;
  */
 export function futureRequest(key, networkRequest) {
     if (!key || !networkRequest) {
-        throw new Error('Developer error - A valid key and NetworkRequest object is required to for making future requests')
+        throw new Error(
+            'Developer error - A valid key and NetworkRequest object is required to for making future requests'
+        );
     }
     return Queue.queueNetworkRequest(key, networkRequest);
 }

@@ -92,7 +92,6 @@ const selectChannelByNameAndDomain = `
     AND domain = ?
 `;
 
-
 const deleteAllChannels = `
     DELETE from channel
 `;

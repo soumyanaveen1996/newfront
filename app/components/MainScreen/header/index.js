@@ -1,3 +1,3 @@
 import CenterComponent from './CenterComponent';
 
-export { CenterComponent }
+export { CenterComponent };

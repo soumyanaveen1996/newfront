@@ -3,7 +3,12 @@ import { StatusBar } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import {LoginScreen} from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
-import { BotChat, PeopleChat, FavoriteMessages, ChannelChat } from '../components/ChatBotScreen';
+import {
+    BotChat,
+    PeopleChat,
+    FavoriteMessages,
+    ChannelChat
+} from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
 import { ContactsPicker } from '../components/ContactsPicker';
 import { Slider } from '../components/Slider';
@@ -11,19 +16,19 @@ import { Launch } from '../components/Launch';
 import I18n from '../config/i18n/i18n';
 import WebViewScreen from '../components/WebViewScreen/WebViewScreen';
 import { BotListScreen } from '../components/BotListScreen';
-import { BotStoreScreen }  from '../components/BotStoreScreen';
-import { BotFilter }  from '../components/BotFilter';
-import { BarcodeScanner } from  '../components/BarcodeScanner';
-import { MapView } from  '../components/MapView';
-import { ImageViewer } from  '../components/ImageViewer';
-import { SNRChart } from  '../components/SNRChart';
-import { LocationPicker } from  '../components/LocationPicker';
-import { VideoRecorder } from  '../components/VideoRecorder';
-import { FormPopup } from  '../components/FormPopup';
+import { BotStoreScreen } from '../components/BotStoreScreen';
+import { BotFilter } from '../components/BotFilter';
+import { BarcodeScanner } from '../components/BarcodeScanner';
+import { MapView } from '../components/MapView';
+import { ImageViewer } from '../components/ImageViewer';
+import { SNRChart } from '../components/SNRChart';
+import { LocationPicker } from '../components/LocationPicker';
+import { VideoRecorder } from '../components/VideoRecorder';
+import { FormPopup } from '../components/FormPopup';
 import { ChannelsList } from '../components/ChannelsList';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
-import { Phone } from  '../components/Phone';
-import { Dialler } from  '../components/Dialler';
+import { Phone } from '../components/Phone';
+import { Dialler } from '../components/Dialler';
 import Config from './config';
 import { Auth } from '../lib/capability';
 import { SignupScreen } from '../components/Signup';

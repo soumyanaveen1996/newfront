@@ -10,11 +10,9 @@ const Styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: 'rgba(4, 4, 4, 0.9)',
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
-    nameContainer: {
-
-    },
+    nameContainer: {},
     callingText: {
         color: GlobalColors.botChatBubbleColor,
         fontSize: 20,
@@ -27,14 +25,14 @@ const Styles = StyleSheet.create({
         textAlign: 'left',
         height: 140,
         marginTop: 20,
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     callingNumberText: {
         color: GlobalColors.black,
         fontSize: 40,
         textAlign: 'center',
         height: 50,
-        marginTop: 20,
+        marginTop: 20
     },
     callButtonContainer: {
         height: 70,
@@ -48,7 +46,7 @@ const Styles = StyleSheet.create({
         width: 60,
         height: 60,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     callCloseButton: {
         backgroundColor: 'red'
@@ -67,23 +65,23 @@ const Styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-around'
     },
     roundButtonText: {
         color: GlobalColors.black,
         fontSize: 36,
         textAlign: 'center',
-        flex: 0,
+        flex: 0
     },
     swapButtonContainer: {
         backgroundColor: GlobalColors.white
     },
     closeButton: {
-        padding: 10,
+        padding: 10
     },
     closeButtonText: {
         fontSize: 17,
-        color: GlobalColors.black,
+        color: GlobalColors.black
     },
     mainContainer: {
         paddingTop: 40,
@@ -95,7 +93,7 @@ const Styles = StyleSheet.create({
     initialMainContainer: {
         backgroundColor: 'green',
         flex: 1,
-        paddingTop: 40,
+        paddingTop: 40
     },
     diallerContainer: {
         height: 300,
@@ -103,20 +101,20 @@ const Styles = StyleSheet.create({
     },
     diallerButtonContainer: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'column'
         //backgroundColor: 'red',
     },
     incallDiallerContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     incallDiallerButtonContainer: {
         height: 300,
         flexDirection: 'row',
         width: '80%',
         justifyContent: 'space-around',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     incallButtonContainer: {
         height: 70,

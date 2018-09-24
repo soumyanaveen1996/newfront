@@ -4,34 +4,34 @@ import { GlobalColors } from '../../config/styles';
 export const MainScreenStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: GlobalColors.background,
+        backgroundColor: GlobalColors.background
     },
     botListContainer: {
-        flex: 1,
+        flex: 1
     },
     floatingButton: {
         width: 50,
         height: 50,
         position: 'absolute',
         right: 15,
-        bottom: 15,
+        bottom: 15
     },
     activityIndicator: {
-        flex: 1,
-    },
+        flex: 1
+    }
 });
 
 export const BotListStyles = {
     container: {
         flexGrow: 1,
-        backgroundColor: GlobalColors.background,
+        backgroundColor: GlobalColors.background
     },
     listViewStyle: {
-        paddingTop: 5,
+        paddingTop: 5
     },
     separator: {
         height: 2,
-        backgroundColor: GlobalColors.background,
+        backgroundColor: GlobalColors.background
     },
     loading: {
         position: 'absolute',
@@ -41,7 +41,7 @@ export const BotListStyles = {
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
-    },
+    }
 };
 
 export const BotListItemColors = {
@@ -60,7 +60,7 @@ export const BotListItemStyles = {
         paddingHorizontal: 10,
         paddingVertical: 12,
         alignItems: 'stretch',
-        backgroundColor: BotListItemColors.backgroundColor,
+        backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
         color: BotListItemColors.titleColor,
@@ -70,22 +70,22 @@ export const BotListItemStyles = {
     subTitle: {
         color: BotListItemColors.subTitleColor,
         fontSize: 14,
-        marginTop: 5,
+        marginTop: 5
     },
     image: {
         height: 50,
         width: 50,
-        marginTop: 5,
+        marginTop: 5
     },
     conversationImage: {
         height: 50,
         width: 50,
         marginTop: 5,
-        borderRadius: 30,
+        borderRadius: 30
     },
     textContainer: {
         flex: 1,
-        marginLeft: 10,
+        marginLeft: 10
     },
     time: {
         position: 'absolute',
@@ -101,13 +101,13 @@ export const BotListItemStyles = {
         width: 60,
         flexDirection: 'row-reverse',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     hidden: {
-        display: 'none',
+        display: 'none'
     },
     count: Platform.select({
-        'ios': {
+        ios: {
             color: BotListItemColors.countTextColor,
             backgroundColor: BotListItemColors.countColor,
             height: 24,
@@ -120,7 +120,7 @@ export const BotListItemStyles = {
             paddingRight: 4,
             overflow: 'hidden'
         },
-        'android': {
+        android: {
             color: BotListItemColors.countTextColor,
             backgroundColor: BotListItemColors.countColor,
             height: 24,
@@ -131,7 +131,7 @@ export const BotListItemStyles = {
             paddingLeft: 4,
             paddingRight: 4,
             overflow: 'hidden',
-            textAlignVertical: 'center',
+            textAlignVertical: 'center'
         }
     }),
     chatImage: {
@@ -139,13 +139,12 @@ export const BotListItemStyles = {
         borderRadius: 7,
         overflow: 'hidden',
         width: 40,
-        height: 40,
+        height: 40
     }
-}
-
+};
 
 export default {
     MainScreenStyles,
     BotListStyles,
     BotListItemStyles
-}
+};

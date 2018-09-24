@@ -7,4 +7,4 @@ export const closeIconConfig = {
     underlayColor: GlobalColors.transparent,
     color: GlobalColors.white,
     fontWeight: '500'
-}
+};

@@ -13,7 +13,6 @@ import Utils from '../../lib/utils';
 import { CachedImage } from '../CachedImage';
 
 export default class ConversationListItem extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -22,19 +21,26 @@ export default class ConversationListItem extends React.Component {
             count: 0,
             message: null,
             chatName: SystemBot.imBot.name
-        }
+        };
         this.conversation = this.props.conversation;
     }
 
     handleBotSelection() {
-        SystemBot.get(SystemBot.imBotManifestName)
-            .then((imBot) => {
-                if (this.conversation.type === IM_CHAT) {
-                    Actions.peopleChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
-                } else {
-                    Actions.channelChat({ bot: imBot, conversation: this.conversation, onBack: this.props.onBack });
-                }
-            });
+        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            if (this.conversation.type === IM_CHAT) {
+                Actions.peopleChat({
+                    bot: imBot,
+                    conversation: this.conversation,
+                    onBack: this.props.onBack
+                });
+            } else {
+                Actions.channelChat({
+                    bot: imBot,
+                    conversation: this.conversation,
+                    onBack: this.props.onBack
+                });
+            }
+        });
     }
 
     async componentDidMount() {
@@ -63,42 +69,80 @@ export default class ConversationListItem extends React.Component {
 
     renderSubview() {
         const { message } = this.state;
-        if (message && message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE) {
-            return <Image style={BotListItemStyles.chatImage} source={{ uri: message.getMessage()}}/>;
+        if (
+            message &&
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
+        ) {
+            return (
+                <Image
+                    style={BotListItemStyles.chatImage}
+                    source={{ uri: message.getMessage() }}
+                />
+            );
         } else {
-            return <Text numberOfLines={2} style={ BotListItemStyles.subTitle } >{this.state.subTitle}</Text>;
+            return (
+                <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
+                    {this.state.subTitle}
+                </Text>
+            );
         }
     }
     renderProfileimage() {
         if (this.conversation.type === IM_CHAT) {
-            return <ProfileImage
-                uuid={this.state.otherUserId}
-                placeholder={images.user_image}
-                style={BotListItemStyles.conversationImage}
-                placeholderStyle={BotListItemStyles.conversationImage}
-                resizeMode="cover"/>;
+            return (
+                <ProfileImage
+                    uuid={this.state.otherUserId}
+                    placeholder={images.user_image}
+                    style={BotListItemStyles.conversationImage}
+                    placeholderStyle={BotListItemStyles.conversationImage}
+                    resizeMode="cover"
+                />
+            );
         } else {
-            return <CachedImage
-                imageTag = "channelLogo"
-                source={{ uri: Utils.channelLogoUrl(this.props.chatData.channel.logo) } }
-                style={ BotListItemStyles.conversationImage }
-                resizeMode="contain"/>;
+            return (
+                <CachedImage
+                    imageTag="channelLogo"
+                    source={{
+                        uri: Utils.channelLogoUrl(
+                            this.props.chatData.channel.logo
+                        )
+                    }}
+                    style={BotListItemStyles.conversationImage}
+                    resizeMode="contain"
+                />
+            );
         }
     }
 
     render() {
         return (
-            <TouchableOpacity style={BotListItemStyles.container} onPress={ this.handleBotSelection.bind(this) }>
+            <TouchableOpacity
+                style={BotListItemStyles.container}
+                onPress={this.handleBotSelection.bind(this)}
+            >
                 {this.renderProfileimage()}
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={ BotListItemStyles.title } >{this.state.chatName}</Text>
+                    <Text style={BotListItemStyles.title}>
+                        {this.state.chatName}
+                    </Text>
                     {this.renderSubview()}
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
-                    { Icons.listRightArrow() }
-                    <Text allowFontScaling={false} style={ this.state.count > 0 ? BotListItemStyles.count : BotListItemStyles.hidden } >{ this.state.count }</Text>
+                    {Icons.listRightArrow()}
+                    <Text
+                        allowFontScaling={false}
+                        style={
+                            this.state.count > 0
+                                ? BotListItemStyles.count
+                                : BotListItemStyles.hidden
+                        }
+                    >
+                        {this.state.count}
+                    </Text>
                 </View>
-                <Text style={ BotListItemStyles.time } >{utils.formattedDate(this.state.date)}</Text>
+                <Text style={BotListItemStyles.time}>
+                    {utils.formattedDate(this.state.date)}
+                </Text>
             </TouchableOpacity>
         );
     }

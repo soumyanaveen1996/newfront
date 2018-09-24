@@ -9,8 +9,8 @@ export default {
         borderlessHeaderStyle: {
             backgroundColor: GlobalColors.accent,
             shadowOpacity: 0,
-            borderBottomWidth: 0,
+            borderBottomWidth: 0
         },
-        navigationBarTintColor: GlobalColors.white,
+        navigationBarTintColor: GlobalColors.white
     }
 };

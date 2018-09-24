@@ -6,16 +6,16 @@ const stylesheet = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: GlobalColors.white,
-        flexDirection: 'column',
+        flexDirection: 'column'
     },
-    searchBar:Platform.select({
-        'ios': {
+    searchBar: Platform.select({
+        ios: {
             backgroundColor: GlobalColors.accent,
-            height: 36,
+            height: 36
         },
-        'android': {
+        android: {
             backgroundColor: GlobalColors.accent,
-            height: 45,
+            height: 45
         }
     }),
     searchTextInput: {
@@ -27,52 +27,52 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.headerTextInputBackground,
         borderRadius: 2,
         height: 24,
-        color: GlobalColors.white,
+        color: GlobalColors.white
     },
     addressBookContainer: {
         flex: 1,
-        backgroundColor: GlobalColors.background,
+        backgroundColor: GlobalColors.background
     },
     addressBook: {
-        flex: 1,
+        flex: 1
     },
     sectionHeaderContainer: {
         backgroundColor: 'rgb(246, 247, 248)',
         height: SECTION_HEADER_HEIGHT,
         paddingHorizontal: 15,
         alignItems: 'center',
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     sectionHeaderTitle: {
         fontSize: 11,
         fontWeight: '700',
-        color: 'rgb(23, 21, 21)',
+        color: 'rgb(23, 21, 21)'
     },
     contactItemContainer: {
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center',
         height: 55,
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     contactItemImage: {
         height: 44,
         width: 44,
         borderRadius: 22,
         marginLeft: 10,
-        marginRight: 12,
+        marginRight: 12
     },
     contactItemDetailsContainer: {
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     contactItemName: {
         color: 'rgb(23, 19, 19)',
-        fontSize: 16,
+        fontSize: 16
     },
     contactItemEmail: {
         color: 'rgb(180, 180, 180)',
-        fontSize: 12,
+        fontSize: 12
     },
     headerRightButton: {
         fontSize: 17,
@@ -88,12 +88,12 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center'
     },
     checkboxIconStyle: {
-        height:22,
-        width:22,
+        height: 22,
+        width: 22
     },
     separator: {
         height: 1,
-        backgroundColor: 'rgb(246, 247, 248)',
+        backgroundColor: 'rgb(246, 247, 248)'
     },
     sideIndex: {
         width: 20,
@@ -104,7 +104,7 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 10,
+        paddingVertical: 10
     },
     sideIndexItem: {
         color: 'rgb(87, 21, 195)',
@@ -117,7 +117,7 @@ const stylesheet = StyleSheet.create({
         height: 40,
         justifyContent: 'space-between',
         paddingTop: 3,
-        marginRight: 5,
+        marginRight: 5
     }
 });
 

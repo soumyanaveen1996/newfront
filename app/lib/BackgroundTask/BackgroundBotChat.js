@@ -25,45 +25,45 @@ export default class BackgroundBotChat {
 
     getBotContext = () => {
         return this.botContext;
-    }
+    };
 
     getBotKey = () => {
         return this.bot.botId;
-    }
+    };
 
-    updateConversationContextId = () => {
+    updateConversationContextId = () => {};
 
-    }
-
-    persistMessage = async (message) => {
+    persistMessage = async message => {
         try {
             await MessageHandler.persistOnDevice(this.getBotKey(), message);
             if (this.conversationContext) {
-                EventEmitter.emit(MessageEvents.messagePersisted, { botId: this.bot.botId, conversationId: this.conversationContext.conversationId, message: message });
+                EventEmitter.emit(MessageEvents.messagePersisted, {
+                    botId: this.bot.botId,
+                    conversationId: this.conversationContext.conversationId,
+                    message: message
+                });
             } else {
-                EventEmitter.emit(MessageEvents.messagePersisted, { botId: this.bot.botId, message: message });
+                EventEmitter.emit(MessageEvents.messagePersisted, {
+                    botId: this.bot.botId,
+                    message: message
+                });
             }
-        } catch (err) {
-        }
-    }
+        } catch (err) {}
+    };
 
-    tell = (message) => {
+    tell = message => {
         this.persistMessage(message);
-    }
+    };
 
-    done = () => {
+    done = () => {};
 
-    }
-
-    wait = () => {
-
-    }
+    wait = () => {};
 
     next = (message, state, messages, botContext) => {
         if (this.loadedBot) {
             this.loadedBot.next(message, state, messages, botContext);
         }
-    }
+    };
 
     async initialize() {
         let self = this;
@@ -83,7 +83,13 @@ export default class BackgroundBotChat {
             throw new Error('Unable to load the bots');
         }
 
-        if (this.bot.maxRequiredPlatformVersion && versionCompare(VersionCheck.getCurrentVersion(), this.bot.maxRequiredPlatformVersion) === 1) {
+        if (
+            this.bot.maxRequiredPlatformVersion &&
+            versionCompare(
+                VersionCheck.getCurrentVersion(),
+                this.bot.maxRequiredPlatformVersion
+            ) === 1
+        ) {
             throw new Error('Unable to load the botss');
         }
 
@@ -92,7 +98,10 @@ export default class BackgroundBotChat {
             self.user = await Promise.resolve(Auth.getUser());
 
             // 2. Get the conversation context
-            self.conversationContext = await this.getConversationContext(this.botContext, this.user);
+            self.conversationContext = await this.getConversationContext(
+                this.botContext,
+                this.user
+            );
 
             // 3. Get messages for this bot / chat
             this.messages = await this.loadMessages();
@@ -111,10 +120,14 @@ export default class BackgroundBotChat {
     loadBot = async () => {
         let botResp = await this.dce_bot.Load(this.botContext);
         return botResp;
-    }
+    };
 
     async loadMessages() {
-        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(this.getBotKey(), PAGE_SIZE, this.oldestLoadedDate())
+        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
+            this.getBotKey(),
+            PAGE_SIZE,
+            this.oldestLoadedDate()
+        );
         return messages;
     }
 
@@ -130,7 +143,9 @@ export default class BackgroundBotChat {
     // Can be overriden from sub classes (PeopleChat)
     async getConversationContext(botContext, user) {
         try {
-            let context = await Promise.resolve(ConversationContext.getConversationContext(botContext, user));
+            let context = await Promise.resolve(
+                ConversationContext.getConversationContext(botContext, user)
+            );
             return context;
         } catch (error) {
             console.log('Error getting a conversation context for bot chat');

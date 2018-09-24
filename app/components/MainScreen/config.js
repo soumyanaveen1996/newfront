@@ -11,6 +11,4 @@ export const filterButtonConfig = {
 
 export default {
     filterButtonConfig
-}
-
-
+};

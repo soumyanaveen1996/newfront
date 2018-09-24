@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
-import { SCREEN_WIDTH } from './config'
+import { SCREEN_WIDTH } from './config';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
 
@@ -44,14 +44,14 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     headerOuterContainerStyles: Platform.select({
-        'ios': {
+        ios: {
             position: 'relative',
             borderBottomColor: GlobalColors.accent,
             paddingLeft: 0,
             paddingBottom: 0,
-            height: Utils.isiPhoneX() ? 70 : 50,
+            height: Utils.isiPhoneX() ? 70 : 50
         },
-        'android': {
+        android: {
             position: 'relative',
             borderBottomColor: GlobalColors.accent,
             paddingLeft: 0,
@@ -60,15 +60,15 @@ export default StyleSheet.create({
         }
     }),
     headerInnerContainerStyles: Platform.select({
-        'ios':  {
-            marginTop: 10,
+        ios: {
+            marginTop: 10
         },
-        'android':  {
-            marginBottom: 5,
+        android: {
+            marginBottom: 5
         }
     }),
     headerInnerContainerForSearch: {
-        marginTop: 50,
+        marginTop: 50
     },
     loading: {
         position: 'absolute',
@@ -79,6 +79,4 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     }
-})
-
-
+});

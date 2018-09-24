@@ -14,63 +14,94 @@ export default class BotList extends React.Component {
         super(props);
         this.state = {
             loaded: false
-        }
+        };
     }
 
     componentWillUnmount() {
-        this.mounted = false
+        this.mounted = false;
     }
 
     async componentDidMount() {
-        this.mounted = true
+        this.mounted = true;
         this.refresh();
     }
 
     async refresh() {
         // TODO: In general overall performance of this is questionable. We need a better way to know what has changed and bubble that up
         const bots = this.props.bots;
-        let conversations = await Promise.resolve(Conversation.getAllConversations()) || [];
+        let conversations =
+            (await Promise.resolve(Conversation.getAllConversations())) || [];
         let user = await Auth.getUser();
         // All
         let allChats = [];
-        conversations.forEach((conversation) => {
+        conversations.forEach(conversation => {
             allChats.push({ key: 'conversation', bot: conversation });
         });
-        bots.forEach((bot) => {
+        bots.forEach(bot => {
             allChats.push({ key: 'bot', bot: bot });
         });
 
-        let allChatsData = await Promise.all(_.map(allChats, async (conversation) => {
-            let chatData = null;
-            if (conversation.key === 'bot') {
-                chatData = await Promise.resolve(Utils.getMessageDataForBot(conversation.bot));
-            } else {
-                chatData = await Promise.resolve(Utils.getMessageDataForConversation(conversation.bot, user));
-            }
-            conversation.chatData = chatData;
-            return conversation;
-        })).catch((e) => {
+        let allChatsData = await Promise.all(
+            _.map(allChats, async conversation => {
+                let chatData = null;
+                if (conversation.key === 'bot') {
+                    chatData = await Promise.resolve(
+                        Utils.getMessageDataForBot(conversation.bot)
+                    );
+                } else {
+                    chatData = await Promise.resolve(
+                        Utils.getMessageDataForConversation(
+                            conversation.bot,
+                            user
+                        )
+                    );
+                }
+                conversation.chatData = chatData;
+                return conversation;
+            })
+        ).catch(e => {
             console.log('Error getting info for timeline', e);
             return [];
         });
 
         // Sort with the most recent date at top
-        allChatsData = _.orderBy(allChatsData, (o) => o.chatData.lastMessageDate, 'desc');
+        allChatsData = _.orderBy(
+            allChatsData,
+            o => o.chatData.lastMessageDate,
+            'desc'
+        );
 
         if (this.mounted) {
             let currentData = this.state.data;
-            const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+            const ds = new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+            });
 
             if (currentData) {
                 // ABOSLUTELY SHITTY HACK DUE TO A BUG IN ListView:
                 // https://stackoverflow.com/questions/31738671/react-native-updating-list-view-datasource
-                this.setState({ loaded: true, dataSource: ds.cloneWithRows([]), data: allChatsData }, function(err, res) {
-                    if (!err) {
-                        this.setState({ loaded: true, dataSource: ds.cloneWithRows(allChatsData), data: allChatsData });
+                this.setState(
+                    {
+                        loaded: true,
+                        dataSource: ds.cloneWithRows([]),
+                        data: allChatsData
+                    },
+                    function(err, res) {
+                        if (!err) {
+                            this.setState({
+                                loaded: true,
+                                dataSource: ds.cloneWithRows(allChatsData),
+                                data: allChatsData
+                            });
+                        }
                     }
-                });
+                );
             } else {
-                this.setState({ loaded: true, dataSource: ds.cloneWithRows(allChatsData), data: allChatsData });
+                this.setState({
+                    loaded: true,
+                    dataSource: ds.cloneWithRows(allChatsData),
+                    data: allChatsData
+                });
             }
         }
     }
@@ -85,16 +116,31 @@ export default class BotList extends React.Component {
             );
         } else {
             return (
-                <ListView containerStyles={BotListStyles.container}
+                <ListView
+                    containerStyles={BotListStyles.container}
                     style={BotListStyles.listViewStyle}
                     dataSource={this.state.dataSource}
-                    renderRow={(chat) => chat.key === 'bot' ? <BotListItem bot={chat.bot} chatData={chat.chatData} onBack={this.props.onBack} /> : <ConversationListItem conversation={chat.bot} chatData={chat.chatData} onBack={this.props.onBack} />}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={BotListStyles.separator} />}
+                    renderRow={chat =>
+                        chat.key === 'bot' ? (
+                            <BotListItem
+                                bot={chat.bot}
+                                chatData={chat.chatData}
+                                onBack={this.props.onBack}
+                            />
+                        ) : (
+                            <ConversationListItem
+                                conversation={chat.bot}
+                                chatData={chat.chatData}
+                                onBack={this.props.onBack}
+                            />
+                        )
+                    }
+                    renderSeparator={(sectionId, rowId) => (
+                        <View key={rowId} style={BotListStyles.separator} />
+                    )}
                     enableEmptySections={true}
                 />
             );
         }
     }
 }
-
-

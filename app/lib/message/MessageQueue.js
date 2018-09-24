@@ -13,8 +13,14 @@ export default class MessageQueue {
     }
 
     subscribeToEvents() {
-        EventEmitter.addListener(AuthEvents.userDataFetched, this.userLoggedInHandler.bind(this));
-        EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler.bind(this));
+        EventEmitter.addListener(
+            AuthEvents.userDataFetched,
+            this.userLoggedInHandler.bind(this)
+        );
+        EventEmitter.addListener(
+            AuthEvents.userLoggedOut,
+            this.userLoggedOutHandler.bind(this)
+        );
     }
 
     userLoggedInHandler() {
@@ -59,8 +65,12 @@ export default class MessageQueue {
     async isMessageAlreadyProcessed(message) {
         console.log('Message  : ', message);
         try {
-            const networkItem = await NetworkDAO.selectByMessageId(message.messageId);
-            const dbMessage = await MessageDAO.selectMessageById(message.messageId);
+            const networkItem = await NetworkDAO.selectByMessageId(
+                message.messageId
+            );
+            const dbMessage = await MessageDAO.selectMessageById(
+                message.messageId
+            );
             console.log('isMessageAlreadyProcessed : ', networkItem, dbMessage);
             if (dbMessage || networkItem) {
                 return true;
@@ -97,13 +107,22 @@ export default class MessageQueue {
             return true;
         }
 
-        console.log('Processing message : ', message, Queue, IMBotMessageHandler);
+        console.log(
+            'Processing message : ',
+            message,
+            Queue,
+            IMBotMessageHandler
+        );
         let bot = message.bot;
         // Name of the bot is the key, unless its IMBot (one to many relationship)
         if (bot === 'im-bot' || bot === 'channels-bot') {
             await IMBotMessageHandler.handleMessage(message, user);
         } else {
-            await BackgroundTaskProcessor.sendBackgroundAsyncMessage(message, message.bot, message.conversation);
+            await BackgroundTaskProcessor.sendBackgroundAsyncMessage(
+                message,
+                message.bot,
+                message.conversation
+            );
         }
         return true;
     }
@@ -115,7 +134,11 @@ export default class MessageQueue {
         this.processing = true;
         while (this.top()) {
             const message = this.top();
-            console.log('Processing Message : ', message.details, this.queueLength);
+            console.log(
+                'Processing Message : ',
+                message.details,
+                this.queueLength
+            );
             for (let i = 0; i < this.retryCount; ++i) {
                 try {
                     const success = await this.handleMessage(message);

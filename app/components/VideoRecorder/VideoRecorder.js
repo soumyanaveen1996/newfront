@@ -10,7 +10,7 @@ const VideoRecorderStates = {
     recording: 'recording',
     start: 'start',
     recorded: 'recorded'
-}
+};
 
 export default class VideoRecorder extends React.Component {
     state = {
@@ -19,8 +19,8 @@ export default class VideoRecorder extends React.Component {
         captureQuality: Camera.constants.CaptureQuality.medium,
         type: Camera.constants.Type.back,
         flashMode: Camera.constants.FlashMode.off,
-        currentState: 'start',
-    }
+        currentState: 'start'
+    };
 
     renderBottomBar = () => {
         return (
@@ -30,35 +30,53 @@ export default class VideoRecorder extends React.Component {
                 {this.renderUseButton()}
             </View>
         );
-    }
+    };
 
     renderCancelButton = () => {
-        return this.renderTextButton(I18n.t('Cancel').toLocaleUpperCase(), this.cancel, [styles.bottomButton, styles.cancelButton]);
-    }
+        return this.renderTextButton(
+            I18n.t('Cancel').toLocaleUpperCase(),
+            this.cancel,
+            [styles.bottomButton, styles.cancelButton]
+        );
+    };
 
     renderRecordButton = () => {
         if (this.state.currentState === VideoRecorderStates.recording) {
             return (
-                <TouchableOpacity onPress={this.stopCaptureVideo} style={styles.recordButtonContainer}>
-                    <View style={styles.stopButton}/>
+                <TouchableOpacity
+                    onPress={this.stopCaptureVideo}
+                    style={styles.recordButtonContainer}
+                >
+                    <View style={styles.stopButton} />
                 </TouchableOpacity>
             );
         } else {
             return (
-                <TouchableOpacity onPress={this.captureVideo} style={styles.recordButtonContainer}>
+                <TouchableOpacity
+                    onPress={this.captureVideo}
+                    style={styles.recordButtonContainer}
+                >
                     {Icons.videoRecordCircle()}
                 </TouchableOpacity>
             );
         }
-    }
+    };
 
     renderUseButton = () => {
         if (this.state.currentState === VideoRecorderStates.recorded) {
-            return this.renderTextButton(I18n.t('Use').toLocaleUpperCase(), this.useVideo, [styles.bottomButton, styles.useButton]);
+            return this.renderTextButton(
+                I18n.t('Use').toLocaleUpperCase(),
+                this.useVideo,
+                [styles.bottomButton, styles.useButton]
+            );
         } else {
-            return <Text style={[styles.bottomButton, styles.useButton]}>{''}</Text>
+            return (
+                <Text style={[styles.bottomButton, styles.useButton]}>
+                    {''}
+                </Text>
+            );
         }
-    }
+    };
 
     renderTextButton = (text, action, style) => {
         return (
@@ -66,32 +84,34 @@ export default class VideoRecorder extends React.Component {
                 <Text style={style}>{text}</Text>
             </TouchableOpacity>
         );
-    }
+    };
 
     renderButton = (icon, action) => {
         return (
             <TouchableOpacity onPress={action} style={styles.button}>
-                { icon }
+                {icon}
             </TouchableOpacity>
-        )
-    }
+        );
+    };
 
     renderFlashButton = () => {
-        return this.state.flashMode === Camera.constants.FlashMode.off ?
-            this.renderButton(Icons.cameraFlashOutline(), this.toggleFlash)
-            : this.renderButton(Icons.cameraFlash(), this.toggleFlash)
-    }
+        return this.state.flashMode === Camera.constants.FlashMode.off
+            ? this.renderButton(Icons.cameraFlashOutline(), this.toggleFlash)
+            : this.renderButton(Icons.cameraFlash(), this.toggleFlash);
+    };
 
     renderTopBar = () => {
-        if (this.state.currentState === VideoRecorderStates.start ||
-            this.state.currentState === VideoRecorderStates.recorded) {
+        if (
+            this.state.currentState === VideoRecorderStates.start ||
+            this.state.currentState === VideoRecorderStates.recorded
+        ) {
             return (
                 <View style={styles.topBar}>
                     {this.renderButton(Icons.cameraFlip(), this.toggleCamera)}
                 </View>
             );
         }
-    }
+    };
 
     toggleCamera = () => {
         if (this.state.type === Camera.constants.Type.back) {
@@ -99,7 +119,7 @@ export default class VideoRecorder extends React.Component {
         } else {
             this.setState({ type: Camera.constants.Type.back });
         }
-    }
+    };
 
     toggleFlash = () => {
         if (this.state.flashMode === Camera.constants.FlashMode.off) {
@@ -107,11 +127,11 @@ export default class VideoRecorder extends React.Component {
         } else {
             this.setState({ flashMode: Camera.constants.FlashMode.off });
         }
-    }
+    };
 
     cancel = () => {
         this.close();
-    }
+    };
 
     close = () => {
         this.camera.stopCapture();
@@ -119,7 +139,7 @@ export default class VideoRecorder extends React.Component {
             this.props.onCancel();
         }
         Actions.pop();
-    }
+    };
 
     componentWillUnmount() {
         this.camera.stopCapture();
@@ -133,30 +153,31 @@ export default class VideoRecorder extends React.Component {
             this.props.onCancel();
         }
         Actions.pop();
-    }
+    };
 
     stopCaptureVideo = () => {
         console.log('Stop Capturing video');
         this.setState({ currentState: VideoRecorderStates.recorded });
         this.camera.stopCapture();
-    }
+    };
 
     captureVideo = () => {
         console.log('Capturing video');
         const options = { audio: true };
         this.setState({ currentState: VideoRecorderStates.recording });
-        this.camera.capture(options)
-            .then((data) => {
+        this.camera
+            .capture(options)
+            .then(data => {
                 this.video = data;
             })
             .catch(err => console.error(err));
-    }
+    };
 
     render() {
         return (
             <View style={styles.container}>
                 <Camera
-                    ref={(cam) => {
+                    ref={cam => {
                         this.camera = cam;
                     }}
                     captureMode={this.state.captureMode}
@@ -166,13 +187,11 @@ export default class VideoRecorder extends React.Component {
                     type={this.state.type}
                     style={styles.preview}
                     audio={true}
-                    aspect={Camera.constants.Aspect.fill} />
+                    aspect={Camera.constants.Aspect.fill}
+                />
                 {this.renderBottomBar()}
                 {this.renderTopBar()}
             </View>
         );
     }
 }
-
-
-

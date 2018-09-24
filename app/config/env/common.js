@@ -19,7 +19,8 @@ const config = {
         ios: {
             google: {
                 behavior: 'web',
-                iosClientId: '705702062891-u7ej27vutmacues3htr8us9uimig906g.apps.googleusercontent.com',
+                iosClientId:
+                    '705702062891-u7ej27vutmacues3htr8us9uimig906g.apps.googleusercontent.com',
                 callback: 'com.frontm.frontm:/oauth2redirect',
                 scopes: ['profile', 'email']
             },
@@ -32,12 +33,14 @@ const config = {
             google: {
                 dev: {
                     scopes: ['profile', 'email'],
-                    webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
+                    webClientId:
+                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
                     clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
                 },
                 prod: {
                     scopes: ['profile', 'email'],
-                    webClientId: '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
+                    webClientId:
+                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
                     clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
                 }
             },
@@ -71,11 +74,11 @@ const config = {
     network: {
         satellite: {
             pollingInterval: 600000,
-            keepAliveInterval: 120000,
+            keepAliveInterval: 120000
         },
         gsm: {
             pollingInterval: 180000,
-            backgroundPollingInterval: 300000,
+            backgroundPollingInterval: 300000
         },
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,
@@ -84,7 +87,7 @@ const config = {
         queueServiceApi: 'execute-api',
         contactsPath: '/contacts',
         channelsPath: '/channels',
-        userDetailsPath: '/userDetails',
+        userDetailsPath: '/userDetails'
     },
     proxy: {
         enabled: true,
@@ -109,11 +112,11 @@ const config = {
         downloadFilePath: '/v2/file',
         twilioPath: '/twilio',
         enableVoIPPath: '/enableVoip',
-        getVoIPStatusPath: '/getVoipStatus',
+        getVoIPStatusPath: '/getVoipStatus'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
     }
-}
+};
 
 export default config;

@@ -3,36 +3,36 @@ import { GlobalColors } from '../../config/styles';
 
 const stylesheet = StyleSheet.create({
     headerStyles: {
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.accent
     },
     outerContainerStyles: {
-        position:'relative'
+        position: 'relative'
     },
     defaultHeaderRightButton: {
         fontSize: 17,
         color: GlobalColors.white,
         fontWeight: '600',
-        marginRight: 15,
+        marginRight: 15
     },
     defaultHeaderLeftButton: {
         fontSize: 17,
         color: GlobalColors.white,
         fontWeight: '600',
-        marginLeft: 15,
+        marginLeft: 15
     },
     defaultHeaderLeftIcon: {
         marginHorizontal: 5,
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     defaultHeaderRightIcon: {
         marginHorizontal: 5,
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     defaultHeaderRightIconImage: {
         maxWidth: 40,
         maxHeight: 40,
-        marginRight: 20,
-    },
+        marginRight: 20
+    }
 });
 
 export default stylesheet;

@@ -1,4 +1,3 @@
-
 import EventEmitter, { AuthEvents } from '../events';
 import { Contact, Channel } from '../capability';
 import { AppState } from 'react-native';
@@ -11,38 +10,48 @@ class DataManager {
         this.userDataFetchedEventEmitted = false;
         await this.listenToEvents();
         this.listenToAppEvents();
-    }
+    };
 
     listenToAppEvents = async () => {
         AppState.addEventListener('change', this.handleAppStateChange);
-    }
+    };
 
     listenToEvents = async () => {
-        EventEmitter.addListener(AuthEvents.userLoggedIn, this.userLoggedInHandler);
-        EventEmitter.addListener(AuthEvents.userLoggedOut, this.userLoggedOutHandler);
-    }
+        EventEmitter.addListener(
+            AuthEvents.userLoggedIn,
+            this.userLoggedInHandler
+        );
+        EventEmitter.addListener(
+            AuthEvents.userLoggedOut,
+            this.userLoggedOutHandler
+        );
+    };
 
-    handleAppStateChange = async (nextAppState) => {
+    handleAppStateChange = async nextAppState => {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (isUserLoggedIn) {
             if (nextAppState === 'active') {
                 this.userLoggedInHandler();
             }
         }
-    }
+    };
 
     checkDataFetched = () => {
-        if (this.channelsFetched && this.contactsFetched && !this.userDataFetchedEventEmitted) {
+        if (
+            this.channelsFetched &&
+            this.contactsFetched &&
+            !this.userDataFetchedEventEmitted
+        ) {
             EventEmitter.emit(AuthEvents.userDataFetched);
             this.userDataFetchedEventEmitted = true;
         }
-    }
+    };
 
     userLoggedInHandler = async () => {
         console.log('DataManager : User Logged in');
         this.refreshChannels();
         this.refreshContacts();
-    }
+    };
 
     userLoggedOutHandler = async () => {
         console.log('DataManager : User Loggedout');
@@ -50,7 +59,7 @@ class DataManager {
         this.deleteChannels();
         this.contactsFetched = false;
         this.channelsFetched = false;
-    }
+    };
 
     refreshContacts = () => {
         Contact.refreshContacts()
@@ -61,12 +70,12 @@ class DataManager {
             .catch(() => {
                 this.contactsFetched = true;
                 this.checkDataFetched();
-            })
-    }
+            });
+    };
 
     deleteContacts = () => {
         Contact.clearContacts();
-    }
+    };
 
     refreshChannels = () => {
         Channel.refreshChannels()
@@ -77,12 +86,12 @@ class DataManager {
             .catch(() => {
                 this.channelsFetched = true;
                 this.checkDataFetched();
-            })
-    }
+            });
+    };
 
     deleteChannels = () => {
         Channel.clearChannels();
-    }
+    };
 }
 
 export default new DataManager();

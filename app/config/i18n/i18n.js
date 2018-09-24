@@ -1,12 +1,13 @@
-import I18n from 'react-native-i18n'
+import I18n from 'react-native-i18n';
 
-I18n.fallbacks = true
+I18n.fallbacks = true;
 
 I18n.translations = {
-    'en': {
+    en: {
         FrontM: 'FrontM',
         React_Native: 'React Native',
-        Description: 'React Native helps us build cross platform native apps in Javascript.',
+        Description:
+            'React Native helps us build cross platform native apps in Javascript.',
         WebM_Bot: 'WebM',
         WebM_Bot_Desc: 'Search the web - chat style!',
         Betty_Bot: 'Betty Botter',
@@ -23,7 +24,7 @@ I18n.translations = {
         Channels: 'Channels',
         ChatBots: 'Chatbots',
         Configure: 'Configure',
-        Authenticate : 'Authenticate',
+        Authenticate: 'Authenticate',
         Bot_Store: 'Marketplace',
         Featured: 'Featured',
         Developer: 'Company',
@@ -34,7 +35,7 @@ I18n.translations = {
         Bots: 'Bots',
         Filters: 'Filters',
         Search: 'Search',
-        Installed_bots : 'Installed Bots',
+        Installed_bots: 'Installed Bots',
         Done: 'Done',
         Button: 'Button',
         Image_Save_Failed: 'Saving the image to the Photo Album failed.',
@@ -50,41 +51,48 @@ I18n.translations = {
         Bot_install_failed: 'Bot install failed',
         Bot_updated: 'Bot updated',
         Bot_update_failed: 'Bot update failed',
-        Bot_uninstall_confirmation: 'Are you sure you want to uninstall the bot ?',
+        Bot_uninstall_confirmation:
+            'Are you sure you want to uninstall the bot ?',
         Install: 'INSTALL',
         Installed: 'Installed',
         Update_Bot: 'UPDATE',
         Tap_To_Load: 'Tap to Load Image',
         Tap_on_Map: 'Long Press on the Map to select a location',
-        Tap_on_Map_to_Change: 'Long Press on another location if you want to change',
+        Tap_on_Map_to_Change:
+            'Long Press on another location if you want to change',
         Pick_Location: 'Pick Location',
         Name: 'Name',
         Email: 'Email',
         Screen_Name: 'Screen Name',
-        UUID : 'uuid',
-        Given_Name : 'Given Name',
+        UUID: 'uuid',
+        Given_Name: 'Given Name',
         Sur_Name: 'Sur Name',
         Chats: 'Chats',
         Reset_Conversation: 'Reset Conversation',
         Network_Error_Title: 'Connection Issues',
-        Network_Error_Content: 'It appears we are having trouble connecting to the internet. Please retry in some time.',
+        Network_Error_Content:
+            'It appears we are having trouble connecting to the internet. Please retry in some time.',
         Retry_Now: 'Retry Now',
         Cancel: 'Cancel',
         Use: 'Use',
         OPEN: 'OPEN',
         Web_content_shown: 'Web content shown',
         Bot_load_failed_title: 'Bot load failed',
-        Bot_load_failed: 'It appears we are having trouble connecting to the internet. Please retry in some time.',
-        Bot_max_version_error: 'The current version is bot is incompatible with the app. Please visit the Installed bots screen to update the bot.',
-        Bot_min_version_error: 'The current version of the app cannot run the new version of the bot. Please update the app from the app store.',
+        Bot_load_failed:
+            'It appears we are having trouble connecting to the internet. Please retry in some time.',
+        Bot_max_version_error:
+            'The current version is bot is incompatible with the app. Please visit the Installed bots screen to update the bot.',
+        Bot_min_version_error:
+            'The current version of the app cannot run the new version of the bot. Please update the app from the app store.',
         Take_picture: 'Take a picture',
         Select_image: 'Select an image',
-        Fill_form : 'Please fill the form',
-        View_form : 'View the form details',
+        Fill_form: 'Please fill the form',
+        View_form: 'View the form details',
         Close: 'Close',
         Yes: 'Yes',
         Confirm: 'Confirm',
-        Call_Message: 'Available when you connect over Satellite broadband (L-Band, Ka-Band)',
+        Call_Message:
+            'Available when you connect over Satellite broadband (L-Band, Ka-Band)',
         Password_not_empty: 'Please enter a password',
         Not_a_number: 'Please enter a number',
         Not_an_email: 'Please enter a valid email',
@@ -95,17 +103,23 @@ I18n.translations = {
         No_Network: 'No network connection',
         Satellite_connection: 'Online over Satellite',
         Connection_Type: 'Connection Type',
-        Satellite_Message: 'You are in Satellite Network Mode which ensures minimum data consumption with a near real time message exchange.',
-        Gsm_Message: 'You are in Terrestrial Network Mode which provides a real time messaging experience.',
-        Auto_Message: 'You are in Automatic Network Mode which ensures optimal data consumption when you switch between Terrestrial Cellular/GSM/Broadband network and Satellite networks.',
+        Satellite_Message:
+            'You are in Satellite Network Mode which ensures minimum data consumption with a near real time message exchange.',
+        Gsm_Message:
+            'You are in Terrestrial Network Mode which provides a real time messaging experience.',
+        Auto_Message:
+            'You are in Automatic Network Mode which ensures optimal data consumption when you switch between Terrestrial Cellular/GSM/Broadband network and Satellite networks.',
         Ok: 'Ok',
         Password_error: 'Please enter a valid password value',
         Retry_Password_error: 'Password and retry password should match',
         Enable_GPS_title: 'Enable GPS',
-        Enable_GPS_to_view_currentLocation: 'GPS is disabled in your device. Please enable GPS to view your current location.',
+        Enable_GPS_to_view_currentLocation:
+            'GPS is disabled in your device. Please enable GPS to view your current location.',
         Quota: 'Quota',
-        Quota_unavailable: 'Currently, you don\'t have enough quota to send messages. Please ask your admin for more quota',
-        Channel_admin_unsubscribe: 'You are the only admin for this channel. Please make another user an admin and then unsubscribe',
+        Quota_unavailable:
+            "Currently, you don't have enough quota to send messages. Please ask your admin for more quota",
+        Channel_admin_unsubscribe:
+            'You are the only admin for this channel. Please make another user an admin and then unsubscribe',
         Discover: 'Discover',
         Activate_Enterprise_Bots: 'Sign in to a new Provider',
         Initializing: 'Initializing',
@@ -114,7 +128,7 @@ I18n.translations = {
         Dial: 'Dial',
         Enter_valid_number: 'Please enter a valid phone number',
         Delete: 'Delete'
-    },
-}
+    }
+};
 
-export default I18n
+export default I18n;

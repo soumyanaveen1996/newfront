@@ -2,7 +2,7 @@ export const AuthEvents = {
     userLoggedIn: 'userLoggedIn',
     userLoggedOut: 'userLoggedOut',
     userDataFetched: 'userDataFetched',
-    userChanged: 'userChanged',
+    userChanged: 'userChanged'
 };
 
 export default AuthEvents;

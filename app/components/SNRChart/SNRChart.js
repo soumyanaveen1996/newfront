@@ -7,41 +7,42 @@ import { styles, chartStyles } from './styles';
 import _ from 'lodash';
 import moment from 'moment';
 
-
 export default class SNRChart extends Component {
-
     static navigationOptions({ navigation, screenProps }) {
         return {
-            headerLeft: <HeaderBack onPress={Actions.pop} />,
-        }
+            headerLeft: <HeaderBack onPress={Actions.pop} />
+        };
     }
 
     getYDomain() {
         const snrData = this.props.chartData.data;
-        const maxVal = _.maxBy(snrData, (d) => d.SNR );
+        const maxVal = _.maxBy(snrData, d => d.SNR);
         return [0, maxVal.SNR > 2 ? maxVal.SNR : 2];
     }
 
     getXDomain() {
         const snrData = this.props.chartData.data;
-        const minVal = _.minBy(snrData, (d) => d.Timestamp );
-        const maxVal = _.maxBy(snrData, (d) => d.Timestamp );
+        const minVal = _.minBy(snrData, d => d.Timestamp);
+        const maxVal = _.maxBy(snrData, d => d.Timestamp);
         return [minVal.Timestamp, maxVal.Timestamp];
     }
 
     getTickValues() {
         const snrData = this.props.chartData.data;
-        const minVal = _.minBy(snrData, (d) => d.Timestamp );
-        const maxVal = _.maxBy(snrData, (d) => d.Timestamp );
+        const minVal = _.minBy(snrData, d => d.Timestamp);
+        const maxVal = _.maxBy(snrData, d => d.Timestamp);
         const midVal = Math.floor((minVal.Timestamp + maxVal.Timestamp) / 2);
         return [minVal.Timestamp, midVal, maxVal.Timestamp];
     }
 
     render() {
         return (
-            <ScrollView contentContainerStyle={styles.container} scrollEnabled={true}>
+            <ScrollView
+                contentContainerStyle={styles.container}
+                scrollEnabled={true}
+            >
                 <Text style={styles.text}>{this.props.chartTitle}</Text>
-                <VictoryChart >
+                <VictoryChart>
                     <VictoryAxis
                         style={chartStyles.axis}
                         dependentAxis
@@ -56,7 +57,7 @@ export default class SNRChart extends Component {
                         domain={this.getXDomain()}
                         tickValues={this.getTickValues()}
                         label="Time"
-                        tickFormat={(x) => moment(x).format('H:mm:ss')}
+                        tickFormat={x => moment(x).format('H:mm:ss')}
                     />
                     <VictoryLine
                         style={chartStyles.line}
