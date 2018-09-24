@@ -250,9 +250,7 @@ export default class Contact {
                                 SystemBot.contactsBot.botId
                             }`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             }
                         };
                         return Network(options);
@@ -297,7 +295,7 @@ export default class Contact {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             }
                         };
                         return Network(options);
