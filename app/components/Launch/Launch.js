@@ -119,7 +119,6 @@ export default class Splash extends React.Component {
     }
 
     handleNotification = (notification) => {
-        console.log('In HandleNotification : ', notification, Actions.currentScene);
         if (!notification.foreground && notification.userInteraction) {
             if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);

@@ -61,7 +61,7 @@ export default class ChatMessage extends React.Component {
     }
 
     async componentDidMount() {
-        this.mounted = true
+        this.mounted = true  
         let { message } = this.props;
 
         if (!message.isRead() && message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM) {

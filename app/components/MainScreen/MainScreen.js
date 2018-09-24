@@ -19,6 +19,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import { LoginScreen } from '../Login';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -58,6 +59,7 @@ export default class MainScreen extends React.Component {
         // Susbscribe to async result handler
         this.eventSubscription = null;
         this.state = {
+            loginState : false,
             screenState: MainScreenStates.notLoaded
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -80,7 +82,7 @@ export default class MainScreen extends React.Component {
         );
     }
 
-    async componentDidMount() {
+    async componentDidMount() {  
         if (this.props.navigation) {
             this.props.navigation.setParams({ openBotFilter: this.openBotFilter.bind(this) });
         }
@@ -90,7 +92,7 @@ export default class MainScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
-        this.messageListener = EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this))
+        this.messageListener = EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this));
     }
 
     componentWillMount() {
@@ -216,12 +218,12 @@ export default class MainScreen extends React.Component {
         }
     }
 
-    renderMain() {
+    renderMain(){   
         if (this.state.screenState === MainScreenStates.notLoaded) {
-            return <ActivityIndicator size="small" style={MainScreenStyles.activityIndicator}/>;
+            return <ActivityIndicator size="small" style={MainScreenStyles.activityIndicator} />;
         } else {
             return (
-                <View style={MainScreenStyles.botListContainer}>                    
+                <View style={MainScreenStyles.botListContainer}>
                     <BotList ref="botList"
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots} />
@@ -237,5 +239,7 @@ export default class MainScreen extends React.Component {
                 {this.renderMain()}
             </View>
         );
+        
+        
     }
 }

@@ -276,6 +276,8 @@ export default class FormPopup extends React.Component {
 
     CTAResponseOnPress() {
         if (!this.isValid() || !this.props.editable) {
+            console.log('getting error');
+            
             this.setState({errorMessages : this.errorMessages});
             return;
         }
