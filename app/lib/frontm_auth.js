@@ -101,12 +101,10 @@ class FrontmAuth {
                 Network(options)
                     .then(res => {
                         let resData =
-                            res && res.data && res.data.creds
-                                ? res.data
-                                : { creds: {} };
+                            res && res.data ? res.data : { creds: {} };
                         if (
                             _.isEmpty(resData) ||
-                            _.isEmpty(resData.creds) ||
+                            _.isEmpty(resData.sessionId) ||
                             _.isEmpty(resData.user)
                         ) {
                             reject(new Error('Empty response from the server'));
@@ -274,12 +272,10 @@ class FrontmAuth {
                     Network(options)
                         .then(res => {
                             let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
-                                    : { creds: {} };
+                                res && res.data ? res.data : { creds: {} };
                             if (
                                 _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
+                                _.isEmpty(resData.sessionId) ||
                                 _.isEmpty(resData.user)
                             ) {
                                 reject(
@@ -386,13 +382,11 @@ class FrontmAuth {
                     Network(options)
                         .then(res => {
                             let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
-                                    : { creds: {} };
+                                res && res.data ? res.data : { creds: {} };
                             console.log('resData : ', res);
                             if (
                                 _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
+                                _.isEmpty(resData.sessionId) ||
                                 _.isEmpty(resData.user)
                             ) {
                                 reject(
