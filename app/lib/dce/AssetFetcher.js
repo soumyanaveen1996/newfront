@@ -105,7 +105,6 @@ class AssetFetcher {
             const path = '/' + config.bot.s3bucket + '/' + s3RelativePath;
             let headers = false;
             const isLoggedIn = await Promise.resolve(Auth.isUserLoggedIn());
-
             // S3 hates invalid headers even for public files - found out the hard way :)
             if (isLoggedIn) {
                 headers = Utils.createAuthHeader(
@@ -118,7 +117,6 @@ class AssetFetcher {
                 );
             }
             const url = config.bot.baseProtocol + host + path;
-
             const fileData = await AssetFetcher.downloadFile(
                 filepath,
                 url,
@@ -171,11 +169,9 @@ class AssetFetcher {
             const host = config.bot.baseUrl;
 
             const s3Config = {
-                accessKeyId: user.aws.accessKeyId,
                 endpoint: host,
                 region: config.aws.region,
-                secretAccessKey: user.aws.secretAccessKey,
-                sessionToken: user.aws.sessionToken
+                sessionId: user.creds.sessionId
             };
             const s3 = new AWS.S3(s3Config);
 
@@ -249,9 +245,7 @@ class AssetFetcher {
                 'POST',
                 uploadUrl,
                 {
-                    accesskeyid: user.aws.accessKeyId,
-                    secretaccesskey: user.aws.secretAccessKey,
-                    sessiontoken: user.aws.sessionToken,
+                    sessionId: user.creds.sessionId,
                     'Content-Type': 'multipart/form-data'
                 },
                 [
@@ -267,9 +261,7 @@ class AssetFetcher {
             );
 
             console.log({
-                accesskeyid: user.aws.accessKeyId,
-                secretaccesskey: user.aws.secretAccessKey,
-                sessiontoken: user.aws.sessionToken,
+                sessiontoken: user.creds.sessionId,
                 'Content-Type': 'multipart/form-data'
             });
             console.log('AssetFetcher::');

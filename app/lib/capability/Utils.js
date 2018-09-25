@@ -23,25 +23,22 @@ const createAuthHeader = function(
         headers: {
             'X-Amz-Date': getAmzDate(new Date().toISOString()),
             host: host,
-            'X-Amz-Security-Token': user.aws.sessionToken
+            'X-Amz-Security-Token': user.creds.sessionId
         },
         region: config.aws.region,
         body: JSON.stringify(body),
         credentials: {
-            SecretKey: user.aws.secretAccessKey,
-            AccessKeyId: user.aws.accessKeyId
+            SecretKey: '',
+            AccessKeyId: ''
         }
     };
-
     // The conteny-type header will be ignored if body is empty - so add it only if body is not empty
     if (body) {
         options.headers['Content-Type'] = 'application/json';
     }
-
     if (service === 's3') {
         options.headers['X-Amz-Content-Sha256'] = EMPTY_HASHED_PAYLOAD;
     }
-
     var awsSignature = new AWSSignature();
     awsSignature.setParams(options);
     var authorization = awsSignature.getAuthorizationHeader();
