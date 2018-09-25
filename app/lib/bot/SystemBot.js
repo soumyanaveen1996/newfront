@@ -27,8 +27,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -58,8 +58,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js',
-                version: '1.1.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -84,8 +84,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -116,8 +116,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: true,
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: true,
@@ -143,8 +143,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: true,
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: true,
@@ -168,9 +168,9 @@ export const SYSTEM_BOT_MANIFEST = {
         dependencies: {
             agentGuardService: {
                 remote: true,
-                version: '1.1.0',
+                version: '1.2.0',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js'
             },
             authContext: {
                 remote: true,
