@@ -1,5 +1,5 @@
 import { CallQuotaEvents, EventEmitter } from '../../lib/events';
-export const updateCallQuota = ({ error = null, callQuota }) => {
+const UpdateCallQuota = ({ error = null, callQuota }) => {
     // Update the latest Call Quota
     if (error) {
         EventEmitter.emit(CallQuotaEvents.UPD_QUOTA_ERROR, { error });
@@ -10,3 +10,5 @@ export const updateCallQuota = ({ error = null, callQuota }) => {
     });
     // Maybe push it to async storage ?? - TBD
 };
+
+export default UpdateCallQuota;
