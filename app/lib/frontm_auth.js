@@ -334,10 +334,10 @@ class FrontmAuth {
                     user: details
                 }
             };
-            console.log('Signin optons : ', signinOptions);
+            console.log('Signin options : ', signinOptions);
             Network(signinOptions)
                 .then(response => {
-                    console.log('signin result ', result);
+                    console.log('signin response ', response);
                     const result = response.data;
                     if (
                         !(result.success === 'true' || result.success === true)
@@ -378,7 +378,10 @@ class FrontmAuth {
                         },
                         data: data
                     };
-                    console.log('network options : ', options);
+                    console.log(
+                        'network options : ' +
+                            JSON.stringify(options, undefined, 2)
+                    );
                     Network(options)
                         .then(res => {
                             let resData =
