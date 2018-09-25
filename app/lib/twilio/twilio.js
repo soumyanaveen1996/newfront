@@ -12,9 +12,7 @@ const getAccessToken = user => {
     }
 
     const queryString = utils.objectToQueryString({
-        accessKeyId: user.aws.accessKeyId,
-        secretAccessKey: user.aws.secretAccessKey,
-        sessionToken: user.aws.sessionToken,
+        sessionId: user.creds.sessionId,
         platform: platform,
         env: env
     });
@@ -25,9 +23,7 @@ const getAccessToken = user => {
             config.proxy.twilioPath
         }?${queryString}`,
         headers: {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken
+            sessionId: user.creds.sessionId
         }
     };
     console.log('Twilio VoIP token : ', options.url);
@@ -53,7 +49,7 @@ const enableVoIP = user => {
         headers: {
             accessKeyId: user.aws.accessKeyId,
             secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken
+            sessionId: user.creds.sessionId
         }
     };
     return Network(options).then(response => {
@@ -72,9 +68,7 @@ const isVoIPEnabled = (otherUserId, user) => {
             config.proxy.getVoIPStatusPath
         }?userId=${otherUserId}`,
         headers: {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken
+            sessionId: user.creds.sessionId
         }
     };
     return Network(options).then(response => {

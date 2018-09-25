@@ -113,10 +113,7 @@ class FrontmAuth {
                             return;
                         }
                         self.credentials.facebook = {
-                            identityId: resData.creds.identityId,
-                            accessKeyId: resData.creds.accessKeyId,
-                            secretAccessKey: resData.creds.secretAccessKey,
-                            sessionToken: resData.creds.sessionToken,
+                            sessionId: resData.sessionId,
                             userId: resData.user.userId,
                             info: resData.user || data.user,
                             refreshToken: resData.longTermToken
@@ -268,7 +265,8 @@ class FrontmAuth {
                         headers: {
                             token: user.idToken,
                             provider_name: 'google',
-                            platform: Platform.OS
+                            platform: Platform.OS,
+                            refresh_token: user.refreshToken
                         },
                         data: data
                     };
@@ -290,10 +288,7 @@ class FrontmAuth {
                                 return;
                             }
                             self.credentials.google = {
-                                identityId: resData.creds.identityId,
-                                accessKeyId: resData.creds.accessKeyId,
-                                secretAccessKey: resData.creds.secretAccessKey,
-                                sessionToken: resData.creds.sessionToken,
+                                sessionId: resData.sessionId,
                                 userId: resData.user.userId,
                                 refreshToken: user.refreshToken,
                                 info: resData.user || data.user
@@ -382,7 +377,8 @@ class FrontmAuth {
                         headers: {
                             token: result.data.id_token,
                             provider_name: 'frontm',
-                            platform: Platform.OS
+                            platform: Platform.OS,
+                            refresh_token: result.data.refresh_token
                         },
                         data: data
                     };
@@ -405,10 +401,7 @@ class FrontmAuth {
                                 return;
                             }
                             self.credentials.frontm = {
-                                identityId: resData.creds.identityId,
-                                accessKeyId: resData.creds.accessKeyId,
-                                secretAccessKey: resData.creds.secretAccessKey,
-                                sessionToken: resData.creds.sessionToken,
+                                sessionId: resData.sessionId,
                                 userId: resData.user.userId,
                                 refreshToken: result.data.refresh_token,
                                 info: resData.user || data.user
@@ -486,13 +479,10 @@ class FrontmAuth {
                         resData.identityId &&
                         resData.accessKeyId &&
                         resData.secretAccessKey &&
-                        resData.sessionToken
+                        resData.sessionId
                     ) {
                         const updatedCreds = {
-                            identityId: resData.identityId,
-                            accessKeyId: resData.accessKeyId,
-                            secretAccessKey: resData.secretAccessKey,
-                            sessionToken: resData.sessionToken
+                            sessionId: resData.sessionId
                         };
                         return resolve(updatedCreds);
                     } else {

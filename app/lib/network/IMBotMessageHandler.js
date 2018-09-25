@@ -302,7 +302,7 @@ const getConversationData = (conversationId, createdBy, user) => {
         return {
             accessKeyId: user.aws.accessKeyId,
             secretAccessKey: user.aws.secretAccessKey,
-            sessionToken: user.aws.sessionToken
+            sessionId: user.creds.sessionId
         };
     }
     return Network(options);

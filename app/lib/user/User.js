@@ -11,7 +11,7 @@ export default class User {
             identityId: '',
             accessKeyId: '',
             secretAccessKey: '',
-            sessionToken: ''
+            sessionId: ''
         };
         this.provider = {
             name: 'dummy',
