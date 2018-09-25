@@ -25,7 +25,7 @@ import BotState from './BotState';
 import BackgroundTaskQueue from './BackgroundTaskQueue';
 import MessageQuota from './MessageQuota';
 import UpdateCallQuota from './CallQuota';
-const version = '1.0'; // Keeps getting bumped if new capabilities are added (after release 1)
+const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
     Contact,

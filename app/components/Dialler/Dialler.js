@@ -8,7 +8,7 @@ import { EventEmitter, TwilioEvents, CallQuotaEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import _ from 'lodash';
-import { Message } from '../../lib/capability';
+import { Message, MessageTypeConstants } from '../../lib/capability';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
 
@@ -20,7 +20,7 @@ export const DiallerState = {
     incall_digits: 'incall_digits'
 };
 
-const MESSAGE_TYPE = 'UPDATE_CALL_QUOTA';
+const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 export default class Dialler extends React.Component {
     constructor(props) {
