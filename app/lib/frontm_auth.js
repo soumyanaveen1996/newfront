@@ -100,8 +100,13 @@ class FrontmAuth {
                 };
                 Network(options)
                     .then(res => {
-                        let resData = res && res.data ? res.data : {};
-                        if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
+                        let resData =
+                            res && res.data ? res.data : { creds: {} };
+                        if (
+                            _.isEmpty(resData) ||
+                            _.isEmpty(resData.sessionId) ||
+                            _.isEmpty(resData.user)
+                        ) {
                             reject(new Error('Empty response from the server'));
                             return;
                         }
@@ -266,8 +271,13 @@ class FrontmAuth {
 
                     Network(options)
                         .then(res => {
-                            let resData = res && res.data ? res.data : {};
-                            if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
+                            let resData =
+                                res && res.data ? res.data : { creds: {} };
+                            if (
+                                _.isEmpty(resData) ||
+                                _.isEmpty(resData.sessionId) ||
+                                _.isEmpty(resData.user)
+                            ) {
                                 reject(
                                     new Error('Empty response from the server')
                                 );
@@ -374,9 +384,14 @@ class FrontmAuth {
                     );
                     Network(options)
                         .then(res => {
+                            let resData =
+                                res && res.data ? res.data : { creds: {} };
                             console.log('resData : ', res);
-                            let resData = res && res.data ? res.data : {};
-                            if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
+                            if (
+                                _.isEmpty(resData) ||
+                                _.isEmpty(resData.sessionId) ||
+                                _.isEmpty(resData.user)
+                            ) {
                                 reject(
                                     new Error('Empty response from the server')
                                 );
