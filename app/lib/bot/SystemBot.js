@@ -163,7 +163,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'BackgroundTaskBot',
         botName: 'Background Task',
-        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.0.0/backgroundTaskBot.js',
+        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.1.0/backgroundTaskBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -184,7 +184,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'backgroundTask-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.0.0'
+        version: '1.1.0'
     }
 };
 
