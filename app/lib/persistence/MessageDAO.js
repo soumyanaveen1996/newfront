@@ -585,6 +585,24 @@ const addStatusColumn = () =>
         });
     });
 
+const createMessageDateIndex = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                messageSql.addMessageCreatedAtIndex,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add index on Message table')
+                    );
+                }
+            );
+        });
+    });
+
 const deleteAllMessages = () =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
