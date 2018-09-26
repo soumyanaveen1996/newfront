@@ -99,7 +99,7 @@ export default class MainScreen extends React.Component {
         // Susbscribe to async result handler
         this.eventSubscription = null;
         this.state = {
-            loginState : false,
+            loginState: false,
             screenState: MainScreenStates.notLoaded
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -120,7 +120,7 @@ export default class MainScreen extends React.Component {
         );
     }
 
-    async componentDidMount() {  
+    async componentDidMount() {
         if (this.props.navigation) {
             this.props.navigation.setParams({
                 openBotFilter: this.openBotFilter.bind(this)
@@ -135,14 +135,10 @@ export default class MainScreen extends React.Component {
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
         });
-<<<<<<< HEAD
-        this.messageListener = EventEmitter.addListener(MessageEvents.messagePersisted, this.handleAsyncMessageResult.bind(this));
-=======
         this.messageListener = EventEmitter.addListener(
             MessageEvents.messagePersisted,
             this.handleAsyncMessageResult.bind(this)
         );
->>>>>>> sep_17_sprint
     }
 
     componentWillMount() {
@@ -303,15 +299,8 @@ export default class MainScreen extends React.Component {
         }
     }
 
-    renderMain(){   
+    renderMain() {
         if (this.state.screenState === MainScreenStates.notLoaded) {
-<<<<<<< HEAD
-            return <ActivityIndicator size="small" style={MainScreenStyles.activityIndicator} />;
-        } else {
-            return (
-                <View style={MainScreenStyles.botListContainer}>
-                    <BotList ref="botList"
-=======
             return (
                 <ActivityIndicator
                     size="small"
@@ -323,7 +312,6 @@ export default class MainScreen extends React.Component {
                 <View style={MainScreenStyles.botListContainer}>
                     <BotList
                         ref="botList"
->>>>>>> sep_17_sprint
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots}
                     />
@@ -337,7 +325,5 @@ export default class MainScreen extends React.Component {
         return (
             <View style={MainScreenStyles.container}>{this.renderMain()}</View>
         );
-        
-        
     }
 }
