@@ -261,7 +261,7 @@ class AssetFetcher {
             );
 
             console.log({
-                sessiontoken: user.creds.sessionId,
+                sessionId: user.creds.sessionId,
                 'Content-Type': 'multipart/form-data'
             });
             console.log('AssetFetcher::');
