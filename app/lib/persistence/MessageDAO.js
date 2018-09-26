@@ -7,7 +7,7 @@ import Utils from '../utils/index';
 import _ from 'lodash';
 
 /**
- * Create the message table if it doesn't exist. Should be called during launch (each time is ok)
+ * Create the message table if it doesn't exist. Should be called during launch (each time is ok).
  */
 const createMessageTable = () =>
     new Promise((resolve, reject) => {
@@ -194,6 +194,7 @@ const updateMessage = message =>
             message.isFavorite() ? 1 : 0,
             message.getCreatedBy(),
             message.isCompleted() ? 1 : 0,
+            message.getStatus(),
             message.getMessageId()
         ];
 
@@ -226,7 +227,8 @@ const insertMessage = message =>
             message.isRead() ? 1 : 0,
             message.isFavorite() ? 1 : 0,
             message.getCreatedBy(),
-            message.isCompleted() ? 1 : 0
+            message.isCompleted() ? 1 : 0,
+            message.getStatus()
         ];
 
         db.transaction(transaction => {
@@ -436,7 +438,8 @@ const messageFromDatabaseRow = msg => {
         isRead: msg.read === 1,
         isFavorite: msg.is_favorite === 1,
         createdBy: msg.created_by,
-        completed: msg.completed === 1
+        completed: msg.completed === 1,
+        status: msg.status
     };
     let message = new Message(opts);
     return message;
@@ -548,6 +551,22 @@ const addCompletedColumn = () =>
         });
     });
 
+const addStatusColumn = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                messageSql.addStatusColumn,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add status column'));
+                }
+            );
+        });
+    });
+
 const createMessageDateIndex = () =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
@@ -602,5 +621,6 @@ export default {
     selectMessagesBeforeDate: selectMessagesBeforeDate,
     createMessageDateIndex: createMessageDateIndex,
     selectMessageById: selectMessageById,
-    deleteAllMessages: deleteAllMessages
+    deleteAllMessages: deleteAllMessages,
+    addStatusColumn
 };

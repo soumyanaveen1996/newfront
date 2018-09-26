@@ -40,8 +40,9 @@ const insertMessage = `
         read,
         is_favorite,
         created_by,
-        completed
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        completed,
+        status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 `;
 
 const updateMessageById = `
@@ -55,7 +56,8 @@ const updateMessageById = `
         read = ?,
         is_favorite = ?,
         created_by = ?,
-        completed = ?
+        completed = ?,
+        status = ?
     WHERE message_id = ?
 `;
 
@@ -91,7 +93,8 @@ const selectRecentMessages = `
         read,
         is_favorite,
         created_by,
-        completed
+        completed,
+        status
     FROM messages
     WHERE bot_key = ?
     ORDER BY message_date desc
@@ -111,7 +114,8 @@ const selectMessagesBeforeDate = `
         read,
         is_favorite,
         created_by,
-        completed
+        completed,
+        status
     FROM messages
     WHERE bot_key = ? AND message_date < ?
     ORDER BY message_date desc
@@ -130,7 +134,8 @@ const selectFavoriteMessages = `
         read,
         is_favorite,
         created_by,
-        completed
+        completed,
+        status
     FROM messages
     WHERE is_favorite = 1
     ORDER BY message_date desc
@@ -150,7 +155,8 @@ const selectMessageById = `
         read,
         is_favorite,
         created_by,
-        completed
+        completed,
+        status
     FROM messages
     WHERE message_id = ?
 `;
@@ -186,7 +192,10 @@ const addMessageCreatedAtIndex = `
 const deleteAllMessages = `
     DELETE FROM messages;
 `;
-
+// Add a New Status Column
+const addStatusColumn = `
+    ALTER TABLE messages ADD COLUMN status INTEGER NOT NULL DEFAULT 0
+`;
 export default {
     createMessageTable: createMessageTable,
     createV2MessageTable: createV2MessageTable,
@@ -207,5 +216,6 @@ export default {
     addCompletedColumn: addCompletedColumn,
     selectMessageById: selectMessageById,
     addMessageCreatedAtIndex: addMessageCreatedAtIndex,
-    deleteAllMessages: deleteAllMessages
+    deleteAllMessages: deleteAllMessages,
+    addStatusColumn
 };

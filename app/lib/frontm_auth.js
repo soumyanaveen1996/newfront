@@ -100,23 +100,13 @@ class FrontmAuth {
                 };
                 Network(options)
                     .then(res => {
-                        let resData =
-                            res && res.data && res.data.creds
-                                ? res.data
-                                : { creds: {} };
-                        if (
-                            _.isEmpty(resData) ||
-                            _.isEmpty(resData.creds) ||
-                            _.isEmpty(resData.user)
-                        ) {
+                        let resData = res && res.data ? res.data : {};
+                        if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
                             reject(new Error('Empty response from the server'));
                             return;
                         }
                         self.credentials.facebook = {
-                            identityId: resData.creds.identityId,
-                            accessKeyId: resData.creds.accessKeyId,
-                            secretAccessKey: resData.creds.secretAccessKey,
-                            sessionToken: resData.creds.sessionToken,
+                            sessionId: resData.sessionId,
                             userId: resData.user.userId,
                             info: resData.user || data.user,
                             refreshToken: resData.longTermToken
@@ -268,32 +258,23 @@ class FrontmAuth {
                         headers: {
                             token: user.idToken,
                             provider_name: 'google',
-                            platform: Platform.OS
+                            platform: Platform.OS,
+                            refresh_token: user.refreshToken
                         },
                         data: data
                     };
 
                     Network(options)
                         .then(res => {
-                            let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
-                                    : { creds: {} };
-                            if (
-                                _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
-                                _.isEmpty(resData.user)
-                            ) {
+                            let resData = res && res.data ? res.data : {};
+                            if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
                                 reject(
                                     new Error('Empty response from the server')
                                 );
                                 return;
                             }
                             self.credentials.google = {
-                                identityId: resData.creds.identityId,
-                                accessKeyId: resData.creds.accessKeyId,
-                                secretAccessKey: resData.creds.secretAccessKey,
-                                sessionToken: resData.creds.sessionToken,
+                                sessionId: resData.sessionId,
                                 userId: resData.user.userId,
                                 refreshToken: user.refreshToken,
                                 info: resData.user || data.user
@@ -343,10 +324,10 @@ class FrontmAuth {
                     user: details
                 }
             };
-            console.log('Signin optons : ', signinOptions);
+            console.log('Signin options : ', signinOptions);
             Network(signinOptions)
                 .then(response => {
-                    console.log('signin result ', result);
+                    console.log('signin response ', response);
                     const result = response.data;
                     if (
                         !(result.success === 'true' || result.success === true)
@@ -382,33 +363,27 @@ class FrontmAuth {
                         headers: {
                             token: result.data.id_token,
                             provider_name: 'frontm',
-                            platform: Platform.OS
+                            platform: Platform.OS,
+                            refresh_token: result.data.refresh_token
                         },
                         data: data
                     };
-                    console.log('network options : ', options);
+                    console.log(
+                        'network options : ' +
+                            JSON.stringify(options, undefined, 2)
+                    );
                     Network(options)
                         .then(res => {
-                            let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
-                                    : { creds: {} };
                             console.log('resData : ', res);
-                            if (
-                                _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
-                                _.isEmpty(resData.user)
-                            ) {
+                            let resData = res && res.data ? res.data : {};
+                            if (_.isEmpty(resData) || _.isEmpty(resData.user)) {
                                 reject(
                                     new Error('Empty response from the server')
                                 );
                                 return;
                             }
                             self.credentials.frontm = {
-                                identityId: resData.creds.identityId,
-                                accessKeyId: resData.creds.accessKeyId,
-                                secretAccessKey: resData.creds.secretAccessKey,
-                                sessionToken: resData.creds.sessionToken,
+                                sessionId: resData.sessionId,
                                 userId: resData.user.userId,
                                 refreshToken: result.data.refresh_token,
                                 info: resData.user || data.user
@@ -486,13 +461,10 @@ class FrontmAuth {
                         resData.identityId &&
                         resData.accessKeyId &&
                         resData.secretAccessKey &&
-                        resData.sessionToken
+                        resData.sessionId
                     ) {
                         const updatedCreds = {
-                            identityId: resData.identityId,
-                            accessKeyId: resData.accessKeyId,
-                            secretAccessKey: resData.secretAccessKey,
-                            sessionToken: resData.sessionToken
+                            sessionId: resData.sessionId
                         };
                         return resolve(updatedCreds);
                     } else {
