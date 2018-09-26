@@ -16,6 +16,7 @@ import { MessageQueue } from '../message';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 import { BackgroundBotChat } from '../BackgroundTask';
 import SystemBot from '../bot/SystemBot';
+import RemoteBotInstall from '../RemoteBotInstall';
 
 const POLL_KEY = 'poll_key';
 const KEEPALIVE_KEY = 'keepalive_key';
@@ -142,6 +143,7 @@ class NetworkPoller {
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
+                RemoteBotInstall.SyncronizeBots();
                 NetworkHandler.readLambda();
                 this.subscribeToServerEvents();
             }

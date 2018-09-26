@@ -14,9 +14,13 @@ import FeaturedTab from './FeaturedTab/FeaturedTab';
 import { HeaderBack } from '../Header';
 import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
-import EventEmitter, { AuthEvents } from '../../lib/events';
+import {
+    EventEmitter,
+    SatelliteConnectionEvents,
+    AuthEvents
+} from '../../lib/events';
 import { Auth } from '../../lib/capability';
-import BotInstall from '../../lib/BotInstall';
+import RemoteBotInstall from '../../lib/RemoteBotInstall';
 
 export default class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -117,13 +121,23 @@ export default class BotStoreScreen extends React.Component {
         });
     }
 
+    async componentWillUnmount() {
+        EventEmitter.removeListener(
+            AuthEvents.userChanged,
+            this.userChangedHandler.bind(this)
+        );
+    }
+
+    async componentWillMount() {
+        await RemoteBotInstall.SyncronizeBots();
+    }
+
     async componentDidMount() {
         try {
             EventEmitter.addListener(
                 AuthEvents.userChanged,
                 this.userChangedHandler.bind(this)
             );
-            await BotInstall.InstallAllSubscribedBots()
             await this.updateCatalog();
             if (this.props.navigation) {
                 this.props.navigation.setParams({
@@ -146,13 +160,6 @@ export default class BotStoreScreen extends React.Component {
                 });
             }
         }
-    }
-
-    componentWillUnmount() {
-        EventEmitter.removeListener(
-            AuthEvents.userChanged,
-            this.userChangedHandler.bind(this)
-        );
     }
 
     async refresh() {
