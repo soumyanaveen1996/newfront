@@ -62,7 +62,7 @@ export default class Channel {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             },
                             data: {
                                 action: 'Subscribe',
@@ -107,7 +107,7 @@ export default class Channel {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             },
                             data: {
                                 action: 'Create',
@@ -159,7 +159,7 @@ export default class Channel {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             },
                             data: {
                                 action: 'Edit',
@@ -201,7 +201,7 @@ export default class Channel {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             },
                             data: {
                                 action: 'Unsubscribe',
@@ -254,7 +254,7 @@ export default class Channel {
                             headers: {
                                 accessKeyId: user.aws.accessKeyId,
                                 secretAccessKey: user.aws.secretAccessKey,
-                                sessionToken: user.aws.sessionToken
+                                sessionId: user.creds.sessionId
                             },
                             data: {
                                 action: 'Get',
