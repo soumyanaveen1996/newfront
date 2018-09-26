@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { Message, MessageTypeConstants } from '../../lib/capability';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
+import { Auth } from '../../lib/capability';
 
 let EventListeners = [];
 export const DiallerState = {
@@ -31,7 +32,7 @@ export default class Dialler extends React.Component {
             dialledDigits: '919880433199',
             micOn: true,
             speakerOn: false,
-            callQuota: 100,
+            callQuota: 0,
             callQuotaUpdateError: false,
             updatingCallQuota: false
         };
@@ -85,7 +86,11 @@ export default class Dialler extends React.Component {
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                TwilioVoice.connect({ To: `${this.state.dialledNumber}` });
+                const user = await Auth.getUser();
+                TwilioVoice.connect({
+                    CallerId: `${user.info.emailAddress}`,
+                    To: `${this.state.dialledNumber}`
+                });
             }
         } catch (err) {
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
@@ -333,7 +338,7 @@ export default class Dialler extends React.Component {
                                 {'Call to Phone'}
                             </Text>
                             <Text style={Styles.callQuotaPrice}>
-                                {`\u00A3 ${this.state.callQuota}`}
+                                {`${this.state.callQuota} Mins`}
                             </Text>
                         </View>
                         <View style={Styles.horizontalRuler} />

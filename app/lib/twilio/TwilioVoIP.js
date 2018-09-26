@@ -64,7 +64,11 @@ export default class TwilioVoIP {
             // }
         } else {
             try {
+                console.log('Getting Auth User');
+
                 const user = await Auth.getUser();
+                console.log(user);
+
                 const accessToken = await Twilio.getAccessToken(user);
                 if (!(__DEV__ && Platform.os === 'ios')) {
                     const isAudioEnabled = await this.requestAudioPermissions();

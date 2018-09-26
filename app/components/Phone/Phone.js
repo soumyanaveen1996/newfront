@@ -9,6 +9,7 @@ import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
+import { Auth } from '../../lib/capability';
 
 export const PhoneState = {
     init: 'init',
@@ -77,9 +78,10 @@ export default class Phone extends React.Component {
         try {
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
+                const user = await Auth.getUser();
                 TwilioVoice.connect({
                     To: `client:${this.props.data.otherUserId}`,
-                    FromName: this.props.data.from
+                    CallerId: `${user.info.emailAddress}`
                 });
                 this.setState({ phoneState: PhoneState.calling });
             }

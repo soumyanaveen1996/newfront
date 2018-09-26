@@ -386,20 +386,20 @@ class FrontmAuth {
                     Network(options)
                         .then(res => {
                             let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
+                                res && res.data
+                                    ? // && res.data.creds
+                                    res.data
                                     : { creds: {} };
-                            console.log('resData : ', res);
-                            if (
-                                _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
-                                _.isEmpty(resData.user)
-                            ) {
-                                reject(
-                                    new Error('Empty response from the server')
-                                );
-                                return;
-                            }
+                            // if (
+                            //     _.isEmpty(resData) ||
+                            //     _.isEmpty(resData.creds) ||
+                            //     _.isEmpty(resData.user)
+                            // ) {
+                            //     reject(
+                            //         new Error('Empty response from the server')
+                            //     );
+                            //     return;
+                            // }
                             self.credentials.frontm = {
                                 sessionId: resData.sessionId,
                                 userId: resData.user.userId,

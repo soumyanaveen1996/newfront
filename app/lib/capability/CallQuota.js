@@ -9,6 +9,7 @@ const UpdateCallQuota = ({ error = null, callQuota }) => {
         callQuota
     });
     // Maybe push it to async storage ?? - TBD
+    return this;
 };
 
 export default UpdateCallQuota;
