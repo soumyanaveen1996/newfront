@@ -255,7 +255,7 @@ class Bot {
                     this.manifest.botName
                 );
 
-                let res = await AssetFetcher.downloadS3FileRest(
+                let res = await AssetFetcher.downloadBotFile(
                     bot_path,
                     this.manifest.botUrl,
                     user
