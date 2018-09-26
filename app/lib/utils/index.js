@@ -114,9 +114,7 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
         user
     );
     headers = _.merge(headers, {
-        accesskeyid: user.aws.accessKeyId,
-        secretaccesskey: user.aws.secretAccessKey,
-        sessiontoken: user.aws.sessionToken
+        sessionId: user.creds.sessionId
     });
 
     console.log(

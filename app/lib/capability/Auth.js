@@ -88,11 +88,8 @@ export default class Auth {
                         currentUser = new User({
                             userId: creds.userId
                         });
-                        currentUser.aws = {
-                            identityId: creds.identityId,
-                            accessKeyId: creds.accessKeyId,
-                            secretAccessKey: creds.secretAccessKey,
-                            sessionToken: creds.sessionToken
+                        currentUser.creds = {
+                            sessionId: creds.sessionId
                         };
                         currentUser.provider = {
                             name: AUTH_PROVIDERS.google,
@@ -140,11 +137,8 @@ export default class Auth {
                         currentUser = new User({
                             userId: creds.userId
                         });
-                        currentUser.aws = {
-                            identityId: creds.identityId,
-                            accessKeyId: creds.accessKeyId,
-                            secretAccessKey: creds.secretAccessKey,
-                            sessionToken: creds.sessionToken
+                        currentUser.creds = {
+                            sessionId: creds.sessionId
                         };
                         currentUser.provider = {
                             name: AUTH_PROVIDERS.facebook,
@@ -354,11 +348,8 @@ export default class Auth {
                         currentUser = new User({
                             userId: creds.userId
                         });
-                        currentUser.aws = {
-                            identityId: creds.identityId,
-                            accessKeyId: creds.accessKeyId,
-                            secretAccessKey: creds.secretAccessKey,
-                            sessionToken: creds.sessionToken
+                        currentUser.creds = {
+                            sessionId: creds.sessionId
                         };
                         currentUser.provider = {
                             name: AUTH_PROVIDERS.frontm,
@@ -409,9 +400,7 @@ export default class Auth {
                                 config.proxy.host +
                                 config.proxy.deleteUserPath,
                             headers: {
-                                accesskeyid: user.aws.accessKeyId,
-                                secretaccesskey: user.aws.secretAccessKey,
-                                sessiontoken: user.aws.sessionToken,
+                                sessionId: user.creds.sessionId,
                                 refresh_token: user.provider.refreshToken
                             }
                         };
@@ -657,11 +646,7 @@ export default class Auth {
             return FrontmAuth.refreshTokens(user)
                 .then(result => {
                     if (result) {
-                        user.aws.identityId =
-                            result.identityId || user.aws.identityId;
-                        user.aws.accessKeyId = result.accessKeyId;
-                        user.aws.secretAccessKey = result.secretAccessKey;
-                        user.aws.sessionToken = result.sessionToken;
+                        user.creds.sessionId = result.sessionId;
                         user.provider.lastRefreshTime = Date.now();
 
                         return resolve(Auth.saveUser(user));

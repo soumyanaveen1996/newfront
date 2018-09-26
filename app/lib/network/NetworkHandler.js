@@ -20,26 +20,18 @@ let processingFutureRequest = false;
  */
 const poll = () => {
     console.log('NetworkHandler::poll::called at ', new Date());
-    Auth.getUser()
-        .then(authUser => {
-            return Auth.refresh(authUser);
-        })
-        .then(refreshedUser => {
-            processNetworkQueue();
-            readRemoteLambdaQueue(refreshedUser);
-        });
+    Auth.getUser().then(authUser => {
+        processNetworkQueue();
+        readRemoteLambdaQueue(authUser);
+    });
 };
 
 const readLambda = () => {
     console.log('NetworkHandler::readLambda::called at ', new Date());
-    Auth.getUser()
-        .then(authUser => {
-            return Auth.refresh(authUser);
-        })
-        .then(refreshedUser => {
-            processNetworkQueue();
-            readRemoteLambdaQueue(refreshedUser);
-        });
+    Auth.getUser().then(authUser => {
+        processNetworkQueue();
+        readRemoteLambdaQueue(authUser);
+    });
 };
 
 const handleLambdaResponse = (res, user) => {
@@ -150,7 +142,7 @@ const readQueue = user =>
                 return {
                     accessKeyId: user.aws.accessKeyId,
                     secretAccessKey: user.aws.secretAccessKey,
-                    sessionToken: user.aws.sessionToken
+                    sessionId: user.creds.sessionId
                 };
             } else {
                 return Utils.createAuthHeader(
@@ -196,7 +188,7 @@ const requestMessagesBeforeDateFromLambda = (
             headers: {
                 accessKeyId: user.aws.accessKeyId,
                 secretAccessKey: user.aws.secretAccessKey,
-                sessionToken: user.aws.sessionToken
+                sessionId: user.creds.sessionId
             },
             data: {
                 conversation: conversationId,
@@ -254,20 +246,16 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
             'NetworkHandler::readOldQueueMessages::called at ',
             new Date()
         );
-        Auth.getUser()
-            .then(authUser => {
-                return Auth.refresh(authUser);
-            })
-            .then(refreshedUser => {
-                resolve(
-                    fetchMessagesBeforeDateFromLambda(
-                        refreshedUser,
-                        conversationId,
-                        botId,
-                        date
-                    )
-                );
-            });
+        Auth.getUser().then(authUser => {
+            resolve(
+                fetchMessagesBeforeDateFromLambda(
+                    authUser,
+                    conversationId,
+                    botId,
+                    date
+                )
+            );
+        });
     });
 
 const ping = user => {
