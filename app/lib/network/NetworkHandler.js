@@ -140,8 +140,6 @@ const readQueue = user =>
         function getHeaders() {
             if (config.proxy.enabled) {
                 return {
-                    accessKeyId: user.aws.accessKeyId,
-                    secretAccessKey: user.aws.secretAccessKey,
                     sessionId: user.creds.sessionId
                 };
             } else {
@@ -186,8 +184,6 @@ const requestMessagesBeforeDateFromLambda = (
                 config.proxy.host +
                 config.proxy.queuePath,
             headers: {
-                accessKeyId: user.aws.accessKeyId,
-                secretAccessKey: user.aws.secretAccessKey,
                 sessionId: user.creds.sessionId
             },
             data: {

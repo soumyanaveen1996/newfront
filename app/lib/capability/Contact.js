@@ -293,8 +293,6 @@ export default class Contact {
                                 SystemBot.contactsBot.botId
                             }`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             }
                         };

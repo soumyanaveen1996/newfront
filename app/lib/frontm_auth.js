@@ -461,7 +461,6 @@ class FrontmAuth {
                 Config.proxy.host +
                 Config.proxy.refreshPath,
             headers: {
-                accesskeyid: user.aws.accessKeyId,
                 provider_name: user.provider.name.toLowerCase(),
                 refresh_token: user.provider.refreshToken,
                 platform: Platform.OS
@@ -472,12 +471,7 @@ class FrontmAuth {
             Network(options)
                 .then(res => {
                     let resData = res ? res.data : {};
-                    if (
-                        resData.identityId &&
-                        resData.accessKeyId &&
-                        resData.secretAccessKey &&
-                        resData.sessionId
-                    ) {
+                    if (resData.sessionId) {
                         const updatedCreds = {
                             sessionId: resData.sessionId
                         };
