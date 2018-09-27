@@ -6,6 +6,7 @@ class DCE {
     }
 
     bot(options) {
+
         let bot = new Bot(options);
 
         this.bots[bot.botId] = bot;
