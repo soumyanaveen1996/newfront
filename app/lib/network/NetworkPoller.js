@@ -143,7 +143,7 @@ class NetworkPoller {
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
-                RemoteBotInstall.SyncronizeBots();
+                RemoteBotInstall.syncronizeBots();
                 NetworkHandler.readLambda();
                 this.subscribeToServerEvents();
             }

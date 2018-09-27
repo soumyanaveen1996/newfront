@@ -11,7 +11,7 @@ class RemoteBotInstall {
      * Return all the bots the user is subscribed to.
      * @returns {Promise} Array of Bot IDs
      */
-    static GetSubscribedBots = () =>
+    static getSubscribedBots = () =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
@@ -39,7 +39,7 @@ class RemoteBotInstall {
      * @param {Array} catalog Bot catalog. Use getCatalog() from lib/bot/indexjs
      * @returns {Object} Bot's Manifest
      */
-    static GetBotManifestFromId = (botID, catalog) => {
+    static getBotManifestFromId = (botID, catalog) => {
         catalog = catalog.bots;
         const subscribedBotManifest = _.find(catalog, manifest => {
             return manifest.botId === botID;
@@ -50,7 +50,7 @@ class RemoteBotInstall {
     /**
      * @returns {Promise} true if the device is using satellite network
      */
-    static IsSatellite = () =>
+    static isSatellite = () =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
@@ -66,15 +66,15 @@ class RemoteBotInstall {
      * @param {Object} botManifest Bot's manifest
      * @returns {Promise} True if installed or updated, False if not.
      */
-    static InstallBot = botManifest =>
+    static installBot = botManifest =>
         new Promise((resolve, reject) => {
-            RemoteBotInstall.IsSatellite().then(isSat => {
+            RemoteBotInstall.isSatellite().then(isSat => {
                 if (isSat) {
                     reject(
                         'Download refused: the device is on satellite network'
                     );
                 } else {
-                    PerformInstallation(botManifest).then(installed => {
+                    performInstallation(botManifest).then(installed => {
                         resolve(installed);
                     });
                 }
@@ -85,10 +85,9 @@ class RemoteBotInstall {
      * Install all the bots the user is subscribed to. Respond success if at least one bot was installed and error if no bots are installed.
      * @returns {Promise} Success if at least one bot is installed
      */
-    static SyncronizeBots = () =>
+    static syncronizeBots = () =>
         new Promise((resolve, reject) => {
-            console.log('YEEEEEEEEEEEEEEEE');
-            RemoteBotInstall.IsSatellite()
+            RemoteBotInstall.isSatellite()
                 .then(isSat => {
                     if (isSat) {
                         throw 'Bots syncronization stopped: device is on satellite network';
@@ -97,12 +96,12 @@ class RemoteBotInstall {
                     }
                 })
                 .then(() => {
-                    return RemoteBotInstall.GetSubscribedBots();
+                    return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
                     let catalog = await Bot.getCatalog();
                     const manifests = _.map(subscribedBotsIds, botId => {
-                        return RemoteBotInstall.GetBotManifestFromId(
+                        return RemoteBotInstall.getBotManifestFromId(
                             botId,
                             catalog
                         );
@@ -113,7 +112,7 @@ class RemoteBotInstall {
                     const results = _.map(
                         subscribedBotsManifests,
                         botManifest => {
-                            return PerformInstallation(botManifest).then(
+                            return performInstallation(botManifest).then(
                                 res => {
                                     return res;
                                 }
@@ -143,7 +142,7 @@ class RemoteBotInstall {
  * @param {Object} botManifest Bot's manifest
  * @returns {Promise} True if installed or updated, False if not.
  */
-function PerformInstallation(botManifest) {
+function performInstallation(botManifest) {
     return new Promise(async (resolve, reject) => {
         const installedBotsManifests = await Bot.getInstalledBots();
         const botStatus = utils.checkBotStatus(
