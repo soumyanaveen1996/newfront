@@ -119,6 +119,7 @@ class Bot {
             ) {
                 return dep.remote === true || dep.remote === 'true';
             });
+            //get dependecies
             await Promise.all(
                 _.map(remoteDeps, async (dep, depName) => {
                     dep.name = depName;
@@ -136,7 +137,7 @@ class Bot {
                 console.log('Catching load err', e);
                 throw e;
             });
-
+            //get bot
             let botResp = await this.bot_data();
             botResp = eval(botResp);
             return botResp;
@@ -245,7 +246,7 @@ class Bot {
 
     async bot_data() {
         try {
-            // Download or Get
+            // Download or Get bot
             let bot_path = `${this.assetFolder}/${this.slug}.js`;
             let bot_data = await AssetFetcher.getFile(bot_path);
 

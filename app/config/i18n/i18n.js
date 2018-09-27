@@ -9,6 +9,7 @@ I18n.translations = {
         Description:
             'React Native helps us build cross platform native apps in Javascript.',
         WebM_Bot: 'WebM',
+        No_balance: "Oops! You don't have credits to make the call",
         WebM_Bot_Desc: 'Search the web - chat style!',
         Betty_Bot: 'Betty Botter',
         Betty_Bot_Desc: 'Play the Betty Botter Game',

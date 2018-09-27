@@ -300,8 +300,6 @@ const getConversationData = (conversationId, createdBy, user) => {
 
     function getHeaders() {
         return {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
             sessionId: user.creds.sessionId
         };
     }

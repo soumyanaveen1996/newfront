@@ -60,8 +60,6 @@ export default class Channel {
                                 config.proxy.host
                             }${config.network.channelsPath}`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             },
                             data: {
@@ -105,8 +103,6 @@ export default class Channel {
                                 config.proxy.host
                             }${config.network.channelsPath}`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             },
                             data: {
@@ -157,8 +153,6 @@ export default class Channel {
                                 config.proxy.host
                             }${config.network.channelsPath}`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             },
                             data: {
@@ -199,8 +193,6 @@ export default class Channel {
                                 config.proxy.host
                             }${config.network.channelsPath}`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             },
                             data: {
@@ -252,8 +244,6 @@ export default class Channel {
                                 config.proxy.host
                             }${config.network.channelsPath}`,
                             headers: {
-                                accessKeyId: user.aws.accessKeyId,
-                                secretAccessKey: user.aws.secretAccessKey,
                                 sessionId: user.creds.sessionId
                             },
                             data: {

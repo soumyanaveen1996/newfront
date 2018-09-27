@@ -4,17 +4,24 @@ import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
-import { EventEmitter, TwilioEvents } from '../../lib/events';
+import { EventEmitter, TwilioEvents, CallQuotaEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import _ from 'lodash';
+import { Message, MessageTypeConstants } from '../../lib/capability';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import SystemBot from '../../lib/bot/SystemBot';
+import { Auth } from '../../lib/capability';
 
+let EventListeners = [];
 export const DiallerState = {
     initial: 'initial',
     connecting: 'connecting',
     incall: 'incall',
     incall_digits: 'incall_digits'
 };
+
+const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 export default class Dialler extends React.Component {
     constructor(props) {
@@ -24,19 +31,47 @@ export default class Dialler extends React.Component {
             dialledNumber: '+',
             dialledDigits: '',
             micOn: true,
-            speakerOn: false
+            speakerOn: false,
+            callQuota: 0,
+            callQuotaUpdateError: false,
+            updatingCallQuota: false,
+            timerId: null,
+            intervalId: null
         };
     }
 
     componentDidMount() {
+        console.log('>>>>>>>>>>>>IN PSTN MOUNT!!!!');
+
         this.mounted = true;
-        this.connectionDidDisconnectListener = EventEmitter.addListener(
-            TwilioEvents.connectionDidDisconnect,
-            this.connectionDidDisconnectHandler.bind(this)
+        // Get the current Call Quota using a background Bot
+        this.initBackGroundBot();
+        // Subscribe to Events
+        EventListeners.push(
+            EventEmitter.addListener(
+                TwilioEvents.connectionDidDisconnect,
+                this.connectionDidDisconnectHandler.bind(this)
+            )
         );
-        this.connectionDidConnectListener = EventEmitter.addListener(
-            TwilioEvents.connectionDidConnect,
-            this.connectionDidConnectHandler.bind(this)
+        EventListeners.push(
+            EventEmitter.addListener(
+                TwilioEvents.connectionDidConnect,
+                this.connectionDidConnectHandler.bind(this)
+            )
+        );
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPDATED_QUOTA,
+                this.handleCallQuotaUpdateSuccess
+            )
+        );
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPD_QUOTA_ERROR,
+                this.handleCallQuotaUpdateFailure
+            )
         );
     }
 
@@ -45,48 +80,111 @@ export default class Dialler extends React.Component {
             Alert.alert(I18n.t('Enter_valid_number'));
             return;
         }
+        if (this.state.callQuota === 0) {
+            Alert.alert(I18n.t('No_balance'));
+            return;
+        }
         try {
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                TwilioVoice.connect({ To: `${this.state.dialledNumber}` });
+                const user = await Auth.getUser();
+                TwilioVoice.connect({
+                    CallerId: `${user.info.emailAddress}`,
+                    To: `${this.state.dialledNumber}`
+                });
             }
         } catch (err) {
-            console.log('Unable to make the call : ', JSON.stringify(err));
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             this.closeCall();
         }
     }
 
     async closeCall() {
+        const { diallerState, timerId, intervalId } = this.state;
+        if (timerId) {
+            console.log('>>>Clearing Timeout<<<');
+            clearTimeout(timerId);
+        }
+        if (intervalId) {
+            console.log('>>>>>>>Clearing Interval to check call<<<<<<<');
+            clearInterval(intervalId);
+        }
         TwilioVoice.disconnect();
         Actions.pop();
     }
 
+    initBackGroundBot = async () => {
+        const message = new Message({
+            msg: {
+                callQuotaUsed: 0
+            },
+            messageType: MESSAGE_TYPE
+        });
+        message.setCreatedBy({ addedByBot: true });
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+
+        await bgBotScreen.initialize();
+
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        this.setState({ updatingCallQuota: true });
+    };
+
+    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+        this.setState({
+            callQuota,
+            updatingCallQuota: false,
+            callQuotaUpdateError: false
+        });
+    };
+
+    handleCallQuotaUpdateFailure = ({ error }) => {
+        this.setState({
+            updatingCallQuota: false,
+            callQuotaUpdateError: true
+        });
+    };
     componentWillUnmount() {
         this.mounted = false;
-        if (this.connectionDidDisconnectListener) {
-            this.connectionDidDisconnectListener.remove();
-        }
-        if (this.connectionDidConnectListener) {
-            this.connectionDidConnectListener.remove();
-        }
+        EventListeners.forEach(listener => listener.remove());
+        EventListeners = [];
     }
 
     connectionDidConnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidConnect : ', data);
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
-            this.setState({ diallerState: DiallerState.incall });
+            const timerId = setTimeout(
+                this.countMinutes,
+                20000,
+                this.state.callQuota
+            );
+            this.setState({ diallerState: DiallerState.incall, timerId });
         }
     }
 
     connectionDidDisconnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidDisconnect : ', data);
         Actions.pop();
     }
 
+    countMinutes = callQuota => {
+        console.log(
+            '>>>>>>Start Counting Minutes for Call<<<<<<<<<',
+            callQuota
+        );
+
+        let quotaLeft = callQuota * 60;
+        const intervalId = setInterval(() => {
+            quotaLeft = quotaLeft - 1;
+            console.log('>>>>Quota Left<<<<', quotaLeft);
+            if (quotaLeft < 0) {
+                this.closeCall();
+            }
+        }, 1000);
+        this.setState({ intervalId });
+    };
+
     close() {
-        const { diallerState } = this.state;
         if (diallerState === Dialler.incall) {
             TwilioVoice.disconnect();
         }
@@ -100,6 +198,7 @@ export default class Dialler extends React.Component {
                 <TouchableOpacity
                     style={[Styles.button, Styles.callButton]}
                     onPress={this.call.bind(this)}
+                    disabled={this.state.updatingCallQuota}
                 >
                     {Icons.greenCall()}
                 </TouchableOpacity>
@@ -269,6 +368,19 @@ export default class Dialler extends React.Component {
                         </Text>
                     </View>
                     <View style={Styles.diallerContainer}>
+                        <View style={Styles.callQuotaContainer}>
+                            <Text style={Styles.callQuotaText}>
+                                {'Call to Phone'}
+                            </Text>
+                            <Text style={Styles.callQuotaPrice}>
+                                {this.state.updatingCallQuota
+                                    ? '...'
+                                    : `Call Balance: ${
+                                        this.state.callQuota
+                                    } mins`}
+                            </Text>
+                        </View>
+                        <View style={Styles.horizontalRuler} />
                         <View style={Styles.diallerButtonContainer}>
                             {this.renderButtons()}
                         </View>
