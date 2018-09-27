@@ -276,6 +276,7 @@ const keepAlive = () => {
 export default {
     poll: poll,
     readLambda: readLambda,
+    readQueue: readQueue,
     keepAlive: keepAlive,
     fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
 };

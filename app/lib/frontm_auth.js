@@ -101,12 +101,10 @@ class FrontmAuth {
                 Network(options)
                     .then(res => {
                         let resData =
-                            res && res.data && res.data.creds
-                                ? res.data
-                                : { creds: {} };
+                            res && res.data ? res.data : { creds: {} };
                         if (
                             _.isEmpty(resData) ||
-                            _.isEmpty(resData.creds) ||
+                            _.isEmpty(resData.sessionId) ||
                             _.isEmpty(resData.user)
                         ) {
                             reject(new Error('Empty response from the server'));
@@ -274,12 +272,10 @@ class FrontmAuth {
                     Network(options)
                         .then(res => {
                             let resData =
-                                res && res.data && res.data.creds
-                                    ? res.data
-                                    : { creds: {} };
+                                res && res.data ? res.data : { creds: {} };
                             if (
                                 _.isEmpty(resData) ||
-                                _.isEmpty(resData.creds) ||
+                                _.isEmpty(resData.sessionId) ||
                                 _.isEmpty(resData.user)
                             ) {
                                 reject(
@@ -338,10 +334,10 @@ class FrontmAuth {
                     user: details
                 }
             };
-            console.log('Signin optons : ', signinOptions);
+            console.log('Signin options : ', signinOptions);
             Network(signinOptions)
                 .then(response => {
-                    console.log('signin result ', result);
+                    console.log('signin response ', response);
                     const result = response.data;
                     if (
                         !(result.success === 'true' || result.success === true)
@@ -382,24 +378,25 @@ class FrontmAuth {
                         },
                         data: data
                     };
-                    console.log('network options : ', options);
+                    console.log(
+                        'network options : ' +
+                            JSON.stringify(options, undefined, 2)
+                    );
                     Network(options)
                         .then(res => {
                             let resData =
-                                res && res.data
-                                    ? // && res.data.creds
-                                    res.data
-                                    : { creds: {} };
-                            // if (
-                            //     _.isEmpty(resData) ||
-                            //     _.isEmpty(resData.creds) ||
-                            //     _.isEmpty(resData.user)
-                            // ) {
-                            //     reject(
-                            //         new Error('Empty response from the server')
-                            //     );
-                            //     return;
-                            // }
+                                res && res.data ? res.data : { creds: {} };
+                            console.log('resData : ', res);
+                            if (
+                                _.isEmpty(resData) ||
+                                _.isEmpty(resData.sessionId) ||
+                                _.isEmpty(resData.user)
+                            ) {
+                                reject(
+                                    new Error('Empty response from the server')
+                                );
+                                return;
+                            }
                             self.credentials.frontm = {
                                 sessionId: resData.sessionId,
                                 userId: resData.user.userId,

@@ -110,6 +110,7 @@ const config = {
         ssePath: '/chatSSE',
         uploadFilePath: '/v2/uploadfile',
         downloadFilePath: '/v2/file',
+        botDownloadPath: '/v2/botfile',
         twilioPath: '/twilio',
         enableVoIPPath: '/enableVoip',
         getVoIPStatusPath: '/getVoipStatus'
