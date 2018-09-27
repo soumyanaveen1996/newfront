@@ -11,7 +11,6 @@ import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
     constructor(manifest, context) {
-
         this.manifest = manifest;
         this.context = context;
 
@@ -58,7 +57,9 @@ class Bot {
         // Finally iterate to read the manifest files and load them as bots
         bots = await Promise.all(
             _.map(slugPaths, async slugPath => {
-                const manifestFile = `${slugPath}/${config.dce.manifestFileName}`;
+                const manifestFile = `${slugPath}/${
+                    config.dce.manifestFileName
+                }`;
                 let botManifest = await AssetFetcher.getFile(manifestFile);
                 try {
                     return JSON.parse(botManifest);
@@ -113,7 +114,7 @@ class Bot {
             // Get the user as we need the creds
             this.user = await Promise.resolve(Auth.getUser());
 
-            let remoteDeps = _.pickBy(this.manifest.dependencies, function (
+            let remoteDeps = _.pickBy(this.manifest.dependencies, function(
                 dep
             ) {
                 return dep.remote === true || dep.remote === 'true';
@@ -219,7 +220,9 @@ class Bot {
 
     async storeManifest() {
         // Store if required
-        const manifest_file_path = `${this.assetFolder}/${config.dce.manifestFileName}`;
+        const manifest_file_path = `${this.assetFolder}/${
+            config.dce.manifestFileName
+        }`;
         const manifest_data = await AssetFetcher.existsOnDevice(
             manifest_file_path
         );
@@ -283,7 +286,9 @@ class Bot {
         let slug = this.slug;
         let version = this.version;
 
-        let path = `${AssetFetcher.RootDir}/${config.dce.botDirName}/${slug}/${version}/`;
+        let path = `${AssetFetcher.RootDir}/${
+            config.dce.botDirName
+        }/${slug}/${version}/`;
 
         return path;
     }
