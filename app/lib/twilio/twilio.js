@@ -47,8 +47,6 @@ const enableVoIP = user => {
             config.proxy.enableVoIPPath
         }`,
         headers: {
-            accessKeyId: user.aws.accessKeyId,
-            secretAccessKey: user.aws.secretAccessKey,
             sessionId: user.creds.sessionId
         }
     };

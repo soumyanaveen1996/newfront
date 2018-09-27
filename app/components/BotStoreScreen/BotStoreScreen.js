@@ -129,7 +129,7 @@ export default class BotStoreScreen extends React.Component {
     }
 
     async componentWillMount() {
-        await RemoteBotInstall.SyncronizeBots();
+        await RemoteBotInstall.syncronizeBots();
     }
 
     async componentDidMount() {
