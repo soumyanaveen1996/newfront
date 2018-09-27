@@ -75,7 +75,7 @@ export default class BackgroundBotChat {
                 self.loadedBot = botResponse;
                 break;
             } catch (error) {
-                console.log('Bot load error');
+                console.log('Bot load error', error);
             }
         }
 

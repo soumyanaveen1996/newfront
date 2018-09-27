@@ -103,7 +103,7 @@ export default class Dialler extends React.Component {
         Actions.pop();
     }
 
-    initBackGroundBot = () => {
+    initBackGroundBot = async () => {
         const message = new Message({
             msg: {
                 callQuotaUsed: 0
@@ -112,8 +112,10 @@ export default class Dialler extends React.Component {
         });
         message.setCreatedBy({ addedByBot: true });
         var bgBotScreen = new BackgroundBotChat({
-            bot: SystemBot.onboardingBot
+            bot: SystemBot.backgroundTaskBot
         });
+
+        await bgBotScreen.initialize();
 
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true });
