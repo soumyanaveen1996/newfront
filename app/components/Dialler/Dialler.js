@@ -34,12 +34,14 @@ export default class Dialler extends React.Component {
             speakerOn: false,
             callQuota: 0,
             callQuotaUpdateError: false,
-            updatingCallQuota: false
+            updatingCallQuota: false,
+            timerId: null,
+            intervalId: null
         };
     }
 
     componentDidMount() {
-        console.log('>>>>>>>>>>>>>IN PSTN MOUNT!!!!');
+        console.log('>>>>>>>>>>>>IN PSTN MOUNT!!!!');
 
         this.mounted = true;
         // Get the current Call Quota using a background Bot
@@ -99,6 +101,15 @@ export default class Dialler extends React.Component {
     }
 
     async closeCall() {
+        const { diallerState, timerId, intervalId } = this.state;
+        if (timerId) {
+            console.log('>>>Clearing Timeout<<<');
+            clearTimeout(timerId);
+        }
+        if (intervalId) {
+            console.log('>>>>>>>Clearing Interval to check call<<<<<<<');
+            clearInterval(intervalId);
+        }
         TwilioVoice.disconnect();
         Actions.pop();
     }
@@ -143,7 +154,12 @@ export default class Dialler extends React.Component {
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
-            this.setState({ diallerState: DiallerState.incall });
+            const timerId = setTimeout(
+                this.countMinutes,
+                20000,
+                this.state.callQuota
+            );
+            this.setState({ diallerState: DiallerState.incall, timerId });
         }
     }
 
@@ -151,8 +167,24 @@ export default class Dialler extends React.Component {
         Actions.pop();
     }
 
+    countMinutes = callQuota => {
+        console.log(
+            '>>>>>>Start Counting Minutes for Call<<<<<<<<<',
+            callQuota
+        );
+
+        let quotaLeft = callQuota * 60;
+        const intervalId = setInterval(() => {
+            quotaLeft = quotaLeft - 1;
+            console.log('>>>>Quota Left<<<<', quotaLeft);
+            if (quotaLeft < 0) {
+                this.closeCall();
+            }
+        }, 1000);
+        this.setState({ intervalId });
+    };
+
     close() {
-        const { diallerState } = this.state;
         if (diallerState === Dialler.incall) {
             TwilioVoice.disconnect();
         }
@@ -166,6 +198,7 @@ export default class Dialler extends React.Component {
                 <TouchableOpacity
                     style={[Styles.button, Styles.callButton]}
                     onPress={this.call.bind(this)}
+                    disabled={this.state.updatingCallQuota}
                 >
                     {Icons.greenCall()}
                 </TouchableOpacity>
@@ -340,7 +373,11 @@ export default class Dialler extends React.Component {
                                 {'Call to Phone'}
                             </Text>
                             <Text style={Styles.callQuotaPrice}>
-                                {`${this.state.callQuota} Mins`}
+                                {this.state.updatingCallQuota
+                                    ? '...'
+                                    : `Call Balance: ${
+                                        this.state.callQuota
+                                    } mins`}
                             </Text>
                         </View>
                         <View style={Styles.horizontalRuler} />
