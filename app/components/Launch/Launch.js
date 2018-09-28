@@ -26,7 +26,7 @@ import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 33; // Corresponding to 2.16.0 build 7. Update this number every time we update initial_bots
+const VERSION = 34; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -61,7 +61,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            //await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
