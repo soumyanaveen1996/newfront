@@ -1032,21 +1032,20 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottom = true;
         this.waitForQueueProcessing().then(() => {
             console.log('Sending my mESSSSAGE', message);
-            this.loadedBot
-                .next(
-                    message,
-                    this.botState,
-                    this.state.messages,
-                    this.botContext
-                )
-                .then(response => {
-                    console.log('Acknowledgement from BOT is...', response);
-                    console.log(this.state.messages);
-                    if (response.status === 200) {
-                        message.setStatus(1);
-                        this.updateChat(message);
-                    }
-                });
+            this.loadedBot.next(
+                message,
+                this.botState,
+                this.state.messages,
+                this.botContext
+            );
+            // .then(response => {
+            //     console.log('Acknowledgement from BOT is...', response);
+            //     console.log(this.state.messages);
+            //     if (response.status === 200) {
+            //         message.setStatus(1);
+            //         this.updateChat(message);
+            //     }
+            // });
             //this.scrollToBottomIfNeeded();
         });
     };
