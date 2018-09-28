@@ -551,22 +551,6 @@ const addCompletedColumn = () =>
         });
     });
 
-const addStatusColumn = () =>
-    new Promise((resolve, reject) => {
-        db.transaction(transaction => {
-            transaction.executeSql(
-                messageSql.addStatusColumn,
-                [],
-                function success() {
-                    return resolve(true);
-                },
-                function failure(tx, err) {
-                    return reject(new Error('Unable to add status column'));
-                }
-            );
-        });
-    });
-
 const createMessageDateIndex = () =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
@@ -580,6 +564,22 @@ const createMessageDateIndex = () =>
                     return reject(
                         new Error('Unable to add index on Message table')
                     );
+                }
+            );
+        });
+    });
+
+const addStatusColumn = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                messageSql.addStatusColumn,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add status column'));
                 }
             );
         });

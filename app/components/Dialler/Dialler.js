@@ -12,6 +12,7 @@ import { Message, MessageTypeConstants } from '../../lib/capability';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Auth } from '../../lib/capability';
+import { Network } from '../../lib/capability';
 
 let EventListeners = [];
 export const DiallerState = {
@@ -76,6 +77,13 @@ export default class Dialler extends React.Component {
     }
 
     async call() {
+        console.log(Network);
+
+        const connection = await Network.isConnected();
+        if (!connection) {
+            Alert.alert(I18n.t('No_Network'));
+            return;
+        }
         if (this.state.dialledNumber.length < 9) {
             Alert.alert(I18n.t('Enter_valid_number'));
             return;
