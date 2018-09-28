@@ -291,6 +291,22 @@ export default class PeopleChat extends ChatBotScreen {
         return this.creatorContact;
     }
 
+    handleMessageEvents(event) {
+        if (
+            !event ||
+            event.botId !== this.getBotId() ||
+            event.conversationId !== this.getBotKey()
+        ) {
+            return;
+        }
+        this.loadedBot.asyncResult(
+            event.message,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
+    }
+
     async handleAsyncMessageResult(event) {
         // Don't handle events that are not for this bot
         if (!event || event.key !== this.getBotKey()) {
