@@ -201,7 +201,7 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.previousMsgs;
     let messages = [];
     _.each(prevMessagesData, mData => {
-        let message = Message.from(mData, user);
+        let message = Message.from(mData, user, conversationId);
         MessageHandler.persistOnDevice(conversationId, message);
         messages.push(message.toBotDisplay());
     });

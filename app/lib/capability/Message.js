@@ -507,18 +507,18 @@ export default class Message {
         return this._completed;
     }
 
-    static from(json, user) {
+    static from(json, user, conversationId) {
         const messageType = IntToMessageTypeConstants[json.contentType];
         let options = {
             messageType: messageType,
-            uuid: json.messageUuid,
+            uuid: json.messageId,
             addedByBot: user && user.userId === json.createdBy ? 0 : 1,
-            botKey: json.conversation,
+            botKey: json.conversation || conversationId,
             msg: json.content[0],
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
-            messageDate: parseInt(json.createdOn.$numberLong, 10)
+            messageDate: parseInt(json.createdOn, 10)
         };
         return new Message(options);
     }
