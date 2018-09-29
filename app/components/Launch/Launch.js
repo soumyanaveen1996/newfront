@@ -41,8 +41,6 @@ export default class Splash extends React.Component {
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
-        console.log('Overrode console object. Now starting initialization');
-
         DataManager.init();
         ContactsCache.init();
         await MessageCounter.init();
@@ -102,7 +100,7 @@ export default class Splash extends React.Component {
             })
             .catch(err => {
                 // ignore
-                console.log('Error : ', err);
+                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
             });
     }
 
@@ -120,7 +118,6 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = async () => {
-        console.log('In Configurig Notifications');
         Notification.deviceInfo().then(info => {
             if (info) {
                 Notification.configure(this.handleNotification.bind(this));
@@ -133,11 +130,6 @@ export default class Splash extends React.Component {
     };
 
     handleNotification = notification => {
-        console.log(
-            'In HandleNotification : ',
-            notification,
-            Actions.currentScene
-        );
         if (!notification.foreground && notification.userInteraction) {
             if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
                 Actions.popTo(ROUTER_SCENE_KEYS.timeline);
@@ -166,7 +158,6 @@ export default class Splash extends React.Component {
     };
 
     listenToEvents = async () => {
-        console.log('listening to events');
         // For now the user should not be taken back
         EventEmitter.addListener(
             AuthEvents.userLoggedIn,
@@ -195,10 +186,7 @@ export default class Splash extends React.Component {
 
     connectToTelnet = async () => {
         var delegate = {
-            commandResult: function(obj) {
-                console.log('Command : ', obj.command);
-                console.log('Result : ', obj.result);
-            }
+            commandResult: function(obj) {}
         };
         let connection = new Telnet(delegate);
 

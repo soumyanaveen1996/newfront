@@ -42,8 +42,6 @@ export default class Dialler extends React.Component {
     }
 
     componentDidMount() {
-        console.log('>>>>>>>>>>>>IN PSTN MOUNT!!!!');
-
         this.mounted = true;
         // Get the current Call Quota using a background Bot
         this.initBackGroundBot();
@@ -77,8 +75,6 @@ export default class Dialler extends React.Component {
     }
 
     async call() {
-        console.log(Network);
-
         const connection = await Network.isConnected();
         if (!connection) {
             Alert.alert(I18n.t('No_Network'));
@@ -111,11 +107,9 @@ export default class Dialler extends React.Component {
     async closeCall() {
         const { diallerState, timerId, intervalId } = this.state;
         if (timerId) {
-            console.log('>>>Clearing Timeout<<<');
             clearTimeout(timerId);
         }
         if (intervalId) {
-            console.log('>>>>>>>Clearing Interval to check call<<<<<<<');
             clearInterval(intervalId);
         }
         TwilioVoice.disconnect();
@@ -176,15 +170,9 @@ export default class Dialler extends React.Component {
     }
 
     countMinutes = callQuota => {
-        console.log(
-            '>>>>>>Start Counting Minutes for Call<<<<<<<<<',
-            callQuota
-        );
-
         let quotaLeft = callQuota * 60;
         const intervalId = setInterval(() => {
             quotaLeft = quotaLeft - 1;
-            console.log('>>>>Quota Left<<<<', quotaLeft);
             if (quotaLeft < 0) {
                 this.closeCall();
             }

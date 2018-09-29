@@ -197,7 +197,7 @@ export default class ChatBotScreen extends React.Component {
                 self.loadedBot = botResponse;
                 break;
             } catch (error) {
-                console.log('Bot load error');
+                console.error('Bot load error', error);
             }
         }
 
@@ -1408,7 +1408,6 @@ export default class ChatBotScreen extends React.Component {
     }
 
     async loadMessages() {
-        console.log('Oldest loaded date : ', this.oldestLoadedDate());
         let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
             this.getBotKey(),
             pageSize,
@@ -1464,7 +1463,7 @@ export default class ChatBotScreen extends React.Component {
                     resolve();
                 })
                 .catch(err => {
-                    console.log('Error persisting session message::', err);
+                    console.error('Error persisting session message::', err);
                     resolve();
                 });
         });

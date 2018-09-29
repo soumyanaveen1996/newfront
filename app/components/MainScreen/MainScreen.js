@@ -172,7 +172,6 @@ export default class MainScreen extends React.Component {
     }
 
     async checkPollingStrategy() {
-        console.log('Polling strategy changed');
         let pollingStrategy = await Settings.getPollingStrategy();
         this.showButton(pollingStrategy);
     }

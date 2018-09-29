@@ -37,7 +37,7 @@ export default class AudioPlayer extends React.Component {
             try {
                 this.state.audio.release();
             } catch (exception) {
-                console.log('Error while releasing audio player', exception);
+                console.error('Error while releasing audio player', exception);
             }
         }
         // When user presses the back button to close the app, clear the trackProgressInterval
@@ -58,13 +58,11 @@ export default class AudioPlayer extends React.Component {
         );
 
         var audioPath = audioSource.uri;
-        console.log(' Audio player : ', audioPath);
         if (_.startsWith(audioPath, 'file://')) {
             audioPath = audioPath.substr(6);
         }
 
         const callback = (error, sound) => {
-            console.log('Error in loading audio file : ', error);
             if (!error) {
                 this.setState({
                     audio: sound
@@ -73,7 +71,6 @@ export default class AudioPlayer extends React.Component {
                 this.setState({ playerState: AudioPlayerStates.STOPPED });
             }
         };
-        console.log(' Audio player : ', audioPath);
         const sound = new Sound(audioPath, '', error => callback(error, sound));
     }
 

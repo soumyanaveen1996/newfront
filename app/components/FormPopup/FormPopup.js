@@ -286,9 +286,7 @@ export default class FormPopup extends React.Component {
         }
     }
 
-    keyboardWillShow(keyboard) {
-        console.log(keyboard);
-    }
+    keyboardWillShow(keyboard) {}
 
     isValid() {
         var formData = this.props.formData;

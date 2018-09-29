@@ -146,10 +146,9 @@ export default class BotStoreScreen extends React.Component {
                 });
             }
         } catch (error) {
-            console.log(
+            console.error(
                 'Error occurred during componentWillMount getting catalogData; ',
-                error,
-                error instanceof NetworkError
+                error
             );
             if (error instanceof NetworkError) {
                 this.setState({

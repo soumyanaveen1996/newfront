@@ -134,7 +134,7 @@ export default class ChatInputBar extends React.Component {
                     this._setPostAudioState();
                 }
             } catch (error) {
-                console.log('Error while stopping recording:', error);
+                console.error('Error while stopping recording:', error);
                 this._setPostAudioState();
             }
             // Reset the state after the audio has been sent as we need the recorded time
@@ -164,18 +164,16 @@ export default class ChatInputBar extends React.Component {
             '/FrontM_' +
             Date.now() +
             options.extension;
-        console.log('Generated file path:', filePath, options);
         try {
             await AudioRecorder.prepareRecordingAtPath(filePath, options);
             return true;
         } catch (error) {
-            console.log('Error while preparing audio:', error);
+            console.error('Error while preparing audio:', error);
             return false;
         }
     }
 
     async _recordAudio() {
-        console.log('Starting recording audio');
         if (this.state.chatState === ChatInputBarState.READY_FOR_SPEECH) {
             this.setState({ chatState: ChatInputBarState.RECORDING_SPEECH });
             const prepared = await this._prepareAudioRecordingPath();
@@ -221,7 +219,6 @@ export default class ChatInputBar extends React.Component {
     _startRecording() {
         if (this.state.chatState === ChatInputBarState.READY_FOR_SPEECH) {
             this._hasRecordPermission().then(permission => {
-                console.log('Permission : ', permission);
                 //AudioRecorder.requestAuthorization();
 
                 if (permission === 'undetermined') {

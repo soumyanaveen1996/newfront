@@ -32,7 +32,7 @@ export default class ConversationList extends React.Component {
                 return { conversation, chatData };
             })
         ).catch(e => {
-            console.log('Error getting info for conversations', e);
+            console.error(e);
             return [];
         });
 

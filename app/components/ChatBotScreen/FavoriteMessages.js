@@ -69,7 +69,7 @@ export default class FavoriteMessages extends React.Component {
             // 4. Update the state of the bot with the messages we have
             this.setState({ messages: messages });
         } catch (e) {
-            console.log('Error occurred during componentWillMount; ', e);
+            console.error('Error occurred during componentWillMount; ', e);
             // TODO: handle errors
         }
     }
