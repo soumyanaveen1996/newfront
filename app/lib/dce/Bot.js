@@ -28,7 +28,7 @@ class Bot {
      * @returns Array of manifests (that are basically the bot representation)
      */
     static async allInstalledBots() {
-        console.log('Calling installedBots');
+        console.log('>>>>>>>>>>>>>>Calling installedBots<<<<<<<<<<<<<<<<<<');
 
         let bots = [];
         const botsDir = `${AssetFetcher.RootDir}/${config.dce.botDirName}/`;
@@ -37,11 +37,17 @@ class Bot {
         let slugPaths = await Promise.all(
             _.map(botsOnDevice, async botDir => {
                 // Go down the slug path to get to the real manifest file path
+
                 const pathToSlug = botDir.path;
                 let pathContent = await AssetFetcher.readDir(pathToSlug);
 
                 // Return the slug paths
                 let allPaths = _.map(pathContent, slug => {
+                    console.log(
+                        '>>>>>>>>>INSTALLED BOTS<<<<<<<<<<<<<<<',
+                        slug.path
+                    );
+
                     return slug.path;
                 });
                 return allPaths;
