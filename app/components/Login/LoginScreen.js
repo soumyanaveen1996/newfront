@@ -59,12 +59,17 @@ export default class LoginScreen extends React.Component {
             email: formInfo[0].value,
             password: formInfo[1].value
         };
-        await Auth.loginWithFrontm(userDetails)
+        await Auth.loginWithFrontm(
+            userDetails,
+            '',
+            SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
+        )
             .then(() => {
                 this.showMainScreen();
             })
             .catch(err => {
                 this.setState({ errorMessage: err.message });
+                this.setState({ loading: false });
             });
     }
 

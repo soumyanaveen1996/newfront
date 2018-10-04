@@ -195,7 +195,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
@@ -227,7 +227,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
@@ -341,11 +341,7 @@ export default class Auth {
             Auth.getUser()
                 .then(user => {
                     currentUser = user;
-                    return FrontmAuth.signinWithFrontm(
-                        userDetails,
-                        conversationId,
-                        botName
-                    );
+                    return FrontmAuth.signinWithFrontm(userDetails);
                 })
                 .then(result => {
                     console.log('frontm login result : ', result);
@@ -537,8 +533,7 @@ export default class Auth {
                     user.info.surname = details.surname || user.info.surname;
                     user.info.givenName =
                         details.givenName || user.info.givenName;
-                    user.info.name =
-                        user.info.givenName + ' ' + user.info.surname;
+                    user.info.name = user.info.userName;
                     return resolve(Auth.saveUser(user));
                 } else {
                     reject('No valid user session');

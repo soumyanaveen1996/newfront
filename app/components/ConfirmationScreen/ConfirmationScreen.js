@@ -4,20 +4,59 @@ import {
     View,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    AsyncStorage
 } from 'react-native';
-
+import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
+import { Auth } from '../../lib/capability';
 
 export default class ConfirmationScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userEmail: 'test@test.com'
+            userEmail: 'test@test.com',
+            code: 0
         };
     }
+
+    componentWillMount() {
+        AsyncStorage.getItem('userEmail').then(token => {
+            this.setState(() => {
+                return { userEmail: token };
+            });
+        });
+    }
+
     async onFormSubmit() {
-        console.log('send code done');
+        const userDetails = {
+            email: this.state.userEmail,
+            confirmCode: this.state.code
+        };
+        console.log('send code done', userDetails);
+
+        await Auth.confirmFrontmSignup(userDetails)
+            .then(async data => {
+                console.log('you can log in now', data);
+                if (data.success) {
+                    await AsyncStorage.setItem('signupStage', 'done');
+                    this.showMainScreen();
+                }
+            })
+            .catch(err => {
+                console.log('error is ', err);
+            });
+    }
+
+    showMainScreen = () => {
+        Actions.timeline({ type: ActionConst.REPLACE });
+        return;
+    };
+
+    onChangeCode(text) {
+        this.setState(() => {
+            return { code: text };
+        });
     }
 
     render() {
@@ -44,6 +83,7 @@ export default class ConfirmationScreen extends Component {
                             keyboardType="numeric"
                             autoFocus={true}
                             placeholder="------"
+                            onChangeText={this.onChangeCode.bind(this)}
                             maxLength={6} //setting limit of input
                         />
                     </View>

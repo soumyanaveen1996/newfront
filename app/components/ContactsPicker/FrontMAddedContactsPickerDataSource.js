@@ -35,12 +35,8 @@ export default class ContactsPickerDataSource {
             this.idToContacts[data.userId] = {
                 id: data.userId,
                 name: data.userName,
-                firstName: data.givenName,
-                middleName: data.middleName,
-                lastName: data.surname,
                 emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
-                phoneNumbers: data.phoneNumbers,
-                screenName: data.screenName
+                phoneNumbers: data.phoneNumbers
             };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));

@@ -8,7 +8,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    AsyncStorage
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -76,7 +77,7 @@ export default class SignupScreen extends React.Component {
         Actions.swiperScreen({ type: ActionConst.REPLACE });
     };
 
-    onSignup = () => {
+    onSignup = async () => {
         let emailResult = this.validateEmail(this.state.email);
         let passworResult = this.passwordValidation(this.state.password);
         let passwordConfirmResult = this.passwordConfirm();
@@ -84,20 +85,25 @@ export default class SignupScreen extends React.Component {
             const userDetails = {
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password,
-                passwordConfirm: this.state.confirmPassword
+                password: this.state.password
             };
-            console.log('call signup api', userDetails);
-
-            // await Auth.signupWithFrontm(userDetails)
-            //     .then(() => {
-
-            //     })
-            //     .catch(err => {
-            //         this.setState({ errorMessage: err.message });
-            //     });
-
-            // Actions.confirmationScreen({ type: ActionConst.REPLACE });
+            await Auth.signupWithFrontm(userDetails)
+                .then(async data => {
+                    console.log('success signup email went', data);
+                    if (data.success) {
+                        await AsyncStorage.setItem('userEmail', data.data);
+                        await AsyncStorage.setItem(
+                            'signupStage',
+                            'confirmCode'
+                        );
+                        Actions.confirmationScreen({
+                            type: ActionConst.REPLACE
+                        });
+                    }
+                })
+                .catch(err => {
+                    this.setState({ errorMessage: err.message });
+                });
         }
     };
 
