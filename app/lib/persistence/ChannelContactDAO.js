@@ -20,9 +20,16 @@ const createChannelContactsTable = () =>
         });
     });
 
-const insertChannelContact = (id, name, email) =>
+const insertChannelContact = (
+    id,
+    name,
+    email,
+    screenName,
+    givenName,
+    surname
+) =>
     new Promise((resolve, reject) => {
-        const args = [id, name, email];
+        const args = [id, name, email, screenName, givenName, surname];
         db.transaction(tx => {
             tx.executeSql(
                 channelContactSql.insertChannelContact,
@@ -31,7 +38,10 @@ const insertChannelContact = (id, name, email) =>
                     return resolve({
                         userId: id,
                         userName: name,
-                        email: email
+                        email: email,
+                        screenName: screenName,
+                        givenName: givenName,
+                        surname: surname
                     });
                 },
                 function failure(transaction, err) {
@@ -61,8 +71,11 @@ const deleteChannelContact = id =>
 const channelContactDataFromDbResult = dbResult => {
     return {
         userId: dbResult.id,
-        userName: dbResult.userName,
-        email: dbResult.email
+        userName: dbResult.name,
+        email: dbResult.email,
+        givenName: dbResult.givenName,
+        surname: dbResult.surname,
+        screenName: dbResult.screenName
     };
 };
 
