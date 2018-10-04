@@ -117,7 +117,6 @@ export default class PeopleChat extends ChatBotScreen {
         this.botKey = null;
         // This means we have a list of participants to start the conversation with (new chat)
         this.otherParticipants = props.otherParticipants;
-        console.log('Participants in People chat : ', this.otherParticipants);
         // This means we are picking up from an older conversation (existing chat)
         this.conversation = props.conversation;
         // Botkey is the id
@@ -172,7 +171,6 @@ export default class PeopleChat extends ChatBotScreen {
                 this.conversationContext,
                 this.user
             );
-            //console.log('is voip enabled : ', isVoIPEnabled);
             this.setNavigationParams(
                 this.conversationContext,
                 this.user,
@@ -187,7 +185,6 @@ export default class PeopleChat extends ChatBotScreen {
                 }
             });
         } catch (err) {
-            console.log('Unable to make the call : ', err);
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
         }
     }
@@ -271,7 +268,7 @@ export default class PeopleChat extends ChatBotScreen {
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log(
+            console.error(
                 'Error getting a conversation context for people chat',
                 error
             );
@@ -289,6 +286,22 @@ export default class PeopleChat extends ChatBotScreen {
             }
         }
         return this.creatorContact;
+    }
+
+    handleMessageEvents(event) {
+        if (
+            !event ||
+            event.botId !== this.getBotId() ||
+            event.conversationId !== this.getBotKey()
+        ) {
+            return;
+        }
+        this.loadedBot.asyncResult(
+            event.message,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
     }
 
     async handleAsyncMessageResult(event) {
@@ -320,11 +333,6 @@ export default class PeopleChat extends ChatBotScreen {
         let newConversation = await Conversation.getIMConversation(
             newConversationId
         );
-        console.log('New conversation : ', newConversation);
-        console.log(
-            'Old conversation : ',
-            await Conversation.getIMConversation(oldConversationId)
-        );
         if (newConversation) {
             await Conversation.deleteConversation(oldConversationId);
             this.conversation = newConversation;
@@ -337,7 +345,6 @@ export default class PeopleChat extends ChatBotScreen {
                 newConversationId
             );
         }
-        console.log(await Conversation.getIMConversation(newConversationId));
     }
 
     async checkAndUpdateConversationContext(
@@ -360,11 +367,6 @@ export default class PeopleChat extends ChatBotScreen {
         } else {
             this.conversationContext = newContext;
         }
-        console.log(
-            await ConversationContext.getBotConversationContextForId(
-                newConversationId
-            )
-        );
         await ConversationContext.deleteConversationContext(oldConversationId);
     }
 
@@ -414,7 +416,6 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     async onRefresh() {
-        console.log('Loading before : ', this.oldestLoadedDate());
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false

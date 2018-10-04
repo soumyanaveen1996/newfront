@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import RNFS from 'react-native-fs';
 import config from '../../config/config.js';
-import AWS from 'aws-sdk';
 import { Utils, Promise, Auth } from '../capability';
-import axios from 'axios';
 import RNFetchBlob from 'react-native-fetch-blob';
+import buildUrl from 'build-url';
 
 class AssetFetcher {
     constructor(options) {
@@ -96,36 +95,41 @@ class AssetFetcher {
         }
     }
 
-    static async downloadS3FileRest(filepath, s3RelativePath, user, encoding) {
+    static async downloadBotFile(filepath, s3RelativePath, user, encoding) {
         try {
-            encoding = encoding || 'utf8';
             console.log(`AssetFetcher::Downloading file from S3: ${filepath}`);
-
+            encoding = encoding || 'utf8';
             const host = config.bot.baseUrl;
+
+            const gatewayUri = `${config.proxy.protocol}${config.proxy.host}`;
             const path = '/' + config.bot.s3bucket + '/' + s3RelativePath;
-            let headers = false;
-            const isLoggedIn = await Promise.resolve(Auth.isUserLoggedIn());
+            const botUri = config.bot.baseProtocol + host + path;
+            const isLoggedIn = await Auth.isUserLoggedIn();
+            let headers = isLoggedIn ? { sessionid: user.creds.sessionId } : {};
 
-            // S3 hates invalid headers even for public files - found out the hard way :)
-            if (isLoggedIn) {
-                headers = Utils.createAuthHeader(
-                    host,
-                    'GET',
-                    path,
-                    config.bot.s3ServiceApi,
-                    '',
-                    user
-                );
-            }
-            const url = config.bot.baseProtocol + host + path;
-
-            const fileData = await AssetFetcher.downloadFile(
-                filepath,
-                url,
-                headers,
-                true
+            console.log(
+                `AssetFetcher::Downloading file from S3 data: ${isLoggedIn}`
             );
 
+            const fileUri = buildUrl(gatewayUri, {
+                path: `${config.proxy.botDownloadPath}`,
+                queryParams: {
+                    path: s3RelativePath,
+                    bucketName: config.bot.s3bucket
+                }
+            });
+
+            console.log(
+                `AssetFetcher::Downloading file from S3 data: ${fileUri} ${botUri} ${filepath} ${headers}`
+            );
+
+            let fileData = await AssetFetcher.downloadFile(
+                filepath,
+                fileUri,
+                headers,
+                true,
+                true
+            );
             return fileData;
         } catch (e) {
             console.log(
@@ -147,82 +151,6 @@ class AssetFetcher {
             return;
         } catch (error) {
             console.log('Failed uploading the file: ' + filepath, error);
-            throw error;
-        }
-    }
-
-    // TODO: improve for production. This is not a good solution as too much is loaded in memory and
-    // data is being sent in one shot
-    // Ideal algo: chunk data + compress (each chunk) + stream to http2 backend as chunks
-    static async uploadFileToS3(
-        base64Data,
-        fileUri,
-        bucketName,
-        filenameWithoutExtension,
-        contentType,
-        extension,
-        user
-    ) {
-        try {
-            console.log(
-                `AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`
-            );
-            // return;
-            const host = config.bot.baseUrl;
-
-            const s3Config = {
-                accessKeyId: user.aws.accessKeyId,
-                endpoint: host,
-                region: config.aws.region,
-                secretAccessKey: user.aws.secretAccessKey,
-                sessionToken: user.aws.sessionToken
-            };
-            const s3 = new AWS.S3(s3Config);
-
-            // Fix for upload binary data S3: https://github.com/benjreinhart/react-native-aws3/issues/14
-            const Buffer = global.Buffer || require('buffer').Buffer;
-            const buf = new Buffer(
-                base64Data.replace(/^data:image\/\w+;base64,/, ''),
-                'base64'
-            );
-
-            const putData = {
-                Bucket: config.bot.binaryS3Bucket + '/' + bucketName,
-                Key: filenameWithoutExtension + '.' + extension,
-                Body: buf,
-                ContentType: contentType,
-                Metadata: {
-                    'Content-Type': contentType
-                }
-            };
-
-            const putObjectPromise = s3.putObject(putData).promise();
-            let a = await Promise.resolve(putObjectPromise);
-            console.log('Put Result : ', a);
-            const s3UrlToFile =
-                config.bot.baseProtocol +
-                host +
-                '/' +
-                config.bot.binaryS3Bucket +
-                '/' +
-                bucketName +
-                '/' +
-                filenameWithoutExtension +
-                '.' +
-                extension;
-
-            console.log(
-                `AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`
-            );
-
-            return s3UrlToFile;
-        } catch (error) {
-            console.log(
-                'Failed uploading for file to bucket: ',
-                fileUri,
-                bucketName,
-                error
-            );
             throw error;
         }
     }
@@ -249,9 +177,7 @@ class AssetFetcher {
                 'POST',
                 uploadUrl,
                 {
-                    accesskeyid: user.aws.accessKeyId,
-                    secretaccesskey: user.aws.secretAccessKey,
-                    sessiontoken: user.aws.sessionToken,
+                    sessionId: user.creds.sessionId,
                     'Content-Type': 'multipart/form-data'
                 },
                 [
@@ -267,9 +193,7 @@ class AssetFetcher {
             );
 
             console.log({
-                accesskeyid: user.aws.accessKeyId,
-                secretaccesskey: user.aws.secretAccessKey,
-                sessiontoken: user.aws.sessionToken,
+                sessionId: user.creds.sessionId,
                 'Content-Type': 'multipart/form-data'
             });
             console.log('AssetFetcher::');
@@ -291,29 +215,6 @@ class AssetFetcher {
             );
             throw error;
         }
-    }
-
-    static async uploadToS3(
-        base64Data,
-        fileUri,
-        conversationId,
-        messageId,
-        contentType,
-        extension,
-        user
-    ) {
-        console.log(
-            `AssetFetcher::Uploading file ${fileUri} data with conversationId: ${conversationId}`
-        );
-        return AssetFetcher.uploadFileToS3(
-            base64Data,
-            fileUri,
-            conversationId,
-            messageId,
-            contentType,
-            extension,
-            user
-        );
     }
 
     static depPath(name, version) {
@@ -341,7 +242,7 @@ class AssetFetcher {
                     version
                 );
 
-                let res = await AssetFetcher.downloadS3FileRest(
+                let res = await AssetFetcher.downloadBotFile(
                     path,
                     depUrl,
                     user

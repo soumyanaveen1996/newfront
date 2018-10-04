@@ -26,7 +26,7 @@ import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
-const VERSION = 33; // Corresponding to 2.16.0 build 7. Update this number every time we update initial_bots
+const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -43,7 +43,6 @@ export default class Splash extends React.Component {
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
-        console.log('Overrode console object. Now starting initialization');
         DataManager.init();
         ContactsCache.init(); // after loging. Logout should clear it.
         await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
@@ -105,7 +104,7 @@ export default class Splash extends React.Component {
             })
             .catch(err => {
                 // ignore
-                console.log('Error : ', err);
+                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
             });
     }
 
@@ -123,7 +122,6 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = async () => {
-        console.log('In Configurig Notifications');
         Notification.deviceInfo().then(info => {
             if (info) {
                 Notification.configure(this.handleNotification.bind(this));
@@ -164,7 +162,6 @@ export default class Splash extends React.Component {
     };
 
     listenToEvents = async () => {
-        console.log('listening to events');
         // For now the user should not be taken back
         EventEmitter.addListener(
             AuthEvents.userLoggedIn,
@@ -193,10 +190,7 @@ export default class Splash extends React.Component {
 
     connectToTelnet = async () => {
         var delegate = {
-            commandResult: function(obj) {
-                console.log('Command : ', obj.command);
-                console.log('Result : ', obj.result);
-            }
+            commandResult: function(obj) {}
         };
         let connection = new Telnet(delegate);
 

@@ -94,7 +94,6 @@ export default class InstalledBotsScreen extends React.Component {
             );
             return;
         }
-        console.log('New bot manifest for upload : ', bot);
         try {
             const dceBot = dce.bot(bot);
             await Bot.update(dceBot);
@@ -140,7 +139,6 @@ export default class InstalledBotsScreen extends React.Component {
             const isSystemBot = _.find(defaultBots, { botId: bot.botId });
             const newBotData = _.find(catalogData.bots, { botId: bot.botId });
             const status = utils.checkBotStatus(bots, newBotData);
-            console.log('bot data old and new : ', newBotData, bot);
             const doesClientSupport = this.checkIfClientSupportsBot(newBotData);
             if ((isSystemBot || autoUpdate) && doesClientSupport) {
                 this.updateBot(newBotData);

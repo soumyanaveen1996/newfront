@@ -9,6 +9,7 @@ import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
+import { Auth } from '../../lib/capability';
 
 export const PhoneState = {
     init: 'init',
@@ -22,6 +23,8 @@ export default class Phone extends React.Component {
         super(props);
         this.state = {
             phoneState: props.state,
+            micOn: true,
+            speakerOn: false,
             username:
                 props.state === PhoneState.calling ||
                 props.state === PhoneState.init
@@ -75,14 +78,14 @@ export default class Phone extends React.Component {
         try {
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
+                const user = await Auth.getUser();
                 TwilioVoice.connect({
                     To: `client:${this.props.data.otherUserId}`,
-                    FromName: this.props.data.from
+                    CallerId: `${user.info.emailAddress}`
                 });
                 this.setState({ phoneState: PhoneState.calling });
             }
         } catch (err) {
-            console.log('Unable to make the call : ', err);
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             Actions.pop();
         }
@@ -99,14 +102,12 @@ export default class Phone extends React.Component {
     }
 
     connectionDidConnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidConnect : ', data);
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             this.setState({ phoneState: PhoneState.incall });
         }
     }
 
     connectionDidDisconnectHandler(data) {
-        console.log('FrontM VoIP : Phone connectionDidDisconnect : ', data);
         Actions.pop();
     }
 
@@ -114,6 +115,16 @@ export default class Phone extends React.Component {
         TwilioVoice.accept();
         this.setState({ phoneState: PhoneState.incall });
     }
+
+    toggleMic = () => {
+        TwilioVoice.setMuted(this.state.micOn);
+        this.setState({ micOn: !this.state.micOn });
+    };
+
+    toggleSpeaker = () => {
+        TwilioVoice.setSpeakerPhone(!this.state.speakerOn);
+        this.setState({ speakerOn: !this.state.speakerOn });
+    };
 
     close() {
         const { phoneState } = this.state;
@@ -144,13 +155,13 @@ export default class Phone extends React.Component {
         }
     }
 
-    statusMessage(state) {
+    statusMessage({ state, userName = 'Unknown' }) {
         if (state === PhoneState.incall) {
-            return '';
+            return `${userName}`;
         } else if (state === PhoneState.calling) {
-            return I18n.t('Calling');
+            return `${I18n.t('Calling')} ${userName}`;
         } else if (state === PhoneState.init) {
-            return I18n.t('Initializing');
+            return 'Initiating Call';
         } else {
             return I18n.t('From');
         }
@@ -162,13 +173,30 @@ export default class Phone extends React.Component {
 
     render() {
         const { phoneState } = this.state;
-
-        const message = this.statusMessage(phoneState);
+        const message = this.statusMessage({
+            state: phoneState,
+            userName: this.username()
+        });
         return (
             <View style={Styles.containerStyle}>
                 <View style={Styles.nameContainer}>
                     <Text style={Styles.callingText}>{message}</Text>
-                    <Text style={Styles.nameText}>{this.username()}</Text>
+                </View>
+                <View style={Styles.buttonContainer}>
+                    {phoneState === PhoneState.incall ? (
+                        <View style={Styles.buttonContainer}>
+                            <TouchableOpacity onPress={this.toggleMic}>
+                                {this.state.micOn
+                                    ? Icons.mic()
+                                    : Icons.micOff()}
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={this.toggleSpeaker}>
+                                {this.state.speakerOn
+                                    ? Icons.speakerOn()
+                                    : Icons.speakerOff()}
+                            </TouchableOpacity>
+                        </View>
+                    ) : null}
                 </View>
                 <View style={Styles.buttonContainer}>
                     <TouchableOpacity

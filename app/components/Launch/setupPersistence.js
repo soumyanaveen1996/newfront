@@ -80,13 +80,11 @@ function eightToNineMigration() {
 }
 
 function nineToTenMigration() {
-    console.log('Nine to 10 migration : ');
     return BackgroundTaskDAO.createBackgroundTaskTable().then(() => {
         return DbVersionDAO.updateVersion(10);
     });
 }
 function tenToEleven() {
-    console.log('Ten to Eleven Migration');
     return MessageDAO.addStatusColumn().then(() => {
         return DbVersionDAO.updateVersion(11);
     });
@@ -182,7 +180,7 @@ function runMigrations() {
                 resolve();
             })
             .catch(error => {
-                console.log('Migration Error : ', error);
+                console.error('Migration Error : ', error);
             });
     });
 }

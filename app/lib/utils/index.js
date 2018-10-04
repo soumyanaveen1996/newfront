@@ -114,9 +114,7 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
         user
     );
     headers = _.merge(headers, {
-        accesskeyid: user.aws.accessKeyId,
-        secretaccesskey: user.aws.secretAccessKey,
-        sessiontoken: user.aws.sessionToken
+        sessionId: user.creds.sessionId
     });
 
     console.log(
@@ -334,10 +332,11 @@ export async function copyIntialBots(overwrite) {
 export function isiPhoneX() {
     const dimen = Dimensions.get('window');
     return (
-        Platform.OS === 'ios' &&
-        !Platform.isPad &&
-        !Platform.isTVOS &&
-        (dimen.height === 812 || dimen.width === 812)
+        (Platform.OS === 'ios' &&
+            !Platform.isPad &&
+            !Platform.isTVOS &&
+            (dimen.height === 812 || dimen.width === 812)) ||
+        (dimen.height === 896 || dimen.width === 896)
     );
 }
 

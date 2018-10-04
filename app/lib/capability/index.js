@@ -24,8 +24,8 @@ import Telnet from './Telnet';
 import BotState from './BotState';
 import BackgroundTaskQueue from './BackgroundTaskQueue';
 import MessageQuota from './MessageQuota';
-
-const version = '1.0'; // Keeps getting bumped if new capabilities are added (after release 1)
+import UpdateCallQuota from './CallQuota';
+const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
     Contact,
@@ -55,5 +55,6 @@ export {
     Telnet,
     BotState,
     BackgroundTaskQueue,
-    MessageQuota
+    MessageQuota,
+    UpdateCallQuota
 };

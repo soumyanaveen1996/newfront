@@ -28,7 +28,7 @@ class Bot {
      * @returns Array of manifests (that are basically the bot representation)
      */
     static async allInstalledBots() {
-        console.log('Calling installedBots');
+        console.log('>>>>>>>>>>>>>>Calling installedBots<<<<<<<<<<<<<<<<<<');
 
         let bots = [];
         const botsDir = `${AssetFetcher.RootDir}/${config.dce.botDirName}/`;
@@ -37,11 +37,17 @@ class Bot {
         let slugPaths = await Promise.all(
             _.map(botsOnDevice, async botDir => {
                 // Go down the slug path to get to the real manifest file path
+
                 const pathToSlug = botDir.path;
                 let pathContent = await AssetFetcher.readDir(pathToSlug);
 
                 // Return the slug paths
                 let allPaths = _.map(pathContent, slug => {
+                    console.log(
+                        '>>>>>>>>>INSTALLED BOTS<<<<<<<<<<<<<<<',
+                        slug.path
+                    );
+
                     return slug.path;
                 });
                 return allPaths;
@@ -119,6 +125,7 @@ class Bot {
             ) {
                 return dep.remote === true || dep.remote === 'true';
             });
+            //get dependecies
             await Promise.all(
                 _.map(remoteDeps, async (dep, depName) => {
                     dep.name = depName;
@@ -136,7 +143,7 @@ class Bot {
                 console.log('Catching load err', e);
                 throw e;
             });
-
+            //get bot
             let botResp = await this.bot_data();
             botResp = eval(botResp);
             return botResp;
@@ -245,7 +252,7 @@ class Bot {
 
     async bot_data() {
         try {
-            // Download or Get
+            // Download or Get bot
             let bot_path = `${this.assetFolder}/${this.slug}.js`;
             let bot_data = await AssetFetcher.getFile(bot_path);
 
@@ -257,7 +264,7 @@ class Bot {
                     this.manifest.botName
                 );
 
-                let res = await AssetFetcher.downloadS3FileRest(
+                let res = await AssetFetcher.downloadBotFile(
                     bot_path,
                     this.manifest.botUrl,
                     user

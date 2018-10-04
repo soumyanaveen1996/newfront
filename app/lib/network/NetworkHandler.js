@@ -20,26 +20,18 @@ let processingFutureRequest = false;
  */
 const poll = () => {
     console.log('NetworkHandler::poll::called at ', new Date());
-    Auth.getUser()
-        .then(authUser => {
-            return Auth.refresh(authUser);
-        })
-        .then(refreshedUser => {
-            processNetworkQueue();
-            readRemoteLambdaQueue(refreshedUser);
-        });
+    Auth.getUser().then(authUser => {
+        processNetworkQueue();
+        readRemoteLambdaQueue(authUser);
+    });
 };
 
 const readLambda = () => {
     console.log('NetworkHandler::readLambda::called at ', new Date());
-    Auth.getUser()
-        .then(authUser => {
-            return Auth.refresh(authUser);
-        })
-        .then(refreshedUser => {
-            processNetworkQueue();
-            readRemoteLambdaQueue(refreshedUser);
-        });
+    Auth.getUser().then(authUser => {
+        processNetworkQueue();
+        readRemoteLambdaQueue(authUser);
+    });
 };
 
 const handleLambdaResponse = (res, user) => {
@@ -148,9 +140,7 @@ const readQueue = user =>
         function getHeaders() {
             if (config.proxy.enabled) {
                 return {
-                    accessKeyId: user.aws.accessKeyId,
-                    secretAccessKey: user.aws.secretAccessKey,
-                    sessionToken: user.aws.sessionToken
+                    sessionId: user.creds.sessionId
                 };
             } else {
                 return Utils.createAuthHeader(
@@ -194,9 +184,7 @@ const requestMessagesBeforeDateFromLambda = (
                 config.proxy.host +
                 config.proxy.queuePath,
             headers: {
-                accessKeyId: user.aws.accessKeyId,
-                secretAccessKey: user.aws.secretAccessKey,
-                sessionToken: user.aws.sessionToken
+                sessionId: user.creds.sessionId
             },
             data: {
                 conversation: conversationId,
@@ -213,7 +201,7 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.previousMsgs;
     let messages = [];
     _.each(prevMessagesData, mData => {
-        let message = Message.from(mData, user);
+        let message = Message.from(mData, user, conversationId);
         MessageHandler.persistOnDevice(conversationId, message);
         messages.push(message.toBotDisplay());
     });
@@ -254,20 +242,16 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
             'NetworkHandler::readOldQueueMessages::called at ',
             new Date()
         );
-        Auth.getUser()
-            .then(authUser => {
-                return Auth.refresh(authUser);
-            })
-            .then(refreshedUser => {
-                resolve(
-                    fetchMessagesBeforeDateFromLambda(
-                        refreshedUser,
-                        conversationId,
-                        botId,
-                        date
-                    )
-                );
-            });
+        Auth.getUser().then(authUser => {
+            resolve(
+                fetchMessagesBeforeDateFromLambda(
+                    authUser,
+                    conversationId,
+                    botId,
+                    date
+                )
+            );
+        });
     });
 
 const ping = user => {
@@ -288,6 +272,7 @@ const keepAlive = () => {
 export default {
     poll: poll,
     readLambda: readLambda,
+    readQueue: readQueue,
     keepAlive: keepAlive,
     fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
 };

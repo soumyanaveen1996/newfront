@@ -49,21 +49,26 @@ export default class TwilioVoIP {
 
     initTelephony = async () => {
         if (Platform.OS === 'ioss') {
-            TwilioVoice.initWithTokenUrl(Twilio.getAccessTokenURL());
-            try {
-                TwilioVoice.configureCallKit({
-                    appName: 'FrontM' // Required param
-                    // imageName:     'my_image_name_in_bundle',             // OPTIONAL
-                    // ringtoneSound: 'my_ringtone_sound_filename_in_bundle' // OPTIONAL
-                });
-                return true;
-            } catch (err) {
-                console.err(err);
-                throw err;
-            }
+            // Not Required
+            // TwilioVoice.initWithTokenUrl(Twilio.getAccessTokenURL());
+            // try {
+            //     TwilioVoice.configureCallKit({
+            //         appName: 'FrontM' // Required param
+            //         // imageName:     'my_image_name_in_bundle',             // OPTIONAL
+            //         // ringtoneSound: 'my_ringtone_sound_filename_in_bundle' // OPTIONAL
+            //     });
+            //     return true;
+            // } catch (err) {
+            //     console.err(err);
+            //     throw err;
+            // }
         } else {
             try {
+                console.log('Getting Auth User');
+
                 const user = await Auth.getUser();
+                console.log(user);
+
                 const accessToken = await Twilio.getAccessToken(user);
                 if (!(__DEV__ && Platform.os === 'ios')) {
                     const isAudioEnabled = await this.requestAudioPermissions();
@@ -75,6 +80,7 @@ export default class TwilioVoIP {
                 }
 
                 await TwilioVoice.initWithToken(accessToken);
+                console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
                         appName: 'FrontM' // Required param
@@ -172,6 +178,8 @@ export default class TwilioVoIP {
     };
 
     connectionDidConnectHandler = data => {
+        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
+
         console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
     };

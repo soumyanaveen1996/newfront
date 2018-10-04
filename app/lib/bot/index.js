@@ -220,9 +220,7 @@ class Bot extends events.EventEmitter {
         function getHeaders(user, postReq) {
             if (config.proxy.enabled) {
                 return {
-                    accessKeyId: user.aws.accessKeyId,
-                    secretAccessKey: user.aws.secretAccessKey,
-                    sessionToken: user.aws.sessionToken
+                    sessionId: user.creds.sessionId
                 };
             } else {
                 return Utils.createAuthHeader(

@@ -14,8 +14,13 @@ import FeaturedTab from './FeaturedTab/FeaturedTab';
 import { HeaderBack } from '../Header';
 import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
-import EventEmitter, { AuthEvents } from '../../lib/events';
+import {
+    EventEmitter,
+    SatelliteConnectionEvents,
+    AuthEvents
+} from '../../lib/events';
 import { Auth } from '../../lib/capability';
+import RemoteBotInstall from '../../lib/RemoteBotInstall';
 
 export default class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -116,6 +121,17 @@ export default class BotStoreScreen extends React.Component {
         });
     }
 
+    async componentWillUnmount() {
+        EventEmitter.removeListener(
+            AuthEvents.userChanged,
+            this.userChangedHandler.bind(this)
+        );
+    }
+
+    async componentWillMount() {
+        await RemoteBotInstall.syncronizeBots();
+    }
+
     async componentDidMount() {
         try {
             EventEmitter.addListener(
@@ -130,10 +146,9 @@ export default class BotStoreScreen extends React.Component {
                 });
             }
         } catch (error) {
-            console.log(
+            console.error(
                 'Error occurred during componentWillMount getting catalogData; ',
-                error,
-                error instanceof NetworkError
+                error
             );
             if (error instanceof NetworkError) {
                 this.setState({
@@ -144,13 +159,6 @@ export default class BotStoreScreen extends React.Component {
                 });
             }
         }
-    }
-
-    componentWillUnmount() {
-        EventEmitter.removeListener(
-            AuthEvents.userChanged,
-            this.userChangedHandler.bind(this)
-        );
     }
 
     async refresh() {

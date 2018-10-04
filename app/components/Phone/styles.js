@@ -8,17 +8,18 @@ const Styles = StyleSheet.create({
         right: 0,
         top: 0,
         bottom: 0,
-        backgroundColor: 'rgba(4, 4, 4, 0.9)'
+        backgroundColor: 'rgba(4, 4, 4, 0.9)',
+        flex: 1,
+        flexDirection: 'column'
     },
     nameContainer: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 40
+        flex: 1,
+        flexDirection: 'row'
     },
     callingText: {
-        color: GlobalColors.white,
-        fontSize: 20,
+        color: 'rgb(161,238,53)',
+        fontSize: 30,
+        paddingTop: 30,
         flex: 1,
         textAlign: 'center'
     },
@@ -29,12 +30,8 @@ const Styles = StyleSheet.create({
         textAlign: 'center'
     },
     buttonContainer: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 80,
+        flex: 1,
         flexDirection: 'row',
-        padding: 36,
         justifyContent: 'space-around'
     },
     button: {

@@ -60,7 +60,7 @@ export default class BotList extends React.Component {
                 return conversation;
             })
         ).catch(e => {
-            console.log('Error getting info for timeline', e);
+            console.error('Error getting info for timeline', e);
             return [];
         });
 

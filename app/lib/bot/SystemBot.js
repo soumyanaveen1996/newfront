@@ -27,8 +27,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -52,14 +52,14 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
         botName: 'FrontM Assistant',
-        botUrl: 'botfarm/frontmai/onboardingBot/1.7.0/onboardingBot.js',
+        botUrl: 'botfarm/frontmai/onboardingBot/1.8.0/onboardingBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js',
-                version: '1.1.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -72,7 +72,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'onboarding-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.7.0'
+        version: '1.8.0'
     },
     'contacts-bot': {
         allowResetConversation: 'false',
@@ -84,8 +84,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: 'true',
@@ -116,8 +116,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: true,
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: true,
@@ -143,8 +143,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: true,
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.0.0/agentGuardService.js',
-                version: '1.0.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
             },
             authContext: {
                 remote: true,
@@ -163,14 +163,14 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'BackgroundTaskBot',
         botName: 'Background Task',
-        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.0.0/backgroundTaskBot.js',
+        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.1.0/backgroundTaskBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
                 remote: true,
-                version: '1.1.0',
+                version: '1.2.0',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.1.0/agentGuardService.js'
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js'
             },
             authContext: {
                 remote: true,
@@ -184,7 +184,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'backgroundTask-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.0.0'
+        version: '1.1.0'
     }
 };
 
