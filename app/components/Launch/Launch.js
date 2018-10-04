@@ -32,6 +32,7 @@ const VERSION_KEY = 'version';
 export default class Splash extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = { duration: props.duration || 2000 };
     }
 
