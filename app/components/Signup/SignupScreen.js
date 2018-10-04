@@ -1,5 +1,15 @@
 import React from 'react';
-import { View, Text, Image,FlatList, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    FlatList,
+    TextInput,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableOpacity,
+    ScrollView
+} from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
@@ -11,25 +21,23 @@ import Loader from '../Loader/Loader';
 import { Button } from 'react-native-elements';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 
-const Icon = images.splash_page_logo;
-
-export default class SignupScreen extends React.Component { 
+export default class SignupScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
             passwordCriteria: [
-                ' Must contain at least 1 lowercase alphabet',
-                ' Must contain at least 1 uppercase alphabet',
-                ' Must contain at least 1 numeric character',
-                ' Must be 8 characters or longer'
+                ' One uppercase letter',
+                ' One lowercase letter',
+                ' One special character',
+                ' One number',
+                ' 8 characters minimum'
             ],
             name: '',
             email: '',
             password: '',
             confirmPassword: ''
-        }
-
+        };
     }
 
     validateEmail(email) {
@@ -37,7 +45,7 @@ export default class SignupScreen extends React.Component {
         return re.test(String(email).toLowerCase());
     }
 
-    passwordValidation = (string) => {
+    passwordValidation = string => {
         var counter = 0;
         if (string.length >= 8) {
             if (/[a-z]/.test(string)) {
@@ -54,91 +62,145 @@ export default class SignupScreen extends React.Component {
             }
         }
         return counter === 4;
-    }
+    };
 
     passwordConfirm = () => {
         if (this.state.password !== this.state.confirmPassword) {
             return false;
         } else {
-            return true
-        };
-    }
+            return true;
+        }
+    };
 
     goBackToLogin = () => {
-        Actions.loginScreen({ type: ActionConst.REPLACE });
-    }
+        Actions.swiperScreen({ type: ActionConst.REPLACE });
+    };
 
     onSignup = () => {
         let emailResult = this.validateEmail(this.state.email);
         let passworResult = this.passwordValidation(this.state.password);
         let passwordConfirmResult = this.passwordConfirm();
         if (emailResult && passworResult && passwordConfirmResult) {
-            console.log('call signup api');
+            const userDetails = {
+                name: this.state.name,
+                email: this.state.email,
+                password: this.state.password,
+                passwordConfirm: this.state.confirmPassword
+            };
+            console.log('call signup api', userDetails);
+
+            // await Auth.signupWithFrontm(userDetails)
+            //     .then(() => {
+
+            //     })
+            //     .catch(err => {
+            //         this.setState({ errorMessage: err.message });
+            //     });
+
+            // Actions.confirmationScreen({ type: ActionConst.REPLACE });
         }
+    };
+
+    onChangeName(text) {
+        this.setState({ name: text });
     }
 
-    onChangeEmail(text){
-        this.setState({email : text});
+    onChangeEmail(text) {
+        this.setState({ email: text });
     }
 
-    onChangePassword(text){
-        this.setState({password : text});
+    onChangePassword(text) {
+        this.setState({ password: text });
     }
-    onChangeConfirmPassword(text){
-        this.setState({confirmPassword : text});
+    onChangeConfirmPassword(text) {
+        this.setState({ confirmPassword: text });
     }
 
-    render(){
+    render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <Text>Signup Screen</Text>
-
-                    <View style={styles.formContainer} behavior={(Platform.OS === 'ios') ? 'position' : null}>
-                        <TextInput style={styles.input}
+                    <Text style={styles.signupHeader}>Sign up to FrontM</Text>
+                    <View
+                        style={styles.formContainer}
+                        behavior={Platform.OS === 'ios' ? 'position' : null}
+                    >
+                        <Text style={styles.placeholderText}> Name </Text>
+                        <TextInput
+                            style={styles.input}
                             autoCorrect={false}
                             returnKeyType="next"
                             placeholder="Name"
-                            placeholderTextColor="rgba(0,0,0,0.6)" />
-                        <TextInput style={styles.input}
+                            onChangeText={this.onChangeName.bind(this)}
+                            placeholderTextColor="rgba(0,0,0,0.6)"
+                        />
+                        <Text style={styles.placeholderText}> Email </Text>
+                        <TextInput
+                            style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
                             keyboardType="email-address"
                             returnKeyType="next"
                             placeholder="Email"
                             onChangeText={this.onChangeEmail.bind(this)}
-                            placeholderTextColor="rgba(0,0,0,0.6)" />
-
-                        <TextInput style={styles.input}
+                            placeholderTextColor="rgba(0,0,0,0.6)"
+                        />
+                        <Text style={styles.placeholderText}> Password </Text>
+                        <TextInput
+                            style={styles.input}
                             returnKeyType="go"
                             placeholder="Password"
                             placeholderTextColor="rgba(0,0,0,0.6)"
                             onChangeText={this.onChangePassword.bind(this)}
-                            secureTextEntry />
-                        <TextInput style={styles.input}
+                            secureTextEntry
+                        />
+                        <Text style={styles.placeholderText}>
+                            {' '}
+                            Confirm Password{' '}
+                        </Text>
+                        <TextInput
+                            style={styles.input}
                             returnKeyType="go"
                             placeholder="Confirm Password"
                             placeholderTextColor="rgba(0,0,0,0.6)"
-                            onChangeText={this.onChangeConfirmPassword.bind(this)}
-                            secureTextEntry />
+                            onChangeText={this.onChangeConfirmPassword.bind(
+                                this
+                            )}
+                            secureTextEntry
+                        />
                         <Text style={{ color: 'red' }}>
                             {this.state.errorMessage}
                         </Text>
-                        <View style={{height : 100, backgroundColor: 'rgba(46, 193, 182, 0.2)', borderRadius: 10, marginBottom: 10, padding: 5}}>
-                            <Text>Password Criteria:</Text>
-                            <FlatList data={this.state.passwordCriteria}  renderItem={({item}) => <Text>{item}</Text>} />
+                        <View
+                            style={{
+                                width: 285,
+                                height: 170,
+                                padding: 5,
+                                marginBottom: 35
+                            }}
+                        >
+                            <Text style={styles.passwordText}>
+                                Password must contain:
+                            </Text>
+                            <FlatList
+                                data={this.state.passwordCriteria}
+                                renderItem={({ item }) => (
+                                    <Text style={styles.passwordCriteriaList}>
+                                        {item}
+                                    </Text>
+                                )}
+                            />
                         </View>
-                        <TouchableOpacity style={styles.buttonContainer} onPress={this.onSignup}>
+                        <TouchableOpacity
+                            style={styles.buttonContainer}
+                            onPress={this.onSignup}
+                        >
                             <Text style={styles.buttonText}>SIGNUP</Text>
                         </TouchableOpacity>
                     </View>
-
-                    <TouchableOpacity onPress={this.goBackToLogin}>
-                        <Text>Go back to Login Page</Text>
-                    </TouchableOpacity>
                 </KeyboardAvoidingView>
-            </View>
+            </ScrollView>
         );
     }
 }
