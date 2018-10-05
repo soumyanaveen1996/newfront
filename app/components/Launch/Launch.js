@@ -151,6 +151,10 @@ export default class Splash extends React.Component {
 
     userLoggedOutHandler = async () => {
         //this.showOnboardingScreen();
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
+        });
     };
 
     showMainScreen = (moveToOnboarding = false) => {
