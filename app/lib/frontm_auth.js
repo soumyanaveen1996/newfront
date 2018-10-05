@@ -358,7 +358,6 @@ class FrontmAuth {
                             Config.proxy.authPath,
                         headers: {
                             token: result.data.id_token,
-                            refresh_token: result.data.refresh_token,
                             provider_name: 'frontm',
                             platform: Platform.OS,
                             refresh_token: result.data.refresh_token
