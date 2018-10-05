@@ -50,7 +50,7 @@ export default class ContactsPickerRow extends React.Component {
                             {contact.name}
                         </Text>
                         <Text style={styles.contactItemEmail}>
-                            {contact.screenName + ' - ' + emails.join(',')}
+                            {emails.join(',')}
                         </Text>
                     </View>
                 </View>
