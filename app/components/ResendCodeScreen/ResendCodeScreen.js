@@ -28,6 +28,22 @@ export default class ResendCodeScreen extends Component {
 
     async onFormSubmit() {
         console.log('send code again');
+        const userDetails = {
+            email: this.state.userEmail
+        };
+        await Auth.resendFrontmSignupCode(userDetails)
+            .then(async data => {
+                if (data.success) {
+                    await AsyncStorage.setItem('userEmail', data.data);
+                    await AsyncStorage.setItem('signupStage', 'confirmCode');
+                    Actions.confirmationScreen({
+                        type: ActionConst.REPLACE
+                    });
+                }
+            })
+            .catch(err => {
+                console.log('error on resending code again ', err);
+            });
     }
 
     render() {
@@ -47,7 +63,7 @@ export default class ResendCodeScreen extends Component {
                             keyboardType="email-address"
                             returnKeyType="next"
                             placeholder="email@example.com"
-                            value={this.state.userEmail}
+                            value={this.props.email}
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(0,0,0,1)"
                         />

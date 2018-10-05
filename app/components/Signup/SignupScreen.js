@@ -78,6 +78,9 @@ export default class SignupScreen extends React.Component {
     };
 
     onSignup = async () => {
+        this.setState(() => {
+            return { loading: true };
+        });
         let emailResult = this.validateEmail(this.state.email);
         let passworResult = this.passwordValidation(this.state.password);
         let passwordConfirmResult = this.passwordConfirm();
@@ -96,6 +99,10 @@ export default class SignupScreen extends React.Component {
                             'signupStage',
                             'confirmCode'
                         );
+
+                        this.setState(() => {
+                            return { loading: false };
+                        });
                         Actions.confirmationScreen({
                             type: ActionConst.REPLACE
                         });
@@ -103,6 +110,9 @@ export default class SignupScreen extends React.Component {
                 })
                 .catch(err => {
                     this.setState({ errorMessage: err.message });
+                    this.setState(() => {
+                        return { loading: false };
+                    });
                 });
         }
     };

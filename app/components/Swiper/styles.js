@@ -12,7 +12,6 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#000',
         backgroundColor: '#9DD6EB'
     },
     textBox: {

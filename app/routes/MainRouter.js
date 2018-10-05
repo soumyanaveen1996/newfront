@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, AsyncStorage } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
 import { LoginScreen } from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
@@ -43,14 +43,23 @@ export default class MainRouter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loginState: false
+            loginState: false,
+            middleState: false
         };
     }
 
     async componentDidMount() {
         const checkLogin = await Auth.isUserLoggedIn();
-        if (checkLogin) {
-            this.setState({ loginState: true });
+        const checkStatus = await AsyncStorage.getItem('signupStage');
+        if (checkStatus && checkStatus === 'done') {
+            this.setState({ middleState: false });
+            if (checkLogin) {
+                this.setState({ loginState: true });
+            }
+        }
+
+        if (checkStatus && checkStatus === 'confirmCode') {
+            this.setState({ middleState: true });
         }
     }
 
@@ -75,13 +84,19 @@ export default class MainRouter extends React.Component {
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.timeline}
                                     component={MainScreen}
-                                    initial={this.state.loginState}
+                                    initial={
+                                        this.state.loginState &&
+                                        !this.state.middleState
+                                    }
                                     title={I18n.t('FrontM')}
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.swiperScreen}
                                     component={SwiperScreen}
-                                    initial={!this.state.loginState}
+                                    initial={
+                                        !this.state.loginState &&
+                                        !this.state.middleState
+                                    }
                                     hideNavBar
                                 />
                                 <Scene
@@ -97,6 +112,10 @@ export default class MainRouter extends React.Component {
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.confirmationScreen}
                                     component={ConfirmationScreen}
+                                    initial={
+                                        !this.state.loginState &&
+                                        this.state.middleState
+                                    }
                                     hideNavBar
                                 />
                                 <Scene

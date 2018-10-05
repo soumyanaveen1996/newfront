@@ -256,7 +256,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }

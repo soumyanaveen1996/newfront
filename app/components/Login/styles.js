@@ -72,7 +72,6 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
-        fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 38

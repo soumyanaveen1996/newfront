@@ -6,7 +6,8 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -38,6 +39,18 @@ export default class LoginScreen extends React.Component {
 
         this.formValuesArray = [];
         this.errorMessages = [];
+    }
+
+    componentWillMount() {
+        //     AsyncStorage.getItem('signupStage').then(token => {
+        //         if (token === 'done') {
+        //             AsyncStorage.getItem('userEmail').then(tokenEmail => {
+        //                 this.setState(() => {
+        //                     return { userEmail: tokenEmail };
+        //                 });
+        //             });
+        //         }
+        //     });
     }
 
     async onFormSubmit() {
@@ -168,6 +181,13 @@ export default class LoginScreen extends React.Component {
                             placeholder="email@example.com"
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(0,0,0,0.6)"
+                            value={
+                                this.props.email &&
+                                this.props.email !== null &&
+                                this.props.email !== ''
+                                    ? this.props.email
+                                    : null
+                            }
                         />
 
                         <Text style={styles.placeholderText}> Password </Text>

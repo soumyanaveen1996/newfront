@@ -47,7 +47,6 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
-        fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
         bottom: 80
@@ -64,7 +63,7 @@ export default StyleSheet.create({
     },
     textInput: {
         height: 40,
-        width: 100,
+        width: 150,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
         color: 'rgba(155,155,155,1)',
@@ -75,5 +74,10 @@ export default StyleSheet.create({
         borderTopLeftRadius: 10,
         textAlign: 'center',
         letterSpacing: 1
+    },
+    resendButton: {
+        color: 'rgba(0,189,242,1)',
+        fontSize: 22,
+        textAlign: 'center'
     }
 });

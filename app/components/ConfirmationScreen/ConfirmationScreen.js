@@ -49,13 +49,25 @@ export default class ConfirmationScreen extends Component {
     }
 
     showMainScreen = () => {
-        Actions.timeline({ type: ActionConst.REPLACE });
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            email: this.state.userEmail,
+            swiperIndex: 4
+        });
         return;
     };
 
     onChangeCode(text) {
         this.setState(() => {
             return { code: text };
+        });
+    }
+
+    onResendButton() {
+        console.log('Go to resend page');
+        Actions.resendCodeScreen({
+            type: ActionConst.REPLACE,
+            email: this.state.userEmail
         });
     }
 
@@ -95,6 +107,14 @@ export default class ConfirmationScreen extends Component {
                             <Text style={styles.buttonText}>Done</Text>
                         </TouchableOpacity>
                     </View>
+                    <TouchableOpacity
+                        style={styles.resendButton}
+                        onPress={this.onResendButton.bind(this)}
+                    >
+                        <Text>
+                            Review email address and send the code again
+                        </Text>
+                    </TouchableOpacity>
                 </KeyboardAvoidingView>
             </View>
         );

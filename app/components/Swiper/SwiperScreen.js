@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View,
-    Dimensions,
-    Image,
-    TouchableOpacity
-} from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 
 import styles from './styles';
 import { SCREEN_HEIGHT } from './config';
@@ -15,7 +7,6 @@ import Swiper from 'react-native-swiper';
 import images from '../../config/images';
 import { LoginScreen } from '../Login';
 import SignupScreen from '../Signup/SignupScreen';
-const { width } = Dimensions.get('window');
 
 export default class SwiperScreen extends Component {
     constructor(props) {
@@ -27,14 +18,12 @@ export default class SwiperScreen extends Component {
     }
 
     changeIndex = state => {
-        this.setState(() => {
-            state;
-        });
+        console.log('on changing index ', state);
     };
 
     changePages = () => {
         if (this.state.isLoginPage) {
-            return <LoginScreen />;
+            return <LoginScreen email={this.props.email} />;
         } else {
             return <SignupScreen />;
         }
@@ -90,6 +79,7 @@ export default class SwiperScreen extends Component {
                 style={styles.wrapper}
                 height={SCREEN_HEIGHT - 40}
                 onIndexChanged={this.changeIndex}
+                index={this.props.swiperIndex ? this.props.swiperIndex : 0}
                 dot={
                     <View
                         style={{
