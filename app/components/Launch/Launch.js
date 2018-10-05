@@ -32,19 +32,20 @@ const VERSION_KEY = 'version';
 export default class Splash extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = { duration: props.duration || 2000 };
+        this.state = {
+            duration: props.duration || 2000,
+            loginState: false
+        };
     }
 
     async componentDidMount() {
         // Override logging in prod builds
-
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         DataManager.init();
-        ContactsCache.init();
-        await MessageCounter.init();
+        ContactsCache.init(); // after loging. Logout should clear it.
+        await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
         GoogleAnalytics.init();
         GoogleAnalytics.logEvents(
             GoogleAnalyticsCategories.APP_LAUNCHED,
@@ -54,6 +55,7 @@ export default class Splash extends React.Component {
             null
         );
 
+        // Before login
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
@@ -65,8 +67,9 @@ export default class Splash extends React.Component {
         }
 
         // Chain all setup stuff
+        // Before login
         persist
-            .runMigrations()
+            .runMigrations() // before login
             .then(() => {
                 return Auth.getUser();
             })
@@ -83,9 +86,9 @@ export default class Splash extends React.Component {
             })
             .then(() => {
                 return Promise.all([
-                    NetworkPoller.start(),
-                    this.listenToEvents(),
-                    this.configureNotifications()
+                    NetworkPoller.start(), // after login
+                    this.listenToEvents(), // after login
+                    this.configureNotifications() // after login
                 ]);
             })
             .then(() => {
@@ -94,9 +97,9 @@ export default class Splash extends React.Component {
             .then(isUserLoggedIn => {
                 this.showMainScreen();
                 if (!isUserLoggedIn) {
-                    return this.sendOnboardingBackgroundMessage();
+                    return this.sendOnboardingBackgroundMessage(); // This might not be required
                 } else {
-                    return TwilioVoIP.init();
+                    return TwilioVoIP.init(); // after login
                 }
             })
             .catch(err => {

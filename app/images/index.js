@@ -40,7 +40,16 @@ const images = {
     satellite: require('./icons/satellite.png'),
     user_image: require('./chat/user_image.png'),
     splash_page_logo: { uri: 'FM-logo-landing page' },
-    trail_arrow: require('./map/trail_arrow.png')
+    trail_arrow: require('./map/trail_arrow.png'),
+    btn_facebook: require('./facebook/btn-facebook-pressed.png'),
+    btn_google: require('./google/btn-google-pressed.png'),
+    preview_slider_1: require('./preview-slide-1/preview-slide-1.png'),
+    preview_slider_2: require('./preview-slide-2/preview-slide-2.png'),
+    preview_slider_3: require('./preview-slide-3/preview-slide-3.png'),
+    preview_slider_4: require('./preview-slide-4/preview-slide-4.png'),
+    pass_checkbox_empty: require('./pass-checkbox-empty/pass-checkbox-empty.png'),
+    pass_checkbox_checked: require('./pass-checkbox-checked/pass-checkbox-checked.png'),
+    blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png')
 };
 
 export default images;

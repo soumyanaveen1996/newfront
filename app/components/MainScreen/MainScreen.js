@@ -29,6 +29,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import { LoginScreen } from '../Login';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -98,6 +99,7 @@ export default class MainScreen extends React.Component {
         // Susbscribe to async result handler
         this.eventSubscription = null;
         this.state = {
+            loginState: false,
             screenState: MainScreenStates.notLoaded
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);

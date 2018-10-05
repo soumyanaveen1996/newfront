@@ -26,7 +26,12 @@ const ROUTER_SCENE_KEYS = {
     videoRecorder: 'videoRecorder',
     channelsList: 'channelsList',
     phone: 'phone',
-    dialler: 'dialler'
+    dialler: 'dialler',
+    loginScreen: 'loginScreen',
+    signupScreen: 'signupScreen',
+    swiperScreen: 'swiperScreen',
+    confirmationScreen: 'confirmationScreen',
+    resendCodeScreen: 'resendCodeScreen'
 };
 
 export default ROUTER_SCENE_KEYS;

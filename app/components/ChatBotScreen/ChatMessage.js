@@ -251,7 +251,7 @@ export default class ChatMessage extends React.Component {
             return (
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={styles.userNameStyle}>
-                        {user ? user.screenName : I18n.t('Unknown')}
+                        {user ? user.userName : I18n.t('Unknown')}
                     </Text>
                     {component}
                 </View>

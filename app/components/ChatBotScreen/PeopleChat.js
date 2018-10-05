@@ -181,7 +181,7 @@ export default class PeopleChat extends ChatBotScreen {
                 data: {
                     call_to: chatName || otherUserId,
                     otherUserId: otherUserId,
-                    from: this.user.info.screenName
+                    from: this.user.info.userName
                 }
             });
         } catch (err) {
