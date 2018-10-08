@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
-import images from '../../images';
 import { Auth } from '../../lib/capability';
 
 export default class ResendCodeScreen extends Component {

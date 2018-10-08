@@ -53,7 +53,7 @@ export default class LoginScreen extends React.Component {
         //     });
     }
 
-    async onFormSubmit() {
+    onFormSubmit() {
         this.setState({ loading: true });
         if (!this.isValid()) {
             this.setState({ errorMessage: this.errorMessages });
@@ -72,7 +72,8 @@ export default class LoginScreen extends React.Component {
             email: formInfo[0].value,
             password: formInfo[1].value
         };
-        await Auth.loginWithFrontm(
+
+        Auth.loginWithFrontm(
             userDetails,
             '',
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId

@@ -21,7 +21,7 @@ import {
     NETWORK_EVENTS_CONSTANTS,
     NetworkHandler
 } from '../../lib/network';
-import EventEmitter, { MessageEvents } from '../../lib/events';
+import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings } from '../../lib/capability';
 import Bot from '../../lib/bot';
@@ -30,6 +30,7 @@ import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { LoginScreen } from '../Login';
+import AfterLogin from '../../services/afterLogin';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -142,6 +143,7 @@ export default class MainScreen extends React.Component {
     }
 
     componentWillMount() {
+        AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
             'hardwareBackPress',
             this.handleBackButtonClick
@@ -149,6 +151,10 @@ export default class MainScreen extends React.Component {
         if (this.props.moveToOnboarding) {
             this.openOnboaringBot();
         }
+        EventEmitter.addListener(
+            AuthEvents.userLoggedOut,
+            this.userLoggedOutHandler
+        );
     }
 
     handleBackButtonClick() {
@@ -156,6 +162,13 @@ export default class MainScreen extends React.Component {
             BackHandler.exitApp();
         }
     }
+
+    userLoggedOutHandler = async () => {
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
+        });
+    };
 
     readLambdaQueue() {
         NetworkHandler.readLambda();
