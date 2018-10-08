@@ -78,6 +78,10 @@ export default StyleSheet.create({
         backgroundColor: '#2980b6',
         color: '#fff'
     },
+    criteriaWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     passwordText: {
         color: 'rgba(74,74,74,1)',
         fontSize: 14,

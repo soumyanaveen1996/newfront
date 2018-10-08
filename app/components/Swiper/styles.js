@@ -8,19 +8,7 @@ export default StyleSheet.create({
     wrapper: {
         backgroundColor: '#fff'
     },
-    slide: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#9DD6EB'
-    },
-    textBox: {
-        paddingTop: 25,
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT - 460,
-        backgroundColor: 'rgba(255,255,255,1)',
-        alignItems: 'center'
-    },
+
     innerBox: {
         width: 300,
         alignItems: 'center',
@@ -28,15 +16,11 @@ export default StyleSheet.create({
     },
     headerText: {
         textAlign: 'center',
-        color: '#070707',
-        fontSize: 30,
-        fontWeight: 'bold',
         color: 'rgba(74,74,74,1)',
         fontSize: 30,
         fontWeight: '300',
         letterSpacing: 1,
         lineHeight: 36,
-        textAlign: 'center',
         marginBottom: 24
     },
     text: {
@@ -45,12 +29,30 @@ export default StyleSheet.create({
         fontSize: 16,
         fontWeight: '300',
         letterSpacing: 1,
-        lineHeight: 20,
-        textAlign: 'center'
+        lineHeight: 20
+    },
+    slide: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff'
+    },
+    sliderImageContainer: {
+        flex: 3,
+        justifyContent: 'center',
+        backgroundColor: '#e7e7e7'
     },
     slider: {
         width: SCREEN_WIDTH,
         flex: 1
+    },
+
+    textBox: {
+        paddingTop: 25,
+        width: SCREEN_WIDTH,
+        flex: 2,
+        backgroundColor: 'rgba(255,255,255,1)',
+        alignItems: 'center'
     },
     login: {
         width: SCREEN_WIDTH,
