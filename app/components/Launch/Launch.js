@@ -1,6 +1,12 @@
 import React from 'react';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { View, Image, Platform, PushNotificationIOS } from 'react-native';
+import {
+    View,
+    Image,
+    Platform,
+    PushNotificationIOS,
+    AsyncStorage
+} from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
@@ -66,42 +72,35 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        const checkStatus = await AsyncStorage.getItem('signupStage');
+
+        if (isUserLoggedIn) {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        this.showMainScreen();
+                    } else {
+                        this.goToLoginPage();
+                    }
+                })
+                .catch(err => {
+                    console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+                });
+        } else {
+            if (checkStatus && checkStatus === 'confirmCode') {
+                Actions.confirmationScreen({ type: ActionConst.REPLACE });
+            } else {
+                this.goToLoginPage();
+            }
+        }
+
+        this.listenToEvents();
+
         // Chain all setup stuff
         // Before login
         persist
             .runMigrations() // before login
-            .then(() => {
-                return Auth.getUser();
-            })
-            .then(user => {
-                if (!user) {
-                    // Creating a DefaultUser session for OnBoarding Bot.
-                    return Auth.saveUser(DefaultUser);
-                } else {
-                    return user;
-                }
-            })
-            .then(() => {
-                return Auth.isUserLoggedIn();
-            })
-            .then(() => {
-                return Promise.all([
-                    NetworkPoller.start(), // after login
-                    this.listenToEvents(), // after login
-                    this.configureNotifications() // after login
-                ]);
-            })
-            .then(() => {
-                return Auth.isUserLoggedIn();
-            })
-            .then(isUserLoggedIn => {
-                this.showMainScreen();
-                if (!isUserLoggedIn) {
-                    return this.sendOnboardingBackgroundMessage(); // This might not be required
-                } else {
-                    return TwilioVoIP.init(); // after login
-                }
-            })
             .catch(err => {
                 // ignore
                 console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
@@ -155,6 +154,10 @@ export default class Splash extends React.Component {
             type: ActionConst.REPLACE,
             swiperIndex: 4
         });
+    };
+
+    goToLoginPage = () => {
+        Actions.swiperScreen({ type: ActionConst.REPLACE });
     };
 
     showMainScreen = (moveToOnboarding = false) => {
