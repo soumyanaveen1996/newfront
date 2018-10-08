@@ -6,8 +6,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: GlobalColors.white,
-        alignItems: 'center'
+        backgroundColor: GlobalColors.white
     },
     keyboardConatiner: {
         padding: 10,
