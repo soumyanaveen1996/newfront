@@ -102,7 +102,6 @@ export default class Splash extends React.Component {
         persist
             .runMigrations() // before login
             .catch(err => {
-                // ignore
                 console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
             });
     }

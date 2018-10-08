@@ -4,7 +4,6 @@ import { Auth, Notification } from '../lib/capability';
 
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
-import EventEmitter, { AuthEvents, NotificationEvents } from '../lib/events';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {

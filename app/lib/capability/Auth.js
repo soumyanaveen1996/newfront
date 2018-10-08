@@ -502,7 +502,7 @@ export default class Auth {
     static isUserLoggedIn = () =>
         new Promise(resolve => {
             DeviceStorage.get(USER_SESSION).then(user => {
-                if (isDefaultUser(user) || !user) {
+                if (!user || isDefaultUser(user)) {
                     resolve(false);
                 } else {
                     resolve(true);
