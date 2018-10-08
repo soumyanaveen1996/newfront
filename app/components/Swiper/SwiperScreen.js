@@ -114,12 +114,7 @@ export default class SwiperScreen extends Component {
                 loop={false}
             >
                 <View style={styles.slide}>
-                    <View
-                        style={{
-                            height: SCREEN_HEIGHT - 240,
-                            backgroundColor: '#fff'
-                        }}
-                    >
+                    <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
                             source={images.preview_slider_1}
@@ -139,12 +134,7 @@ export default class SwiperScreen extends Component {
                     </View>
                 </View>
                 <View style={styles.slide}>
-                    <View
-                        style={{
-                            height: SCREEN_HEIGHT - 240,
-                            backgroundColor: '#fff'
-                        }}
-                    >
+                    <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
                             source={images.preview_slider_2}
@@ -165,12 +155,7 @@ export default class SwiperScreen extends Component {
                     </View>
                 </View>
                 <View style={styles.slide}>
-                    <View
-                        style={{
-                            height: SCREEN_HEIGHT - 240,
-                            backgroundColor: '#fff'
-                        }}
-                    >
+                    <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
                             source={images.preview_slider_3}
@@ -191,12 +176,7 @@ export default class SwiperScreen extends Component {
                     </View>
                 </View>
                 <View style={styles.slide}>
-                    <View
-                        style={{
-                            height: SCREEN_HEIGHT - 240,
-                            backgroundColor: '#fff'
-                        }}
-                    >
+                    <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
                             source={images.preview_slider_4}
