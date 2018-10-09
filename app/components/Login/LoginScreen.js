@@ -1,13 +1,13 @@
 import React from 'react';
 import {
     View,
+    ScrollView,
     Text,
     Image,
     TextInput,
     KeyboardAvoidingView,
     Platform,
-    TouchableOpacity,
-    AsyncStorage
+    TouchableOpacity
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -163,7 +163,7 @@ export default class LoginScreen extends React.Component {
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
         );
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={styles.keyboardConatiner}>
                     <Text style={styles.loginHeader}> Log in to FrontM </Text>
@@ -242,7 +242,7 @@ export default class LoginScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
-            </View>
+            </ScrollView>
         );
     }
 }
