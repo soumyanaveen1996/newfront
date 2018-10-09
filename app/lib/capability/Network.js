@@ -144,7 +144,7 @@ function Network(options, queue = false) {
                         } else {
                             console.log(
                                 '>>>>>>NETWORK ERROR CODE NE 200',
-                                response.statusText
+                                response
                             );
                             reject(
                                 new NetworkError(

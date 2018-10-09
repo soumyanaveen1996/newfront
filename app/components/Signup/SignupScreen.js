@@ -86,7 +86,7 @@ export default class SignupScreen extends React.Component {
         let passwordConfirmResult = this.passwordConfirm();
         if (emailResult && passworResult && passwordConfirmResult) {
             const userDetails = {
-                name: this.state.name,
+                userName: this.state.name,
                 email: this.state.email,
                 password: this.state.password
             };
@@ -149,7 +149,7 @@ export default class SignupScreen extends React.Component {
                             returnKeyType="next"
                             placeholder="Name"
                             onChangeText={this.onChangeName.bind(this)}
-                            placeholderTextColor="rgba(0,0,0,0.6)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                         />
                         <Text style={styles.placeholderText}> Email </Text>
                         <TextInput
@@ -160,14 +160,14 @@ export default class SignupScreen extends React.Component {
                             returnKeyType="next"
                             placeholder="Email"
                             onChangeText={this.onChangeEmail.bind(this)}
-                            placeholderTextColor="rgba(0,0,0,0.6)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                         />
                         <Text style={styles.placeholderText}> Password </Text>
                         <TextInput
                             style={styles.input}
                             returnKeyType="go"
                             placeholder="Password"
-                            placeholderTextColor="rgba(0,0,0,0.6)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                             onChangeText={this.onChangePassword.bind(this)}
                             secureTextEntry
                         />
@@ -179,7 +179,7 @@ export default class SignupScreen extends React.Component {
                             style={styles.input}
                             returnKeyType="go"
                             placeholder="Confirm Password"
-                            placeholderTextColor="rgba(0,0,0,0.6)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                             onChangeText={this.onChangeConfirmPassword.bind(
                                 this
                             )}

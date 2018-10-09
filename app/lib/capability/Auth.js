@@ -521,12 +521,11 @@ export default class Auth {
         new Promise((resolve, reject) => {
             return Auth.getUser().then(user => {
                 if (user) {
-                    user.info.screenName =
-                        details.screenName || user.info.screenName;
-                    user.info.surname = details.surname || user.info.surname;
-                    user.info.givenName =
-                        details.givenName || user.info.givenName;
-                    user.info.name = user.info.userName;
+                    user.info.userName = details.userName || user.info.userName;
+                    // user.info.surname = details.surname || user.info.surname;
+                    // user.info.givenName =
+                    //     details.givenName || user.info.givenName;
+                    // user.info.name = user.info.userName;
                     return resolve(Auth.saveUser(user));
                 } else {
                     reject('No valid user session');

@@ -45,7 +45,7 @@ export default StyleSheet.create({
     text: {
         textAlign: 'center',
         color: 'rgba(102,102,102,1)',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: '300',
         letterSpacing: 1,
         lineHeight: 22
