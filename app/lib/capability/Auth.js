@@ -16,7 +16,6 @@ import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
-import RemoteBotInstall from '../RemoteBotInstall';
 
 const USER_SESSION = 'userSession';
 
@@ -104,7 +103,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
@@ -155,7 +153,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
@@ -363,7 +360,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
