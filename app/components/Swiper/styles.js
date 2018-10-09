@@ -8,7 +8,26 @@ export default StyleSheet.create({
     wrapper: {
         backgroundColor: '#fff'
     },
-
+    dotStyle: {
+        backgroundColor: 'rgba(222,222,222,1)',
+        width: 5,
+        height: 5,
+        borderRadius: 4,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 3,
+        marginBottom: 3
+    },
+    activeDotStyle: {
+        backgroundColor: 'rgba(222,222,222,1)',
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 3,
+        marginBottom: 3
+    },
     innerBox: {
         width: 300,
         alignItems: 'center',
@@ -26,10 +45,10 @@ export default StyleSheet.create({
     text: {
         textAlign: 'center',
         color: 'rgba(102,102,102,1)',
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: '300',
         letterSpacing: 1,
-        lineHeight: 20
+        lineHeight: 22
     },
     slide: {
         flex: 1,
