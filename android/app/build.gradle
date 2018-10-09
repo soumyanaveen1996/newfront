@@ -155,6 +155,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-iap')
     compile project(':react-native-document-picker')
     compile project(':react-native-twilio-programmable-voice')
     compile project(':react-native-tcp')
