@@ -1409,7 +1409,7 @@ chalk@2.3.0, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
-chalk@^2.3.1:
+chalk@^2.3.1, chalk@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   dependencies:
@@ -2204,6 +2204,12 @@ domutils@^1.5.1:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
+
+dooboolab-welcome@^1.0.5:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.1.0.tgz#4a0aa9d2cbc4e2b1008bf7683bc056b41caa3d0d"
+  dependencies:
+    chalk "^2.4.1"
 
 dot-prop@^4.1.0:
   version "4.2.0"
@@ -6198,6 +6204,12 @@ react-native-i18n@^2.0.4:
   resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.10.tgz#d22a6136abca1dee07c527f73cd805f9296bddc1"
   dependencies:
     i18n-js "^3.0.2"
+
+react-native-iap@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-2.3.1.tgz#b4465c4c05f5a3ffd013c163e89475197516c2f5"
+  dependencies:
+    dooboolab-welcome "^1.0.5"
 
 react-native-image-picker@^0.26.7:
   version "0.26.7"
