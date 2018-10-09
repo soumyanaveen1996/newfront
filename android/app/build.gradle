@@ -103,8 +103,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 36
-        versionName "2.36.0"
+        versionCode 39
+        versionName "2.18.0"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
