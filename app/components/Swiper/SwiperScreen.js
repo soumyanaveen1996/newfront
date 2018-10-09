@@ -13,13 +13,35 @@ export default class SwiperScreen extends Component {
         super(props);
         this.state = {
             lastIndex: 0,
-            isLoginPage: true
+            isLoginPage: true,
+            swiperData: [
+                {
+                    header: 'Welcome to FrontM',
+                    description:
+                        'I’m your companion app that keeps up with conversations no matter where you are!',
+                    imageSource: images.preview_slider_1
+                },
+                {
+                    header: 'At Sea',
+                    description:
+                        'Now you can communicate and collaborate with friends, colleagues, and companies while you’re at sea.. Say goodbye to isolation!',
+                    imageSource: images.preview_slider_2
+                },
+                {
+                    header: 'In The Sky',
+                    description:
+                        'We’re making flying way more fun. Stay connected to the world below. Book cabs, hotels and shop duty-free!',
+                    imageSource: images.preview_slider_3
+                },
+                {
+                    header: 'Or Anywhere on Land',
+                    description:
+                        'Collaborate and boost efficiency. You’re always connected with us!',
+                    imageSource: images.preview_slider_4
+                }
+            ]
         };
     }
-
-    changeIndex = state => {
-        console.log('on changing index ', state);
-    };
 
     changePages = () => {
         if (this.state.isLoginPage) {
@@ -63,14 +85,12 @@ export default class SwiperScreen extends Component {
         this.setState(() => {
             return { isLoginPage: false };
         });
-        // Actions.signupScreen({ type: ActionConst.REPLACE });
     };
 
     goToLoginPage = () => {
         this.setState(() => {
             return { isLoginPage: true };
         });
-        // Actions.signupScreen({ type: ActionConst.REPLACE });
     };
 
     render() {
@@ -78,36 +98,9 @@ export default class SwiperScreen extends Component {
             <Swiper
                 style={styles.wrapper}
                 height={SCREEN_HEIGHT - 40}
-                onIndexChanged={this.changeIndex}
                 index={this.props.swiperIndex ? this.props.swiperIndex : 0}
-                dot={
-                    <View
-                        style={{
-                            backgroundColor: 'rgba(222,222,222,1)',
-                            width: 5,
-                            height: 5,
-                            borderRadius: 4,
-                            marginLeft: 3,
-                            marginRight: 3,
-                            marginTop: 3,
-                            marginBottom: 3
-                        }}
-                    />
-                }
-                activeDot={
-                    <View
-                        style={{
-                            backgroundColor: 'rgba(222,222,222,1)',
-                            width: 8,
-                            height: 8,
-                            borderRadius: 4,
-                            marginLeft: 3,
-                            marginRight: 3,
-                            marginTop: 3,
-                            marginBottom: 3
-                        }}
-                    />
-                }
+                dot={<View style={styles.dotStyle} />}
+                activeDot={<View style={styles.activeDotStyle} />}
                 paginationStyle={{
                     bottom: 20
                 }}
@@ -117,18 +110,16 @@ export default class SwiperScreen extends Component {
                     <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
-                            source={images.preview_slider_1}
+                            source={this.state.swiperData[0].imageSource}
                         />
                     </View>
                     <View style={styles.textBox}>
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
-                                Welcome to FrontM!
+                                {this.state.swiperData[0].header}
                             </Text>
                             <Text style={styles.text}>
-                                Intelligent Collaboration. Lorem ipsum dolor sit
-                                amet consectetur ut enim ad minim veniam, quis
-                                nostrud exercitation ullamco laboris nisi ut.
+                                {this.state.swiperData[0].description}
                             </Text>
                         </View>
                     </View>
@@ -137,19 +128,16 @@ export default class SwiperScreen extends Component {
                     <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
-                            source={images.preview_slider_2}
+                            source={this.state.swiperData[1].imageSource}
                         />
                     </View>
                     <View style={styles.textBox}>
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
-                                Cruise Passengers and Crew
+                                {this.state.swiperData[1].header}
                             </Text>
                             <Text style={styles.text}>
-                                In voluptate velit esse cillum dolore eu fugiat
-                                nulla pariatur. Excepteur sint occaecat
-                                cupidatat non proident, sunt in culpa qui
-                                officia deserunt mollit.
+                                {this.state.swiperData[1].description}
                             </Text>
                         </View>
                     </View>
@@ -158,19 +146,16 @@ export default class SwiperScreen extends Component {
                     <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
-                            source={images.preview_slider_3}
+                            source={this.state.swiperData[2].imageSource}
                         />
                     </View>
                     <View style={styles.textBox}>
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
-                                Airline Passengers and Crew
+                                {this.state.swiperData[2].header}
                             </Text>
                             <Text style={styles.text}>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua sit
-                                dolor amet.
+                                {this.state.swiperData[2].description}
                             </Text>
                         </View>
                     </View>
@@ -179,17 +164,16 @@ export default class SwiperScreen extends Component {
                     <View style={styles.sliderImageContainer}>
                         <Image
                             style={styles.slider}
-                            source={images.preview_slider_4}
+                            source={this.state.swiperData[3].imageSource}
                         />
                     </View>
                     <View style={styles.textBox}>
                         <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>Remote Land</Text>
+                            <Text style={styles.headerText}>
+                                {this.state.swiperData[3].header}
+                            </Text>
                             <Text style={styles.text}>
-                                Excepteur sint occaecat cupidatat non proident,
-                                sunt in culpa qui officia deserunt mollit anim
-                                id est laborum. In voluptate velit esse cillum
-                                dolore eu fugiat nulla.
+                                {this.state.swiperData[3].description}
                             </Text>
                         </View>
                     </View>
