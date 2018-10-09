@@ -7,6 +7,7 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
+    BackHandler,
     TouchableOpacity
 } from 'react-native';
 import styles from './styles';
@@ -52,6 +53,16 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'loginScreen') {
+            BackHandler.exitApp();
+        }
     }
 
     onFormSubmit() {
@@ -183,14 +194,7 @@ export default class LoginScreen extends React.Component {
                             returnKeyType="next"
                             placeholder="email@example.com"
                             underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(0,0,0,0.6)"
-                            value={
-                                this.props.email &&
-                                this.props.email !== null &&
-                                this.props.email !== ''
-                                    ? this.props.email
-                                    : null
-                            }
+                            placeholderTextColor="rgba(155,155,155,1)"
                         />
 
                         <Text style={styles.placeholderText}> Password </Text>
@@ -202,7 +206,7 @@ export default class LoginScreen extends React.Component {
                                 1
                             )}
                             underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(0,0,0,0.6)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                             secureTextEntry
                         />
 
@@ -223,14 +227,7 @@ export default class LoginScreen extends React.Component {
                         {' '}
                         Or log in with social media
                     </Text>
-                    <View
-                        style={{
-                            width: 300,
-                            flexDirection: 'row',
-                            marginBottom: 40,
-                            justifyContent: 'space-between'
-                        }}
-                    >
+                    <View style={styles.socialMediaButtons}>
                         <TouchableOpacity
                             onPress={() => this.loginWithFacebook()}
                         >

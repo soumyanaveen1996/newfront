@@ -93,6 +93,12 @@ export default StyleSheet.create({
         lineHeight: 20,
         marginBottom: 20
     },
+    socialMediaButtons: {
+        width: 300,
+        flexDirection: 'row',
+        marginBottom: 40,
+        justifyContent: 'space-between'
+    },
     goToSignup: {
         color: 'rgba(0,189,242,1)',
         textAlign: 'center',

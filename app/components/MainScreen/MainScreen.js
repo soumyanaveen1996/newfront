@@ -122,6 +122,10 @@ export default class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        if (!isUserLoggedIn) {
+            this.userLoggedOutHandler();
+        }
         if (this.props.navigation) {
             this.props.navigation.setParams({
                 openBotFilter: this.openBotFilter.bind(this)
