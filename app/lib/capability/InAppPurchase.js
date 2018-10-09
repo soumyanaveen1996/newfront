@@ -48,10 +48,6 @@ const buyProduct = async ({
     const isConnected = await connection();
     if (isConnected) {
         try {
-            // const sku = 'android.test.purchased';
-            // const sku = 'android.test.canceled';
-            // const sku = 'android.test.item_unavailable';
-            // const sku = productCode;
             const itemSkus = Platform.select({
                 ios: ['bot_2000'],
                 android: ['bot_1000']
@@ -60,30 +56,18 @@ const buyProduct = async ({
             console.log(Products);
             // throw new Error("Debugging")
 
-            const purchase = await RNIap.buyProductWithoutFinishTransaction(
-                Products[0].productId
-            );
-            // const purchase = await RNIap.buyProduct(sku);
-            console.log(`Purchase : ${purchase}`);
-            /**
-                 *
-autoRenewingAndroid: false
-dataAndroid: "{"packageName":"com.frontm.frontm","orderId":"transactionId.android.test.purchased","productId":"android.test.purchased","developerPayload":"","purchaseTime":0,"purchaseState":0,"purchaseToken":"inapp:com.frontm.frontm:android.test.purchased"}"
-productId: "android.test.purchased"
-purchaseToken: "inapp:com.frontm.frontm:android.test.purchased"
-signatureAndroid: ""
-transactionDate: "0"
-transactionId: "transactionId.android.test.purchased"
-transactionReceipt: "inapp:com.frontm.frontm:android.test.purchased"
-                 *
-                 */
-            // Update the server with the purchase details;
-
-            // Reset Purchase so that it can be purchased again
-            RNIap.finishTransaction();
-            await RNIap.consumePurchase(purchase.purchaseToken);
+            const sku = Products[0].productId;
+            let purchase;
+            if (Platform.OS === 'ios') {
+                purchase = await RNIap.buyProductWithoutFinishTransaction(sku);
+                console.log(`Purchase : ${purchase}`);
+                RNIap.finishTransaction();
+            } else {
+                purchase = await RNIap.buyProduct(sku);
+                console.log(`Purchase : ${purchase}`);
+                await RNIap.consumePurchase(purchase.purchaseToken);
+            }
             console.log('Finished Everything Send Back data');
-
             return purchase;
         } catch (err) {
             console.error(err.code, err.message);
