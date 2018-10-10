@@ -12,4 +12,6 @@ target 'frontm_mobile' do
 
   pod 'RNIap', :path => '../node_modules/react-native-iap'
 
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
 end
