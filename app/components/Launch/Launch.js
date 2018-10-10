@@ -31,6 +31,7 @@ import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import codePush from 'react-native-code-push';
 
 const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -46,6 +47,15 @@ export default class Splash extends React.Component {
 
     async componentDidMount() {
         // Override logging in prod builds
+        if (global.__DEV__) {
+            //  We will check for CodePush Updates --Only in Dev Mode
+            codePush.sync({
+                updateDialog: {
+                    title: 'An Update with Bug Fixes is Available!'
+                },
+                installMode: codePush.InstallMode.ON_NEXT_RESUME
+            });
+        }
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
