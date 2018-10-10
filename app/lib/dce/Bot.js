@@ -1,12 +1,8 @@
 import _ from 'lodash';
-
 import RNFS from 'react-native-fs';
-
 import config from '../../config/config.js';
-
 import AssetFetcher from './AssetFetcher';
-
-import { Auth, MessageTypeConstants, Promise } from '../capability';
+import { Auth, MessageTypeConstants, Promise, Network } from '../capability';
 import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
@@ -113,12 +109,28 @@ class Bot {
 
     async Load(ctx) {
         try {
+            // Get the user as we need the creds
+            this.user = await Promise.resolve(Auth.getUser());
+
+            //first subscribe to the bot
+            const options = {
+                method: 'post',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.subscribeToBot,
+                data: {
+                    botId: this.manifest.botId
+                },
+                headers: {
+                    sessionId: this.user.creds.sessionId
+                }
+            };
+            Network(options);
+
             this.createRootDirectory();
 
             await this.storeManifest();
-
-            // Get the user as we need the creds
-            this.user = await Promise.resolve(Auth.getUser());
 
             let remoteDeps = _.pickBy(this.manifest.dependencies, function(
                 dep
@@ -163,6 +175,25 @@ class Bot {
      */
     async Delete(ctx) {
         try {
+            // Get the user as we need the creds
+            this.user = await Promise.resolve(Auth.getUser());
+
+            //first unsubscribe from the bot
+            const options = {
+                method: 'post',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.unsubscribeFromBot,
+                data: {
+                    botId: this.manifest.botId
+                },
+                headers: {
+                    sessionId: this.user.creds.sessionId
+                }
+            };
+            Network(options);
+
             let botDirectoryPath = this.botDirectory;
             console.log(
                 'Deleting the bot if it exists locally. botPath = ',

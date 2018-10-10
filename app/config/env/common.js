@@ -113,7 +113,10 @@ const config = {
         botDownloadPath: '/v2/botfile',
         twilioPath: '/twilio',
         enableVoIPPath: '/enableVoip',
-        getVoIPStatusPath: '/getVoipStatus'
+        getVoIPStatusPath: '/getVoipStatus',
+        subscribedBotsPath: '/v2/users/bots',
+        subscribeToBot: '/bots/subscribe',
+        unsubscribeFromBot: '/bots/unsubscribe'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
