@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, Keyboard } from 'react-native';
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Keyboard,
+    ScrollView
+} from 'react-native';
 
 import styles from './styles';
-import { SCREEN_HEIGHT } from './config';
 import Swiper from 'react-native-swiper';
 import images from '../../config/images';
 import { LoginScreen } from '../Login';
@@ -94,8 +100,7 @@ export default class SwiperScreen extends Component {
     };
 
     onIndexChanged(index) {
-        console.log('Swiper Index: ', index);
-        if (index === 3) {
+        if (index <= 3) {
             Keyboard.dismiss();
         }
     }
@@ -104,7 +109,6 @@ export default class SwiperScreen extends Component {
         return (
             <Swiper
                 style={styles.wrapper}
-                height={SCREEN_HEIGHT - 40}
                 index={this.props.swiperIndex ? this.props.swiperIndex : 0}
                 onIndexChanged={this.onIndexChanged.bind(this)}
                 dot={<View style={styles.dotStyle} />}
@@ -186,12 +190,12 @@ export default class SwiperScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <View style={styles.login}>
+                <ScrollView style={styles.login}>
                     {this.changePages()}
                     <View style={styles.bottomBox}>
                         {this.changeNavigationText()}
                     </View>
-                </View>
+                </ScrollView>
             </Swiper>
         );
     }

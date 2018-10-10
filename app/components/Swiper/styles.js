@@ -78,11 +78,11 @@ export default StyleSheet.create({
         height: SCREEN_HEIGHT - 80
     },
     bottomBox: {
-        height: 10,
+        height: 5,
         backgroundColor: '#fff',
         borderTopColor: 'rgba(91,91,91,0.2)',
         borderTopWidth: 1,
-        padding: 10
+        padding: 5
     },
     goToLine: {
         marginTop: 20,

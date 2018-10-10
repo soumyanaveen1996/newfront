@@ -15,22 +15,21 @@ export default StyleSheet.create({
     },
     loginHeader: {
         width: 300,
-        height: 40,
+        height: 45,
         textAlign: 'left',
-        fontSize: 30,
+        fontSize: 28,
         color: 'rgba(74,74,74,1)',
         fontWeight: '300',
-        marginTop: 82
+        marginTop: '20%'
     },
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,
-            alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            alignItems: 'flex-end'
         },
         android: {
             marginBottom: 20,
-            alignItems: 'center',
             justifyContent: 'center'
         }
     }),
@@ -73,12 +72,11 @@ export default StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 38
+        marginBottom: 25
     },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontWeight: 'normal',
         fontSize: 16,
         fontWeight: '500'
     },
@@ -106,5 +104,24 @@ export default StyleSheet.create({
         letterSpacing: 1,
         lineHeight: 20,
         fontWeight: 'bold'
+    },
+    userError: {
+        backgroundColor: 'red',
+        marginTop: 5,
+        minWidth: 150,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    errorText: {
+        color: '#ffffff',
+        textAlign: 'center'
     }
 });
