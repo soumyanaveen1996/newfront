@@ -77,26 +77,54 @@ export default StyleSheet.create({
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT - 80
     },
-    bottomBox: {
-        height: 5,
-        backgroundColor: '#fff',
-        borderTopColor: 'rgba(91,91,91,0.2)',
-        borderTopWidth: 1,
-        padding: 5
-    },
-    goToLine: {
-        marginTop: 20,
-        height: 20,
-        color: 'rgba(0,189,242,1)',
-        fontSize: 14,
-        letterSpacing: 1,
-        lineHeight: 20,
-        fontWeight: 'bold',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+    bottomBox: Platform.select({
+        ios: {
+            height: 5,
+            backgroundColor: '#fff',
+            borderTopColor: 'rgba(91,91,91,0.2)',
+            borderTopWidth: 1,
+            padding: 5
+        },
+        android: {
+            height: 25,
+            backgroundColor: '#fff',
+            borderTopColor: 'rgba(91,91,91,0.2)',
+            borderTopWidth: 1
+        }
+    }),
+    goToLine: Platform.select({
+        ios: {
+            marginTop: 20,
+            height: 20,
+            color: 'rgba(0,189,242,1)',
+            fontSize: 14,
+            letterSpacing: 1,
+            lineHeight: 20,
+            fontWeight: 'bold',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        android: {
+            marginTop: 5,
+            width: '100%',
+            textAlign: 'center',
+            color: 'rgba(0,189,242,1)',
+            fontSize: 14,
+            letterSpacing: 1,
+            lineHeight: 20,
+            fontWeight: 'bold',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }
+    }),
     bolder: {
         fontWeight: '900',
         fontSize: 15
-    }
+    },
+    arrow: Platform.select({
+        android: {
+            width: 35,
+            height: 30
+        }
+    })
 });

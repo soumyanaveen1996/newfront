@@ -5,9 +5,10 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    ScrollView
+    ScrollView,
+    BackHandler
 } from 'react-native';
-
+import { Actions } from 'react-native-router-flux';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
 import images from '../../config/images';
@@ -48,6 +49,18 @@ export default class SwiperScreen extends Component {
             ]
         };
     }
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'swiperScreen') {
+            BackHandler.exitApp();
+        }
+    }
 
     changePages = () => {
         if (this.state.isLoginPage) {
@@ -62,12 +75,15 @@ export default class SwiperScreen extends Component {
             return (
                 <TouchableOpacity
                     onPress={this.goToSignupPage}
-                    style={{ alignItems: 'center' }}
+                    style={{ alignItems: 'center', zIndex: 1 }}
                 >
                     <Text style={styles.goToLine}>
                         You don’t have an account?
                         <Text style={styles.bolder}> Sign up </Text>
-                        <Image source={images.blue_arrow} />
+                        <Image
+                            style={styles.arrow}
+                            source={images.blue_arrow}
+                        />
                     </Text>
                 </TouchableOpacity>
             );
@@ -80,7 +96,10 @@ export default class SwiperScreen extends Component {
                     <Text style={styles.goToLine}>
                         Already have an account?{' '}
                         <Text style={styles.bolder}> Log in </Text>
-                        <Image source={images.blue_arrow} />
+                        <Image
+                            style={styles.arrow}
+                            source={images.blue_arrow}
+                        />
                     </Text>
                 </TouchableOpacity>
             );
@@ -113,9 +132,6 @@ export default class SwiperScreen extends Component {
                 onIndexChanged={this.onIndexChanged.bind(this)}
                 dot={<View style={styles.dotStyle} />}
                 activeDot={<View style={styles.activeDotStyle} />}
-                paginationStyle={{
-                    bottom: 20
-                }}
                 loop={false}
             >
                 <View style={styles.slide}>

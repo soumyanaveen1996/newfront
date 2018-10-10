@@ -45,6 +45,7 @@ export default class LoginScreen extends React.Component {
 
         this.formValuesArray = [];
         this.errorMessages = [];
+        this.inputs = {};
     }
 
     componentWillMount() {
@@ -57,23 +58,13 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'loginScreen') {
-            BackHandler.exitApp();
-        }
     }
 
     onFormSubmit() {
         this.setState({ loading: true });
         if (!this.isValid()) {
             console.log('error', this.errorMessages);
-            if (this.errorMessages && this.errorMessages.length > 1) {
+            if (this.errorMessages && this.errorMessages.length >= 0) {
                 this.setState({ emailErrorMessage: this.errorMessages[0] });
             } else {
                 this.setState({ emailErrorMessage: '' });
@@ -237,6 +228,10 @@ export default class LoginScreen extends React.Component {
         }
     };
 
+    focusTheField = id => {
+        this.inputs[id].focus();
+    };
+
     render() {
         const B = props => (
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
@@ -257,7 +252,11 @@ export default class LoginScreen extends React.Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeEmailText.bind(this, 0)}
                             keyboardType="email-address"
+                            blurOnSubmit={false}
                             returnKeyType={'next'}
+                            onSubmitEditing={() => {
+                                this.focusTheField('password');
+                            }}
                             placeholder="email@example.com"
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
@@ -267,7 +266,11 @@ export default class LoginScreen extends React.Component {
                         <Text style={styles.placeholderText}> Password </Text>
                         <TextInput
                             style={styles.input}
-                            returnKeyType={'go'}
+                            blurOnSubmit={true}
+                            returnKeyType={'done'}
+                            ref={input => {
+                                this.inputs.password = input;
+                            }}
                             onChangeText={this.onChangePasswordText.bind(
                                 this,
                                 1
