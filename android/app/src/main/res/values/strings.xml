@@ -1,4 +1,5 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">2D1QblSb5J7t7QfT2HlIf4vTvaNZ033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
     <string name="app_name">FrontMApp</string>
     <string name="facebook_app_id">150576769074284</string>
 </resources>
