@@ -190,12 +190,12 @@ export default class SwiperScreen extends Component {
                         </View>
                     </View>
                 </View>
-                <ScrollView style={styles.login}>
+                <View style={styles.login}>
                     {this.changePages()}
                     <View style={styles.bottomBox}>
                         {this.changeNavigationText()}
                     </View>
-                </ScrollView>
+                </View>
             </Swiper>
         );
     }
