@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, View, Text, TouchableOpacity } from 'react-native';
+import { Alert, View, Text, TouchableOpacity, Keyboard } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
@@ -48,6 +48,7 @@ export default class Phone extends React.Component {
             this.initialize();
         } else if (this.state.phoneState === PhoneState.incomingcall) {
             this.findCallerName();
+            Keyboard.dismiss();
         }
     }
 
