@@ -8,6 +8,7 @@ import { Auth } from '../../lib/capability';
 import Utils from './Utils';
 import _ from 'lodash';
 import { Promise } from '../../lib/capability';
+import RemoteBotInstall from '../../lib/RemoteBotInstall';
 
 export default class BotList extends React.Component {
     constructor(props) {
@@ -24,6 +25,9 @@ export default class BotList extends React.Component {
     async componentDidMount() {
         this.mounted = true;
         this.refresh();
+    }
+    async componentWillMount() {
+        await RemoteBotInstall.syncronizeBots();
     }
 
     async refresh() {

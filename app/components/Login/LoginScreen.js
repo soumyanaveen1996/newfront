@@ -19,6 +19,7 @@ import images from '../../images';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import RemoteBotInstall from '../../lib/RemoteBotInstall';
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -98,7 +99,8 @@ export default class LoginScreen extends React.Component {
             });
     }
 
-    showMainScreen = () => {
+    showMainScreen = async () => {
+        await RemoteBotInstall.syncronizeBots();
         Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({ loading: false });
         return;
