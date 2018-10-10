@@ -16,7 +16,7 @@ import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
 import { Auth, Notification, Message } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
-import { overrideConsole } from '../../config/config';
+import Config, { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
@@ -52,7 +52,9 @@ export default class Splash extends React.Component {
 
     async componentDidMount() {
         // Override logging in prod builds
-        if (global.__DEV__) {
+        console.log(Config);
+
+        if (Config.proxy.host === 'elbdev.frontm.ai') {
             //  We will check for CodePush Updates --Only in Dev Mode
             codePush.sync(
                 {

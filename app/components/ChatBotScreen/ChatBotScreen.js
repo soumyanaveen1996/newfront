@@ -1030,24 +1030,47 @@ export default class ChatBotScreen extends React.Component {
         this.countMessage(message);
         this.updateChat(message);
         this.scrollToBottom = true;
-        this.waitForQueueProcessing().then(() => {
-            console.log('Sending my mESSSSAGE', message);
-            this.loadedBot.next(
-                message,
-                this.botState,
-                this.state.messages,
-                this.botContext
-            );
-            // .then(response => {
-            //     console.log('Acknowledgement from BOT is...', response);
-            //     console.log(this.state.messages);
-            //     if (response.status === 200) {
-            //         message.setStatus(1);
-            //         this.updateChat(message);
-            //     }
-            // });
-            //this.scrollToBottomIfNeeded();
-        });
+        await this.waitForQueueProcessing();
+        const getNext = this.loadedBot.next(
+            message,
+            this.botState,
+            this.state.messages,
+            this.botContext
+        );
+        const isPromise = getNext instanceof Promise;
+        console.log('[FrontM] Is Promise?', isPromise);
+        if (isPromise) {
+            getNext.then(response => {
+                console.log('Acknowledgement from BOT is...', response);
+                console.log(this.state.messages);
+                if (response.status === 200) {
+                    message.setStatus(1);
+                    this.updateChat(message);
+                }
+            });
+        } else {
+            return getNext;
+        }
+
+        //     //this.scrollToBottomIfNeeded();
+        // this.waitForQueueProcessing().then(() => {
+        //     console.log('Sending my mESSSSAGE', message);
+        //     this.loadedBot.next(
+        //         message,
+        //         this.botState,
+        //         this.state.messages,
+        //         this.botContext
+        //     );
+        //     // .then(response => {
+        //     //     console.log('Acknowledgement from BOT is...', response);
+        //     //     console.log(this.state.messages);
+        //     //     if (response.status === 200) {
+        //     //         message.setStatus(1);
+        //     //         this.updateChat(message);
+        //     //     }
+        //     // });
+        //     //this.scrollToBottomIfNeeded();
+        // });
     };
 
     async onSendMessage(messageStr) {
