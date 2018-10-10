@@ -32,6 +32,9 @@ import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+// const BusyIndicator = require('react-native-busy-indicator')
 
 const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
@@ -41,7 +44,9 @@ export default class Splash extends React.Component {
         super(props);
         this.state = {
             duration: props.duration || 2000,
-            loginState: false
+            loginState: false,
+            loading: false,
+            loadingText: ''
         };
     }
 
@@ -49,12 +54,33 @@ export default class Splash extends React.Component {
         // Override logging in prod builds
         if (global.__DEV__) {
             //  We will check for CodePush Updates --Only in Dev Mode
-            codePush.sync({
-                updateDialog: {
-                    title: 'An Update with Bug Fixes is Available!'
+            codePush.sync(
+                {
+                    updateDialog: {
+                        appendReleaseDescription: true,
+                        descriptionPrefix: '\n\nChange log:\n'
+                    },
+                    installMode: codePush.InstallMode.IMMEDIATE
                 },
-                installMode: codePush.InstallMode.ON_NEXT_RESUME
-            });
+                status => {
+                    switch (status) {
+                    case codePush.SyncStatus.DOWNLOADING_PACKAGE:
+                        this.setState({
+                            loading: true,
+                            loadingText: 'Downloading Package...'
+                        });
+                        break;
+                    case codePush.SyncStatus.INSTALLING_UPDATE:
+                        this.setState({
+                            loading: true,
+                            loadingText: 'Installing Package...'
+                        });
+                        break;
+                    default:
+                        this.setState({ loading: false, loadingText: '' });
+                    }
+                }
+            );
         }
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
@@ -232,6 +258,12 @@ export default class Splash extends React.Component {
                     source={Icon}
                     resizeMode={'contain'}
                 />
+                {
+                    <Spinner
+                        visible={this.state.loading}
+                        textContent={this.state.loadingText}
+                    />
+                }
             </View>
         );
     }
