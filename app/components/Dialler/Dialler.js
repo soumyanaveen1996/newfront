@@ -99,6 +99,12 @@ export default class Dialler extends React.Component {
                 });
             }
         } catch (err) {
+            const connection = await Network.isConnected();
+            if (!connection) {
+                Alert.alert(I18n.t('No_Network'));
+                Actions.pop();
+                return;
+            }
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             this.closeCall();
         }
