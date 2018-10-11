@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, Keyboard } from 'react-native';
-
+import {
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Keyboard,
+    ScrollView,
+    BackHandler
+} from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import styles from './styles';
-import { SCREEN_HEIGHT } from './config';
 import Swiper from 'react-native-swiper';
 import images from '../../config/images';
 import { LoginScreen } from '../Login';
@@ -42,6 +49,18 @@ export default class SwiperScreen extends Component {
             ]
         };
     }
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'swiperScreen') {
+            BackHandler.exitApp();
+        }
+    }
 
     changePages = () => {
         if (this.state.isLoginPage) {
@@ -56,12 +75,15 @@ export default class SwiperScreen extends Component {
             return (
                 <TouchableOpacity
                     onPress={this.goToSignupPage}
-                    style={{ alignItems: 'center' }}
+                    style={{ alignItems: 'center', zIndex: 1 }}
                 >
                     <Text style={styles.goToLine}>
                         You don’t have an account?
                         <Text style={styles.bolder}> Sign up </Text>
-                        <Image source={images.blue_arrow} />
+                        <Image
+                            style={styles.arrow}
+                            source={images.blue_arrow}
+                        />
                     </Text>
                 </TouchableOpacity>
             );
@@ -74,7 +96,10 @@ export default class SwiperScreen extends Component {
                     <Text style={styles.goToLine}>
                         Already have an account?{' '}
                         <Text style={styles.bolder}> Log in </Text>
-                        <Image source={images.blue_arrow} />
+                        <Image
+                            style={styles.arrow}
+                            source={images.blue_arrow}
+                        />
                     </Text>
                 </TouchableOpacity>
             );
@@ -94,8 +119,7 @@ export default class SwiperScreen extends Component {
     };
 
     onIndexChanged(index) {
-        console.log('Swiper Index: ', index);
-        if (index === 3) {
+        if (index <= 3) {
             Keyboard.dismiss();
         }
     }
@@ -104,14 +128,10 @@ export default class SwiperScreen extends Component {
         return (
             <Swiper
                 style={styles.wrapper}
-                height={SCREEN_HEIGHT - 40}
                 index={this.props.swiperIndex ? this.props.swiperIndex : 0}
                 onIndexChanged={this.onIndexChanged.bind(this)}
                 dot={<View style={styles.dotStyle} />}
                 activeDot={<View style={styles.activeDotStyle} />}
-                paginationStyle={{
-                    bottom: 20
-                }}
                 loop={false}
             >
                 <View style={styles.slide}>
