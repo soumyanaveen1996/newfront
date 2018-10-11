@@ -283,9 +283,26 @@ export default class ChatMessage extends React.Component {
                     linkDefault={true}
                     linkStyle={{ textDecorationLine: 'underline' }}
                 >
-                    <Text style={chatMessageTextStyle(this.props.alignRight)}>
-                        {message.getDisplayMessage()}
-                    </Text>
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                        <Text
+                            style={chatMessageTextStyle(this.props.alignRight)}
+                        >
+                            {message.getDisplayMessage()}
+                        </Text>
+                        {message.getStatus() == 1 ? (
+                            <View
+                                style={{
+                                    paddingLeft: 10,
+                                    opacity: 0.7,
+                                    alignSelf: 'flex-end'
+                                }}
+                            >
+                                {Icons.delivered()}
+                            </View>
+                        ) : (
+                            <Text />
+                        )}
+                    </View>
                 </Hyperlink>
             );
             const component = (
@@ -444,11 +461,6 @@ export default class ChatMessage extends React.Component {
                     metadataContainerStyle(alignRight, !!this.props.imageSource)
                 ]}
             >
-                {message.getStatus() === 1 ? (
-                    <View style={{ paddingLeft: 5, opacity: 0.7 }}>
-                        {Icons.delivered()}
-                    </View>
-                ) : null}
                 <Text style={[styles.date, styles.dataNoMargin]}>
                     {utils.formattedDate(message.getMessageDate())}
                 </Text>

@@ -1436,6 +1436,8 @@ export default class ChatBotScreen extends React.Component {
             pageSize,
             this.oldestLoadedDate()
         );
+        console.log('[FrontM]-- Bot Messages', messages);
+
         return messages;
     }
 
