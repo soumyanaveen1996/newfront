@@ -110,6 +110,16 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
+        this.listenToEvents();
+
+        // Chain all setup stuff
+        // Before login
+        persist
+            .runMigrations() // before login
+            .catch(err => {
+                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+            });
+
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         const checkStatus = await AsyncStorage.getItem('signupStage');
 
@@ -132,16 +142,6 @@ export default class Splash extends React.Component {
                 this.goToLoginPage();
             }
         }
-
-        this.listenToEvents();
-
-        // Chain all setup stuff
-        // Before login
-        persist
-            .runMigrations() // before login
-            .catch(err => {
-                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
-            });
     }
 
     sendOnboardingBackgroundMessage = async () => {

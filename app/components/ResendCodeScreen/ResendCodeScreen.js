@@ -60,7 +60,7 @@ export default class ResendCodeScreen extends Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeEmailText.bind(this, 0)}
                             keyboardType="email-address"
-                            returnKeyType="next"
+                            returnKeyType="go"
                             placeholder="email@example.com"
                             value={this.props.email}
                             underlineColorAndroid={'transparent'}

@@ -36,11 +36,16 @@ export default class LoginScreen extends React.Component {
                 { id: 4, title: 'Login', type: 'button', action: 'signIn' }
             ],
             errorMessage: '',
-            loading: false
+            emailErrorMessage: '',
+            passwordErrorMessage: '',
+            loading: false,
+            pressedFbBtn: false,
+            pressedGglBtn: false
         };
 
         this.formValuesArray = [];
         this.errorMessages = [];
+        this.inputs = {};
     }
 
     componentWillMount() {
@@ -53,21 +58,23 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'loginScreen') {
-            BackHandler.exitApp();
-        }
     }
 
     onFormSubmit() {
         this.setState({ loading: true });
         if (!this.isValid()) {
+            console.log('error', this.errorMessages);
+            if (this.errorMessages && this.errorMessages.length >= 0) {
+                this.setState({ emailErrorMessage: this.errorMessages[0] });
+            } else {
+                this.setState({ emailErrorMessage: '' });
+            }
+
+            if (this.errorMessages && this.errorMessages.length > 1) {
+                this.setState({ passwordErrorMessage: this.errorMessages[1] });
+            } else {
+                this.setState({ passwordErrorMessage: '' });
+            }
             this.setState({ errorMessage: this.errorMessages });
             this.setState({ loading: false });
             return;
@@ -91,10 +98,14 @@ export default class LoginScreen extends React.Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
+                this.setState({ passwordErrorMessage: '' });
+                this.setState({ emailErrorMessage: '' });
                 this.showMainScreen();
             })
             .catch(err => {
-                this.setState({ errorMessage: err.message });
+                console.log('errors', err);
+                this.setState({ emailErrorMessage: err.message });
+                this.setState({ passwordErrorMessage: '' });
                 this.setState({ loading: false });
             });
     }
@@ -145,6 +156,7 @@ export default class LoginScreen extends React.Component {
     }
 
     loginWithGoogle = async () => {
+        this.setState({ pressedGglBtn: !this.state.pressedGglBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithGoogle(conversationId, botName)
@@ -158,6 +170,7 @@ export default class LoginScreen extends React.Component {
             });
     };
     loginWithFacebook = async () => {
+        this.setState({ pressedFbBtn: !this.state.pressedFbBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
@@ -169,6 +182,54 @@ export default class LoginScreen extends React.Component {
             .catch(err => {
                 this.setState({ errorMessage: err.message });
             });
+    };
+
+    renderFacebookBtn = () => {
+        let imgSource = this.state.pressedFbBtn
+            ? images.btn_pressed_facebook
+            : images.btn_facebook;
+
+        return <Image source={imgSource} />;
+    };
+    renderGoogleBtn = () => {
+        let imgSource = this.state.pressedGglBtn
+            ? images.btn_pressed_google
+            : images.btn_google;
+
+        return <Image source={imgSource} />;
+    };
+
+    displayEmailErrorMessege = () => {
+        if (
+            this.state.emailErrorMessage &&
+            this.state.emailErrorMessage.length > 0
+        ) {
+            return (
+                <View style={styles.userError}>
+                    <Text style={styles.errorText}>
+                        {this.state.emailErrorMessage}
+                    </Text>
+                </View>
+            );
+        }
+    };
+    displayPasswordErrorMessege = () => {
+        if (
+            this.state.passwordErrorMessage &&
+            this.state.passwordErrorMessage.length > 0
+        ) {
+            return (
+                <View style={styles.userError}>
+                    <Text style={styles.errorText}>
+                        {this.state.passwordErrorMessage}
+                    </Text>
+                </View>
+            );
+        }
+    };
+
+    focusTheField = id => {
+        this.inputs[id].focus();
     };
 
     render() {
@@ -191,16 +252,25 @@ export default class LoginScreen extends React.Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeEmailText.bind(this, 0)}
                             keyboardType="email-address"
-                            returnKeyType="next"
+                            blurOnSubmit={false}
+                            returnKeyType={'next'}
+                            onSubmitEditing={() => {
+                                this.focusTheField('password');
+                            }}
                             placeholder="email@example.com"
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
                         />
+                        {this.displayEmailErrorMessege()}
 
                         <Text style={styles.placeholderText}> Password </Text>
                         <TextInput
                             style={styles.input}
-                            returnKeyType="go"
+                            blurOnSubmit={true}
+                            returnKeyType={'done'}
+                            ref={input => {
+                                this.inputs.password = input;
+                            }}
                             onChangeText={this.onChangePasswordText.bind(
                                 this,
                                 1
@@ -209,12 +279,9 @@ export default class LoginScreen extends React.Component {
                             placeholderTextColor="rgba(155,155,155,1)"
                             secureTextEntry
                         />
-
+                        {this.displayPasswordErrorMessege()}
                         <Text style={styles.forgotPassowrd}>
                             Forgot Password?
-                        </Text>
-                        <Text style={{ color: 'red' }}>
-                            {this.state.errorMessage}
                         </Text>
                         <TouchableOpacity
                             style={styles.buttonContainer}
@@ -231,13 +298,13 @@ export default class LoginScreen extends React.Component {
                         <TouchableOpacity
                             onPress={() => this.loginWithFacebook()}
                         >
-                            <Image source={images.btn_facebook} />
+                            {this.renderFacebookBtn()}
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => this.loginWithGoogle()}
                         >
-                            <Image source={images.btn_google} />
+                            {this.renderGoogleBtn()}
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
