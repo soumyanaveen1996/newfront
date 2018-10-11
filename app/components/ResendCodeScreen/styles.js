@@ -10,7 +10,6 @@ export default StyleSheet.create({
     },
     keyboardConatiner: {
         flex: 1,
-        textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'space-between'
     },

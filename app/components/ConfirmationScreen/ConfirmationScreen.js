@@ -95,6 +95,7 @@ export default class ConfirmationScreen extends Component {
                             keyboardType="numeric"
                             autoFocus={true}
                             placeholder="------"
+                            returnKeyType="go"
                             onChangeText={this.onChangeCode.bind(this)}
                             maxLength={6} //setting limit of input
                         />

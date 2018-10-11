@@ -18,12 +18,12 @@ export default StyleSheet.create({
     },
     signupHeader: {
         width: 300,
-        height: 40,
+        height: 45,
         textAlign: 'left',
-        fontSize: 30,
+        fontSize: 28,
         color: 'rgba(74,74,74,1)',
         fontWeight: '300',
-        marginTop: 82
+        marginTop: '20%'
     },
     formContainer: Platform.select({
         ios: {
@@ -66,7 +66,16 @@ export default StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 38
+        marginBottom: 25
+    },
+    diableButton: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(155,155,155,1);',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 25
     },
     buttonText: {
         color: '#fff',
