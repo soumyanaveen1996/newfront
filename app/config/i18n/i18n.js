@@ -21,7 +21,7 @@ I18n.translations = {
         Add_Contact: 'Add Contact',
         My_Contacts: 'My Contacts',
         Favorites: 'Favorites',
-        Contacts: 'Contact',
+        Contacts: 'Contacts',
         Channels: 'Channels',
         ChatBots: 'Chatbots',
         Configure: 'Configure',
