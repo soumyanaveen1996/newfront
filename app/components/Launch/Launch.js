@@ -36,7 +36,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
-const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 37; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -106,7 +106,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            // await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
