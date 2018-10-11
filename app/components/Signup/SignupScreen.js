@@ -37,8 +37,13 @@ export default class SignupScreen extends React.Component {
             name: '',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            nameError: '',
+            emailError: '',
+            passwordError: '',
+            confirmPasswordError: ''
         };
+        this.inputs = {};
     }
 
     validateEmail(email) {
@@ -75,6 +80,20 @@ export default class SignupScreen extends React.Component {
 
     goBackToLogin = () => {
         Actions.swiperScreen({ type: ActionConst.REPLACE });
+    };
+
+    checkFieldEmpty = () => {
+        if (this.state.name && this.state.name === '') {
+        }
+
+        if (
+            this.state.name !== '' &&
+            this.state.email !== '' &&
+            this.state.password !== '' &&
+            this.state.confirmPassword !== ''
+        ) {
+            return true;
+        }
     };
 
     onSignup = async () => {
@@ -114,6 +133,13 @@ export default class SignupScreen extends React.Component {
                         return { loading: false };
                     });
                 });
+        } else {
+            if (!emailResult) {
+                this.ssetState({ emailError: 'Invalid Email' });
+            }
+            this.setState(() => {
+                return { loading: false };
+            });
         }
     };
 
@@ -132,6 +158,10 @@ export default class SignupScreen extends React.Component {
         this.setState({ confirmPassword: text });
     }
 
+    focusNextField = id => {
+        this.inputs[id].focus();
+    };
+
     render() {
         return (
             <ScrollView style={styles.container}>
@@ -146,7 +176,14 @@ export default class SignupScreen extends React.Component {
                         <TextInput
                             style={styles.input}
                             autoCorrect={false}
-                            returnKeyType="next"
+                            returnKeyType={'next'}
+                            blurOnSubmit={false}
+                            onSubmitEditing={() => {
+                                this.focusNextField('two');
+                            }}
+                            ref={input => {
+                                this.inputs.one = input;
+                            }}
                             placeholder="Name"
                             onChangeText={this.onChangeName.bind(this)}
                             placeholderTextColor="rgba(155,155,155,1)"
@@ -157,7 +194,14 @@ export default class SignupScreen extends React.Component {
                             autoCapitalize="none"
                             autoCorrect={false}
                             keyboardType="email-address"
-                            returnKeyType="next"
+                            returnKeyType={'next'}
+                            blurOnSubmit={false}
+                            onSubmitEditing={() => {
+                                this.focusNextField('three');
+                            }}
+                            ref={input => {
+                                this.inputs.two = input;
+                            }}
                             placeholder="Email"
                             onChangeText={this.onChangeEmail.bind(this)}
                             placeholderTextColor="rgba(155,155,155,1)"
@@ -165,7 +209,14 @@ export default class SignupScreen extends React.Component {
                         <Text style={styles.placeholderText}> Password </Text>
                         <TextInput
                             style={styles.input}
-                            returnKeyType="go"
+                            returnKeyType={'next'}
+                            blurOnSubmit={false}
+                            onSubmitEditing={() => {
+                                this.focusNextField('four');
+                            }}
+                            ref={input => {
+                                this.inputs.three = input;
+                            }}
                             placeholder="Password"
                             placeholderTextColor="rgba(155,155,155,1)"
                             onChangeText={this.onChangePassword.bind(this)}
@@ -177,7 +228,11 @@ export default class SignupScreen extends React.Component {
                         </Text>
                         <TextInput
                             style={styles.input}
-                            returnKeyType="go"
+                            returnKeyType={'done'}
+                            blurOnSubmit={true}
+                            ref={input => {
+                                this.inputs.four = input;
+                            }}
                             placeholder="Confirm Password"
                             placeholderTextColor="rgba(155,155,155,1)"
                             onChangeText={this.onChangeConfirmPassword.bind(
@@ -209,7 +264,12 @@ export default class SignupScreen extends React.Component {
                             />
                         </View>
                         <TouchableOpacity
-                            style={styles.buttonContainer}
+                            disabled={!this.checkFieldEmpty()}
+                            style={
+                                this.checkFieldEmpty()
+                                    ? styles.buttonContainer
+                                    : styles.diableButton
+                            }
                             onPress={this.onSignup}
                         >
                             <Text style={styles.buttonText}>SIGNUP</Text>
