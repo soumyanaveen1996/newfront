@@ -186,7 +186,6 @@ export default class ChatBotScreen extends React.Component {
     };
 
     async componentDidMount() {
-        NetworkHandler.readLambda();
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         this.mounted = true;
         let self = this;
