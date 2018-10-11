@@ -9,7 +9,7 @@ import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
-import { Auth } from '../../lib/capability';
+import { Auth, Network } from '../../lib/capability';
 
 export const PhoneState = {
     init: 'init',
@@ -87,6 +87,12 @@ export default class Phone extends React.Component {
                 this.setState({ phoneState: PhoneState.calling });
             }
         } catch (err) {
+            const connection = await Network.isConnected();
+            if (!connection) {
+                Alert.alert(I18n.t('No_Network'));
+                Actions.pop();
+                return;
+            }
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             Actions.pop();
         }
