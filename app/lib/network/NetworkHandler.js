@@ -153,7 +153,6 @@ const readQueue = user =>
                 );
             }
         }
-
         return Network(options)
             .then(res => {
                 handleOnSatelliteResponse(res);

@@ -112,22 +112,6 @@ class Bot {
             // Get the user as we need the creds
             this.user = await Promise.resolve(Auth.getUser());
 
-            //first subscribe to the bot
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.subscribeToBot,
-                data: {
-                    botId: this.manifest.botId
-                },
-                headers: {
-                    sessionId: this.user.creds.sessionId
-                }
-            };
-            Network(options);
-
             this.createRootDirectory();
 
             await this.storeManifest();
@@ -177,22 +161,6 @@ class Bot {
         try {
             // Get the user as we need the creds
             this.user = await Promise.resolve(Auth.getUser());
-
-            //first unsubscribe from the bot
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.unsubscribeFromBot,
-                data: {
-                    botId: this.manifest.botId
-                },
-                headers: {
-                    sessionId: this.user.creds.sessionId
-                }
-            };
-            Network(options);
 
             let botDirectoryPath = this.botDirectory;
             console.log(
