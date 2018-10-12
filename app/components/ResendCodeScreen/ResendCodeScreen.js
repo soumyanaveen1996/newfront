@@ -16,7 +16,8 @@ export default class ResendCodeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userEmail: 'testy@test.com'
+            userEmail: this.props.email,
+            errorMessage: ''
         };
     }
 
@@ -32,11 +33,9 @@ export default class ResendCodeScreen extends Component {
             BackHandler.exitApp();
         }
     }
-    onChangeEmailText(i, text) {
-        console.log('we will see ', i, text);
-        this.setState(() => {
-            return { userEmail: text };
-        });
+    onChangeEmailText(text) {
+        console.log('we will see ', text);
+        this.setState({ userEmail: text });
     }
 
     async onFormSubmit() {
@@ -74,11 +73,12 @@ export default class ResendCodeScreen extends Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeEmailText.bind(this, 0)}
                             keyboardType="email-address"
+                            editable={true}
                             returnKeyType={'done'}
                             placeholder="email@example.com"
-                            value={this.props.email}
+                            value={this.state.userEmail}
                             underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(0,0,0,1)"
+                            placeholderTextColor="rgba(155,155,155,1)"
                         />
                     </View>
                     <TouchableOpacity

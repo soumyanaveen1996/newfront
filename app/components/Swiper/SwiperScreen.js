@@ -23,8 +23,7 @@ export default class SwiperScreen extends Component {
             isLoginPage: true,
             swiperData: [
                 {
-                    header:
-                        'Keeping Conversations Going No Matter Where You Are',
+                    header: 'Keep conversations going no matter where you are',
                     description:
                         'The Safest and Lowest-data-consuming smart messenger, the cheapest voice calling and the most powerful Chatbot Marketplace app out there.',
                     imageSource: images.preview_slider_1
