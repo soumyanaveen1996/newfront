@@ -285,6 +285,7 @@ export default class LoginScreen extends React.Component {
                                 this,
                                 1
                             )}
+                            placeholder="password"
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
                             secureTextEntry

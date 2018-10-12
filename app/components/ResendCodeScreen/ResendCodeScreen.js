@@ -4,7 +4,8 @@ import {
     TextInput,
     View,
     TouchableOpacity,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    BackHandler
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
