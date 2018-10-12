@@ -44,8 +44,8 @@ export default StyleSheet.create({
     headerText: {
         textAlign: 'center',
         color: 'rgba(74,74,74,1)',
-        fontSize: 30,
-        fontWeight: '300',
+        fontSize: 24,
+        fontWeight: '500',
         letterSpacing: 1,
         lineHeight: 36,
         marginBottom: 24

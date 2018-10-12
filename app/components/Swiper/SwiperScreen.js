@@ -23,27 +23,28 @@ export default class SwiperScreen extends Component {
             isLoginPage: true,
             swiperData: [
                 {
-                    header: 'Welcome to FrontM',
+                    header:
+                        'Keeping Conversations Going No Matter Where You Are',
                     description:
-                        'I’m your companion app that keeps up with conversations no matter where you are!',
+                        'The Safest and Lowest-data-consuming smart messenger, the cheapest voice calling and the most powerful Chatbot Marketplace app out there.',
                     imageSource: images.preview_slider_1
                 },
                 {
-                    header: 'At Sea',
+                    header: 'Say Goodbye to isolation',
                     description:
-                        'Now you can communicate and collaborate with friends, colleagues, and companies while you’re at sea.. Say goodbye to isolation!',
+                        'Easily collaborate with your friends, colleagues and companies while you’re at sea',
                     imageSource: images.preview_slider_2
                 },
                 {
-                    header: 'In The Sky',
+                    header: 'Flying is fun again',
                     description:
-                        'We’re making flying way more fun. Stay connected to the world below. Book cabs, hotels and shop duty-free!',
+                        'Discover the world below you, chat with others on the flight, book hotels, cabs, shop duty free and much more',
                     imageSource: images.preview_slider_3
                 },
                 {
-                    header: 'Or Anywhere on Land',
+                    header: "Let's get you going",
                     description:
-                        'Collaborate and boost efficiency. You’re always connected with us!',
+                        'No matter where you, we are making it easier for you to connect, communicate and operate.',
                     imageSource: images.preview_slider_4
                 }
             ]
