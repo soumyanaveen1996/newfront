@@ -58,6 +58,16 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'swiperScreen') {
+            BackHandler.exitApp();
+        }
     }
 
     onFormSubmit() {

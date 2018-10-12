@@ -132,6 +132,7 @@ export default class SwiperScreen extends Component {
                 onIndexChanged={this.onIndexChanged.bind(this)}
                 dot={<View style={styles.dotStyle} />}
                 activeDot={<View style={styles.activeDotStyle} />}
+                paginationStyle={styles.paginationStyles}
                 loop={false}
             >
                 <View style={styles.slide}>

@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView
 } from 'react-native';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
@@ -18,6 +19,18 @@ export default class ResendCodeScreen extends Component {
         };
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'confirmationScreen') {
+            BackHandler.exitApp();
+        }
+    }
     onChangeEmailText(i, text) {
         console.log('we will see ', i, text);
         this.setState(() => {
@@ -60,7 +73,7 @@ export default class ResendCodeScreen extends Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeEmailText.bind(this, 0)}
                             keyboardType="email-address"
-                            returnKeyType="go"
+                            returnKeyType={'done'}
                             placeholder="email@example.com"
                             value={this.props.email}
                             underlineColorAndroid={'transparent'}
