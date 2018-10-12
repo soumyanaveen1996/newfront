@@ -7,14 +7,13 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: GlobalColors.white,
-        alignItems: 'center'
+        backgroundColor: GlobalColors.white
     },
-    keyboardConatiner: {
+    innerContainer: {
         flex: 1,
         textAlign: 'center',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        backgroundColor: '#ffffff'
     },
     header: {
         width: 300,
@@ -25,6 +24,9 @@ export default StyleSheet.create({
         fontWeight: '300',
         marginTop: 82,
         marginBottom: 30
+    },
+    captionText: {
+        alignItems: 'center'
     },
     emailText: {
         fontWeight: 'bold'
@@ -55,11 +57,11 @@ export default StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'normal',
-        fontSize: 16,
-        fontWeight: '500'
+        fontSize: 16
     },
     pinCode: {
-        paddingBottom: 60
+        paddingBottom: 60,
+        marginTop: 10
     },
     textInput: {
         height: 40,
@@ -67,7 +69,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
         color: 'rgba(155,155,155,1)',
-        fontSize: 24,
+        fontSize: 20,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -75,9 +77,17 @@ export default StyleSheet.create({
         textAlign: 'center',
         letterSpacing: 1
     },
+    codeButton: {
+        marginTop: 40
+    },
     resendButton: {
-        color: 'rgba(0,189,242,1)',
-        fontSize: 22,
-        textAlign: 'center'
+        flex: 1,
+        bottom: 10
+    },
+    textColor: {
+        color: 'rgba(0, 189, 242, 1)',
+        fontSize: 16,
+        textAlign: 'center',
+        bottom: 20
     }
 });
