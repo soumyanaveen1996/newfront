@@ -345,7 +345,10 @@ export default class Dialler extends React.Component {
     }
 
     openDial() {
-        if (diallerState === DiallerState.incall) {
+        if (
+            this.state.diallerState === DiallerState.connecting ||
+            this.state.diallerState === DiallerState.incall
+        ) {
             this.setState({ diallerState: DiallerState.incall_digits });
         }
     }
