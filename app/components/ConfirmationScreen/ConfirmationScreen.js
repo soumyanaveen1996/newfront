@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     AsyncStorage,
-    BackHandler
+    BackHandler,
+    ScrollView
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -85,50 +86,56 @@ export default class ConfirmationScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <View>
-                        <Text style={styles.header}>Confirmation code</Text>
-                        <Text style={styles.firstTitle}>
-                            A confirmation code, with a 24 hour validity, has
-                            been sent to{' '}
-                            <Text style={styles.emailText}>
-                                {this.state.userEmail}
-                            </Text>{' '}
-                        </Text>
-                        <Text style={styles.secondTitle}>
-                            Please enter the code below to complete the
-                            registration process
-                        </Text>
-                    </View>
-                    <View style={styles.pinCode}>
-                        <TextInput
-                            style={styles.textInput}
-                            keyboardType="numeric"
-                            autoFocus={true}
-                            placeholder="------"
-                            returnKeyType={'done'}
-                            onChangeText={this.onChangeCode.bind(this)}
-                            maxLength={6} //setting limit of input
-                        />
-                    </View>
-                    <View>
-                        <TouchableOpacity
-                            style={styles.buttonContainer}
-                            onPress={this.onFormSubmit.bind(this)}
-                        >
-                            <Text style={styles.buttonText}>Done</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity
-                        style={styles.resendButton}
-                        onPress={this.onResendButton.bind(this)}
-                    >
-                        <Text>
-                            Review email address and send the code again
-                        </Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
+            <View style={{ flex: 1 }}>
+                <ScrollView style={styles.container}>
+                    <KeyboardAvoidingView style={{ flex: 1 }}>
+                        <View style={styles.innerContainer}>
+                            <View style={styles.captionText}>
+                                <Text style={styles.header}>
+                                    Confirmation code
+                                </Text>
+                                <Text style={styles.firstTitle}>
+                                    A confirmation code, with a 24 hour
+                                    validity, has been sent to{' '}
+                                    <Text style={styles.emailText}>
+                                        {this.state.userEmail}
+                                    </Text>{' '}
+                                </Text>
+                                <Text style={styles.secondTitle}>
+                                    Please enter the code below to complete the
+                                    registration process
+                                </Text>
+                            </View>
+                            <View style={styles.pinCode}>
+                                <TextInput
+                                    style={styles.textInput}
+                                    keyboardType="numeric"
+                                    autoFocus={true}
+                                    placeholder="------"
+                                    returnKeyType={'done'}
+                                    onChangeText={this.onChangeCode.bind(this)}
+                                    maxLength={6} //setting limit of input
+                                />
+                            </View>
+                            <View style={styles.codeButton}>
+                                <TouchableOpacity
+                                    style={styles.buttonContainer}
+                                    onPress={this.onFormSubmit.bind(this)}
+                                >
+                                    <Text style={styles.buttonText}>Done</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.resendButton}
+                                onPress={this.onResendButton.bind(this)}
+                            >
+                                <Text style={styles.textColor}>
+                                    Review email address and send the code again
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </KeyboardAvoidingView>
+                </ScrollView>
             </View>
         );
     }

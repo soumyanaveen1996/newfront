@@ -48,7 +48,7 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
-        color: 'rgba(155,155,155,1)',
+        color: 'rgba(0,0,0,0.8)',
         fontSize: 16,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
