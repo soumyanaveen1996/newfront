@@ -97,7 +97,7 @@ const Styles = StyleSheet.create({
         paddingTop: 30
     },
     diallerContainer: {
-        height: Dimensions.get('window').height * 0.5,
+        height: Dimensions.get('window').height * 0.6,
         backgroundColor: GlobalColors.white
     },
     callQuotaContainer: {
