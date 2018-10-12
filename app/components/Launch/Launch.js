@@ -34,6 +34,9 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+// Switch off During FINAL PROD RELEASE
+const CODE_PUSH_ACTIVATE = true;
+
 // const BusyIndicator = require('react-native-busy-indicator')
 
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
@@ -54,7 +57,7 @@ export default class Splash extends React.Component {
         // Override logging in prod builds
         console.log(Config);
 
-        if (Config.proxy.host === 'elbdev.frontm.ai') {
+        if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode
             codePush.sync(
                 {
