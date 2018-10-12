@@ -13,14 +13,9 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import I18n from '../../config/i18n/i18n';
-import _ from 'lodash';
-import { isEmail } from '../../lib/utils';
 import images from '../../images';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
-import { Button } from 'react-native-elements';
-import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 
 export default class SignupScreen extends React.Component {
     constructor(props) {
@@ -41,7 +36,8 @@ export default class SignupScreen extends React.Component {
             nameError: '',
             emailError: '',
             passwordError: '',
-            confirmPasswordError: ''
+            confirmPasswordError: '',
+            errorMessage: ''
         };
         this.inputs = {};
     }
