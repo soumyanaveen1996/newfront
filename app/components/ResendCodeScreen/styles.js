@@ -47,7 +47,6 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
-        fontSize: 16,
         alignItems: 'center',
         justifyContent: 'center',
         bottom: 80
@@ -56,7 +55,6 @@ export default StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'normal',
-        fontSize: 16,
-        fontWeight: '500'
+        fontSize: 16
     }
 });
