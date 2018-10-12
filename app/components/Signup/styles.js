@@ -7,11 +7,11 @@ import { SCREEN_WIDTH } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        height: SCREEN_HEIGHT - 100,
         padding: 20,
         backgroundColor: GlobalColors.white
     },
     keyboardConatiner: {
+        flex: 1,
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center'
@@ -97,7 +97,7 @@ export default StyleSheet.create({
         fontWeight: '500',
         letterSpacing: 1,
         lineHeight: 16,
-        marginBottom: 10
+        marginBottom: 5
     },
     passwordCriteriaList: {
         color: 'rgba(74,74,74,1)',

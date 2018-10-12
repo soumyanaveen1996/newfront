@@ -5,7 +5,8 @@ import {
     TextInput,
     TouchableOpacity,
     KeyboardAvoidingView,
-    AsyncStorage
+    AsyncStorage,
+    BackHandler
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -26,6 +27,17 @@ export default class ConfirmationScreen extends Component {
                 return { userEmail: token };
             });
         });
+
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'confirmationScreen') {
+            BackHandler.exitApp();
+        }
     }
 
     async onFormSubmit() {
@@ -95,7 +107,7 @@ export default class ConfirmationScreen extends Component {
                             keyboardType="numeric"
                             autoFocus={true}
                             placeholder="------"
-                            returnKeyType="go"
+                            returnKeyType={'done'}
                             onChangeText={this.onChangeCode.bind(this)}
                             maxLength={6} //setting limit of input
                         />
