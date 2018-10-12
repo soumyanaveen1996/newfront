@@ -35,7 +35,7 @@ import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // Switch off During FINAL PROD RELEASE
-const CODE_PUSH_ACTIVATE = true;
+const CODE_PUSH_ACTIVATE = false;
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
