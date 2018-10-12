@@ -171,8 +171,8 @@ export default class MainScreen extends React.Component {
     }
 
     userLoggedOutHandler = async () => {
-        DataManager.init();
-        ContactsCache.init();
+        await DataManager.init();
+        await ContactsCache.init();
         await MessageCounter.init();
 
         Actions.swiperScreen({

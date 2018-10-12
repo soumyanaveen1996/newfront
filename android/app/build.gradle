@@ -104,7 +104,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 46
+        versionCode 49
         versionName "2.18.0"
         multiDexEnabled true
         ndk {
