@@ -168,7 +168,9 @@ export default class SignupScreen extends React.Component {
                             return { loading: false };
                         });
                         Actions.confirmationScreen({
-                            type: ActionConst.REPLACE
+                            type: ActionConst.REPLACE,
+                            userEmail: this.state.email,
+                            password: this.state.password
                         });
                     }
                 })

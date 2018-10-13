@@ -51,10 +51,39 @@ export default StyleSheet.create({
         justifyContent: 'center',
         bottom: 80
     },
+
+    diableButton: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(155,155,155,1);',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 80
+    },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'normal',
         fontSize: 16
+    },
+
+    userError: {
+        backgroundColor: 'rgba(229,69,59,1)',
+        position: 'absolute',
+        bottom: -30,
+        zIndex: 999999,
+        right: 0,
+        width: 150,
+        padding: 5,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 0,
+        alignItems: 'center'
+    },
+    errorText: {
+        color: '#ffffff',
+        textAlign: 'center'
     }
 });

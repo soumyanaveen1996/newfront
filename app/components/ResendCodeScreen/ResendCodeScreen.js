@@ -5,19 +5,22 @@ import {
     View,
     TouchableOpacity,
     KeyboardAvoidingView,
-    BackHandler
+    BackHandler,
+    AsyncStorage
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
+import Loader from '../Loader/Loader';
 
 export default class ResendCodeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userEmail: this.props.email,
-            errorMessage: ''
+            errorMessage: '',
+            loading: false
         };
     }
 
@@ -34,18 +37,25 @@ export default class ResendCodeScreen extends Component {
         }
     }
     onChangeEmailText(text) {
-        console.log('we will see ', text);
         this.setState({ userEmail: text });
     }
 
+    validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
     async onFormSubmit() {
+        this.setState({ loading: true });
         console.log('send code again');
         const userDetails = {
             email: this.state.userEmail
         };
+
         await Auth.resendFrontmSignupCode(userDetails)
             .then(async data => {
                 if (data.success) {
+                    this.setState({ loading: false });
                     await AsyncStorage.setItem('userEmail', data.data);
                     await AsyncStorage.setItem('signupStage', 'confirmCode');
                     Actions.confirmationScreen({
@@ -55,14 +65,46 @@ export default class ResendCodeScreen extends Component {
             })
             .catch(err => {
                 console.log('error on resending code again ', err);
+                this.setState({ loading: false });
+                this.setState({
+                    errorMessage: 'User/Email not found'
+                });
             });
     }
+    checkFieldEmpty = () => {
+        if (this.state.userEmail === '') {
+            return false;
+        } else {
+            if (this.validateEmail(this.state.userEmail)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 
+    displayEmailErrorMessege = () => {
+        if (this.state.errorMessage && this.state.errorMessage.length > 0) {
+            return (
+                <View style={styles.userError}>
+                    <Text style={styles.errorText}>
+                        {this.state.errorMessage}
+                    </Text>
+                </View>
+            );
+        }
+    };
     render() {
         return (
             <View style={styles.container}>
+                <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <View>
+                    <View
+                        style={{
+                            position: 'relative',
+                            backgroundColor: 'rgba(0,0,0,0.0)'
+                        }}
+                    >
                         <Text style={styles.header}>Confirmation code</Text>
                         <Text style={styles.firstTitle}>
                             Please confirm the email address
@@ -71,7 +113,7 @@ export default class ResendCodeScreen extends Component {
                             style={styles.input}
                             autoCapitalize="none"
                             autoCorrect={false}
-                            onChangeText={this.onChangeEmailText.bind(this, 0)}
+                            onChangeText={this.onChangeEmailText.bind(this)}
                             keyboardType="email-address"
                             editable={true}
                             returnKeyType={'done'}
@@ -80,9 +122,15 @@ export default class ResendCodeScreen extends Component {
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
                         />
+                        {this.displayEmailErrorMessege()}
                     </View>
                     <TouchableOpacity
-                        style={styles.buttonContainer}
+                        disabled={!this.checkFieldEmpty()}
+                        style={
+                            this.checkFieldEmpty()
+                                ? styles.buttonContainer
+                                : styles.diableButton
+                        }
                         onPress={this.onFormSubmit.bind(this)}
                     >
                         <Text style={styles.buttonText}>Send code again</Text>
