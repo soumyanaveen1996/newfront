@@ -51,7 +51,7 @@ export default class ConfirmationScreen extends Component {
             email: this.state.userEmail,
             confirmCode: this.state.code
         };
-        this.setState({ loading: true });
+        this.setState({ loading: true, errorMessage: '' });
         console.log('send code done', userDetails);
 
         await Auth.confirmFrontmSignup(userDetails)
@@ -64,6 +64,7 @@ export default class ConfirmationScreen extends Component {
             })
             .catch(err => {
                 console.log('error is ', err);
+                this.setState({ errorMessage: err.message, loading: false });
             });
     }
 
@@ -163,6 +164,17 @@ export default class ConfirmationScreen extends Component {
                                 >
                                     <Text style={styles.buttonText}>Done</Text>
                                 </TouchableOpacity>
+                                <View>
+                                    {this.state.errorMessage ? (
+                                        <Text
+                                            style={{
+                                                color: 'rgba(0, 189, 242, 1)'
+                                            }}
+                                        >
+                                            {this.state.errorMessage}
+                                        </Text>
+                                    ) : null}
+                                </View>
                             </View>
                             <TouchableOpacity
                                 style={styles.resendButton}
