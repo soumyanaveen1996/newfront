@@ -19,6 +19,7 @@ export default class ResendCodeScreen extends Component {
         super(props);
         this.state = {
             userEmail: this.props.email,
+            password: this.props.password,
             errorMessage: '',
             loading: false
         };
@@ -59,7 +60,9 @@ export default class ResendCodeScreen extends Component {
                     await AsyncStorage.setItem('userEmail', data.data);
                     await AsyncStorage.setItem('signupStage', 'confirmCode');
                     Actions.confirmationScreen({
-                        type: ActionConst.REPLACE
+                        type: ActionConst.REPLACE,
+                        userEmail: this.state.userEmail,
+                        password: this.state.password
                     });
                 }
             })
@@ -121,6 +124,8 @@ export default class ResendCodeScreen extends Component {
                             value={this.state.userEmail}
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
+                            editable={false}
+                            selectTextOnFocus={false}
                         />
                         {this.displayEmailErrorMessege()}
                     </View>

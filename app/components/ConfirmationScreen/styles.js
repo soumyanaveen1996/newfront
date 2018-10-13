@@ -91,12 +91,13 @@ export default StyleSheet.create({
     resendButton: {
         flex: 1,
         bottom: 10,
-        color: 'green'
+        // color: 'green'
+        height: 40
     },
     textColor: {
         color: 'rgba(0, 189, 242, 1)',
         fontSize: 14,
-        textAlign: 'center',
-        bottom: 20
+        textAlign: 'center'
+        // bottom: 20
     }
 });

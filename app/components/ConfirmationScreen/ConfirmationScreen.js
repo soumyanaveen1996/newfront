@@ -40,6 +40,15 @@ export default class ConfirmationScreen extends Component {
         );
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps !== this.props) {
+            this.setState({
+                userEmail: this.props.userEmail,
+                password: this.props.password
+            });
+        }
+    }
+
     handleBackButtonClick() {
         if (Actions.currentScene === 'confirmationScreen') {
             BackHandler.exitApp();
@@ -107,7 +116,8 @@ export default class ConfirmationScreen extends Component {
         console.log('Go to resend page');
         Actions.resendCodeScreen({
             type: ActionConst.REPLACE,
-            email: this.state.userEmail
+            email: this.state.userEmail,
+            password: this.state.password
         });
     }
     checkFieldEmpty = () => {
@@ -164,11 +174,11 @@ export default class ConfirmationScreen extends Component {
                                 >
                                     <Text style={styles.buttonText}>Done</Text>
                                 </TouchableOpacity>
-                                <View>
+                                <View style={{ bottom: 60 }}>
                                     {this.state.errorMessage ? (
                                         <Text
                                             style={{
-                                                color: 'rgba(0, 189, 242, 1)'
+                                                color: 'rgba(255,0,0,1)'
                                             }}
                                         >
                                             {this.state.errorMessage}
