@@ -12,13 +12,18 @@ import {
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 import { Auth } from '../../lib/capability';
+import Loader from '../Loader/Loader';
+import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 
 export default class ConfirmationScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userEmail: 'test@test.com',
-            code: 0
+            userEmail: this.props.userEmail,
+            password: this.props.password,
+            code: 0,
+            loading: false,
+            errorMessage: ''
         };
     }
 
@@ -46,6 +51,7 @@ export default class ConfirmationScreen extends Component {
             email: this.state.userEmail,
             confirmCode: this.state.code
         };
+        this.setState({ loading: true });
         console.log('send code done', userDetails);
 
         await Auth.confirmFrontmSignup(userDetails)
@@ -62,11 +68,31 @@ export default class ConfirmationScreen extends Component {
     }
 
     showMainScreen = () => {
-        Actions.swiperScreen({
-            type: ActionConst.REPLACE,
+        // Actions.swiperScreen({
+        //     type: ActionConst.REPLACE,
+        //     email: this.state.userEmail,
+        //     swiperIndex: 4
+        // });
+
+        const userDetails = {
             email: this.state.userEmail,
-            swiperIndex: 4
-        });
+            password: this.state.password
+        };
+
+        Auth.loginWithFrontm(
+            userDetails,
+            '',
+            SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
+        )
+            .then(() => {
+                this.setState({ loading: false });
+                Actions.timeline({ type: ActionConst.REPLACE });
+            })
+            .catch(err => {
+                console.log('errors', err);
+                this.setState({ errorMessage: err.message });
+                this.setState({ loading: false });
+            });
         return;
     };
 
@@ -83,10 +109,18 @@ export default class ConfirmationScreen extends Component {
             email: this.state.userEmail
         });
     }
+    checkFieldEmpty = () => {
+        if (this.state.code !== 0 && this.state.code.length === 6) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <Loader loading={this.state.loading} />
                 <ScrollView style={styles.container}>
                     <KeyboardAvoidingView style={{ flex: 1 }}>
                         <View style={styles.innerContainer}>
@@ -119,7 +153,12 @@ export default class ConfirmationScreen extends Component {
                             </View>
                             <View style={styles.codeButton}>
                                 <TouchableOpacity
-                                    style={styles.buttonContainer}
+                                    disabled={!this.checkFieldEmpty()}
+                                    style={
+                                        this.checkFieldEmpty()
+                                            ? styles.buttonContainer
+                                            : styles.diableButton
+                                    }
                                     onPress={this.onFormSubmit.bind(this)}
                                 >
                                     <Text style={styles.buttonText}>Done</Text>

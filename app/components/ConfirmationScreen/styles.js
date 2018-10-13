@@ -11,7 +11,6 @@ export default StyleSheet.create({
     },
     innerContainer: {
         flex: 1,
-        textAlign: 'center',
         alignItems: 'center',
         backgroundColor: '#ffffff'
     },
@@ -48,6 +47,15 @@ export default StyleSheet.create({
         height: 40,
         width: 300,
         backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 80
+    },
+    diableButton: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(155,155,155,1);',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',

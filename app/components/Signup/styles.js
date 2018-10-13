@@ -28,12 +28,10 @@ export default StyleSheet.create({
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,
-            alignItems: 'center',
             justifyContent: 'center'
         },
         android: {
             marginBottom: 20,
-            alignItems: 'center',
             justifyContent: 'center'
         }
     }),
@@ -46,6 +44,10 @@ export default StyleSheet.create({
         lineHeight: 20,
         fontSize: 14,
         marginTop: 20
+    },
+    entryFields: {
+        position: 'relative',
+        backgroundColor: 'rgba(0,0,0,0.0)'
     },
     input: {
         height: 40,
@@ -105,5 +107,23 @@ export default StyleSheet.create({
         fontWeight: '300',
         letterSpacing: 1,
         lineHeight: 28
+    },
+    userError: {
+        backgroundColor: 'rgba(229,69,59,1)',
+        position: 'absolute',
+        bottom: -30,
+        zIndex: 999999,
+        right: 0,
+        width: 150,
+        padding: 5,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 0,
+        alignItems: 'center'
+    },
+    errorText: {
+        color: '#ffffff',
+        textAlign: 'center'
     }
 });
