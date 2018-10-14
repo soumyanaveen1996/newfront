@@ -124,8 +124,7 @@ export default class ResendCodeScreen extends Component {
                             value={this.state.userEmail}
                             underlineColorAndroid={'transparent'}
                             placeholderTextColor="rgba(155,155,155,1)"
-                            editable={false}
-                            selectTextOnFocus={false}
+                            selectTextOnFocus={true}
                         />
                         {this.displayEmailErrorMessege()}
                     </View>
