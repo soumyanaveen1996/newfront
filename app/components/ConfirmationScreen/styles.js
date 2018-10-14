@@ -6,7 +6,7 @@ import { SCREEN_HEIGHT } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        padding: 10,
         backgroundColor: GlobalColors.white
     },
     innerContainer: {
@@ -22,7 +22,7 @@ export default StyleSheet.create({
         color: 'rgba(74,74,74,1)',
         fontWeight: '300',
         marginTop: 82,
-        marginBottom: 30
+        marginBottom: 10
     },
     captionText: {
         alignItems: 'center'
