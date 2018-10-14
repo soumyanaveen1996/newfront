@@ -172,10 +172,16 @@ export default class SignupScreen extends React.Component {
                             userEmail: this.state.email,
                             password: this.state.password
                         });
+                    } else {
+                        this.setState({ emailError: err.message });
+                        this.setState(() => {
+                            return { loading: false };
+                        });
                     }
                 })
                 .catch(err => {
-                    this.setState({ errorMessage: err.message });
+                    console.log('signup error ', err);
+                    this.setState({ emailError: 'Email already in use' });
                     this.setState(() => {
                         return { loading: false };
                     });
@@ -235,8 +241,12 @@ export default class SignupScreen extends React.Component {
     displayNameErrorMessege = () => {
         if (this.state.nameError && this.state.nameError.length > 0) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>{this.state.nameError}</Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.nameError}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -245,10 +255,12 @@ export default class SignupScreen extends React.Component {
     displayEmailErrorMessege = () => {
         if (this.state.emailError && this.state.emailError.length > 0) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>
-                        {this.state.emailError}
-                    </Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.emailError}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -257,10 +269,12 @@ export default class SignupScreen extends React.Component {
     displayPasswordErrorMessege = () => {
         if (this.state.passwordError && this.state.passwordError.length > 0) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>
-                        {this.state.passwordError}
-                    </Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.passwordError}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -271,10 +285,12 @@ export default class SignupScreen extends React.Component {
             this.state.confirmPasswordError.length > 0
         ) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>
-                        {this.state.confirmPasswordError}
-                    </Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.confirmPasswordError}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -310,6 +326,7 @@ export default class SignupScreen extends React.Component {
                                 }}
                                 onSubmitEditing={() => {
                                     this.focusNextField('two');
+                                    this.inputs.two.focus();
                                 }}
                                 ref={input => {
                                     this.inputs.one = input;
@@ -345,6 +362,7 @@ export default class SignupScreen extends React.Component {
                                 }}
                                 onSubmitEditing={() => {
                                     this.focusNextField('three');
+                                    this.inputs.three.focus();
                                 }}
                                 ref={input => {
                                     this.inputs.two = input;
@@ -380,6 +398,7 @@ export default class SignupScreen extends React.Component {
                                 }}
                                 onSubmitEditing={() => {
                                     this.focusNextField('four');
+                                    this.inputs.four.focus();
                                 }}
                                 ref={input => {
                                     this.inputs.three = input;
