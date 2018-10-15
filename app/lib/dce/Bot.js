@@ -1,12 +1,8 @@
 import _ from 'lodash';
-
 import RNFS from 'react-native-fs';
-
 import config from '../../config/config.js';
-
 import AssetFetcher from './AssetFetcher';
-
-import { Auth, MessageTypeConstants, Promise } from '../capability';
+import { Auth, MessageTypeConstants, Promise, Network } from '../capability';
 import SystemBot from '../../lib/bot/SystemBot';
 
 class Bot {
@@ -113,12 +109,12 @@ class Bot {
 
     async Load(ctx) {
         try {
+            // Get the user as we need the creds
+            this.user = await Promise.resolve(Auth.getUser());
+
             this.createRootDirectory();
 
             await this.storeManifest();
-
-            // Get the user as we need the creds
-            this.user = await Promise.resolve(Auth.getUser());
 
             let remoteDeps = _.pickBy(this.manifest.dependencies, function(
                 dep
@@ -163,6 +159,9 @@ class Bot {
      */
     async Delete(ctx) {
         try {
+            // Get the user as we need the creds
+            this.user = await Promise.resolve(Auth.getUser());
+
             let botDirectoryPath = this.botDirectory;
             console.log(
                 'Deleting the bot if it exists locally. botPath = ',

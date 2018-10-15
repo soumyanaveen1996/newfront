@@ -1,6 +1,7 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, AsyncStorage } from 'react-native';
 import { Scene, Router, Lightbox } from 'react-native-router-flux';
+import { LoginScreen } from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
 import {
     BotChat,
@@ -29,6 +30,11 @@ import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
 import Config from './config';
+import { Auth } from '../lib/capability';
+import { SignupScreen } from '../components/Signup';
+import { SwiperScreen } from '../components/Swiper';
+import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScreen';
+import { ResendCodeScreen } from '../components/ResendCodeScreen';
 
 const MainRouter = () => {
     // We want white network bar
@@ -41,8 +47,8 @@ const MainRouter = () => {
                     <Scene
                         key={ROUTER_SCENE_KEYS.launch}
                         component={Launch}
-                        initial
                         hideNavBar
+                        initial
                     />
                     <Scene key={ROUTER_SCENE_KEYS.lightbox} hideNavBar>
                         <Scene
@@ -55,8 +61,32 @@ const MainRouter = () => {
                             <Scene
                                 key={ROUTER_SCENE_KEYS.timeline}
                                 component={MainScreen}
-                                initial
                                 title={I18n.t('FrontM')}
+                            />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.swiperScreen}
+                                component={SwiperScreen}
+                                hideNavBar
+                            />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.loginScreen}
+                                component={LoginScreen}
+                                hideNavBar
+                            />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.signupScreen}
+                                component={SignupScreen}
+                                hideNavBar
+                            />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.confirmationScreen}
+                                component={ConfirmationScreen}
+                                hideNavBar
+                            />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.resendCodeScreen}
+                                component={ResendCodeScreen}
+                                hideNavBar
                             />
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}

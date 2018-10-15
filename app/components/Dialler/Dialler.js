@@ -75,6 +75,8 @@ export default class Dialler extends React.Component {
     }
 
     async call() {
+        console.log('In PSTN');
+
         const connection = await Network.isConnected();
         if (!connection) {
             Alert.alert(I18n.t('No_Network'));
@@ -99,6 +101,12 @@ export default class Dialler extends React.Component {
                 });
             }
         } catch (err) {
+            const connection = await Network.isConnected();
+            if (!connection) {
+                Alert.alert(I18n.t('No_Network'));
+                Actions.pop();
+                return;
+            }
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
             this.closeCall();
         }
@@ -337,7 +345,10 @@ export default class Dialler extends React.Component {
     }
 
     openDial() {
-        if (diallerState === DiallerState.incall) {
+        if (
+            this.state.diallerState === DiallerState.connecting ||
+            this.state.diallerState === DiallerState.incall
+        ) {
             this.setState({ diallerState: DiallerState.incall_digits });
         }
     }

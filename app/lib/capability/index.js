@@ -25,6 +25,8 @@ import BotState from './BotState';
 import BackgroundTaskQueue from './BackgroundTaskQueue';
 import MessageQuota from './MessageQuota';
 import UpdateCallQuota from './CallQuota';
+import RemoteBotInstall from '../RemoteBotInstall';
+import InAppPurchase from './InAppPurchase';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
@@ -56,5 +58,7 @@ export {
     BotState,
     BackgroundTaskQueue,
     MessageQuota,
-    UpdateCallQuota
+    UpdateCallQuota,
+    RemoteBotInstall,
+    InAppPurchase
 };

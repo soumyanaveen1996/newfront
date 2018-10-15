@@ -11,7 +11,7 @@ import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
 import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 // import CenterComponent from './header/CenterComponent';
 import { HeaderLeftIcon } from '../Header';
 import Config from './config';
@@ -21,7 +21,7 @@ import {
     NETWORK_EVENTS_CONSTANTS,
     NetworkHandler
 } from '../../lib/network';
-import EventEmitter, { MessageEvents } from '../../lib/events';
+import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings } from '../../lib/capability';
 import Bot from '../../lib/bot';
@@ -29,6 +29,11 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import { LoginScreen } from '../Login';
+import AfterLogin from '../../services/afterLogin';
+import { DataManager } from '../../lib/DataManager';
+import { ContactsCache } from '../../lib/ContactsCache';
+import { MessageCounter } from '../../lib/MessageCounter';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -98,6 +103,7 @@ export default class MainScreen extends React.Component {
         // Susbscribe to async result handler
         this.eventSubscription = null;
         this.state = {
+            loginState: false,
             screenState: MainScreenStates.notLoaded
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -119,6 +125,10 @@ export default class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        if (!isUserLoggedIn) {
+            this.userLoggedOutHandler();
+        }
         if (this.props.navigation) {
             this.props.navigation.setParams({
                 openBotFilter: this.openBotFilter.bind(this)
@@ -140,6 +150,7 @@ export default class MainScreen extends React.Component {
     }
 
     componentWillMount() {
+        AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
             'hardwareBackPress',
             this.handleBackButtonClick
@@ -147,6 +158,10 @@ export default class MainScreen extends React.Component {
         if (this.props.moveToOnboarding) {
             this.openOnboaringBot();
         }
+        EventEmitter.addListener(
+            AuthEvents.userLoggedOut,
+            this.userLoggedOutHandler
+        );
     }
 
     handleBackButtonClick() {
@@ -154,6 +169,22 @@ export default class MainScreen extends React.Component {
             BackHandler.exitApp();
         }
     }
+
+    userLoggedOutHandler = async () => {
+        await DataManager.init();
+        await ContactsCache.init();
+        await MessageCounter.init();
+
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
+        });
+
+        // Actions.launch({
+        //     type: ActionConst.REPLACE,
+        //     logout: true
+        // })
+    };
 
     readLambdaQueue() {
         NetworkHandler.readLambda();
