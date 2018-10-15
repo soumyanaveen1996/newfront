@@ -45,10 +45,17 @@ export default StyleSheet.create({
         fontSize: 14,
         marginTop: 20
     },
-    entryFields: {
-        position: 'relative',
-        backgroundColor: 'rgba(0,0,0,0.0)'
-    },
+    entryFields: Platform.select({
+        ios: {
+            position: 'relative',
+            width: 300,
+            backgroundColor: 'transparent'
+        },
+        android: {
+            width: 300,
+            backgroundColor: 'transparent'
+        }
+    }),
     input: {
         height: 40,
         width: 300,
@@ -108,22 +115,48 @@ export default StyleSheet.create({
         letterSpacing: 1,
         lineHeight: 28
     },
-    userError: {
-        backgroundColor: 'rgba(229,69,59,1)',
-        position: 'absolute',
-        bottom: -30,
-        zIndex: 999999,
-        right: 0,
-        width: 150,
-        padding: 5,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderTopLeftRadius: 0,
-        alignItems: 'center'
-    },
-    errorText: {
-        color: '#ffffff',
-        textAlign: 'center'
-    }
+    errorContainer: Platform.select({
+        ios: {
+            position: 'absolute',
+            bottom: -30,
+            right: 0
+        },
+        android: {
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+    userError: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            zIndex: 999999,
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
+    errorText: Platform.select({
+        ios: {
+            color: '#ffffff',
+            textAlign: 'center'
+        },
+        android: {
+            color: '#ffffff',
+            textAlign: 'center'
+        }
+    })
 });

@@ -12,7 +12,7 @@ export default StyleSheet.create({
     innerContainer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#ffffff'
+        backgroundColor: 'rgba(0,0,0,0)'
     },
     header: {
         width: 300,
@@ -76,13 +76,13 @@ export default StyleSheet.create({
         width: 150,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
+        textAlign: 'center',
         color: 'rgba(155,155,155,1)',
         fontSize: 20,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         borderTopLeftRadius: 10,
-        textAlign: 'center',
         letterSpacing: 1
     },
     codeButton: {
@@ -90,14 +90,12 @@ export default StyleSheet.create({
     },
     resendButton: {
         flex: 1,
-        bottom: 10,
-        // color: 'green'
-        height: 40
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     textColor: {
         color: 'rgba(0, 189, 242, 1)',
-        fontSize: 14,
+        fontSize: 16,
         textAlign: 'center'
-        // bottom: 20
     }
 });
