@@ -54,5 +54,8 @@ buck-out/
 *.dSYM.zip
 ios/frontm_mobile.xcworkspace/xcshareddata/
 *.apk
-.vscode 
+.vscode
 .idea
+
+# Bundle artifact
+*.jsbundle

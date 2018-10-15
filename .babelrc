@@ -1,16 +1,3 @@
 {
-  "presets": ["react-native"],
-  "plugins": [
-      [ "module-resolver", {
-        "root": ["./app"],
-        "alias": {
-          "test": "./__tests__"
-        }
-      }]
-  ],
-  "env": {
-    "development": {
-      "plugins": ["transform-react-jsx-source"]
-    }
-  }
+  "presets": ["module:metro-react-native-babel-preset"]
 }
