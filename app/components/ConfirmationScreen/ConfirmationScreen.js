@@ -73,36 +73,39 @@ export default class ConfirmationScreen extends Component {
             })
             .catch(err => {
                 console.log('error is ', err);
-                this.setState({ errorMessage: err.message, loading: false });
+                this.setState({ errorMessage: 'Wrong code', loading: false });
             });
     }
 
     showMainScreen = () => {
-        // Actions.swiperScreen({
-        //     type: ActionConst.REPLACE,
-        //     email: this.state.userEmail,
-        //     swiperIndex: 4
-        // });
+        if (this.state.password && this.state.password !== '') {
+            const userDetails = {
+                email: this.state.userEmail,
+                password: this.state.password
+            };
 
-        const userDetails = {
-            email: this.state.userEmail,
-            password: this.state.password
-        };
-
-        Auth.loginWithFrontm(
-            userDetails,
-            '',
-            SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
-        )
-            .then(() => {
-                this.setState({ loading: false });
-                Actions.timeline({ type: ActionConst.REPLACE });
-            })
-            .catch(err => {
-                console.log('errors', err);
-                this.setState({ errorMessage: err.message });
-                this.setState({ loading: false });
+            Auth.loginWithFrontm(
+                userDetails,
+                '',
+                SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
+            )
+                .then(() => {
+                    this.setState({ loading: false });
+                    Actions.timeline({ type: ActionConst.REPLACE });
+                })
+                .catch(err => {
+                    console.log('errors', err);
+                    this.setState({ errorMessage: err.message });
+                    this.setState({ loading: false });
+                });
+        } else {
+            Actions.swiperScreen({
+                type: ActionConst.REPLACE,
+                email: this.state.userEmail,
+                swiperIndex: 4
             });
+        }
+
         return;
     };
 
