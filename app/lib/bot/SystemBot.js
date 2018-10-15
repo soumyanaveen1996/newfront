@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.0.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.1.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,13 +46,13 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.0.0'
+        version: '1.1.0'
     },
     'onboarding-bot': {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
         botName: 'FrontM Assistant',
-        botUrl: 'botfarm/frontmai/onboardingBot/1.8.0/onboardingBot.js',
+        botUrl: 'botfarm/frontmai/onboardingBot/1.9.0/onboardingBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -67,18 +67,19 @@ export const SYSTEM_BOT_MANIFEST = {
                 version: '1.4.0'
             }
         },
-        description: 'Onboarding bot for Frontm',
+        description:
+            'I am FrontM Assistant and will help you to start using FrontM. Open this conversation to set you up',
         logoUrl: botLogoUrl('AuthenticationLogo.png'),
         slug: 'onboarding-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.8.0'
+        version: '1.9.0'
     },
     'contacts-bot': {
         allowResetConversation: 'false',
         botId: '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
         botName: 'Address Book Management',
-        botUrl: 'botfarm/frontmai/contactsBot/1.1.0/contactsBot.js',
+        botUrl: 'botfarm/frontmai/contactsBot/1.2.0/contactsBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -104,13 +105,13 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'contacts-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.1.0'
+        version: '1.2.0'
     },
     'channels-bot': {
         allowResetConversation: 'false',
         botId: 'de3a7fe6-b2a7-4468-8099-40c57848387d',
         botName: 'Channels',
-        botUrl: 'botfarm/frontmai/channelsBot/1.4.0/channelsBot.js',
+        botUrl: 'botfarm/frontmai/channelsBot/1.5.0/channelsBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -131,13 +132,13 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'channels-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.4.0'
+        version: '1.5.0'
     },
     'domMgmt-bot': {
         allowResetConversation: 'false',
         botId: 'domMgmtBot',
         botName: 'Sign in to a new Provider',
-        botUrl: 'botfarm/frontmai/domMgmtBot/1.2.0/domMgmtBot.js',
+        botUrl: 'botfarm/frontmai/domMgmtBot/1.3.0/domMgmtBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -157,13 +158,13 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'domMgmt-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.2.0'
+        version: '1.3.0'
     },
     'backgroundTask-bot': {
         allowResetConversation: 'false',
         botId: 'BackgroundTaskBot',
         botName: 'Background Task',
-        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.1.0/backgroundTaskBot.js',
+        botUrl: 'botfarm/frontmai/backgroundTaskBot/1.2.0/backgroundTaskBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -184,7 +185,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'backgroundTask-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.1.0'
+        version: '1.2.0'
     }
 };
 

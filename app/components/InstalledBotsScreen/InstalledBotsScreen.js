@@ -31,8 +31,10 @@ import {
     Settings,
     Network,
     PollingStrategyTypes,
-    DeviceStorage
+    DeviceStorage,
+    Auth
 } from '../../lib/capability';
+import config from '../../config/config';
 import { Icons } from '../../config/icons';
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
@@ -221,6 +223,21 @@ export default class InstalledBotsScreen extends React.Component {
         try {
             await MessageHandler.deleteBotMessages(bot.botId);
             const dceBot = dce.bot(bot);
+            const user = await Promise.resolve(Auth.getUser());
+            const options = {
+                method: 'post',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.unsubscribeFromBot,
+                data: {
+                    botId: dceBot.botId
+                },
+                headers: {
+                    sessionId: user.creds.sessionId
+                }
+            };
+            await Promise.resolve(Network(options));
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
             this.refs.toast.show(

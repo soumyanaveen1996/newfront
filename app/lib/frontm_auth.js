@@ -74,11 +74,6 @@ class FrontmAuth {
             const data = {
                 user: {
                     emailAddress: fbDetails.email,
-                    givenName: fbDetails.first_name,
-                    screenName: fbDetails.name
-                        ? fbDetails.name.replace(/ /g, '')
-                        : '',
-                    surname: fbDetails.last_name || '',
                     userName: fbDetails.name,
                     userId: fbDetails.id
                 }
@@ -240,11 +235,6 @@ class FrontmAuth {
                     const data = {
                         user: {
                             emailAddress: user.email,
-                            givenName: user.givenName,
-                            screenName: user.name
-                                ? user.name.replace(/ /g, '')
-                                : '',
-                            surname: user.familyName || user.surname,
                             userName: user.name,
                             userId: user.id
                         },
@@ -356,10 +346,6 @@ class FrontmAuth {
                     const data = {
                         user: {
                             emailAddress: frontmUser.emailAddress,
-                            givenName: frontmUser.givenName,
-                            screenName:
-                                frontmUser.screenName || defaultScreenName,
-                            surname: frontmUser.surname,
                             userName: frontmUser.userName,
                             awsId: frontmUser.awsId
                         }

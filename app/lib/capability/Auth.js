@@ -16,7 +16,6 @@ import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
-import RemoteBotInstall from '../RemoteBotInstall';
 
 const USER_SESSION = 'userSession';
 
@@ -104,7 +103,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
@@ -155,7 +153,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
@@ -192,7 +189,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
@@ -224,7 +221,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
@@ -256,7 +253,7 @@ export default class Auth {
                         result.data.success === 'true' ||
                         result.data.success === true
                     ) {
-                        resolve();
+                        resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
@@ -338,11 +335,7 @@ export default class Auth {
             Auth.getUser()
                 .then(user => {
                     currentUser = user;
-                    return FrontmAuth.signinWithFrontm(
-                        userDetails,
-                        conversationId,
-                        botName
-                    );
+                    return FrontmAuth.signinWithFrontm(userDetails);
                 })
                 .then(result => {
                     console.log('frontm login result : ', result);
@@ -367,7 +360,6 @@ export default class Auth {
                                     AuthEvents.userLoggedIn,
                                     user
                                 );
-                                RemoteBotInstall.syncronizeBots();
                                 resolve(user);
                             })
                             .catch(error => {
@@ -506,7 +498,7 @@ export default class Auth {
     static isUserLoggedIn = () =>
         new Promise(resolve => {
             DeviceStorage.get(USER_SESSION).then(user => {
-                if (isDefaultUser(user) || !user) {
+                if (!user || isDefaultUser(user)) {
                     resolve(false);
                 } else {
                     resolve(true);
@@ -525,13 +517,11 @@ export default class Auth {
         new Promise((resolve, reject) => {
             return Auth.getUser().then(user => {
                 if (user) {
-                    user.info.screenName =
-                        details.screenName || user.info.screenName;
-                    user.info.surname = details.surname || user.info.surname;
-                    user.info.givenName =
-                        details.givenName || user.info.givenName;
-                    user.info.name =
-                        user.info.givenName + ' ' + user.info.surname;
+                    user.info.userName = details.userName || user.info.userName;
+                    // user.info.surname = details.surname || user.info.surname;
+                    // user.info.givenName =
+                    //     details.givenName || user.info.givenName;
+                    // user.info.name = user.info.userName;
                     return resolve(Auth.saveUser(user));
                 } else {
                     reject('No valid user session');

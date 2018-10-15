@@ -1,6 +1,12 @@
 import React from 'react';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { View, Image, Platform, PushNotificationIOS } from 'react-native';
+import {
+    View,
+    Image,
+    Platform,
+    PushNotificationIOS,
+    AsyncStorage
+} from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
 import persist from './setupPersistence';
@@ -10,7 +16,7 @@ import { NetworkPoller, NetworkHandler } from '../../lib/network';
 import { DataManager } from '../../lib/DataManager';
 import { Auth, Notification, Message } from '../../lib/capability';
 import BotUtils from '../../lib/utils';
-import { overrideConsole } from '../../config/config';
+import Config, { overrideConsole } from '../../config/config';
 import EventEmitter, { AuthEvents, NotificationEvents } from '../../lib/events';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { DeviceStorage } from '../../lib/capability';
@@ -25,25 +31,72 @@ import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import codePush from 'react-native-code-push';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+// const BusyIndicator = require('react-native-busy-indicator')
+
+// Switch off During FINAL PROD RELEASE
+const CODE_PUSH_ACTIVATE = true;
+// const CODE_PUSH_ACTIVATE = false;
+const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { duration: props.duration || 2000 };
+        this.state = {
+            duration: props.duration || 2000,
+            loginState: false,
+            loading: false,
+            loadingText: ''
+        };
     }
 
     async componentDidMount() {
         // Override logging in prod builds
+        console.log(Config);
 
+        console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
+
+        if (CODE_PUSH_ACTIVATE) {
+            //  We will check for CodePush Updates --Only in Dev Mode
+            console.log('[FRONTM] Checking for Code Changes in Server');
+
+            codePush.sync(
+                {
+                    updateDialog: {
+                        appendReleaseDescription: true,
+                        descriptionPrefix: '\n\nChange log:\n'
+                    },
+                    installMode: codePush.InstallMode.IMMEDIATE
+                },
+                status => {
+                    switch (status) {
+                    case codePush.SyncStatus.DOWNLOADING_PACKAGE:
+                        this.setState({
+                            loading: true,
+                            loadingText: 'Downloading Package...'
+                        });
+                        break;
+                    case codePush.SyncStatus.INSTALLING_UPDATE:
+                        this.setState({
+                            loading: true,
+                            loadingText: 'Installing Package...'
+                        });
+                        break;
+                    default:
+                        this.setState({ loading: false, loadingText: '' });
+                    }
+                }
+            );
+        }
         let truConsole = global.console;
         global.console = overrideConsole(truConsole);
 
         DataManager.init();
-        ContactsCache.init();
-        await MessageCounter.init();
+        ContactsCache.init(); // after loging. Logout should clear it.
+        await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
         GoogleAnalytics.init();
         GoogleAnalytics.logEvents(
             GoogleAnalyticsCategories.APP_LAUNCHED,
@@ -53,6 +106,7 @@ export default class Splash extends React.Component {
             null
         );
 
+        // Before login
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
@@ -63,43 +117,36 @@ export default class Splash extends React.Component {
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
+        const isUserLoggedIn = await Auth.isUserLoggedIn();
+        const checkStatus = await AsyncStorage.getItem('signupStage');
+
+        if (isUserLoggedIn) {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        this.showMainScreen();
+                    } else {
+                        this.goToLoginPage();
+                    }
+                })
+                .catch(err => {
+                    console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+                });
+        } else {
+            if (checkStatus && checkStatus === 'confirmCode') {
+                Actions.confirmationScreen({ type: ActionConst.REPLACE });
+            } else {
+                this.goToLoginPage();
+            }
+        }
+
+        this.listenToEvents();
+
         // Chain all setup stuff
+        // Before login
         persist
-            .runMigrations()
-            .then(() => {
-                return Auth.getUser();
-            })
-            .then(user => {
-                if (!user) {
-                    // Creating a DefaultUser session for OnBoarding Bot.
-                    return Auth.saveUser(DefaultUser);
-                } else {
-                    return user;
-                }
-            })
-            .then(() => {
-                return Auth.isUserLoggedIn();
-            })
-            .then(() => {
-                return Promise.all([
-                    NetworkPoller.start(),
-                    this.listenToEvents(),
-                    this.configureNotifications()
-                ]);
-            })
-            .then(() => {
-                return Auth.isUserLoggedIn();
-            })
-            .then(isUserLoggedIn => {
-                this.showMainScreen();
-                if (!isUserLoggedIn) {
-                    return this.sendOnboardingBackgroundMessage();
-                } else {
-                    return TwilioVoIP.init();
-                }
-            })
+            .runMigrations() // before login
             .catch(err => {
-                // ignore
                 console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
             });
     }
@@ -147,6 +194,14 @@ export default class Splash extends React.Component {
 
     userLoggedOutHandler = async () => {
         //this.showOnboardingScreen();
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
+        });
+    };
+
+    goToLoginPage = () => {
+        Actions.swiperScreen({ type: ActionConst.REPLACE });
     };
 
     showMainScreen = (moveToOnboarding = false) => {
@@ -212,6 +267,12 @@ export default class Splash extends React.Component {
                     source={Icon}
                     resizeMode={'contain'}
                 />
+                {
+                    <Spinner
+                        visible={this.state.loading}
+                        textContent={this.state.loadingText}
+                    />
+                }
             </View>
         );
     }

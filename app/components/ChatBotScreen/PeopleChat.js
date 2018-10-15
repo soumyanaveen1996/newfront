@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Alert, Keyboard } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
-import { ConversationContext, Promise, Contact } from '../../lib/capability';
+import {
+    ConversationContext,
+    Promise,
+    Contact,
+    Network
+} from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
 import { Actions } from 'react-native-router-flux';
@@ -181,10 +186,12 @@ export default class PeopleChat extends ChatBotScreen {
                 data: {
                     call_to: chatName || otherUserId,
                     otherUserId: otherUserId,
-                    from: this.user.info.screenName
+                    from: this.user.info.userName
                 }
             });
         } catch (err) {
+            console.log('[FrontM] Error in VOIP', err);
+
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
         }
     }

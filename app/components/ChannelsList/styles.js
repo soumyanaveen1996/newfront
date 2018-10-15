@@ -25,7 +25,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH,
-        height: 105,
+        height: 75,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -83,13 +83,14 @@ export default StyleSheet.create({
         marginTop: 50
     },
     flatList: {
-        height: '100%'
+        height: '100%',
+        paddingTop: 5
     },
     container: {
         flex: 1,
         flexDirection: 'row',
         paddingHorizontal: 10,
-        paddingVertical: 24,
+        paddingVertical: 14,
         alignItems: 'stretch',
         backgroundColor: ChannelsListItemColors.backgroundColor
     },

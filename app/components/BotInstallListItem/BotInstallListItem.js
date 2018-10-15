@@ -12,6 +12,8 @@ import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
 import CachedImage from '../CachedImage';
 import utils from '../../lib/utils';
+import { Auth, Network } from '../../lib/capability';
+import config from '../../config/config';
 
 const subtitleNumberOfLines = 2;
 
@@ -59,6 +61,22 @@ export default class BotInstallListItem extends React.Component {
             if (update) {
                 await Bot.update(dceBot);
             } else {
+                //first subscribe to the bot
+                const user = await Promise.resolve(Auth.getUser());
+                const options = {
+                    method: 'post',
+                    url:
+                        config.proxy.protocol +
+                        config.proxy.host +
+                        config.proxy.subscribeToBot,
+                    data: {
+                        botId: dceBot.botId
+                    },
+                    headers: {
+                        sessionId: user.creds.sessionId
+                    }
+                };
+                await Promise.resolve(Network(options));
                 await Bot.install(dceBot);
             }
         } catch (e) {

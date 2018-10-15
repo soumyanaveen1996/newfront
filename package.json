@@ -8,7 +8,10 @@
     "test": "jest",
     "postinstall": "rn-nodeify --install stream,process,util --hack",
     "fix-code": "prettier-eslint --write 'app/**/*.{js,jsx}' ",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "cpios": "code-push release-react FrontMIOS ios -d 'Staging' -m --description",
+    "cpandroid": "code-push release-react FrontM android -d 'Staging' -m --description",
+    "cpclear": "code-push deployment clear FrontM 'Staging' && code-push deployment clear FrontMIOS 'Staging'"
   },
   "lint-staged": {
     "linters": {
@@ -44,6 +47,7 @@
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
     "react-native-camera": "^1.1.1",
+    "react-native-code-push": "^5.4.2",
     "react-native-contacts": "^2.1.1",
     "react-native-device-info": "^0.21.5",
     "react-native-document-picker": "^2.1.0",
@@ -59,11 +63,13 @@
     "react-native-google-sign-in": "git+https://github.com/joonhocho/react-native-google-sign-in",
     "react-native-hyperlink": "^0.0.14",
     "react-native-i18n": "^2.0.4",
+    "react-native-iap": "^2.3.1",
     "react-native-image-picker": "^0.26.7",
     "react-native-image-placeholder": "^1.0.12",
     "react-native-image-resizer": "^1.0.0",
     "react-native-indicators": "^0.12.0",
     "react-native-keychain": "^2.0.0-rc",
+    "react-native-loading-spinner-overlay": "^0.5.2",
     "react-native-maps": "^0.19.0",
     "react-native-modalbox": "^1.5.0",
     "react-native-permissions": "^1.1.1",
@@ -75,6 +81,7 @@
     "react-native-super-grid": "^2.4.3",
     "react-native-svg": "^6.0.1-rc.1",
     "react-native-swipeout": "^2.3.3",
+    "react-native-swiper": "^1.5.13",
     "react-native-tcp": "^3.3.0",
     "react-native-transformable-image": "https://github.com/dflourusso/react-native-transformable-image.git",
     "react-native-twilio-programmable-voice": "^3.20.1",
