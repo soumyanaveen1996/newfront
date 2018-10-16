@@ -16,10 +16,12 @@ import I18n from '../../config/i18n/i18n';
 import _ from 'lodash';
 import { isEmail } from '../../lib/utils';
 import images from '../../images';
-import { Auth } from '../../lib/capability';
+import { Auth, Network } from '../../lib/capability';
 import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import config from '../../config/config';
+import Conversation from '../../lib/conversation/Conversation';
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -121,6 +123,7 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
+        await Conversation.downloadRemoteConversations();
         await RemoteBotInstall.syncronizeBots();
         Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({ loading: false });

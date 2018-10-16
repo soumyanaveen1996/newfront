@@ -26,6 +26,10 @@ const getMessageDataForConversation = (conversation, user) =>
                 conversation.conversationId
             )
                 .then(conversationContext => {
+                    console.log(
+                        'conversGOT ' +
+                            JSON.stringify(conversationContext, undefined, 2)
+                    );
                     context = conversationContext;
                     chatName = ConversationContext.getChatName(context, user);
                     otherUserId = ConversationContext.getOtherUserId(

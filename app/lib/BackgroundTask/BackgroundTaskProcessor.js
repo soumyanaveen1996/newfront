@@ -54,6 +54,10 @@ class BackgroundTaskBotScreen {
     wait = () => {};
 }
 
+const generateScreen = (botId, conversationId) => {
+    return new BackgroundTaskBotScreen(botId, conversationId);
+};
+
 const process = async () => {
     const user = await Auth.getUser();
     if (!user) {
@@ -321,6 +325,7 @@ const sendBackgroundIMMessage = async (
 };
 
 export default {
+    generateScreen: generateScreen,
     process: process,
     sendBackgroundMessage: sendBackgroundMessage,
     sendBackgroundIMMessage: sendBackgroundIMMessage,

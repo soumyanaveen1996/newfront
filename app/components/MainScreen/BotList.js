@@ -34,19 +34,19 @@ export default class BotList extends React.Component {
         // TODO: In general overall performance of this is questionable. We need a better way to know what has changed and bubble that up
         const bots = this.props.bots;
         let conversations =
-            (await Promise.resolve(Conversation.getAllConversations())) || [];
+            (await Promise.resolve(Conversation.getLocalConversations())) || [];
         let user = await Auth.getUser();
         // All
         let allChats = [];
         conversations.forEach(conversation => {
             allChats.push({ key: 'conversation', bot: conversation });
         });
+
         bots.forEach(bot => {
             allChats.push({ key: 'bot', bot: bot });
         });
-
         let allChatsData = await Promise.all(
-            _.map(allChats, async conversation => {
+            _.map(allChats, async (conversation, index) => {
                 let chatData = null;
                 if (conversation.key === 'bot') {
                     chatData = await Promise.resolve(
@@ -59,6 +59,9 @@ export default class BotList extends React.Component {
                             user
                         )
                     );
+                    console.log(
+                        '>>>>>> ' + JSON.stringify(chatData, undefined, 2)
+                    );
                 }
                 conversation.chatData = chatData;
                 return conversation;
@@ -67,7 +70,6 @@ export default class BotList extends React.Component {
             console.error('Error getting info for timeline', e);
             return [];
         });
-
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,
