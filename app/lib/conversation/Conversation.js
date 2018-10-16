@@ -64,23 +64,36 @@ export default class Conversation {
                     conversations = res.data.content;
                     let promise = _.map(conversations, conversation => {
                         if (conversation.bot === 'im-bot') {
+                            let botContext;
                             Conversation.createChannelConversation(
                                 conversation.conversationId
-                            ).then(() => {
-                                const botScreen = BackgroundTaskProcessor.generateScreen(
-                                    conversation.bot,
-                                    conversation.conversationId
-                                );
-                                const botContext = new BotContext(
-                                    botScreen,
-                                    manifestChan
-                                );
-                                return ConversationContext.createAndSaveNewChannelConversationContext(
-                                    botContext,
-                                    user,
-                                    conversation.channel
-                                );
-                            });
+                            )
+                                .then(() => {
+                                    const botScreen = BackgroundTaskProcessor.generateScreen(
+                                        conversation.bot,
+                                        conversation.conversationId
+                                    );
+                                    botContext = new BotContext(
+                                        botScreen,
+                                        manifestChan
+                                    );
+                                    return ConversationContext.createNewChannelConversationContext(
+                                        botContext,
+                                        user,
+                                        conversation.channel
+                                    );
+                                })
+                                .then(newChanConvContext => {
+                                    ConversationContext.updateParticipants(
+                                        newChanConvContext,
+                                        conversation.participants
+                                    );
+                                    return ConversationContext.saveConversationContext(
+                                        newChanConvContext,
+                                        botContext,
+                                        user
+                                    );
+                                });
                         } else if (conversation.bot.botId === 'im-bot') {
                             let botContext;
                             const otherParticipant = {
