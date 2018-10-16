@@ -48,7 +48,7 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
-        color: 'rgba(155,155,155,1)',
+        color: 'rgba(0,0,0,0.8)',
         fontSize: 16,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
@@ -62,7 +62,7 @@ export default StyleSheet.create({
         letterSpacing: 1,
         lineHeight: 20,
         color: 'rgba(0,167,214,1)',
-        marginTop: 11,
+        marginTop: 30,
         marginBottom: 25
     },
     buttonContainer: {
@@ -105,21 +105,53 @@ export default StyleSheet.create({
         lineHeight: 20,
         fontWeight: 'bold'
     },
-    userError: {
-        backgroundColor: 'red',
-        marginTop: 5,
-        minWidth: 150,
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderTopLeftRadius: 0,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
+
+    entryFields: Platform.select({
+        ios: {
+            position: 'relative',
+            width: 300,
+            backgroundColor: 'transparent'
+        },
+        android: {
+            width: 300,
+            backgroundColor: 'transparent'
+        }
+    }),
+    errorContainer: Platform.select({
+        ios: {
+            position: 'absolute',
+            bottom: -30,
+            right: 0
+        },
+        android: {
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+
+    userError: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            zIndex: 999999,
+            minWidth: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
     errorText: {
         color: '#ffffff',
         textAlign: 'center'

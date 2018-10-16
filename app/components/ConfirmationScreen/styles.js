@@ -6,15 +6,13 @@ import { SCREEN_HEIGHT } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: GlobalColors.white,
-        alignItems: 'center'
+        padding: 10,
+        backgroundColor: GlobalColors.white
     },
-    keyboardConatiner: {
+    innerContainer: {
         flex: 1,
-        textAlign: 'center',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        backgroundColor: 'rgba(0,0,0,0)'
     },
     header: {
         width: 300,
@@ -24,7 +22,10 @@ export default StyleSheet.create({
         color: 'rgba(74,74,74,1)',
         fontWeight: '300',
         marginTop: 82,
-        marginBottom: 30
+        marginBottom: 10
+    },
+    captionText: {
+        alignItems: 'center'
     },
     emailText: {
         fontWeight: 'bold'
@@ -51,33 +52,50 @@ export default StyleSheet.create({
         justifyContent: 'center',
         bottom: 80
     },
+    diableButton: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(155,155,155,1);',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 80
+    },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'normal',
-        fontSize: 16,
-        fontWeight: '500'
+        fontSize: 16
     },
     pinCode: {
-        paddingBottom: 60
+        paddingBottom: 60,
+        marginTop: 10
     },
     textInput: {
         height: 40,
         width: 150,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
+        textAlign: 'center',
         color: 'rgba(155,155,155,1)',
-        fontSize: 24,
+        fontSize: 20,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         borderTopLeftRadius: 10,
-        textAlign: 'center',
         letterSpacing: 1
     },
+    codeButton: {
+        marginTop: 40
+    },
     resendButton: {
-        color: 'rgba(0,189,242,1)',
-        fontSize: 22,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textColor: {
+        color: 'rgba(0, 189, 242, 1)',
+        fontSize: 16,
         textAlign: 'center'
     }
 });

@@ -58,6 +58,16 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'swiperScreen') {
+            BackHandler.exitApp();
+        }
     }
 
     onFormSubmit() {
@@ -205,10 +215,12 @@ export default class LoginScreen extends React.Component {
             this.state.emailErrorMessage.length > 0
         ) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>
-                        {this.state.emailErrorMessage}
-                    </Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.emailErrorMessage}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -219,10 +231,12 @@ export default class LoginScreen extends React.Component {
             this.state.passwordErrorMessage.length > 0
         ) {
             return (
-                <View style={styles.userError}>
-                    <Text style={styles.errorText}>
-                        {this.state.passwordErrorMessage}
-                    </Text>
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.passwordErrorMessage}
+                        </Text>
+                    </View>
                 </View>
             );
         }
@@ -245,41 +259,51 @@ export default class LoginScreen extends React.Component {
                         style={styles.formContainer}
                         behavior={Platform.OS === 'ios' ? 'position' : null}
                     >
-                        <Text style={styles.placeholderText}> Email </Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            onChangeText={this.onChangeEmailText.bind(this, 0)}
-                            keyboardType="email-address"
-                            blurOnSubmit={false}
-                            returnKeyType={'next'}
-                            onSubmitEditing={() => {
-                                this.focusTheField('password');
-                            }}
-                            placeholder="email@example.com"
-                            underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(155,155,155,1)"
-                        />
-                        {this.displayEmailErrorMessege()}
-
-                        <Text style={styles.placeholderText}> Password </Text>
-                        <TextInput
-                            style={styles.input}
-                            blurOnSubmit={true}
-                            returnKeyType={'done'}
-                            ref={input => {
-                                this.inputs.password = input;
-                            }}
-                            onChangeText={this.onChangePasswordText.bind(
-                                this,
-                                1
-                            )}
-                            underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(155,155,155,1)"
-                            secureTextEntry
-                        />
-                        {this.displayPasswordErrorMessege()}
+                        <View style={styles.entryFields}>
+                            <Text style={styles.placeholderText}> Email </Text>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                onChangeText={this.onChangeEmailText.bind(
+                                    this,
+                                    0
+                                )}
+                                keyboardType="email-address"
+                                blurOnSubmit={false}
+                                returnKeyType={'next'}
+                                onSubmitEditing={() => {
+                                    this.focusTheField('password');
+                                }}
+                                placeholder="email@example.com"
+                                underlineColorAndroid={'transparent'}
+                                placeholderTextColor="rgba(155,155,155,1)"
+                            />
+                            {this.displayEmailErrorMessege()}
+                        </View>
+                        <View style={styles.entryFields}>
+                            <Text style={styles.placeholderText}>
+                                {' '}
+                                Password{' '}
+                            </Text>
+                            <TextInput
+                                style={styles.input}
+                                blurOnSubmit={true}
+                                returnKeyType={'done'}
+                                ref={input => {
+                                    this.inputs.password = input;
+                                }}
+                                onChangeText={this.onChangePasswordText.bind(
+                                    this,
+                                    1
+                                )}
+                                placeholder="password"
+                                underlineColorAndroid={'transparent'}
+                                placeholderTextColor="rgba(155,155,155,1)"
+                                secureTextEntry
+                            />
+                            {this.displayPasswordErrorMessege()}
+                        </View>
                         <Text style={styles.forgotPassowrd}>
                             Forgot Password?
                         </Text>

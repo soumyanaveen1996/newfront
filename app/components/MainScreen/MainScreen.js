@@ -11,7 +11,7 @@ import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
 import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 // import CenterComponent from './header/CenterComponent';
 import { HeaderLeftIcon } from '../Header';
 import Config from './config';
@@ -31,6 +31,9 @@ import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { LoginScreen } from '../Login';
 import AfterLogin from '../../services/afterLogin';
+import { DataManager } from '../../lib/DataManager';
+import { ContactsCache } from '../../lib/ContactsCache';
+import { MessageCounter } from '../../lib/MessageCounter';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -168,10 +171,19 @@ export default class MainScreen extends React.Component {
     }
 
     userLoggedOutHandler = async () => {
+        await DataManager.init();
+        await ContactsCache.init();
+        await MessageCounter.init();
+
         Actions.swiperScreen({
             type: ActionConst.REPLACE,
             swiperIndex: 4
         });
+
+        // Actions.launch({
+        //     type: ActionConst.REPLACE,
+        //     logout: true
+        // })
     };
 
     readLambdaQueue() {

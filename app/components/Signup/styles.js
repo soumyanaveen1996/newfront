@@ -7,11 +7,11 @@ import { SCREEN_WIDTH } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        height: SCREEN_HEIGHT - 100,
         padding: 20,
         backgroundColor: GlobalColors.white
     },
     keyboardConatiner: {
+        flex: 1,
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center'
@@ -28,12 +28,10 @@ export default StyleSheet.create({
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,
-            alignItems: 'center',
             justifyContent: 'center'
         },
         android: {
             marginBottom: 20,
-            alignItems: 'center',
             justifyContent: 'center'
         }
     }),
@@ -47,12 +45,23 @@ export default StyleSheet.create({
         fontSize: 14,
         marginTop: 20
     },
+    entryFields: Platform.select({
+        ios: {
+            position: 'relative',
+            width: 300,
+            backgroundColor: 'transparent'
+        },
+        android: {
+            width: 300,
+            backgroundColor: 'transparent'
+        }
+    }),
     input: {
         height: 40,
         width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
-        color: 'rgba(155,155,155,1)',
+        color: 'rgba(0,0,0,0.8)',
         fontSize: 16,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 10,
@@ -63,6 +72,15 @@ export default StyleSheet.create({
         height: 40,
         width: 300,
         backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 25
+    },
+    diableButton: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(155,155,155,1);',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -88,7 +106,7 @@ export default StyleSheet.create({
         fontWeight: '500',
         letterSpacing: 1,
         lineHeight: 16,
-        marginBottom: 10
+        marginBottom: 5
     },
     passwordCriteriaList: {
         color: 'rgba(74,74,74,1)',
@@ -96,5 +114,49 @@ export default StyleSheet.create({
         fontWeight: '300',
         letterSpacing: 1,
         lineHeight: 28
-    }
+    },
+    errorContainer: Platform.select({
+        ios: {
+            position: 'absolute',
+            bottom: -30,
+            right: 0
+        },
+        android: {
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+    userError: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            zIndex: 999999,
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
+    errorText: Platform.select({
+        ios: {
+            color: '#ffffff',
+            textAlign: 'center'
+        },
+        android: {
+            color: '#ffffff',
+            textAlign: 'center'
+        }
+    })
 });

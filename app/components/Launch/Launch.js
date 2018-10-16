@@ -36,7 +36,10 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
-const VERSION = 36; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+// Switch off During FINAL PROD RELEASE
+const CODE_PUSH_ACTIVATE = true;
+// const CODE_PUSH_ACTIVATE = false;
+const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -54,8 +57,12 @@ export default class Splash extends React.Component {
         // Override logging in prod builds
         console.log(Config);
 
-        if (Config.proxy.host === 'elbdev.frontm.ai') {
+        console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
+
+        if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode
+            console.log('[FRONTM] Checking for Code Changes in Server');
+
             codePush.sync(
                 {
                     updateDialog: {
@@ -106,7 +113,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            // await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 

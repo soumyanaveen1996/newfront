@@ -28,6 +28,14 @@ export default StyleSheet.create({
         marginTop: 3,
         marginBottom: 3
     },
+    paginationStyles: Platform.select({
+        ios: {
+            bottom: 30
+        },
+        android: {
+            bottom: 15
+        }
+    }),
     innerBox: {
         width: 300,
         alignItems: 'center',
@@ -36,8 +44,8 @@ export default StyleSheet.create({
     headerText: {
         textAlign: 'center',
         color: 'rgba(74,74,74,1)',
-        fontSize: 30,
-        fontWeight: '300',
+        fontSize: 24,
+        fontWeight: '500',
         letterSpacing: 1,
         lineHeight: 36,
         marginBottom: 24
@@ -74,19 +82,20 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     login: {
-        width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT - 80
+        flex: 1
+        // width: SCREEN_WIDTH,
+        // height: SCREEN_HEIGHT - 80
     },
     bottomBox: Platform.select({
         ios: {
-            height: 5,
+            height: 85,
             backgroundColor: '#fff',
             borderTopColor: 'rgba(91,91,91,0.2)',
             borderTopWidth: 1,
             padding: 5
         },
         android: {
-            height: 25,
+            height: 65,
             backgroundColor: '#fff',
             borderTopColor: 'rgba(91,91,91,0.2)',
             borderTopWidth: 1
@@ -94,7 +103,7 @@ export default StyleSheet.create({
     }),
     goToLine: Platform.select({
         ios: {
-            marginTop: 20,
+            marginTop: 5,
             height: 20,
             color: 'rgba(0,189,242,1)',
             fontSize: 14,
