@@ -1065,11 +1065,6 @@
 			isa = PBXGroup;
 			children = (
 				040C5A721FFCF9A50071B62D /* libRNImagePicker.a */,
-				13B07FAE1A68108700A75B9A /* frontm_mobile */,
-				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* frontm_mobileTests */,
-				83CBBA001A601CBA00E9B192 /* Products */,
-				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1078,7 +1073,6 @@
 			isa = PBXGroup;
 			children = (
 				040C5A881FFCF9A50071B62D /* libRNBackgroundTimer.a */,
-				040C5A8A1FFCF9A50071B62D /* libRNBackgroundTimer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";

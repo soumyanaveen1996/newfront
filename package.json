@@ -79,7 +79,7 @@
     "react-native-sound": "^0.10.4",
     "react-native-sqlite-storage": "^3.3.4",
     "react-native-super-grid": "^2.4.3",
-    "react-native-svg": "^6.0.1-rc.1",
+    "react-native-svg": "^6.5.0",
     "react-native-swipeout": "^2.3.3",
     "react-native-swiper": "^1.5.13",
     "react-native-tcp": "^3.3.0",
@@ -96,7 +96,7 @@
     "stream-browserify": "^1.0.0",
     "util": "^0.10.4",
     "uuid": "^3.1.0",
-    "victory-native": "^0.15.0"
+    "victory-native": "^30.0.0"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.9.0",
