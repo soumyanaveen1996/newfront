@@ -63,31 +63,34 @@ export default class Conversation {
                     );
                     conversations = res.data.content;
                     let promise = _.map(conversations, conversation => {
-                        // if (conversation.bot === 'im-bot') {
-                        //     Conversation.createChannelConversation(
-                        //         conversation.conversationId,
-                        //     )
-                        //         .then(() => {
-                        //             const botScreen = BackgroundTaskProcessor.generateScreen(conversation.bot, conversation.conversationId);
-                        //             const botContext = new BotContext(botScreen, manifestChan);
-                        //             return ConversationContext.createAndSaveNewChannelConversationContext(
-                        //                 botContext,
-                        //                 user,
-                        //                 conversation.channel,
-                        //             )
-                        //         })
-                        // } else if (conversation.bot.botId === 'im-bot'){
-                        if (conversation.bot.botId === 'im-bot') {
+                        if (conversation.bot === 'im-bot') {
+                            Conversation.createChannelConversation(
+                                conversation.conversationId
+                            ).then(() => {
+                                const botScreen = BackgroundTaskProcessor.generateScreen(
+                                    conversation.bot,
+                                    conversation.conversationId
+                                );
+                                const botContext = new BotContext(
+                                    botScreen,
+                                    manifestChan
+                                );
+                                return ConversationContext.createAndSaveNewChannelConversationContext(
+                                    botContext,
+                                    user,
+                                    conversation.channel
+                                );
+                            });
+                        } else if (conversation.bot.botId === 'im-bot') {
                             let botContext;
                             const otherParticipant = {
                                 userName: conversation.contact.userName,
                                 userId: conversation.contact.userId
                             };
-                            // console.log('downloaded ' + JSON.stringify(conversation, undefined, 2))
                             Conversation.createIMConversation(
                                 conversation.conversationId
                             )
-                                .then(zi => {
+                                .then(() => {
                                     const botScreen = BackgroundTaskProcessor.generateScreen(
                                         conversation.bot.botId,
                                         conversation.conversationId
