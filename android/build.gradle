@@ -10,8 +10,21 @@ buildscript {
     }
     repositories {
         google()
+        mavenLocal()
+
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
+        maven {
+            // Needed for react-native-google-signin library
+            url 'https://maven.google.com'
+        }
+        maven {
+            // Needed for react-native-camera library
+            url 'https://jitpack.io'
+        }
         jcenter()
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'

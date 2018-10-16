@@ -77,7 +77,7 @@
     "react-native-router-flux": "^4.0.4",
     "react-native-segmented-control-tab": "^3.2.1",
     "react-native-sound": "^0.10.4",
-    "react-native-sqlite-storage": "^3.3.4",
+    "react-native-sqlite-storage": "^3.3.7",
     "react-native-super-grid": "^2.4.3",
     "react-native-svg": "^6.5.0",
     "react-native-swipeout": "^2.3.3",

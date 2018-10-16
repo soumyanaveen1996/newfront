@@ -4,37 +4,38 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.graphics.Color;
+import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
-import com.microsoft.codepush.react.CodePush;
-import com.dooboolab.RNIap.RNIapPackage;
-import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
-import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
-import com.peel.react.TcpSocketsModule;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
-import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
-import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
-import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.actionsheet.ActionSheetPackage;
-import com.horcrux.svg.SvgPackage;
 import com.brentvatne.react.ReactVideoPackage;
+import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
+import com.peel.react.TcpSocketsModule;
+import com.horcrux.svg.SvgPackage;
 import com.zmxv.RNSound.RNSoundPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.keychain.KeychainPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.dooboolab.RNIap.RNIapPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.microsoft.codepush.react.CodePush;
 import org.reactnative.camera.RNCameraPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
+import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
+import com.actionsheet.ActionSheetPackage;
 import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -69,36 +70,36 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new RNIapPackage(),
-            new ReactNativeDocumentPicker(),
-            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
-            new TcpSocketsModule(),
-            new RNDeviceInfo(),
-            new BackgroundTaskPackage(),
-            new RNVersionCheckPackage(),
-            new AndroidOpenSettingsPackage(),
-            new RNGoogleSignInPackage(),
-            new ImageResizerPackage(),
-            new FBSDKPackage(mCallbackManager),
-            new ReactNativePushNotificationPackage(),
-            new ActionSheetPackage(),
-            new SvgPackage(),
-            new ReactVideoPackage(),
-            new VectorIconsPackage(),
-            new RNSoundPackage(),
-            new MapsPackage(),
-            new KeychainPackage(),
-            new ImagePickerPackage(),
-            new RNI18nPackage(),
-            new RNFSPackage(),
-            new RNFetchBlobPackage(),
-            new ReactNativeContacts(),
-            new RNCameraPackage(),
-            new BackgroundTimerPackage(),
-            new ReactNativeAudioPackage(),
-            new SQLitePluginPackage()
+              new MainReactPackage(),
+              new ReactVideoPackage(),
+              new RNVersionCheckPackage(),
+              new VectorIconsPackage(),
+              new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
+              new TcpSocketsModule(),
+              new SvgPackage(),
+              new RNSoundPackage(),
+              new ReactNativePushNotificationPackage(),
+              new MapsPackage(),
+              new KeychainPackage(),
+              new ImageResizerPackage(),
+              new ImagePickerPackage(),
+              new RNIapPackage(),
+              new RNI18nPackage(),
+              new RNGoogleSignInPackage(),
+              new RNFSPackage(),
+              new RNFetchBlobPackage(),
+              new FBSDKPackage(mCallbackManager),
+              new ReactNativeDocumentPicker(),
+              new RNDeviceInfo(),
+              new ReactNativeContacts(),
+              new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
+              new RNCameraPackage(),
+              new BackgroundTimerPackage(),
+              new BackgroundTaskPackage(),
+              new ReactNativeAudioPackage(),
+              new AndroidOpenSettingsPackage(),
+              new ActionSheetPackage(),
+              new SQLitePluginPackage()
       );
     }
 
@@ -117,7 +118,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    FacebookSdk.sdkInitialize(getApplicationContext());
+    // TODO(sourav) : Have to check if Facebook works ?
+    //FacebookSdk.sdkInitialize(getApplicationContext());
     BackgroundTaskPackage.useContext(this);
   }
 }
