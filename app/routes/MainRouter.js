@@ -30,7 +30,6 @@ import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
 import Config from './config';
-import { Auth } from '../lib/capability';
 import { SignupScreen } from '../components/Signup';
 import { SwiperScreen } from '../components/Swiper';
 import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScreen';

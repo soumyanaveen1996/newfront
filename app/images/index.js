@@ -51,7 +51,8 @@ const images = {
     preview_slider_4: require('./preview-slide-4/preview-slide-4.png'),
     pass_checkbox_empty: require('./pass-checkbox-empty/pass-checkbox-empty.png'),
     pass_checkbox_checked: require('./pass-checkbox-checked/pass-checkbox-checked.png'),
-    blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png')
+    blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png'),
+    logo_background: require('./logo-background/logo-background.png')
 };
 
 export default images;

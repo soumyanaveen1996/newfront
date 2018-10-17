@@ -1,5 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import { SCREEN_HEIGHT } from './config';
+import { SCREEN_WIDTH } from './config';
 
 export const MainScreenStyles = StyleSheet.create({
     container: {
