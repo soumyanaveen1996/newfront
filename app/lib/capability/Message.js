@@ -31,7 +31,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_FORM_OPEN: 'form_open',
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
     MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
-    MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota'
+    MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota',
+    MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion'
 };
 
 export const IntToMessageTypeConstants = {
