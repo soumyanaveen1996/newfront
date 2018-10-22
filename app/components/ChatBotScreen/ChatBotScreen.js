@@ -158,7 +158,8 @@ export default class ChatBotScreen extends React.Component {
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false
+            refreshing: false,
+            sliderClosed: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -324,6 +325,12 @@ export default class ChatBotScreen extends React.Component {
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
         );
+
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this.keyboardDidHide.bind(this)
+        );
+
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(
             SatelliteConnectionEvents.connectedToSatellite,
@@ -487,6 +494,9 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
         Network.removeConnectionChangeEventListener(
             this.handleConnectionChange
         );
@@ -545,6 +555,9 @@ export default class ChatBotScreen extends React.Component {
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
         }
     };
 
@@ -552,6 +565,16 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
+        }
+    };
+
+    keyboardDidHide = () => {
+        this.scrollToBottomIfNeeded();
+        if (Platform.OS === 'android' && this.state.sliderClosed) {
+            this.setState({ showSlider: true });
         }
     };
 
