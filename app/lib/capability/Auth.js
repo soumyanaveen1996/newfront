@@ -27,7 +27,7 @@ export const AUTH_PROVIDERS = {
 
 export class AuthError extends Error {
     constructor(code, message) {
-        super();
+        super(code, message);
         this.code = code;
         this.message = message;
     }

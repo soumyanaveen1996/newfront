@@ -113,7 +113,6 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
-                console.log('errors', err);
                 this.setState({ emailErrorMessage: err.message });
                 this.setState({ passwordErrorMessage: '' });
                 this.setState({ loading: false });
