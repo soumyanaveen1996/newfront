@@ -45,7 +45,8 @@ export const IntToMessageTypeConstants = {
     210: MessageTypeConstants.MESSAGE_TYPE_SLIDER,
     220: MessageTypeConstants.MESSAGE_TYPE_BUTTON,
     230: MessageTypeConstants.MESSAGE_TYPE_FORM,
-    240: MessageTypeConstants.MESSAGE_TYPE_MAP
+    240: MessageTypeConstants.MESSAGE_TYPE_MAP,
+    250: MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -146,6 +147,19 @@ export default class Message {
             this._options = JSON.stringify(options);
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER;
+    };
+
+    /**
+     * Store reply suggestions and options for SmartSuggestions
+     * @param replies - json object of data - will be stringified
+     * @param options - json object of options - will be stringified
+     */
+    smartSuggestionsMessage = () => {
+        this._msg = JSON.stringify(replies || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS;
     };
 
     sliderResponseMessage = (sliderData, options) => {
@@ -250,6 +264,8 @@ export default class Message {
 
     getMessage = () => {
         if (
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
@@ -532,6 +548,7 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
+            MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
             MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {

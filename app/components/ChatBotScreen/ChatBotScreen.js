@@ -662,23 +662,17 @@ export default class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
         ) {
-            if (this.smartSuggestions) {
-                this.smartSuggestions.close(() => {
-                    this.updateSmartSuggestions(message);
-                }, false);
-            } else {
-                this.updateSmartSuggestions(message);
-            }
+            this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
-            if (this.smartSuggestions) {
-                this.smartSuggestions.close(() => {
-                    this.updateSmartSuggestions(message);
+            if (this.slider) {
+                this.slider.close(() => {
+                    this.fireSlider(message);
                 }, false);
             } else {
-                this.updateSmartSuggestions(message);
+                this.fireSlider(message);
             }
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
@@ -723,7 +717,6 @@ export default class ChatBotScreen extends React.Component {
 
     updateSmartSuggestions(message) {
         // Suggestions
-        // this.setState({ smartSuggesions: message.getMessage() });
         this.smartSuggestionsArea.update([]);
         this.smartSuggestionsArea.update(message.getMessage());
     }
