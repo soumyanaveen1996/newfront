@@ -154,7 +154,7 @@ export default class Message {
      * @param replies - json object of data - will be stringified
      * @param options - json object of options - will be stringified
      */
-    smartSuggestionsMessage = () => {
+    smartSuggestions = (replies, options) => {
         this._msg = JSON.stringify(replies || []);
         if (options) {
             this._options = JSON.stringify(options);
