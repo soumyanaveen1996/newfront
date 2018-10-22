@@ -1671,6 +1671,8 @@ export default class ChatBotScreen extends React.Component {
                     }
                 >
                     <FlatList
+                        style={chatStyles.messagesList}
+                        ListFooterComponent={this.renderSmartSuggestions()}
                         accessibilityLabel="Messages List"
                         testID="messages-list"
                         ref={list => {
@@ -1692,7 +1694,7 @@ export default class ChatBotScreen extends React.Component {
                         )}
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
-                    {this.renderSmartSuggestions()}
+                    {/* {this.renderSmartSuggestions()} */}
                     {this.renderChatInputBar()}
                     {this.renderNetworkStatusBar()}
                     {this.renderCallModal()}
