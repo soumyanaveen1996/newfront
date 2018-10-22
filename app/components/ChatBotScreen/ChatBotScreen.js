@@ -156,7 +156,8 @@ export default class ChatBotScreen extends React.Component {
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false
+            refreshing: false,
+            sliderClosed: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -552,6 +553,9 @@ export default class ChatBotScreen extends React.Component {
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
         }
     };
 
@@ -559,12 +563,15 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
         }
     };
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        if (Platform.OS === 'android') {
+        if (Platform.OS === 'android' && this.state.sliderClosed) {
             this.setState({ showSlider: true });
         }
     };
