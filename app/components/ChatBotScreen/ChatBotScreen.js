@@ -154,10 +154,10 @@ export default class ChatBotScreen extends React.Component {
         this.allLocalMessagesLoaded = false;
 
         this.state = {
+            smartSuggesions: [],
             messages: [],
             typing: '',
             showSlider: false,
-            showSmartSuggestions: true,
             refreshing: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
@@ -664,21 +664,21 @@ export default class ChatBotScreen extends React.Component {
         ) {
             if (this.smartSuggestions) {
                 this.smartSuggestions.close(() => {
-                    this.fireSmartSuggestions(message);
+                    this.updateSmartSuggestions(message);
                 }, false);
             } else {
-                this.fireSmartSuggestions(message);
+                this.updateSmartSuggestions(message);
             }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
-            if (this.slider) {
-                this.slider.close(() => {
-                    this.fireSlider(message);
+            if (this.smartSuggestions) {
+                this.smartSuggestions.close(() => {
+                    this.updateSmartSuggestions(message);
                 }, false);
             } else {
-                this.fireSlider(message);
+                this.updateSmartSuggestions(message);
             }
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
@@ -721,9 +721,11 @@ export default class ChatBotScreen extends React.Component {
         // Has to be Immutable for react
     }
 
-    fireSmartSuggestions(message) {
+    updateSmartSuggestions(message) {
         // Suggestions
-        this.setState({ showSmartSuggestions: true, message: message });
+        // this.setState({ smartSuggesions: message.getMessage() });
+        this.smartSuggestionsArea.update([]);
+        this.smartSuggestionsArea.update(message.getMessage());
     }
 
     fireSlider(message) {
@@ -745,6 +747,7 @@ export default class ChatBotScreen extends React.Component {
         });
     }
 
+    // picked from Smart Suggestions
     sendSmartReply(selectedSuggestion) {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
@@ -1521,9 +1524,11 @@ export default class ChatBotScreen extends React.Component {
     renderSmartSuggestions() {
         return (
             <SmartSuggestions
-                ref={smartSuggestions => {
-                    this.smartSuggestions = smartSuggestions;
+                ref={smartSuggestionsArea => {
+                    this.smartSuggestionsArea = smartSuggestionsArea;
                 }}
+                suggestions={this.state.smartSuggesions}
+                onReplySelected={this.onSendMessage.bind(this)}
             />
         );
     }
@@ -1687,9 +1692,7 @@ export default class ChatBotScreen extends React.Component {
                         )}
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
-                    {this.state.showSmartSuggestions
-                        ? this.renderSmartSuggestions()
-                        : null}
+                    {this.renderSmartSuggestions()}
                     {this.renderChatInputBar()}
                     {this.renderNetworkStatusBar()}
                     {this.renderCallModal()}

@@ -389,6 +389,8 @@ export default class Message {
             return null;
         }
         if (
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE ||
