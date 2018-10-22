@@ -322,6 +322,12 @@ export default class ChatBotScreen extends React.Component {
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
         );
+
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this.keyboardDidHide.bind(this)
+        );
+
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(
             SatelliteConnectionEvents.connectedToSatellite,
@@ -485,6 +491,9 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
         Network.removeConnectionChangeEventListener(
             this.handleConnectionChange
         );
@@ -550,6 +559,13 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
+        }
+    };
+
+    keyboardDidHide = () => {
+        this.scrollToBottomIfNeeded();
+        if (Platform.OS === 'android') {
+            this.setState({ showSlider: true });
         }
     };
 
