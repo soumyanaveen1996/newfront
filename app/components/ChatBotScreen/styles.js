@@ -12,7 +12,11 @@ const stylesheet = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: GlobalColors.white
+        justifyContent: 'flex-end'
+    },
+    messagesList: {
+        flexGrow: 0,
+        overflow: 'visible'
     },
     row: {
         marginTop: 12,
