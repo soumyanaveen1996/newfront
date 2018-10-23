@@ -7,7 +7,7 @@ import ChannelDAO from '../../lib/persistence/ChannelDAO';
 
 export class ChannelError extends Error {
     constructor(code, message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }
