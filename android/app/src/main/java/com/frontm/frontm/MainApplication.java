@@ -48,19 +48,19 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private  static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
-  protected  static CallbackManager getCallbackManager() {
+  protected static CallbackManager getCallbackManager() {
     return mCallbackManager;
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
-        @Override
-        protected String getJSBundleFile() {
-        return CodePush.getJSBundleFile();
-        }
-    
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -68,38 +68,20 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new RNIapPackage(),
-            new ReactNativeDocumentPicker(),
-            new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
-            new TcpSocketsModule(),
-            new RNDeviceInfo(),
-            new BackgroundTaskPackage(),
-            new RNVersionCheckPackage(),
-            new AndroidOpenSettingsPackage(),
-            new RNGoogleSignInPackage(),
-            new ImageResizerPackage(),
-            new FBSDKPackage(mCallbackManager),
-            new ReactNativePushNotificationPackage(),
-            new ActionSheetPackage(),
-            new SvgPackage(),
-            new ReactVideoPackage(),
-            new VectorIconsPackage(),
-            new RNSoundPackage(),
-            new MapsPackage(),
-            new KeychainPackage(),
-            new ImagePickerPackage(),
-            new RNI18nPackage(),
-            new RNFSPackage(),
-            new RNFetchBlobPackage(),
-            new ReactNativeContacts(),
-            new RNCameraPackage(),
-            new BackgroundTimerPackage(),
-            new ReactNativeAudioPackage(),
-            new SQLitePluginPackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new ActionSheetPackage(),
+          new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),
+              getApplicationContext(), BuildConfig.DEBUG),
+          new RNIapPackage(), new ReactNativeDocumentPicker(), new TwilioVoicePackage(false), // <---- pass false to
+                                                                                              // handle microphone
+                                                                                              // permissions in your
+                                                                                              // application
+          new TcpSocketsModule(), new RNDeviceInfo(), new BackgroundTaskPackage(), new RNVersionCheckPackage(),
+          new AndroidOpenSettingsPackage(), new RNGoogleSignInPackage(), new ImageResizerPackage(),
+          new FBSDKPackage(mCallbackManager), new ReactNativePushNotificationPackage(), new SvgPackage(),
+          new ReactVideoPackage(), new VectorIconsPackage(), new RNSoundPackage(), new MapsPackage(),
+          new KeychainPackage(), new ImagePickerPackage(), new RNI18nPackage(), new RNFSPackage(),
+          new RNFetchBlobPackage(), new ReactNativeContacts(), new RNCameraPackage(), new BackgroundTimerPackage(),
+          new ReactNativeAudioPackage(), new SQLitePluginPackage());
     }
 
     @Override

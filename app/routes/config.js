@@ -3,14 +3,20 @@ import GlobalColors from '../config/styles';
 export default {
     navBar: {
         headerStyle: {
-            backgroundColor: GlobalColors.accent,
+            backgroundColor: GlobalColors.white,
             shadowOpacity: 0
         },
         borderlessHeaderStyle: {
-            backgroundColor: GlobalColors.accent,
+            backgroundColor: GlobalColors.white,
             shadowOpacity: 0,
-            borderBottomWidth: 0
+            borderBottomWidth: 1,
+            borderBottomColor: GlobalColors.background
         },
-        navigationBarTintColor: GlobalColors.white
+        navigationBarTintColor: GlobalColors.headerBlack,
+        titleStyle: {
+            fontFamily: 'SF Pro Text',
+            fontSize: 18,
+            fontWeight: '400'
+        }
     }
 };

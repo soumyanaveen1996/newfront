@@ -52,7 +52,17 @@ const images = {
     pass_checkbox_empty: require('./pass-checkbox-empty/pass-checkbox-empty.png'),
     pass_checkbox_checked: require('./pass-checkbox-checked/pass-checkbox-checked.png'),
     blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png'),
-    logo_background: require('./logo-background/logo-background.png')
+    logo_background: require('./logo-background/logo-background.png'),
+    tabbar_home: require('./tabbar-home/tabbar-home.png'),
+    tabbar_home_active: require('./tabbar-home-active/tabbar-home-active.png'),
+    tabbar_contacts: require('./tabbar-contacts/tabbar-contacts.png'),
+    tabbar_contacts_active: require('./tabbar-contacts-active/tabbar-contacts-active.png'),
+    tabbar_channels: require('./tabbar-channels/tabbar-channels.png'),
+    tabbar_channels_active: require('./tabbar-channels-active/tabbar-channels-active.png'),
+    tabbar_marketplace: require('./tabbar-marketplace/tabbar-marketplace.png'),
+    tabbar_marketplace_active: require('./tabbar-marketplace-active/tabbar-marketplace-active.png'),
+    home_gray_arrow: require('./home-gray-arrow/home-gray-arrow.png'),
+    backgroundImage: require('./background/background.png')
 };
 
 export default images;

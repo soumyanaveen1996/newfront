@@ -108,14 +108,19 @@ export default class LoginScreen extends React.Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
-                this.setState({ passwordErrorMessage: '' });
-                this.setState({ emailErrorMessage: '' });
+                this.setState({
+                    passwordErrorMessage: '',
+                    emailErrorMessage: ''
+                });
+
                 this.showMainScreen();
             })
             .catch(err => {
                 console.log('errors', err);
-                this.setState({ emailErrorMessage: err.message });
-                this.setState({ passwordErrorMessage: '' });
+                this.setState({
+                    emailErrorMessage: err.message,
+                    passwordErrorMessage: ''
+                });
                 this.setState({ loading: false });
             });
     }

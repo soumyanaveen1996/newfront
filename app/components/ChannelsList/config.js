@@ -2,6 +2,7 @@ import { Dimensions } from 'react-native';
 import I18n from '../../config/i18n/i18n';
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 export const SCREEN_WIDTH = Dimensions.get('window').width;
+import GlobalColors from '../../config/styles';
 
 export const scrollViewConfig = {
     width: SCREEN_WIDTH * 0.98
@@ -16,6 +17,6 @@ export const addButtonConfig = {
     name: 'add',
     size: 30,
     underlayColor: 'transparent',
-    color: '#fff',
+    color: GlobalColors.sideButtons,
     fontWeight: '500'
 };
