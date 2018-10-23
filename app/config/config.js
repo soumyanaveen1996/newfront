@@ -8,12 +8,19 @@ import Reactotron from 'reactotron-react-native';
 const config = configToUse;
 
 export const overrideConsole = trueConsole => {
-    trueConsole.tron = Reactotron;
     return {
         log: function() {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
                 // console.tron.log.apply(trueConsole, arguments)
+                Reactotron.display({
+                    name: 'CONSOLE.LOG',
+                    value: arguments,
+                    preview:
+                        arguments.length > 1
+                            ? JSON.stringify(arguments)
+                            : arguments[0]
+                });
             }
         },
         error: function() {
