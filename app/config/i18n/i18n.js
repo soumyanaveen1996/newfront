@@ -6,6 +6,8 @@ I18n.translations = {
     en: {
         FrontM: 'FrontM',
         React_Native: 'React Native',
+        MainMenu: 'Main',
+        Home: 'Home',
         Description:
             'React Native helps us build cross platform native apps in Javascript.',
         WebM_Bot: 'WebM',

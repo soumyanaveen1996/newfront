@@ -9,6 +9,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Channel } from '../../lib/capability';
+import { BackgroundImage } from '../BackgroundImage';
 
 export default class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -20,20 +21,20 @@ export default class ChannelsList extends React.Component {
                     config={addButtonConfig}
                     onPress={state.params.handleAddChannel}
                 />
-            ),
-            headerLeft: (
-                <HeaderBack
-                    onPress={
-                        state.params.onBack
-                            ? () => {
-                                Actions.pop();
-                                state.params.onBack();
-                            }
-                            : Actions.pop
-                    }
-                    refresh={true}
-                />
             )
+            // headerLeft: (
+            //     <HeaderBack
+            //         onPress={
+            //             state.params.onBack
+            //                 ? () => {
+            //                     Actions.pop();
+            //                     state.params.onBack();
+            //                 }
+            //                 : Actions.pop
+            //         }
+            //         refresh={true}
+            //     />
+            // )
         };
     }
 
@@ -127,7 +128,7 @@ export default class ChannelsList extends React.Component {
 
     render() {
         return (
-            <View>
+            <BackgroundImage>
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.id}
@@ -136,7 +137,7 @@ export default class ChannelsList extends React.Component {
                     extraData={this.state}
                 />
                 <Toast ref="toast" positionValue={200} />
-            </View>
+            </BackgroundImage>
         );
     }
 }

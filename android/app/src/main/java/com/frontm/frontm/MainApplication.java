@@ -49,19 +49,19 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private  static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
-  protected  static CallbackManager getCallbackManager() {
+  protected static CallbackManager getCallbackManager() {
     return mCallbackManager;
   }
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
-        @Override
-        protected String getJSBundleFile() {
-        return CodePush.getJSBundleFile();
-        }
-    
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -69,38 +69,19 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-              new MainReactPackage(),
-              new ReactVideoPackage(),
-              new RNVersionCheckPackage(),
-              new VectorIconsPackage(),
-              new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions in your application
-              new TcpSocketsModule(),
-              new SvgPackage(),
-              new RNSoundPackage(),
-              new ReactNativePushNotificationPackage(),
-              new MapsPackage(),
-              new KeychainPackage(),
-              new ImageResizerPackage(),
-              new ImagePickerPackage(),
-              new RNIapPackage(),
-              new RNI18nPackage(),
-              new RNGoogleSignInPackage(),
-              new RNFSPackage(),
-              new RNFetchBlobPackage(),
-              new FBSDKPackage(mCallbackManager),
-              new ReactNativeDocumentPicker(),
-              new RNDeviceInfo(),
-              new ReactNativeContacts(),
-              new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-              new RNCameraPackage(),
-              new BackgroundTimerPackage(),
-              new BackgroundTaskPackage(),
-              new ReactNativeAudioPackage(),
-              new AndroidOpenSettingsPackage(),
-              new ActionSheetPackage(),
-              new SQLitePluginPackage()
-      );
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
+          new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions
+                                                                   // in your application
+          new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
+          new MapsPackage(), new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
+          new RNIapPackage(), new RNI18nPackage(), new RNGoogleSignInPackage(), new RNFSPackage(),
+          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager), new ReactNativeDocumentPicker(),
+          new RNDeviceInfo(), new ReactNativeContacts(),
+          new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),
+              getApplicationContext(), BuildConfig.DEBUG),
+          new RNCameraPackage(), new BackgroundTimerPackage(), new BackgroundTaskPackage(),
+          new ReactNativeAudioPackage(), new AndroidOpenSettingsPackage(), new ActionSheetPackage(),
+          new SQLitePluginPackage());
     }
 
     @Override
@@ -119,7 +100,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     // TODO(sourav) : Have to check if Facebook works ?
-    //FacebookSdk.sdkInitialize(getApplicationContext());
+    // FacebookSdk.sdkInitialize(getApplicationContext());
     BackgroundTaskPackage.useContext(this);
   }
 }

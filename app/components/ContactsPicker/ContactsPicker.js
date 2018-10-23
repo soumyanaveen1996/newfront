@@ -25,13 +25,14 @@ import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Contact } from '../../lib/capability';
 import { Icons } from '../../config/icons';
+import { BackgroundImage } from '../BackgroundImage';
 
 export default class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerRight: ContactsPicker.rightHeaderView(state),
-            headerLeft: <HeaderBack onPress={Actions.pop} />
+            headerRight: ContactsPicker.rightHeaderView(state)
+            // headerLeft: <HeaderBack onPress={Actions.pop} />
         };
     }
 
@@ -241,7 +242,7 @@ export default class ContactsPicker extends React.Component {
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search"
-                    selectionColor={GlobalColors.white}
+                    selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
                 />

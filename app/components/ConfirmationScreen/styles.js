@@ -8,6 +8,7 @@ export default StyleSheet.create({
         flex: 1,
         padding: 10,
         backgroundColor: GlobalColors.white
+        // backgroundColor: 'rgba(0,0,0,0.1)'
     },
     innerContainer: {
         flex: 1,
@@ -25,6 +26,7 @@ export default StyleSheet.create({
         marginBottom: 10
     },
     captionText: {
+        flex: 1,
         alignItems: 'center'
     },
     emailText: {
@@ -68,8 +70,11 @@ export default StyleSheet.create({
         fontSize: 16
     },
     pinCode: {
+        flex: 1,
+        alignItems: 'center',
         paddingBottom: 60,
-        marginTop: 10
+        marginTop: 10,
+        justifyContent: 'center'
     },
     textInput: {
         height: 40,
@@ -86,6 +91,9 @@ export default StyleSheet.create({
         letterSpacing: 1
     },
     codeButton: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 40
     },
     resendButton: {

@@ -6,6 +6,7 @@ import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
 import { CachedImage } from '../CachedImage';
+import images from '../../images';
 
 export default class BotListItem extends React.Component {
     constructor(props) {
@@ -86,7 +87,8 @@ export default class BotListItem extends React.Component {
                     testID="list-element-right-arrow"
                     style={BotListItemStyles.rightContainer}
                 >
-                    {Icons.listRightArrow()}
+                    {/* {Icons.listRightArrow()} */}
+                    <Image source={images.home_gray_arrow} />
                     <Text
                         allowFontScaling={false}
                         style={
@@ -98,13 +100,13 @@ export default class BotListItem extends React.Component {
                         {this.state.count}
                     </Text>
                 </View>
-                <Text
+                {/* <Text
                     accessibilityLabel="List Element Date"
                     testID="list-element-date"
                     style={BotListItemStyles.time}
                 >
                     {utils.formattedDate(this.state.date)}
-                </Text>
+                </Text> */}
             </TouchableOpacity>
         );
     }

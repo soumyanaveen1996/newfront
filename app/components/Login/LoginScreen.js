@@ -108,13 +108,19 @@ export default class LoginScreen extends React.Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
-                this.setState({ passwordErrorMessage: '' });
-                this.setState({ emailErrorMessage: '' });
+                this.setState({
+                    passwordErrorMessage: '',
+                    emailErrorMessage: ''
+                });
+
                 this.showMainScreen();
             })
             .catch(err => {
-                this.setState({ emailErrorMessage: err.message });
-                this.setState({ passwordErrorMessage: '' });
+                console.log('errors', err);
+                this.setState({
+                    emailErrorMessage: err.message,
+                    passwordErrorMessage: ''
+                });
                 this.setState({ loading: false });
             });
     }
@@ -165,30 +171,34 @@ export default class LoginScreen extends React.Component {
     }
 
     loginWithGoogle = async () => {
+        this.setState({ loading: true });
         this.setState({ pressedGglBtn: !this.state.pressedGglBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithGoogle(conversationId, botName)
             .then(() => {
                 console.log('logged in using google');
-                this.setState({ loading: true });
+                this.setState({ loading: false });
                 this.showMainScreen();
             })
             .catch(err => {
+                this.setState({ loading: false });
                 this.setState({ errorMessage: err.message });
             });
     };
     loginWithFacebook = async () => {
+        this.setState({ loading: true });
         this.setState({ pressedFbBtn: !this.state.pressedFbBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
             .then(() => {
                 console.log('logged in using facebook');
-                this.setState({ loading: true });
+                this.setState({ loading: false });
                 this.showMainScreen();
             })
             .catch(err => {
+                this.setState({ loading: false });
                 this.setState({ errorMessage: err.message });
             });
     };

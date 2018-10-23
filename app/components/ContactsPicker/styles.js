@@ -10,11 +10,11 @@ const stylesheet = StyleSheet.create({
     },
     searchBar: Platform.select({
         ios: {
-            backgroundColor: GlobalColors.accent,
+            backgroundColor: GlobalColors.white,
             height: 36
         },
         android: {
-            backgroundColor: GlobalColors.accent,
+            backgroundColor: GlobalColors.white,
             height: 45
         }
     }),
@@ -24,10 +24,11 @@ const stylesheet = StyleSheet.create({
         fontSize: 13,
         paddingHorizontal: 5,
         flex: 1,
-        backgroundColor: GlobalColors.headerTextInputBackground,
+        backgroundColor: GlobalColors.white,
         borderRadius: 2,
+        borderColor: GlobalColors.darkGray,
         height: 24,
-        color: GlobalColors.white
+        color: GlobalColors.darkGray
     },
     addressBookContainer: {
         flex: 1,
@@ -76,7 +77,7 @@ const stylesheet = StyleSheet.create({
     },
     headerRightButton: {
         fontSize: 17,
-        color: GlobalColors.white,
+        color: GlobalColors.sideButtons,
         fontWeight: '600',
         marginBottom: 10
     },

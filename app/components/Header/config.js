@@ -7,7 +7,7 @@ export const backArrowConfig = Platform.select({
         name: 'ios-arrow-back',
         size: 30,
         underlayColor: GlobalColors.transparent,
-        color: GlobalColors.white,
+        color: GlobalColors.sideButtons,
         fontWeight: '500'
     },
     android: {
@@ -15,7 +15,7 @@ export const backArrowConfig = Platform.select({
         name: 'md-arrow-back',
         size: 30,
         underlayColor: GlobalColors.transparent,
-        color: GlobalColors.white,
+        color: GlobalColors.sideButtons,
         fontWeight: '500'
     }
 });

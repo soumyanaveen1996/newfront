@@ -3,8 +3,8 @@ import { SCREEN_WIDTH, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
 
 export const ChannelsListItemColors = {
-    titleColor: 'rgb(255, 82, 59)',
-    subTitleColor: 'rgb(71, 72, 78)',
+    titleColor: 'rgba(74, 74, 74, 1)',
+    subTitleColor: 'rgba(153,153,153,1);',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
     countColor: 'rgb(62,137,252)',
@@ -84,7 +84,7 @@ export default StyleSheet.create({
     },
     flatList: {
         height: '100%',
-        paddingTop: 5
+        paddingTop: 10
     },
     container: {
         flex: 1,
@@ -96,12 +96,12 @@ export default StyleSheet.create({
     },
     title: {
         color: ChannelsListItemColors.titleColor,
-        fontSize: 15,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     subTitle: {
         color: ChannelsListItemColors.subTitleColor,
-        fontSize: 15,
+        fontSize: 14,
         marginTop: 5
     },
     image: {

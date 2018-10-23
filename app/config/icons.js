@@ -7,7 +7,7 @@ function icon(
     type,
     size,
     color,
-    underlayColor = Colors.white,
+    underlayColor = Colors.sideButtons,
     fontWeight = 'normal'
 ) {
     return function(options) {
@@ -28,7 +28,7 @@ function renderIcon(
     type,
     size,
     color,
-    underlayColor = Colors.white,
+    underlayColor = Colors.sideButtons,
     fontWeight = 'normal',
     options = {}
 ) {
@@ -54,7 +54,7 @@ export const Icons = {
         'ios-arrow-back',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.transparent,
         '500'
     ),
@@ -166,7 +166,7 @@ export const Icons = {
         'ios-refresh',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.translucentDark,
         '500'
     ),
@@ -174,7 +174,7 @@ export const Icons = {
         'ios-call',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.transparent,
         '500'
     ),
@@ -190,7 +190,7 @@ export const Icons = {
         'ios-ionic',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.translucentDark,
         '500'
     ),

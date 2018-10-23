@@ -137,6 +137,7 @@ export default class Splash extends React.Component {
                 })
                 .catch(err => {
                     console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+                    this.goToLoginPage();
                 });
         } else {
             if (checkStatus && checkStatus === 'confirmCode') {
@@ -170,12 +171,16 @@ export default class Splash extends React.Component {
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     };
 
-    configureNotifications = async () => {
-        Notification.deviceInfo().then(info => {
-            if (info) {
-                Notification.configure(this.handleNotification.bind(this));
-            }
-        });
+    configureNotifications = () => {
+        Notification.deviceInfo()
+            .then(info => {
+                if (info) {
+                    Notification.configure(this.handleNotification.bind(this));
+                }
+            })
+            .catch(err => {
+                console.log('error from launch ', err);
+            });
     };
 
     notificationRegistrationHandler = () => {
@@ -211,7 +216,7 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
-        Actions.main({
+        Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding
         });
