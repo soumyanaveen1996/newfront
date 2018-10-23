@@ -11,21 +11,21 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.29.0):
     - FBSDKCoreKit
-  - TwilioVoice (2.0.4)
+  - TwilioVoice (2.0.6)
 
 DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - TwilioVoice (~> 2.0.0)
+  - TwilioVoice
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
   FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
   FBSDKShareKit: 18a2cd118aef11dd657fe7e8b64bae5c719088b2
-  TwilioVoice: f3a1ec7a362dc361c84e246a6c8a930d152d760d
+  TwilioVoice: 10657be3313c8f6e269d0d0f469bf64633f6888e
 
-PODFILE CHECKSUM: 9e2636aa42a74f0a9fa7874297decf6ec2e1d0b5
+PODFILE CHECKSUM: 8a2353f6c2f55953bcbdd32e7f3d02d6ab485020
 
 COCOAPODS: 1.3.1

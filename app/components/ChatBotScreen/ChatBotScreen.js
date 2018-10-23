@@ -70,6 +70,7 @@ import {
     DocumentPicker,
     DocumentPickerUtil
 } from 'react-native-document-picker';
+import { SmartSuggestions } from '../SmartSuggestions';
 
 const R = require('ramda');
 
@@ -153,10 +154,12 @@ export default class ChatBotScreen extends React.Component {
         this.allLocalMessagesLoaded = false;
 
         this.state = {
+            smartSuggesions: [],
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false
+            refreshing: false,
+            sliderClosed: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -322,6 +325,12 @@ export default class ChatBotScreen extends React.Component {
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
         );
+
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this.keyboardDidHide.bind(this)
+        );
+
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(
             SatelliteConnectionEvents.connectedToSatellite,
@@ -485,6 +494,9 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
         Network.removeConnectionChangeEventListener(
             this.handleConnectionChange
         );
@@ -543,6 +555,9 @@ export default class ChatBotScreen extends React.Component {
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
         }
     };
 
@@ -550,6 +565,16 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
+        }
+    };
+
+    keyboardDidHide = () => {
+        this.scrollToBottomIfNeeded();
+        if (Platform.OS === 'android' && this.state.sliderClosed) {
+            this.setState({ showSlider: true });
         }
     };
 
@@ -658,6 +683,11 @@ export default class ChatBotScreen extends React.Component {
         // Push a new message to the end
         if (
             message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
+        ) {
+            this.updateSmartSuggestions(message);
+        } else if (
+            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -708,6 +738,12 @@ export default class ChatBotScreen extends React.Component {
         // Has to be Immutable for react
     }
 
+    updateSmartSuggestions(message) {
+        // Suggestions
+        this.smartSuggestionsArea.update([]);
+        this.smartSuggestionsArea.update(message.getMessage());
+    }
+
     fireSlider(message) {
         // Slider
         Keyboard.dismiss();
@@ -725,6 +761,14 @@ export default class ChatBotScreen extends React.Component {
             chartData: message.getMessage(),
             chartTitle: I18n.t('SNR_Chart_title')
         });
+    }
+
+    // picked from Smart Suggestions
+    sendSmartReply(selectedSuggestion) {
+        let message = new Message({ addedByBot: false });
+        message.setCreatedBy(this.getUserId());
+        // message.sliderResponseMessage(selectedRows);
+        return this.sendMessage(message);
     }
 
     sendSliderResponseMessage(selectedRows) {
@@ -1493,6 +1537,18 @@ export default class ChatBotScreen extends React.Component {
                 });
         });
 
+    renderSmartSuggestions() {
+        return (
+            <SmartSuggestions
+                ref={smartSuggestionsArea => {
+                    this.smartSuggestionsArea = smartSuggestionsArea;
+                }}
+                suggestions={this.state.smartSuggesions}
+                onReplySelected={this.onSendMessage.bind(this)}
+            />
+        );
+    }
+
     renderSlider() {
         const message = this.state.message;
         const doneFn = this.state.overrideDoneFn
@@ -1631,6 +1687,8 @@ export default class ChatBotScreen extends React.Component {
                     }
                 >
                     <FlatList
+                        style={chatStyles.messagesList}
+                        ListFooterComponent={this.renderSmartSuggestions()}
                         accessibilityLabel="Messages List"
                         testID="messages-list"
                         ref={list => {
@@ -1652,6 +1710,7 @@ export default class ChatBotScreen extends React.Component {
                         )}
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
+                    {/* {this.renderSmartSuggestions()} */}
                     {this.renderChatInputBar()}
                     {this.renderNetworkStatusBar()}
                     {this.renderCallModal()}

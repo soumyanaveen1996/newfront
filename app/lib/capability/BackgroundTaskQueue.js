@@ -59,17 +59,21 @@ class BackgroundTaskQueue {
     }
 
     dequeue(options) {
-        if (!options.key) {
-            reject(new BackgroundTaskError(0, BackgroundTaskErrorCodes[0]));
-        }
-        if (!options.botId) {
-            reject(new BackgroundTaskError(1, BackgroundTaskErrorCodes[1]));
-        }
-        BackgroundTaskDAO.deleteBackgroundTask(options.key, options.botId)
-            .then(resolve)
-            .catch(() => {
-                reject(new BackgroundTaskError(5, BackgroundTaskErrorCodes[5]));
-            });
+        return new Promise((resolve, reject) => {
+            if (!options.key) {
+                reject(new BackgroundTaskError(0, BackgroundTaskErrorCodes[0]));
+            }
+            if (!options.botId) {
+                reject(new BackgroundTaskError(1, BackgroundTaskErrorCodes[1]));
+            }
+            BackgroundTaskDAO.deleteBackgroundTask(options.key, options.botId)
+                .then(resolve)
+                .catch(() => {
+                    reject(
+                        new BackgroundTaskError(5, BackgroundTaskErrorCodes[5])
+                    );
+                });
+        });
     }
 }
 
