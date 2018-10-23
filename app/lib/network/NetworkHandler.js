@@ -84,7 +84,6 @@ const dequeueAndProcessQueueRequest = async () => {
         let request = res.request;
         const response = await Network(request.getNetworkRequestOptions());
         if (__DEV__) {
-            console.tron.log(response);
         }
         if (response && response.data) {
             let results = response.data;

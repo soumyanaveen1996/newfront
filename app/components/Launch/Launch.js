@@ -38,8 +38,8 @@ import { initStore } from '../../lib/Store';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-// const CODE_PUSH_ACTIVATE = true;
-const CODE_PUSH_ACTIVATE = false;
+const CODE_PUSH_ACTIVATE = true;
+// const CODE_PUSH_ACTIVATE = false
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
@@ -117,7 +117,6 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            console.tron.log('HI, I AM REACTOTRON');
 
             // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);

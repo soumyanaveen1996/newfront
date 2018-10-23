@@ -53,7 +53,6 @@ const dequeueNetworkRequest = () =>
         return NetworkDAO.selectFirstPendingNetworkRequest()
             .then(res => {
                 if (__DEV__) {
-                    console.tron.log(res);
                 }
                 if (!res || !res.request) {
                     return resolve(null);
