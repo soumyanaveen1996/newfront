@@ -137,6 +137,15 @@ export default class Message {
     };
 
     /**
+     * Store reply suggestions and for SmartSuggestions
+     * @param {Array} replies - json object of data - will be stringified
+     */
+    smartSuggestions = replies => {
+        this._msg = JSON.stringify(replies || []);
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS;
+    };
+
+    /**
      * Store complex response and options for sliders
      * @param sliderData - json object of data - will be stringified
      * @param options - json object of options - will be stringified
@@ -147,19 +156,6 @@ export default class Message {
             this._options = JSON.stringify(options);
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER;
-    };
-
-    /**
-     * Store reply suggestions and options for SmartSuggestions
-     * @param replies - json object of data - will be stringified
-     * @param options - json object of options - will be stringified
-     */
-    smartSuggestions = (replies, options) => {
-        this._msg = JSON.stringify(replies || []);
-        if (options) {
-            this._options = JSON.stringify(options);
-        }
-        this._messageType = MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS;
     };
 
     sliderResponseMessage = (sliderData, options) => {
