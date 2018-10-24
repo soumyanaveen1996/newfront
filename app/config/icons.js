@@ -145,7 +145,7 @@ export const Icons = {
         '500'
     ),
     videoRecordCircle: icon('circle', 'font-awesome', 46, '#F00'),
-    delete: icon('md-trash', 'ionicon', 32, 'rgb(198, 198, 198)'),
+    delete: icon('md-trash', 'ionicon', 24, 'rgba(153, 153, 153,0.3)'),
     satelliteChatStatusClose: icon(
         'ios-close',
         'ionicon',

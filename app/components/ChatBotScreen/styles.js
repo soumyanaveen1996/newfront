@@ -47,19 +47,21 @@ const stylesheet = StyleSheet.create({
         maxWidth: '90%',
         paddingVertical: 5,
         paddingHorizontal: 10,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
     rightBubble: {
-        backgroundColor: GlobalColors.accent,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8
+        backgroundColor: GlobalColors.tabBackground,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
     },
     videoContainer: {
         padding: 5,
@@ -91,10 +93,10 @@ const stylesheet = StyleSheet.create({
     },
     message: {
         fontSize: 16,
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     rightMessage: {
-        color: GlobalColors.white
+        color: GlobalColors.chatRightTextColor
     },
     imageMessage: {
         width: Config.ChatImageOptions.width,
@@ -211,10 +213,10 @@ const stylesheet = StyleSheet.create({
         height: 30
     },
     talkLeftIcon: {
-        borderRightWidth: 10
+        borderRightWidth: 0
     },
     talkRightIcon: {
-        borderLeftWidth: 10,
+        borderLeftWidth: 0,
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
     },

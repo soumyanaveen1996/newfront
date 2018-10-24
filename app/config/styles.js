@@ -26,7 +26,9 @@ export const GlobalColors = {
     statusBarBackgroundColor: 'rgb(255, 192, 203)',
     headerBlack: 'rgba(3, 3, 3, 1)',
     sideButtons: 'rgba(0,189,242,1)',
-    tabBackground: 'rgba(0, 167, 214, 1)'
+    tabBackground: 'rgba(0, 167, 214, 1)',
+    chatLeftTextColor: 'rgba(74, 74, 74, 1)',
+    chatRightTextColor: 'rgba(255, 255, 255, 1)'
 };
 
 export default GlobalColors;

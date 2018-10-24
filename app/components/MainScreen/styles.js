@@ -1,7 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-import { SCREEN_HEIGHT } from './config';
-import { SCREEN_WIDTH } from './config';
 
 export const MainScreenStyles = StyleSheet.create({
     container: {
@@ -33,7 +31,7 @@ export const BotListStyles = {
         paddingTop: 15
     },
     separator: {
-        height: 2,
+        height: 0,
         backgroundColor: GlobalColors.background
     },
     loading: {
@@ -63,6 +61,7 @@ export const BotListItemStyles = {
         paddingHorizontal: 10,
         paddingVertical: 12,
         alignItems: 'stretch',
+        marginBottom: 10,
         backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
