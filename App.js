@@ -2,9 +2,9 @@ import './shim';
 import React from 'react';
 import { MainRouter } from './app/routes/';
 import codePush from 'react-native-code-push';
+import './ReactotronConfig';
 
 console.disableYellowBox = true;
-
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 
 class App extends React.Component {

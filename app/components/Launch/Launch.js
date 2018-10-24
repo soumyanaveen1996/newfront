@@ -33,6 +33,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { initStore } from '../../lib/Store';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
@@ -106,6 +107,9 @@ export default class Splash extends React.Component {
             null
         );
 
+        initStore({
+            satelliteConnection: false
+        });
         // Before login
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
@@ -113,6 +117,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
+
             // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }

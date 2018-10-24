@@ -52,6 +52,8 @@ const dequeueNetworkRequest = () =>
     new Promise((resolve, reject) => {
         return NetworkDAO.selectFirstPendingNetworkRequest()
             .then(res => {
+                if (__DEV__) {
+                }
                 if (!res || !res.request) {
                     return resolve(null);
                 }

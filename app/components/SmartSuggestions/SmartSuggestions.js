@@ -9,14 +9,11 @@ export default class SmartSuggestions extends React.Component {
         this.state = {
             suggestions: [] //array
         };
-        this.update();
+        this.update([]);
     }
 
     smartSuggestion = ({ item }) => (
-        <Suggestion
-            reply={item.title}
-            onReplySelected={this.props.onReplySelected}
-        />
+        <Suggestion reply={item} onReplySelected={this.props.onReplySelected} />
     );
 
     update = suggestions => {
@@ -34,6 +31,7 @@ export default class SmartSuggestions extends React.Component {
                     horizontal={true}
                     style={styles.smartSuggestions}
                     extraData={this.state}
+                    showsHorizontalScrollIndicator={false}
                 />
             </View>
         );
