@@ -25,7 +25,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH,
-        height: 75,
+        height: 85,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -84,7 +84,7 @@ export default StyleSheet.create({
     },
     flatList: {
         height: '100%',
-        paddingTop: 10
+        paddingTop: 15
     },
     container: {
         flex: 1,
@@ -96,17 +96,20 @@ export default StyleSheet.create({
     },
     title: {
         color: ChannelsListItemColors.titleColor,
+        fontFamily: 'SF Pro Text',
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: '300'
     },
     subTitle: {
         color: ChannelsListItemColors.subTitleColor,
         fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: '300',
         marginTop: 5
     },
     image: {
-        height: 40,
-        width: 40,
+        height: 50,
+        width: 50,
         marginTop: 5
     },
     textContainer: {
