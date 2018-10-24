@@ -275,7 +275,7 @@ export default class BotStoreScreen extends React.Component {
 
         return (
             <BackgroundImage style={{ flex: 1 }}>
-                <StatusBar backgroundColor="blue" barStyle="light-content" />
+                <StatusBar backgroundColor="grey" barStyle="light-content" />
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </BackgroundImage>

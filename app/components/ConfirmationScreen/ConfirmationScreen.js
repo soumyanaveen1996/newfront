@@ -159,6 +159,7 @@ export default class ConfirmationScreen extends Component {
                                 placeholder="------"
                                 returnKeyType={'done'}
                                 onChangeText={this.onChangeCode.bind(this)}
+                                underlineColorAndroid="transparent"
                                 maxLength={6} //setting limit of input
                             />
                         </View>
