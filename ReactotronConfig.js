@@ -10,3 +10,5 @@ if (__DEV__) {
     Reactotron.connect();
     Reactotron.clear();
 }
+
+console.tron = Reactotron;

@@ -8,7 +8,6 @@ import Reactotron from 'reactotron-react-native';
 const config = configToUse;
 
 export const overrideConsole = trueConsole => {
-    trueConsole.tron = Reactotron;
     return {
         log: function() {
             if (global.__DEV__) {
@@ -29,6 +28,19 @@ export const overrideConsole = trueConsole => {
         info: function() {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
+            }
+        },
+        tron: function() {
+            if (global.__DEV__) {
+                trueConsole.log.apply(trueConsole, arguments);
+                Reactotron.display({
+                    name: 'TRON',
+                    value: arguments,
+                    preview:
+                        arguments.length > 1
+                            ? JSON.stringify(arguments)
+                            : arguments[0]
+                });
             }
         }
     };
