@@ -117,7 +117,6 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-
             // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }

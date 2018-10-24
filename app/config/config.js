@@ -29,6 +29,19 @@ export const overrideConsole = trueConsole => {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
             }
+        },
+        tron: function() {
+            if (global.__DEV__) {
+                trueConsole.log.apply(trueConsole, arguments);
+                Reactotron.display({
+                    name: 'TRON',
+                    value: arguments,
+                    preview:
+                        arguments.length > 1
+                            ? JSON.stringify(arguments)
+                            : arguments[0]
+                });
+            }
         }
     };
 };
