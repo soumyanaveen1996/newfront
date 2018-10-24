@@ -13,14 +13,6 @@ export const overrideConsole = trueConsole => {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
                 // console.tron.log.apply(trueConsole, arguments)
-                Reactotron.display({
-                    name: 'CONSOLE.LOG',
-                    value: arguments,
-                    preview:
-                        arguments.length > 1
-                            ? JSON.stringify(arguments)
-                            : arguments[0]
-                });
             }
         },
         error: function() {
