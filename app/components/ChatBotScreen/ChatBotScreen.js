@@ -71,6 +71,7 @@ import {
     DocumentPickerUtil
 } from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
+import { WebCards } from '../WebCards';
 
 const R = require('ramda');
 
@@ -688,6 +689,11 @@ export default class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+        ) {
+            this.updateChat(message);
+        } else if (
+            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -1026,20 +1032,32 @@ export default class ChatBotScreen extends React.Component {
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
-            return (
-                <ChatMessage
-                    message={message}
-                    isUserChat={this.isUserChat()}
-                    shouldShowUserName={this.shouldShowUserName()}
-                    user={this.user}
-                    imageSource={{ uri: this.bot.logoUrl }}
-                    onDoneBtnClick={this.onButtonDone.bind()}
-                    onFormCTAClick={this.onFormDone.bind(this)}
-                    onFormCancel={this.onFormCancel.bind(this)}
-                    onFormOpen={this.onFormOpen.bind(this)}
-                    showTime={item.showTime}
-                />
-            );
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+            ) {
+                return (
+                    <WebCards
+                        webCardsList={message.getMessage()}
+                        previews={message.getMessageOptions()}
+                    />
+                );
+            } else {
+                return (
+                    <ChatMessage
+                        message={message}
+                        isUserChat={this.isUserChat()}
+                        shouldShowUserName={this.shouldShowUserName()}
+                        user={this.user}
+                        imageSource={{ uri: this.bot.logoUrl }}
+                        onDoneBtnClick={this.onButtonDone.bind()}
+                        onFormCTAClick={this.onFormDone.bind(this)}
+                        onFormCancel={this.onFormCancel.bind(this)}
+                        onFormOpen={this.onFormOpen.bind(this)}
+                        showTime={item.showTime}
+                    />
+                );
+            }
         } else {
             return (
                 <ChatMessage
