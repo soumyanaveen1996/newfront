@@ -11,9 +11,10 @@ export default StyleSheet.create({
         borderRadius: 8,
         borderTopRightRadius: 0,
         backgroundColor: GlobalColors.white,
-        paddingVertical: 5,
+        paddingVertical: 10,
         paddingHorizontal: 10,
-        marginVertical: 9
+        marginBottom: 15,
+        marginTop: 20
     },
     smartSuggestions: {
         paddingLeft: 60
