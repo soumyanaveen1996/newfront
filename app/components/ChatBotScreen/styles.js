@@ -44,7 +44,7 @@ const stylesheet = StyleSheet.create({
         borderRadius: 15
     },
     bubble: {
-        maxWidth: '90%',
+        maxWidth: '85%',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderTopLeftRadius: 0,
@@ -73,10 +73,10 @@ const stylesheet = StyleSheet.create({
     ellipsisBubble: {
         height: 30,
         width: 75,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
         backgroundColor: GlobalColors.botChatBubbleColor,
         overflow: 'hidden'
     },
@@ -92,10 +92,12 @@ const stylesheet = StyleSheet.create({
         borderBottomLeftRadius: 8
     },
     message: {
+        paddingLeft: 10,
         fontSize: 16,
         color: GlobalColors.chatLeftTextColor
     },
     rightMessage: {
+        paddingLeft: 15,
         color: GlobalColors.chatRightTextColor
     },
     imageMessage: {
@@ -111,19 +113,15 @@ const stylesheet = StyleSheet.create({
     },
     chatTextInput: {
         paddingHorizontal: 20,
-        fontSize: 18,
+        fontSize: 16,
         flex: 1,
-        borderColor: 'rgb(202, 206, 204)',
         backgroundColor: GlobalColors.white,
-        borderRadius: 18,
-        borderWidth: 1,
-        minHeight: 36
+        minHeight: 28
     },
     chatBarMoreButton: {
-        width: 32,
-        height: 32,
-        marginLeft: 10,
-        marginRight: 5
+        width: 16,
+        height: 15,
+        marginLeft: 10
     },
     cancelButton: {
         width: 32,
@@ -141,14 +139,14 @@ const stylesheet = StyleSheet.create({
         width: '100%'
     },
     chatBarSpeakButton: {
-        width: 32,
-        height: 32,
+        width: 10,
+        height: 20,
         marginRight: 10,
         marginLeft: 10
     },
     chatBarSendButton: {
-        width: 32,
-        height: 32,
+        width: 18,
+        height: 18,
         marginRight: 10,
         marginLeft: 10
     },
@@ -353,14 +351,17 @@ const stylesheet = StyleSheet.create({
         backgroundColor: 'rgb(248, 248, 248)'
     },
     chatBar: {
-        minHeight: 50,
-        maxHeight: 108,
+        width: '85%',
+        minHeight: 40,
+        maxHeight: 95,
         flexDirection: 'row',
-        backgroundColor: 'rgb(248, 248, 248)',
+        backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
         paddingVertical: 7,
-        borderTopWidth: 1,
-        borderColor: 'rgb(202, 206, 204)'
+        borderWidth: 1,
+        borderRadius: 10,
+        marginBottom: 10,
+        borderColor: 'rgba(91,91,91,0.2)'
     },
     chatBarSatellite: {
         backgroundColor: 'rgb(255, 218, 185)'

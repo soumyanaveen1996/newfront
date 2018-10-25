@@ -4,7 +4,7 @@ import {
     View,
     BackHandler,
     Alert,
-    Text
+    StatusBar
 } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
@@ -353,6 +353,11 @@ export default class MainScreen extends React.Component {
     }
 
     render() {
-        return <BackgroundImage>{this.renderMain()}</BackgroundImage>;
+        return (
+            <BackgroundImage>
+                <StatusBar backgroundColor="grey" barStyle="light-content" />
+                {this.renderMain()}
+            </BackgroundImage>
+        );
     }
 }
