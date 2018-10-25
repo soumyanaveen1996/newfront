@@ -157,7 +157,7 @@ class RetryFormTextInput extends React.Component {
                     <View style={Styles.titleContainer}>
                         <Text
                             sallowFontScaling={false}
-                            tyle={Styles.formInputLabel}
+                            style={Styles.formInputLabel}
                         >
                             {formData.title
                                 ? formData.title.toLocaleUpperCase()

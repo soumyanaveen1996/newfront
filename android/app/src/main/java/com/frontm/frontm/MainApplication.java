@@ -70,7 +70,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
-          new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to handle microphone permissions
+          new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
+                                                                   // handle microphone
+                                                                   // permissions
                                                                    // in your application
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
           new MapsPackage(), new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),

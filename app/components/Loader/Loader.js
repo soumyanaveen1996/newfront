@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Modal, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import { headerConfig } from './config';

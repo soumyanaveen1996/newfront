@@ -1042,6 +1042,10 @@ acorn@^5.5.0:
 adm-zip@^0.4.7:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.11.tgz#2aa54c84c4b01a9d0fb89bb11982a51f13e3d62a"
+<<<<<<< HEAD
+=======
+  integrity sha512-L8vcjDTCOIJk7wFvmlEUN7AsSb8T+2JrdP7KINBjzr24TJ5Mwj590sLu3BC7zNZowvJWa/JtPmD8eJCzdtDWjA==
+>>>>>>> c4aa55aab6bd61b3edffecfa9ef18399d44b12fb
 
 agent-base@4, agent-base@^4.1.0, agent-base@^4.2.0:
   version "4.2.1"
@@ -4414,6 +4418,10 @@ has-gulplog@^0.1.0:
 has-symbol-support-x@^1.4.1:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/has-symbol-support-x/-/has-symbol-support-x-1.4.2.tgz#1409f98bc00247da45da67cee0a36f282ff26455"
+<<<<<<< HEAD
+=======
+  integrity sha512-3ToOva++HaW+eCpgqZrCfN51IPB+7bJNVT6CUATzueB5Heb8o6Nam0V3HG5dlDvZU1Gn5QLcbahiKw/XVk5JJw==
+>>>>>>> c4aa55aab6bd61b3edffecfa9ef18399d44b12fb
 
 has-to-string-tag-x@^1.2.0:
   version "1.4.1"
@@ -6327,6 +6335,10 @@ mimic-fn@^1.0.0:
 mimic-response@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
+<<<<<<< HEAD
+=======
+  integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==
+>>>>>>> c4aa55aab6bd61b3edffecfa9ef18399d44b12fb
 
 min-document@^2.19.0:
   version "2.19.0"
@@ -7446,6 +7458,10 @@ react-native-event-source@^1.0.1:
 react-native-fbsdk@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.8.0.tgz#4ee95ebb7be4b00fa9f871ca594f068c9782c7de"
+<<<<<<< HEAD
+=======
+  integrity sha512-odqSTgvXtw9f84iU0THTjK+Z9Lvy14aP5Yd0fdfHCXFpb/Q0WrpwsSyjPFXG1AsWIe+FtpzzgJsjOu6E2xqgMQ==
+>>>>>>> c4aa55aab6bd61b3edffecfa9ef18399d44b12fb
   dependencies:
     adm-zip "^0.4.7"
     fastfall "^1.5.1"
