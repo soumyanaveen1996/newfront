@@ -44,10 +44,10 @@ export default StyleSheet.create({
     headerText: {
         textAlign: 'center',
         color: 'rgba(74,74,74,1)',
-        fontSize: 24,
-        fontWeight: '500',
+        fontSize: 26,
+        fontWeight: '400',
         letterSpacing: 1,
-        lineHeight: 36,
+        lineHeight: 26,
         marginBottom: 24
     },
     text: {
@@ -132,8 +132,8 @@ export default StyleSheet.create({
     },
     arrow: Platform.select({
         android: {
-            width: 35,
-            height: 30
+            width: 15,
+            height: 10
         }
     })
 });

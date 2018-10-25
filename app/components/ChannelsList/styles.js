@@ -3,8 +3,8 @@ import { SCREEN_WIDTH, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
 
 export const ChannelsListItemColors = {
-    titleColor: 'rgb(255, 82, 59)',
-    subTitleColor: 'rgb(71, 72, 78)',
+    titleColor: 'rgba(74, 74, 74, 1)',
+    subTitleColor: 'rgba(153,153,153,1);',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
     countColor: 'rgb(62,137,252)',
@@ -25,7 +25,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH,
-        height: 75,
+        height: 80,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -84,7 +84,7 @@ export default StyleSheet.create({
     },
     flatList: {
         height: '100%',
-        paddingTop: 5
+        paddingTop: 15
     },
     container: {
         flex: 1,
@@ -96,17 +96,20 @@ export default StyleSheet.create({
     },
     title: {
         color: ChannelsListItemColors.titleColor,
-        fontSize: 15,
-        fontWeight: 'bold'
+        fontFamily: 'SF Pro Text',
+        fontSize: 18,
+        fontWeight: '300'
     },
     subTitle: {
         color: ChannelsListItemColors.subTitleColor,
-        fontSize: 15,
+        fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: '300',
         marginTop: 5
     },
     image: {
-        height: 40,
-        width: 40,
+        height: 50,
+        width: 50,
         marginTop: 5
     },
     textContainer: {

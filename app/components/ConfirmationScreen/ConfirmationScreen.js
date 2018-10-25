@@ -135,71 +135,67 @@ export default class ConfirmationScreen extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
-                <ScrollView style={styles.container}>
-                    <KeyboardAvoidingView style={{ flex: 1 }}>
-                        <View style={styles.innerContainer}>
-                            <View style={styles.captionText}>
-                                <Text style={styles.header}>
-                                    Confirmation code
-                                </Text>
-                                <Text style={styles.firstTitle}>
-                                    A confirmation code, with a 24 hour
-                                    validity, has been sent to{' '}
-                                    <Text style={styles.emailText}>
-                                        {this.state.userEmail}
-                                    </Text>{' '}
-                                </Text>
-                                <Text style={styles.secondTitle}>
-                                    Please enter the code below to complete the
-                                    registration process
-                                </Text>
-                            </View>
-                            <View style={styles.pinCode}>
-                                <TextInput
-                                    style={styles.textInput}
-                                    keyboardType="numeric"
-                                    autoFocus={true}
-                                    placeholder="------"
-                                    returnKeyType={'done'}
-                                    onChangeText={this.onChangeCode.bind(this)}
-                                    maxLength={6} //setting limit of input
-                                />
-                            </View>
-                            <View style={styles.codeButton}>
-                                <TouchableOpacity
-                                    disabled={!this.checkFieldEmpty()}
-                                    style={
-                                        this.checkFieldEmpty()
-                                            ? styles.buttonContainer
-                                            : styles.diableButton
-                                    }
-                                    onPress={this.onFormSubmit.bind(this)}
-                                >
-                                    <Text style={styles.buttonText}>Done</Text>
-                                </TouchableOpacity>
-                                <View style={{ bottom: 60 }}>
-                                    {this.state.errorMessage ? (
-                                        <Text
-                                            style={{
-                                                color: 'rgba(255,0,0,1)'
-                                            }}
-                                        >
-                                            {this.state.errorMessage}
-                                        </Text>
-                                    ) : null}
-                                </View>
-                            </View>
-                            <TouchableOpacity
-                                style={styles.resendButton}
-                                onPress={this.onResendButton.bind(this)}
-                            >
-                                <Text style={styles.textColor}>
-                                    Review email address and send the code again
-                                </Text>
-                            </TouchableOpacity>
+                <KeyboardAvoidingView style={{ flex: 1 }}>
+                    <ScrollView style={styles.container}>
+                        <View style={styles.captionText}>
+                            <Text style={styles.header}>Confirmation code</Text>
+                            <Text style={styles.firstTitle}>
+                                A confirmation code, with a 24 hour validity,
+                                has been sent to{' '}
+                                <Text style={styles.emailText}>
+                                    {this.state.userEmail}
+                                </Text>{' '}
+                            </Text>
+                            <Text style={styles.secondTitle}>
+                                Please enter the code below to complete the
+                                registration process
+                            </Text>
                         </View>
-                    </KeyboardAvoidingView>
-                </ScrollView>
+                        <View style={styles.pinCode}>
+                            <TextInput
+                                style={styles.textInput}
+                                keyboardType="numeric"
+                                autoFocus={true}
+                                placeholder="------"
+                                returnKeyType={'done'}
+                                onChangeText={this.onChangeCode.bind(this)}
+                                maxLength={6} //setting limit of input
+                            />
+                        </View>
+                        <View style={styles.codeButton}>
+                            <TouchableOpacity
+                                disabled={!this.checkFieldEmpty()}
+                                style={
+                                    this.checkFieldEmpty()
+                                        ? styles.buttonContainer
+                                        : styles.diableButton
+                                }
+                                onPress={this.onFormSubmit.bind(this)}
+                            >
+                                <Text style={styles.buttonText}>Done</Text>
+                            </TouchableOpacity>
+                            <View style={{ bottom: 60 }}>
+                                {this.state.errorMessage ? (
+                                    <Text
+                                        style={{
+                                            color: 'rgba(255,0,0,1)'
+                                        }}
+                                    >
+                                        {this.state.errorMessage}
+                                    </Text>
+                                ) : null}
+                            </View>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.resendButton}
+                            onPress={this.onResendButton.bind(this)}
+                        >
+                            <Text style={styles.textColor}>
+                                Review email address and send the code again
+                            </Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </View>
         );
     }

@@ -5,8 +5,8 @@ import Utils from '../../lib/utils';
 
 export default StyleSheet.create({
     headerTitleStyle: {
-        fontSize: 17,
-        color: GlobalColors.white,
+        fontSize: 18,
+        color: GlobalColors.headerBlack,
         fontWeight: '500'
     },
     searchBar: {
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     },
 
     tabStyle: {
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.tabBackground,
         borderColor: GlobalColors.white
     },
     tabTextStyle: {
@@ -38,7 +38,7 @@ export default StyleSheet.create({
     },
     segmentedControlTab: {
         height: 40,
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.tabBackground,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'

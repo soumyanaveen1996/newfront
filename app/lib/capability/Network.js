@@ -33,7 +33,7 @@ import _ from 'lodash';
 
 export class NetworkError extends Error {
     constructor(code, message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }
@@ -135,6 +135,7 @@ function Network(options, queue = false) {
                         //console.log('Response raw : ', response);
                         if (response.status === 200) {
                             response.json().then(json => {
+                                console.log(json);
                                 resolve({
                                     data: json,
                                     status: response.status,

@@ -29,11 +29,11 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import { LoginScreen } from '../Login';
 import AfterLogin from '../../services/afterLogin';
 import { DataManager } from '../../lib/DataManager';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
+import { BackgroundImage } from '../../components/BackgroundImage';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -343,15 +343,12 @@ export default class MainScreen extends React.Component {
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots}
                     />
-                    {this.renderFloatingButton()}
                 </View>
             );
         }
     }
 
     render() {
-        return (
-            <View style={MainScreenStyles.container}>{this.renderMain()}</View>
-        );
+        return <BackgroundImage>{this.renderMain()}</BackgroundImage>;
     }
 }

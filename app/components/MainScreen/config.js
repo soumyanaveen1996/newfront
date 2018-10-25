@@ -5,7 +5,7 @@ export const filterButtonConfig = {
     name: 'tune',
     size: 26,
     underlayColor: GlobalColors.transparent,
-    color: GlobalColors.white,
+    color: GlobalColors.sideButtons,
     fontWeight: '500'
 };
 

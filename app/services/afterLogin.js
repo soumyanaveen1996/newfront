@@ -18,12 +18,16 @@ export default class AfterLogin {
         }
     };
 
-    configureNotifications = async () => {
-        Notification.deviceInfo().then(info => {
-            if (info) {
-                Notification.configure(this.handleNotification.bind(this));
-            }
-        });
+    configureNotifications = () => {
+        Notification.deviceInfo()
+            .then(info => {
+                if (info) {
+                    Notification.configure(this.handleNotification.bind(this));
+                }
+            })
+            .catch(err => {
+                console.log('error from after login ', err);
+            });
     };
 
     handleNotification = notification => {

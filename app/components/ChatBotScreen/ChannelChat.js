@@ -142,6 +142,9 @@ export default class ChannelChat extends ChatBotScreen {
                     )
                 );
                 this.setNavigationParams(context, user);
+
+                console.log('Conversation context ', context);
+                console.log('Conversation participants ', this.participants);
                 return context;
             }
             // Else its a new conversation with participants.

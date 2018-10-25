@@ -2,7 +2,7 @@ import BackgroundTaskDAO from '../persistence/BackgroundTaskDAO';
 
 export class BackgroundTaskError extends Error {
     constructor(code, message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }

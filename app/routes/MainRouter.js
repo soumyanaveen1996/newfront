@@ -30,11 +30,11 @@ import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
 import Config from './config';
-import { Auth } from '../lib/capability';
 import { SignupScreen } from '../components/Signup';
 import { SwiperScreen } from '../components/Swiper';
 import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScreen';
 import { ResendCodeScreen } from '../components/ResendCodeScreen';
+import { TabIcon } from '../components/TabIcon';
 
 const MainRouter = () => {
     // We want white network bar
@@ -57,12 +57,8 @@ const MainRouter = () => {
                             headerTintColor={
                                 Config.navBar.navigationBarTintColor
                             }
+                            headerTitleStyle={Config.navBar.titleStyle}
                         >
-                            <Scene
-                                key={ROUTER_SCENE_KEYS.timeline}
-                                component={MainScreen}
-                                title={I18n.t('FrontM')}
-                            />
                             <Scene
                                 key={ROUTER_SCENE_KEYS.swiperScreen}
                                 component={SwiperScreen}
@@ -88,6 +84,71 @@ const MainRouter = () => {
                                 component={ResendCodeScreen}
                                 hideNavBar
                             />
+                            <Scene
+                                key={ROUTER_SCENE_KEYS.tabBar}
+                                tabs={true}
+                                tabBarStyle={{
+                                    backgroundColor: '#ffffff',
+                                    height: 60
+                                }}
+                                hideNavBar
+                            >
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.homeMain}
+                                    title={I18n.t('Home')}
+                                    imageSource={require('../images/tabbar-home/tabbar-home.png')}
+                                    icon={TabIcon}
+                                >
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.timeline}
+                                        component={MainScreen}
+                                        title={I18n.t('FrontM')}
+                                    />
+                                </Scene>
+
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.contactsMain}
+                                    title={I18n.t('Contacts')}
+                                    imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                    icon={TabIcon}
+                                >
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.addContacts}
+                                        headerStyle={
+                                            Config.navBar.borderlessHeaderStyle
+                                        }
+                                        component={ContactsPicker}
+                                        title={I18n.t('Contacts')}
+                                        back
+                                    />
+                                </Scene>
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.channelsMenu}
+                                    title={I18n.t('Channels')}
+                                    imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
+                                    icon={TabIcon}
+                                >
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.channelsList}
+                                        component={ChannelsList}
+                                        title={I18n.t('Channels')}
+                                        back
+                                    />
+                                </Scene>
+
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.marketplaceMenu}
+                                    title={I18n.t('Bot_Store')}
+                                    imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
+                                    icon={TabIcon}
+                                >
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.botStore}
+                                        component={BotStoreScreen}
+                                        title={I18n.t('Bot_Store')}
+                                    />
+                                </Scene>
+                            </Scene>
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}
                                 component={BotChat}
@@ -134,15 +195,7 @@ const MainRouter = () => {
                                 component={BarcodeScanner}
                                 hideNavBar
                             />
-                            <Scene
-                                key={ROUTER_SCENE_KEYS.addContacts}
-                                headerStyle={
-                                    Config.navBar.borderlessHeaderStyle
-                                }
-                                component={ContactsPicker}
-                                title={I18n.t('My_Contacts')}
-                                back
-                            />
+
                             <Scene
                                 key={ROUTER_SCENE_KEYS.conversations}
                                 component={ConversationList}
@@ -153,12 +206,7 @@ const MainRouter = () => {
                                 key={ROUTER_SCENE_KEYS.imageViewer}
                                 component={ImageViewer}
                             />
-                            <Scene
-                                key={ROUTER_SCENE_KEYS.channelsList}
-                                component={ChannelsList}
-                                title={I18n.t('Channels')}
-                                back
-                            />
+
                             <Scene
                                 key={ROUTER_SCENE_KEYS.SNRChart}
                                 component={SNRChart}

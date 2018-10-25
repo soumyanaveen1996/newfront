@@ -72,6 +72,7 @@ import {
 } from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
+import { BackgroundImage } from '../BackgroundImage';
 
 const R = require('ramda');
 
@@ -1691,8 +1692,7 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView
-                style={chatStyles.safeArea}
+            <BackgroundImage
                 accessibilityLabel="Messages List"
                 testID="messages-list"
             >
@@ -1733,7 +1733,7 @@ export default class ChatBotScreen extends React.Component {
                     {this.renderNetworkStatusBar()}
                     {this.renderCallModal()}
                 </KeyboardAvoidingView>
-            </SafeAreaView>
+            </BackgroundImage>
         );
     }
 }

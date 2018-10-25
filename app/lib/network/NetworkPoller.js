@@ -78,6 +78,9 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
+        if (Platform.OS === 'android') {
+            return;
+        }
         this.unsubscribeFromServerEvents();
         let user = await Auth.getUser();
         if (user.userId === 'default_user_uuid') {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, StatusBar } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Header, Icon } from 'react-native-elements';
 import { GlobalColors } from '../../config/styles';
@@ -21,6 +21,7 @@ import {
 } from '../../lib/events';
 import { Auth } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import { BackgroundImage } from '../BackgroundImage';
 
 export default class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -75,7 +76,7 @@ export default class BotStoreScreen extends React.Component {
                 <Header
                     innerContainerStyles={styles.headerInnerContainerForSearch}
                     outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.accent}
+                    backgroundColor={GlobalColors.white}
                 >
                     {/* <SearchBar
                     lightTheme
@@ -91,9 +92,9 @@ export default class BotStoreScreen extends React.Component {
                 <Header
                     innerContainerStyles={styles.headerInnerContainerStyles}
                     outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.accent}
+                    backgroundColor={GlobalColors.white}
                     centerComponent={BotStoreScreen.renderHeaderTitle()}
-                    leftComponent={BotStoreScreen.renderLeftIcon(state)}
+                    // leftComponent={BotStoreScreen.renderLeftIcon(state)}
                 />
             );
         }
@@ -273,10 +274,11 @@ export default class BotStoreScreen extends React.Component {
         }
 
         return (
-            <View style={{ flex: 1 }}>
+            <BackgroundImage style={{ flex: 1 }}>
+                <StatusBar backgroundColor="blue" barStyle="light-content" />
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
-            </View>
+            </BackgroundImage>
         );
     }
 }

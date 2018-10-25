@@ -129,6 +129,8 @@ class Bot extends events.EventEmitter {
                 throw new NetworkError('Error getting catalog');
             }
 
+            // console.log('data of catalog ', catalog);
+
             catalog = _.map(catalog, bot =>
                 _.merge(bot, { logoUrl: FrontmUtils.botLogoUrl(bot.logoUrl) })
             );
