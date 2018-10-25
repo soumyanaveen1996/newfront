@@ -34,6 +34,7 @@ import { DataManager } from '../../lib/DataManager';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { BackgroundImage } from '../../components/BackgroundImage';
+import { TourScreen } from '../TourScreen';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -351,6 +352,7 @@ export default class MainScreen extends React.Component {
     render() {
         return (
             <BackgroundImage>
+                {/* <TourScreen /> */}
                 <StatusBar backgroundColor="grey" barStyle="light-content" />
                 {this.renderMain()}
             </BackgroundImage>

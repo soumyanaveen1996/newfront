@@ -166,7 +166,6 @@ export default class ContactsPicker extends React.Component {
                 Actions.peopleChat({
                     bot: imBot,
                     otherParticipants: participants,
-                    type: ActionConst.REPLACE,
                     onBack: this.props.onBack
                 });
             });
