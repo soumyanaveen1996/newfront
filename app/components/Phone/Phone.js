@@ -3,13 +3,14 @@ import { Alert, View, Text, TouchableOpacity, Keyboard } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { EventEmitter, TwilioEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
 import { Auth, Network } from '../../lib/capability';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 export const PhoneState = {
     init: 'init',
@@ -51,7 +52,7 @@ export default class Phone extends React.Component {
         if (this.state.phoneState === PhoneState.init) {
             this.initialize();
         } else if (this.state.phoneState === PhoneState.incomingcall) {
-            // this.findCallerName()
+            this.findCallerName({ username: this.state.username });
             Keyboard.dismiss();
         }
     }
@@ -128,8 +129,14 @@ export default class Phone extends React.Component {
     }
 
     connectionDidDisconnectHandler(data) {
-        const test = Actions.pop();
-        console.log(test);
+        const sceneBefore = Actions.currentScene;
+        Actions.pop();
+        const sceneAfter = Actions.currentScene;
+        if (sceneBefore === sceneAfter) {
+            Actions.homeMain({
+                type: ActionConst.REPLACE
+            });
+        }
     }
 
     accept() {

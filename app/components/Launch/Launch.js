@@ -39,8 +39,8 @@ import { PhoneState } from '../../components/Phone';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-const CODE_PUSH_ACTIVATE = true;
-// const CODE_PUSH_ACTIVATE = false
+// const CODE_PUSH_ACTIVATE = true;
+const CODE_PUSH_ACTIVATE = false;
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
@@ -130,17 +130,17 @@ export default class Splash extends React.Component {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        // const gState = Store.getState()
-                        // console.log(gState)
-                        // const {call_state} = gState
-                        // if (call_state && call_state === 'PENDING') {
-                        //     Actions.phone({
-                        //         type: ActionConst.REPLACE,
-                        //         state: PhoneState.incomingcall,
-                        //         data: gState
-                        //     })
-                        //     return
-                        // }
+                        const gState = Store.getState();
+                        console.log(gState);
+                        const { call_state } = gState;
+                        if (call_state && call_state === 'PENDING') {
+                            Actions.phone({
+                                type: ActionConst.REPLACE,
+                                state: PhoneState.incomingcall,
+                                data: gState
+                            });
+                            return;
+                        }
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();
