@@ -32,7 +32,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
     MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
     MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota',
-    MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion'
+    MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion',
+    MESSAGE_TYPE_WEB_CARD: 'web_card'
 };
 
 export const IntToMessageTypeConstants = {
@@ -46,7 +47,8 @@ export const IntToMessageTypeConstants = {
     220: MessageTypeConstants.MESSAGE_TYPE_BUTTON,
     230: MessageTypeConstants.MESSAGE_TYPE_FORM,
     240: MessageTypeConstants.MESSAGE_TYPE_MAP,
-    250: MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
+    250: MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
+    260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -143,6 +145,19 @@ export default class Message {
     smartSuggestions = replies => {
         this._msg = JSON.stringify(replies || []);
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS;
+    };
+
+    /**
+     * Store web pages datas and options for sliders
+     * @param {Object} webCardsList - json object of data - will be stringified
+     * @param {bool} previews - display or not pages previews
+     */
+    webCard = (webCardsList, previews = false) => {
+        this._msg = JSON.stringify(webCardsList || []);
+        if (previews) {
+            this._options = JSON.stringify(previews);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_WEB_CARD;
     };
 
     /**
@@ -260,6 +275,7 @@ export default class Message {
 
     getMessage = () => {
         if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
@@ -401,6 +417,7 @@ export default class Message {
             return null;
         }
         if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
@@ -540,6 +557,7 @@ export default class Message {
 
     isEmptyMessage() {
         const emptyMessages = [
+            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
