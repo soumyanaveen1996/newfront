@@ -9,7 +9,7 @@ import { SatelliteConnectionEvents } from '../events';
 import _ from 'lodash';
 import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
-import { updateStore } from '../../lib/Store';
+import Store from '../../lib/Store';
 import PushNotification from 'react-native-push-notification';
 
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
@@ -167,10 +167,10 @@ const readQueue = user =>
 const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
         EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
-        updateStore({ satelliteConnection: true });
+        Store.updateStore({ satelliteConnection: true });
     } else {
         EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
-        updateStore({ satelliteConnection: false });
+        Store.updateStore({ satelliteConnection: false });
     }
 };
 

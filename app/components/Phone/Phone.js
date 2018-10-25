@@ -128,7 +128,8 @@ export default class Phone extends React.Component {
     }
 
     connectionDidDisconnectHandler(data) {
-        Actions.pop();
+        const test = Actions.pop();
+        console.log(test);
     }
 
     accept() {

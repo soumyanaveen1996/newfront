@@ -21,7 +21,11 @@ import {
     NETWORK_EVENTS_CONSTANTS,
     NetworkHandler
 } from '../../lib/network';
-import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
+import EventEmitter, {
+    MessageEvents,
+    AuthEvents,
+    TwilioEvents
+} from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings } from '../../lib/capability';
 import Bot from '../../lib/bot';
