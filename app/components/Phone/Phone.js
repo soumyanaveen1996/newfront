@@ -43,17 +43,21 @@ export default class Phone extends React.Component {
             TwilioEvents.connectionDidConnect,
             this.connectionDidConnectHandler.bind(this)
         );
+        this.deviceDidReceiveIncomingListener = EventEmitter.addListener(
+            TwilioEvents.deviceDidReceiveIncoming,
+            this.deviceDidReceiveIncomingHandler.bind(this)
+        );
 
         if (this.state.phoneState === PhoneState.init) {
             this.initialize();
         } else if (this.state.phoneState === PhoneState.incomingcall) {
-            this.findCallerName();
+            // this.findCallerName()
             Keyboard.dismiss();
         }
     }
 
-    findCallerName() {
-        const { username } = this.state;
+    findCallerName({ username }) {
+        // const {username} = this.state
         if (username && _.startsWith(username, 'client:')) {
             const clientId = username.substr(7);
             const clientDetails = ContactsCache.getUserDetails(clientId);
@@ -106,12 +110,21 @@ export default class Phone extends React.Component {
         if (this.connectionDidConnectListener) {
             this.connectionDidConnectListener.remove();
         }
+        if (this.deviceDidReceiveIncomingListener) {
+            this.deviceDidReceiveIncomingListener.remove();
+        }
     }
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             this.setState({ phoneState: PhoneState.incall });
         }
+    }
+
+    deviceDidReceiveIncomingHandler(data) {
+        const username = data.call_from;
+        this.setState({ phoneState: PhoneState.incomingcall });
+        this.findCallerName({ username });
     }
 
     connectionDidDisconnectHandler(data) {
@@ -169,6 +182,8 @@ export default class Phone extends React.Component {
             return `${I18n.t('Calling')} ${userName}`;
         } else if (state === PhoneState.init) {
             return 'Initiating Call';
+        } else if (state === PhoneState.incomingcall) {
+            return `${this.state.username}`;
         } else {
             return I18n.t('From');
         }

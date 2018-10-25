@@ -129,6 +129,7 @@ export default class Splash extends React.Component {
                 .then(user => {
                     if (user) {
                         this.showMainScreen();
+                        TwilioVoIP.init();
                     } else {
                         this.goToLoginPage();
                     }
