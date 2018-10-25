@@ -1189,9 +1189,9 @@ acorn@^5.5.0:
   integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
 
 adm-zip@^0.4.7:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.7.tgz#8606c2cbf1c426ce8c8ec00174447fd49b6eafc1"
-  integrity sha1-hgbCy/HEJs6MjsABdER/1Jtur8E=
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.11.tgz#2aa54c84c4b01a9d0fb89bb11982a51f13e3d62a"
+  integrity sha512-L8vcjDTCOIJk7wFvmlEUN7AsSb8T+2JrdP7KINBjzr24TJ5Mwj590sLu3BC7zNZowvJWa/JtPmD8eJCzdtDWjA==
 
 agent-base@4, agent-base@^4.1.0, agent-base@^4.2.0:
   version "4.2.1"
@@ -5064,9 +5064,9 @@ has-gulplog@^0.1.0:
     sparkles "^1.0.0"
 
 has-symbol-support-x@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/has-symbol-support-x/-/has-symbol-support-x-1.4.1.tgz#66ec2e377e0c7d7ccedb07a3a84d77510ff1bc4c"
-  integrity sha512-JkaetveU7hFbqnAC1EV1sF4rlojU2D4Usc5CmS69l6NfmPDnpnFUegzFg33eDkkpNCxZ0mQp65HwUDrNFS/8MA==
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/has-symbol-support-x/-/has-symbol-support-x-1.4.2.tgz#1409f98bc00247da45da67cee0a36f282ff26455"
+  integrity sha512-3ToOva++HaW+eCpgqZrCfN51IPB+7bJNVT6CUATzueB5Heb8o6Nam0V3HG5dlDvZU1Gn5QLcbahiKw/XVk5JJw==
 
 has-to-string-tag-x@^1.2.0:
   version "1.4.1"
@@ -7264,9 +7264,9 @@ mimic-fn@^1.0.0:
   integrity sha1-5md4PZLonb00KBi1IwudYqZyrRg=
 
 mimic-response@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.0.tgz#df3d3652a73fded6b9b0b24146e6fd052353458e"
-  integrity sha1-3z02Uqc/3ta5sLJBRub9BSNTRY4=
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
+  integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==
 
 min-document@^2.19.0:
   version "2.19.0"
@@ -8569,10 +8569,10 @@ react-native-event-source@^1.0.1:
   resolved "https://registry.yarnpkg.com/react-native-event-source/-/react-native-event-source-1.0.1.tgz#7d063207d2d2d58f587bdd15f1783ebe4bc65c87"
   integrity sha512-pDbGSjy2nWaX7ZEDWSL1krcGLm5ctyjlwYmQi7q/8bGtRXio7YJi5OKZjr3T33MAmD3PV/Bs4NH/f7uvojndZw==
 
-react-native-fbsdk@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.7.0.tgz#263dfe5845205de7b80efb0f18ed5c1ded025291"
-  integrity sha512-wM+S+NGaqn437H6IYebLhBy2612aIXNPPxunvN5SdJVIIQZdGhkdDZUDbZmgmFnMRY3wQpQatzp+vRjEmAcEmg==
+react-native-fbsdk@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.8.0.tgz#4ee95ebb7be4b00fa9f871ca594f068c9782c7de"
+  integrity sha512-odqSTgvXtw9f84iU0THTjK+Z9Lvy14aP5Yd0fdfHCXFpb/Q0WrpwsSyjPFXG1AsWIe+FtpzzgJsjOu6E2xqgMQ==
   dependencies:
     adm-zip "^0.4.7"
     fastfall "^1.5.1"

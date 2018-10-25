@@ -8,10 +8,10 @@ import {
     RefreshControl,
     View,
     Alert,
-    SafeAreaView,
+    BackHandler,
     Platform
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
@@ -188,6 +188,19 @@ export default class ChatBotScreen extends React.Component {
             this.props.onBack();
         }
     };
+
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'botChat') {
+            Actions.timeline({ type: ActionConst.REPLACE });
+        }
+    }
 
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.

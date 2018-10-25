@@ -1,9 +1,10 @@
 import React from 'react';
+import { BackHandler } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import { Icons } from '../../config/icons';
@@ -90,6 +91,19 @@ export default class ChannelChat extends ChatBotScreen {
         if (this.conversation) {
             this.botKey = this.conversation.conversationId;
             this.newSession = false;
+        }
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'channelChat') {
+            Actions.timeline({ type: ActionConst.REPLACE });
         }
     }
 

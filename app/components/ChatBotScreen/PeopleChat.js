@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert, Keyboard } from 'react-native';
+import { View, Alert, Keyboard, BackHandler } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import {
     ConversationContext,
@@ -9,7 +9,7 @@ import {
 } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
@@ -131,6 +131,18 @@ export default class PeopleChat extends ChatBotScreen {
         }
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        if (Actions.currentScene === 'peopleChat') {
+            Actions.timeline({ type: ActionConst.REPLACE });
+        }
+    }
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId;
