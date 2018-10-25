@@ -17,7 +17,8 @@ export default StyleSheet.create({
         height: 85,
         borderBottomWidth: 1,
         borderColor: 'transparent',
-        borderRadius: 15
+        borderRadius: 15,
+        marginBottom: 10
     },
     rowContent: {
         flex: 1,
@@ -59,7 +60,8 @@ export default StyleSheet.create({
         flex: 1
     },
     flatList: {
-        flex: 1
+        flex: 1,
+        paddingTop: 15
     },
     toast: {
         position: 'absolute',

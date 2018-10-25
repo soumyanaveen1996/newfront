@@ -342,7 +342,7 @@ export default class InstalledBotsScreen extends React.Component {
             <Swipeout
                 right={swipeBtns}
                 style={{ flex: 1 }}
-                backgroundColor={GlobalColors.white}
+                backgroundColor={GlobalColors.transparent}
                 autoClose={true}
             >
                 <View key={item.botId} style={styles.rowContainer}>

@@ -96,9 +96,9 @@ I18n.translations = {
         Confirm: 'Confirm',
         Call_Message:
             'Available when you connect over Satellite broadband (L-Band, Ka-Band)',
-        Password_not_empty: 'Please enter a password',
-        Not_a_number: 'Please enter a number',
-        Not_an_email: 'Please enter a valid email',
+        Password_not_empty: 'Please enter password',
+        Not_a_number: 'Please enter number',
+        Not_an_email: 'Please enter valid email',
         Field_mandatory: 'Field is mandatory',
         Channel_unsubscribed: 'Unsubscribed from the channel',
         Channel_unsubscribe_failed: 'Failed to unsubscribe from the channel',

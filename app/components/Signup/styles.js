@@ -158,5 +158,49 @@ export default StyleSheet.create({
             color: '#ffffff',
             textAlign: 'center'
         }
+    }),
+    successContainer: Platform.select({
+        ios: {
+            position: 'absolute',
+            bottom: -30,
+            right: 0
+        },
+        android: {
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+    userSuccess: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(47,199,111,1)',
+            zIndex: 999999,
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(47,199,111,1)',
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
+    successText: Platform.select({
+        ios: {
+            color: '#ffffff',
+            textAlign: 'center'
+        },
+        android: {
+            color: '#ffffff',
+            textAlign: 'center'
+        }
     })
 });

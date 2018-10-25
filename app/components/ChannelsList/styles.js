@@ -25,13 +25,14 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH,
-        height: 80,
+        height: 95,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
     },
     rowContent: {
         flex: 1,
+        marginBottom: 10,
         justifyContent: 'center',
         backgroundColor: 'white'
     },

@@ -1711,7 +1711,10 @@ export default class ChatBotScreen extends React.Component {
                     />
                     {this.state.showSlider ? this.renderSlider() : null}
                     {/* {this.renderSmartSuggestions()} */}
-                    {this.renderChatInputBar()}
+                    <View style={{ alignItems: 'center' }}>
+                        {this.renderChatInputBar()}
+                    </View>
+
                     {this.renderNetworkStatusBar()}
                     {this.renderCallModal()}
                 </KeyboardAvoidingView>

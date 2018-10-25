@@ -7,7 +7,8 @@ export default StyleSheet.create({
     headerTitleStyle: {
         fontSize: 18,
         color: GlobalColors.headerBlack,
-        fontWeight: '500'
+        fontWeight: '400',
+        fontFamily: 'SF Pro Text'
     },
     searchBar: {
         flex: 1,
@@ -48,8 +49,8 @@ export default StyleSheet.create({
             position: 'relative',
             borderBottomColor: GlobalColors.accent,
             paddingLeft: 0,
-            paddingBottom: 0,
-            height: Utils.isiPhoneX() ? 70 : 50
+            paddingBottom: 10,
+            height: Utils.isiPhoneX() ? 70 : 60
         },
         android: {
             position: 'relative',

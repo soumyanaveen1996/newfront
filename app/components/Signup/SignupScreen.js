@@ -279,6 +279,35 @@ export default class SignupScreen extends React.Component {
             );
         }
     };
+
+    displayPasswordSuccessMessege = () => {
+        if (this.passwordValidation(this.state.password)) {
+            return (
+                <View style={styles.successContainer}>
+                    <View style={styles.userSuccess}>
+                        <Text style={styles.successText}>Perfect!</Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
+    displayConfrimSuccessMessege = () => {
+        if (
+            this.state.confirmPassword &&
+            this.state.confirmPassword.length > 0 &&
+            this.passwordConfirm()
+        ) {
+            return (
+                <View style={styles.successContainer}>
+                    <View style={styles.userSuccess}>
+                        <Text style={styles.successText}>Match!</Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
     displayConfrimErrorMessege = () => {
         if (
             this.state.confirmPasswordError &&
@@ -409,6 +438,7 @@ export default class SignupScreen extends React.Component {
                                 secureTextEntry
                             />
                             {this.displayPasswordErrorMessege()}
+                            {this.displayPasswordSuccessMessege()}
                         </View>
                         <View style={styles.entryFields}>
                             <Text style={styles.placeholderText}>
@@ -444,6 +474,7 @@ export default class SignupScreen extends React.Component {
                                 secureTextEntry
                             />
                             {this.displayConfrimErrorMessege()}
+                            {this.displayConfrimSuccessMessege()}
                         </View>
                         <View
                             style={{
