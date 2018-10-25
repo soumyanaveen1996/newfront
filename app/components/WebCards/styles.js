@@ -11,7 +11,7 @@ export default StyleSheet.create({
         borderWidth: 0.2,
         width: 120,
         height: 120,
-        marginRight: 20,
+        marginRight: 10,
         marginVertical: 30,
         padding: 10,
         flexDirection: 'column',
