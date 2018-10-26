@@ -4,7 +4,8 @@ import {
     View,
     BackHandler,
     Alert,
-    StatusBar
+    StatusBar,
+    AsyncStorage
 } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
@@ -109,7 +110,8 @@ export default class MainScreen extends React.Component {
         this.eventSubscription = null;
         this.state = {
             loginState: false,
-            screenState: MainScreenStates.notLoaded
+            screenState: MainScreenStates.notLoaded,
+            firstTimer: true
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
@@ -154,7 +156,15 @@ export default class MainScreen extends React.Component {
         );
     }
 
-    componentWillMount() {
+    async componentWillMount() {
+        const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        console.log('we will see', getFirstTime);
+
+        if (getFirstTime) {
+            this.setState({ firstTimer: false });
+        } else {
+            console.log('start tutorial');
+        }
         AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
             'hardwareBackPress',
@@ -356,7 +366,7 @@ export default class MainScreen extends React.Component {
     render() {
         return (
             <BackgroundImage>
-                {/* <TourScreen /> */}
+                {this.state.firstTimer && <TourScreen />}
                 <StatusBar backgroundColor="grey" barStyle="light-content" />
                 {this.renderMain()}
             </BackgroundImage>

@@ -36,6 +36,14 @@ export default StyleSheet.create({
             bottom: 15
         }
     }),
+    backgroundImage: {
+        height: null,
+        paddingTop: 25,
+        width: SCREEN_WIDTH,
+        flex: 2,
+        backgroundColor: 'rgba(255,255,255,1)',
+        alignItems: 'center'
+    },
     innerBox: {
         width: 300,
         alignItems: 'center',
@@ -135,5 +143,10 @@ export default StyleSheet.create({
             width: 15,
             height: 10
         }
-    })
+    }),
+    logoStyle: {
+        width: 180,
+        height: 72,
+        marginBottom: 20
+    }
 });

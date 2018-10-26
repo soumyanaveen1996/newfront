@@ -65,7 +65,9 @@ const images = {
     backgroundImage: require('./background/background.png'),
     network_icon_automatic: require('./network-icon-automatic/network-icon-automatic.png'),
     dot_blue: require('./dot-blue/dot-blue.png'),
-    dot_gray: require('./dot-gray/dot-gray.png')
+    dot_gray: require('./dot-gray/dot-gray.png'),
+    frontm_logo: require('./frontm-logo/frontm-logo.png'),
+    bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png')
 };
 
 export default images;
