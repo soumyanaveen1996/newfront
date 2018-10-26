@@ -345,7 +345,7 @@ export default class SignupScreen extends React.Component {
                                 onBlur={() => {
                                     if (this.state.name.length < 3) {
                                         this.setState({
-                                            nameError: 'Atleat 3 letters'
+                                            nameError: 'Atleast 3 letters'
                                         });
                                     } else {
                                         this.setState({
