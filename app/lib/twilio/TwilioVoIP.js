@@ -181,27 +181,35 @@ export default class TwilioVoIP {
     connectionDidConnectHandler = data => {
         console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
 
-        Store.updateStore(data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
     };
 
     connectionDidDisconnectHandler = data => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
-        Store.updateStore(data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
         //this.closePhoneScreen();
     };
 
     callRejectedHandler = data => {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
-        Store.updateStore(data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         EventEmitter.emit(TwilioEvents.callRejected, data);
     };
 
     deviceDidReceiveIncomingHandler = data => {
         console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
-        Store.updateStore(data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         this.handleIncomingCall(data);
         EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     };
