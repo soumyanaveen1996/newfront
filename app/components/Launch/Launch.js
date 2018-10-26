@@ -33,13 +33,14 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { initStore } from '../../lib/Store';
+import Store from '../../lib/Store';
+import { PhoneState } from '../../components/Phone';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
 const CODE_PUSH_ACTIVATE = true;
-// const CODE_PUSH_ACTIVATE = false
+// const CODE_PUSH_ACTIVATE = false;
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
@@ -107,7 +108,7 @@ export default class Splash extends React.Component {
             null
         );
 
-        initStore({
+        Store.initStore({
             satelliteConnection: false
         });
         // Before login
@@ -125,9 +126,21 @@ export default class Splash extends React.Component {
         const checkStatus = await AsyncStorage.getItem('signupStage');
 
         if (isUserLoggedIn) {
+            await TwilioVoIP.init();
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        const gState = Store.getState();
+                        console.log(gState);
+                        const { call_state } = gState;
+                        if (call_state && call_state === 'PENDING') {
+                            Actions.phone({
+                                type: ActionConst.REPLACE,
+                                state: PhoneState.incomingcall,
+                                data: gState
+                            });
+                            return;
+                        }
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();

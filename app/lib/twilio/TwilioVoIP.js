@@ -7,6 +7,7 @@ import EventEmitter, { TwilioEvents } from '../../lib/events';
 import { Actions } from 'react-native-router-flux';
 import { PhoneState } from '../../components/Phone';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Store from '../../lib/Store';
 
 /*
 const _eventHandlers = {
@@ -112,7 +113,7 @@ export default class TwilioVoIP {
             TwilioEvents.connectionDidDisconnect,
             this.connectionDidDisconnectHandler
         );
-        AppState.addEventListener('change', this.handleAppStateChange);
+        // AppState.addEventListener('change', this.handleAppStateChange);
 
         if (Platform.OS === 'ios') {
             TwilioVoice.addEventListener(
@@ -180,23 +181,35 @@ export default class TwilioVoIP {
     connectionDidConnectHandler = data => {
         console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
 
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
     };
 
     connectionDidDisconnectHandler = data => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
         //this.closePhoneScreen();
     };
 
     callRejectedHandler = data => {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         EventEmitter.emit(TwilioEvents.callRejected, data);
     };
 
     deviceDidReceiveIncomingHandler = data => {
         console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
+        if (Platform.OS === 'android') {
+            Store.updateStore(data);
+        }
         this.handleIncomingCall(data);
         EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     };

@@ -1,8 +1,21 @@
 const R = require('ramda');
-const store = {};
-export const initStore = state => R.merge(store, state);
-export const updateStore = state => R.merge(store, state);
-export const clearStore = () => (store = {});
-export const getState = () => {
+let store = {};
+const initStore = state => {
+    store = R.merge(store, state);
+    return;
+};
+const updateStore = state => {
+    store = R.merge(store, state);
+    return;
+};
+const clearStore = () => (store = {});
+const getState = () => {
     return store;
+};
+
+export default {
+    initStore,
+    updateStore,
+    clearStore,
+    getState
 };
