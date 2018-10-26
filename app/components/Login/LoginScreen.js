@@ -178,7 +178,7 @@ export default class LoginScreen extends React.Component {
         await Auth.loginWithGoogle(conversationId, botName)
             .then(() => {
                 console.log('logged in using google');
-                this.setState({ loading: false });
+
                 this.showMainScreen();
             })
             .catch(err => {

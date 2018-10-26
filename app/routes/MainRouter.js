@@ -1,6 +1,13 @@
 import React from 'react';
 import { StatusBar, AsyncStorage } from 'react-native';
-import { Scene, Router, Lightbox } from 'react-native-router-flux';
+import {
+    Scene,
+    Router,
+    Lightbox,
+    ActionConst,
+    Actions,
+    Tabs
+} from 'react-native-router-flux';
 import { LoginScreen } from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
 import {
@@ -84,20 +91,23 @@ const MainRouter = () => {
                                 component={ResendCodeScreen}
                                 hideNavBar
                             />
-                            <Scene
+                            <Tabs
                                 key={ROUTER_SCENE_KEYS.tabBar}
                                 tabs={true}
                                 tabBarStyle={{
                                     backgroundColor: '#ffffff',
                                     height: 60
                                 }}
+                                swipeEnabled={true}
+                                showLabel={false}
                                 hideNavBar
                             >
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.homeMain}
-                                    title={I18n.t('Home')}
+                                    titleScreen={I18n.t('Home')}
                                     imageSource={require('../images/tabbar-home/tabbar-home.png')}
                                     icon={TabIcon}
+                                    initial={true}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.timeline}
@@ -108,7 +118,7 @@ const MainRouter = () => {
 
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.contactsMain}
-                                    title={I18n.t('Contacts')}
+                                    titleScreen={I18n.t('Contacts')}
                                     imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
                                     icon={TabIcon}
                                 >
@@ -124,7 +134,7 @@ const MainRouter = () => {
                                 </Scene>
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.channelsMenu}
-                                    title={I18n.t('Channels')}
+                                    titleScreen={I18n.t('Channels')}
                                     imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
                                     icon={TabIcon}
                                 >
@@ -138,7 +148,7 @@ const MainRouter = () => {
 
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.marketplaceMenu}
-                                    title={I18n.t('Bot_Store')}
+                                    titleScreen={I18n.t('Bot_Store')}
                                     imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
                                     icon={TabIcon}
                                 >
@@ -148,7 +158,7 @@ const MainRouter = () => {
                                         title={I18n.t('Bot_Store')}
                                     />
                                 </Scene>
-                            </Scene>
+                            </Tabs>
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}
                                 component={BotChat}

@@ -62,7 +62,10 @@ const images = {
     tabbar_marketplace: require('./tabbar-marketplace/tabbar-marketplace.png'),
     tabbar_marketplace_active: require('./tabbar-marketplace-active/tabbar-marketplace-active.png'),
     home_gray_arrow: require('./home-gray-arrow/home-gray-arrow.png'),
-    backgroundImage: require('./background/background.png')
+    backgroundImage: require('./background/background.png'),
+    network_icon_automatic: require('./network-icon-automatic/network-icon-automatic.png'),
+    dot_blue: require('./dot-blue/dot-blue.png'),
+    dot_gray: require('./dot-gray/dot-gray.png')
 };
 
 export default images;
