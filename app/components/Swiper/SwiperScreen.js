@@ -5,7 +5,7 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    ScrollView,
+    ImageBackground,
     BackHandler
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -35,7 +35,7 @@ export default class SwiperScreen extends Component {
                     imageSource: images.preview_slider_2
                 },
                 {
-                    header: 'Flying is fun again',
+                    header: 'Making flying fun again',
                     description:
                         'Discover the world below you, chat with others on the flight, book hotels, cabs, shop duty free and much more',
                     imageSource: images.preview_slider_3
@@ -142,16 +142,21 @@ export default class SwiperScreen extends Component {
                             source={this.state.swiperData[0].imageSource}
                         />
                     </View>
-                    <View style={styles.textBox}>
+                    <ImageBackground
+                        resizeMode="cover"
+                        style={styles.backgroundImage}
+                        source={images.logo_background}
+                    >
                         <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[0].header}
-                            </Text>
+                            <Image
+                                style={styles.logoStyle}
+                                source={images.frontm_logo}
+                            />
                             <Text style={styles.text}>
                                 {this.state.swiperData[0].description}
                             </Text>
                         </View>
-                    </View>
+                    </ImageBackground>
                 </View>
                 <View style={styles.slide}>
                     <View style={styles.sliderImageContainer}>
@@ -160,7 +165,11 @@ export default class SwiperScreen extends Component {
                             source={this.state.swiperData[1].imageSource}
                         />
                     </View>
-                    <View style={styles.textBox}>
+                    <ImageBackground
+                        resizeMode="cover"
+                        style={styles.backgroundImage}
+                        source={images.logo_background}
+                    >
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
                                 {this.state.swiperData[1].header}
@@ -169,7 +178,7 @@ export default class SwiperScreen extends Component {
                                 {this.state.swiperData[1].description}
                             </Text>
                         </View>
-                    </View>
+                    </ImageBackground>
                 </View>
                 <View style={styles.slide}>
                     <View style={styles.sliderImageContainer}>
@@ -178,7 +187,11 @@ export default class SwiperScreen extends Component {
                             source={this.state.swiperData[2].imageSource}
                         />
                     </View>
-                    <View style={styles.textBox}>
+                    <ImageBackground
+                        resizeMode="cover"
+                        style={styles.backgroundImage}
+                        source={images.logo_background}
+                    >
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
                                 {this.state.swiperData[2].header}
@@ -187,7 +200,7 @@ export default class SwiperScreen extends Component {
                                 {this.state.swiperData[2].description}
                             </Text>
                         </View>
-                    </View>
+                    </ImageBackground>
                 </View>
                 <View style={styles.slide}>
                     <View style={styles.sliderImageContainer}>
@@ -196,7 +209,11 @@ export default class SwiperScreen extends Component {
                             source={this.state.swiperData[3].imageSource}
                         />
                     </View>
-                    <View style={styles.textBox}>
+                    <ImageBackground
+                        resizeMode="cover"
+                        style={styles.backgroundImage}
+                        source={images.logo_background}
+                    >
                         <View style={styles.innerBox}>
                             <Text style={styles.headerText}>
                                 {this.state.swiperData[3].header}
@@ -205,7 +222,7 @@ export default class SwiperScreen extends Component {
                                 {this.state.swiperData[3].description}
                             </Text>
                         </View>
-                    </View>
+                    </ImageBackground>
                 </View>
                 <View style={styles.login}>
                     {this.changePages()}
