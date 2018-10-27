@@ -72,6 +72,7 @@ export default class TwilioVoIP {
                 await Twilio.enableVoIP(user);
 
                 const accessToken = await Twilio.getAccessToken(user);
+                await TwilioVoice.initWithToken(accessToken);
                 if (!(__DEV__ && Platform.os === 'ios')) {
                     console.log('INit VoiP....');
 
@@ -83,7 +84,6 @@ export default class TwilioVoIP {
                     }
                 }
 
-                await TwilioVoice.initWithToken(accessToken);
                 console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
