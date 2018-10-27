@@ -39,6 +39,7 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { BackgroundImage } from '../../components/BackgroundImage';
 import { TourScreen } from '../TourScreen';
+import { TwilioVoIP } from '../../lib/twilio';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -152,6 +153,8 @@ export default class MainScreen extends React.Component {
             MessageEvents.messagePersisted,
             this.handleAsyncMessageResult.bind(this)
         );
+
+        TwilioVoIP.init();
     }
 
     componentWillMount() {

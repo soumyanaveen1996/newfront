@@ -209,13 +209,15 @@ export default class ChatMessage extends React.Component {
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
+        const audioStyle = {
+            ...chatMessageBubbleStyle(
+                this.props.alignRight,
+                this.props.imageSource
+            ),
+            backgroundColor: '#594673'
+        };
         const component = (
-            <View
-                style={chatMessageBubbleStyle(
-                    this.props.alignRight,
-                    this.props.imageSource
-                )}
-            >
+            <View style={audioStyle}>
                 <AudioPlayer audioSource={{ uri: url, headers: headers }} />
             </View>
         );
