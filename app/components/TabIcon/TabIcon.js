@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, Image, Text } from 'react-native';
+import {
+    Scene,
+    Router,
+    Lightbox,
+    ActionConst,
+    Actions,
+    Tabs
+} from 'react-native-router-flux';
 import styles from './styles';
 
 const TabIcon = ({ focused, imageSource, titleScreen }) => {
     if (__DEV__) {
-        console.tron('TAB', focused, titleScreen);
+        console.tron('TAB', Actions.currentScene);
     }
 
     return (
