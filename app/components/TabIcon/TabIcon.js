@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Image, Text } from 'react-native';
 import styles from './styles';
 
-const TabIcon = ({ selected, imageSource, titleScreen }) => {
-    console.log('in which tab ', titleScreen, selected);
+const TabIcon = ({ focused, imageSource, titleScreen }) => {
+    if (__DEV__) {
+        console.tron('TAB', focused, titleScreen);
+    }
+
     return (
         <View style={{ alignItems: 'center' }}>
             <Image source={imageSource} />
