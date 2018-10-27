@@ -66,7 +66,14 @@ class BackgroundTaskQueue {
             if (!options.botId) {
                 reject(new BackgroundTaskError(1, BackgroundTaskErrorCodes[1]));
             }
-            BackgroundTaskDAO.deleteBackgroundTask(options.key, options.botId)
+            if (!options.conversationId) {
+                reject(new BackgroundTaskError(3, BackgroundTaskErrorCodes[3]));
+            }
+            BackgroundTaskDAO.deleteBackgroundTask(
+                options.key,
+                options.botId,
+                options.conversationId
+            )
                 .then(resolve)
                 .catch(() => {
                     reject(
