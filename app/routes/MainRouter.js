@@ -138,6 +138,14 @@ const MainRouter = () => {
                                         component={ContactsPicker}
                                         title={I18n.t('Contacts')}
                                         back
+                                        onEnter={() => {
+                                            Actions.replace(
+                                                ROUTER_SCENE_KEYS.addContacts,
+                                                {
+                                                    key: Math.random()
+                                                }
+                                            );
+                                        }}
                                     />
                                 </Scene>
                                 <Scene

@@ -12,18 +12,27 @@ import styles from './styles';
 
 const TabIcon = ({ focused, imageSource, titleScreen }) => {
     if (__DEV__) {
-        console.tron('TAB', Actions.currentScene, titleScreen);
+        console.tron('TAB', Actions.currentScene);
     }
     let tempScreen;
-    let fontSize = 0;
+    let color;
     if (Actions.currentScene === 'timeline') {
         tempScreen = 'Home';
     }
 
+    if (Actions.currentScene === 'botStore') {
+        tempScreen = 'Marketplace';
+    }
+    if (Actions.currentScene === 'channelsList') {
+        tempScreen = 'Channels';
+    }
+    if (Actions.currentScene === 'addContacts') {
+        tempScreen = 'Contacts';
+    }
     if (tempScreen === titleScreen) {
-        fontSize = 16;
+        fontSize = 'rgba(80,74,74,0.6)';
     } else {
-        fontSize = 14;
+        color = 'rgba(74,74,74,0.6)';
     }
 
     return (
@@ -32,8 +41,8 @@ const TabIcon = ({ focused, imageSource, titleScreen }) => {
             <Text
                 style={{
                     textAlign: 'center',
-                    fontSize,
-                    color: 'rgba(74,74,74,0.6)'
+                    fontSize: 14,
+                    color
                 }}
             >
                 {titleScreen}
