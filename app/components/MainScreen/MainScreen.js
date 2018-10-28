@@ -133,6 +133,10 @@ export default class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        if (__DEV__) {
+            console.tron('Mounting @@');
+        }
+
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (!isUserLoggedIn) {
             this.userLoggedOutHandler();
@@ -160,6 +164,10 @@ export default class MainScreen extends React.Component {
     }
 
     async componentWillMount() {
+        if (__DEV__) {
+            console.tron('Unmounting @@');
+        }
+
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
 
         if (getFirstTime) {

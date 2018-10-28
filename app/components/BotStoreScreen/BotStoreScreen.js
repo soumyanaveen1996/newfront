@@ -162,6 +162,34 @@ export default class BotStoreScreen extends React.Component {
         }
     }
 
+    static onEnter() {
+        if (__DEV__) {
+            console.tron('Entering Bot Store');
+        }
+        try {
+            this.updateCatalog();
+        } catch (error) {
+            console.error(
+                'Error occurred during componentWillMount getting catalogData; ',
+                error
+            );
+            if (error instanceof NetworkError) {
+                this.setState({
+                    showSearchBar: false,
+                    selectedIndex: 0,
+                    catalogLoaded: false,
+                    networkError: true
+                });
+            }
+        }
+    }
+
+    static onExit() {
+        if (__DEV__) {
+            console.tron('LEaving Bot Store');
+        }
+    }
+
     async refresh() {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (this.state && isUserLoggedIn) {

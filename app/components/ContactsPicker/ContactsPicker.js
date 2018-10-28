@@ -79,6 +79,15 @@ export default class ContactsPicker extends React.Component {
         });
     }
 
+    static onEnter() {
+        Contact.getAddedContacts().then(contacts => {
+            if (contacts.length === 0) {
+                //If no contacts are added then go directly to contacts bot
+                this.handleAddContact();
+            }
+        });
+    }
+
     showDialler = () => {
         Actions.dialler();
     };

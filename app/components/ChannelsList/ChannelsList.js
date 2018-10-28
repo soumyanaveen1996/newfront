@@ -52,6 +52,16 @@ export default class ChannelsList extends React.Component {
         this.refresh();
     }
 
+    static onEnter() {
+        if (__DEV__) {
+            console.tron('Entering Channel List');
+        }
+        this.props.navigation.setParams({
+            handleAddChannel: this.handleAddChannel.bind(this)
+        });
+        this.refresh();
+    }
+
     handleAddChannel = () => {
         SystemBot.get(SystemBot.channelsBotManifestName).then(channelsBot => {
             Actions.botChat({ bot: channelsBot, onBack: this.onBack });

@@ -138,14 +138,14 @@ const MainRouter = () => {
                                         component={ContactsPicker}
                                         title={I18n.t('Contacts')}
                                         back
-                                        onEnter={() => {
-                                            Actions.replace(
-                                                ROUTER_SCENE_KEYS.addContacts,
-                                                {
-                                                    key: Math.random()
-                                                }
-                                            );
-                                        }}
+                                        // onEnter={() => {
+                                        //     Actions.replace(
+                                        //         ROUTER_SCENE_KEYS.addContacts,
+                                        //         {
+                                        //             key: Math.random()
+                                        //         }
+                                        //     )
+                                        // }}
                                     />
                                 </Scene>
                                 <Scene
@@ -159,14 +159,14 @@ const MainRouter = () => {
                                         component={ChannelsList}
                                         title={I18n.t('Channels')}
                                         back
-                                        onEnter={() => {
-                                            Actions.replace(
-                                                ROUTER_SCENE_KEYS.channelsList,
-                                                {
-                                                    key: Math.random()
-                                                }
-                                            );
-                                        }}
+                                        // onEnter={() => {
+                                        //     Actions.replace(
+                                        //         ROUTER_SCENE_KEYS.channelsList,
+                                        //         {
+                                        //             key: Math.random()
+                                        //         }
+                                        //     );
+                                        // }}
                                     />
                                 </Scene>
 
@@ -180,14 +180,14 @@ const MainRouter = () => {
                                         key={ROUTER_SCENE_KEYS.botStore}
                                         component={BotStoreScreen}
                                         title={I18n.t('Bot_Store')}
-                                        onEnter={() => {
-                                            Actions.replace(
-                                                ROUTER_SCENE_KEYS.botStore,
-                                                {
-                                                    key: Math.random()
-                                                }
-                                            );
-                                        }}
+                                        // onEnter={() => {
+                                        //     Actions.replace(
+                                        //         ROUTER_SCENE_KEYS.botStore,
+                                        //         {
+                                        //             key: Math.random()
+                                        //         }
+                                        //     )
+                                        // }}
                                     />
                                 </Scene>
                             </Tabs>
