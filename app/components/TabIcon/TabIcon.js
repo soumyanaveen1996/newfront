@@ -11,9 +11,6 @@ import {
 import styles from './styles';
 
 const TabIcon = ({ focused, imageSource, titleScreen }) => {
-    if (__DEV__) {
-        console.tron('TAB', Actions.currentScene);
-    }
     let tempScreen;
     let color;
     if (Actions.currentScene === 'timeline') {
