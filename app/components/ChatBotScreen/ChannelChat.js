@@ -141,10 +141,6 @@ export default class ChannelChat extends ChatBotScreen {
                 );
             }
             if (this.channel) {
-                console.log(
-                    'Conversation ID from channel : ',
-                    this.channel.channelId
-                );
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {
@@ -157,8 +153,6 @@ export default class ChannelChat extends ChatBotScreen {
                 );
                 this.setNavigationParams(context, user);
 
-                console.log('Conversation context ', context);
-                console.log('Conversation participants ', this.participants);
                 return context;
             }
             // Else its a new conversation with participants.
@@ -175,8 +169,6 @@ export default class ChannelChat extends ChatBotScreen {
                 )
             );
             ConversationContext.updateParticipants(context, this.participants);
-
-            console.log('Conversation Context : ', context);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -206,10 +198,6 @@ export default class ChannelChat extends ChatBotScreen {
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log(
-                'Error getting a conversation context for channel chat',
-                error
-            );
             throw error;
         }
     }
@@ -286,7 +274,6 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async onRefresh() {
-        console.log('Loading before : ', this.oldestLoadedDate());
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false

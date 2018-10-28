@@ -60,7 +60,6 @@ const process = async () => {
         return;
     }
     const tasks = await BackgroundTaskDAO.selectAllBackgroundTasks();
-    console.log('BackgroundProcessor::tasks::', tasks);
     _.forEach(tasks, task => {
         processTask(task, user);
     });

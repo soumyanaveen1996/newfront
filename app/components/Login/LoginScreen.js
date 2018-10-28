@@ -74,7 +74,6 @@ export default class LoginScreen extends React.Component {
     onFormSubmit() {
         this.setState({ loading: true });
         if (!this.isValid()) {
-            console.log('error', this.errorMessages);
             if (this.errorMessages && this.errorMessages.length >= 0) {
                 this.setState({ emailErrorMessage: this.errorMessages[0] });
             } else {
@@ -117,7 +116,6 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
-                console.log('errors', err);
                 this.setState({
                     emailErrorMessage: err.message,
                     passwordErrorMessage: ''
@@ -179,8 +177,6 @@ export default class LoginScreen extends React.Component {
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithGoogle(conversationId, botName)
             .then(() => {
-                console.log('logged in using google');
-
                 this.showMainScreen();
             })
             .catch(err => {
@@ -195,7 +191,6 @@ export default class LoginScreen extends React.Component {
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
             .then(() => {
-                console.log('logged in using facebook');
                 this.setState({ loading: false });
                 this.showMainScreen();
             })

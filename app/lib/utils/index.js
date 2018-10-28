@@ -235,14 +235,12 @@ async function copyDir(fromDir, toDir, overwrite = false) {
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
             if (!exists || overwrite) {
-                console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
             if (!exists || overwrite) {
-                console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyDir(stat.path, toPath);
             } else {
@@ -271,14 +269,12 @@ async function copyAssetsDir(assetsPath, toDir, overwrite = false) {
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
             if (!exists || overwrite) {
-                console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyAssetFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
             if (!exists || overwrite) {
-                console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyAssetsDir(stat.path, toPath);
             } else {

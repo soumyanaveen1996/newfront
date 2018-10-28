@@ -1,15 +1,20 @@
 const R = require('ramda');
 let store = {};
 const initStore = state => {
-    store = R.merge(store, state);
+    store = { ...store, ...state };
+    console.log('Store Initialized', store);
+
     return;
 };
 const updateStore = state => {
-    store = R.merge(store, state);
+    store = { ...store, ...state };
+    console.log('Store Updated', store);
+
     return;
 };
 const clearStore = () => (store = {});
 const getState = () => {
+    console.log('Current Store State', store);
     return store;
 };
 

@@ -57,7 +57,6 @@ export default class Splash extends React.Component {
 
     async componentDidMount() {
         // Override logging in prod builds
-        console.log(Config);
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
 
@@ -133,6 +132,7 @@ export default class Splash extends React.Component {
                         const gState = Store.getState();
                         console.log(gState);
                         const { call_state } = gState;
+
                         if (call_state && call_state === 'PENDING') {
                             Actions.phone({
                                 type: ActionConst.REPLACE,

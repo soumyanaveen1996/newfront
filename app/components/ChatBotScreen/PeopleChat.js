@@ -202,8 +202,6 @@ export default class PeopleChat extends ChatBotScreen {
                 }
             });
         } catch (err) {
-            console.log('[FrontM] Error in VOIP', err);
-
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
         }
     }

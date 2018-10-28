@@ -1,5 +1,12 @@
 import React from 'react';
-import { Alert, View, Text, TouchableOpacity, Keyboard } from 'react-native';
+import {
+    Alert,
+    View,
+    Text,
+    TouchableOpacity,
+    Keyboard,
+    Platform
+} from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
@@ -21,7 +28,16 @@ export const PhoneState = {
 
 export default class Phone extends React.Component {
     constructor(props) {
+        let call_to, call_from;
         super(props);
+        if (Platform.OS === 'ios') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+        }
+        if (Platform.OS === 'android') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+        }
         this.state = {
             phoneState: props.state,
             micOn: true,
@@ -29,8 +45,8 @@ export default class Phone extends React.Component {
             username:
                 props.state === PhoneState.calling ||
                 props.state === PhoneState.init
-                    ? props.data.call_to
-                    : props.data.call_from
+                    ? call_to
+                    : call_from
         };
     }
 

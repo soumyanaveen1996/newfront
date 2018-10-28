@@ -20,7 +20,6 @@ let processingFutureRequest = false;
  *  - Right now it is kinda dumb
  */
 const poll = () => {
-    console.log('NetworkHandler::poll::called at ', new Date());
     Auth.getUser().then(authUser => {
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
@@ -28,7 +27,6 @@ const poll = () => {
 };
 
 const readLambda = () => {
-    console.log('NetworkHandler::readLambda::called at ', new Date());
     Auth.getUser().then(authUser => {
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
@@ -48,10 +46,6 @@ const handleLambdaResponse = (res, user) => {
 };
 
 const readRemoteLambdaQueue = user => {
-    console.log(
-        'NetworkHandler::readRemoteLambdaQueue::called at ',
-        new Date()
-    );
     readQueue(user)
         .then(res => {
             PushNotification.setApplicationIconBadgeNumber(0);
@@ -106,7 +100,6 @@ const dequeueAndProcessQueueRequest = async () => {
 };
 
 const processNetworkQueue = () => {
-    console.log('NetworkHandler::processNetworkQueue::called at ', new Date());
     Network.isConnected().then(connected => {
         if (connected) {
             processNetworkQueueRequest();
@@ -214,10 +207,6 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
 
 const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
     new Promise((resolve, reject) => {
-        console.log(
-            'NetworkHandler::readRemoteLambdaQueue::called at ',
-            new Date()
-        );
         requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
             .then(res => {
                 console.log('Messages before date : ', res, date);
@@ -242,10 +231,6 @@ const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
 
 const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
     new Promise((resolve, reject) => {
-        console.log(
-            'NetworkHandler::readOldQueueMessages::called at ',
-            new Date()
-        );
         Auth.getUser().then(authUser => {
             resolve(
                 fetchMessagesBeforeDateFromLambda(
@@ -259,7 +244,6 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
     });
 
 const ping = user => {
-    console.log('NetworkHandler::ping::called at ', new Date());
     let options = {
         method: 'get',
         url: config.proxy.protocol + config.proxy.host + config.proxy.pingPath

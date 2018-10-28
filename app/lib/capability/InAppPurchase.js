@@ -28,14 +28,10 @@ const InAppPurchaseErrorCodes = {
 
 const connection = async () => {
     try {
-        console.log('In InAppPurchase');
-
         await RNIap.initConnection();
-        console.log('Connected to PlayStore!!!');
 
         return true;
     } catch (err) {
-        console.log('Error : ' + err.message);
         return false;
     }
 };
@@ -45,8 +41,6 @@ const buyProduct = async ({
     productName = PRODUCT_NAMES.VOIP,
     botId = null
 }) => {
-    console.log(productCode);
-
     const isConnected = await connection();
     if (isConnected) {
         try {
@@ -61,21 +55,17 @@ const buyProduct = async ({
                         android: ['dummy']
                     });
             const Products = await RNIap.getProducts(itemSkus);
-            console.log(Products);
             // throw new Error("Debugging")
 
             const sku = Products[0].productId;
             let purchase;
             if (Platform.OS === 'ios') {
                 purchase = await RNIap.buyProductWithoutFinishTransaction(sku);
-                console.log(`Purchase : ${purchase}`);
                 RNIap.finishTransaction();
             } else {
                 purchase = await RNIap.buyProduct(sku);
-                console.log(`Purchase : ${purchase}`);
                 await RNIap.consumePurchase(purchase.purchaseToken);
             }
-            console.log('Finished Everything Send Back data');
             return purchase;
         } catch (err) {
             console.error(err.code, err.message);

@@ -161,12 +161,10 @@ export default class MainScreen extends React.Component {
 
     async componentWillMount() {
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
-        console.log('we will see', getFirstTime);
 
         if (getFirstTime) {
             this.setState({ firstTimer: false });
         } else {
-            console.log('start tutorial');
         }
         AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
