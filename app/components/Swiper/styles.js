@@ -52,7 +52,7 @@ export default StyleSheet.create({
     headerText: {
         textAlign: 'center',
         color: 'rgba(74,74,74,1)',
-        fontSize: 26,
+        fontSize: 24,
         fontWeight: '400',
         letterSpacing: 1,
         lineHeight: 26,
@@ -61,7 +61,7 @@ export default StyleSheet.create({
     text: {
         textAlign: 'center',
         color: 'rgba(102,102,102,1)',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '300',
         letterSpacing: 1,
         lineHeight: 22
@@ -145,8 +145,8 @@ export default StyleSheet.create({
         }
     }),
     logoStyle: {
-        width: 180,
-        height: 72,
+        width: 160,
+        height: 65,
         marginBottom: 20
     }
 });

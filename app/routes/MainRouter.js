@@ -93,7 +93,7 @@ const MainRouter = () => {
                                 component={ResendCodeScreen}
                                 hideNavBar
                             />
-                            <Scene
+                            <Tabs
                                 key={ROUTER_SCENE_KEYS.tabBar}
                                 tabBarStyle={{
                                     backgroundColor: '#ffffff',
@@ -179,7 +179,7 @@ const MainRouter = () => {
                                         title={I18n.t('Bot_Store')}
                                     />
                                 </Scene>
-                            </Scene>
+                            </Tabs>
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}
                                 component={BotChat}

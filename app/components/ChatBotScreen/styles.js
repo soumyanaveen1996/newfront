@@ -268,6 +268,7 @@ const stylesheet = StyleSheet.create({
         color: 'rgb(164, 164, 164)',
         fontWeight: 'bold',
         fontStyle: 'italic',
+        marginBottom: 10,
         fontSize: 12
     },
     buttonMsgParent: {
