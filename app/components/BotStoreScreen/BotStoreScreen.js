@@ -183,11 +183,7 @@ export default class BotStoreScreen extends React.Component {
         }
     }
 
-    static onExit() {
-        if (__DEV__) {
-            console.tron('LEaving Bot Store');
-        }
-    }
+    static onExit() {}
 
     async refresh() {
         const isUserLoggedIn = await Auth.isUserLoggedIn();

@@ -114,10 +114,6 @@ class NetworkPoller {
             const pollingStrategy = await Settings.getPollingStrategy();
             if (pollingStrategy === PollingStrategyTypes.automatic) {
                 if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
-                    if (__DEV__) {
-                        console.tron('Polling Stopped');
-                    }
-
                     await this.stopGSMPolling();
                     await this.startSatellitePolling();
                 }

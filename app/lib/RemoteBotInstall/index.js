@@ -90,10 +90,6 @@ class RemoteBotInstall {
             RemoteBotInstall.isSatellite()
                 .then(isSat => {
                     if (isSat) {
-                        if (__DEV__) {
-                            console.tron('Cannot Synchronize Bots');
-                        }
-
                         throw 'Bots syncronization stopped: device is on satellite network';
                     } else {
                         return;
@@ -103,10 +99,6 @@ class RemoteBotInstall {
                     return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
-                    if (__DEV__) {
-                        console.tron('Got Subscribed Bots');
-                    }
-
                     let catalog = await Bot.getCatalog();
                     const manifests = _.map(subscribedBotsIds, botId => {
                         return RemoteBotInstall.getBotManifestFromId(
