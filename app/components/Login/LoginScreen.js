@@ -125,10 +125,18 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
-        await TwilioVoIP.init();
-        await RemoteBotInstall.syncronizeBots();
-        Actions.timeline({ type: ActionConst.REPLACE });
+        TwilioVoIP.init();
+        if (__DEV__) {
+            console.tron('Calling Snchronize Bots');
+        }
+
+        RemoteBotInstall.syncronizeBots();
         this.setState({ loading: false });
+        if (__DEV__) {
+            console.tron('Going to TIMELINE ');
+        }
+
+        Actions.timeline({ type: ActionConst.REPLACE });
         return;
     };
 
@@ -191,7 +199,7 @@ export default class LoginScreen extends React.Component {
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
             .then(() => {
-                this.setState({ loading: false });
+                // this.setState({ loading: false });
                 this.showMainScreen();
             })
             .catch(err => {

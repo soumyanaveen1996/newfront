@@ -78,9 +78,9 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
-        // if (Platform.OS === 'android') {
-        //     return;
-        // }
+        if (Platform.OS === 'android') {
+            return;
+        }
         this.unsubscribeFromServerEvents();
         let user = await Auth.getUser();
         if (user.userId === 'default_user_uuid') {
@@ -114,6 +114,10 @@ class NetworkPoller {
             const pollingStrategy = await Settings.getPollingStrategy();
             if (pollingStrategy === PollingStrategyTypes.automatic) {
                 if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
+                    if (__DEV__) {
+                        console.tron('Polling Stopped');
+                    }
+
                     await this.stopGSMPolling();
                     await this.startSatellitePolling();
                 }
