@@ -310,7 +310,7 @@ const stylesheet = StyleSheet.create({
         color: GlobalColors.botChatBubbleColor
     },
     buttonBrightText: {
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     formButtonWrapper: {
         paddingVertical: 5,
@@ -319,7 +319,7 @@ const stylesheet = StyleSheet.create({
         borderTopRightRadius: 8,
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,
-        backgroundColor: GlobalColors.botChatBubbleColor,
+        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -327,8 +327,8 @@ const stylesheet = StyleSheet.create({
         height: 54
     },
     formButton: {
-        backgroundColor: GlobalColors.botChatBubbleColor,
-        borderColor: GlobalColors.white,
+        backgroundColor: GlobalColors.white,
+        borderColor: GlobalColors.chatLeftTextColor,
         borderWidth: 1,
         borderRadius: 4,
         width: '80%',
@@ -337,7 +337,7 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center'
     },
     formButtonText: {
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     closeButton: {
         height: 24,

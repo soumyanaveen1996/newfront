@@ -26,6 +26,7 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            email: '',
             formData: [
                 { id: 2, title: 'Email', type: 'email_field', optional: false },
                 {
@@ -125,12 +126,12 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
-        TwilioVoIP.init();
-
-        RemoteBotInstall.syncronizeBots();
-        this.setState({ loading: false });
-
+        this.formValuesArray[0] = '';
+        this.formValuesArray[1] = '';
+        await TwilioVoIP.init();
+        await RemoteBotInstall.syncronizeBots();
         Actions.timeline({ type: ActionConst.REPLACE });
+        this.setState({ loading: false });
         return;
     };
 
@@ -280,7 +281,7 @@ export default class LoginScreen extends React.Component {
                                     this,
                                     0
                                 )}
-                                value={this.state.email}
+                                value={this.formValuesArray[0]}
                                 keyboardType="email-address"
                                 blurOnSubmit={false}
                                 returnKeyType={'next'}
@@ -315,6 +316,7 @@ export default class LoginScreen extends React.Component {
                                 placeholderTextColor="rgba(155,155,155,1)"
                                 secureTextEntry
                                 clearButtonMode="always"
+                                value={this.formValuesArray[1]}
                             />
                             {this.displayPasswordErrorMessege()}
                         </View>

@@ -50,7 +50,7 @@ export const BotListItemColors = {
     subTitleColor: 'rgba(153, 153, 153, 1)',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
-    countColor: 'rgb(62,137,252)',
+    countColor: 'rgba(0,167,214,1)',
     countTextColor: GlobalColors.white
 };
 
@@ -123,7 +123,8 @@ export const BotListItemStyles = {
             borderRadius: 12,
             paddingLeft: 4,
             paddingRight: 4,
-            overflow: 'hidden'
+            overflow: 'hidden',
+            marginRight: 5
         },
         android: {
             color: BotListItemColors.countTextColor,
@@ -136,7 +137,8 @@ export const BotListItemStyles = {
             paddingLeft: 4,
             paddingRight: 4,
             overflow: 'hidden',
-            textAlignVertical: 'center'
+            textAlignVertical: 'center',
+            marginRight: 5
         }
     }),
     chatImage: {
