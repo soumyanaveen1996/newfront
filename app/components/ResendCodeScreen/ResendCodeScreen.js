@@ -68,7 +68,6 @@ export default class ResendCodeScreen extends Component {
                 }
             })
             .catch(err => {
-                console.log('error on resending code again ', err);
                 this.setState({ loading: false });
                 this.setState({
                     errorMessage: 'User/Email not found'

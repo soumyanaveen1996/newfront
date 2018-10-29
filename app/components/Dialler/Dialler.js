@@ -75,8 +75,6 @@ export default class Dialler extends React.Component {
     }
 
     async call() {
-        console.log('In PSTN');
-
         const connection = await Network.isConnected();
         if (!connection) {
             Alert.alert(I18n.t('No_Network'));

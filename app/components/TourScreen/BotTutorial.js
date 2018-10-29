@@ -9,12 +9,8 @@ export default class BotTutorial extends Component {
         super(props);
     }
 
-    onSkipSubmit() {
-        console.log('skipped');
-    }
-    onNextSubmit() {
-        console.log('next 1');
-    }
+    onSkipSubmit() {}
+    onNextSubmit() {}
 
     render() {
         return (

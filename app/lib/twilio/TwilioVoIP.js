@@ -69,7 +69,6 @@ export default class TwilioVoIP {
 
                 const user = await Auth.getUser();
                 console.log(user);
-                await Twilio.enableVoIP(user);
 
                 const accessToken = await Twilio.getAccessToken(user);
                 if (!(__DEV__ && Platform.os === 'ios')) {
@@ -82,8 +81,9 @@ export default class TwilioVoIP {
                         );
                     }
                 }
-
                 await TwilioVoice.initWithToken(accessToken);
+
+                await Twilio.enableVoIP(user);
                 console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
@@ -116,7 +116,10 @@ export default class TwilioVoIP {
             TwilioEvents.connectionDidDisconnect,
             this.connectionDidDisconnectHandler
         );
-        // AppState.addEventListener('change', this.handleAppStateChange);
+
+        if (Platform.OS === 'ios') {
+            AppState.addEventListener('change', this.handleAppStateChange);
+        }
 
         if (Platform.OS === 'ios') {
             TwilioVoice.addEventListener(
@@ -184,35 +187,28 @@ export default class TwilioVoIP {
     connectionDidConnectHandler = data => {
         console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
 
-        if (Platform.OS === 'android') {
-            Store.updateStore(data);
-        }
+        Store.updateStore(data);
         console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
+        Actions.phone({ state: PhoneState.incall, data: data });
     };
 
     connectionDidDisconnectHandler = data => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
-        if (Platform.OS === 'android') {
-            Store.updateStore(data);
-        }
+        Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
         //this.closePhoneScreen();
     };
 
     callRejectedHandler = data => {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
-        if (Platform.OS === 'android') {
-            Store.updateStore(data);
-        }
+        Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.callRejected, data);
     };
 
     deviceDidReceiveIncomingHandler = data => {
         console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
-        if (Platform.OS === 'android') {
-            Store.updateStore(data);
-        }
+        Store.updateStore(data);
         this.handleIncomingCall(data);
         EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     };

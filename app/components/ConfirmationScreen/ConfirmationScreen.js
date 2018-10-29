@@ -61,18 +61,15 @@ export default class ConfirmationScreen extends Component {
             confirmCode: this.state.code
         };
         this.setState({ loading: true, errorMessage: '' });
-        console.log('send code done', userDetails);
 
         await Auth.confirmFrontmSignup(userDetails)
             .then(async data => {
-                console.log('you can log in now', data);
                 if (data.success) {
                     await AsyncStorage.setItem('signupStage', 'done');
                     this.showMainScreen();
                 }
             })
             .catch(err => {
-                console.log('error is ', err);
                 this.setState({ errorMessage: 'Wrong code', loading: false });
             });
     }
@@ -94,7 +91,6 @@ export default class ConfirmationScreen extends Component {
                     Actions.timeline({ type: ActionConst.REPLACE });
                 })
                 .catch(err => {
-                    console.log('errors', err);
                     this.setState({ errorMessage: err.message });
                     this.setState({ loading: false });
                 });
@@ -116,7 +112,6 @@ export default class ConfirmationScreen extends Component {
     }
 
     onResendButton() {
-        console.log('Go to resend page');
         Actions.resendCodeScreen({
             type: ActionConst.REPLACE,
             email: this.state.userEmail,

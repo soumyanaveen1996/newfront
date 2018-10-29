@@ -9,6 +9,5 @@ target 'frontm_mobile' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
-  pod 'TwilioVoice'
-
+  pod 'TwilioVoice', '~> 2.0.0'
 end

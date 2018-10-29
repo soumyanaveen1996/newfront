@@ -163,8 +163,6 @@ export default class ChatMessage extends React.Component {
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
-        console.log('Video URL : ', url, headers);
-
         // http://techslides.com/demos/sample-videos/small.mp4
         const component = (
             <View style={videoContainerStyle(this.props.alignRight)}>
@@ -175,9 +173,6 @@ export default class ChatMessage extends React.Component {
                     videoHeight={300}
                     autoplay={false}
                     loop={false}
-                    onError={error =>
-                        console.log('AmalVideo: Error in loading file', error)
-                    }
                     onLoad={() => console.log('AmalVideo: File loaded')}
                     onLoadStart={() =>
                         console.log('AmalVideo: File load started')
@@ -209,13 +204,15 @@ export default class ChatMessage extends React.Component {
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
+        const audioStyle = {
+            ...chatMessageBubbleStyle(
+                this.props.alignRight,
+                this.props.imageSource
+            ),
+            backgroundColor: '#594673'
+        };
         const component = (
-            <View
-                style={chatMessageBubbleStyle(
-                    this.props.alignRight,
-                    this.props.imageSource
-                )}
-            >
+            <View style={audioStyle}>
                 <AudioPlayer audioSource={{ uri: url, headers: headers }} />
             </View>
         );
@@ -232,7 +229,6 @@ export default class ChatMessage extends React.Component {
             !message.isFavorite()
         )
             .then(success => {
-                console.log('markBotMessageAsFavorite' + !message.isFavorite());
                 message.setFavorite(!message.isFavorite());
                 this.setState({
                     isFavorite: message.isFavorite()

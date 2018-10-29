@@ -167,10 +167,6 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
         const filePath = toDirectory + '/' + fileName;
         RNFS.mkdir(toDirectory);
         const exists = await AssetFetcher.existsOnDevice(decodeURI(filePath));
-        console.log(
-            'Utils::downloadFileAsync::fileName ' + fileName + ' exists = ',
-            exists
-        );
 
         // Download if not already downloaded
         if (!exists) {
@@ -186,7 +182,6 @@ export async function downloadFileAsync(uri, headers, toDirectory) {
                 false
             );
         }
-        console.log('File downloaded');
         return {
             uri: filePath,
             headers: headers
@@ -230,19 +225,16 @@ async function copyDir(fromDir, toDir, overwrite = false) {
 
     for (let i = 0; i < fromResources.length; ++i) {
         let stat = fromResources[i];
-        console.log(`Checking for ${stat.path}`);
         const toPath = toDir + '/' + stat.name;
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
             if (!exists || overwrite) {
-                console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
             if (!exists || overwrite) {
-                console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyDir(stat.path, toPath);
             } else {
@@ -271,14 +263,12 @@ async function copyAssetsDir(assetsPath, toDir, overwrite = false) {
         const exists = await RNFS.exists(toPath);
         if (stat.isFile()) {
             if (!exists || overwrite) {
-                console.log(`File Copying ${stat.path} to ${toPath}`);
                 await copyAssetFile(stat.path, toPath);
             } else {
                 console.log(`File ${toPath} exists`);
             }
         } else if (stat.isDirectory()) {
             if (!exists || overwrite) {
-                console.log(`Copying ${stat.path} to ${toPath}`);
                 await RNFS.mkdir(toPath);
                 await copyAssetsDir(stat.path, toPath);
             } else {

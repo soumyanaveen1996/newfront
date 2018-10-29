@@ -1,4 +1,5 @@
 import Reactotron, { trackGlobalErrors } from 'reactotron-react-native';
+import { NativeModules } from 'react-native';
 
 Reactotron.configure({
     name: 'FrontM'
@@ -7,7 +8,9 @@ Reactotron.configure({
     .use(trackGlobalErrors());
 
 if (__DEV__) {
-    Reactotron.connect();
+    const scriptURL = NativeModules.SourceCode.scriptURL;
+    scriptHostname = scriptURL.split('://')[1].split(':')[0];
+    Reactotron.connect({ host: `http://${scriptHostname}` });
     Reactotron.clear();
 }
 

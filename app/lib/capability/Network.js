@@ -75,14 +75,11 @@ function Network(options, queue = false) {
             .then((connected) => {
                 if (connected) {
                     const requestOptions = converOptionsToFetchRequest(options);
-                    console.log('Request : ', options, requestOptions);
                     fetch(options.url, requestOptions)
                         .then((response) => {
-                            console.log('Response raw : ', response);
                             if (response.status === 200) {
                                 response.json()
                                     .then((json) => {
-                                        console.log('Response : ', json);
                                         resolve({
                                             data: json,
                                             status: response.status,
@@ -135,7 +132,6 @@ function Network(options, queue = false) {
                         //console.log('Response raw : ', response);
                         if (response.status === 200) {
                             response.json().then(json => {
-                                console.log(json);
                                 resolve({
                                     data: json,
                                     status: response.status,
@@ -163,7 +159,6 @@ function Network(options, queue = false) {
                     axios(options)
                         .then((data) => {
                             const now = moment().valueOf();
-                            console.log('Time for network call : ', options.url, now - start);
                             resolve(data);
                         })
                         .catch(reject); */
@@ -207,7 +202,6 @@ Network.removeConnectionChangeEventListener = handleConnectionChange => {
 
 Network.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
-        console.log('Time for isConnected : ', reachability);
         if (reachability.type === 'unknown' && Platform.OS === 'ios') {
             return new Promise(resolve => {
                 const handleFirstConnectivityChangeIOS = isConnected => {

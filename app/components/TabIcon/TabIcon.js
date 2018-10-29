@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
 import { View, Image, Text } from 'react-native';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import {
+    Scene,
+    Router,
+    Lightbox,
+    ActionConst,
+    Actions,
+    Tabs
+} from 'react-native-router-flux';
 import styles from './styles';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
-class TabIcon extends Component {
+export default class TabIcon extends React.Component {
+    state = {
+        scene: 'Home'
+    };
+    componentDidMount() {
+        EventEmitter.addListener(AuthEvents.tabSelected, this.tabSelected);
+    }
+    componentWillUnmount() {
+        EventEmitter.removeListener(AuthEvents.tabSelected);
+    }
+    tabSelected = scene => {
+        this.setState({ scene });
+    };
     render() {
-        var color = this.props.selected ? '#00f240' : '#301c2a';
+        const { imageSource, titleScreen } = this.props;
+        let color;
+
+        if (this.state.scene === titleScreen) {
+            fontSize = 'rgba(80,74,74,0.6)';
+        } else {
+            color = 'rgba(74,74,74,0.6)';
+        }
 
         return (
             <View style={{ alignItems: 'center' }}>
-                <Image source={this.props.imageSource} />
+                <Image source={imageSource} />
                 <Text
                     style={{
                         textAlign: 'center',
-                        fontSize: 12,
-                        color: 'rgba(74,74,74,0.6)'
+                        fontSize: 14,
+                        color
                     }}
                 >
-                    {this.props.titleScreen}
+                    {titleScreen}
                 </Text>
             </View>
         );
     }
 }
-
-export default TabIcon;

@@ -156,7 +156,6 @@ export default class SignupScreen extends React.Component {
             };
             await Auth.signupWithFrontm(userDetails)
                 .then(async data => {
-                    console.log('success signup email went', data);
                     if (data.success) {
                         await AsyncStorage.setItem('userEmail', data.data);
                         await AsyncStorage.setItem(
@@ -180,7 +179,6 @@ export default class SignupScreen extends React.Component {
                     }
                 })
                 .catch(err => {
-                    console.log('signup error ', err);
                     this.setState({ emailError: 'Email already in use' });
                     this.setState(() => {
                         return { loading: false };
