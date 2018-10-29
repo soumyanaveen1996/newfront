@@ -61,35 +61,60 @@ export default class ContactsPicker extends React.Component {
 
     constructor(props) {
         super(props);
-        this.dataSource = new FrontMAddedContactsPickerDataSource(this);
+        // this.dataSource = new FrontMAddedContactsPickerDataSource(this)
         this.state = {
             contactsData: [],
             selectedContacts: []
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.navigation.setParams({
             handleAddContact: this.handleAddContact.bind(this),
             showDialler: this.showDialler
         });
-        Contact.getAddedContacts().then(contacts => {
-            if (contacts.length === 0) {
-                //If no contacts are added then go directly to contacts bot
-                this.handleAddContact();
-            }
+
+        const loadedContacts = await Contact.getAddedContacts();
+        if (loadedContacts.length > 0) {
+            this.dataSource = new FrontMAddedContactsPickerDataSource(this);
+            return;
+        }
+        Contact.refreshContacts().then(() => {
+            Contact.getAddedContacts().then(contacts => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                } else {
+                    this.dataSource = new FrontMAddedContactsPickerDataSource(
+                        this
+                    );
+                }
+            });
         });
+
+        // Contact.getAddedContacts().then(contacts => {
+        //     if (contacts.length === 0) {
+        //         //If no contacts are added then go directly to contacts bot
+        //         this.handleAddContact()
+        //     }
+        // })
     }
 
-    static onEnter() {
+    static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+        // if (__DEV__) {
+        //     console.tron('Enter Contacts Picker')
+        // }
 
-        Contact.getAddedContacts().then(contacts => {
-            if (contacts.length === 0) {
-                //If no contacts are added then go directly to contacts bot
-                this.handleAddContact();
-            }
-        });
+        // await Contact.getAddedContacts()
+        // Actions.refresh()
+        // this.refresh()
+        // Contact.getAddedContacts().then(contacts => {
+        //     if (contacts.length === 0) {
+        //         //If no contacts are added then go directly to contacts bot
+        //         this.handleAddContact()
+        //     }
+        // })
     }
 
     showDialler = () => {

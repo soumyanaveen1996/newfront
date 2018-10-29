@@ -49,8 +49,8 @@ class DataManager {
 
     userLoggedInHandler = async () => {
         console.log('DataManager : User Logged in');
-        this.refreshChannels();
-        this.refreshContacts();
+        await this.refreshChannels();
+        await this.refreshContacts();
     };
 
     userLoggedOutHandler = async () => {
@@ -62,8 +62,16 @@ class DataManager {
     };
 
     refreshContacts = () => {
+        if (__DEV__) {
+            console.tron('Getting Contacts');
+        }
+
         Contact.refreshContacts()
             .then(() => {
+                if (__DEV__) {
+                    console.tron('Contacts Fetcched');
+                }
+
                 this.contactsFetched = true;
                 this.checkDataFetched();
             })
@@ -80,6 +88,10 @@ class DataManager {
     refreshChannels = () => {
         Channel.refreshChannels()
             .then(() => {
+                if (__DEV__) {
+                    console.tron('Fetched Cahnnels on Load');
+                }
+
                 this.channelsFetched = true;
                 this.checkDataFetched();
             })

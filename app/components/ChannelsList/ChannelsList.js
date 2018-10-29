@@ -45,12 +45,25 @@ export default class ChannelsList extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.navigation.setParams({
             handleAddChannel: this.handleAddChannel.bind(this)
         });
-        this.refresh();
+        const channels = await Channel.getSubscribedChannels();
+        if (channels.length > 0) {
+            return this.refresh();
+        }
+
+        Channel.refreshChannels().then(async () => {
+            if (__DEV__) {
+                console.tron('Fetched Channels');
+            }
+            await this.wait();
+            return this.refresh();
+        });
     }
+
+    wait = () => new Promise(resolve => setTimeout(resolve, 2000));
 
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
@@ -69,7 +82,11 @@ export default class ChannelsList extends React.Component {
 
     async refresh(onback = false, handleEmptyChannels = true) {
         const channels = await Channel.getSubscribedChannels();
-        if (handleEmptyChannels && channels.length === 0) {
+        if (__DEV__) {
+            console.tron('Channel Count', channels.length);
+        }
+
+        if (handleEmptyChannels && channels.length == 0) {
             if (onback) {
                 if (this.props.onBack) {
                     this.props.onBack();
