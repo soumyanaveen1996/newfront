@@ -129,6 +129,7 @@ export default class Splash extends React.Component {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        this.listenToEvents();
                         const gState = Store.getState();
                         console.log(gState);
                         const { call_state } = gState;
@@ -158,8 +159,6 @@ export default class Splash extends React.Component {
             }
         }
 
-        this.listenToEvents();
-
         // Chain all setup stuff
         // Before login
         persist
@@ -185,6 +184,10 @@ export default class Splash extends React.Component {
     configureNotifications = () => {
         Notification.deviceInfo()
             .then(info => {
+                if (__DEV__) {
+                    console.tron('In configure Notificaitons');
+                }
+
                 if (info) {
                     Notification.configure(this.handleNotification.bind(this));
                 }
@@ -195,14 +198,20 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        this.configureNotifications();
+        if (__DEV__) {
+            console.tron('Config Notificaitons');
+        }
+
+        this.configureNotifications().bind(this);
     };
 
     handleNotification = notification => {
+        if (__DEV__) {
+            console.tron('In Notificaiton handler', notification);
+        }
+
         if (!notification.foreground && notification.userInteraction) {
-            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
-                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
-            }
+            Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {

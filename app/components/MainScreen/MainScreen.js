@@ -277,7 +277,8 @@ export default class MainScreen extends React.Component {
 
     handleAsyncMessageResult(event) {
         if (event && Actions.currentScene === ROUTER_SCENE_KEYS.timeline) {
-            this.refs.botList.refresh();
+            this.update();
+            // this.refs.botList.refresh();
         }
     }
 

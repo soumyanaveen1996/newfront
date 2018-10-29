@@ -21,6 +21,10 @@ export default class AfterLogin {
     configureNotifications = () => {
         Notification.deviceInfo()
             .then(info => {
+                if (__DEV__) {
+                    console.tron('Config Notificaitons');
+                }
+
                 if (info) {
                     Notification.configure(this.handleNotification.bind(this));
                 }
@@ -31,10 +35,12 @@ export default class AfterLogin {
     };
 
     handleNotification = notification => {
+        if (__DEV__) {
+            console.tron('In Not Handler', notification);
+        }
+
         if (!notification.foreground && notification.userInteraction) {
-            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
-                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
-            }
+            Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {

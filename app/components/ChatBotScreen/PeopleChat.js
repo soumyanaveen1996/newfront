@@ -139,9 +139,11 @@ export default class PeopleChat extends ChatBotScreen {
     }
 
     handleBackButtonClick() {
-        if (Actions.currentScene === 'peopleChat') {
-            Actions.timeline({ type: ActionConst.REPLACE });
-        }
+        Actions.pop();
+        // if (Actions.currentScene === 'peopleChat') {
+        //     Actions.timeline({type: ActionConst.REPLACE})
+        // }
+        return true;
     }
     // Implemented methods
     getBotKey = () => {

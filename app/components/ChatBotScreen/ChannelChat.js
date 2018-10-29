@@ -102,9 +102,11 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     handleBackButtonClick() {
-        if (Actions.currentScene === 'channelChat') {
-            Actions.timeline({ type: ActionConst.REPLACE });
-        }
+        // if (Actions.currentScene === 'channelChat') {
+        //     Actions.timeline({ type: ActionConst.REPLACE });
+        // }
+        Actions.pop();
+        return true;
     }
 
     // Implemented methods
