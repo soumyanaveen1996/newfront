@@ -23,7 +23,7 @@ const _eventHandlers = {
 export default class TwilioVoIP {
     init = async () => {
         try {
-            await this.initTelephony();
+            this.initTelephony();
             //this.showAlertMessage('VoIP initialized');
         } catch (err) {
             //this.showAlertMessage('VoIP initialization failed');

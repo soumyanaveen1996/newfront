@@ -194,7 +194,7 @@ export default class LoginScreen extends React.Component {
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
             .then(() => {
-                this.setState({ loading: false });
+                // this.setState({ loading: false });
                 this.showMainScreen();
             })
             .catch(err => {

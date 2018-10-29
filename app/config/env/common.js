@@ -1,8 +1,14 @@
+import { Platform } from 'react-native';
 const S3_HOST = 'localhost:3000';
 const CATALOG_HOST = 'localhost:3000';
 const QUEUE_HOST = 'localhost:3000';
 const PROXY_HOST = 'localhost:3000';
-
+let pollingInterval;
+if (Platform.OS === 'android') {
+    pollingInterval = 15000;
+} else {
+    pollingInterval = 180000;
+}
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.
 const config = {
     app: {
@@ -77,7 +83,7 @@ const config = {
             keepAliveInterval: 120000
         },
         gsm: {
-            pollingInterval: 180000,
+            pollingInterval: pollingInterval,
             backgroundPollingInterval: 300000
         },
         queueProtocol: 'http://',
