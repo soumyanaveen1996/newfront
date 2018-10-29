@@ -93,9 +93,8 @@ const MainRouter = () => {
                                 component={ResendCodeScreen}
                                 hideNavBar
                             />
-                            <Scene
+                            <Tabs
                                 key={ROUTER_SCENE_KEYS.tabBar}
-                                tabs={true}
                                 tabBarStyle={{
                                     backgroundColor: '#ffffff',
                                     height: 60
@@ -110,6 +109,9 @@ const MainRouter = () => {
                                     imageSource={require('../images/tabbar-home/tabbar-home.png')}
                                     icon={TabIcon}
                                     initial={true}
+                                    onEnter={() => {
+                                        console.log('on press');
+                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.timeline}
@@ -135,6 +137,11 @@ const MainRouter = () => {
                                     titleScreen={I18n.t('Contacts')}
                                     imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
                                     icon={TabIcon}
+                                    onEnter={() => {
+                                        Actions.refresh({
+                                            key: ROUTER_SCENE_KEYS.addContacts
+                                        });
+                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.addContacts}
@@ -172,7 +179,7 @@ const MainRouter = () => {
                                         title={I18n.t('Bot_Store')}
                                     />
                                 </Scene>
-                            </Scene>
+                            </Tabs>
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}
                                 component={BotChat}

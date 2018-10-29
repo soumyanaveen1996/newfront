@@ -361,6 +361,7 @@ export default class SignupScreen extends React.Component {
                                 placeholder="Name"
                                 onChangeText={this.onChangeName.bind(this)}
                                 placeholderTextColor="rgba(155,155,155,1)"
+                                clearButtonMode="always"
                             />
                             {this.displayNameErrorMessege()}
                         </View>
@@ -397,6 +398,7 @@ export default class SignupScreen extends React.Component {
                                 placeholder="Email"
                                 onChangeText={this.onChangeEmail.bind(this)}
                                 placeholderTextColor="rgba(155,155,155,1)"
+                                clearButtonMode="always"
                             />
                             {this.displayEmailErrorMessege()}
                         </View>
@@ -434,6 +436,7 @@ export default class SignupScreen extends React.Component {
                                 placeholderTextColor="rgba(155,155,155,1)"
                                 onChangeText={this.onChangePassword.bind(this)}
                                 secureTextEntry
+                                clearButtonMode="always"
                             />
                             {this.displayPasswordErrorMessege()}
                             {this.displayPasswordSuccessMessege()}
@@ -470,6 +473,7 @@ export default class SignupScreen extends React.Component {
                                     this
                                 )}
                                 secureTextEntry
+                                clearButtonMode="always"
                             />
                             {this.displayConfrimErrorMessege()}
                             {this.displayConfrimSuccessMessege()}

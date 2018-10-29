@@ -274,7 +274,10 @@ export default class LoginScreen extends React.Component {
                         behavior={Platform.OS === 'ios' ? 'position' : null}
                     >
                         <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}> Email </Text>
+                            <Text style={styles.placeholderText}>
+                                {' '}
+                                {this.state.formData[0].title}{' '}
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
@@ -283,6 +286,7 @@ export default class LoginScreen extends React.Component {
                                     this,
                                     0
                                 )}
+                                value={this.state.email}
                                 keyboardType="email-address"
                                 blurOnSubmit={false}
                                 returnKeyType={'next'}
@@ -292,13 +296,14 @@ export default class LoginScreen extends React.Component {
                                 placeholder="email@example.com"
                                 underlineColorAndroid={'transparent'}
                                 placeholderTextColor="rgba(155,155,155,1)"
+                                clearButtonMode="always"
                             />
                             {this.displayEmailErrorMessege()}
                         </View>
                         <View style={styles.entryFields}>
                             <Text style={styles.placeholderText}>
                                 {' '}
-                                Password{' '}
+                                {this.state.formData[1].title}{' '}
                             </Text>
                             <TextInput
                                 style={styles.input}
@@ -315,6 +320,7 @@ export default class LoginScreen extends React.Component {
                                 underlineColorAndroid={'transparent'}
                                 placeholderTextColor="rgba(155,155,155,1)"
                                 secureTextEntry
+                                clearButtonMode="always"
                             />
                             {this.displayPasswordErrorMessege()}
                         </View>
