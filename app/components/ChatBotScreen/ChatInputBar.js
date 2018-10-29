@@ -265,10 +265,12 @@ export default class ChatInputBar extends React.Component {
                     testID="right-button-mic"
                     onPress={() => this._startRecording()}
                 >
-                    <Image
-                        source={Images.btn_record}
-                        style={styles.chatBarSpeakButton}
-                    />
+                    <View style={styles.micContainer}>
+                        <Image
+                            source={Images.btn_record}
+                            style={styles.chatBarSpeakButton}
+                        />
+                    </View>
                 </TouchableOpacity>
             );
         } else {

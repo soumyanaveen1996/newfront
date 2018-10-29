@@ -5,7 +5,8 @@ import {
     BackHandler,
     Alert,
     StatusBar,
-    AsyncStorage
+    AsyncStorage,
+    SafeAreaView
 } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
@@ -46,6 +47,8 @@ const MainScreenStates = {
     authenticated: 'authenticated',
     unauthenticated: 'unauthenticated'
 };
+
+let firstTimer = false;
 
 export default class MainScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -111,7 +114,7 @@ export default class MainScreen extends React.Component {
         this.state = {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
-            firstTimer: true
+            firstTimer: false
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
@@ -132,6 +135,17 @@ export default class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        if (getFirstTime) {
+            this.setState({ firstTimer: false }, () => {
+                firstTimer = this.state.firstTimer;
+            });
+        } else {
+            this.setState({ firstTimer: true }, () => {
+                firstTimer = this.state.firstTimer;
+            });
+        }
+
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (!isUserLoggedIn) {
             this.userLoggedOutHandler();
@@ -157,14 +171,6 @@ export default class MainScreen extends React.Component {
     }
 
     async componentWillMount() {
-        const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
-        console.log('we will see', getFirstTime);
-
-        if (getFirstTime) {
-            this.setState({ firstTimer: false });
-        } else {
-            console.log('start tutorial');
-        }
         AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
             'hardwareBackPress',
@@ -363,13 +369,27 @@ export default class MainScreen extends React.Component {
         }
     }
 
+    displayButton() {
+        firstTimer = false;
+        console.log('this is being called', firstTimer);
+    }
+
     render() {
         return (
-            <BackgroundImage>
-                {this.state.firstTimer && <TourScreen />}
-                <StatusBar backgroundColor="grey" barStyle="light-content" />
-                {this.renderMain()}
-            </BackgroundImage>
+            <SafeAreaView style={{ flex: 1 }}>
+                <BackgroundImage>
+                    {this.state.firstTimer && (
+                        <TourScreen
+                            showNetwork={this.displayButton.bind(this)}
+                        />
+                    )}
+                    <StatusBar
+                        backgroundColor="grey"
+                        barStyle="light-content"
+                    />
+                    {this.renderMain()}
+                </BackgroundImage>
+            </SafeAreaView>
         );
     }
 }

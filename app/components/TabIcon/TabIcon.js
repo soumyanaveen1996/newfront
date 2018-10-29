@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Image, Text } from 'react-native';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 
-const TabIcon = ({ selected, imageSource, titleScreen }) => {
-    console.log('in which tab ', titleScreen, selected);
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <Image source={imageSource} />
-            <Text
-                style={{
-                    textAlign: 'center',
-                    fontSize: 12,
-                    color: 'rgba(74,74,74,0.6)'
-                }}
-            >
-                {titleScreen}
-            </Text>
-        </View>
-    );
-};
+class TabIcon extends Component {
+    render() {
+        var color = this.props.selected ? '#00f240' : '#301c2a';
+
+        return (
+            <View style={{ alignItems: 'center' }}>
+                <Image source={this.props.imageSource} />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 12,
+                        color: 'rgba(74,74,74,0.6)'
+                    }}
+                >
+                    {this.props.titleScreen}
+                </Text>
+            </View>
+        );
+    }
+}
 
 export default TabIcon;

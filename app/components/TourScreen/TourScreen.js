@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Modal, AsyncStorage } from 'react-native';
+import { View, Modal, AsyncStorage, SafeAreaView } from 'react-native';
 import styles from './styles';
 
 import WelcomeScreen from './WelcomeScreen';
@@ -41,6 +41,7 @@ export default class TourScreen extends Component {
         });
     }
     tabBarScreen() {
+        this.props.showNetwork();
         this.setState({
             showScreenTwo: false,
             showScreenThree: true
@@ -69,35 +70,37 @@ export default class TourScreen extends Component {
                     console.log('close modal');
                 }}
             >
-                <View style={styles.modalBackground}>
-                    {this.state.showScreenOne && (
-                        <WelcomeScreen
-                            networkScreen={this.networkScreen}
-                            action={this.handler}
-                        />
-                    )}
-                    {this.state.showScreenTwo && (
-                        <NetworkTutorial
-                            tabBarScreen={this.tabBarScreen}
-                            action={this.handler}
-                        />
-                    )}
-                    {this.state.showScreenThree && (
-                        <TabBarTutorial
-                            botScreen={this.botScreen}
-                            action={this.handler}
-                        />
-                    )}
-                    {this.state.showScreenFour && (
-                        <BotTutorial
-                            readyScreen={this.readyScreen}
-                            action={this.handler}
-                        />
-                    )}
-                    {this.state.showScreenFive && (
-                        <ReadyScreen action={this.handler} />
-                    )}
-                </View>
+                <SafeAreaView style={{ flex: 1 }}>
+                    <View style={styles.modalBackground}>
+                        {this.state.showScreenOne && (
+                            <WelcomeScreen
+                                networkScreen={this.networkScreen}
+                                action={this.handler}
+                            />
+                        )}
+                        {this.state.showScreenTwo && (
+                            <NetworkTutorial
+                                tabBarScreen={this.tabBarScreen}
+                                action={this.handler}
+                            />
+                        )}
+                        {this.state.showScreenThree && (
+                            <TabBarTutorial
+                                botScreen={this.botScreen}
+                                action={this.handler}
+                            />
+                        )}
+                        {this.state.showScreenFour && (
+                            <BotTutorial
+                                readyScreen={this.readyScreen}
+                                action={this.handler}
+                            />
+                        )}
+                        {this.state.showScreenFive && (
+                            <ReadyScreen action={this.handler} />
+                        )}
+                    </View>
+                </SafeAreaView>
             </Modal>
         );
     }

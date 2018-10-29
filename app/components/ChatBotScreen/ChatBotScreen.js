@@ -9,6 +9,7 @@ import {
     View,
     Alert,
     BackHandler,
+    SafeAreaView,
     Platform
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -1705,51 +1706,53 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <BackgroundImage
-                accessibilityLabel="Messages List"
-                testID="messages-list"
-            >
-                <KeyboardAvoidingView
-                    style={chatStyles.container}
-                    behavior={Platform.OS === 'ios' ? 'padding' : null}
-                    keyboardVerticalOffset={
-                        Constants.DEFAULT_HEADER_HEIGHT +
-                        (Utils.isiPhoneX() ? 24 : 0)
-                    }
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <BackgroundImage
+                    accessibilityLabel="Messages List"
+                    testID="messages-list"
                 >
-                    <FlatList
-                        style={chatStyles.messagesList}
-                        ListFooterComponent={this.renderSmartSuggestions()}
-                        accessibilityLabel="Messages List"
-                        testID="messages-list"
-                        ref={list => {
-                            this.chatList = list;
-                            this.checkForScrolling();
-                        }}
-                        data={this.state.messages}
-                        renderItem={this.renderItem.bind(this)}
-                        onLayout={this.onChatListLayout.bind(this)}
-                        refreshControl={
-                            <RefreshControl
-                                colors={['#9Bd35A', '#689F38']}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
+                    <KeyboardAvoidingView
+                        style={chatStyles.container}
+                        behavior={Platform.OS === 'ios' ? 'padding' : null}
+                        keyboardVerticalOffset={
+                            Constants.DEFAULT_HEADER_HEIGHT +
+                            (Utils.isiPhoneX() ? 24 : 0)
                         }
-                        onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
-                            this
-                        )}
-                    />
-                    {this.state.showSlider ? this.renderSlider() : null}
-                    {/* {this.renderSmartSuggestions()} */}
-                    <View style={{ alignItems: 'center' }}>
-                        {this.renderChatInputBar()}
-                    </View>
+                    >
+                        <FlatList
+                            style={chatStyles.messagesList}
+                            ListFooterComponent={this.renderSmartSuggestions()}
+                            accessibilityLabel="Messages List"
+                            testID="messages-list"
+                            ref={list => {
+                                this.chatList = list;
+                                this.checkForScrolling();
+                            }}
+                            data={this.state.messages}
+                            renderItem={this.renderItem.bind(this)}
+                            onLayout={this.onChatListLayout.bind(this)}
+                            refreshControl={
+                                <RefreshControl
+                                    colors={['#9Bd35A', '#689F38']}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh.bind(this)}
+                                />
+                            }
+                            onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
+                                this
+                            )}
+                        />
+                        {this.state.showSlider ? this.renderSlider() : null}
+                        {/* {this.renderSmartSuggestions()} */}
+                        <View style={{ alignItems: 'center' }}>
+                            {this.renderChatInputBar()}
+                        </View>
 
-                    {this.renderNetworkStatusBar()}
-                    {this.renderCallModal()}
-                </KeyboardAvoidingView>
-            </BackgroundImage>
+                        {this.renderNetworkStatusBar()}
+                        {this.renderCallModal()}
+                    </KeyboardAvoidingView>
+                </BackgroundImage>
+            </SafeAreaView>
         );
     }
 }

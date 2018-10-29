@@ -85,8 +85,8 @@ export default StyleSheet.create({
     },
     networkTutorial: {
         position: 'absolute',
-        top: '3%',
-        right: (SCREEN_WIDTH - 300) / 2,
+        top: '1.8%',
+        right: '14%',
         backgroundColor: '#ffffff',
         height: 165,
         width: 300,
@@ -136,18 +136,18 @@ export default StyleSheet.create({
     },
     satelliteCircle: {
         position: 'absolute',
-        right: -50,
+        right: -45,
         top: -5,
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
         borderRadius: 20,
         backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'center'
     },
     imageSatellite: {
-        width: 30,
-        height: 30
+        width: 25,
+        height: 25
     },
     triangle: Platform.select({
         ios: {
@@ -241,7 +241,7 @@ export default StyleSheet.create({
     }),
     bottomNavBarTutorial: {
         position: 'absolute',
-        height: 60,
+        height: 65,
         width: SCREEN_WIDTH,
         backgroundColor: '#fff',
         bottom: -75,
@@ -267,7 +267,7 @@ export default StyleSheet.create({
     },
     botTutorial: {
         position: 'absolute',
-        top: '24%',
+        top: '21%',
         right: (SCREEN_WIDTH - 300) / 2,
         backgroundColor: '#ffffff',
         height: 165,

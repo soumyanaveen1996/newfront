@@ -93,7 +93,6 @@ const MainRouter = () => {
                             />
                             <Tabs
                                 key={ROUTER_SCENE_KEYS.tabBar}
-                                tabs={true}
                                 tabBarStyle={{
                                     backgroundColor: '#ffffff',
                                     height: 60
@@ -108,11 +107,21 @@ const MainRouter = () => {
                                     imageSource={require('../images/tabbar-home/tabbar-home.png')}
                                     icon={TabIcon}
                                     initial={true}
+                                    onEnter={() => {
+                                        console.log('on press');
+                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.timeline}
                                         component={MainScreen}
                                         title={I18n.t('FrontM')}
+                                        onEnter={() => {
+                                            console.log('Entering');
+
+                                            Actions.refresh({
+                                                key: ROUTER_SCENE_KEYS.timeline
+                                            });
+                                        }}
                                     />
                                 </Scene>
 
@@ -121,6 +130,11 @@ const MainRouter = () => {
                                     titleScreen={I18n.t('Contacts')}
                                     imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
                                     icon={TabIcon}
+                                    onEnter={() => {
+                                        Actions.refresh({
+                                            key: ROUTER_SCENE_KEYS.addContacts
+                                        });
+                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.addContacts}

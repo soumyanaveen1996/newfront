@@ -405,7 +405,12 @@ export default class ChatMessage extends React.Component {
                         this.props.imageSource
                     )}
                 >
-                    <DotIndicator color="white" size={8} count={3} />
+                    <DotIndicator
+                        style={{ backgroundColor: 'rgba(0,189,242,1)' }}
+                        color="white"
+                        size={8}
+                        count={3}
+                    />
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);

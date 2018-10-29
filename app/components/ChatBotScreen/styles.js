@@ -138,15 +138,19 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center',
         width: '100%'
     },
-    chatBarSpeakButton: {
-        width: 10,
+    micContainer: {
+        width: 20,
         height: 20,
-        marginRight: 10,
+        marginRight: 5,
         marginLeft: 10
     },
+    chatBarSpeakButton: {
+        width: 11,
+        height: 20
+    },
     chatBarSendButton: {
-        width: 18,
-        height: 18,
+        width: 24,
+        height: 24,
         marginRight: 10,
         marginLeft: 10
     },

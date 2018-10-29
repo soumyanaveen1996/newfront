@@ -32,7 +32,7 @@ const ROUTER_SCENE_KEYS = {
     swiperScreen: 'swiperScreen',
     confirmationScreen: 'confirmationScreen',
     resendCodeScreen: 'resendCodeScreen',
-    tabBar: 'tabBar',
+    tabBar: 'tabbar',
     homeMain: 'homeMain',
     contactsMain: 'contactsMain',
     channelsMenu: 'channelsMenu',
