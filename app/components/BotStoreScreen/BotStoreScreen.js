@@ -19,6 +19,7 @@ import {
     SatelliteConnectionEvents,
     AuthEvents
 } from '../../lib/events';
+import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { BackgroundImage } from '../BackgroundImage';
@@ -163,9 +164,7 @@ export default class BotStoreScreen extends React.Component {
     }
 
     static onEnter() {
-        if (__DEV__) {
-            console.tron('Entering Bot Store');
-        }
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
         try {
             this.updateCatalog();
         } catch (error) {

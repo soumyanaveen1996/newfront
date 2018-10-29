@@ -9,43 +9,44 @@ import {
     Tabs
 } from 'react-native-router-flux';
 import styles from './styles';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
-const TabIcon = ({ focused, imageSource, titleScreen }) => {
-    let tempScreen;
-    let color;
-    if (Actions.currentScene === 'timeline') {
-        tempScreen = 'Home';
+export default class TabIcon extends React.Component {
+    state = {
+        scene: 'Home'
+    };
+    componentDidMount() {
+        EventEmitter.addListener(AuthEvents.tabSelected, this.tabSelected);
     }
+    componentWillUnmount() {
+        EventEmitter.removeListener(AuthEvents.tabSelected);
+    }
+    tabSelected = scene => {
+        this.setState({ scene });
+    };
+    render() {
+        const { imageSource, titleScreen } = this.props;
+        let color;
 
-    if (Actions.currentScene === 'botStore') {
-        tempScreen = 'Marketplace';
-    }
-    if (Actions.currentScene === 'channelsList') {
-        tempScreen = 'Channels';
-    }
-    if (Actions.currentScene === 'addContacts') {
-        tempScreen = 'Contacts';
-    }
-    if (tempScreen === titleScreen) {
-        fontSize = 'rgba(80,74,74,0.6)';
-    } else {
-        color = 'rgba(74,74,74,0.6)';
-    }
+        if (this.state.scene === titleScreen) {
+            fontSize = 'rgba(80,74,74,0.6)';
+        } else {
+            color = 'rgba(74,74,74,0.6)';
+        }
 
-    return (
-        <View style={{ alignItems: 'center' }}>
-            <Image source={imageSource} />
-            <Text
-                style={{
-                    textAlign: 'center',
-                    fontSize: 14,
-                    color
-                }}
-            >
-                {titleScreen}
-            </Text>
-        </View>
-    );
-};
-
-export default TabIcon;
+        return (
+            <View style={{ alignItems: 'center' }}>
+                <Image source={imageSource} />
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 14,
+                        color
+                    }}
+                >
+                    {titleScreen}
+                </Text>
+            </View>
+        );
+    }
+}

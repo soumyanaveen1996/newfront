@@ -6,7 +6,8 @@ import {
     Lightbox,
     ActionConst,
     Actions,
-    Tabs
+    Tabs,
+    Stack
 } from 'react-native-router-flux';
 import { LoginScreen } from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
@@ -42,6 +43,7 @@ import { SwiperScreen } from '../components/Swiper';
 import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScreen';
 import { ResendCodeScreen } from '../components/ResendCodeScreen';
 import { TabIcon } from '../components/TabIcon';
+import EventEmitter, { AuthEvents } from '../lib/events';
 
 const MainRouter = () => {
     // We want white network bar
@@ -91,7 +93,7 @@ const MainRouter = () => {
                                 component={ResendCodeScreen}
                                 hideNavBar
                             />
-                            <Tabs
+                            <Scene
                                 key={ROUTER_SCENE_KEYS.tabBar}
                                 tabs={true}
                                 tabBarStyle={{
@@ -114,6 +116,10 @@ const MainRouter = () => {
                                         component={MainScreen}
                                         title={I18n.t('FrontM')}
                                         onEnter={() => {
+                                            EventEmitter.emit(
+                                                AuthEvents.tabSelected,
+                                                I18n.t('Home')
+                                            );
                                             Actions.replace(
                                                 ROUTER_SCENE_KEYS.timeline,
                                                 {
@@ -138,14 +144,6 @@ const MainRouter = () => {
                                         component={ContactsPicker}
                                         title={I18n.t('Contacts')}
                                         back
-                                        // onEnter={() => {
-                                        //     Actions.replace(
-                                        //         ROUTER_SCENE_KEYS.addContacts,
-                                        //         {
-                                        //             key: Math.random()
-                                        //         }
-                                        //     )
-                                        // }}
                                     />
                                 </Scene>
                                 <Scene
@@ -159,14 +157,6 @@ const MainRouter = () => {
                                         component={ChannelsList}
                                         title={I18n.t('Channels')}
                                         back
-                                        // onEnter={() => {
-                                        //     Actions.replace(
-                                        //         ROUTER_SCENE_KEYS.channelsList,
-                                        //         {
-                                        //             key: Math.random()
-                                        //         }
-                                        //     );
-                                        // }}
                                     />
                                 </Scene>
 
@@ -180,17 +170,9 @@ const MainRouter = () => {
                                         key={ROUTER_SCENE_KEYS.botStore}
                                         component={BotStoreScreen}
                                         title={I18n.t('Bot_Store')}
-                                        // onEnter={() => {
-                                        //     Actions.replace(
-                                        //         ROUTER_SCENE_KEYS.botStore,
-                                        //         {
-                                        //             key: Math.random()
-                                        //         }
-                                        //     )
-                                        // }}
                                     />
                                 </Scene>
-                            </Tabs>
+                            </Scene>
                             <Scene
                                 key={ROUTER_SCENE_KEYS.botChat}
                                 component={BotChat}

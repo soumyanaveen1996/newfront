@@ -10,7 +10,7 @@ import I18n from '../../config/i18n/i18n';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Channel } from '../../lib/capability';
 import { BackgroundImage } from '../BackgroundImage';
-
+import EventEmitter, { AuthEvents } from '../../lib/events';
 export default class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -53,13 +53,8 @@ export default class ChannelsList extends React.Component {
     }
 
     static onEnter() {
-        if (__DEV__) {
-            console.tron('Entering Channel List');
-        }
-        this.props.navigation.setParams({
-            handleAddChannel: this.handleAddChannel.bind(this)
-        });
-        this.refresh();
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
+        this.refresh(false, true);
     }
 
     handleAddChannel = () => {

@@ -26,7 +26,9 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { Contact } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
+import I18n from '../../config/i18n/i18n';
 export default class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -80,6 +82,8 @@ export default class ContactsPicker extends React.Component {
     }
 
     static onEnter() {
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length === 0) {
                 //If no contacts are added then go directly to contacts bot
