@@ -327,6 +327,7 @@ const stylesheet = StyleSheet.create({
         width: '90%',
         height: 54
     },
+
     formButton: {
         backgroundColor: GlobalColors.white,
         borderColor: GlobalColors.chatLeftTextColor,

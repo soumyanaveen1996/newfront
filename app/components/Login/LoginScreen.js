@@ -140,8 +140,8 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
-        await TwilioVoIP.init();
-        await RemoteBotInstall.syncronizeBots();
+        TwilioVoIP.init();
+        RemoteBotInstall.syncronizeBots();
         this.setState({ loading: false });
         Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({
