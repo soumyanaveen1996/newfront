@@ -12,19 +12,25 @@ export default StyleSheet.create({
     },
     keyboardConatiner: {
         flex: 1,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center'
+        padding: 10
+    },
+    headerContainer: {
+        width: 300,
+        height: 80,
+        marginTop: '10%',
+        alignItems: 'center'
     },
     signupHeader: {
-        width: 300,
-        height: 45,
-        textAlign: 'left',
         fontSize: 28,
         color: 'rgba(74,74,74,1)',
-        fontWeight: '300',
-        marginTop: '20%'
+        fontWeight: '300'
     },
+    signupSubHeader: {
+        fontSize: 20,
+        color: 'rgba(74,74,74,1)',
+        fontWeight: '300'
+    },
+
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,

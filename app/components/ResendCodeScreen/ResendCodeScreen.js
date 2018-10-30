@@ -26,16 +26,26 @@ export default class ResendCodeScreen extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         BackHandler.addEventListener(
             'hardwareBackPress',
-            this.handleBackButtonClick
+            () => {
+                this.handleBackButtonClick(
+                    this.props.email,
+                    this.props.password
+                );
+            },
+            false
         );
     }
 
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'confirmationScreen') {
-            BackHandler.exitApp();
+    handleBackButtonClick(email, password) {
+        if (Actions.currentScene === 'resendCodeScreen') {
+            Actions.confirmationScreen({
+                type: ActionConst.REPLACE,
+                userEmail: email,
+                password: password
+            });
         }
     }
     onChangeEmailText(text) {
@@ -68,6 +78,7 @@ export default class ResendCodeScreen extends Component {
                 }
             })
             .catch(err => {
+                console.log('error from resendCode ', err);
                 this.setState({ loading: false });
                 this.setState({
                     errorMessage: 'User/Email not found'
@@ -99,46 +110,52 @@ export default class ResendCodeScreen extends Component {
     };
     render() {
         return (
-            <View style={styles.container}>
+            <View style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <View
-                        style={{
-                            position: 'relative',
-                            backgroundColor: 'rgba(0,0,0,0.0)'
-                        }}
+                    <ScrollView
+                        style={styles.container}
+                        keyboardShouldPersistTaps="always"
                     >
-                        <Text style={styles.header}>Confirmation code</Text>
-                        <Text style={styles.firstTitle}>
-                            Please confirm the email address
-                        </Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            onChangeText={this.onChangeEmailText.bind(this)}
-                            keyboardType="email-address"
-                            editable={true}
-                            returnKeyType={'done'}
-                            placeholder="email@example.com"
-                            value={this.state.userEmail}
-                            underlineColorAndroid={'transparent'}
-                            placeholderTextColor="rgba(155,155,155,1)"
-                            selectTextOnFocus={true}
-                        />
-                        {this.displayEmailErrorMessege()}
-                    </View>
-                    <TouchableOpacity
-                        disabled={!this.checkFieldEmpty()}
-                        style={
-                            this.checkFieldEmpty()
-                                ? styles.buttonContainer
-                                : styles.diableButton
-                        }
-                        onPress={this.onFormSubmit.bind(this)}
-                    >
-                        <Text style={styles.buttonText}>Send code again</Text>
-                    </TouchableOpacity>
+                        <View style={styles.captionText}>
+                            <Text style={styles.header}>Confirmation code</Text>
+                            <Text style={styles.firstTitle}>
+                                Please confirm the email address
+                            </Text>
+                        </View>
+                        <View style={styles.pinCode}>
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                onChangeText={this.onChangeEmailText.bind(this)}
+                                keyboardType="email-address"
+                                editable={true}
+                                returnKeyType={'done'}
+                                placeholder="email@example.com"
+                                value={this.state.userEmail}
+                                underlineColorAndroid={'transparent'}
+                                placeholderTextColor="rgba(155,155,155,1)"
+                                selectTextOnFocus={true}
+                            />
+                            {this.displayEmailErrorMessege()}
+                        </View>
+                        <View style={styles.codeButton}>
+                            <TouchableOpacity
+                                disabled={!this.checkFieldEmpty()}
+                                style={
+                                    this.checkFieldEmpty()
+                                        ? styles.buttonContainer
+                                        : styles.diableButton
+                                }
+                                onPress={this.onFormSubmit.bind(this)}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Send code again
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
                 </KeyboardAvoidingView>
             </View>
         );
