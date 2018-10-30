@@ -6,7 +6,8 @@ import {
     Alert,
     StatusBar,
     AsyncStorage,
-    SafeAreaView
+    SafeAreaView,
+    Platform
 } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
@@ -14,7 +15,7 @@ import { MainScreenStyles } from './styles';
 import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { Actions, ActionConst } from 'react-native-router-flux';
-// import CenterComponent from './header/CenterComponent';
+import CenterComponent from './header/CenterComponent';
 import { HeaderLeftIcon } from '../Header';
 import Config from './config';
 import appConfig from '../../config/config';
@@ -55,7 +56,7 @@ export default class MainScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let ret = {
-            //headerTitle: <CenterComponent />
+            headerTitle: <CenterComponent />
         };
         if (appConfig.app.hideFilter !== true) {
             ret.headerLeft = (
@@ -115,7 +116,7 @@ export default class MainScreen extends React.Component {
         this.state = {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
-            firstTimer: false
+            firstTimer: true
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
@@ -277,7 +278,8 @@ export default class MainScreen extends React.Component {
 
     handleAsyncMessageResult(event) {
         if (event && Actions.currentScene === ROUTER_SCENE_KEYS.timeline) {
-            this.refs.botList.refresh();
+            this.update();
+            // this.refs.botList.refresh();
         }
     }
 
@@ -387,8 +389,13 @@ export default class MainScreen extends React.Component {
                         />
                     )}
                     <StatusBar
+                        hidden={false}
                         backgroundColor="grey"
-                        barStyle="light-content"
+                        barStyle={
+                            Platform.OS === 'ios'
+                                ? 'dark-content'
+                                : 'light-content'
+                        }
                     />
                     {this.renderMain()}
                 </BackgroundImage>

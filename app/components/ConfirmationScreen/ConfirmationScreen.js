@@ -131,7 +131,10 @@ export default class ConfirmationScreen extends Component {
             <View style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={{ flex: 1 }}>
-                    <ScrollView style={styles.container}>
+                    <ScrollView
+                        style={styles.container}
+                        keyboardShouldPersistTaps="always"
+                    >
                         <View style={styles.captionText}>
                             <Text style={styles.header}>Confirmation code</Text>
                             <Text style={styles.firstTitle}>
@@ -153,6 +156,11 @@ export default class ConfirmationScreen extends Component {
                                 autoFocus={true}
                                 placeholder="------"
                                 returnKeyType={'done'}
+                                value={
+                                    this.state.code === 0
+                                        ? null
+                                        : this.state.code
+                                }
                                 onChangeText={this.onChangeCode.bind(this)}
                                 underlineColorAndroid="transparent"
                                 maxLength={6} //setting limit of input

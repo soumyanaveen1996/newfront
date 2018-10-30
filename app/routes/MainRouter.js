@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, AsyncStorage } from 'react-native';
+import { View, Image, StatusBar } from 'react-native';
 import {
     Scene,
     Router,
@@ -44,6 +44,7 @@ import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScr
 import { ResendCodeScreen } from '../components/ResendCodeScreen';
 import { TabIcon } from '../components/TabIcon';
 import EventEmitter, { AuthEvents } from '../lib/events';
+import { images } from '../config/images';
 
 const MainRouter = () => {
     // We want white network bar
@@ -75,13 +76,12 @@ const MainRouter = () => {
                             />
                             <Scene
                                 key={ROUTER_SCENE_KEYS.loginScreen}
+                                title={I18n.t('FrontM')}
                                 component={LoginScreen}
-                                hideNavBar
                             />
                             <Scene
                                 key={ROUTER_SCENE_KEYS.signupScreen}
                                 component={SignupScreen}
-                                hideNavBar
                             />
                             <Scene
                                 key={ROUTER_SCENE_KEYS.confirmationScreen}
@@ -100,6 +100,7 @@ const MainRouter = () => {
                                     height: 60
                                 }}
                                 swipeEnabled={true}
+                                animationEnabled={true}
                                 showLabel={false}
                                 hideNavBar
                             >

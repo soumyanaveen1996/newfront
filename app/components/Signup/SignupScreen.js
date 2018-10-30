@@ -325,10 +325,19 @@ export default class SignupScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView
+                style={styles.container}
+                keyboardShouldPersistTaps="always"
+            >
                 <Loader loading={this.state.loading} />
                 <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <Text style={styles.signupHeader}>Sign up to FrontM</Text>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.signupHeader}> Welcome! </Text>
+                        <Text style={styles.signupSubHeader}>
+                            {' '}
+                            Sign up to FrontM{' '}
+                        </Text>
+                    </View>
                     <View
                         style={styles.formContainer}
                         behavior={Platform.OS === 'ios' ? 'position' : null}

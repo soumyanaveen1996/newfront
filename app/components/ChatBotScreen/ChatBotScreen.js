@@ -199,10 +199,11 @@ export default class ChatBotScreen extends React.Component {
     }
 
     handleBackButtonClick() {
-        if (Actions.currentScene === 'botChat') {
-            // Actions.timeline({ type: ActionConst.REPLACE });
-            Actions.pop();
-        }
+        Actions.pop();
+        return true;
+        // if (Actions.currentScene === 'botChat') {
+        //     Actions.timeline({ type: ActionConst.REPLACE });
+        // }
     }
 
     async componentDidMount() {

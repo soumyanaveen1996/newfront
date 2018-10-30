@@ -13,14 +13,20 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    loginHeader: {
+    headerContainer: {
         width: 300,
-        height: 45,
-        textAlign: 'left',
+        marginTop: '10%',
+        alignItems: 'center'
+    },
+    loginHeader: {
         fontSize: 28,
         color: 'rgba(74,74,74,1)',
-        fontWeight: '300',
-        marginTop: '20%'
+        fontWeight: '300'
+    },
+    loginSubHeader: {
+        fontSize: 20,
+        color: 'rgba(74,74,74,1)',
+        fontWeight: '300'
     },
     formContainer: Platform.select({
         ios: {
@@ -120,10 +126,12 @@ export default StyleSheet.create({
     errorContainer: Platform.select({
         ios: {
             position: 'absolute',
+            minWidth: 150,
             bottom: -30,
             right: 0
         },
         android: {
+            minWidth: 150,
             flex: 1,
             alignItems: 'flex-end'
         }

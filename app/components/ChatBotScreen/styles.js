@@ -278,9 +278,10 @@ const stylesheet = StyleSheet.create({
     },
     userNameStyle: {
         display: 'flex',
-        color: GlobalColors.white,
+        color: GlobalColors.chatLeftTextColor,
         fontWeight: '600',
         fontSize: 12,
+        paddingLeft: 10,
         marginBottom: 3,
         fontStyle: 'italic',
         height: 15
@@ -326,6 +327,7 @@ const stylesheet = StyleSheet.create({
         width: '90%',
         height: 54
     },
+
     formButton: {
         backgroundColor: GlobalColors.white,
         borderColor: GlobalColors.chatLeftTextColor,
