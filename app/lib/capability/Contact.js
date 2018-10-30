@@ -253,19 +253,12 @@ export default class Contact {
                                 sessionId: user.creds.sessionId
                             }
                         };
-                        if (__DEV__) {
-                            console.tron('NETWORK REQUEST---> CONTACTS');
-                        }
 
                         return Network(options);
                     }
                 })
                 .then(response => {
                     if (response.data) {
-                        if (__DEV__) {
-                            console.tron('Loaded Contacts!');
-                        }
-
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {

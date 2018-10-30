@@ -55,9 +55,6 @@ export default class ChannelsList extends React.Component {
         }
 
         Channel.refreshChannels().then(async () => {
-            if (__DEV__) {
-                console.tron('Fetched Channels');
-            }
             await this.wait();
             return this.refresh();
         });
@@ -82,9 +79,6 @@ export default class ChannelsList extends React.Component {
 
     async refresh(onback = false, handleEmptyChannels = true) {
         const channels = await Channel.getSubscribedChannels();
-        if (__DEV__) {
-            console.tron('Channel Count', channels.length);
-        }
 
         if (handleEmptyChannels && channels.length == 0) {
             if (onback) {

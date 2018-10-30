@@ -184,10 +184,6 @@ export default class Splash extends React.Component {
     configureNotifications = () => {
         Notification.deviceInfo()
             .then(info => {
-                if (__DEV__) {
-                    console.tron('In configure Notificaitons');
-                }
-
                 if (info) {
                     Notification.configure(this.handleNotification.bind(this));
                 }
@@ -198,18 +194,10 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        if (__DEV__) {
-            console.tron('Config Notificaitons');
-        }
-
         this.configureNotifications().bind(this);
     };
 
     handleNotification = notification => {
-        if (__DEV__) {
-            console.tron('In Notificaiton handler', notification);
-        }
-
         if (!notification.foreground && notification.userInteraction) {
             Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }

@@ -102,9 +102,6 @@ export default class ContactsPicker extends React.Component {
 
     static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
-        // if (__DEV__) {
-        //     console.tron('Enter Contacts Picker')
-        // }
 
         // await Contact.getAddedContacts()
         // Actions.refresh()
