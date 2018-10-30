@@ -58,14 +58,25 @@ export default StyleSheet.create({
         lineHeight: 26,
         marginBottom: 24
     },
-    text: {
-        textAlign: 'center',
-        color: 'rgba(102,102,102,1)',
-        fontSize: 16,
-        fontWeight: '300',
-        letterSpacing: 1,
-        lineHeight: 22
-    },
+    text: Platform.select({
+        ios: {
+            textAlign: 'center',
+            color: 'rgba(102,102,102,1)',
+            fontSize: 16,
+            fontFamily: 'SF Pro Text',
+            fontWeight: '300',
+            letterSpacing: 1,
+            lineHeight: 22
+        },
+        android: {
+            textAlign: 'center',
+            color: 'rgba(102,102,102,1)',
+            fontSize: 16,
+            fontFamily: 'SF Pro Text',
+            letterSpacing: 1,
+            lineHeight: 22
+        }
+    }),
     slide: {
         flex: 1,
         alignItems: 'center',

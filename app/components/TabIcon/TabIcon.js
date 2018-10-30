@@ -12,6 +12,10 @@ import styles from './styles';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class TabIcon extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         scene: 'Home'
     };
@@ -25,14 +29,9 @@ export default class TabIcon extends React.Component {
         this.setState({ scene });
     };
     render() {
+        console.log('this is props of navabar', this.props);
         const { imageSource, titleScreen } = this.props;
-        let color;
-
-        if (this.state.scene === titleScreen) {
-            fontSize = 'rgba(80,74,74,0.6)';
-        } else {
-            color = 'rgba(74,74,74,0.6)';
-        }
+        let color = 'rgba(74,74,74,0.6)';
 
         return (
             <View style={{ alignItems: 'center' }}>

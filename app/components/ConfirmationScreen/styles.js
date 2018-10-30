@@ -8,7 +8,6 @@ export default StyleSheet.create({
         flex: 1,
         padding: 10,
         backgroundColor: GlobalColors.white
-        // backgroundColor: 'rgba(0,0,0,0.1)'
     },
     innerContainer: {
         flex: 1,
