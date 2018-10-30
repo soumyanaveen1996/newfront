@@ -67,7 +67,8 @@ const images = {
     dot_blue: require('./dot-blue/dot-blue.png'),
     dot_gray: require('./dot-gray/dot-gray.png'),
     frontm_logo: require('./frontm-logo/frontm-logo.png'),
-    bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png')
+    bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png'),
+    frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png')
 };
 
 export default images;

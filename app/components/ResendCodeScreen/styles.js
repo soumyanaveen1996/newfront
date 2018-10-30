@@ -5,13 +5,12 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: GlobalColors.white,
-        alignItems: 'center'
+        backgroundColor: GlobalColors.white
     },
     keyboardConatiner: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        backgroundColor: GlobalColors.white
     },
     header: {
         width: 300,
@@ -48,8 +47,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center',
-        bottom: 80
+        justifyContent: 'center'
     },
 
     diableButton: {
@@ -58,8 +56,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(155,155,155,1);',
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center',
-        bottom: 80
+        justifyContent: 'center'
     },
     buttonText: {
         color: '#fff',
@@ -85,5 +82,22 @@ export default StyleSheet.create({
     errorText: {
         color: '#ffffff',
         textAlign: 'center'
+    },
+    captionText: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    pinCode: {
+        flex: 1,
+        alignItems: 'center',
+        paddingBottom: 60,
+        marginTop: 10,
+        justifyContent: 'center'
+    },
+    codeButton: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 40
     }
 });

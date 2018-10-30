@@ -16,15 +16,23 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    signupHeader: {
+    headerContainer: {
         width: 300,
-        height: 45,
-        textAlign: 'left',
+        height: 80,
+        marginTop: '10%',
+        alignItems: 'center'
+    },
+    signupHeader: {
         fontSize: 28,
         color: 'rgba(74,74,74,1)',
-        fontWeight: '300',
-        marginTop: '20%'
+        fontWeight: '300'
     },
+    signupSubHeader: {
+        fontSize: 20,
+        color: 'rgba(74,74,74,1)',
+        fontWeight: '300'
+    },
+
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,
