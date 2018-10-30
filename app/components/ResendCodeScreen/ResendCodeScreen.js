@@ -26,17 +26,27 @@ export default class ResendCodeScreen extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         BackHandler.addEventListener(
             'hardwareBackPress',
-            this.handleBackButtonClick
+            () => {
+                this.handleBackButtonClick(
+                    this.props.email,
+                    this.props.password
+                );
+            },
+            false
         );
     }
 
-    handleBackButtonClick() {
-        Actions.pop();
-
-        return true;
+    handleBackButtonClick(email, password) {
+        if (Actions.currentScene === 'resendCodeScreen') {
+            Actions.confirmationScreen({
+                type: ActionConst.REPLACE,
+                userEmail: email,
+                password: password
+            });
+        }
     }
     onChangeEmailText(text) {
         this.setState({ userEmail: text });

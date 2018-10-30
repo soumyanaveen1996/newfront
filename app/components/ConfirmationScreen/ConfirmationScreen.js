@@ -51,7 +51,8 @@ export default class ConfirmationScreen extends Component {
 
     handleBackButtonClick() {
         if (Actions.currentScene === 'confirmationScreen') {
-            BackHandler.exitApp();
+            // BackHandler.exitApp();
+            return true;
         }
     }
 
@@ -70,6 +71,7 @@ export default class ConfirmationScreen extends Component {
                 }
             })
             .catch(err => {
+                console.log('error from confirmation page ', err);
                 this.setState({ errorMessage: 'Wrong code', loading: false });
             });
     }
