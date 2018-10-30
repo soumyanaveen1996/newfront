@@ -1,10 +1,12 @@
 import Reactotron, { trackGlobalErrors } from 'reactotron-react-native';
+import { reactotronRedux } from 'reactotron-redux';
 import { NativeModules } from 'react-native';
 
-Reactotron.configure({
+const reactotron = Reactotron.configure({
     name: 'FrontM'
 })
     .useReactNative()
+    .use(reactotronRedux()) //  <- here i am!
     .use(trackGlobalErrors());
 
 if (__DEV__) {
@@ -15,3 +17,5 @@ if (__DEV__) {
 }
 
 console.tron = Reactotron;
+
+export default reactotron;

@@ -81,13 +81,10 @@ export default class ContactsPicker extends React.Component {
         }
         Contact.refreshContacts().then(() => {
             Contact.getAddedContacts().then(contacts => {
+                this.dataSource = new FrontMAddedContactsPickerDataSource(this);
                 if (contacts.length === 0) {
                     //If no contacts are added then go directly to contacts bot
                     this.handleAddContact();
-                } else {
-                    this.dataSource = new FrontMAddedContactsPickerDataSource(
-                        this
-                    );
                 }
             });
         });
