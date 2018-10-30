@@ -21,6 +21,8 @@ import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { TwilioVoIP } from '../../lib/twilio';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
 
 export default class LoginScreen extends React.Component {
     constructor(props) {
@@ -129,7 +131,9 @@ export default class LoginScreen extends React.Component {
         this.formValuesArray[0] = '';
         this.formValuesArray[1] = '';
         TwilioVoIP.init();
-        RemoteBotInstall.syncronizeBots();
+        // RemoteBotInstall.syncronizeBots()
+        // AfterLogin.executeAfterLogin()
+        synchronizeUserData();
         this.setState({ loading: false });
         Actions.timeline({ type: ActionConst.REPLACE });
         return;

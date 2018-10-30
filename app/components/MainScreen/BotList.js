@@ -27,7 +27,7 @@ export default class BotList extends React.Component {
         this.refresh();
     }
     async componentWillMount() {
-        await RemoteBotInstall.syncronizeBots();
+        // await RemoteBotInstall.syncronizeBots()
     }
 
     async refresh() {
@@ -60,7 +60,15 @@ export default class BotList extends React.Component {
                         )
                     );
                 }
+                // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
+                if (
+                    chatData.lastMessage &&
+                    chatData.lastMessage.getMessageType() === 'web_card'
+                ) {
+                    chatData.lastMessage = null;
+                }
                 conversation.chatData = chatData;
+
                 return conversation;
             })
         ).catch(e => {
@@ -112,6 +120,7 @@ export default class BotList extends React.Component {
 
     render() {
         const { loaded } = this.state;
+
         if (!loaded) {
             return (
                 <View style={BotListStyles.loading}>

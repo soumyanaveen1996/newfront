@@ -35,6 +35,8 @@ import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
@@ -129,6 +131,7 @@ export default class Splash extends React.Component {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        // AfterLogin.executeAfterLogin()
                         this.listenToEvents();
                         const gState = Store.getState();
                         console.log(gState);
@@ -224,6 +227,7 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
+        synchronizeUserData();
         Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding

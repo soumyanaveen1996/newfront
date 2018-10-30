@@ -9,6 +9,8 @@ import config from '../../config/config';
 import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
+import Store from '../../redux/store/configureStore';
+import { completeContactsLoad } from '../../redux/actions/UserActions';
 
 /**
  * Expected format per contact:
@@ -272,6 +274,7 @@ export default class Contact {
                         });
                         var allContacts = _.concat(contacts, ignored);
                         Contact.saveContacts(allContacts);
+                        Store.dispatch(completeContactsLoad());
                         resolve();
                     }
                 })

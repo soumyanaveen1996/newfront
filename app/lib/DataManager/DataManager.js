@@ -17,10 +17,11 @@ class DataManager {
     };
 
     listenToEvents = async () => {
-        EventEmitter.addListener(
-            AuthEvents.userLoggedIn,
-            this.userLoggedInHandler
-        );
+        // NO NEED WE CALL THIS AFTER LOGIN IN or IN LAUNCH
+        // EventEmitter.addListener(
+        //     AuthEvents.userLoggedIn,
+        //     this.userLoggedInHandler
+        // );
         EventEmitter.addListener(
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler

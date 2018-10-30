@@ -11,10 +11,10 @@ export default class AfterLogin {
 
         if (isUserLoggedIn) {
             ContactsCache.init();
-            await MessageCounter.init();
-            await NetworkPoller.start();
+            MessageCounter.init();
+            NetworkPoller.start();
             this.configureNotifications();
-            await TwilioVoIP.init();
+            TwilioVoIP.init();
         }
     };
 

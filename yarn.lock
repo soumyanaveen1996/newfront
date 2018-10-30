@@ -7598,6 +7598,10 @@ react-native-permissions@^1.1.1:
   version "3.1.1"
   resolved "git+https://github.com/rajamal/react-native-push-notification.git#5bd622d620e4ba679200f9007bf530f46b435158"
 
+react-native-responsive-screen@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/react-native-responsive-screen/-/react-native-responsive-screen-1.1.9.tgz#1a9858731e9e7cc1f1312877eb9b94ac32f4500f"
+
 react-native-router-flux@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-4.0.4.tgz#95aca0863bbf0ecf6b0f565b3040861736a81189"

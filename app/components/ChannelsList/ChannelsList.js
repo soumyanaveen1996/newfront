@@ -11,7 +11,8 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { Channel } from '../../lib/capability';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
-export default class ChannelsList extends React.Component {
+import { connect } from 'react-redux';
+class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
@@ -49,22 +50,43 @@ export default class ChannelsList extends React.Component {
         this.props.navigation.setParams({
             handleAddChannel: this.handleAddChannel.bind(this)
         });
-        const channels = await Channel.getSubscribedChannels();
-        if (channels.length > 0) {
-            return this.refresh();
-        }
+        // const channels = await Channel.getSubscribedChannels()
+        // if (channels.length > 0) {
+        //     return this.refresh()
+        // }
 
-        Channel.refreshChannels().then(async () => {
-            await this.wait();
-            return this.refresh();
-        });
+        // Channel.refreshChannels().then(async () => {
+        //     await this.wait()
+        //     return this.refresh()
+        // })
+        if (!this.props.appState.allChannelsLoaded) {
+            if (__DEV__) {
+                console.tron('Channels Not Loaded ... Load Again!');
+            }
+
+            return Channel.refreshChannels();
+        }
+        this.refresh();
     }
 
     wait = () => new Promise(resolve => setTimeout(resolve, 2000));
 
+    async componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.allChannelsLoaded !==
+            this.props.appState.allChannelsLoaded
+        ) {
+            await this.wait();
+            return this.refresh();
+        }
+    }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
-        this.refresh(false, true);
+        if (!this.props.appState.allChannelsLoaded) {
+            Channel.refreshChannels();
+        } else {
+            this.refresh();
+        }
     }
 
     handleAddChannel = () => {
@@ -157,3 +179,16 @@ export default class ChannelsList extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChannelsList);
