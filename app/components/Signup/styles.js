@@ -12,9 +12,7 @@ export default StyleSheet.create({
     },
     keyboardConatiner: {
         flex: 1,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center'
+        padding: 10
     },
     headerContainer: {
         width: 300,

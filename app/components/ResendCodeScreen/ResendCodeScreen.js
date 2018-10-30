@@ -34,9 +34,9 @@ export default class ResendCodeScreen extends Component {
     }
 
     handleBackButtonClick() {
-        if (Actions.currentScene === 'confirmationScreen') {
-            BackHandler.exitApp();
-        }
+        Actions.pop();
+
+        return true;
     }
     onChangeEmailText(text) {
         this.setState({ userEmail: text });

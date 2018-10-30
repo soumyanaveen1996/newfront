@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import images from '../../images';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
@@ -179,7 +180,7 @@ export default class SignupScreen extends React.Component {
                     }
                 })
                 .catch(err => {
-                    this.setState({ emailError: 'Email already in use' });
+                    this.setState({ emailError: 'Email already in use', err });
                     this.setState(() => {
                         return { loading: false };
                     });
@@ -330,7 +331,11 @@ export default class SignupScreen extends React.Component {
                 keyboardShouldPersistTaps="always"
             >
                 <Loader loading={this.state.loading} />
-                <KeyboardAvoidingView style={styles.keyboardConatiner}>
+                <KeyboardAwareScrollView
+                    style={styles.keyboardConatiner}
+                    resetScrollToCoords={{ x: 0, y: 0 }}
+                    scrollEnabled={false}
+                >
                     <View style={styles.headerContainer}>
                         <Text style={styles.signupHeader}> Welcome! </Text>
                         <Text style={styles.signupSubHeader}>
@@ -544,7 +549,7 @@ export default class SignupScreen extends React.Component {
                             <Text style={styles.buttonText}>SIGNUP</Text>
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
+                </KeyboardAwareScrollView>
             </ScrollView>
         );
     }
