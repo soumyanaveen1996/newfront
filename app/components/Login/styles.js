@@ -161,6 +161,6 @@ export default StyleSheet.create({
     errorText: {
         color: '#ffffff',
         textAlign: 'center',
-        padding: 2
+        padding: 6
     }
 });

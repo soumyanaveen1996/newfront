@@ -43,6 +43,9 @@ export default class LoginScreen extends React.Component {
         this.state = {
             email: '',
             password: '',
+            errorMessage: '',
+            emailErrorMessage: '',
+            passwordErrorMessage: '',
             formData: [
                 { id: 2, title: 'Email', type: 'email_field', optional: false },
                 {
@@ -53,9 +56,6 @@ export default class LoginScreen extends React.Component {
                 },
                 { id: 4, title: 'Login', type: 'button', action: 'signIn' }
             ],
-            errorMessage: '',
-            emailErrorMessage: '',
-            passwordErrorMessage: '',
             loading: false,
             pressedFbBtn: false,
             pressedGglBtn: false
@@ -76,6 +76,7 @@ export default class LoginScreen extends React.Component {
         //             });
         //         }
         //     });
+
         BackHandler.addEventListener(
             'hardwareBackPress',
             this.handleBackButtonClick
@@ -107,16 +108,16 @@ export default class LoginScreen extends React.Component {
             return;
         }
 
-        let formInfo = this.state.formData;
-        for (let i = 0; i < formInfo.length; i++) {
-            let eachFormData = formInfo[i];
-            eachFormData.value = _.trim(this.formValuesArray[i]);
-            formInfo[i] = eachFormData;
-        }
+        // let formInfo = this.state.formData;
+        // for (let i = 0; i < formInfo.length; i++) {
+        //     let eachFormData = formInfo[i];
+        //     eachFormData.value = _.trim(this.formValuesArray[i]);
+        //     formInfo[i] = eachFormData;
+        // }
 
         const userDetails = {
-            email: formInfo[0].value,
-            password: formInfo[1].value
+            email: this.state.email,
+            password: this.state.password
         };
         console.log('userDetails ', userDetails);
 
@@ -130,6 +131,7 @@ export default class LoginScreen extends React.Component {
                     passwordErrorMessage: '',
                     emailErrorMessage: ''
                 });
+
                 this.showMainScreen();
             })
             .catch(err => {
@@ -146,12 +148,17 @@ export default class LoginScreen extends React.Component {
         // RemoteBotInstall.syncronizeBots()
         // AfterLogin.executeAfterLogin()
         synchronizeUserData();
-        this.setState({ loading: false });
-        Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({
+            loading: false,
+            errorMessage: '',
+            emailErrorMessage: '',
+            passwordErrorMessage: '',
             email: '',
             password: ''
         });
+        Actions.timeline({ type: ActionConst.REPLACE });
+        this.formValuesArray.length = 0;
+
         return;
     };
 
@@ -169,7 +176,7 @@ export default class LoginScreen extends React.Component {
 
             if (
                 formData[i].type === 'password_field' &&
-                _.trim(this.formValuesArray[i]) === ''
+                _.trim(this.state.password) === ''
             ) {
                 this.errorMessages[i] = I18n.t('Password_not_empty');
                 return false;
@@ -177,7 +184,7 @@ export default class LoginScreen extends React.Component {
 
             if (
                 formData[i].type === 'email_field' &&
-                !isEmail(_.trim(this.formValuesArray[i]))
+                !isEmail(_.trim(this.state.email))
             ) {
                 this.errorMessages[i] = I18n.t('Not_an_email');
                 return false;
