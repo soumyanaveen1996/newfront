@@ -173,7 +173,7 @@ class MainScreen extends React.Component {
             this.handleAsyncMessageResult.bind(this)
         );
 
-        TwilioVoIP.init();
+        // TwilioVoIP.init();
     }
 
     async componentWillMount() {
