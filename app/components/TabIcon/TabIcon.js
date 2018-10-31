@@ -29,7 +29,6 @@ export default class TabIcon extends React.Component {
         this.setState({ scene });
     };
     render() {
-        console.log('this is props of navabar', this.props);
         const { imageSource, titleScreen } = this.props;
         let color = 'rgba(74,74,74,0.6)';
 
