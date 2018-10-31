@@ -142,7 +142,7 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
-        TwilioVoIP.init();
+        await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
         // AfterLogin.executeAfterLogin()
         synchronizeUserData();
@@ -205,8 +205,9 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
+                console.log('google error login ', err);
                 this.setState({ loading: false });
-                this.setState({ errorMessage: err.message });
+                this.setState({ errorMessage: 'No Internet Connection' });
             });
     };
     loginWithFacebook = async () => {
@@ -219,8 +220,9 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
+                console.log('fb error login ', err);
                 this.setState({ loading: false });
-                this.setState({ errorMessage: err.message });
+                this.setState({ errorMessage: 'No Internet Connection' });
             });
     };
 
@@ -249,6 +251,18 @@ export default class LoginScreen extends React.Component {
                     <View style={styles.userError}>
                         <Text style={styles.errorText}>
                             {this.state.emailErrorMessage}
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+
+        if (this.state.errorMessage && this.state.errorMessage.length > 0) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.errorMessage}
                         </Text>
                     </View>
                 </View>

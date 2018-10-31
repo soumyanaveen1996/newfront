@@ -209,7 +209,8 @@ export default class ChatMessage extends React.Component {
                 this.props.alignRight,
                 this.props.imageSource
             ),
-            backgroundColor: '#594673'
+            backgroundColor: 'rgba(0, 167, 214, 1)',
+            borderRadius: 12
         };
         const component = (
             <View style={audioStyle}>

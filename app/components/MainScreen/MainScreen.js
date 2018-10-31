@@ -118,7 +118,7 @@ class MainScreen extends React.Component {
         this.state = {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
-            firstTimer: true
+            firstTimer: false
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
