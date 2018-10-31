@@ -126,12 +126,12 @@ export default StyleSheet.create({
     errorContainer: Platform.select({
         ios: {
             position: 'absolute',
-            minWidth: 150,
+            minWidth: 180,
             bottom: -30,
             right: 0
         },
         android: {
-            minWidth: 150,
+            minWidth: 180,
             flex: 1,
             alignItems: 'flex-end'
         }
@@ -141,8 +141,7 @@ export default StyleSheet.create({
         ios: {
             backgroundColor: 'rgba(229,69,59,1)',
             zIndex: 999999,
-            minWidth: 150,
-            padding: 5,
+            minWidth: 180,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
@@ -151,8 +150,7 @@ export default StyleSheet.create({
         },
         android: {
             backgroundColor: 'rgba(229,69,59,1)',
-            width: 150,
-            padding: 5,
+            width: 180,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
@@ -162,6 +160,7 @@ export default StyleSheet.create({
     }),
     errorText: {
         color: '#ffffff',
-        textAlign: 'center'
+        textAlign: 'center',
+        padding: 2
     }
 });
