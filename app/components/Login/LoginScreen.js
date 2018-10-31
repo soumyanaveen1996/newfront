@@ -303,6 +303,9 @@ export default class LoginScreen extends React.Component {
         );
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                <View style={styles.logoHeader}>
+                    <Image source={images.frontm_header_logo} />
+                </View>
                 <ScrollView
                     style={styles.container}
                     keyboardShouldPersistTaps="always"

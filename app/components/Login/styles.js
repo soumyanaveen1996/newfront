@@ -1,12 +1,22 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import { Platform } from 'react-native';
+import { SCREEN_HEIGHT } from './config';
+import { SCREEN_WIDTH } from './config';
 
 export default StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
         backgroundColor: GlobalColors.white
+    },
+    logoHeader: {
+        width: SCREEN_WIDTH,
+        height: 45,
+        borderBottomColor: 'rgb(192, 192, 192)',
+        borderBottomWidth: 0.2,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     keyboardConatiner: {
         padding: 10,
@@ -15,7 +25,7 @@ export default StyleSheet.create({
     },
     headerContainer: {
         width: 300,
-        marginTop: '10%',
+        marginTop: '5%',
         alignItems: 'center'
     },
     loginHeader: {

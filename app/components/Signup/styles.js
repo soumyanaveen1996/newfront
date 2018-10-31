@@ -10,15 +10,24 @@ export default StyleSheet.create({
         padding: 20,
         backgroundColor: GlobalColors.white
     },
+    logoHeader: {
+        width: SCREEN_WIDTH,
+        height: 45,
+        borderBottomColor: 'rgb(192, 192, 192)',
+        borderBottomWidth: 0.2,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     keyboardConatiner: {
         flex: 1,
         padding: 10
     },
     headerContainer: {
-        width: 300,
+        flex: 1,
         height: 80,
-        marginTop: '10%',
-        alignItems: 'center'
+        marginTop: '2%',
+        alignItems: 'center',
+        textAlign: 'center'
     },
     signupHeader: {
         fontSize: 28,
@@ -34,10 +43,12 @@ export default StyleSheet.create({
     formContainer: Platform.select({
         ios: {
             marginBottom: 20,
+            alignItems: 'center',
             justifyContent: 'center'
         },
         android: {
             marginBottom: 20,
+            alignItems: 'center',
             justifyContent: 'center'
         }
     }),
