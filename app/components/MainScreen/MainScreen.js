@@ -43,6 +43,8 @@ import { MessageCounter } from '../../lib/MessageCounter';
 import { BackgroundImage } from '../../components/BackgroundImage';
 import { TourScreen } from '../TourScreen';
 import { TwilioVoIP } from '../../lib/twilio';
+import { connect } from 'react-redux';
+import { logout } from '../../redux/actions/UserActions';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -52,7 +54,7 @@ const MainScreenStates = {
 
 let firstTimer = false;
 
-export default class MainScreen extends React.Component {
+class MainScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let ret = {
@@ -189,6 +191,19 @@ export default class MainScreen extends React.Component {
         );
     }
 
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.remoteBotsInstalled !==
+            this.props.appState.remoteBotsInstalled
+        ) {
+            if (__DEV__) {
+                console.tron('Update Screen');
+            }
+
+            this.update();
+        }
+    }
+
     handleBackButtonClick() {
         if (Actions.currentScene === 'timeline') {
             BackHandler.exitApp();
@@ -199,6 +214,7 @@ export default class MainScreen extends React.Component {
         await DataManager.init();
         await ContactsCache.init();
         await MessageCounter.init();
+        this.props.logout();
 
         Actions.swiperScreen({
             type: ActionConst.REPLACE,
@@ -403,3 +419,18 @@ export default class MainScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => dispatch(logout())
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MainScreen);

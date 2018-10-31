@@ -35,12 +35,14 @@ import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-// const CODE_PUSH_ACTIVATE = true;
-const CODE_PUSH_ACTIVATE = false;
+const CODE_PUSH_ACTIVATE = true;
+// const CODE_PUSH_ACTIVATE = false;
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
@@ -117,7 +119,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            // await BotUtils.copyIntialBots(forceUpdate)
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -129,6 +131,7 @@ export default class Splash extends React.Component {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        // AfterLogin.executeAfterLogin()
                         this.listenToEvents();
                         const gState = Store.getState();
                         console.log(gState);
@@ -184,10 +187,6 @@ export default class Splash extends React.Component {
     configureNotifications = () => {
         Notification.deviceInfo()
             .then(info => {
-                if (__DEV__) {
-                    console.tron('In configure Notificaitons');
-                }
-
                 if (info) {
                     Notification.configure(this.handleNotification.bind(this));
                 }
@@ -198,18 +197,10 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        if (__DEV__) {
-            console.tron('Config Notificaitons');
-        }
-
         this.configureNotifications().bind(this);
     };
 
     handleNotification = notification => {
-        if (__DEV__) {
-            console.tron('In Notificaiton handler', notification);
-        }
-
         if (!notification.foreground && notification.userInteraction) {
             Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }
@@ -236,6 +227,7 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
+        synchronizeUserData();
         Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding

@@ -75,6 +75,7 @@
     "react-native-modalbox": "^1.5.0",
     "react-native-permissions": "^1.1.1",
     "react-native-push-notification": "git+https://github.com/rajamal/react-native-push-notification.git#frontm",
+    "react-native-responsive-screen": "^1.1.9",
     "react-native-router-flux": "^4.0.4",
     "react-native-segmented-control-tab": "^3.2.1",
     "react-native-sound": "^0.10.4",
@@ -90,7 +91,10 @@
     "react-native-version-check": "^3.0.0-rc.5",
     "react-native-video": "github:emrah88/react-native-video",
     "react-native-video-player": "^0.9.1",
+    "react-redux": "^5.1.0",
     "readable-stream": "^1.0.33",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "semver-compare": "^1.0.0",
     "sha1": "^1.1.1",
     "short-uuid": "^3.0.0",
@@ -122,6 +126,7 @@
     "react-dom": "^16.0.0-beta.5",
     "react-test-renderer": "16.0.0",
     "reactotron-react-native": "^2.1.0",
+    "reactotron-redux": "^2.1.0",
     "rn-nodeify": "^10.0.0"
   },
   "jest": {

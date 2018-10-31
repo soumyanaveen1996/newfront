@@ -27,9 +27,10 @@ import { Contact } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
+import { connect } from 'react-redux';
 
 import I18n from '../../config/i18n/i18n';
-export default class ContactsPicker extends React.Component {
+class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
@@ -68,11 +69,35 @@ export default class ContactsPicker extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.navigation.setParams({
             handleAddContact: this.handleAddContact.bind(this),
             showDialler: this.showDialler
         });
+
+        // const loadedContacts = await Contact.getAddedContacts()
+        // if (loadedContacts.length > 0) {
+        //     this.dataSource = new FrontMAddedContactsPickerDataSource(this)
+        //     return
+        // }
+        // Contact.refreshContacts().then(() => {
+        //     Contact.getAddedContacts().then(contacts => {
+        //         this.dataSource = new FrontMAddedContactsPickerDataSource(this)
+        //         if (contacts.length === 0) {
+        //             //If no contacts are added then go directly to contacts bot
+        //             this.handleAddContact()
+        //         }
+        //     })
+        // })
+
+        if (!this.props.appState.contactsLoaded) {
+            if (__DEV__) {
+                console.tron('Contacts Not Loaded. Load again');
+            }
+
+            Contact.refreshContacts();
+            return;
+        }
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length === 0) {
                 //If no contacts are added then go directly to contacts bot
@@ -81,17 +106,34 @@ export default class ContactsPicker extends React.Component {
         });
     }
 
-    static onEnter() {
+    static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
 
-        Contact.getAddedContacts().then(contacts => {
-            if (contacts.length === 0) {
-                //If no contacts are added then go directly to contacts bot
-                this.handleAddContact();
-            }
-        });
+        if (!this.props.appState.contactsLoaded) {
+            Contact.refreshContacts();
+        } else {
+            this.refresh();
+        }
+
+        // await Contact.getAddedContacts()
+        // Actions.refresh()
+        // this.refresh()
+        // Contact.getAddedContacts().then(contacts => {
+        //     if (contacts.length === 0) {
+        //         //If no contacts are added then go directly to contacts bot
+        //         this.handleAddContact()
+        //     }
+        // })
     }
 
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.contactsLoaded !==
+            this.props.appState.contactsData
+        ) {
+            this.refresh();
+        }
+    }
     showDialler = () => {
         Actions.dialler();
     };
@@ -303,3 +345,15 @@ export default class ContactsPicker extends React.Component {
         );
     }
 }
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ContactsPicker);

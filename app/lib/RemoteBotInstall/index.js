@@ -5,6 +5,8 @@ import { Auth, Network } from '../capability';
 import config from '../../config/config';
 import _ from 'lodash';
 import { NetworkHandler } from '../network';
+import Store from '../../redux/store/configureStore';
+import { completeBotInstall } from '../../redux/actions/UserActions';
 
 class RemoteBotInstall {
     /**
@@ -126,10 +128,12 @@ class RemoteBotInstall {
                             })
                         ) {
                             console.log('Bots installed');
-                            resolve();
+                            Store.dispatch(completeBotInstall());
+                            return resolve();
                         } else {
                             console.log('No bot was installed');
-                            resolve();
+                            Store.dispatch(completeBotInstall());
+                            return resolve();
                         }
                     });
                 })

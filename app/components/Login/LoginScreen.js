@@ -22,6 +22,8 @@ import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { TwilioVoIP } from '../../lib/twilio';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
 
 import { headerConfig } from './config';
 import CenterComponent from './header/CenterComponent';
@@ -140,10 +142,10 @@ export default class LoginScreen extends React.Component {
     }
 
     showMainScreen = async () => {
-        console.log('navigate to timeline');
-
-        await TwilioVoIP.init();
-        await RemoteBotInstall.syncronizeBots();
+        TwilioVoIP.init();
+        // RemoteBotInstall.syncronizeBots()
+        // AfterLogin.executeAfterLogin()
+        synchronizeUserData();
         this.setState({ loading: false });
         Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({

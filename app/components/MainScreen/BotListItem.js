@@ -67,6 +67,7 @@ export default class BotListItem extends React.Component {
 
     render() {
         const { bot } = this.props;
+
         return (
             <TouchableOpacity
                 style={BotListItemStyles.container}
