@@ -2,6 +2,8 @@ import EventEmitter, { AuthEvents } from '../events';
 import { Contact, Channel } from '../capability';
 import { AppState } from 'react-native';
 import Auth from '../capability/Auth';
+import { AssetFetcher } from '../dce';
+import Bot from '../bot/index';
 
 class DataManager {
     init = async () => {

@@ -57,15 +57,15 @@ class Bot extends events.EventEmitter {
         }
 
         // Check if the bot to install is in list of installed bots:
-        const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, { botId: bot.botId });
+        // const bots = await Bot.getInstalledBots()
+        // const present = _.findIndex(bots, {botId: bot.botId})
 
-        if (present < 0) {
-            throw new Error(
-                'The supplied bot is not an installed bot:',
-                bot.botId
-            );
-        }
+        // if (present < 0) {
+        //     throw new Error(
+        //         'The supplied bot is not an installed bot:',
+        //         bot.botId
+        //     )
+        // }
 
         await bot.Delete();
     };
