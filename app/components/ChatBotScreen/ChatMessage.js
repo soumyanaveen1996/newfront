@@ -403,8 +403,8 @@ export default class ChatMessage extends React.Component {
                     )}
                 >
                     <DotIndicator
-                        style={{ backgroundColor: 'rgba(0,189,242,1)' }}
-                        color="white"
+                        style={{ backgroundColor: 'rgba(255,255,255,1)' }}
+                        color="rgba(0,0,0,0.4)"
                         size={8}
                         count={3}
                     />

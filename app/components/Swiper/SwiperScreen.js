@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Keyboard,
     ImageBackground,
-    BackHandler
+    BackHandler,
+    SafeAreaView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles';
@@ -126,111 +127,113 @@ export default class SwiperScreen extends Component {
 
     render() {
         return (
-            <Swiper
-                style={styles.wrapper}
-                index={this.props.swiperIndex ? this.props.swiperIndex : 0}
-                onIndexChanged={this.onIndexChanged.bind(this)}
-                dot={<View style={styles.dotStyle} />}
-                activeDot={<View style={styles.activeDotStyle} />}
-                paginationStyle={styles.paginationStyles}
-                loop={false}
-            >
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[0].imageSource}
-                        />
-                    </View>
-                    <ImageBackground
-                        resizeMode="cover"
-                        style={styles.backgroundImage}
-                        source={images.logo_background}
-                    >
-                        <View style={styles.innerBox}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <Swiper
+                    style={styles.wrapper}
+                    index={this.props.swiperIndex ? this.props.swiperIndex : 0}
+                    onIndexChanged={this.onIndexChanged.bind(this)}
+                    dot={<View style={styles.dotStyle} />}
+                    activeDot={<View style={styles.activeDotStyle} />}
+                    paginationStyle={styles.paginationStyles}
+                    loop={false}
+                >
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
                             <Image
-                                style={styles.logoStyle}
-                                source={images.frontm_logo}
+                                style={styles.slider}
+                                source={this.state.swiperData[0].imageSource}
                             />
-                            <Text style={styles.text}>
-                                {this.state.swiperData[0].description}
-                            </Text>
                         </View>
-                    </ImageBackground>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[1].imageSource}
-                        />
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Image
+                                    style={styles.logoStyle}
+                                    source={images.frontm_logo}
+                                />
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[0].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
-                    <ImageBackground
-                        resizeMode="cover"
-                        style={styles.backgroundImage}
-                        source={images.logo_background}
-                    >
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[1].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[1].description}
-                            </Text>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[1].imageSource}
+                            />
                         </View>
-                    </ImageBackground>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[2].imageSource}
-                        />
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[1].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[1].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
-                    <ImageBackground
-                        resizeMode="cover"
-                        style={styles.backgroundImage}
-                        source={images.logo_background}
-                    >
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[2].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[2].description}
-                            </Text>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[2].imageSource}
+                            />
                         </View>
-                    </ImageBackground>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[3].imageSource}
-                        />
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[2].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[2].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
-                    <ImageBackground
-                        resizeMode="cover"
-                        style={styles.backgroundImage}
-                        source={images.logo_background}
-                    >
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[3].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[3].description}
-                            </Text>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[3].imageSource}
+                            />
                         </View>
-                    </ImageBackground>
-                </View>
-                <View style={styles.login}>
-                    {this.changePages()}
-                    <View style={styles.bottomBox}>
-                        {this.changeNavigationText()}
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[3].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[3].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
-                </View>
-            </Swiper>
+                    <View style={styles.login}>
+                        {this.changePages()}
+                        <View style={styles.bottomBox}>
+                            {this.changeNavigationText()}
+                        </View>
+                    </View>
+                </Swiper>
+            </SafeAreaView>
         );
     }
 }
