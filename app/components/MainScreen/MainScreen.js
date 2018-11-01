@@ -196,10 +196,6 @@ class MainScreen extends React.Component {
             prevProps.appState.remoteBotsInstalled !==
             this.props.appState.remoteBotsInstalled
         ) {
-            if (__DEV__) {
-                console.tron('Update Screen');
-            }
-
             this.update();
         }
     }
