@@ -148,12 +148,20 @@ const stylesheet = StyleSheet.create({
         width: 11,
         height: 20
     },
-    chatBarSendButton: {
-        width: 24,
-        height: 24,
-        marginRight: 10,
-        marginLeft: 10
-    },
+    chatBarSendButton: Platform.select({
+        ios: {
+            width: 28,
+            height: 28,
+            marginRight: 10,
+            marginLeft: 10
+        },
+        android: {
+            width: 28,
+            height: 28,
+            marginRight: 10,
+            marginLeft: 10
+        }
+    }),
     headerTitle: {
         fontSize: 17,
         color: GlobalColors.white,

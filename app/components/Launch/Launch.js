@@ -5,7 +5,8 @@ import {
     Image,
     Platform,
     PushNotificationIOS,
-    AsyncStorage
+    AsyncStorage,
+    StatusBar
 } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
@@ -285,6 +286,13 @@ export default class Splash extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="grey"
+                    barStyle={
+                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+                    }
+                />
                 <Image
                     style={styles.imageStyle}
                     source={Icon}

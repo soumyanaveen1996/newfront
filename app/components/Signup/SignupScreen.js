@@ -5,7 +5,7 @@ import {
     Image,
     FlatList,
     TextInput,
-    KeyboardAvoidingView,
+    SafeAreaView,
     Platform,
     TouchableOpacity,
     ScrollView,
@@ -326,231 +326,248 @@ export default class SignupScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView
-                style={styles.container}
-                keyboardShouldPersistTaps="always"
-            >
-                <Loader loading={this.state.loading} />
-                <KeyboardAwareScrollView
-                    style={styles.keyboardConatiner}
-                    resetScrollToCoords={{ x: 0, y: 0 }}
-                    scrollEnabled={false}
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={styles.logoHeader}>
+                    <Image source={images.frontm_header_logo} />
+                </View>
+                <ScrollView
+                    style={styles.container}
+                    keyboardShouldPersistTaps="always"
                 >
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.signupHeader}> Welcome! </Text>
-                        <Text style={styles.signupSubHeader}>
-                            {' '}
-                            Sign up to FrontM{' '}
-                        </Text>
-                    </View>
-                    <View
-                        style={styles.formContainer}
-                        behavior={Platform.OS === 'ios' ? 'position' : null}
+                    <Loader loading={this.state.loading} />
+                    <KeyboardAwareScrollView
+                        style={styles.keyboardConatiner}
+                        resetScrollToCoords={{ x: 0, y: 0 }}
+                        scrollEnabled={false}
                     >
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}> Name </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCorrect={false}
-                                returnKeyType={'next'}
-                                blurOnSubmit={false}
-                                onBlur={() => {
-                                    if (this.state.name.length < 3) {
-                                        this.setState({
-                                            nameError: 'Atleast 3 letters'
-                                        });
-                                    } else {
-                                        this.setState({
-                                            nameError: ''
-                                        });
-                                    }
-                                }}
-                                onSubmitEditing={() => {
-                                    this.focusNextField('two');
-                                    this.inputs.two.focus();
-                                }}
-                                ref={input => {
-                                    this.inputs.one = input;
-                                }}
-                                placeholder="Name"
-                                onChangeText={this.onChangeName.bind(this)}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                clearButtonMode="always"
-                            />
-                            {this.displayNameErrorMessege()}
-                        </View>
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}> Email </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                keyboardType="email-address"
-                                returnKeyType={'next'}
-                                blurOnSubmit={false}
-                                onBlur={() => {
-                                    const isValidEmail = this.validateEmail(
-                                        this.state.email
-                                    );
-                                    if (!isValidEmail) {
-                                        this.setState({
-                                            emailError: 'Invalid Email'
-                                        });
-                                    } else {
-                                        this.setState({
-                                            emailError: ''
-                                        });
-                                    }
-                                }}
-                                onSubmitEditing={() => {
-                                    this.focusNextField('three');
-                                    this.inputs.three.focus();
-                                }}
-                                ref={input => {
-                                    this.inputs.two = input;
-                                }}
-                                placeholder="Email"
-                                onChangeText={this.onChangeEmail.bind(this)}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                clearButtonMode="always"
-                            />
-                            {this.displayEmailErrorMessege()}
-                        </View>
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}>
+                        <View style={styles.headerContainer}>
+                            <Text style={styles.signupHeader}> Welcome! </Text>
+                            <Text style={styles.signupSubHeader}>
                                 {' '}
-                                Password{' '}
+                                Sign up to FrontM{' '}
                             </Text>
-                            <TextInput
-                                style={styles.input}
-                                returnKeyType={'next'}
-                                blurOnSubmit={false}
-                                onBlur={() => {
-                                    const isValidPasswword = this.passwordValidation(
-                                        this.state.password
-                                    );
-                                    if (!isValidPasswword) {
-                                        this.setState({
-                                            passwordError: 'Check your Password'
-                                        });
-                                    } else {
-                                        this.setState({
-                                            passwordError: ''
-                                        });
-                                    }
-                                }}
-                                onSubmitEditing={() => {
-                                    this.focusNextField('four');
-                                    this.inputs.four.focus();
-                                }}
-                                ref={input => {
-                                    this.inputs.three = input;
-                                }}
-                                placeholder="Password"
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                onChangeText={this.onChangePassword.bind(this)}
-                                secureTextEntry
-                                clearButtonMode="always"
-                            />
-                            {this.displayPasswordErrorMessege()}
-                            {this.displayPasswordSuccessMessege()}
-                        </View>
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}>
-                                {' '}
-                                Confirm Password{' '}
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                returnKeyType={'done'}
-                                blurOnSubmit={true}
-                                onBlur={() => {
-                                    const isValidConfirmPasswword = this.passwordConfirm(
-                                        this.state.confirmPassword
-                                    );
-                                    if (!isValidConfirmPasswword) {
-                                        this.setState({
-                                            confirmPasswordError: "Don't match"
-                                        });
-                                    } else {
-                                        this.setState({
-                                            confirmPasswordError: ''
-                                        });
-                                    }
-                                }}
-                                ref={input => {
-                                    this.inputs.four = input;
-                                }}
-                                placeholder="Confirm Password"
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                onChangeText={this.onChangeConfirmPassword.bind(
-                                    this
-                                )}
-                                secureTextEntry
-                                clearButtonMode="always"
-                            />
-                            {this.displayConfrimErrorMessege()}
-                            {this.displayConfrimSuccessMessege()}
                         </View>
                         <View
-                            style={{
-                                width: 285,
-                                height: 170,
-                                padding: 5,
-                                marginTop: 30,
-                                marginBottom: 35,
-                                backgroundColor: 'rgba(0,0,0,0.0)'
-                            }}
+                            style={styles.formContainer}
+                            behavior={Platform.OS === 'ios' ? 'position' : null}
                         >
-                            <Text style={styles.passwordText}>
-                                Password must contain:
-                            </Text>
-                            <FlatList
-                                data={this.state.passwordCriteria}
-                                renderItem={({ item }) => (
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'flex-start'
-                                        }}
-                                    >
-                                        <Image
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    Name{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    autoCorrect={false}
+                                    returnKeyType={'next'}
+                                    blurOnSubmit={false}
+                                    onBlur={() => {
+                                        if (this.state.name.length < 3) {
+                                            this.setState({
+                                                nameError: 'Atleast 3 letters'
+                                            });
+                                        } else {
+                                            this.setState({
+                                                nameError: ''
+                                            });
+                                        }
+                                    }}
+                                    onSubmitEditing={() => {
+                                        this.focusNextField('two');
+                                        this.inputs.two.focus();
+                                    }}
+                                    ref={input => {
+                                        this.inputs.one = input;
+                                    }}
+                                    placeholder="Name"
+                                    onChangeText={this.onChangeName.bind(this)}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    clearButtonMode="always"
+                                />
+                                {this.displayNameErrorMessege()}
+                            </View>
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    Email{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    keyboardType="email-address"
+                                    returnKeyType={'next'}
+                                    blurOnSubmit={false}
+                                    onBlur={() => {
+                                        const isValidEmail = this.validateEmail(
+                                            this.state.email
+                                        );
+                                        if (!isValidEmail) {
+                                            this.setState({
+                                                emailError: 'Invalid Email'
+                                            });
+                                        } else {
+                                            this.setState({
+                                                emailError: ''
+                                            });
+                                        }
+                                    }}
+                                    onSubmitEditing={() => {
+                                        this.focusNextField('three');
+                                        this.inputs.three.focus();
+                                    }}
+                                    ref={input => {
+                                        this.inputs.two = input;
+                                    }}
+                                    placeholder="Email"
+                                    onChangeText={this.onChangeEmail.bind(this)}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    clearButtonMode="always"
+                                />
+                                {this.displayEmailErrorMessege()}
+                            </View>
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    Password{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    returnKeyType={'next'}
+                                    blurOnSubmit={false}
+                                    onBlur={() => {
+                                        const isValidPasswword = this.passwordValidation(
+                                            this.state.password
+                                        );
+                                        if (!isValidPasswword) {
+                                            this.setState({
+                                                passwordError:
+                                                    'Check your Password'
+                                            });
+                                        } else {
+                                            this.setState({
+                                                passwordError: ''
+                                            });
+                                        }
+                                    }}
+                                    onSubmitEditing={() => {
+                                        this.focusNextField('four');
+                                        this.inputs.four.focus();
+                                    }}
+                                    ref={input => {
+                                        this.inputs.three = input;
+                                    }}
+                                    placeholder="Password"
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    onChangeText={this.onChangePassword.bind(
+                                        this
+                                    )}
+                                    secureTextEntry
+                                    clearButtonMode="always"
+                                />
+                                {this.displayPasswordErrorMessege()}
+                                {this.displayPasswordSuccessMessege()}
+                            </View>
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    Confirm Password{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    returnKeyType={'done'}
+                                    blurOnSubmit={true}
+                                    onBlur={() => {
+                                        const isValidConfirmPasswword = this.passwordConfirm(
+                                            this.state.confirmPassword
+                                        );
+                                        if (!isValidConfirmPasswword) {
+                                            this.setState({
+                                                confirmPasswordError:
+                                                    "Don't match"
+                                            });
+                                        } else {
+                                            this.setState({
+                                                confirmPasswordError: ''
+                                            });
+                                        }
+                                    }}
+                                    ref={input => {
+                                        this.inputs.four = input;
+                                    }}
+                                    placeholder="Confirm Password"
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    onChangeText={this.onChangeConfirmPassword.bind(
+                                        this
+                                    )}
+                                    secureTextEntry
+                                    clearButtonMode="always"
+                                />
+                                {this.displayConfrimErrorMessege()}
+                                {this.displayConfrimSuccessMessege()}
+                            </View>
+                            <View
+                                style={{
+                                    width: 285,
+                                    height: 170,
+                                    padding: 5,
+                                    marginTop: 30,
+                                    marginBottom: 35,
+                                    backgroundColor: 'rgba(0,0,0,0.0)'
+                                }}
+                            >
+                                <Text style={styles.passwordText}>
+                                    Password must contain:
+                                </Text>
+                                <FlatList
+                                    data={this.state.passwordCriteria}
+                                    renderItem={({ item }) => (
+                                        <View
                                             style={{
-                                                width: 15,
-                                                height: 15,
-                                                marginRight: 5
+                                                flex: 1,
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-start'
                                             }}
-                                            source={
-                                                item.isDone
-                                                    ? images.pass_checkbox_checked
-                                                    : images.pass_checkbox_empty
-                                            }
-                                        />
-                                        <Text
-                                            style={styles.passwordCriteriaList}
                                         >
-                                            {item.text}
-                                        </Text>
-                                    </View>
-                                )}
-                            />
+                                            <Image
+                                                style={{
+                                                    width: 15,
+                                                    height: 15,
+                                                    marginRight: 5
+                                                }}
+                                                source={
+                                                    item.isDone
+                                                        ? images.pass_checkbox_checked
+                                                        : images.pass_checkbox_empty
+                                                }
+                                            />
+                                            <Text
+                                                style={
+                                                    styles.passwordCriteriaList
+                                                }
+                                            >
+                                                {item.text}
+                                            </Text>
+                                        </View>
+                                    )}
+                                />
+                            </View>
+                            <TouchableOpacity
+                                disabled={!this.checkFieldEmpty()}
+                                style={
+                                    this.checkFieldEmpty()
+                                        ? styles.buttonContainer
+                                        : styles.diableButton
+                                }
+                                onPress={this.onSignup}
+                            >
+                                <Text style={styles.buttonText}>SIGNUP</Text>
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
-                            disabled={!this.checkFieldEmpty()}
-                            style={
-                                this.checkFieldEmpty()
-                                    ? styles.buttonContainer
-                                    : styles.diableButton
-                            }
-                            onPress={this.onSignup}
-                        >
-                            <Text style={styles.buttonText}>SIGNUP</Text>
-                        </TouchableOpacity>
-                    </View>
-                </KeyboardAwareScrollView>
-            </ScrollView>
+                    </KeyboardAwareScrollView>
+                </ScrollView>
+            </SafeAreaView>
         );
     }
 }
