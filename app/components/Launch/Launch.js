@@ -120,7 +120,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            // await BotUtils.copyIntialBots(forceUpdate)
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -132,7 +132,7 @@ export default class Splash extends React.Component {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        // AfterLogin.executeAfterLogin()
+                        AfterLogin.executeAfterLogin();
                         this.listenToEvents();
                         const gState = Store.getState();
                         console.log(gState);
