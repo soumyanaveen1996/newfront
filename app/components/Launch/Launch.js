@@ -42,8 +42,8 @@ import AfterLogin from '../../services/afterLogin';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-const CODE_PUSH_ACTIVATE = true;
-// const CODE_PUSH_ACTIVATE = false;
+// const CODE_PUSH_ACTIVATE = true;
+const CODE_PUSH_ACTIVATE = false;
 const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
@@ -189,7 +189,7 @@ export default class Splash extends React.Component {
         Notification.deviceInfo()
             .then(info => {
                 if (info) {
-                    Notification.configure(this.handleNotification.bind(this));
+                    Notification.configure(this.handleNotification);
                 }
             })
             .catch(err => {
@@ -198,7 +198,7 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        this.configureNotifications().bind(this);
+        this.configureNotifications();
     };
 
     handleNotification = notification => {
