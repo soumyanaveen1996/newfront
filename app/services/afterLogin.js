@@ -13,7 +13,7 @@ export default class AfterLogin {
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();
-            this.configureNotifications();
+            // this.configureNotifications();
             TwilioVoIP.init();
         }
     };

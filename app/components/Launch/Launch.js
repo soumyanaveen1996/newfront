@@ -189,7 +189,7 @@ export default class Splash extends React.Component {
         Notification.deviceInfo()
             .then(info => {
                 if (info) {
-                    Notification.configure(this.handleNotification.bind(this));
+                    Notification.configure(this.handleNotification);
                 }
             })
             .catch(err => {
@@ -198,7 +198,7 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        this.configureNotifications().bind(this);
+        this.configureNotifications();
     };
 
     handleNotification = notification => {
