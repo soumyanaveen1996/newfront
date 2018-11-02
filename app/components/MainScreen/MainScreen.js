@@ -177,7 +177,7 @@ class MainScreen extends React.Component {
     }
 
     async componentWillMount() {
-        AfterLogin.executeAfterLogin();
+        // AfterLogin.executeAfterLogin();
         BackHandler.addEventListener(
             'hardwareBackPress',
             this.handleBackButtonClick

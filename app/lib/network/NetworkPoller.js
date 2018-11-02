@@ -299,6 +299,10 @@ class NetworkPoller {
                 pollingInterval +
                 ' millisecs'
         );
+        if (__DEV__) {
+            console.tron('Polling Interval Set For', pollingInterval);
+        }
+
         this.process();
         const newIntervalId = BackgroundTimer.setInterval(() => {
             this.process();
