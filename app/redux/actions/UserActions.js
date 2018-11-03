@@ -5,8 +5,9 @@ export const setSatMode = payload => ({
     payload
 });
 
-export const completeBotInstall = () => ({
-    type: Actions.COMPLETE_BOT_INSTALL
+export const completeBotInstall = payload => ({
+    type: Actions.COMPLETE_BOT_INSTALL,
+    payload
 });
 
 export const completeChannelInstall = () => ({
@@ -19,4 +20,14 @@ export const completeContactsLoad = () => ({
 
 export const logout = () => ({
     type: Actions.LOGOUT
+});
+
+export const setCurrentScene = payload => ({
+    type: Actions.SET_CURRENT_SCENE,
+    payload
+});
+
+export const refreshTimeline = payload => ({
+    type: Actions.REFRESH_TIMELINE,
+    payload
 });

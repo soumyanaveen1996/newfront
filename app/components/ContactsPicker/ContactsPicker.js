@@ -91,10 +91,6 @@ class ContactsPicker extends React.Component {
         // })
 
         if (!this.props.appState.contactsLoaded) {
-            if (__DEV__) {
-                console.tron('Contacts Not Loaded. Load again');
-            }
-
             Contact.refreshContacts();
             return;
         }
@@ -109,11 +105,11 @@ class ContactsPicker extends React.Component {
     static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
 
-        if (!this.props.appState.contactsLoaded) {
-            Contact.refreshContacts();
-        } else {
-            this.refresh();
-        }
+        // if (!this.props.appState.contactsLoaded) {
+        //     Contact.refreshContacts();
+        // } else {
+        //     this.refresh();
+        // }
 
         // await Contact.getAddedContacts()
         // Actions.refresh()
@@ -124,6 +120,10 @@ class ContactsPicker extends React.Component {
         //         this.handleAddContact()
         //     }
         // })
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Contacts');
     }
 
     componentDidUpdate(prevProps) {

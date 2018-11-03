@@ -44,7 +44,8 @@ import { BackgroundImage } from '../../components/BackgroundImage';
 import { TourScreen } from '../TourScreen';
 import { TwilioVoIP } from '../../lib/twilio';
 import { connect } from 'react-redux';
-import { logout } from '../../redux/actions/UserActions';
+import { logout, refreshTimeline } from '../../redux/actions/UserActions';
+import Store from '../../redux/store/configureStore';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -191,6 +192,10 @@ class MainScreen extends React.Component {
         );
     }
 
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Home');
+    }
+
     componentDidUpdate(prevProps) {
         if (
             prevProps.appState.remoteBotsInstalled !==
@@ -198,6 +203,22 @@ class MainScreen extends React.Component {
         ) {
             this.update();
         }
+
+        if (
+            prevProps.appState.refreshTimeline !==
+            this.props.appState.refreshTimeline
+        ) {
+            this.update();
+        }
+    }
+
+    static onEnter() {
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
+        Store.dispatch(refreshTimeline(true));
+    }
+
+    static onExit() {
+        Store.dispatch(refreshTimeline(false));
     }
 
     handleBackButtonClick() {
@@ -216,11 +237,6 @@ class MainScreen extends React.Component {
             type: ActionConst.REPLACE,
             swiperIndex: 4
         });
-
-        // Actions.launch({
-        //     type: ActionConst.REPLACE,
-        //     logout: true
-        // })
     };
 
     readLambdaQueue() {
@@ -279,7 +295,7 @@ class MainScreen extends React.Component {
     }
 
     async onBack() {
-        this.update();
+        // this.update()
     }
 
     // Use this when favorites is ready

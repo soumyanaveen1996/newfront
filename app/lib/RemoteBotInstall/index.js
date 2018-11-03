@@ -98,6 +98,7 @@ class RemoteBotInstall {
                     }
                 })
                 .then(() => {
+                    Store.dispatch(completeBotInstall(false));
                     return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
@@ -128,11 +129,11 @@ class RemoteBotInstall {
                             })
                         ) {
                             console.log('Bots installed');
-                            Store.dispatch(completeBotInstall());
+                            Store.dispatch(completeBotInstall(true));
                             return resolve();
                         } else {
                             console.log('No bot was installed');
-                            Store.dispatch(completeBotInstall());
+                            Store.dispatch(completeBotInstall(true));
                             return resolve();
                         }
                     });

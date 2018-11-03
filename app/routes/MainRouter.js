@@ -110,39 +110,18 @@ const MainRouter = () => {
                                     imageSource={require('../images/tabbar-home/tabbar-home.png')}
                                     icon={TabIcon}
                                     initial={true}
-                                    onEnter={() => {
-                                        console.log('on press');
-                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.timeline}
                                         component={MainScreen}
                                         title={I18n.t('FrontM')}
-                                        onEnter={() => {
-                                            EventEmitter.emit(
-                                                AuthEvents.tabSelected,
-                                                I18n.t('Home')
-                                            );
-                                            Actions.replace(
-                                                ROUTER_SCENE_KEYS.timeline,
-                                                {
-                                                    key: Math.random()
-                                                }
-                                            );
-                                        }}
                                     />
                                 </Scene>
-
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.contactsMain}
                                     titleScreen={I18n.t('Contacts')}
                                     imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
                                     icon={TabIcon}
-                                    onEnter={() => {
-                                        Actions.refresh({
-                                            key: ROUTER_SCENE_KEYS.addContacts
-                                        });
-                                    }}
                                 >
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.addContacts}

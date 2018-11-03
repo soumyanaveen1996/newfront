@@ -71,6 +71,9 @@ class ChannelsList extends React.Component {
 
     wait = () => new Promise(resolve => setTimeout(resolve, 2000));
 
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Channels');
+    }
     async componentDidUpdate(prevProps) {
         if (
             prevProps.appState.allChannelsLoaded !==
@@ -82,11 +85,6 @@ class ChannelsList extends React.Component {
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
-        if (!this.props.appState.allChannelsLoaded) {
-            Channel.refreshChannels();
-        } else {
-            this.refresh();
-        }
     }
 
     handleAddChannel = () => {

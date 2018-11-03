@@ -23,8 +23,9 @@ import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { BackgroundImage } from '../BackgroundImage';
+import { connect } from 'react-redux';
 
-export default class BotStoreScreen extends React.Component {
+class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
@@ -131,7 +132,7 @@ export default class BotStoreScreen extends React.Component {
     }
 
     async componentWillMount() {
-        await RemoteBotInstall.syncronizeBots();
+        // await RemoteBotInstall.syncronizeBots()
     }
 
     async componentDidMount() {
@@ -163,27 +164,16 @@ export default class BotStoreScreen extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Bot_Store');
+    }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
-        try {
-            this.updateCatalog();
-        } catch (error) {
-            console.error(
-                'Error occurred during componentWillMount getting catalogData; ',
-                error
-            );
-            if (error instanceof NetworkError) {
-                this.setState({
-                    showSearchBar: false,
-                    selectedIndex: 0,
-                    catalogLoaded: false,
-                    networkError: true
-                });
-            }
-        }
     }
 
-    static onExit() {}
+    static onExit() {
+        RemoteBotInstall.syncronizeBots();
+    }
 
     async refresh() {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
@@ -305,3 +295,16 @@ export default class BotStoreScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(BotStoreScreen);
