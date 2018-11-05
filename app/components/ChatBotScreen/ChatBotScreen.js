@@ -694,9 +694,6 @@ export default class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
-        if (__DEV__) {
-            console.tron('Bot Wants to TELL', message);
-        }
 
         this.stopWaiting();
         this.countMessage(message);

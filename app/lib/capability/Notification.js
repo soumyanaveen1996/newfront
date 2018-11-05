@@ -12,24 +12,13 @@ export default class Notification {
         new Promise((resolve, reject) => {
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {
-                    if (__DEV__) {
-                        console.tron('In Device', value);
-                    }
-
                     if (value) {
                         value.isRegistered = true;
                         DeviceStorage.save(NotificationKeys.notification, value)
                             .then(() => {
-                                if (__DEV__) {
-                                    console.tron('Saved Notificaiton');
-                                }
-
                                 EventEmitter.emit(
                                     NotificationEvents.registeredNotifications
                                 );
-                                if (__DEV__) {
-                                    console.tron('Call Resolve');
-                                }
 
                                 resolve(value);
                             })
@@ -53,11 +42,6 @@ export default class Notification {
                                         'Notification device info : ',
                                         notificationDeviceInfo
                                     );
-                                    if (__DEV__) {
-                                        console.tron(
-                                            'Notificaiotn Device Info'
-                                        );
-                                    }
 
                                     DeviceStorage.save(
                                         NotificationKeys.notification,

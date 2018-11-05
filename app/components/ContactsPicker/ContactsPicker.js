@@ -28,8 +28,10 @@ import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
-
 import I18n from '../../config/i18n/i18n';
+import Store from '../../redux/store/configureStore';
+import { setCurrentScene } from '../../redux/actions/UserActions';
+
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -91,10 +93,6 @@ class ContactsPicker extends React.Component {
         // })
 
         if (!this.props.appState.contactsLoaded) {
-            if (__DEV__) {
-                console.tron('Contacts Not Loaded. Load again');
-            }
-
             Contact.refreshContacts();
             return;
         }
@@ -108,22 +106,13 @@ class ContactsPicker extends React.Component {
 
     static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+    }
 
-        if (!this.props.appState.contactsLoaded) {
-            Contact.refreshContacts();
-        } else {
-            this.refresh();
-        }
-
-        // await Contact.getAddedContacts()
-        // Actions.refresh()
-        // this.refresh()
-        // Contact.getAddedContacts().then(contacts => {
-        //     if (contacts.length === 0) {
-        //         //If no contacts are added then go directly to contacts bot
-        //         this.handleAddContact()
-        //     }
-        // })
+    static onExit() {
+        Store.dispatch(setCurrentScene('none'));
+    }
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Contacts');
     }
 
     componentDidUpdate(prevProps) {

@@ -10,6 +10,8 @@ import {
 } from 'react-native-router-flux';
 import styles from './styles';
 import EventEmitter, { AuthEvents } from '../../lib/events';
+import { setCurrentScene } from '../../redux/actions/UserActions';
+import Store from '../../redux/store/configureStore';
 
 export default class TabIcon extends React.Component {
     constructor(props) {
@@ -26,6 +28,7 @@ export default class TabIcon extends React.Component {
         EventEmitter.removeListener(AuthEvents.tabSelected);
     }
     tabSelected = scene => {
+        Store.dispatch(setCurrentScene(scene));
         this.setState({ scene });
     };
     render() {
