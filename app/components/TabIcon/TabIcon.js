@@ -29,12 +29,18 @@ export default class TabIcon extends React.Component {
         this.setState({ scene });
     };
     render() {
-        const { imageSource, titleScreen } = this.props;
+        const { imageSource, titleScreen, imageSelected } = this.props;
         let color = 'rgba(74,74,74,0.6)';
 
         return (
             <View style={{ alignItems: 'center' }}>
-                <Image source={imageSource} />
+                <Image
+                    source={
+                        this.props.titleScreen === this.state.scene
+                            ? imageSelected
+                            : imageSource
+                    }
+                />
                 <Text
                     style={{
                         textAlign: 'center',

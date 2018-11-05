@@ -90,11 +90,11 @@ class NetworkPoller {
         let url = `${config.proxy.protocol}${config.proxy.host}${
             config.proxy.ssePath
         }?user=${user.userId}`;
-        console.log('Event source url : ', url);
+        // console.log('Event source url : ', url);
 
         this.eventSource = new RNEventSource(url);
         this.eventSource.addEventListener(user.userId, event => {
-            console.log('Event : ', event);
+            // console.log('Event : ', event);
             const data = JSON.parse(event.data);
             if (data) {
                 MessageQueue.push(data);

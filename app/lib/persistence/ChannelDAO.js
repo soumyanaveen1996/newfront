@@ -212,13 +212,13 @@ const insertIfNotPresent = (name, description, logo, domain, channelId) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
-                console.log(
-                    'selected channel : ',
-                    name,
-                    description,
-                    logo,
-                    domain
-                );
+                // console.log(
+                //     'selected channel : ',
+                //     name,
+                //     description,
+                //     logo,
+                //     domain
+                // );
                 if (!channel) {
                     return insertChannel(
                         name,
