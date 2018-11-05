@@ -14,6 +14,7 @@ import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
+
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
