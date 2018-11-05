@@ -7,6 +7,8 @@ import {
     Keyboard,
     ImageBackground,
     BackHandler,
+    StatusBar,
+    Platform,
     SafeAreaView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -128,6 +130,13 @@ export default class SwiperScreen extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="grey"
+                    barStyle={
+                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+                    }
+                />
                 <Swiper
                     style={styles.wrapper}
                     index={this.props.swiperIndex ? this.props.swiperIndex : 0}
