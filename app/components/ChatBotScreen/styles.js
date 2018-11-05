@@ -150,14 +150,14 @@ const stylesheet = StyleSheet.create({
     },
     chatBarSendButton: Platform.select({
         ios: {
-            width: 28,
-            height: 28,
+            width: 22,
+            height: 20,
             marginRight: 10,
             marginLeft: 10
         },
         android: {
-            width: 28,
-            height: 28,
+            width: 22,
+            height: 20,
             marginRight: 10,
             marginLeft: 10
         }

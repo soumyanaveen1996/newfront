@@ -164,7 +164,7 @@ function performInstallation(botManifest) {
                 }
                 resolve(true);
             } else {
-                console.log(botManifest.botName + ': already installed');
+                // console.log(botManifest.botName + ': already installed');
                 resolve(false);
             }
         } catch (e) {

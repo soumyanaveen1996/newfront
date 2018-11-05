@@ -108,6 +108,7 @@ const MainRouter = () => {
                                     key={ROUTER_SCENE_KEYS.homeMain}
                                     titleScreen={I18n.t('Home')}
                                     imageSource={require('../images/tabbar-home/tabbar-home.png')}
+                                    imageSelected={require('../images/tabbar-home-active/tabbar-home-active.png')}
                                     icon={TabIcon}
                                     initial={true}
                                 >
@@ -121,6 +122,7 @@ const MainRouter = () => {
                                     key={ROUTER_SCENE_KEYS.contactsMain}
                                     titleScreen={I18n.t('Contacts')}
                                     imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                    imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
                                     icon={TabIcon}
                                 >
                                     <Scene
@@ -137,6 +139,7 @@ const MainRouter = () => {
                                     key={ROUTER_SCENE_KEYS.channelsMenu}
                                     titleScreen={I18n.t('Channels')}
                                     imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
+                                    imageSelected={require('../images/tabbar-channels-active/tabbar-channels-active.png')}
                                     icon={TabIcon}
                                 >
                                     <Scene
@@ -151,6 +154,7 @@ const MainRouter = () => {
                                     key={ROUTER_SCENE_KEYS.marketplaceMenu}
                                     titleScreen={I18n.t('Bot_Store')}
                                     imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
+                                    imageSelected={require('../images/tabbar-marketplace-active/tabbar-marketplace-active.png')}
                                     icon={TabIcon}
                                 >
                                     <Scene

@@ -8434,14 +8434,6 @@ react-deep-force-update@^1.0.0:
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.1.1.tgz#bcd31478027b64b3339f108921ab520b4313dc2c"
   integrity sha1-vNMUeAJ7ZLMznxCJIatSC0MT3Cw=
 
-react-devtools-core@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.3.4.tgz#9e497a94b73413b91774bf3e3197e539d5f9a21d"
-  integrity sha512-6lsBDRInT9jU8Ya8bnKWJSsnaGg/xk1ZSfvhc/dHc3n2CUTMfGlqm2tGeZQ9WEoe0Y2K7Lg90Kvb1E8anLePaQ==
-  dependencies:
-    shell-quote "^1.6.1"
-    ws "^3.3.1"
-
 react-devtools-core@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.4.0.tgz#6b61594dce01b129a9e0b44b5bc4952f8f59ceec"
@@ -8450,16 +8442,24 @@ react-devtools-core@^3.4.0:
     shell-quote "^1.6.1"
     ws "^3.3.1"
 
-react-devtools@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/react-devtools/-/react-devtools-3.3.4.tgz#6d7d232bd9042ab66b14a3152c8c8e2c8c77c2da"
-  integrity sha512-ZV2Od798JUCbh8wKT8KSil/KX3SbHgeNhd7+hTyh1UydDIOfA9NA4L1HXsncCO8/rGsLb7xtSoCVVtryjpCyMw==
+react-devtools-core@^3.4.1:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-3.4.2.tgz#4888b428f1db9a3078fdff66a1da14f71fb1680e"
+  integrity sha512-1pqbxenMeOiVPLf5Fm69woc+Q/pb/lLfWCizJuVJQDm9v7x0fcr76VMcq6Q30Onv3ikkfrlAQgOcOdCk/0t5tA==
+  dependencies:
+    shell-quote "^1.6.1"
+    ws "^3.3.1"
+
+react-devtools@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/react-devtools/-/react-devtools-3.4.2.tgz#936ae188afb90ddaa76b2518799009db9d6b252a"
+  integrity sha512-Z9EDmnVPT08WCeyzTd1Xd7d6u8LyVsOVz55Zmlb4LUNC7l3chPnlH02KoxC+VkwH3GpMtlfodhNaDC7lYNCGwg==
   dependencies:
     cross-spawn "^5.0.1"
     electron "^1.8.7"
     ip "^1.1.4"
     minimist "^1.2.0"
-    react-devtools-core "^3.3.4"
+    react-devtools-core "^3.4.1"
     update-notifier "^2.1.0"
 
 react-dom@^16.0.0-beta.5:

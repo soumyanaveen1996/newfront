@@ -7,7 +7,8 @@ import {
     KeyboardAvoidingView,
     AsyncStorage,
     BackHandler,
-    ScrollView
+    ScrollView,
+    SafeAreaView
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -19,11 +20,13 @@ export default class ConfirmationScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            confirmPasswordTitle: 'Confirm password',
             userEmail: this.props.userEmail,
             password: this.props.password,
             code: 0,
             loading: false,
-            errorMessage: ''
+            errorMessage: '',
+            passwordErrorMessage: ''
         };
     }
 
@@ -77,32 +80,24 @@ export default class ConfirmationScreen extends Component {
     }
 
     showMainScreen = () => {
-        if (this.state.password && this.state.password !== '') {
-            const userDetails = {
-                email: this.state.userEmail,
-                password: this.state.password
-            };
+        const userDetails = {
+            email: this.state.userEmail,
+            password: this.state.password
+        };
 
-            Auth.loginWithFrontm(
-                userDetails,
-                '',
-                SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
-            )
-                .then(() => {
-                    this.setState({ loading: false });
-                    Actions.timeline({ type: ActionConst.REPLACE });
-                })
-                .catch(err => {
-                    this.setState({ errorMessage: err.message });
-                    this.setState({ loading: false });
-                });
-        } else {
-            Actions.swiperScreen({
-                type: ActionConst.REPLACE,
-                email: this.state.userEmail,
-                swiperIndex: 4
+        Auth.loginWithFrontm(
+            userDetails,
+            '',
+            SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
+        )
+            .then(() => {
+                this.setState({ loading: false });
+                Actions.timeline({ type: ActionConst.REPLACE });
+            })
+            .catch(err => {
+                this.setState({ errorMessage: err.message });
+                this.setState({ loading: false });
             });
-        }
 
         return;
     };
@@ -122,18 +117,75 @@ export default class ConfirmationScreen extends Component {
     }
     checkFieldEmpty = () => {
         if (this.state.code !== 0 && this.state.code.length === 6) {
-            return true;
+            if (this.props.password) {
+                return true;
+            } else {
+                if (
+                    this.state.password &&
+                    typeof this.state.password !== 'undefined' &&
+                    this.state.password.length >= 8
+                ) {
+                    return true;
+                }
+            }
         } else {
             return false;
         }
     };
 
+    onChangePasswordText(i, text) {
+        this.setState({ password: text });
+    }
+
+    displayPasswordField = () => {
+        if (!this.props.password) {
+            return (
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}>
+                        {' '}
+                        {this.state.confirmPasswordTitle}{' '}
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        blurOnSubmit={true}
+                        returnKeyType={'done'}
+                        onChangeText={this.onChangePasswordText.bind(this, 1)}
+                        placeholder="password"
+                        underlineColorAndroid={'transparent'}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        secureTextEntry
+                        clearButtonMode="always"
+                        value={this.state.password}
+                    />
+                    {this.displayPasswordErrorMessege()}
+                </View>
+            );
+        }
+    };
+
+    displayPasswordErrorMessege = () => {
+        if (
+            this.state.passwordErrorMessage &&
+            this.state.passwordErrorMessage.length > 0
+        ) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.passwordErrorMessage}
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
                 <Loader loading={this.state.loading} />
-                <KeyboardAvoidingView style={{ flex: 1 }}>
-                    <ScrollView
+                <ScrollView style={{ flex: 1 }}>
+                    <KeyboardAvoidingView
                         style={styles.container}
                         keyboardShouldPersistTaps="always"
                     >
@@ -151,7 +203,13 @@ export default class ConfirmationScreen extends Component {
                                 registration process
                             </Text>
                         </View>
-                        <View style={styles.pinCode}>
+                        <View
+                            style={
+                                !this.props.password
+                                    ? styles.pinCodeWithPassword
+                                    : styles.pinCode
+                            }
+                        >
                             <TextInput
                                 style={styles.textInput}
                                 keyboardType="numeric"
@@ -168,6 +226,7 @@ export default class ConfirmationScreen extends Component {
                                 maxLength={6} //setting limit of input
                             />
                         </View>
+                        {this.displayPasswordField()}
                         <View style={styles.codeButton}>
                             <TouchableOpacity
                                 disabled={!this.checkFieldEmpty()}
@@ -192,6 +251,7 @@ export default class ConfirmationScreen extends Component {
                                 ) : null}
                             </View>
                         </View>
+
                         <TouchableOpacity
                             style={styles.resendButton}
                             onPress={this.onResendButton.bind(this)}
@@ -200,9 +260,9 @@ export default class ConfirmationScreen extends Component {
                                 Review email address and send the code again
                             </Text>
                         </TouchableOpacity>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </View>
+                    </KeyboardAvoidingView>
+                </ScrollView>
+            </SafeAreaView>
         );
     }
 }

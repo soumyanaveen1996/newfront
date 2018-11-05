@@ -38,12 +38,12 @@ class MessageCounter {
         _.forEach(_.keys(counts), key => {
             this.addCount(key, counts[key]);
         });
-        console.log('Message counts : ', this.messageCounts);
+        // console.log('Message counts : ', this.messageCounts);
     };
 
     readQuotaFromStorage = async () => {
         this.quotas = (await DeviceStorage.get(MESSAGE_QUOTA_KEY)) || {};
-        console.log('Message quota : ', this.messageCounts);
+        // console.log('Message quota : ', this.messageCounts);
     };
 
     saveCountsToStorage = () => {
@@ -53,8 +53,8 @@ class MessageCounter {
     setMessageQuota = (quotas, counts) => {
         this.quotas = quotas;
         this.subtractCounts(counts);
-        console.log('MessageCounter::Quotas : ', this.quotas);
-        console.log('MessageCounter::Counts : ', this.messageCounts);
+        // console.log('MessageCounter::Quotas : ', this.quotas);
+        // console.log('MessageCounter::Counts : ', this.messageCounts);
     };
 
     getUsedMessageQuota = () => {
