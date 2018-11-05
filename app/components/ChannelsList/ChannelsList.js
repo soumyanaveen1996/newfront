@@ -12,6 +12,8 @@ import { Channel } from '../../lib/capability';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
+import Store from '../../redux/store/configureStore';
+import { setCurrentScene } from '../../redux/actions/UserActions';
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -85,6 +87,10 @@ class ChannelsList extends React.Component {
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
+    }
+
+    static onExit() {
+        Store.dispatch(setCurrentScene('none'));
     }
 
     handleAddChannel = () => {

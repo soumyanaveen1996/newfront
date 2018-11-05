@@ -44,7 +44,11 @@ import { BackgroundImage } from '../../components/BackgroundImage';
 import { TourScreen } from '../TourScreen';
 import { TwilioVoIP } from '../../lib/twilio';
 import { connect } from 'react-redux';
-import { logout, refreshTimeline } from '../../redux/actions/UserActions';
+import {
+    logout,
+    refreshTimeline,
+    setCurrentScene
+} from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 
 const MainScreenStates = {
@@ -219,6 +223,7 @@ class MainScreen extends React.Component {
 
     static onExit() {
         Store.dispatch(refreshTimeline(false));
+        Store.dispatch(setCurrentScene('none'));
     }
 
     handleBackButtonClick() {

@@ -24,6 +24,8 @@ import { Auth } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { BackgroundImage } from '../BackgroundImage';
 import { connect } from 'react-redux';
+import Store from '../../redux/store/configureStore';
+import { setCurrentScene } from '../../redux/actions/UserActions';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -173,6 +175,7 @@ class BotStoreScreen extends React.Component {
 
     static onExit() {
         RemoteBotInstall.syncronizeBots();
+        Store.dispatch(setCurrentScene('none'));
     }
 
     async refresh() {
