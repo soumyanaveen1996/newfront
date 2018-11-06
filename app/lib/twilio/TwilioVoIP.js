@@ -185,12 +185,10 @@ export default class TwilioVoIP {
     };
 
     connectionDidConnectHandler = data => {
-        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
-
+        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data);
         Store.updateStore(data);
-        console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
-        Actions.phone({ state: PhoneState.incall, data: data });
+        // Actions.phone({state: PhoneState.incall, data: data})
     };
 
     connectionDidDisconnectHandler = data => {

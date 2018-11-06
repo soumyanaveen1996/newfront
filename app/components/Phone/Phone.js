@@ -223,6 +223,7 @@ export default class Phone extends React.Component {
             state: phoneState,
             userName: this.username()
         });
+        console.log('Current Phone State', phoneState);
         return (
             <View style={Styles.containerStyle}>
                 <View style={Styles.nameContainer}>

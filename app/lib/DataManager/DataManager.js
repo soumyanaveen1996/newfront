@@ -4,6 +4,7 @@ import { AppState } from 'react-native';
 import Auth from '../capability/Auth';
 import { AssetFetcher } from '../dce';
 import Bot from '../bot/index';
+import Twilio from '../twilio';
 
 class DataManager {
     init = async () => {
