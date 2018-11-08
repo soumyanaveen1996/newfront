@@ -24,9 +24,12 @@ import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { TwilioVoIP } from '../../lib/twilio';
 import { synchronizeUserData } from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
+import SystemBot from '../../lib/bot/SystemBot';
+import Config, { overrideConsole } from '../../config/config';
 
 import { headerConfig } from './config';
 import CenterComponent from './header/CenterComponent';
+import DefaultPreference from 'react-native-default-preference';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -146,6 +149,18 @@ export default class LoginScreen extends React.Component {
     showMainScreen = async () => {
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
+        Auth.getUser().then(user => {
+            if (Platform.OS === 'android') {
+                DefaultPreference.setName('NativeStorage');
+            }
+            const ContactsURL = `${Config.network.queueProtocol}${
+                Config.proxy.host
+            }${Config.network.userDetailsPath}`;
+            const ContactsBOT = SystemBot.contactsBot.botId;
+            DefaultPreference.set('SESSION', user.creds.sessionId);
+            DefaultPreference.set('URL', ContactsURL);
+            DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
+        });
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
         this.setState({

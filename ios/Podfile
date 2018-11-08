@@ -10,4 +10,6 @@ target 'frontm_mobile' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'TwilioVoice', '~> 2.0.0'
+  pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
+
 end
