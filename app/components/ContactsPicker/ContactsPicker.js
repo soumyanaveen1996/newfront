@@ -116,12 +116,12 @@ class ContactsPicker extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (
-            prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsData
-        ) {
-            this.refresh();
-        }
+        // if (
+        //     prevProps.appState.contactsLoaded !==
+        //     this.props.appState.contactsData
+        // ) {
+        //     this.refresh()
+        // }
     }
     showDialler = () => {
         Actions.dialler();
@@ -172,15 +172,13 @@ class ContactsPicker extends React.Component {
     }
 
     onSearchQueryChange(text) {
+        let contactsList = [];
         if (!text || text === '') {
-            this.setState({
-                contactsData: this.dataSource.getData()
-            });
+            contactsList = this.dataSource.getData();
         } else {
-            this.setState({
-                contactsData: this.dataSource.getFilteredData(text)
-            });
+            contactsList = this.dataSource.getFilteredData(text);
         }
+        this.setState({ contactsData: contactsList });
     }
 
     onContactSelected(contact) {

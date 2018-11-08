@@ -57,7 +57,7 @@ export default class ContactsPickerDataSource {
             this.allContactIds,
             (result, contactId) => {
                 const contact = this.idToContacts[contactId];
-                if (filterFunc === undefined || filterFunc(contact)) {
+                if (filterFunc === undefined || filterFunc(contact.name)) {
                     let firstChar =
                         contact.name.length > 0
                             ? contact.name[0].toLowerCase()
@@ -84,9 +84,13 @@ export default class ContactsPickerDataSource {
             return [];
         }
         text = text.toLowerCase();
-        let filterFunc = contact =>
-            contact.name.toLowerCase().indexOf(text) !== -1;
-        return this.contactsDataBySection(this.createContactsDict(filterFunc));
+        const filterFunc = contact => {
+            return contact.toLowerCase().includes(text);
+        };
+        const filtered_data = this.contactsDataBySection(
+            this.createContactsDict(filterFunc)
+        );
+        return filtered_data;
     }
 
     loadImage(contactId) {
