@@ -37,7 +37,7 @@ export default class BotTutorial extends Component {
                         <Image source={images.home_gray_arrow} />
                     </View>
                 </View>
-                <View style={styles.topTutorialContainer}>
+                <View style={styles.topTutorialContainerForBotTab}>
                     <Text style={styles.welcomeSubHeader}>
                         Chat with FrontM Assistant to configure your account.
                         Feel free to ask him whatever you want.

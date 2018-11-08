@@ -31,6 +31,7 @@ import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -328,6 +329,7 @@ class ContactsPicker extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <NetworkStatusNotchBar />
                 {this.renderSearchBar()}
                 {this.renderContactsList()}
             </SafeAreaView>

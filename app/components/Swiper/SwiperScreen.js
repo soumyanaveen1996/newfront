@@ -8,9 +8,9 @@ import {
     ImageBackground,
     BackHandler,
     StatusBar,
-    Platform,
-    SafeAreaView
+    Platform
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
@@ -66,10 +66,17 @@ export default class SwiperScreen extends Component {
     }
 
     changePages = () => {
-        if (this.state.isLoginPage) {
-            return <LoginScreen email={this.props.email} />;
-        } else {
+        console.log('get the islogin ', this.state.isLoginPage);
+
+        if (this.props.page && this.props.page === 'signup') {
+            this.goToSignupPage();
             return <SignupScreen />;
+        } else {
+            if (this.state.isLoginPage) {
+                return <LoginScreen email={this.props.email} />;
+            } else {
+                return <SignupScreen />;
+            }
         }
     };
 
@@ -128,8 +135,10 @@ export default class SwiperScreen extends Component {
     }
 
     render() {
+        console.log('this is islogin ', this.state.isLoginPage);
+
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 <StatusBar
                     hidden={false}
                     backgroundColor="grey"
@@ -242,7 +251,7 @@ export default class SwiperScreen extends Component {
                         </View>
                     </View>
                 </Swiper>
-            </SafeAreaView>
+            </View>
         );
     }
 }

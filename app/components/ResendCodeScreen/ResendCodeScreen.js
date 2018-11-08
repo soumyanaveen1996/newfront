@@ -56,6 +56,15 @@ export default class ResendCodeScreen extends Component {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
+    redirectToSignup() {
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4,
+            userEmail: this.state.userEmail,
+            isLoginPage: false,
+            page: 'signup'
+        });
+    }
 
     async onFormSubmit() {
         this.setState({ loading: true });
@@ -120,10 +129,14 @@ export default class ResendCodeScreen extends Component {
                         <View style={styles.captionText}>
                             <Text style={styles.header}>Confirmation code</Text>
                             <Text style={styles.firstTitle}>
-                                Please confirm the email address
+                                Please touch the button below and we will send a
+                                new code to the email address{' '}
+                                {this.state.userEmail}. If your email is not
+                                correct please return to the signup screen and
+                                change it.
                             </Text>
                         </View>
-                        <View style={styles.pinCode}>
+                        {/* <View style={styles.pinCode}>
                             <TextInput
                                 style={styles.input}
                                 autoCapitalize="none"
@@ -139,7 +152,7 @@ export default class ResendCodeScreen extends Component {
                                 selectTextOnFocus={true}
                             />
                             {this.displayEmailErrorMessege()}
-                        </View>
+                        </View> */}
                         <View style={styles.codeButton}>
                             <TouchableOpacity
                                 disabled={!this.checkFieldEmpty()}
@@ -152,6 +165,15 @@ export default class ResendCodeScreen extends Component {
                             >
                                 <Text style={styles.buttonText}>
                                     Send code again
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.changeEmailTextStyle}>
+                            <TouchableOpacity
+                                onPress={this.redirectToSignup.bind(this)}
+                            >
+                                <Text style={styles.goToSignup}>
+                                    Go back to the Sign up screen
                                 </Text>
                             </TouchableOpacity>
                         </View>

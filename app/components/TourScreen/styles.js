@@ -2,6 +2,7 @@ import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import { Dimensions } from 'react-native';
 export const SCREEN_WIDTH = Dimensions.get('window').width;
+export const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default StyleSheet.create({
     modalBackground: {
@@ -113,6 +114,27 @@ export default StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(244,244,244,1)'
     },
+    topTutorialContainerForBotTab: Platform.select({
+        ios: {
+            display: 'flex',
+            flex: 2.5,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            borderBottomWidth: 1,
+            borderBottomColor: 'rgba(244,244,244,1)'
+        },
+        android: {
+            top: 10,
+            display: 'flex',
+            flex: 2.5,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            borderBottomWidth: 1,
+            borderBottomColor: 'rgba(244,244,244,1)'
+        }
+    }),
     bottomTutorialContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -315,17 +337,30 @@ export default StyleSheet.create({
             borderColor: 'transparent'
         }
     }),
-    botSreen: {
-        position: 'absolute',
-        top: -95,
-        height: 80,
-        width: SCREEN_WIDTH,
-        backgroundColor: 'rgba(255,255,255,1)',
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        paddingVertical: 12,
-        alignItems: 'stretch'
-    },
+    botSreen: Platform.select({
+        ios: {
+            position: 'absolute',
+            top: -(SCREEN_HEIGHT / 8),
+            height: 80,
+            width: SCREEN_WIDTH,
+            backgroundColor: 'rgba(255,255,255,1)',
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            paddingVertical: 12,
+            alignItems: 'stretch'
+        },
+        android: {
+            position: 'absolute',
+            top: -(SCREEN_HEIGHT / 10),
+            height: 80,
+            width: SCREEN_WIDTH,
+            backgroundColor: 'rgba(255,255,255,1)',
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            paddingVertical: 12,
+            alignItems: 'stretch'
+        }
+    }),
     image: {},
     textContainer: {
         flex: 1,
