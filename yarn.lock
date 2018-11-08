@@ -7370,7 +7370,7 @@ react-native-tcp@^3.3.0:
 
 "react-native-twilio-programmable-voice@https://github.com/chattes/react-native-twilio-programmable-voice.git":
   version "3.21.0"
-  resolved "https://github.com/chattes/react-native-twilio-programmable-voice.git#0339827931715378a9294d4eff3a2a758858152a"
+  resolved "https://github.com/chattes/react-native-twilio-programmable-voice.git#c03ab8e690d1107469a04733a215789c7fefe178"
 
 react-native-vector-icons@^4.4.2:
   version "4.6.0"
