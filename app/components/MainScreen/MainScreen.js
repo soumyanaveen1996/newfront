@@ -30,7 +30,8 @@ import EventEmitter, {
     TwilioEvents
 } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
-import { PollingStrategyTypes, Settings } from '../../lib/capability';
+import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
@@ -50,6 +51,7 @@ import {
     setCurrentScene
 } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -123,7 +125,9 @@ class MainScreen extends React.Component {
         this.state = {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
-            firstTimer: false
+            firstTimer: false,
+            showNetworkStatusBar: false,
+            network: null
         };
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
@@ -179,6 +183,16 @@ class MainScreen extends React.Component {
         );
 
         // TwilioVoIP.init();
+
+        Network.addConnectionChangeEventListener(this.handleConnectionChange);
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.connectedToSatellite,
+            this.satelliteConnectionHandler
+        );
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.notConnectedToSatellite,
+            this.satelliteDisconnectHandler
+        );
     }
 
     async componentWillMount() {
@@ -386,7 +400,63 @@ class MainScreen extends React.Component {
         }
     }
 
+    satelliteConnectionHandler = () => {
+        if (this.state.network !== 'satellite') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'satellite'
+            });
+        }
+    };
+
+    satelliteDisconnectHandler = () => {
+        if (this.state.network === 'satellite') {
+            this.setState({
+                showNetworkStatusBar: false,
+                network: 'connected'
+            });
+        }
+    };
+
+    handleConnectionChange = connection => {
+        if (connection.type === 'none') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'none'
+            });
+        } else {
+            if (this.state.network === 'none') {
+                this.setState({
+                    showNetworkStatusBar: false,
+                    network: 'connected'
+                });
+            }
+        }
+    };
+
+    onChatStatusBarClose = () => {
+        this.setState({
+            showNetworkStatusBar: false
+        });
+    };
+
+    renderNetworkStatusBar = () => {
+        const { network, showNetworkStatusBar } = this.state;
+        if (
+            showNetworkStatusBar &&
+            (network === 'none' || network === 'satellite')
+        ) {
+            return (
+                <ChatStatusBar
+                    network={this.state.network}
+                    onChatStatusBarClose={this.onChatStatusBarClose}
+                />
+            );
+        }
+    };
+
     renderMain() {
+        const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
             return (
                 <ActivityIndicator
@@ -396,7 +466,14 @@ class MainScreen extends React.Component {
             );
         } else {
             return (
-                <View style={MainScreenStyles.botListContainer}>
+                <View
+                    style={
+                        showNetworkStatusBar &&
+                        (network === 'none' || network === 'satellite')
+                            ? MainScreenStyles.statusBar
+                            : MainScreenStyles.botListContainer
+                    }
+                >
                     <BotList
                         ref="botList"
                         onBack={this.onBack.bind(this)}
@@ -430,6 +507,7 @@ class MainScreen extends React.Component {
                                 : 'light-content'
                         }
                     />
+                    <NetworkStatusNotchBar />
                     {this.renderMain()}
                 </BackgroundImage>
             </SafeAreaView>

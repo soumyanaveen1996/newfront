@@ -6,6 +6,14 @@ export default {
             backgroundColor: GlobalColors.white,
             shadowOpacity: 0
         },
+        noConnectionStyle: {
+            backgroundColor: GlobalColors.disabledButton,
+            shadowOpacity: 0
+        },
+        satelliteStyle: {
+            backgroundColor: GlobalColors.satelliteMode,
+            shadowOpacity: 0
+        },
         borderlessHeaderStyle: {
             backgroundColor: GlobalColors.white,
             shadowOpacity: 0,

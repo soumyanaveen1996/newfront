@@ -10,6 +10,9 @@ export const MainScreenStyles = StyleSheet.create({
     botListContainer: {
         flex: 1
     },
+    statusBar: {
+        paddingTop: 15
+    },
     floatingButton: {
         width: 50,
         height: 50,

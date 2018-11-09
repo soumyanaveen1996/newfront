@@ -13,8 +13,9 @@ export default StyleSheet.create({
     logoHeader: {
         width: SCREEN_WIDTH,
         height: 45,
+        borderStyle: 'solid',
         borderBottomColor: 'rgb(192, 192, 192)',
-        borderBottomWidth: 0.2,
+        borderBottomWidth: 1,
         alignItems: 'center',
         justifyContent: 'center'
     },

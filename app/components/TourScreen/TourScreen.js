@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Modal, AsyncStorage, SafeAreaView } from 'react-native';
+import { View, Modal, AsyncStorage } from 'react-native';
 import styles from './styles';
+
+import { SafeAreaView } from 'react-navigation';
 
 import WelcomeScreen from './WelcomeScreen';
 import NetworkTutorial from './NetworkTutorial';
