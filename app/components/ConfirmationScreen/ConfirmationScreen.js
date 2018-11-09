@@ -91,7 +91,7 @@ export default class ConfirmationScreen extends Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
-                this.setState({ loading: false });
+                this.setState({ loading: false, code: '', password: '' });
                 Actions.timeline({ type: ActionConst.REPLACE });
             })
             .catch(err => {

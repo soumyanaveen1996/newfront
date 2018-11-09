@@ -69,7 +69,6 @@ export default class SwiperScreen extends Component {
         console.log('get the islogin ', this.state.isLoginPage);
 
         if (this.props.page && this.props.page === 'signup') {
-            this.goToSignupPage();
             return <SignupScreen />;
         } else {
             if (this.state.isLoginPage) {
