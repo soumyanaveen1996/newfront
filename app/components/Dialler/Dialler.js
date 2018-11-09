@@ -228,6 +228,7 @@ export default class Dialler extends React.Component {
     }
 
     phonenumber(state) {
+        console.log('Phone Number', state);
         if (state === DiallerState.incall_digits) {
             return this.state.dialledDigits;
         } else {
@@ -362,6 +363,8 @@ export default class Dialler extends React.Component {
     }
 
     render() {
+        console.log('Dialled Number', this.state.diallerState);
+
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
         if (diallerState === DiallerState.initial) {
@@ -405,9 +408,10 @@ export default class Dialler extends React.Component {
                 <View style={Styles.container}>
                     <View style={Styles.mainContainer}>
                         <View style={Styles.nameContainer}>
-                            <Text style={Styles.callingText}>{message}</Text>
+                            {/* <Text style={Styles.callingText}>{message}</Text> */}
                             <Text style={Styles.callingNumberText}>
-                                {this.phonenumber(diallerState)}
+                                {/* {this.phonenumber(diallerState)} */}
+                                {this.state.dialledNumber}
                             </Text>
                         </View>
                         <View style={Styles.incallDiallerContainer}>

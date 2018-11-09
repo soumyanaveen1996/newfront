@@ -119,6 +119,7 @@ const config = {
         botDownloadPath: '/v2/botfile',
         twilioPath: '/twilio',
         enableVoIPPath: '/enableVoip',
+        disableVoIPPath: '/disableVoip',
         getVoIPStatusPath: '/getVoipStatus',
         subscribedBotsPath: '/v2/users/bots',
         subscribeToBot: '/bots/subscribe',

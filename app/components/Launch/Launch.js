@@ -38,7 +38,7 @@ import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
 import { synchronizeUserData } from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
-
+import DefaultPreference from 'react-native-default-preference';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
@@ -120,7 +120,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -131,6 +131,16 @@ export default class Splash extends React.Component {
             await TwilioVoIP.init();
             Auth.getUser()
                 .then(user => {
+                    if (Platform.OS === 'android') {
+                        DefaultPreference.setName('NativeStorage');
+                    }
+                    const ContactsURL = `${Config.network.queueProtocol}${
+                        Config.proxy.host
+                    }${Config.network.userDetailsPath}`;
+                    const ContactsBOT = SystemBot.contactsBot.botId;
+                    DefaultPreference.set('SESSION', user.creds.sessionId);
+                    DefaultPreference.set('URL', ContactsURL);
+                    DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
                     if (user) {
                         AfterLogin.executeAfterLogin();
                         this.listenToEvents();

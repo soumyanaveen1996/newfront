@@ -10,6 +10,14 @@ const NotificationKeys = {
 export default class Notification {
     static register = () =>
         new Promise((resolve, reject) => {
+            let timer = setTimeout(function() {
+                if (__DEV__) {
+                    console.tron('Timed Out');
+                }
+
+                reject('No Notifications');
+            }, 10000);
+
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {
                     if (value) {
@@ -20,9 +28,11 @@ export default class Notification {
                                     NotificationEvents.registeredNotifications
                                 );
 
+                                clearTimeout(timer);
                                 resolve(value);
                             })
                             .catch(error => {
+                                clearTimeout(timer);
                                 reject(error);
                             });
                     } else {
@@ -51,18 +61,23 @@ export default class Notification {
                                             EventEmitter.emit(
                                                 NotificationEvents.registeredNotifications
                                             );
+                                            clearTimeout(timer);
                                             resolve(notificationDeviceInfo);
                                         })
                                         .catch(error => {
+                                            clearTimeout(timer);
                                             reject(error);
                                         });
                                 } else {
+                                    clearTimeout(timer);
                                     reject(new Error('User cancelled'));
                                 }
                             },
                             senderID: config.gcm.senderID,
+                            requestPermissions: true,
                             onError: error => {
                                 console.log('onError', error);
+                                clearTimeout(timer);
                                 reject(error);
                             }
                         });

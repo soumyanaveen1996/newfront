@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'react-native-transformable-image';
+import Image from '../TransformableImage/TransformableImage';
 import { CameraRoll, TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import Icons from '../../config/icons';

@@ -59,6 +59,24 @@ const enableVoIP = user => {
     });
 };
 
+const disableVoip = user => {
+    let options = {
+        method: 'GET',
+        url: `${config.network.queueProtocol}${config.proxy.host}${
+            config.proxy.disableVoIPPath
+        }`,
+        headers: {
+            sessionId: user.creds.sessionId
+        }
+    };
+    return Network(options).then(response => {
+        if (response.data && response.data.success) {
+            return true;
+        } else {
+            throw new Error('Unable to enable VoIP for the user');
+        }
+    });
+};
 const isVoIPEnabled = (otherUserId, user) => {
     let options = {
         method: 'GET',
@@ -88,5 +106,6 @@ export default {
     getAccessToken,
     getAccessTokenURL,
     enableVoIP,
+    disableVoip,
     isVoIPEnabled
 };
