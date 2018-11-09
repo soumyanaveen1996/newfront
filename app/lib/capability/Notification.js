@@ -16,7 +16,7 @@ export default class Notification {
                 }
 
                 reject('No Notifications');
-            }, 10000);
+            }, 6000);
 
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {

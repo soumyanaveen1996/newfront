@@ -244,6 +244,7 @@ export default class Contact {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        Store.dispatch(completeContactsLoad(false));
                         let options = {
                             method: 'get',
                             url: `${config.network.queueProtocol}${
@@ -274,7 +275,7 @@ export default class Contact {
                         });
                         var allContacts = _.concat(contacts, ignored);
                         Contact.saveContacts(allContacts);
-                        Store.dispatch(completeContactsLoad());
+                        Store.dispatch(completeContactsLoad(true));
                         resolve();
                     }
                 })
