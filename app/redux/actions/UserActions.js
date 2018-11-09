@@ -14,8 +14,9 @@ export const completeChannelInstall = () => ({
     type: Actions.COMPLETE_CHANNEL_INSTALL
 });
 
-export const completeContactsLoad = () => ({
-    type: Actions.COMPLETE_CONTACTS_LOAD
+export const completeContactsLoad = payload => ({
+    type: Actions.COMPLETE_CONTACTS_LOAD,
+    payload
 });
 
 export const logout = () => ({

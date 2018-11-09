@@ -11,7 +11,7 @@ export const UserReducer = (state = initialState.user, action) => {
     case Actions.COMPLETE_CHANNEL_INSTALL:
         return { ...state, ...{ allChannelsLoaded: true } };
     case Actions.COMPLETE_CONTACTS_LOAD:
-        return { ...state, ...{ contactsLoaded: true } };
+        return { ...state, ...{ contactsLoaded: action.payload } };
     case Actions.SET_CURRENT_SCENE:
         return { ...state, ...{ currentScene: action.payload } };
     case Actions.REFRESH_TIMELINE:

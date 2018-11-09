@@ -105,6 +105,15 @@ class ContactsPicker extends React.Component {
         });
     }
 
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.contactsLoaded !==
+            this.props.appState.contactsLoaded
+        ) {
+            this.onDataUpdate();
+        }
+    }
+
     static async onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
     }
