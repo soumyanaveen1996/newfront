@@ -11,7 +11,7 @@ import {
     Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
 import images from '../../config/images';
@@ -57,6 +57,10 @@ export default class SwiperScreen extends Component {
             'hardwareBackPress',
             this.handleBackButtonClick
         );
+    }
+
+    componentDidUpdate() {
+        console.log('will receive props ', this.props.isLoginPage);
     }
 
     handleBackButtonClick() {
@@ -116,8 +120,8 @@ export default class SwiperScreen extends Component {
     };
 
     goToSignupPage = () => {
-        this.setState(() => {
-            return { isLoginPage: false };
+        Actions.signupScreen({
+            type: ActionConst.REPLACE
         });
     };
 
@@ -134,8 +138,6 @@ export default class SwiperScreen extends Component {
     }
 
     render() {
-        console.log('this is islogin ', this.state.isLoginPage);
-
         return (
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 <StatusBar
@@ -244,9 +246,21 @@ export default class SwiperScreen extends Component {
                         </ImageBackground>
                     </View>
                     <View style={styles.login}>
-                        {this.changePages()}
+                        <LoginScreen email={this.props.email || ''} />
                         <View style={styles.bottomBox}>
-                            {this.changeNavigationText()}
+                            <TouchableOpacity
+                                onPress={this.goToSignupPage}
+                                style={{ alignItems: 'center', zIndex: 1 }}
+                            >
+                                <Text style={styles.goToLine}>
+                                    You don’t have an account?
+                                    <Text style={styles.bolder}> Sign up </Text>
+                                    <Image
+                                        style={styles.arrow}
+                                        source={images.blue_arrow}
+                                    />
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Swiper>

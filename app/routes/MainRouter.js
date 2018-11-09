@@ -80,6 +80,7 @@ class MainRouter extends React.Component {
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.swiperScreen}
                                     component={SwiperScreen}
+                                    isLoginPage={true}
                                     hideNavBar
                                 />
                                 <Scene
@@ -90,6 +91,7 @@ class MainRouter extends React.Component {
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.signupScreen}
                                     component={SignupScreen}
+                                    hideNavBar
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.confirmationScreen}

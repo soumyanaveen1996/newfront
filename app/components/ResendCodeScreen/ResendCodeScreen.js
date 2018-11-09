@@ -56,13 +56,12 @@ export default class ResendCodeScreen extends Component {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
-    redirectToSignup() {
-        Actions.swiperScreen({
+    async redirectToSignup() {
+        const name = await AsyncStorage.getItem('userDisplayName');
+        Actions.signupScreen({
             type: ActionConst.REPLACE,
-            swiperIndex: 4,
-            userEmail: this.state.userEmail,
-            isLoginPage: false,
-            page: 'signup'
+            userName: name,
+            userEmail: this.state.userEmail
         });
     }
 
