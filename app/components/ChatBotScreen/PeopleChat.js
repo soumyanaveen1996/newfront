@@ -72,7 +72,9 @@ export default class PeopleChat extends ChatBotScreen {
             <HeaderRightIcon
                 icon={Icons.call()}
                 onPress={() => {
-                    params.showCallMessage();
+                    if (params.showCallMessage) {
+                        params.showCallMessage();
+                    }
                 }}
                 style={{ marginRight: 0, paddingHorizontal: 0 }}
             />
