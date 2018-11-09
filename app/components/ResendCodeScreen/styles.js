@@ -68,7 +68,7 @@ export default StyleSheet.create({
     userError: {
         backgroundColor: 'rgba(229,69,59,1)',
         position: 'absolute',
-        bottom: -30,
+        top: 40,
         zIndex: 999999,
         right: 0,
         width: 150,
@@ -98,6 +98,16 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 40
+        marginTop: 40,
+        marginBottom: 40
+    },
+    changeEmailTextStyle: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    goToSignup: {
+        color: 'rgba(0, 189, 242, 1)',
+        fontSize: 16,
+        textAlign: 'center'
     }
 });

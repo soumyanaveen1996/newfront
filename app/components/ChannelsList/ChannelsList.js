@@ -14,7 +14,7 @@ import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
-
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -172,6 +172,7 @@ class ChannelsList extends React.Component {
     render() {
         return (
             <BackgroundImage>
+                <NetworkStatusNotchBar />
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.id}

@@ -31,7 +31,7 @@ export default class SignupScreen extends React.Component {
                 { text: ' 8 characters minimum', isDone: false }
             ],
             name: '',
-            email: '',
+            email: this.props.userEmail,
             password: '',
             confirmPassword: '',
             nameError: '',
@@ -395,6 +395,7 @@ export default class SignupScreen extends React.Component {
                                     style={styles.input}
                                     autoCapitalize="none"
                                     autoCorrect={false}
+                                    value={this.state.email}
                                     keyboardType="email-address"
                                     returnKeyType={'next'}
                                     blurOnSubmit={false}
@@ -465,8 +466,10 @@ export default class SignupScreen extends React.Component {
                                     secureTextEntry
                                     clearButtonMode="always"
                                 />
-                                {this.displayPasswordErrorMessege()}
-                                {this.displayPasswordSuccessMessege()}
+
+                                {this.passwordValidation(this.state.password)
+                                    ? this.displayPasswordSuccessMessege()
+                                    : this.displayPasswordErrorMessege()}
                             </View>
                             <View style={styles.entryFields}>
                                 <Text style={styles.placeholderText}>
@@ -503,8 +506,10 @@ export default class SignupScreen extends React.Component {
                                     secureTextEntry
                                     clearButtonMode="always"
                                 />
-                                {this.displayConfrimErrorMessege()}
-                                {this.displayConfrimSuccessMessege()}
+
+                                {this.passwordConfirm()
+                                    ? this.displayConfrimSuccessMessege()
+                                    : this.displayConfrimErrorMessege()}
                             </View>
                             <View
                                 style={{
