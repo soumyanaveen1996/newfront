@@ -115,14 +115,6 @@ class ContactsPicker extends React.Component {
         return nextProps.appState.currentScene === I18n.t('Contacts');
     }
 
-    componentDidUpdate(prevProps) {
-        // if (
-        //     prevProps.appState.contactsLoaded !==
-        //     this.props.appState.contactsData
-        // ) {
-        //     this.refresh()
-        // }
-    }
     showDialler = () => {
         Actions.dialler();
     };

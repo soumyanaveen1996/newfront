@@ -5,6 +5,7 @@ import Auth from '../capability/Auth';
 import { AssetFetcher } from '../dce';
 import Bot from '../bot/index';
 import Twilio from '../twilio';
+import DefaultPreference from 'react-native-default-preference';
 
 class DataManager {
     init = async () => {
@@ -59,6 +60,7 @@ class DataManager {
 
     userLoggedOutHandler = async () => {
         console.log('DataManager : User Loggedout');
+        DefaultPreference.clearAll();
         this.deleteContacts();
         this.deleteChannels();
         this.contactsFetched = false;
