@@ -7,11 +7,11 @@ import { SCREEN_WIDTH } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: GlobalColors.white
     },
     logoHeader: {
         width: SCREEN_WIDTH,
+        backgroundColor: GlobalColors.white,
         height: 45,
         borderStyle: 'solid',
         borderBottomColor: 'rgb(192, 192, 192)',
@@ -20,8 +20,7 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     keyboardConatiner: {
-        flex: 1,
-        padding: 10
+        flex: 1
     },
     headerContainer: {
         flex: 1,
@@ -43,11 +42,13 @@ export default StyleSheet.create({
 
     formContainer: Platform.select({
         ios: {
+            padding: 10,
             marginBottom: 20,
             alignItems: 'center',
             justifyContent: 'center'
         },
         android: {
+            padding: 10,
             marginBottom: 20,
             alignItems: 'center',
             justifyContent: 'center'
@@ -93,7 +94,7 @@ export default StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 25
+        marginBottom: 10
     },
     diableButton: {
         height: 40,
@@ -102,7 +103,7 @@ export default StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 25
+        marginBottom: 10
     },
     buttonText: {
         color: '#fff',
@@ -220,5 +221,67 @@ export default StyleSheet.create({
             color: '#ffffff',
             textAlign: 'center'
         }
-    })
+    }),
+    goToLine: Platform.select({
+        ios: {
+            marginTop: 5,
+            height: 20,
+            color: 'rgba(0,189,242,1)',
+            fontSize: 14,
+            letterSpacing: 1,
+            lineHeight: 20,
+            fontWeight: 'bold',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        android: {
+            marginTop: 5,
+            width: '100%',
+            textAlign: 'center',
+            color: 'rgba(0,189,242,1)',
+            fontSize: 14,
+            letterSpacing: 1,
+            lineHeight: 20,
+            fontWeight: 'bold',
+            justifyContent: 'center',
+            alignItems: 'center'
+        }
+    }),
+    bottomMargin: {
+        width: SCREEN_WIDTH,
+        backgroundColor: GlobalColors.white,
+        height: 60,
+        borderStyle: 'solid',
+        borderTopColor: 'rgb(192, 192, 192)',
+        borderTopWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10
+    },
+    dotSider: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    innerWidth: {
+        width: 55,
+        height: 10,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    dotSize: {
+        width: 5,
+        height: 5,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 3,
+        marginBottom: 3
+    },
+    lastDotSize: {
+        width: 8,
+        height: 8,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 3,
+        marginBottom: 3
+    }
 });

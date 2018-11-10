@@ -158,10 +158,10 @@ export default StyleSheet.create({
     },
     satelliteCircle: {
         position: 'absolute',
-        right: -45,
+        right: -42,
         top: -5,
-        width: 30,
-        height: 30,
+        width: 35,
+        height: 35,
         borderRadius: 20,
         backgroundColor: '#ffffff',
         alignItems: 'center',

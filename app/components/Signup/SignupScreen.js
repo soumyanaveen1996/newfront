@@ -30,8 +30,8 @@ export default class SignupScreen extends React.Component {
                 { text: ' One number', isDone: false },
                 { text: ' 8 characters minimum', isDone: false }
             ],
-            name: '',
-            email: this.props.userEmail,
+            name: this.props.userName || '',
+            email: this.props.userEmail || '',
             password: '',
             confirmPassword: '',
             nameError: '',
@@ -160,13 +160,15 @@ export default class SignupScreen extends React.Component {
                     if (data.success) {
                         await AsyncStorage.setItem('userEmail', data.data);
                         await AsyncStorage.setItem(
+                            'userDisplayName',
+                            this.state.name
+                        );
+                        await AsyncStorage.setItem(
                             'signupStage',
                             'confirmCode'
                         );
 
-                        this.setState(() => {
-                            return { loading: false };
-                        });
+                        this.setState({ loading: false, name: '', email: '' });
                         Actions.confirmationScreen({
                             type: ActionConst.REPLACE,
                             userEmail: this.state.email,
@@ -324,9 +326,16 @@ export default class SignupScreen extends React.Component {
         }
     };
 
+    goToLoginPage = () => {
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
+        });
+    };
+
     render() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 <View style={styles.logoHeader}>
                     <Image source={images.frontm_header_logo} />
                 </View>
@@ -361,6 +370,7 @@ export default class SignupScreen extends React.Component {
                                     autoCorrect={false}
                                     returnKeyType={'next'}
                                     blurOnSubmit={false}
+                                    value={this.state.name}
                                     onBlur={() => {
                                         if (this.state.name.length < 3) {
                                             this.setState({
@@ -373,11 +383,7 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('two');
-                                        this.inputs.two.focus();
-                                    }}
-                                    ref={input => {
-                                        this.inputs.one = input;
+                                        this.focusNextField('email');
                                     }}
                                     placeholder="Name"
                                     onChangeText={this.onChangeName.bind(this)}
@@ -414,11 +420,10 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('three');
-                                        this.inputs.three.focus();
+                                        this.focusNextField('password');
                                     }}
                                     ref={input => {
-                                        this.inputs.two = input;
+                                        this.inputs.email = input;
                                     }}
                                     placeholder="Email"
                                     onChangeText={this.onChangeEmail.bind(this)}
@@ -452,11 +457,10 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('four');
-                                        this.inputs.four.focus();
+                                        this.focusNextField('confirmPassword');
                                     }}
                                     ref={input => {
-                                        this.inputs.three = input;
+                                        this.inputs.password = input;
                                     }}
                                     placeholder="Password"
                                     placeholderTextColor="rgba(155,155,155,1)"
@@ -496,7 +500,7 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     ref={input => {
-                                        this.inputs.four = input;
+                                        this.inputs.confirmPassword = input;
                                     }}
                                     placeholder="Confirm Password"
                                     placeholderTextColor="rgba(155,155,155,1)"
@@ -569,6 +573,48 @@ export default class SignupScreen extends React.Component {
                             >
                                 <Text style={styles.buttonText}>SIGNUP</Text>
                             </TouchableOpacity>
+                        </View>
+                        <View style={styles.bottomMargin}>
+                            <TouchableOpacity
+                                onPress={this.goToLoginPage}
+                                style={{
+                                    alignItems: 'center',
+                                    marginBottom: 10
+                                }}
+                            >
+                                <Text style={styles.goToLine}>
+                                    Already have an account?{' '}
+                                    <Text style={styles.bolder}> Log in </Text>
+                                    <Image
+                                        style={styles.arrow}
+                                        source={images.blue_arrow}
+                                    />
+                                </Text>
+                            </TouchableOpacity>
+                            <View style={styles.dotSider}>
+                                <View style={styles.innerWidth}>
+                                    <Image
+                                        style={styles.dotSize}
+                                        source={images.dot_gray}
+                                    />
+                                    <Image
+                                        style={styles.dotSize}
+                                        source={images.dot_gray}
+                                    />
+                                    <Image
+                                        style={styles.dotSize}
+                                        source={images.dot_gray}
+                                    />
+                                    <Image
+                                        style={styles.dotSize}
+                                        source={images.dot_gray}
+                                    />
+                                    <Image
+                                        style={styles.lastDotSize}
+                                        source={images.dot_gray}
+                                    />
+                                </View>
+                            </View>
                         </View>
                     </KeyboardAwareScrollView>
                 </ScrollView>
