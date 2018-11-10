@@ -11,10 +11,6 @@ export default class Notification {
     static register = () =>
         new Promise((resolve, reject) => {
             let timer = setTimeout(function() {
-                if (__DEV__) {
-                    console.tron('Timed Out');
-                }
-
                 reject('No Notifications');
             }, 6000);
 

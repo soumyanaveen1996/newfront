@@ -129,7 +129,6 @@ class MainScreen extends React.Component {
             showNetworkStatusBar: false,
             network: null
         };
-        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     showConnectionMessage(connectionType) {
@@ -197,10 +196,6 @@ class MainScreen extends React.Component {
 
     async componentWillMount() {
         // AfterLogin.executeAfterLogin();
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
         if (this.props.moveToOnboarding) {
             this.openOnboaringBot();
         }
@@ -231,19 +226,14 @@ class MainScreen extends React.Component {
     }
 
     static onEnter() {
-        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
+        Store.dispatch(setCurrentScene('Home'));
         Store.dispatch(refreshTimeline(true));
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
     }
 
     static onExit() {
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'timeline') {
-            BackHandler.exitApp();
-        }
     }
 
     userLoggedOutHandler = async () => {
@@ -297,10 +287,6 @@ class MainScreen extends React.Component {
         if (this.eventSubscription) {
             this.eventSubscription.remove();
         }
-        BackHandler.removeEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
         if (this.messageListener) {
             this.messageListener.remove();
             this.messageListener = null;

@@ -94,21 +94,6 @@ export default class ChannelChat extends ChatBotScreen {
         }
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        // if (Actions.currentScene === 'channelChat') {
-        //     Actions.timeline({ type: ActionConst.REPLACE });
-        // }
-        Actions.pop();
-        return true;
-    }
-
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId || this.channel.channelId;

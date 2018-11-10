@@ -36,11 +36,6 @@ export default class ConfirmationScreen extends Component {
                 return { userEmail: token };
             });
         });
-
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -49,13 +44,6 @@ export default class ConfirmationScreen extends Component {
                 userEmail: this.props.userEmail,
                 password: this.props.password
             });
-        }
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'confirmationScreen') {
-            // BackHandler.exitApp();
-            return true;
         }
     }
 

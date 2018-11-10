@@ -30,7 +30,10 @@ import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
-import { setCurrentScene } from '../../redux/actions/UserActions';
+import {
+    setCurrentScene,
+    completeContactsLoad
+} from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
 class ContactsPicker extends React.Component {
@@ -110,15 +113,21 @@ class ContactsPicker extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            this.onDataUpdate();
+            if (__DEV__) {
+                console.tron('Update Contacts');
+            }
+
+            this.refresh();
         }
     }
 
-    static async onEnter() {
+    static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+        Store.dispatch(completeContactsLoad(true));
     }
 
     static onExit() {
+        Store.dispatch(completeContactsLoad(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {

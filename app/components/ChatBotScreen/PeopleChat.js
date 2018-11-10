@@ -132,21 +132,6 @@ export default class PeopleChat extends ChatBotScreen {
             this.newSession = false;
         }
     }
-
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        Actions.pop();
-        // if (Actions.currentScene === 'peopleChat') {
-        //     Actions.timeline({type: ActionConst.REPLACE})
-        // }
-        return true;
-    }
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId;

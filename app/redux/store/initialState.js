@@ -4,7 +4,7 @@ const initialState = {
         satelliteMode: false,
         remoteBotsInstalled: false,
         allChannelsLoaded: false,
-        contactsLoaded: false,
+        contactsLoaded: true,
         conversationsLoaded: false,
         currentScene: I18n.t('Home'),
         refreshTimeline: true

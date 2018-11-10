@@ -52,18 +52,6 @@ export default class SwiperScreen extends Component {
             ]
         };
     }
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'swiperScreen') {
-            BackHandler.exitApp();
-        }
-    }
 
     changePages = () => {
         console.log('get the islogin ', this.state.isLoginPage);
