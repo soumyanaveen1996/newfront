@@ -13,7 +13,10 @@ import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
-import { setCurrentScene } from '../../redux/actions/UserActions';
+import {
+    setCurrentScene,
+    completeChannelInstall
+} from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -87,10 +90,12 @@ class ChannelsList extends React.Component {
         }
     }
     static onEnter() {
+        Store.dispatch(completeChannelInstall(true));
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
     }
 
     static onExit() {
+        Store.dispatch(completeChannelInstall(false));
         Store.dispatch(setCurrentScene('none'));
     }
 

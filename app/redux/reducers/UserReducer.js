@@ -9,7 +9,7 @@ export const UserReducer = (state = initialState.user, action) => {
     case Actions.COMPLETE_BOT_INSTALL:
         return { ...state, ...{ remoteBotsInstalled: action.payload } };
     case Actions.COMPLETE_CHANNEL_INSTALL:
-        return { ...state, ...{ allChannelsLoaded: true } };
+        return { ...state, ...{ allChannelsLoaded: action.payload } };
     case Actions.COMPLETE_CONTACTS_LOAD:
         return { ...state, ...{ contactsLoaded: action.payload } };
     case Actions.SET_CURRENT_SCENE:
