@@ -67,6 +67,17 @@ export default class ResendCodeScreen extends Component {
 
     async onFormSubmit() {
         this.setState({ loading: true });
+
+        const getStatus = await AsyncStorage.getItem('signupStage');
+        if (getStatus && getStatus === 'done') {
+            Actions.confirmationScreen({
+                type: ActionConst.REPLACE,
+                userEmail: this.state.userEmail,
+                password: this.state.password,
+                lastScreen: 'resendScreen'
+            });
+        }
+
         console.log('send code again');
         const userDetails = {
             email: this.state.userEmail

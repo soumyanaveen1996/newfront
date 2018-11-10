@@ -9,8 +9,7 @@ import {
     Platform,
     TouchableOpacity,
     ScrollView,
-    AsyncStorage,
-    StatusBar
+    AsyncStorage
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -384,11 +383,7 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('two');
-                                        this.inputs.two.focus();
-                                    }}
-                                    ref={input => {
-                                        this.inputs.one = input;
+                                        this.focusNextField('email');
                                     }}
                                     placeholder="Name"
                                     onChangeText={this.onChangeName.bind(this)}
@@ -425,11 +420,10 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('three');
-                                        this.inputs.three.focus();
+                                        this.focusNextField('password');
                                     }}
                                     ref={input => {
-                                        this.inputs.two = input;
+                                        this.inputs.email = input;
                                     }}
                                     placeholder="Email"
                                     onChangeText={this.onChangeEmail.bind(this)}
@@ -463,11 +457,10 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     onSubmitEditing={() => {
-                                        this.focusNextField('four');
-                                        this.inputs.four.focus();
+                                        this.focusNextField('confirmPassword');
                                     }}
                                     ref={input => {
-                                        this.inputs.three = input;
+                                        this.inputs.password = input;
                                     }}
                                     placeholder="Password"
                                     placeholderTextColor="rgba(155,155,155,1)"
@@ -507,7 +500,7 @@ export default class SignupScreen extends React.Component {
                                         }
                                     }}
                                     ref={input => {
-                                        this.inputs.four = input;
+                                        this.inputs.confirmPassword = input;
                                     }}
                                     placeholder="Confirm Password"
                                     placeholderTextColor="rgba(155,155,155,1)"
