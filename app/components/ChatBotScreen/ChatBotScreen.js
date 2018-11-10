@@ -191,21 +191,6 @@ export default class ChatBotScreen extends React.Component {
         }
     };
 
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        Actions.pop();
-        return true;
-        // if (Actions.currentScene === 'botChat') {
-        //     Actions.timeline({ type: ActionConst.REPLACE });
-        // }
-    }
-
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         this.mounted = true;

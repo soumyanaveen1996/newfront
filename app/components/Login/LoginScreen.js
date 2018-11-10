@@ -68,19 +68,6 @@ export default class LoginScreen extends React.Component {
         this.inputs = {};
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'swiperScreen') {
-            BackHandler.exitApp();
-        }
-    }
-
     onFormSubmit() {
         this.setState({
             errorMessage: '',
@@ -146,7 +133,7 @@ export default class LoginScreen extends React.Component {
             email: '',
             password: ''
         });
-        Actions.timeline({ type: ActionConst.REPLACE });
+        Actions.tabbar({ type: 'replace' });
         this.formValuesArray.length = 0;
 
         return;

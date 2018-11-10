@@ -59,10 +59,6 @@ export default class SwiperScreen extends Component {
         );
     }
 
-    componentDidUpdate() {
-        console.log('will receive props ', this.props.isLoginPage);
-    }
-
     handleBackButtonClick() {
         if (Actions.currentScene === 'swiperScreen') {
             BackHandler.exitApp();

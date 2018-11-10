@@ -21,6 +21,10 @@ let processingFutureRequest = false;
  */
 const poll = () => {
     Auth.getUser().then(authUser => {
+        if (__DEV__) {
+            console.tron('Polling');
+        }
+
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
     });
@@ -28,6 +32,10 @@ const poll = () => {
 
 const readLambda = () => {
     Auth.getUser().then(authUser => {
+        if (__DEV__) {
+            console.tron('Read lambda');
+        }
+
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
     });

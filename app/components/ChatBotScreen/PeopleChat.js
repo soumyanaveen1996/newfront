@@ -72,7 +72,9 @@ export default class PeopleChat extends ChatBotScreen {
             <HeaderRightIcon
                 icon={Icons.call()}
                 onPress={() => {
-                    params.showCallMessage();
+                    if (params.showCallMessage) {
+                        params.showCallMessage();
+                    }
                 }}
                 style={{ marginRight: 0, paddingHorizontal: 0 }}
             />
@@ -129,21 +131,6 @@ export default class PeopleChat extends ChatBotScreen {
             this.botKey = this.conversation.conversationId;
             this.newSession = false;
         }
-    }
-
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        Actions.pop();
-        // if (Actions.currentScene === 'peopleChat') {
-        //     Actions.timeline({type: ActionConst.REPLACE})
-        // }
-        return true;
     }
     // Implemented methods
     getBotKey = () => {
