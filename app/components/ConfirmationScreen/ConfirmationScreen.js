@@ -48,6 +48,22 @@ export default class ConfirmationScreen extends Component {
     }
 
     async onFormSubmit() {
+        const getStatus = await AsyncStorage.getItem('signupStage');
+
+        if (getStatus && getStatus === 'done') {
+            if (
+                this.state.password &&
+                typeof this.state.password !== 'undefined' &&
+                this.state.password.length >= 8
+            ) {
+                this.showMainScreen();
+            } else {
+                this.setState({
+                    errorMessage: 'Enter password',
+                    loading: false
+                });
+            }
+        }
         const userDetails = {
             email: this.state.userEmail,
             confirmCode: this.state.code
@@ -126,7 +142,10 @@ export default class ConfirmationScreen extends Component {
     }
 
     displayPasswordField = () => {
-        if (!this.props.password) {
+        if (
+            !this.props.password ||
+            (this.props.lastScreen && this.props.lastScreen === 'resendScreen')
+        ) {
             return (
                 <View style={styles.entryFields}>
                     <Text style={styles.placeholderText}>
