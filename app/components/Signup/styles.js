@@ -250,7 +250,7 @@ export default StyleSheet.create({
     bottomMargin: {
         width: SCREEN_WIDTH,
         backgroundColor: GlobalColors.white,
-        height: 60,
+        height: 80,
         borderStyle: 'solid',
         borderTopColor: 'rgb(192, 192, 192)',
         borderTopWidth: 1,
