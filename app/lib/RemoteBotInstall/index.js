@@ -54,13 +54,15 @@ class RemoteBotInstall {
      */
     static isSatellite = () =>
         new Promise((resolve, reject) => {
-            Auth.getUser()
-                .then(user => {
-                    return NetworkHandler.readQueue(user);
-                })
-                .then(res => {
-                    resolve(res.data.onSatellite);
-                });
+            return resolve(false);
+
+            // Auth.getUser()
+            //     .then(user => {
+            //         return NetworkHandler.readQueue(user)
+            //     })
+            //     .then(res => {
+            //         resolve(res.data.onSatellite)
+            //     })
         });
 
     /**

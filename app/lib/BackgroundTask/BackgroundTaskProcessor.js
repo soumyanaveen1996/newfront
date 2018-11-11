@@ -119,8 +119,10 @@ const processTask = async (task, user) => {
     }
 
     if (
-        task.lastRunTime + task.timeInterval < timeNow ||
-        task.lastRunTime + task.timeInterval - timeNow < 60000 * 5
+        task.lastRunTime + task.timeInterval <
+        timeNow
+        // task.lastRunTime + task.timeInterval < timeNow ||
+        // task.lastRunTime + task.timeInterval - timeNow < 60000 * 5
     ) {
         let message = new Message();
         message.setCreatedBy({

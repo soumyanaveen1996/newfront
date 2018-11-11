@@ -254,6 +254,7 @@ export default class Channel {
                                 domains: user.info.domains
                             }
                         };
+                        Store.dispatch(completeChannelInstall(false));
                         return Network(options);
                     }
                 })
@@ -269,7 +270,7 @@ export default class Channel {
                                 channel.channelId
                             );
                         });
-                        Store.dispatch(completeChannelInstall());
+                        Store.dispatch(completeChannelInstall(true));
                         return Promise.all(channelInsertPromises);
                     }
                 })

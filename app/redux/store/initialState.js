@@ -3,7 +3,7 @@ const initialState = {
     user: {
         satelliteMode: false,
         remoteBotsInstalled: false,
-        allChannelsLoaded: false,
+        allChannelsLoaded: true,
         contactsLoaded: true,
         conversationsLoaded: false,
         currentScene: I18n.t('Home'),

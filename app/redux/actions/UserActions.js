@@ -10,8 +10,9 @@ export const completeBotInstall = payload => ({
     payload
 });
 
-export const completeChannelInstall = () => ({
-    type: Actions.COMPLETE_CHANNEL_INSTALL
+export const completeChannelInstall = payload => ({
+    type: Actions.COMPLETE_CHANNEL_INSTALL,
+    payload
 });
 
 export const completeContactsLoad = payload => ({
