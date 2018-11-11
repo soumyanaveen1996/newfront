@@ -106,7 +106,8 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        if (this.props.appState.refreshChannels === false) {
+        const user = Store.getState().user;
+        if (user.allChannelsLoaded === false) {
             Channel.refreshChannels();
         }
     }

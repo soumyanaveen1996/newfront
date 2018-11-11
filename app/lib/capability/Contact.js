@@ -275,6 +275,13 @@ export default class Contact {
                         });
                         var allContacts = _.concat(contacts, ignored);
                         Contact.saveContacts(allContacts);
+                        if (__DEV__) {
+                            console.tron(
+                                'Contacts Load Completed',
+                                allContacts
+                            );
+                        }
+
                         Store.dispatch(completeContactsLoad(true));
                         resolve();
                     }

@@ -38,3 +38,8 @@ export const refreshChannels = payload => ({
     type: Actions.REFRESH_CHANNELS,
     payload
 });
+
+export const refreshContacts = payload => ({
+    type: Actions.REFRESH_CONTACTS,
+    payload
+});
