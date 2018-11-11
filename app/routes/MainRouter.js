@@ -88,10 +88,12 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.loginScreen}
                                         title={I18n.t('FrontM')}
                                         component={LoginScreen}
+                                        hideNavBar
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.signupScreen}
                                         component={SignupScreen}
+                                        hideNavBar
                                     />
                                     <Scene
                                         key={
