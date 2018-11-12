@@ -52,6 +52,7 @@ import {
 } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',

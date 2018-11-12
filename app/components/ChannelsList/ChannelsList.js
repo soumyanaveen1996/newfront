@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
 import {
     setCurrentScene,
-    completeChannelInstall
+    refreshChannels
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 class ChannelsList extends React.Component {
@@ -65,17 +65,16 @@ class ChannelsList extends React.Component {
         //     await this.wait()
         //     return this.refresh()
         // })
-        if (!this.props.appState.allChannelsLoaded) {
-            if (__DEV__) {
-                console.tron('Channels Not Loaded ... Load Again!');
-            }
+        // if (!this.props.appState.allChannelsLoaded) {
+        //     if (__DEV__) {
+        //         console.tron('Channels Not Loaded ... Load Again!')
+        //     }
 
-            return Channel.refreshChannels();
-        }
-        this.refresh();
+        //     return Channel.refreshChannels()
+        // }
+        // this.refresh();
+        this.refresh(false, true);
     }
-
-    wait = () => new Promise(resolve => setTimeout(resolve, 2000));
 
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Channels');
@@ -85,18 +84,32 @@ class ChannelsList extends React.Component {
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
-            await this.wait();
-            return this.refresh();
+            return this.refresh(true, false);
+        }
+
+        if (
+            prevProps.appState.refreshChannels !==
+            this.props.appState.refreshChannels
+        ) {
+            if (__DEV__) {
+                console.tron('Refresh Channels');
+            }
+
+            return this.refresh(true, false);
         }
     }
     static onEnter() {
-        Store.dispatch(completeChannelInstall(true));
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
+        Store.dispatch(refreshChannels(true));
     }
 
     static onExit() {
-        Store.dispatch(completeChannelInstall(false));
+        Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
+        const user = Store.getState().user;
+        if (user.allChannelsLoaded === false) {
+            Channel.refreshChannels();
+        }
     }
 
     handleAddChannel = () => {
@@ -106,7 +119,7 @@ class ChannelsList extends React.Component {
     };
 
     onBack = () => {
-        this.refresh(true);
+        // this.refresh()
     };
 
     async refresh(onback = false, handleEmptyChannels = true) {

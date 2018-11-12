@@ -16,6 +16,10 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ currentScene: action.payload } };
     case Actions.REFRESH_TIMELINE:
         return { ...state, ...{ refreshTimeline: action.payload } };
+    case Actions.REFRESH_CHANNELS:
+        return { ...state, ...{ refreshChannels: action.payload } };
+    case Actions.REFRESH_CONTACTS:
+        return { ...state, ...{ refreshContacts: action.payload } };
     default:
         return state;
     }

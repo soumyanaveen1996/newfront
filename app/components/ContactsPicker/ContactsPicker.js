@@ -32,7 +32,8 @@ import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
 import {
     setCurrentScene,
-    completeContactsLoad
+    completeContactsLoad,
+    refreshContacts
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
@@ -96,14 +97,16 @@ class ContactsPicker extends React.Component {
         //     })
         // })
 
-        if (!this.props.appState.contactsLoaded) {
-            Contact.refreshContacts();
-            return;
-        }
+        // if (!this.props.appState.contactsLoaded) {
+        //     Contact.refreshContacts();
+        //     return;
+        // }
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length === 0) {
                 //If no contacts are added then go directly to contacts bot
                 this.handleAddContact();
+            } else {
+                this.refresh();
             }
         });
     }
@@ -113,21 +116,28 @@ class ContactsPicker extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            if (__DEV__) {
-                console.tron('Update Contacts');
-            }
+            this.refresh();
+        }
 
+        if (
+            prevProps.appState.refreshContacts !==
+            this.props.appState.refreshContacts
+        ) {
             this.refresh();
         }
     }
 
     static onEnter() {
+        const user = Store.getState().user;
+        if (user.contactsLoaded === false) {
+            Contact.refreshContacts();
+        }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
-        Store.dispatch(completeContactsLoad(true));
+        Store.dispatch(refreshContacts(true));
     }
 
     static onExit() {
-        Store.dispatch(completeContactsLoad(false));
+        Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {
@@ -145,7 +155,7 @@ class ContactsPicker extends React.Component {
     };
 
     onBack = () => {
-        this.refresh();
+        // this.refresh()
     };
 
     refresh = () => {

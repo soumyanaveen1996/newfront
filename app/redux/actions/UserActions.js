@@ -33,3 +33,13 @@ export const refreshTimeline = payload => ({
     type: Actions.REFRESH_TIMELINE,
     payload
 });
+
+export const refreshChannels = payload => ({
+    type: Actions.REFRESH_CHANNELS,
+    payload
+});
+
+export const refreshContacts = payload => ({
+    type: Actions.REFRESH_CONTACTS,
+    payload
+});

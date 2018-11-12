@@ -3,11 +3,13 @@ const initialState = {
     user: {
         satelliteMode: false,
         remoteBotsInstalled: false,
-        allChannelsLoaded: true,
-        contactsLoaded: true,
+        allChannelsLoaded: false,
+        contactsLoaded: false,
         conversationsLoaded: false,
         currentScene: I18n.t('Home'),
-        refreshTimeline: true
+        refreshTimeline: true,
+        refreshChannels: true,
+        refreshContacts: true
     }
 };
 

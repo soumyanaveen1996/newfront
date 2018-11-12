@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { Network } from '../../lib/capability';
 import EventEmitter from '../../lib/events';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
+import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 
 class NetworkStatusNotchBar extends React.Component {
     constructor(props) {
