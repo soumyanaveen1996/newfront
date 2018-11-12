@@ -82,6 +82,20 @@ export default StyleSheet.create({
         marginTop: 10,
         justifyContent: 'center'
     },
+    textCode: {
+        height: 40,
+        width: 150,
+        backgroundColor: 'rgba(244,244,244,1)',
+        padding: 10,
+        textAlign: 'center',
+        color: 'rgba(155,155,155,1)',
+        fontSize: 20,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10,
+        letterSpacing: 1
+    },
     textInput: {
         height: 40,
         width: 150,

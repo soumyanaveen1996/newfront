@@ -26,7 +26,8 @@ export default class ConfirmationScreen extends Component {
             code: 0,
             loading: false,
             errorMessage: '',
-            passwordErrorMessage: ''
+            passwordErrorMessage: '',
+            signupStatus: ''
         };
     }
 
@@ -74,6 +75,7 @@ export default class ConfirmationScreen extends Component {
             .then(async data => {
                 if (data.success) {
                     await AsyncStorage.setItem('signupStage', 'done');
+                    this.setState({ signupStatus: 'codeConfirmed' });
                     this.showMainScreen();
                 }
             })
@@ -95,7 +97,12 @@ export default class ConfirmationScreen extends Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
-                this.setState({ loading: false, code: '', password: '' });
+                this.setState({
+                    loading: false,
+                    code: '',
+                    password: '',
+                    signupStatus: ''
+                });
                 Actions.timeline({ type: ActionConst.REPLACE });
             })
             .catch(err => {
@@ -116,7 +123,8 @@ export default class ConfirmationScreen extends Component {
         Actions.resendCodeScreen({
             type: ActionConst.REPLACE,
             email: this.state.userEmail,
-            password: this.state.password
+            password: this.state.password,
+            signupStatus: this.state.signupStatus
         });
     }
     checkFieldEmpty = () => {
@@ -187,6 +195,67 @@ export default class ConfirmationScreen extends Component {
         }
     };
 
+    confirmCodeStatus = () => {
+        if (
+            this.state.signupStatus &&
+            this.state.signupStatus === 'codeConfirmed'
+        ) {
+            return (
+                <View
+                    style={
+                        !this.props.password
+                            ? styles.pinCodeWithPassword
+                            : styles.pinCode
+                    }
+                >
+                    <Text style={styles.textCode}>{this.state.code}</Text>
+                </View>
+            );
+        } else {
+            return (
+                <View
+                    style={
+                        !this.props.password
+                            ? styles.pinCodeWithPassword
+                            : styles.pinCode
+                    }
+                >
+                    <TextInput
+                        style={styles.textInput}
+                        keyboardType="numeric"
+                        autoFocus={true}
+                        placeholder="------"
+                        returnKeyType={'done'}
+                        value={this.state.code === 0 ? null : this.state.code}
+                        onChangeText={this.onChangeCode.bind(this)}
+                        underlineColorAndroid="transparent"
+                        maxLength={6} //setting limit of input
+                    />
+                </View>
+            );
+        }
+    };
+
+    checkToResendCodeScreen = () => {
+        if (
+            this.state.signupStatus &&
+            this.state.signupStatus === 'codeConfirmed'
+        ) {
+            return null;
+        } else {
+            return (
+                <TouchableOpacity
+                    style={styles.resendButton}
+                    onPress={this.onResendButton.bind(this)}
+                >
+                    <Text style={styles.textColor}>
+                        Review email address and send the code again
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
+    };
+
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
@@ -210,29 +279,7 @@ export default class ConfirmationScreen extends Component {
                                 registration process
                             </Text>
                         </View>
-                        <View
-                            style={
-                                !this.props.password
-                                    ? styles.pinCodeWithPassword
-                                    : styles.pinCode
-                            }
-                        >
-                            <TextInput
-                                style={styles.textInput}
-                                keyboardType="numeric"
-                                autoFocus={true}
-                                placeholder="------"
-                                returnKeyType={'done'}
-                                value={
-                                    this.state.code === 0
-                                        ? null
-                                        : this.state.code
-                                }
-                                onChangeText={this.onChangeCode.bind(this)}
-                                underlineColorAndroid="transparent"
-                                maxLength={6} //setting limit of input
-                            />
-                        </View>
+                        {this.confirmCodeStatus()}
                         {this.displayPasswordField()}
                         <View style={styles.codeButton}>
                             <TouchableOpacity
@@ -259,14 +306,7 @@ export default class ConfirmationScreen extends Component {
                             </View>
                         </View>
 
-                        <TouchableOpacity
-                            style={styles.resendButton}
-                            onPress={this.onResendButton.bind(this)}
-                        >
-                            <Text style={styles.textColor}>
-                                Review email address and send the code again
-                            </Text>
-                        </TouchableOpacity>
+                        {this.checkToResendCodeScreen()}
                     </KeyboardAvoidingView>
                 </ScrollView>
             </SafeAreaView>
