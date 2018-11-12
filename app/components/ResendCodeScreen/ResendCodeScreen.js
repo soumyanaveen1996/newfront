@@ -22,7 +22,8 @@ export default class ResendCodeScreen extends Component {
             userEmail: this.props.email,
             password: this.props.password,
             errorMessage: '',
-            loading: false
+            loading: false,
+            signupStage: this.props.signupStage
         };
     }
 
@@ -105,15 +106,24 @@ export default class ResendCodeScreen extends Component {
             });
     }
     checkFieldEmpty = () => {
-        if (this.state.userEmail === '') {
-            return false;
-        } else {
-            if (this.validateEmail(this.state.userEmail)) {
-                return true;
-            } else {
-                return false;
-            }
+        // if (this.state.userEmail === '') {
+        //     return false;
+        // } else {
+        //     if (this.validateEmail(this.state.userEmail)) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // }
+
+        if (
+            this.state.signupStage &&
+            this.state.signupStage === 'codeConfirmed'
+        ) {
+            return true;
         }
+
+        return false;
     };
 
     displayEmailErrorMessege = () => {
