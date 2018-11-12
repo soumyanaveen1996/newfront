@@ -2,6 +2,10 @@ import EventEmitter, { AuthEvents } from '../events';
 import { Contact, Channel } from '../capability';
 import { AppState } from 'react-native';
 import Auth from '../capability/Auth';
+import { AssetFetcher } from '../dce';
+import Bot from '../bot/index';
+import Twilio from '../twilio';
+import DefaultPreference from 'react-native-default-preference';
 
 class DataManager {
     init = async () => {
@@ -17,10 +21,11 @@ class DataManager {
     };
 
     listenToEvents = async () => {
-        EventEmitter.addListener(
-            AuthEvents.userLoggedIn,
-            this.userLoggedInHandler
-        );
+        // NO NEED WE CALL THIS AFTER LOGIN IN or IN LAUNCH
+        // EventEmitter.addListener(
+        //     AuthEvents.userLoggedIn,
+        //     this.userLoggedInHandler
+        // );
         EventEmitter.addListener(
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
@@ -49,12 +54,13 @@ class DataManager {
 
     userLoggedInHandler = async () => {
         console.log('DataManager : User Logged in');
-        this.refreshChannels();
-        this.refreshContacts();
+        await this.refreshChannels();
+        await this.refreshContacts();
     };
 
     userLoggedOutHandler = async () => {
         console.log('DataManager : User Loggedout');
+        DefaultPreference.clearAll();
         this.deleteContacts();
         this.deleteChannels();
         this.contactsFetched = false;

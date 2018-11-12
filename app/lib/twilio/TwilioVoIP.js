@@ -7,6 +7,7 @@ import EventEmitter, { TwilioEvents } from '../../lib/events';
 import { Actions } from 'react-native-router-flux';
 import { PhoneState } from '../../components/Phone';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Store from '../../lib/Store';
 
 /*
 const _eventHandlers = {
@@ -22,7 +23,7 @@ const _eventHandlers = {
 export default class TwilioVoIP {
     init = async () => {
         try {
-            await this.initTelephony();
+            this.initTelephony();
             //this.showAlertMessage('VoIP initialized');
         } catch (err) {
             //this.showAlertMessage('VoIP initialization failed');
@@ -71,6 +72,8 @@ export default class TwilioVoIP {
 
                 const accessToken = await Twilio.getAccessToken(user);
                 if (!(__DEV__ && Platform.os === 'ios')) {
+                    console.log('INit VoiP....');
+
                     const isAudioEnabled = await this.requestAudioPermissions();
                     if (!isAudioEnabled) {
                         this.showAlertMessage(
@@ -78,8 +81,9 @@ export default class TwilioVoIP {
                         );
                     }
                 }
-
                 await TwilioVoice.initWithToken(accessToken);
+
+                await Twilio.enableVoIP(user);
                 console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
@@ -112,7 +116,10 @@ export default class TwilioVoIP {
             TwilioEvents.connectionDidDisconnect,
             this.connectionDidDisconnectHandler
         );
-        AppState.addEventListener('change', this.handleAppStateChange);
+
+        if (Platform.OS === 'ios') {
+            AppState.addEventListener('change', this.handleAppStateChange);
+        }
 
         if (Platform.OS === 'ios') {
             TwilioVoice.addEventListener(
@@ -178,25 +185,28 @@ export default class TwilioVoIP {
     };
 
     connectionDidConnectHandler = data => {
-        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data.call_state);
-
-        console.log('FrontM VoIP : connectionDidConnectHandler : ', data);
+        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data);
+        Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
+        // Actions.phone({state: PhoneState.incall, data: data})
     };
 
     connectionDidDisconnectHandler = data => {
         console.log('FrontM VoIP : connectionDidDisconnectHandler : ', data);
+        Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.connectionDidDisconnect, data);
         //this.closePhoneScreen();
     };
 
     callRejectedHandler = data => {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
+        Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.callRejected, data);
     };
 
     deviceDidReceiveIncomingHandler = data => {
         console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
+        Store.updateStore(data);
         this.handleIncomingCall(data);
         EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     };

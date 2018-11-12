@@ -8,7 +8,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     BackHandler,
-    TouchableOpacity
+    TouchableOpacity,
+    SafeAreaView
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -22,11 +23,34 @@ import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import config from '../../config/config';
 import Conversation from '../../lib/conversation/Conversation';
+import { TwilioVoIP } from '../../lib/twilio';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
+import SystemBot from '../../lib/bot/SystemBot';
+import Config, { overrideConsole } from '../../config/config';
+
+import { headerConfig } from './config';
+import CenterComponent from './header/CenterComponent';
+import DefaultPreference from 'react-native-default-preference';
 
 export default class LoginScreen extends React.Component {
+    static navigationOptions({ navigation, screenProps }) {
+        const { state } = navigation;
+        let ret = {
+            headerTitle: <CenterComponent />
+        };
+
+        return ret;
+    }
+
     constructor(props) {
         super(props);
         this.state = {
+            email: '',
+            password: '',
+            errorMessage: '',
+            emailErrorMessage: '',
+            passwordErrorMessage: '',
             formData: [
                 { id: 2, title: 'Email', type: 'email_field', optional: false },
                 {
@@ -37,72 +61,32 @@ export default class LoginScreen extends React.Component {
                 },
                 { id: 4, title: 'Login', type: 'button', action: 'signIn' }
             ],
-            errorMessage: '',
-            emailErrorMessage: '',
-            passwordErrorMessage: '',
             loading: false,
             pressedFbBtn: false,
             pressedGglBtn: false
         };
 
         this.formValuesArray = [];
-        this.errorMessages = [];
         this.inputs = {};
     }
 
-    componentWillMount() {
-        //     AsyncStorage.getItem('signupStage').then(token => {
-        //         if (token === 'done') {
-        //             AsyncStorage.getItem('userEmail').then(tokenEmail => {
-        //                 this.setState(() => {
-        //                     return { userEmail: tokenEmail };
-        //                 });
-        //             });
-        //         }
-        //     });
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'swiperScreen') {
-            BackHandler.exitApp();
-        }
-    }
-
     onFormSubmit() {
+        this.setState({
+            errorMessage: '',
+            emailErrorMessage: '',
+            passwordErrorMessage: ''
+        });
         this.setState({ loading: true });
         if (!this.isValid()) {
-            console.log('error', this.errorMessages);
-            if (this.errorMessages && this.errorMessages.length >= 0) {
-                this.setState({ emailErrorMessage: this.errorMessages[0] });
-            } else {
-                this.setState({ emailErrorMessage: '' });
-            }
-
-            if (this.errorMessages && this.errorMessages.length > 1) {
-                this.setState({ passwordErrorMessage: this.errorMessages[1] });
-            } else {
-                this.setState({ passwordErrorMessage: '' });
-            }
-            this.setState({ errorMessage: this.errorMessages });
             this.setState({ loading: false });
             return;
         }
 
-        let formInfo = this.state.formData;
-        for (let i = 0; i < formInfo.length; i++) {
-            let eachFormData = formInfo[i];
-            eachFormData.value = _.trim(this.formValuesArray[i]);
-            formInfo[i] = eachFormData;
-        }
-
         const userDetails = {
-            email: formInfo[0].value,
-            password: formInfo[1].value
+            email: this.state.email,
+            password: this.state.password
         };
+        console.log('userDetails ', userDetails);
 
         Auth.loginWithFrontm(
             userDetails,
@@ -110,15 +94,19 @@ export default class LoginScreen extends React.Component {
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
             .then(() => {
-                this.setState({ passwordErrorMessage: '' });
-                this.setState({ emailErrorMessage: '' });
+                this.setState({
+                    passwordErrorMessage: '',
+                    emailErrorMessage: ''
+                });
+
                 this.showMainScreen();
             })
             .catch(err => {
-                console.log('errors', err);
-                this.setState({ emailErrorMessage: err.message });
-                this.setState({ passwordErrorMessage: '' });
-                this.setState({ loading: false });
+                this.setState({
+                    loading: false,
+                    emailErrorMessage: err.message,
+                    passwordErrorMessage: ''
+                });
             });
     }
 
@@ -127,73 +115,93 @@ export default class LoginScreen extends React.Component {
         await RemoteBotInstall.syncronizeBots();
         Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({ loading: false });
+        await TwilioVoIP.init();
+        // RemoteBotInstall.syncronizeBots()
+        Auth.getUser().then(user => {
+            if (Platform.OS === 'android') {
+                DefaultPreference.setName('NativeStorage');
+            }
+            const ContactsURL = `${Config.network.queueProtocol}${
+                Config.proxy.host
+            }${Config.network.userDetailsPath}`;
+            const ContactsBOT = SystemBot.contactsBot.botId;
+            DefaultPreference.set('SESSION', user.creds.sessionId);
+            DefaultPreference.set('URL', ContactsURL);
+            DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
+        });
+        AfterLogin.executeAfterLogin();
+        synchronizeUserData();
+        this.setState({
+            loading: false,
+            errorMessage: '',
+            emailErrorMessage: '',
+            passwordErrorMessage: '',
+            email: '',
+            password: ''
+        });
+        Actions.tabbar({ type: 'replace' });
+        this.formValuesArray.length = 0;
+
         return;
     };
 
     isValid() {
-        let formData = this.state.formData;
-        for (var i = 0; i < formData.length; i++) {
-            this.errorMessages[i] = undefined;
-            if (
-                formData[i].optional === false &&
-                _.trim(this.formValuesArray[i]) === ''
-            ) {
-                this.errorMessages[i] = I18n.t('Field_mandatory');
-                return false;
-            }
-
-            if (
-                formData[i].type === 'password_field' &&
-                _.trim(this.formValuesArray[i]) === ''
-            ) {
-                this.errorMessages[i] = I18n.t('Password_not_empty');
-                return false;
-            }
-
-            if (
-                formData[i].type === 'email_field' &&
-                !isEmail(_.trim(this.formValuesArray[i]))
-            ) {
-                this.errorMessages[i] = I18n.t('Not_an_email');
+        if (_.trim(this.state.email) === '') {
+            this.setState({ emailErrorMessage: I18n.t('Field_mandatory') });
+            return false;
+        } else {
+            if (!isEmail(_.trim(this.state.email))) {
+                this.setState({ emailErrorMessage: I18n.t('Not_an_email') });
                 return false;
             }
         }
+
+        if (_.trim(this.state.password) === '') {
+            this.setState({ passwordErrorMessage: I18n.t('Field_mandatory') });
+            return false;
+        }
+
         return true;
     }
     onChangeEmailText(i, text) {
         this.formValuesArray[i] = text;
+        this.setState({ email: text });
     }
 
     onChangePasswordText(i, text) {
         this.formValuesArray[i] = text;
+        this.setState({ password: text });
     }
 
     loginWithGoogle = async () => {
+        this.setState({ loading: true });
         this.setState({ pressedGglBtn: !this.state.pressedGglBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithGoogle(conversationId, botName)
             .then(() => {
-                console.log('logged in using google');
-                this.setState({ loading: true });
                 this.showMainScreen();
             })
             .catch(err => {
-                this.setState({ errorMessage: err.message });
+                console.log('google error login ', err);
+                this.setState({ loading: false });
+                this.setState({ errorMessage: 'No Internet Connection' });
             });
     };
     loginWithFacebook = async () => {
+        this.setState({ loading: true });
         this.setState({ pressedFbBtn: !this.state.pressedFbBtn });
         const conversationId = '';
         const botName = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
         await Auth.loginWithFacebook(conversationId, botName)
             .then(() => {
-                console.log('logged in using facebook');
-                this.setState({ loading: true });
                 this.showMainScreen();
             })
             .catch(err => {
-                this.setState({ errorMessage: err.message });
+                const errMsg = err;
+                console.log('fb error login =====', errMsg);
+                this.setState({ loading: false });
+                this.setState({ errorMessage: 'No Internet Connection' });
             });
     };
 
@@ -227,6 +235,18 @@ export default class LoginScreen extends React.Component {
                 </View>
             );
         }
+
+        if (this.state.errorMessage && this.state.errorMessage.length > 0) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.errorMessage}
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
     };
     displayPasswordErrorMessege = () => {
         if (
@@ -254,88 +274,109 @@ export default class LoginScreen extends React.Component {
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
         );
         return (
-            <ScrollView style={styles.container}>
-                <Loader loading={this.state.loading} />
-                <KeyboardAvoidingView style={styles.keyboardConatiner}>
-                    <Text style={styles.loginHeader}> Log in to FrontM </Text>
-                    <View
-                        style={styles.formContainer}
-                        behavior={Platform.OS === 'ios' ? 'position' : null}
-                    >
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}> Email </Text>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                onChangeText={this.onChangeEmailText.bind(
-                                    this,
-                                    0
-                                )}
-                                keyboardType="email-address"
-                                blurOnSubmit={false}
-                                returnKeyType={'next'}
-                                onSubmitEditing={() => {
-                                    this.focusTheField('password');
-                                }}
-                                placeholder="email@example.com"
-                                underlineColorAndroid={'transparent'}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                            />
-                            {this.displayEmailErrorMessege()}
-                        </View>
-                        <View style={styles.entryFields}>
-                            <Text style={styles.placeholderText}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={styles.logoHeader}>
+                    <Image source={images.frontm_header_logo} />
+                </View>
+                <ScrollView
+                    style={styles.container}
+                    keyboardShouldPersistTaps="always"
+                >
+                    <Loader loading={this.state.loading} />
+                    <KeyboardAvoidingView style={styles.keyboardConatiner}>
+                        <View style={styles.headerContainer}>
+                            <Text style={styles.loginHeader}> Welcome! </Text>
+                            <Text style={styles.loginSubHeader}>
                                 {' '}
-                                Password{' '}
+                                Log in to FrontM{' '}
                             </Text>
-                            <TextInput
-                                style={styles.input}
-                                blurOnSubmit={true}
-                                returnKeyType={'done'}
-                                ref={input => {
-                                    this.inputs.password = input;
-                                }}
-                                onChangeText={this.onChangePasswordText.bind(
-                                    this,
-                                    1
-                                )}
-                                placeholder="password"
-                                underlineColorAndroid={'transparent'}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                secureTextEntry
-                            />
-                            {this.displayPasswordErrorMessege()}
                         </View>
-                        <Text style={styles.forgotPassowrd}>
-                            Forgot Password?
+                        <View
+                            style={styles.formContainer}
+                            behavior={Platform.OS === 'ios' ? 'position' : null}
+                        >
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    {this.state.formData[0].title}{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    onChangeText={this.onChangeEmailText.bind(
+                                        this,
+                                        0
+                                    )}
+                                    value={this.state.email}
+                                    keyboardType="email-address"
+                                    blurOnSubmit={false}
+                                    returnKeyType={'next'}
+                                    onSubmitEditing={() => {
+                                        this.focusTheField('password');
+                                    }}
+                                    placeholder="email@example.com"
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    clearButtonMode="always"
+                                />
+                                {this.displayEmailErrorMessege()}
+                            </View>
+                            <View style={styles.entryFields}>
+                                <Text style={styles.placeholderText}>
+                                    {' '}
+                                    {this.state.formData[1].title}{' '}
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    blurOnSubmit={true}
+                                    returnKeyType={'done'}
+                                    ref={input => {
+                                        this.inputs.password = input;
+                                    }}
+                                    onChangeText={this.onChangePasswordText.bind(
+                                        this,
+                                        1
+                                    )}
+                                    placeholder="password"
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    secureTextEntry
+                                    clearButtonMode="always"
+                                    value={this.state.password}
+                                />
+                                {this.displayPasswordErrorMessege()}
+                            </View>
+                            <Text style={styles.forgotPassowrd}>
+                                Forgot Password?
+                            </Text>
+                            <TouchableOpacity
+                                style={styles.buttonContainer}
+                                onPress={this.onFormSubmit.bind(this)}
+                            >
+                                <Text style={styles.buttonText}>Log in</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.socialMediaText}>
+                            {' '}
+                            Or log in with social media
                         </Text>
-                        <TouchableOpacity
-                            style={styles.buttonContainer}
-                            onPress={this.onFormSubmit.bind(this)}
-                        >
-                            <Text style={styles.buttonText}>Log in</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.socialMediaText}>
-                        {' '}
-                        Or log in with social media
-                    </Text>
-                    <View style={styles.socialMediaButtons}>
-                        <TouchableOpacity
-                            onPress={() => this.loginWithFacebook()}
-                        >
-                            {this.renderFacebookBtn()}
-                        </TouchableOpacity>
+                        <View style={styles.socialMediaButtons}>
+                            <TouchableOpacity
+                                onPress={() => this.loginWithFacebook()}
+                            >
+                                {this.renderFacebookBtn()}
+                            </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => this.loginWithGoogle()}
-                        >
-                            {this.renderGoogleBtn()}
-                        </TouchableOpacity>
-                    </View>
-                </KeyboardAvoidingView>
-            </ScrollView>
+                            <TouchableOpacity
+                                onPress={() => this.loginWithGoogle()}
+                            >
+                                {this.renderGoogleBtn()}
+                            </TouchableOpacity>
+                        </View>
+                    </KeyboardAvoidingView>
+                </ScrollView>
+            </SafeAreaView>
         );
     }
 }

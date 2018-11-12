@@ -66,7 +66,8 @@ const Styles = StyleSheet.create({
         paddingBottom: 20
     },
     formTitleContainer: {
-        padding: 20,
+        padding: 10,
+        paddingLeft: 20,
         height: 50,
         borderBottomWidth: 1,
         borderColor: GlobalColors.disabledGray,
@@ -76,9 +77,9 @@ const Styles = StyleSheet.create({
         marginBottom: 10
     },
     formTitle: {
-        color: GlobalColors.black,
-        fontWeight: '500',
-        fontSize: 15
+        color: GlobalColors.chatLeftTextColor,
+        fontWeight: '400',
+        fontSize: 16
     },
     formText: {
         color: GlobalColors.black,

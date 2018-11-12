@@ -9,7 +9,8 @@ const stylesheet = StyleSheet.create({
         width: 160,
         height: 40,
         marginHorizontal: 15,
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        backgroundColor: GlobalColors.tabBackground
     },
     button: {
         marginRight: 10

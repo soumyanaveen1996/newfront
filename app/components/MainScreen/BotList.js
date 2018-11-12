@@ -27,11 +27,16 @@ export default class BotList extends React.Component {
         this.refresh();
     }
     async componentWillMount() {
-        await RemoteBotInstall.syncronizeBots();
+        // await RemoteBotInstall.syncronizeBots()
     }
 
     async refresh() {
         // TODO: In general overall performance of this is questionable. We need a better way to know what has changed and bubble that up
+
+        if (__DEV__) {
+            console.tron('Start Refresh');
+        }
+
         const bots = this.props.bots;
         let conversations =
             (await Promise.resolve(Conversation.getLocalConversations())) || [];
@@ -63,7 +68,15 @@ export default class BotList extends React.Component {
                         '>>>>>> ' + JSON.stringify(chatData, undefined, 2)
                     );
                 }
+                // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
+                if (
+                    chatData.lastMessage &&
+                    chatData.lastMessage.getMessageType() === 'web_card'
+                ) {
+                    chatData.lastMessage = null;
+                }
                 conversation.chatData = chatData;
+
                 return conversation;
             })
         ).catch(e => {
@@ -114,6 +127,7 @@ export default class BotList extends React.Component {
 
     render() {
         const { loaded } = this.state;
+
         if (!loaded) {
             return (
                 <View style={BotListStyles.loading}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert, Keyboard } from 'react-native';
+import { View, Alert, Keyboard, BackHandler } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import {
     ConversationContext,
@@ -9,7 +9,7 @@ import {
 } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { MessageHandler } from '../../lib/message';
 import { Icons } from '../../config/icons';
@@ -72,7 +72,9 @@ export default class PeopleChat extends ChatBotScreen {
             <HeaderRightIcon
                 icon={Icons.call()}
                 onPress={() => {
-                    params.showCallMessage();
+                    if (params.showCallMessage) {
+                        params.showCallMessage();
+                    }
                 }}
                 style={{ marginRight: 0, paddingHorizontal: 0 }}
             />
@@ -130,7 +132,6 @@ export default class PeopleChat extends ChatBotScreen {
             this.newSession = false;
         }
     }
-
     // Implemented methods
     getBotKey = () => {
         return this.conversation.conversationId;
@@ -190,8 +191,6 @@ export default class PeopleChat extends ChatBotScreen {
                 }
             });
         } catch (err) {
-            console.log('[FrontM] Error in VOIP', err);
-
             Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
         }
     }

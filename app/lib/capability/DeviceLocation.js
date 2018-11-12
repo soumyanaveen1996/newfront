@@ -2,7 +2,7 @@ import Permissions from 'react-native-permissions';
 
 export class LocationError extends Error {
     constructor(code, message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }

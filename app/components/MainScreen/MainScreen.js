@@ -4,7 +4,10 @@ import {
     View,
     BackHandler,
     Alert,
-    Text
+    StatusBar,
+    AsyncStorage,
+    SafeAreaView,
+    Platform
 } from 'react-native';
 import BotList from './BotList';
 import FloatingButton from '../FloatingButton';
@@ -12,7 +15,7 @@ import { MainScreenStyles } from './styles';
 import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { Actions, ActionConst } from 'react-native-router-flux';
-// import CenterComponent from './header/CenterComponent';
+import CenterComponent from './header/CenterComponent';
 import { HeaderLeftIcon } from '../Header';
 import Config from './config';
 import appConfig from '../../config/config';
@@ -21,19 +24,35 @@ import {
     NETWORK_EVENTS_CONSTANTS,
     NetworkHandler
 } from '../../lib/network';
-import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
+import EventEmitter, {
+    MessageEvents,
+    AuthEvents,
+    TwilioEvents
+} from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
-import { PollingStrategyTypes, Settings } from '../../lib/capability';
+import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import { LoginScreen } from '../Login';
 import AfterLogin from '../../services/afterLogin';
 import { DataManager } from '../../lib/DataManager';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
+import { BackgroundImage } from '../../components/BackgroundImage';
+import { TourScreen } from '../TourScreen';
+import { TwilioVoIP } from '../../lib/twilio';
+import { connect } from 'react-redux';
+import {
+    logout,
+    refreshTimeline,
+    setCurrentScene
+} from '../../redux/actions/UserActions';
+import Store from '../../redux/store/configureStore';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -41,11 +60,13 @@ const MainScreenStates = {
     unauthenticated: 'unauthenticated'
 };
 
-export default class MainScreen extends React.Component {
+let firstTimer = false;
+
+class MainScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let ret = {
-            //headerTitle: <CenterComponent />
+            headerTitle: <CenterComponent />
         };
         if (appConfig.app.hideFilter !== true) {
             ret.headerLeft = (
@@ -104,9 +125,11 @@ export default class MainScreen extends React.Component {
         this.eventSubscription = null;
         this.state = {
             loginState: false,
-            screenState: MainScreenStates.notLoaded
+            screenState: MainScreenStates.notLoaded,
+            firstTimer: false,
+            showNetworkStatusBar: false,
+            network: null
         };
-        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
 
     showConnectionMessage(connectionType) {
@@ -125,6 +148,17 @@ export default class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        if (getFirstTime) {
+            this.setState({ firstTimer: false }, () => {
+                firstTimer = this.state.firstTimer;
+            });
+        } else {
+            this.setState({ firstTimer: true }, () => {
+                firstTimer = this.state.firstTimer;
+            });
+        }
+
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (!isUserLoggedIn) {
             this.userLoggedOutHandler();
@@ -147,14 +181,22 @@ export default class MainScreen extends React.Component {
             MessageEvents.messagePersisted,
             this.handleAsyncMessageResult.bind(this)
         );
+
+        // TwilioVoIP.init();
+
+        Network.addConnectionChangeEventListener(this.handleConnectionChange);
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.connectedToSatellite,
+            this.satelliteConnectionHandler
+        );
+        EventEmitter.addListener(
+            SatelliteConnectionEvents.notConnectedToSatellite,
+            this.satelliteDisconnectHandler
+        );
     }
 
-    componentWillMount() {
-        AfterLogin.executeAfterLogin();
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
+    async componentWillMount() {
+        // AfterLogin.executeAfterLogin();
         if (this.props.moveToOnboarding) {
             this.openOnboaringBot();
         }
@@ -164,26 +206,47 @@ export default class MainScreen extends React.Component {
         );
     }
 
-    handleBackButtonClick() {
-        if (Actions.currentScene === 'timeline') {
-            BackHandler.exitApp();
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Home');
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.remoteBotsInstalled !==
+            this.props.appState.remoteBotsInstalled
+        ) {
+            this.update();
         }
+
+        if (
+            prevProps.appState.refreshTimeline !==
+            this.props.appState.refreshTimeline
+        ) {
+            this.update();
+        }
+    }
+
+    static onEnter() {
+        Store.dispatch(setCurrentScene('Home'));
+        Store.dispatch(refreshTimeline(true));
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
+    }
+
+    static onExit() {
+        Store.dispatch(refreshTimeline(false));
+        Store.dispatch(setCurrentScene('none'));
     }
 
     userLoggedOutHandler = async () => {
         await DataManager.init();
         await ContactsCache.init();
         await MessageCounter.init();
+        this.props.logout();
 
         Actions.swiperScreen({
             type: ActionConst.REPLACE,
             swiperIndex: 4
         });
-
-        // Actions.launch({
-        //     type: ActionConst.REPLACE,
-        //     logout: true
-        // })
     };
 
     readLambdaQueue() {
@@ -225,10 +288,6 @@ export default class MainScreen extends React.Component {
         if (this.eventSubscription) {
             this.eventSubscription.remove();
         }
-        BackHandler.removeEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
         if (this.messageListener) {
             this.messageListener.remove();
             this.messageListener = null;
@@ -242,7 +301,7 @@ export default class MainScreen extends React.Component {
     }
 
     async onBack() {
-        this.update();
+        // this.update()
     }
 
     // Use this when favorites is ready
@@ -253,7 +312,8 @@ export default class MainScreen extends React.Component {
 
     handleAsyncMessageResult(event) {
         if (event && Actions.currentScene === ROUTER_SCENE_KEYS.timeline) {
-            this.refs.botList.refresh();
+            this.update();
+            // this.refs.botList.refresh();
         }
     }
 
@@ -327,7 +387,63 @@ export default class MainScreen extends React.Component {
         }
     }
 
+    satelliteConnectionHandler = () => {
+        if (this.state.network !== 'satellite') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'satellite'
+            });
+        }
+    };
+
+    satelliteDisconnectHandler = () => {
+        if (this.state.network === 'satellite') {
+            this.setState({
+                showNetworkStatusBar: false,
+                network: 'connected'
+            });
+        }
+    };
+
+    handleConnectionChange = connection => {
+        if (connection.type === 'none') {
+            this.setState({
+                showNetworkStatusBar: true,
+                network: 'none'
+            });
+        } else {
+            if (this.state.network === 'none') {
+                this.setState({
+                    showNetworkStatusBar: false,
+                    network: 'connected'
+                });
+            }
+        }
+    };
+
+    onChatStatusBarClose = () => {
+        this.setState({
+            showNetworkStatusBar: false
+        });
+    };
+
+    renderNetworkStatusBar = () => {
+        const { network, showNetworkStatusBar } = this.state;
+        if (
+            showNetworkStatusBar &&
+            (network === 'none' || network === 'satellite')
+        ) {
+            return (
+                <ChatStatusBar
+                    network={this.state.network}
+                    onChatStatusBarClose={this.onChatStatusBarClose}
+                />
+            );
+        }
+    };
+
     renderMain() {
+        const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
             return (
                 <ActivityIndicator
@@ -337,21 +453,66 @@ export default class MainScreen extends React.Component {
             );
         } else {
             return (
-                <View style={MainScreenStyles.botListContainer}>
+                <View
+                    style={
+                        showNetworkStatusBar &&
+                        (network === 'none' || network === 'satellite')
+                            ? MainScreenStyles.statusBar
+                            : MainScreenStyles.botListContainer
+                    }
+                >
                     <BotList
                         ref="botList"
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots}
                     />
-                    {this.renderFloatingButton()}
                 </View>
             );
         }
     }
 
+    displayButton() {
+        firstTimer = false;
+        console.log('this is being called', firstTimer);
+    }
+
     render() {
         return (
-            <View style={MainScreenStyles.container}>{this.renderMain()}</View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <BackgroundImage>
+                    {this.state.firstTimer && (
+                        <TourScreen
+                            showNetwork={this.displayButton.bind(this)}
+                        />
+                    )}
+                    <StatusBar
+                        hidden={false}
+                        backgroundColor="grey"
+                        barStyle={
+                            Platform.OS === 'ios'
+                                ? 'dark-content'
+                                : 'light-content'
+                        }
+                    />
+                    <NetworkStatusNotchBar />
+                    {this.renderMain()}
+                </BackgroundImage>
+            </SafeAreaView>
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => dispatch(logout())
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MainScreen);

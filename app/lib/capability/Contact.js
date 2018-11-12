@@ -9,6 +9,8 @@ import config from '../../config/config';
 import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
+import Store from '../../redux/store/configureStore';
+import { completeContactsLoad } from '../../redux/actions/UserActions';
 
 /**
  * Expected format per contact:
@@ -242,6 +244,7 @@ export default class Contact {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        Store.dispatch(completeContactsLoad(false));
                         let options = {
                             method: 'get',
                             url: `${config.network.queueProtocol}${
@@ -253,12 +256,12 @@ export default class Contact {
                                 sessionId: user.creds.sessionId
                             }
                         };
+
                         return Network(options);
                     }
                 })
                 .then(response => {
                     if (response.data) {
-                        console.log('Contacts Data : ', response.data.contacts);
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -272,6 +275,7 @@ export default class Contact {
                         });
                         var allContacts = _.concat(contacts, ignored);
                         Contact.saveContacts(allContacts);
+                        Store.dispatch(completeContactsLoad(true));
                         resolve();
                     }
                 })

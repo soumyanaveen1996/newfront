@@ -25,13 +25,24 @@ import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Contact } from '../../lib/capability';
 import { Icons } from '../../config/icons';
+import { BackgroundImage } from '../BackgroundImage';
+import EventEmitter, { AuthEvents } from '../../lib/events';
+import { connect } from 'react-redux';
+import I18n from '../../config/i18n/i18n';
+import Store from '../../redux/store/configureStore';
+import {
+    setCurrentScene,
+    completeContactsLoad,
+    refreshContacts
+} from '../../redux/actions/UserActions';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
-export default class ContactsPicker extends React.Component {
+class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerRight: ContactsPicker.rightHeaderView(state),
-            headerLeft: <HeaderBack onPress={Actions.pop} />
+            headerRight: ContactsPicker.rightHeaderView(state)
+            // headerLeft: <HeaderBack onPress={Actions.pop} />
         };
     }
 
@@ -65,17 +76,72 @@ export default class ContactsPicker extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.navigation.setParams({
             handleAddContact: this.handleAddContact.bind(this),
             showDialler: this.showDialler
         });
+
+        // const loadedContacts = await Contact.getAddedContacts()
+        // if (loadedContacts.length > 0) {
+        //     this.dataSource = new FrontMAddedContactsPickerDataSource(this)
+        //     return
+        // }
+        // Contact.refreshContacts().then(() => {
+        //     Contact.getAddedContacts().then(contacts => {
+        //         this.dataSource = new FrontMAddedContactsPickerDataSource(this)
+        //         if (contacts.length === 0) {
+        //             //If no contacts are added then go directly to contacts bot
+        //             this.handleAddContact()
+        //         }
+        //     })
+        // })
+
+        // if (!this.props.appState.contactsLoaded) {
+        //     Contact.refreshContacts();
+        //     return;
+        // }
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length === 0) {
                 //If no contacts are added then go directly to contacts bot
                 this.handleAddContact();
+            } else {
+                this.refresh();
             }
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.contactsLoaded !==
+            this.props.appState.contactsLoaded
+        ) {
+            this.refresh();
+        }
+
+        if (
+            prevProps.appState.refreshContacts !==
+            this.props.appState.refreshContacts
+        ) {
+            this.refresh();
+        }
+    }
+
+    static onEnter() {
+        const user = Store.getState().user;
+        if (user.contactsLoaded === false) {
+            Contact.refreshContacts();
+        }
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+        Store.dispatch(refreshContacts(true));
+    }
+
+    static onExit() {
+        Store.dispatch(refreshContacts(false));
+        Store.dispatch(setCurrentScene('none'));
+    }
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Contacts');
     }
 
     showDialler = () => {
@@ -89,7 +155,7 @@ export default class ContactsPicker extends React.Component {
     };
 
     onBack = () => {
-        this.refresh();
+        // this.refresh()
     };
 
     refresh = () => {
@@ -127,15 +193,13 @@ export default class ContactsPicker extends React.Component {
     }
 
     onSearchQueryChange(text) {
+        let contactsList = [];
         if (!text || text === '') {
-            this.setState({
-                contactsData: this.dataSource.getData()
-            });
+            contactsList = this.dataSource.getData();
         } else {
-            this.setState({
-                contactsData: this.dataSource.getFilteredData(text)
-            });
+            contactsList = this.dataSource.getFilteredData(text);
         }
+        this.setState({ contactsData: contactsList });
     }
 
     onContactSelected(contact) {
@@ -165,7 +229,7 @@ export default class ContactsPicker extends React.Component {
                 Actions.peopleChat({
                     bot: imBot,
                     otherParticipants: participants,
-                    type: ActionConst.REPLACE,
+                    // type: ActionConst.REPLACE,
                     onBack: this.props.onBack
                 });
             });
@@ -241,7 +305,7 @@ export default class ContactsPicker extends React.Component {
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search"
-                    selectionColor={GlobalColors.white}
+                    selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
                 />
@@ -283,9 +347,22 @@ export default class ContactsPicker extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <NetworkStatusNotchBar />
                 {this.renderSearchBar()}
                 {this.renderContactsList()}
             </SafeAreaView>
         );
     }
 }
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ContactsPicker);

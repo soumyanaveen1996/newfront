@@ -11,26 +11,28 @@ export default class AfterLogin {
 
         if (isUserLoggedIn) {
             ContactsCache.init();
-            await MessageCounter.init();
-            await NetworkPoller.start();
-            this.configureNotifications();
-            await TwilioVoIP.init();
+            MessageCounter.init();
+            NetworkPoller.start();
+            // this.configureNotifications();
+            TwilioVoIP.init();
         }
     };
 
-    configureNotifications = async () => {
-        Notification.deviceInfo().then(info => {
-            if (info) {
-                Notification.configure(this.handleNotification.bind(this));
-            }
-        });
+    configureNotifications = () => {
+        Notification.deviceInfo()
+            .then(info => {
+                if (info) {
+                    Notification.configure(this.handleNotification.bind(this));
+                }
+            })
+            .catch(err => {
+                console.log('error from after login ', err);
+            });
     };
 
     handleNotification = notification => {
         if (!notification.foreground && notification.userInteraction) {
-            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
-                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
-            }
+            Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {

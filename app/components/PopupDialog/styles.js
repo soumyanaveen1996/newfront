@@ -28,7 +28,7 @@ const Styles = StyleSheet.create({
         overflow: 'hidden'
     },
     headerContainer: {
-        height: 58,
+        height: 60,
         flexDirection: 'row'
     },
     closeButton: {

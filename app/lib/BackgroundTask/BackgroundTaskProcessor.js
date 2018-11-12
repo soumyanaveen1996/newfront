@@ -64,7 +64,6 @@ const process = async () => {
         return;
     }
     const tasks = await BackgroundTaskDAO.selectAllBackgroundTasks();
-    console.log('BackgroundProcessor::tasks::', tasks);
     _.forEach(tasks, task => {
         processTask(task, user);
     });
@@ -124,8 +123,10 @@ const processTask = async (task, user) => {
     }
 
     if (
-        task.lastRunTime + task.timeInterval < timeNow ||
-        task.lastRunTime + task.timeInterval - timeNow < 60000 * 5
+        task.lastRunTime + task.timeInterval <
+        timeNow
+        // task.lastRunTime + task.timeInterval < timeNow ||
+        // task.lastRunTime + task.timeInterval - timeNow < 60000 * 5
     ) {
         let message = new Message();
         message.setCreatedBy({

@@ -128,7 +128,8 @@ export default class ConversationListItem extends React.Component {
                     {this.renderSubview()}
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
-                    {Icons.listRightArrow()}
+                    {/* {Icons.listRightArrow()} */}
+                    <Image source={images.home_gray_arrow} />
                     <Text
                         allowFontScaling={false}
                         style={

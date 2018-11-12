@@ -9,8 +9,16 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Channel } from '../../lib/capability';
-
-export default class ChannelsList extends React.Component {
+import { BackgroundImage } from '../BackgroundImage';
+import EventEmitter, { AuthEvents } from '../../lib/events';
+import { connect } from 'react-redux';
+import Store from '../../redux/store/configureStore';
+import {
+    setCurrentScene,
+    refreshChannels
+} from '../../redux/actions/UserActions';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
@@ -20,20 +28,20 @@ export default class ChannelsList extends React.Component {
                     config={addButtonConfig}
                     onPress={state.params.handleAddChannel}
                 />
-            ),
-            headerLeft: (
-                <HeaderBack
-                    onPress={
-                        state.params.onBack
-                            ? () => {
-                                Actions.pop();
-                                state.params.onBack();
-                            }
-                            : Actions.pop
-                    }
-                    refresh={true}
-                />
             )
+            // headerLeft: (
+            //     <HeaderBack
+            //         onPress={
+            //             state.params.onBack
+            //                 ? () => {
+            //                     Actions.pop();
+            //                     state.params.onBack();
+            //                 }
+            //                 : Actions.pop
+            //         }
+            //         refresh={true}
+            //     />
+            // )
         };
     }
 
@@ -44,11 +52,64 @@ export default class ChannelsList extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.navigation.setParams({
             handleAddChannel: this.handleAddChannel.bind(this)
         });
-        this.refresh();
+        // const channels = await Channel.getSubscribedChannels()
+        // if (channels.length > 0) {
+        //     return this.refresh()
+        // }
+
+        // Channel.refreshChannels().then(async () => {
+        //     await this.wait()
+        //     return this.refresh()
+        // })
+        // if (!this.props.appState.allChannelsLoaded) {
+        //     if (__DEV__) {
+        //         console.tron('Channels Not Loaded ... Load Again!')
+        //     }
+
+        //     return Channel.refreshChannels()
+        // }
+        // this.refresh();
+        this.refresh(false, true);
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Channels');
+    }
+    async componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.allChannelsLoaded !==
+            this.props.appState.allChannelsLoaded
+        ) {
+            return this.refresh(true, false);
+        }
+
+        if (
+            prevProps.appState.refreshChannels !==
+            this.props.appState.refreshChannels
+        ) {
+            if (__DEV__) {
+                console.tron('Refresh Channels');
+            }
+
+            return this.refresh(true, false);
+        }
+    }
+    static onEnter() {
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
+        Store.dispatch(refreshChannels(true));
+    }
+
+    static onExit() {
+        Store.dispatch(refreshChannels(false));
+        Store.dispatch(setCurrentScene('none'));
+        const user = Store.getState().user;
+        if (user.allChannelsLoaded === false) {
+            Channel.refreshChannels();
+        }
     }
 
     handleAddChannel = () => {
@@ -58,12 +119,13 @@ export default class ChannelsList extends React.Component {
     };
 
     onBack = () => {
-        this.refresh(true);
+        // this.refresh()
     };
 
     async refresh(onback = false, handleEmptyChannels = true) {
         const channels = await Channel.getSubscribedChannels();
-        if (handleEmptyChannels && channels.length === 0) {
+
+        if (handleEmptyChannels && channels.length == 0) {
             if (onback) {
                 if (this.props.onBack) {
                     this.props.onBack();
@@ -127,7 +189,8 @@ export default class ChannelsList extends React.Component {
 
     render() {
         return (
-            <View>
+            <BackgroundImage>
+                <NetworkStatusNotchBar />
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.id}
@@ -136,7 +199,20 @@ export default class ChannelsList extends React.Component {
                     extraData={this.state}
                 />
                 <Toast ref="toast" positionValue={200} />
-            </View>
+            </BackgroundImage>
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChannelsList);

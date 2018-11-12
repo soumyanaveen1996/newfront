@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import { Platform } from 'react-native';
+import { SCREEN_HEIGHT } from './config';
+import { SCREEN_WIDTH } from './config';
 
 export default StyleSheet.create({
     container: {
@@ -8,19 +10,34 @@ export default StyleSheet.create({
         padding: 20,
         backgroundColor: GlobalColors.white
     },
+    logoHeader: {
+        width: SCREEN_WIDTH,
+        height: 45,
+        borderStyle: 'solid',
+        borderBottomColor: 'rgb(192, 192, 192)',
+        borderBottomWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     keyboardConatiner: {
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center'
     },
-    loginHeader: {
+    headerContainer: {
         width: 300,
-        height: 45,
-        textAlign: 'left',
+        marginTop: '5%',
+        alignItems: 'center'
+    },
+    loginHeader: {
         fontSize: 28,
         color: 'rgba(74,74,74,1)',
-        fontWeight: '300',
-        marginTop: '20%'
+        fontWeight: '300'
+    },
+    loginSubHeader: {
+        fontSize: 20,
+        color: 'rgba(74,74,74,1)',
+        fontWeight: '300'
     },
     formContainer: Platform.select({
         ios: {
@@ -120,10 +137,12 @@ export default StyleSheet.create({
     errorContainer: Platform.select({
         ios: {
             position: 'absolute',
+            minWidth: 180,
             bottom: -30,
             right: 0
         },
         android: {
+            minWidth: 180,
             flex: 1,
             alignItems: 'flex-end'
         }
@@ -133,8 +152,7 @@ export default StyleSheet.create({
         ios: {
             backgroundColor: 'rgba(229,69,59,1)',
             zIndex: 999999,
-            minWidth: 150,
-            padding: 5,
+            minWidth: 180,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
@@ -143,8 +161,7 @@ export default StyleSheet.create({
         },
         android: {
             backgroundColor: 'rgba(229,69,59,1)',
-            width: 150,
-            padding: 5,
+            width: 180,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,
@@ -154,6 +171,7 @@ export default StyleSheet.create({
     }),
     errorText: {
         color: '#ffffff',
-        textAlign: 'center'
+        textAlign: 'center',
+        padding: 6
     }
 });

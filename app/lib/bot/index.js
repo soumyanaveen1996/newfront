@@ -57,15 +57,15 @@ class Bot extends events.EventEmitter {
         }
 
         // Check if the bot to install is in list of installed bots:
-        const bots = await Bot.getInstalledBots();
-        const present = _.findIndex(bots, { botId: bot.botId });
+        // const bots = await Bot.getInstalledBots()
+        // const present = _.findIndex(bots, {botId: bot.botId})
 
-        if (present < 0) {
-            throw new Error(
-                'The supplied bot is not an installed bot:',
-                bot.botId
-            );
-        }
+        // if (present < 0) {
+        //     throw new Error(
+        //         'The supplied bot is not an installed bot:',
+        //         bot.botId
+        //     )
+        // }
 
         await bot.Delete();
     };
@@ -128,6 +128,8 @@ class Bot extends events.EventEmitter {
             if (!_.isArray(catalog)) {
                 throw new NetworkError('Error getting catalog');
             }
+
+            // console.log('data of catalog ', catalog);
 
             catalog = _.map(catalog, bot =>
                 _.merge(bot, { logoUrl: FrontmUtils.botLogoUrl(bot.logoUrl) })

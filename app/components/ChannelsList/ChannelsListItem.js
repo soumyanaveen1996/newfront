@@ -75,7 +75,6 @@ export default class ChannelsListItem extends React.Component {
     }
 
     onItemPressed() {
-        console.log('On Item pressed');
         if (this.props.onChannelTapped) {
             this.props.onChannelTapped(this.props.channel);
         }

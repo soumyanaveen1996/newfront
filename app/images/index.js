@@ -38,6 +38,7 @@ const images = {
     walkthrough_image: require('./walkthrough/image.png'),
     gsm: require('./icons/gsm.png'),
     satellite: require('./icons/satellite.png'),
+    refresh: require('./icons/network-icon-refresh.png'),
     user_image: require('./chat/user_image.png'),
     splash_page_logo: { uri: 'FM-logo-landing page' },
     trail_arrow: require('./map/trail_arrow.png'),
@@ -51,7 +52,24 @@ const images = {
     preview_slider_4: require('./preview-slide-4/preview-slide-4.png'),
     pass_checkbox_empty: require('./pass-checkbox-empty/pass-checkbox-empty.png'),
     pass_checkbox_checked: require('./pass-checkbox-checked/pass-checkbox-checked.png'),
-    blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png')
+    blue_arrow: require('./cta-small-blue-arrow/cta-small-blue-arrow.png'),
+    logo_background: require('./logo-background/logo-background.png'),
+    tabbar_home: require('./tabbar-home/tabbar-home.png'),
+    tabbar_home_active: require('./tabbar-home-active/tabbar-home-active.png'),
+    tabbar_contacts: require('./tabbar-contacts/tabbar-contacts.png'),
+    tabbar_contacts_active: require('./tabbar-contacts-active/tabbar-contacts-active.png'),
+    tabbar_channels: require('./tabbar-channels/tabbar-channels.png'),
+    tabbar_channels_active: require('./tabbar-channels-active/tabbar-channels-active.png'),
+    tabbar_marketplace: require('./tabbar-marketplace/tabbar-marketplace.png'),
+    tabbar_marketplace_active: require('./tabbar-marketplace-active/tabbar-marketplace-active.png'),
+    home_gray_arrow: require('./home-gray-arrow/home-gray-arrow.png'),
+    backgroundImage: require('./background/background.png'),
+    network_icon_automatic: require('./network-icon-automatic/network-icon-automatic.png'),
+    dot_blue: require('./dot-blue/dot-blue.png'),
+    dot_gray: require('./dot-gray/dot-gray.png'),
+    frontm_logo: require('./frontm-logo/frontm-logo.png'),
+    bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png'),
+    frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png')
 };
 
 export default images;

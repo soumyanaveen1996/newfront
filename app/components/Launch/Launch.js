@@ -5,7 +5,8 @@ import {
     Image,
     Platform,
     PushNotificationIOS,
-    AsyncStorage
+    AsyncStorage,
+    StatusBar
 } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
@@ -33,13 +34,17 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import Store from '../../lib/Store';
+import { PhoneState } from '../../components/Phone';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import AfterLogin from '../../services/afterLogin';
+import DefaultPreference from 'react-native-default-preference';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-const CODE_PUSH_ACTIVATE = true;
-// const CODE_PUSH_ACTIVATE = false;
-const VERSION = 38; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+// const CODE_PUSH_ACTIVATE = true;
+const CODE_PUSH_ACTIVATE = false;
+const VERSION = 39; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -55,7 +60,6 @@ export default class Splash extends React.Component {
 
     async componentDidMount() {
         // Override logging in prod builds
-        console.log(Config);
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
 
@@ -106,6 +110,9 @@ export default class Splash extends React.Component {
             null
         );
 
+        Store.initStore({
+            satelliteConnection: false
+        });
         // Before login
         let versionString = await DeviceStorage.get(VERSION_KEY);
         let version = parseInt(versionString, 10);
@@ -113,7 +120,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -131,9 +138,34 @@ export default class Splash extends React.Component {
         const checkStatus = await AsyncStorage.getItem('signupStage');
 
         if (isUserLoggedIn) {
+            await TwilioVoIP.init();
             Auth.getUser()
                 .then(user => {
+                    if (Platform.OS === 'android') {
+                        DefaultPreference.setName('NativeStorage');
+                    }
+                    const ContactsURL = `${Config.network.queueProtocol}${
+                        Config.proxy.host
+                    }${Config.network.userDetailsPath}`;
+                    const ContactsBOT = SystemBot.contactsBot.botId;
+                    DefaultPreference.set('SESSION', user.creds.sessionId);
+                    DefaultPreference.set('URL', ContactsURL);
+                    DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
                     if (user) {
+                        AfterLogin.executeAfterLogin();
+                        this.listenToEvents();
+                        const gState = Store.getState();
+                        console.log(gState);
+                        const { call_state } = gState;
+
+                        if (call_state && call_state === 'PENDING') {
+                            Actions.phone({
+                                type: ActionConst.REPLACE,
+                                state: PhoneState.incomingcall,
+                                data: gState
+                            });
+                            return;
+                        }
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();
@@ -141,6 +173,7 @@ export default class Splash extends React.Component {
                 })
                 .catch(err => {
                     console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+                    this.goToLoginPage();
                 });
         } else {
             if (checkStatus && checkStatus === 'confirmCode') {
@@ -149,6 +182,14 @@ export default class Splash extends React.Component {
                 this.goToLoginPage();
             }
         }
+
+        // Chain all setup stuff
+        // Before login
+        persist
+            .runMigrations() // before login
+            .catch(err => {
+                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
+            });
     }
 
     sendOnboardingBackgroundMessage = async () => {
@@ -164,12 +205,16 @@ export default class Splash extends React.Component {
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     };
 
-    configureNotifications = async () => {
-        Notification.deviceInfo().then(info => {
-            if (info) {
-                Notification.configure(this.handleNotification.bind(this));
-            }
-        });
+    configureNotifications = () => {
+        Notification.deviceInfo()
+            .then(info => {
+                if (info) {
+                    Notification.configure(this.handleNotification);
+                }
+            })
+            .catch(err => {
+                console.log('error from launch ', err);
+            });
     };
 
     notificationRegistrationHandler = () => {
@@ -178,9 +223,7 @@ export default class Splash extends React.Component {
 
     handleNotification = notification => {
         if (!notification.foreground && notification.userInteraction) {
-            if (Actions.currentScene !== ROUTER_SCENE_KEYS.timeline) {
-                Actions.popTo(ROUTER_SCENE_KEYS.timeline);
-            }
+            Actions.replace(ROUTER_SCENE_KEYS.timeline);
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
@@ -205,7 +248,8 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
-        Actions.main({
+        synchronizeUserData();
+        Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding
         });
@@ -262,6 +306,13 @@ export default class Splash extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="grey"
+                    barStyle={
+                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+                    }
+                />
                 <Image
                     style={styles.imageStyle}
                     source={Icon}

@@ -31,7 +31,12 @@ const ROUTER_SCENE_KEYS = {
     signupScreen: 'signupScreen',
     swiperScreen: 'swiperScreen',
     confirmationScreen: 'confirmationScreen',
-    resendCodeScreen: 'resendCodeScreen'
+    resendCodeScreen: 'resendCodeScreen',
+    tabBar: 'tabbar',
+    homeMain: 'homeMain',
+    contactsMain: 'contactsMain',
+    channelsMenu: 'channelsMenu',
+    marketplaceMenu: 'marketplaceMenu'
 };
 
 export default ROUTER_SCENE_KEYS;

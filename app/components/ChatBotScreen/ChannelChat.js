@@ -1,9 +1,10 @@
 import React from 'react';
+import { BackHandler } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { Queue } from '../../lib/network';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import { Icons } from '../../config/icons';
@@ -127,10 +128,6 @@ export default class ChannelChat extends ChatBotScreen {
                 );
             }
             if (this.channel) {
-                console.log(
-                    'Conversation ID from channel : ',
-                    this.channel.channelId
-                );
             }
             // Existing conversation - so pick from storage
             if (this.conversation) {
@@ -142,6 +139,7 @@ export default class ChannelChat extends ChatBotScreen {
                     )
                 );
                 this.setNavigationParams(context, user);
+
                 return context;
             }
             // Else its a new conversation with participants.
@@ -158,8 +156,6 @@ export default class ChannelChat extends ChatBotScreen {
                 )
             );
             ConversationContext.updateParticipants(context, this.participants);
-
-            console.log('Conversation Context : ', context);
 
             // Use conversationId as the botkey for people chat
             this.botKey = context.conversationId;
@@ -189,10 +185,6 @@ export default class ChannelChat extends ChatBotScreen {
             this.newSession = true;
             return context;
         } catch (error) {
-            console.log(
-                'Error getting a conversation context for channel chat',
-                error
-            );
             throw error;
         }
     }
@@ -269,7 +261,6 @@ export default class ChannelChat extends ChatBotScreen {
     }
 
     async onRefresh() {
-        console.log('Loading before : ', this.oldestLoadedDate());
         if (this.allOldMessagesLoaded) {
             this.setState({
                 refreshing: false

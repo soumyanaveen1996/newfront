@@ -5,6 +5,8 @@ import { Auth, Network } from '../capability';
 import config from '../../config/config';
 import _ from 'lodash';
 import { NetworkHandler } from '../network';
+import Store from '../../redux/store/configureStore';
+import { completeBotInstall } from '../../redux/actions/UserActions';
 
 class RemoteBotInstall {
     /**
@@ -52,13 +54,15 @@ class RemoteBotInstall {
      */
     static isSatellite = () =>
         new Promise((resolve, reject) => {
-            Auth.getUser()
-                .then(user => {
-                    return NetworkHandler.readQueue(user);
-                })
-                .then(res => {
-                    resolve(res.data.onSatellite);
-                });
+            return resolve(false);
+
+            // Auth.getUser()
+            //     .then(user => {
+            //         return NetworkHandler.readQueue(user)
+            //     })
+            //     .then(res => {
+            //         resolve(res.data.onSatellite)
+            //     })
         });
 
     /**
@@ -96,6 +100,7 @@ class RemoteBotInstall {
                     }
                 })
                 .then(() => {
+                    Store.dispatch(completeBotInstall(false));
                     return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
@@ -126,10 +131,12 @@ class RemoteBotInstall {
                             })
                         ) {
                             console.log('Bots installed');
-                            resolve();
+                            Store.dispatch(completeBotInstall(true));
+                            return resolve();
                         } else {
                             console.log('No bot was installed');
-                            resolve();
+                            Store.dispatch(completeBotInstall(true));
+                            return resolve();
                         }
                     });
                 })
@@ -159,7 +166,7 @@ function performInstallation(botManifest) {
                 }
                 resolve(true);
             } else {
-                console.log(botManifest.botName + ': already installed');
+                // console.log(botManifest.botName + ': already installed');
                 resolve(false);
             }
         } catch (e) {

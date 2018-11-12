@@ -12,7 +12,11 @@ const stylesheet = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: GlobalColors.white
+        justifyContent: 'flex-end'
+    },
+    messagesList: {
+        flexGrow: 0,
+        overflow: 'visible'
     },
     row: {
         marginTop: 12,
@@ -40,22 +44,24 @@ const stylesheet = StyleSheet.create({
         borderRadius: 15
     },
     bubble: {
-        maxWidth: '90%',
+        maxWidth: '85%',
         paddingVertical: 5,
         paddingHorizontal: 10,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        backgroundColor: GlobalColors.botChatBubbleColor,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
     rightBubble: {
-        backgroundColor: GlobalColors.accent,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8
+        backgroundColor: GlobalColors.tabBackground,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
     },
     videoContainer: {
         padding: 5,
@@ -67,10 +73,10 @@ const stylesheet = StyleSheet.create({
     ellipsisBubble: {
         height: 30,
         width: 75,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-        borderBottomLeftRadius: 8,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
         backgroundColor: GlobalColors.botChatBubbleColor,
         overflow: 'hidden'
     },
@@ -86,11 +92,13 @@ const stylesheet = StyleSheet.create({
         borderBottomLeftRadius: 8
     },
     message: {
+        paddingLeft: 10,
         fontSize: 16,
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     rightMessage: {
-        color: GlobalColors.white
+        paddingLeft: 15,
+        color: GlobalColors.chatRightTextColor
     },
     imageMessage: {
         width: Config.ChatImageOptions.width,
@@ -105,19 +113,15 @@ const stylesheet = StyleSheet.create({
     },
     chatTextInput: {
         paddingHorizontal: 20,
-        fontSize: 18,
+        fontSize: 16,
         flex: 1,
-        borderColor: 'rgb(202, 206, 204)',
         backgroundColor: GlobalColors.white,
-        borderRadius: 18,
-        borderWidth: 1,
-        minHeight: 36
+        minHeight: 28
     },
     chatBarMoreButton: {
-        width: 32,
-        height: 32,
-        marginLeft: 10,
-        marginRight: 5
+        width: 16,
+        height: 15,
+        marginLeft: 10
     },
     cancelButton: {
         width: 32,
@@ -134,18 +138,30 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center',
         width: '100%'
     },
+    micContainer: {
+        width: 20,
+        height: 20,
+        marginRight: 5,
+        marginLeft: 10
+    },
     chatBarSpeakButton: {
-        width: 32,
-        height: 32,
-        marginRight: 10,
-        marginLeft: 10
+        width: 11,
+        height: 20
     },
-    chatBarSendButton: {
-        width: 32,
-        height: 32,
-        marginRight: 10,
-        marginLeft: 10
-    },
+    chatBarSendButton: Platform.select({
+        ios: {
+            width: 22,
+            height: 20,
+            marginRight: 10,
+            marginLeft: 10
+        },
+        android: {
+            width: 22,
+            height: 20,
+            marginRight: 10,
+            marginLeft: 10
+        }
+    }),
     headerTitle: {
         fontSize: 17,
         color: GlobalColors.white,
@@ -207,10 +223,10 @@ const stylesheet = StyleSheet.create({
         height: 30
     },
     talkLeftIcon: {
-        borderRightWidth: 10
+        borderRightWidth: 0
     },
     talkRightIcon: {
-        borderLeftWidth: 10,
+        borderLeftWidth: 0,
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
     },
@@ -260,6 +276,7 @@ const stylesheet = StyleSheet.create({
         color: 'rgb(164, 164, 164)',
         fontWeight: 'bold',
         fontStyle: 'italic',
+        marginBottom: 10,
         fontSize: 12
     },
     buttonMsgParent: {
@@ -269,9 +286,10 @@ const stylesheet = StyleSheet.create({
     },
     userNameStyle: {
         display: 'flex',
-        color: GlobalColors.white,
+        color: GlobalColors.chatLeftTextColor,
         fontWeight: '600',
         fontSize: 12,
+        paddingLeft: 10,
         marginBottom: 3,
         fontStyle: 'italic',
         height: 15
@@ -301,7 +319,7 @@ const stylesheet = StyleSheet.create({
         color: GlobalColors.botChatBubbleColor
     },
     buttonBrightText: {
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     formButtonWrapper: {
         paddingVertical: 5,
@@ -310,16 +328,17 @@ const stylesheet = StyleSheet.create({
         borderTopRightRadius: 8,
         borderBottomRightRadius: 8,
         borderBottomLeftRadius: 8,
-        backgroundColor: GlobalColors.botChatBubbleColor,
+        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         width: '90%',
         height: 54
     },
+
     formButton: {
-        backgroundColor: GlobalColors.botChatBubbleColor,
-        borderColor: GlobalColors.white,
+        backgroundColor: GlobalColors.white,
+        borderColor: GlobalColors.chatLeftTextColor,
         borderWidth: 1,
         borderRadius: 4,
         width: '80%',
@@ -328,7 +347,7 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center'
     },
     formButtonText: {
-        color: GlobalColors.white
+        color: GlobalColors.chatLeftTextColor
     },
     closeButton: {
         height: 24,
@@ -347,14 +366,17 @@ const stylesheet = StyleSheet.create({
         backgroundColor: 'rgb(248, 248, 248)'
     },
     chatBar: {
-        minHeight: 50,
-        maxHeight: 108,
+        width: '85%',
+        minHeight: 40,
+        maxHeight: 95,
         flexDirection: 'row',
-        backgroundColor: 'rgb(248, 248, 248)',
+        backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
         paddingVertical: 7,
-        borderTopWidth: 1,
-        borderColor: 'rgb(202, 206, 204)'
+        borderWidth: 1,
+        borderRadius: 10,
+        marginBottom: 10,
+        borderColor: 'rgba(91,91,91,0.2)'
     },
     chatBarSatellite: {
         backgroundColor: 'rgb(255, 218, 185)'

@@ -10,6 +10,10 @@ const NotificationKeys = {
 export default class Notification {
     static register = () =>
         new Promise((resolve, reject) => {
+            let timer = setTimeout(function() {
+                reject('No Notifications');
+            }, 6000);
+
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {
                     if (value) {
@@ -19,9 +23,12 @@ export default class Notification {
                                 EventEmitter.emit(
                                     NotificationEvents.registeredNotifications
                                 );
+
+                                clearTimeout(timer);
                                 resolve(value);
                             })
                             .catch(error => {
+                                clearTimeout(timer);
                                 reject(error);
                             });
                     } else {
@@ -41,6 +48,7 @@ export default class Notification {
                                         'Notification device info : ',
                                         notificationDeviceInfo
                                     );
+
                                     DeviceStorage.save(
                                         NotificationKeys.notification,
                                         notificationDeviceInfo
@@ -49,18 +57,23 @@ export default class Notification {
                                             EventEmitter.emit(
                                                 NotificationEvents.registeredNotifications
                                             );
+                                            clearTimeout(timer);
                                             resolve(notificationDeviceInfo);
                                         })
                                         .catch(error => {
+                                            clearTimeout(timer);
                                             reject(error);
                                         });
                                 } else {
+                                    clearTimeout(timer);
                                     reject(new Error('User cancelled'));
                                 }
                             },
                             senderID: config.gcm.senderID,
+                            requestPermissions: true,
                             onError: error => {
                                 console.log('onError', error);
+                                clearTimeout(timer);
                                 reject(error);
                             }
                         });

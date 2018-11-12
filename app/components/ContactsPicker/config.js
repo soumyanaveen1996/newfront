@@ -16,7 +16,7 @@ export const addButtonConfig = {
     name: 'add',
     size: 30,
     underlayColor: 'transparent',
-    color: '#fff',
+    color: GlobalColors.sideButtons,
     fontWeight: '500'
 };
 

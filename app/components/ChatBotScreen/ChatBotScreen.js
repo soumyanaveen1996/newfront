@@ -8,10 +8,11 @@ import {
     RefreshControl,
     View,
     Alert,
+    BackHandler,
     SafeAreaView,
     Platform
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
@@ -70,6 +71,9 @@ import {
     DocumentPicker,
     DocumentPickerUtil
 } from 'react-native-document-picker';
+import { SmartSuggestions } from '../SmartSuggestions';
+import { WebCards } from '../WebCards';
+import { BackgroundImage } from '../BackgroundImage';
 
 const R = require('ramda');
 
@@ -153,10 +157,12 @@ export default class ChatBotScreen extends React.Component {
         this.allLocalMessagesLoaded = false;
 
         this.state = {
+            smartSuggesions: [],
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false
+            refreshing: false,
+            sliderClosed: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -322,6 +328,12 @@ export default class ChatBotScreen extends React.Component {
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
         );
+
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this.keyboardDidHide.bind(this)
+        );
+
         Network.addConnectionChangeEventListener(this.handleConnectionChange);
         EventEmitter.addListener(
             SatelliteConnectionEvents.connectedToSatellite,
@@ -485,6 +497,9 @@ export default class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardDidHideListener) {
+            this.keyboardDidHideListener.remove();
+        }
         Network.removeConnectionChangeEventListener(
             this.handleConnectionChange
         );
@@ -543,6 +558,9 @@ export default class ChatBotScreen extends React.Component {
     keyboardWillShow = () => {
         if (this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
         }
     };
 
@@ -550,6 +568,16 @@ export default class ChatBotScreen extends React.Component {
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
+            this.setState({ sliderClosed: true });
+        } else {
+            this.setState({ sliderClosed: false });
+        }
+    };
+
+    keyboardDidHide = () => {
+        this.scrollToBottomIfNeeded();
+        if (Platform.OS === 'android' && this.state.sliderClosed) {
+            this.setState({ showSlider: true });
         }
     };
 
@@ -651,12 +679,23 @@ export default class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
+
         this.stopWaiting();
         this.countMessage(message);
 
         // Update the bot interface
         // Push a new message to the end
         if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
+        ) {
+            this.updateSmartSuggestions(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+        ) {
+            this.updateChat(message);
+        } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
@@ -708,6 +747,12 @@ export default class ChatBotScreen extends React.Component {
         // Has to be Immutable for react
     }
 
+    updateSmartSuggestions(message) {
+        // Suggestions
+        this.smartSuggestionsArea.update([]);
+        this.smartSuggestionsArea.update(message.getMessage());
+    }
+
     fireSlider(message) {
         // Slider
         Keyboard.dismiss();
@@ -725,6 +770,14 @@ export default class ChatBotScreen extends React.Component {
             chartData: message.getMessage(),
             chartTitle: I18n.t('SNR_Chart_title')
         });
+    }
+
+    // picked from Smart Suggestions
+    sendSmartReply(selectedSuggestion) {
+        let message = new Message({ addedByBot: false });
+        message.setCreatedBy(this.getUserId());
+        // message.sliderResponseMessage(selectedRows);
+        return this.sendMessage(message);
     }
 
     sendSliderResponseMessage(selectedRows) {
@@ -982,20 +1035,32 @@ export default class ChatBotScreen extends React.Component {
     renderItem({ item }) {
         const message = item.message;
         if (message.isMessageByBot()) {
-            return (
-                <ChatMessage
-                    message={message}
-                    isUserChat={this.isUserChat()}
-                    shouldShowUserName={this.shouldShowUserName()}
-                    user={this.user}
-                    imageSource={{ uri: this.bot.logoUrl }}
-                    onDoneBtnClick={this.onButtonDone.bind()}
-                    onFormCTAClick={this.onFormDone.bind(this)}
-                    onFormCancel={this.onFormCancel.bind(this)}
-                    onFormOpen={this.onFormOpen.bind(this)}
-                    showTime={item.showTime}
-                />
-            );
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+            ) {
+                return (
+                    <WebCards
+                        webCardsList={message.getMessage()}
+                        previews={message.getMessageOptions()}
+                    />
+                );
+            } else {
+                return (
+                    <ChatMessage
+                        message={message}
+                        isUserChat={this.isUserChat()}
+                        shouldShowUserName={this.shouldShowUserName()}
+                        user={this.user}
+                        imageSource={{ uri: this.bot.logoUrl }}
+                        onDoneBtnClick={this.onButtonDone.bind()}
+                        onFormCTAClick={this.onFormDone.bind(this)}
+                        onFormCancel={this.onFormCancel.bind(this)}
+                        onFormOpen={this.onFormOpen.bind(this)}
+                        showTime={item.showTime}
+                    />
+                );
+            }
         } else {
             return (
                 <ChatMessage
@@ -1493,6 +1558,18 @@ export default class ChatBotScreen extends React.Component {
                 });
         });
 
+    renderSmartSuggestions() {
+        return (
+            <SmartSuggestions
+                ref={smartSuggestionsArea => {
+                    this.smartSuggestionsArea = smartSuggestionsArea;
+                }}
+                suggestions={this.state.smartSuggesions}
+                onReplySelected={this.onSendMessage.bind(this)}
+            />
+        );
+    }
+
     renderSlider() {
         const message = this.state.message;
         const doneFn = this.state.overrideDoneFn
@@ -1617,45 +1694,52 @@ export default class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView
-                style={chatStyles.safeArea}
-                accessibilityLabel="Messages List"
-                testID="messages-list"
-            >
-                <KeyboardAvoidingView
-                    style={chatStyles.container}
-                    behavior={Platform.OS === 'ios' ? 'padding' : null}
-                    keyboardVerticalOffset={
-                        Constants.DEFAULT_HEADER_HEIGHT +
-                        (Utils.isiPhoneX() ? 24 : 0)
-                    }
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                <BackgroundImage
+                    accessibilityLabel="Messages List"
+                    testID="messages-list"
                 >
-                    <FlatList
-                        accessibilityLabel="Messages List"
-                        testID="messages-list"
-                        ref={list => {
-                            this.chatList = list;
-                            this.checkForScrolling();
-                        }}
-                        data={this.state.messages}
-                        renderItem={this.renderItem.bind(this)}
-                        onLayout={this.onChatListLayout.bind(this)}
-                        refreshControl={
-                            <RefreshControl
-                                colors={['#9Bd35A', '#689F38']}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
+                    <KeyboardAvoidingView
+                        style={chatStyles.container}
+                        behavior={Platform.OS === 'ios' ? 'padding' : null}
+                        keyboardVerticalOffset={
+                            Constants.DEFAULT_HEADER_HEIGHT +
+                            (Utils.isiPhoneX() ? 24 : 0)
                         }
-                        onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
-                            this
-                        )}
-                    />
-                    {this.state.showSlider ? this.renderSlider() : null}
-                    {this.renderChatInputBar()}
-                    {this.renderNetworkStatusBar()}
-                    {this.renderCallModal()}
-                </KeyboardAvoidingView>
+                    >
+                        <FlatList
+                            style={chatStyles.messagesList}
+                            ListFooterComponent={this.renderSmartSuggestions()}
+                            accessibilityLabel="Messages List"
+                            testID="messages-list"
+                            ref={list => {
+                                this.chatList = list;
+                                this.checkForScrolling();
+                            }}
+                            data={this.state.messages}
+                            renderItem={this.renderItem.bind(this)}
+                            onLayout={this.onChatListLayout.bind(this)}
+                            refreshControl={
+                                <RefreshControl
+                                    colors={['#9Bd35A', '#689F38']}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh.bind(this)}
+                                />
+                            }
+                            onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
+                                this
+                            )}
+                        />
+                        {this.state.showSlider ? this.renderSlider() : null}
+                        {/* {this.renderSmartSuggestions()} */}
+                        <View style={{ alignItems: 'center' }}>
+                            {this.renderChatInputBar()}
+                        </View>
+
+                        {this.renderNetworkStatusBar()}
+                        {this.renderCallModal()}
+                    </KeyboardAvoidingView>
+                </BackgroundImage>
             </SafeAreaView>
         );
     }

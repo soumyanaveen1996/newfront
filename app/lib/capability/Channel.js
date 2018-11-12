@@ -4,10 +4,12 @@ import I18n from '../../config/i18n/i18n';
 import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
+import Store from '../../redux/store/configureStore';
+import { completeChannelInstall } from '../../redux/actions/UserActions';
 
 export class ChannelError extends Error {
     constructor(code, message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }
@@ -252,6 +254,7 @@ export default class Channel {
                                 domains: user.info.domains
                             }
                         };
+                        Store.dispatch(completeChannelInstall(false));
                         return Network(options);
                     }
                 })
@@ -267,10 +270,18 @@ export default class Channel {
                                 channel.channelId
                             );
                         });
+                        Store.dispatch(completeChannelInstall(true));
                         return Promise.all(channelInsertPromises);
                     }
                 })
-                .then(resolve)
-                .catch(reject);
+                .then(() => {
+                    resolve();
+                })
+                .catch(() => {
+                    if (__DEV__) {
+                        console.tron('Cannot Load Cahnnels');
+                    }
+                    reject();
+                });
         });
 }

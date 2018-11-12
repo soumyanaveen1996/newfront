@@ -163,8 +163,6 @@ export default class ChatMessage extends React.Component {
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
-        console.log('Video URL : ', url, headers);
-
         // http://techslides.com/demos/sample-videos/small.mp4
         const component = (
             <View style={videoContainerStyle(this.props.alignRight)}>
@@ -175,9 +173,6 @@ export default class ChatMessage extends React.Component {
                     videoHeight={300}
                     autoplay={false}
                     loop={false}
-                    onError={error =>
-                        console.log('AmalVideo: Error in loading file', error)
-                    }
                     onLoad={() => console.log('AmalVideo: File loaded')}
                     onLoadStart={() =>
                         console.log('AmalVideo: File load started')
@@ -209,13 +204,16 @@ export default class ChatMessage extends React.Component {
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
+        const audioStyle = {
+            ...chatMessageBubbleStyle(
+                this.props.alignRight,
+                this.props.imageSource
+            ),
+            backgroundColor: 'rgba(0, 167, 214, 1)',
+            borderRadius: 12
+        };
         const component = (
-            <View
-                style={chatMessageBubbleStyle(
-                    this.props.alignRight,
-                    this.props.imageSource
-                )}
-            >
+            <View style={audioStyle}>
                 <AudioPlayer audioSource={{ uri: url, headers: headers }} />
             </View>
         );
@@ -232,7 +230,6 @@ export default class ChatMessage extends React.Component {
             !message.isFavorite()
         )
             .then(success => {
-                console.log('markBotMessageAsFavorite' + !message.isFavorite());
                 message.setFavorite(!message.isFavorite());
                 this.setState({
                     isFavorite: message.isFavorite()
@@ -405,7 +402,12 @@ export default class ChatMessage extends React.Component {
                         this.props.imageSource
                     )}
                 >
-                    <DotIndicator color="white" size={8} count={3} />
+                    <DotIndicator
+                        style={{ backgroundColor: 'rgba(255,255,255,1)' }}
+                        color="rgba(0,0,0,0.4)"
+                        size={8}
+                        count={3}
+                    />
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);

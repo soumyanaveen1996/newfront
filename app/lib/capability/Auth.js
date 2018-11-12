@@ -16,6 +16,8 @@ import Bot from '../../lib/bot/index';
 import { Network } from '../capability';
 import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
+import { Twilio } from '../twilio';
+import TwilioVoice from 'react-native-twilio-programmable-voice';
 
 const USER_SESSION = 'userSession';
 
@@ -27,7 +29,7 @@ export const AUTH_PROVIDERS = {
 
 export class AuthError extends Error {
     constructor(code, message) {
-        super();
+        super(code, message);
         this.code = code;
         this.message = message;
     }
@@ -429,7 +431,35 @@ export default class Auth {
      */
     static logout = () =>
         new Promise((resolve, reject) => {
-            DeviceStorage.delete(USER_SESSION)
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        // Twilio.disableVoip(user)
+                        //     .then(data => {
+                        //         if (__DEV__) {
+                        //             console.tron('VOIP HAS been Disabled', data)
+                        //         }
+                        //     })
+                        //     .catch(err => {
+                        //         // Supress Errro and log only
+                        //         if (__DEV__) {
+                        //             console.tron('Cannot Disable VOIP')
+                        //         }
+                        //     })
+                        //     .finally(() => {
+                        //         resolve()
+                        //     })
+                        Twilio.getAccessToken(user).then(accessToken => {
+                            TwilioVoice.unregister();
+                            resolve();
+                        });
+                    } else {
+                        resolve();
+                    }
+                })
+                .then(() => {
+                    DeviceStorage.delete(USER_SESSION);
+                })
                 .then(() => {
                     return Bot.unInstallBots();
                 })

@@ -9,6 +9,7 @@ import { SatelliteConnectionEvents } from '../events';
 import _ from 'lodash';
 import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
+import Store from '../../lib/Store';
 import PushNotification from 'react-native-push-notification';
 
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
@@ -19,16 +20,22 @@ let processingFutureRequest = false;
  *  - Right now it is kinda dumb
  */
 const poll = () => {
-    console.log('NetworkHandler::poll::called at ', new Date());
     Auth.getUser().then(authUser => {
+        if (__DEV__) {
+            console.tron('Polling');
+        }
+
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
     });
 };
 
 const readLambda = () => {
-    console.log('NetworkHandler::readLambda::called at ', new Date());
     Auth.getUser().then(authUser => {
+        if (__DEV__) {
+            console.tron('Read lambda');
+        }
+
         processNetworkQueue();
         readRemoteLambdaQueue(authUser);
     });
@@ -47,10 +54,6 @@ const handleLambdaResponse = (res, user) => {
 };
 
 const readRemoteLambdaQueue = user => {
-    console.log(
-        'NetworkHandler::readRemoteLambdaQueue::called at ',
-        new Date()
-    );
     readQueue(user)
         .then(res => {
             PushNotification.setApplicationIconBadgeNumber(0);
@@ -82,6 +85,8 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         let request = res.request;
         const response = await Network(request.getNetworkRequestOptions());
+        if (__DEV__) {
+        }
         if (response && response.data) {
             let results = response.data;
             await Queue.completeNetworkRequest(requestId, key, results);
@@ -103,7 +108,6 @@ const dequeueAndProcessQueueRequest = async () => {
 };
 
 const processNetworkQueue = () => {
-    console.log('NetworkHandler::processNetworkQueue::called at ', new Date());
     Network.isConnected().then(connected => {
         if (connected) {
             processNetworkQueueRequest();
@@ -164,8 +168,10 @@ const readQueue = user =>
 const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
         EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
+        Store.updateStore({ satelliteConnection: true });
     } else {
         EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
+        Store.updateStore({ satelliteConnection: false });
     }
 };
 
@@ -209,10 +215,6 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
 
 const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
     new Promise((resolve, reject) => {
-        console.log(
-            'NetworkHandler::readRemoteLambdaQueue::called at ',
-            new Date()
-        );
         requestMessagesBeforeDateFromLambda(user, conversationId, botId, date)
             .then(res => {
                 console.log('Messages before date : ', res, date);
@@ -237,10 +239,6 @@ const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
 
 const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
     new Promise((resolve, reject) => {
-        console.log(
-            'NetworkHandler::readOldQueueMessages::called at ',
-            new Date()
-        );
         Auth.getUser().then(authUser => {
             resolve(
                 fetchMessagesBeforeDateFromLambda(
@@ -254,7 +252,6 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
     });
 
 const ping = user => {
-    console.log('NetworkHandler::ping::called at ', new Date());
     let options = {
         method: 'get',
         url: config.proxy.protocol + config.proxy.host + config.proxy.pingPath

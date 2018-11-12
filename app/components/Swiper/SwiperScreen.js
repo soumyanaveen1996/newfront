@@ -5,10 +5,13 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
-    ScrollView,
-    BackHandler
+    ImageBackground,
+    BackHandler,
+    StatusBar,
+    Platform
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
+import { SafeAreaView } from 'react-navigation';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
 import Swiper from 'react-native-swiper';
 import images from '../../config/images';
@@ -35,7 +38,7 @@ export default class SwiperScreen extends Component {
                     imageSource: images.preview_slider_2
                 },
                 {
-                    header: 'Flying is fun again',
+                    header: 'Making flying fun again',
                     description:
                         'Discover the world below you, chat with others on the flight, book hotels, cabs, shop duty free and much more',
                     imageSource: images.preview_slider_3
@@ -63,10 +66,16 @@ export default class SwiperScreen extends Component {
     }
 
     changePages = () => {
-        if (this.state.isLoginPage) {
-            return <LoginScreen email={this.props.email} />;
-        } else {
+        console.log('get the islogin ', this.state.isLoginPage);
+
+        if (this.props.page && this.props.page === 'signup') {
             return <SignupScreen />;
+        } else {
+            if (this.state.isLoginPage) {
+                return <LoginScreen email={this.props.email} />;
+            } else {
+                return <SignupScreen />;
+            }
         }
     };
 
@@ -107,8 +116,8 @@ export default class SwiperScreen extends Component {
     };
 
     goToSignupPage = () => {
-        this.setState(() => {
-            return { isLoginPage: false };
+        Actions.signupScreen({
+            type: ActionConst.REPLACE
         });
     };
 
@@ -126,94 +135,132 @@ export default class SwiperScreen extends Component {
 
     render() {
         return (
-            <Swiper
-                style={styles.wrapper}
-                index={this.props.swiperIndex ? this.props.swiperIndex : 0}
-                onIndexChanged={this.onIndexChanged.bind(this)}
-                dot={<View style={styles.dotStyle} />}
-                activeDot={<View style={styles.activeDotStyle} />}
-                paginationStyle={styles.paginationStyles}
-                loop={false}
-            >
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[0].imageSource}
-                        />
+            <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="grey"
+                    barStyle={
+                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+                    }
+                />
+                <Swiper
+                    style={styles.wrapper}
+                    index={this.props.swiperIndex ? this.props.swiperIndex : 0}
+                    onIndexChanged={this.onIndexChanged.bind(this)}
+                    dot={<View style={styles.dotStyle} />}
+                    activeDot={<View style={styles.activeDotStyle} />}
+                    paginationStyle={styles.paginationStyles}
+                    loop={false}
+                >
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[0].imageSource}
+                            />
+                        </View>
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Image
+                                    style={styles.logoStyle}
+                                    source={images.frontm_logo}
+                                />
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[0].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
-                    <View style={styles.textBox}>
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[0].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[0].description}
-                            </Text>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[1].imageSource}
+                            />
+                        </View>
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[1].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[1].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+                    </View>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[2].imageSource}
+                            />
+                        </View>
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[2].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[2].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+                    </View>
+                    <View style={styles.slide}>
+                        <View style={styles.sliderImageContainer}>
+                            <Image
+                                style={styles.slider}
+                                source={this.state.swiperData[3].imageSource}
+                            />
+                        </View>
+                        <ImageBackground
+                            resizeMode="cover"
+                            style={styles.backgroundImage}
+                            source={images.logo_background}
+                        >
+                            <View style={styles.innerBox}>
+                                <Text style={styles.headerText}>
+                                    {this.state.swiperData[3].header}
+                                </Text>
+                                <Text style={styles.text}>
+                                    {this.state.swiperData[3].description}
+                                </Text>
+                            </View>
+                        </ImageBackground>
+                    </View>
+                    <View style={styles.login}>
+                        <LoginScreen email={this.props.email || ''} />
+                        <View style={styles.bottomBox}>
+                            <TouchableOpacity
+                                onPress={this.goToSignupPage}
+                                style={{ alignItems: 'center', zIndex: 1 }}
+                            >
+                                <Text style={styles.goToLine}>
+                                    You don’t have an account?
+                                    <Text style={styles.bolder}> Sign up </Text>
+                                    <Image
+                                        style={styles.arrow}
+                                        source={images.blue_arrow}
+                                    />
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[1].imageSource}
-                        />
-                    </View>
-                    <View style={styles.textBox}>
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[1].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[1].description}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[2].imageSource}
-                        />
-                    </View>
-                    <View style={styles.textBox}>
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[2].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[2].description}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.slide}>
-                    <View style={styles.sliderImageContainer}>
-                        <Image
-                            style={styles.slider}
-                            source={this.state.swiperData[3].imageSource}
-                        />
-                    </View>
-                    <View style={styles.textBox}>
-                        <View style={styles.innerBox}>
-                            <Text style={styles.headerText}>
-                                {this.state.swiperData[3].header}
-                            </Text>
-                            <Text style={styles.text}>
-                                {this.state.swiperData[3].description}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.login}>
-                    {this.changePages()}
-                    <View style={styles.bottomBox}>
-                        {this.changeNavigationText()}
-                    </View>
-                </View>
-            </Swiper>
+                </Swiper>
+            </View>
         );
     }
 }

@@ -15,7 +15,7 @@ export default StyleSheet.create({
     },
     separator: {
         backgroundColor: GlobalColors.disabledGray,
-        height: 1,
+        height: 0,
         width: '100%',
         margin: 0
     },
@@ -91,7 +91,8 @@ export default StyleSheet.create({
         color: GlobalColors.white
     },
     flatList: {
-        flex: 1
+        flex: 1,
+        paddingTop: 15
     },
     loading: {
         position: 'absolute',

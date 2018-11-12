@@ -4,10 +4,14 @@ import { GlobalColors } from '../../config/styles';
 export const MainScreenStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: GlobalColors.background
+        backgroundColor: GlobalColors.background,
+        paddingTop: 5
     },
     botListContainer: {
         flex: 1
+    },
+    statusBar: {
+        paddingTop: 15
     },
     floatingButton: {
         width: 50,
@@ -27,10 +31,10 @@ export const BotListStyles = {
         backgroundColor: GlobalColors.background
     },
     listViewStyle: {
-        paddingTop: 5
+        paddingTop: 15
     },
     separator: {
-        height: 2,
+        height: 0,
         backgroundColor: GlobalColors.background
     },
     loading: {
@@ -45,11 +49,11 @@ export const BotListStyles = {
 };
 
 export const BotListItemColors = {
-    titleColor: 'rgb(255, 82, 59)',
-    subTitleColor: 'rgb(169,169,169)',
+    titleColor: 'rgba(74, 74, 74, 1)',
+    subTitleColor: 'rgba(153, 153, 153, 1)',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
-    countColor: 'rgb(62,137,252)',
+    countColor: 'rgba(0,167,214,1)',
     countTextColor: GlobalColors.white
 };
 
@@ -60,16 +64,20 @@ export const BotListItemStyles = {
         paddingHorizontal: 10,
         paddingVertical: 12,
         alignItems: 'stretch',
+        marginBottom: 10,
         backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
         color: BotListItemColors.titleColor,
-        fontSize: 14,
-        fontWeight: 'bold'
+        fontFamily: 'SF Pro Text',
+        fontSize: 18,
+        fontWeight: '300'
     },
     subTitle: {
         color: BotListItemColors.subTitleColor,
         fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: '300',
         marginTop: 5
     },
     image: {
@@ -118,7 +126,8 @@ export const BotListItemStyles = {
             borderRadius: 12,
             paddingLeft: 4,
             paddingRight: 4,
-            overflow: 'hidden'
+            overflow: 'hidden',
+            marginRight: 5
         },
         android: {
             color: BotListItemColors.countTextColor,
@@ -131,7 +140,8 @@ export const BotListItemStyles = {
             paddingLeft: 4,
             paddingRight: 4,
             overflow: 'hidden',
-            textAlignVertical: 'center'
+            textAlignVertical: 'center',
+            marginRight: 5
         }
     }),
     chatImage: {

@@ -5,9 +5,10 @@ import Utils from '../../lib/utils';
 
 export default StyleSheet.create({
     headerTitleStyle: {
-        fontSize: 17,
-        color: GlobalColors.white,
-        fontWeight: '500'
+        fontSize: 18,
+        color: GlobalColors.headerBlack,
+        fontWeight: '400',
+        fontFamily: 'SF Pro Text'
     },
     searchBar: {
         flex: 1,
@@ -18,7 +19,7 @@ export default StyleSheet.create({
     },
 
     tabStyle: {
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.tabBackground,
         borderColor: GlobalColors.white
     },
     tabTextStyle: {
@@ -38,7 +39,7 @@ export default StyleSheet.create({
     },
     segmentedControlTab: {
         height: 40,
-        backgroundColor: GlobalColors.accent,
+        backgroundColor: GlobalColors.tabBackground,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
@@ -48,8 +49,8 @@ export default StyleSheet.create({
             position: 'relative',
             borderBottomColor: GlobalColors.accent,
             paddingLeft: 0,
-            paddingBottom: 0,
-            height: Utils.isiPhoneX() ? 70 : 50
+            paddingBottom: 10,
+            height: Utils.isiPhoneX() ? 70 : 60
         },
         android: {
             position: 'relative',

@@ -1,15 +1,23 @@
 import React from 'react';
-import { Alert, View, Text, TouchableOpacity, Keyboard } from 'react-native';
+import {
+    Alert,
+    View,
+    Text,
+    TouchableOpacity,
+    Keyboard,
+    Platform
+} from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { EventEmitter, TwilioEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
 import { Auth, Network } from '../../lib/capability';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 export const PhoneState = {
     init: 'init',
@@ -20,7 +28,16 @@ export const PhoneState = {
 
 export default class Phone extends React.Component {
     constructor(props) {
+        let call_to, call_from;
         super(props);
+        if (Platform.OS === 'ios') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+        }
+        if (Platform.OS === 'android') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+        }
         this.state = {
             phoneState: props.state,
             micOn: true,
@@ -28,8 +45,8 @@ export default class Phone extends React.Component {
             username:
                 props.state === PhoneState.calling ||
                 props.state === PhoneState.init
-                    ? props.data.call_to
-                    : props.data.call_from
+                    ? call_to
+                    : call_from
         };
     }
 
@@ -43,17 +60,21 @@ export default class Phone extends React.Component {
             TwilioEvents.connectionDidConnect,
             this.connectionDidConnectHandler.bind(this)
         );
+        this.deviceDidReceiveIncomingListener = EventEmitter.addListener(
+            TwilioEvents.deviceDidReceiveIncoming,
+            this.deviceDidReceiveIncomingHandler.bind(this)
+        );
 
         if (this.state.phoneState === PhoneState.init) {
             this.initialize();
         } else if (this.state.phoneState === PhoneState.incomingcall) {
-            this.findCallerName();
+            this.findCallerName({ username: this.state.username });
             Keyboard.dismiss();
         }
     }
 
-    findCallerName() {
-        const { username } = this.state;
+    findCallerName({ username }) {
+        // const {username} = this.state
         if (username && _.startsWith(username, 'client:')) {
             const clientId = username.substr(7);
             const clientDetails = ContactsCache.getUserDetails(clientId);
@@ -106,6 +127,9 @@ export default class Phone extends React.Component {
         if (this.connectionDidConnectListener) {
             this.connectionDidConnectListener.remove();
         }
+        if (this.deviceDidReceiveIncomingListener) {
+            this.deviceDidReceiveIncomingListener.remove();
+        }
     }
 
     connectionDidConnectHandler(data) {
@@ -114,8 +138,21 @@ export default class Phone extends React.Component {
         }
     }
 
+    deviceDidReceiveIncomingHandler(data) {
+        const username = data.call_from;
+        this.setState({ phoneState: PhoneState.incomingcall });
+        this.findCallerName({ username });
+    }
+
     connectionDidDisconnectHandler(data) {
+        const sceneBefore = Actions.currentScene;
         Actions.pop();
+        const sceneAfter = Actions.currentScene;
+        if (sceneBefore === sceneAfter) {
+            Actions.homeMain({
+                type: ActionConst.REPLACE
+            });
+        }
     }
 
     accept() {
@@ -169,6 +206,8 @@ export default class Phone extends React.Component {
             return `${I18n.t('Calling')} ${userName}`;
         } else if (state === PhoneState.init) {
             return 'Initiating Call';
+        } else if (state === PhoneState.incomingcall) {
+            return `${this.state.username}`;
         } else {
             return I18n.t('From');
         }
@@ -184,6 +223,7 @@ export default class Phone extends React.Component {
             state: phoneState,
             userName: this.username()
         });
+        console.log('Current Phone State', phoneState);
         return (
             <View style={Styles.containerStyle}>
                 <View style={Styles.nameContainer}>

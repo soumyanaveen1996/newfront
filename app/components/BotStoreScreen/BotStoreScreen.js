@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, StatusBar } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Header, Icon } from 'react-native-elements';
 import { GlobalColors } from '../../config/styles';
@@ -19,10 +19,15 @@ import {
     SatelliteConnectionEvents,
     AuthEvents
 } from '../../lib/events';
+import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import { BackgroundImage } from '../BackgroundImage';
+import { connect } from 'react-redux';
+import Store from '../../redux/store/configureStore';
+import { setCurrentScene } from '../../redux/actions/UserActions';
 
-export default class BotStoreScreen extends React.Component {
+class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
@@ -75,7 +80,7 @@ export default class BotStoreScreen extends React.Component {
                 <Header
                     innerContainerStyles={styles.headerInnerContainerForSearch}
                     outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.accent}
+                    backgroundColor={GlobalColors.white}
                 >
                     {/* <SearchBar
                     lightTheme
@@ -91,9 +96,9 @@ export default class BotStoreScreen extends React.Component {
                 <Header
                     innerContainerStyles={styles.headerInnerContainerStyles}
                     outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.accent}
+                    backgroundColor={GlobalColors.white}
                     centerComponent={BotStoreScreen.renderHeaderTitle()}
-                    leftComponent={BotStoreScreen.renderLeftIcon(state)}
+                    // leftComponent={BotStoreScreen.renderLeftIcon(state)}
                 />
             );
         }
@@ -129,7 +134,7 @@ export default class BotStoreScreen extends React.Component {
     }
 
     async componentWillMount() {
-        await RemoteBotInstall.syncronizeBots();
+        // await RemoteBotInstall.syncronizeBots()
     }
 
     async componentDidMount() {
@@ -159,6 +164,18 @@ export default class BotStoreScreen extends React.Component {
                 });
             }
         }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Bot_Store');
+    }
+    static onEnter() {
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
+    }
+
+    static onExit() {
+        RemoteBotInstall.syncronizeBots();
+        Store.dispatch(setCurrentScene('none'));
     }
 
     async refresh() {
@@ -273,10 +290,24 @@ export default class BotStoreScreen extends React.Component {
         }
 
         return (
-            <View style={{ flex: 1 }}>
+            <BackgroundImage style={{ flex: 1 }}>
+                <StatusBar backgroundColor="grey" barStyle="light-content" />
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
-            </View>
+            </BackgroundImage>
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(BotStoreScreen);

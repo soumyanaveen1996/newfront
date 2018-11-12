@@ -7,7 +7,7 @@ function icon(
     type,
     size,
     color,
-    underlayColor = Colors.white,
+    underlayColor = Colors.sideButtons,
     fontWeight = 'normal'
 ) {
     return function(options) {
@@ -28,7 +28,7 @@ function renderIcon(
     type,
     size,
     color,
-    underlayColor = Colors.white,
+    underlayColor = Colors.sideButtons,
     fontWeight = 'normal',
     options = {}
 ) {
@@ -54,7 +54,7 @@ export const Icons = {
         'ios-arrow-back',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.transparent,
         '500'
     ),
@@ -145,7 +145,7 @@ export const Icons = {
         '500'
     ),
     videoRecordCircle: icon('circle', 'font-awesome', 46, '#F00'),
-    delete: icon('md-trash', 'ionicon', 32, 'rgb(198, 198, 198)'),
+    delete: icon('md-trash', 'ionicon', 24, 'rgba(153, 153, 153,0.3)'),
     satelliteChatStatusClose: icon(
         'ios-close',
         'ionicon',
@@ -166,7 +166,7 @@ export const Icons = {
         'ios-refresh',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.translucentDark,
         '500'
     ),
@@ -174,7 +174,7 @@ export const Icons = {
         'ios-call',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.transparent,
         '500'
     ),
@@ -190,7 +190,7 @@ export const Icons = {
         'ios-ionic',
         'ionicon',
         30,
-        Colors.white,
+        Colors.sideButtons,
         Colors.translucentDark,
         '500'
     ),
