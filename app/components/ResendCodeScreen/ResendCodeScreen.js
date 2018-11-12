@@ -123,6 +123,10 @@ export default class ResendCodeScreen extends Component {
             return true;
         }
 
+        if (!this.props.signupScreen) {
+            return true;
+        }
+
         return false;
     };
 
