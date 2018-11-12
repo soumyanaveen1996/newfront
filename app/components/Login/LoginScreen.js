@@ -192,7 +192,8 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
-                console.log('fb error login ', err);
+                const errMsg = err;
+                console.log('fb error login =====', errMsg);
                 this.setState({ loading: false });
                 this.setState({ errorMessage: 'No Internet Connection' });
             });

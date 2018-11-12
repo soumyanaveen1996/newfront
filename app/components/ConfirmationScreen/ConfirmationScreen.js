@@ -64,25 +64,29 @@ export default class ConfirmationScreen extends Component {
                     loading: false
                 });
             }
-        }
-        const userDetails = {
-            email: this.state.userEmail,
-            confirmCode: this.state.code
-        };
-        this.setState({ loading: true, errorMessage: '' });
+        } else {
+            const userDetails = {
+                email: this.state.userEmail,
+                confirmCode: this.state.code
+            };
+            this.setState({ loading: true, errorMessage: '' });
 
-        await Auth.confirmFrontmSignup(userDetails)
-            .then(async data => {
-                if (data.success) {
-                    await AsyncStorage.setItem('signupStage', 'done');
-                    this.setState({ signupStatus: 'codeConfirmed' });
-                    this.showMainScreen();
-                }
-            })
-            .catch(err => {
-                console.log('error from confirmation page ', err);
-                this.setState({ errorMessage: 'Wrong code', loading: false });
-            });
+            await Auth.confirmFrontmSignup(userDetails)
+                .then(async data => {
+                    if (data.success) {
+                        await AsyncStorage.setItem('signupStage', 'done');
+                        this.setState({ signupStatus: 'codeConfirmed' });
+                        this.showMainScreen();
+                    }
+                })
+                .catch(err => {
+                    console.log('error from confirmation page ', err);
+                    this.setState({
+                        errorMessage: 'Wrong code',
+                        loading: false
+                    });
+                });
+        }
     }
 
     showMainScreen = () => {
@@ -101,7 +105,8 @@ export default class ConfirmationScreen extends Component {
                     loading: false,
                     code: '',
                     password: '',
-                    signupStatus: ''
+                    signupStatus: '',
+                    errorMessage: ''
                 });
                 Actions.timeline({ type: ActionConst.REPLACE });
             })
