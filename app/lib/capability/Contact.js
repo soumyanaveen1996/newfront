@@ -172,6 +172,10 @@ export default class Contact {
         new Promise((resolve, reject) => {
             DeviceStorage.delete(CONTACT_STORAGE_KEY_CAPABILITY)
                 .then(() => {
+                    if (__DEV__) {
+                        console.tron('All Contacts Deleted');
+                    }
+
                     return resolve();
                 })
                 .catch(err => {

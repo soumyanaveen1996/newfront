@@ -450,7 +450,7 @@ export default class Auth {
                         //         resolve()
                         //     })
                         Twilio.getAccessToken(user).then(accessToken => {
-                            TwilioVoice.unregister();
+                            // TwilioVoice.unregister();
                             resolve();
                         });
                     } else {
