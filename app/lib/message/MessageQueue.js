@@ -1,7 +1,7 @@
 import { Auth } from '../capability';
 import { Queue, IMBotMessageHandler } from '../network';
 import { MessageDAO, NetworkDAO } from '../persistence';
-import EventEmitter, { AuthEvents } from '../events';
+import EventEmitter, { AuthEvents, MessageEvents } from '../events';
 import { BackgroundTaskProcessor } from '../BackgroundTask';
 import Store from '../../redux/store/configureStore';
 
@@ -116,18 +116,24 @@ export default class MessageQueue {
         );
         let bot = message.bot;
         // Name of the bot is the key, unless its IMBot (one to many relationship)
-        if (__DEV__) {
-            console.tron('Current Bot', Store.getState().bots.id);
-        }
-
         if (bot === 'im-bot' || bot === 'channels-bot') {
             await IMBotMessageHandler.handleMessage(message, user);
         } else {
-            await BackgroundTaskProcessor.sendBackgroundAsyncMessage(
-                message,
-                message.bot,
-                message.conversation
-            );
+            // If our Bot is currently in Foreground then Handle Differently
+            const activeBot = Store.getState().bots.id;
+            const messageBot = message.bot;
+            if (activeBot && activeBot === messageBot) {
+                EventEmitter.emit(MessageEvents.messageProcessed, {
+                    message,
+                    botId: messageBot
+                });
+            } else {
+                await BackgroundTaskProcessor.sendBackgroundAsyncMessage(
+                    message,
+                    message.bot,
+                    message.conversation
+                );
+            }
         }
         return true;
     }
