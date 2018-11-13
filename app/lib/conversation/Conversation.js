@@ -61,7 +61,7 @@ export default class Conversation {
                     let manifest = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
-                    conversations = res.data.content;
+                    let conversations = res.data.content.conversations;
                     let promise = _.map(conversations, conversation => {
                         if (conversation.bot === 'im-bot') {
                             let botContext;
