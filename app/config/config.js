@@ -1,6 +1,6 @@
-// import configToUse from './env/prod';
+import configToUse from './env/prod';
 // import configToUse from './env/local'
-import configToUse from './env/dev';
+// import configToUse from './env/dev';
 import ReactotronConfig from '../../ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
