@@ -3,6 +3,7 @@ import { Queue, IMBotMessageHandler } from '../network';
 import { MessageDAO, NetworkDAO } from '../persistence';
 import EventEmitter, { AuthEvents } from '../events';
 import { BackgroundTaskProcessor } from '../BackgroundTask';
+import Store from '../../redux/store/configureStore';
 
 export default class MessageQueue {
     constructor(options = {}) {
@@ -115,6 +116,10 @@ export default class MessageQueue {
         );
         let bot = message.bot;
         // Name of the bot is the key, unless its IMBot (one to many relationship)
+        if (__DEV__) {
+            console.tron('Current Bot', Store.getState().bots.id);
+        }
+
         if (bot === 'im-bot' || bot === 'channels-bot') {
             await IMBotMessageHandler.handleMessage(message, user);
         } else {

@@ -10,6 +10,9 @@ const initialState = {
         refreshTimeline: true,
         refreshChannels: true,
         refreshContacts: true
+    },
+    botState: {
+        id: null
     }
 };
 

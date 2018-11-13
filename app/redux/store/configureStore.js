@@ -9,4 +9,5 @@ if (__DEV__) {
 } else {
     Store = createStore(reducer, applyMiddleware(...middleware));
 }
+
 export default Store;
