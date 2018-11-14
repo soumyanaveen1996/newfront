@@ -219,6 +219,12 @@ class MainScreen extends React.Component {
         }
 
         if (
+            prevProps.appState.allConversationsLoaded !==
+            this.props.appState.allConversationsLoaded
+        ) {
+            this.update();
+        }
+        if (
             prevProps.appState.refreshTimeline !==
             this.props.appState.refreshTimeline
         ) {

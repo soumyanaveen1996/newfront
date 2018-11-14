@@ -7,6 +7,8 @@ import Utils from '../../components/MainScreen/Utils';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 import BotContext from '../botcontext/BotContext';
 import SystemBot from '../bot/SystemBot';
+import { completeConversationsLoad } from '../../redux/actions/UserActions';
+import Store from '../../redux/store/configureStore';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 
@@ -52,6 +54,7 @@ export default class Conversation {
                             sessionId: user.creds.sessionId
                         }
                     };
+                    Store.dispatch(completeConversationsLoad(false));
                     return Network(options);
                 })
                 .then(async res => {
@@ -139,6 +142,8 @@ export default class Conversation {
                             return null;
                         }
                     });
+
+                    Store.dispatch(completeConversationsLoad(true));
                     return Promise.all(promise);
                 })
                 .then(resolve);

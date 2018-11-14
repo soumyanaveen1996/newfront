@@ -8,6 +8,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ satelliteMode: action.payload } };
     case Actions.COMPLETE_BOT_INSTALL:
         return { ...state, ...{ remoteBotsInstalled: action.payload } };
+    case Actions.COMPLETE_CONVERSATIONS_LOAD:
+        return { ...state, ...{ allConversationsLoaded: action.payload } };
     case Actions.COMPLETE_CHANNEL_INSTALL:
         return { ...state, ...{ allChannelsLoaded: action.payload } };
     case Actions.COMPLETE_CONTACTS_LOAD:
