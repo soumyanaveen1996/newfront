@@ -93,7 +93,7 @@ export default StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 14,
         alignItems: 'stretch',
-        backgroundColor: ChannelsListItemColors.backgroundColor
+        backgroundColor: ChannelsListItemColors.countColor
     },
     title: {
         color: ChannelsListItemColors.titleColor,

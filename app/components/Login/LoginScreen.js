@@ -177,9 +177,12 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
-                console.log('google error login ', err);
+                const errMsg = err.message;
+                console.log('google error login ', errMsg);
                 this.setState({ loading: false });
-                this.setState({ errorMessage: 'No Internet Connection' });
+                this.setState({
+                    errorMessage: errMsg
+                });
             });
     };
     loginWithFacebook = async () => {
@@ -192,10 +195,10 @@ export default class LoginScreen extends React.Component {
                 this.showMainScreen();
             })
             .catch(err => {
-                const errMsg = err;
+                const errMsg = err.message;
                 console.log('fb error login =====', errMsg);
                 this.setState({ loading: false });
-                this.setState({ errorMessage: 'No Internet Connection' });
+                this.setState({ errorMessage: errMsg });
             });
     };
 

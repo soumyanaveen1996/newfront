@@ -82,6 +82,8 @@ export default class ChannelsListItem extends React.Component {
 
     render() {
         const channel = this.props.channel;
+        console.log('channels details :', channel);
+
         return (
             <TouchableOpacity
                 style={styles.container}

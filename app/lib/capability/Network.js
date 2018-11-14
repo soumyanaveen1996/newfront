@@ -8,6 +8,7 @@ import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
 import moment from 'moment';
 import _ from 'lodash';
+import Auth from './Auth';
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -129,7 +130,7 @@ function Network(options, queue = false) {
                 const requestOptions = converOptionsToFetchRequest(options);
                 fetch(options.url, requestOptions)
                     .then(response => {
-                        //console.log('Response raw : ', response);
+                        console.log('Response raw : ', response);
                         if (response.status === 200) {
                             response.json().then(json => {
                                 resolve({
@@ -143,6 +144,11 @@ function Network(options, queue = false) {
                                 '>>>>>>NETWORK ERROR CODE NE 200',
                                 response
                             );
+                            if (response.status === 401) {
+                                console.log('need to logout');
+                                Auth.logout();
+                                resolve();
+                            }
                             reject(
                                 new NetworkError(
                                     response.status,

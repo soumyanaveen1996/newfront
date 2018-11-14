@@ -114,6 +114,8 @@ class ChannelsList extends React.Component {
 
     handleAddChannel = () => {
         SystemBot.get(SystemBot.channelsBotManifestName).then(channelsBot => {
+            console.log('clicking on right button channel ', channelsBot);
+
             Actions.botChat({ bot: channelsBot, onBack: this.onBack });
         });
     };

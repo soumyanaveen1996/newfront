@@ -9,6 +9,7 @@ import {
     Platform,
     TouchableOpacity,
     ScrollView,
+    BackHandler,
     AsyncStorage
 } from 'react-native';
 import styles from './styles';
@@ -41,6 +42,21 @@ export default class SignupScreen extends React.Component {
             errorMessage: ''
         };
         this.inputs = {};
+    }
+
+    componentWillMount() {
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
+    }
+
+    handleBackButtonClick() {
+        console.log('going back from signup screen');
+
+        if (Actions.currentScene === 'signupScreen') {
+            BackHandler.exitApp();
+        }
     }
 
     validateEmail(email) {
@@ -158,7 +174,10 @@ export default class SignupScreen extends React.Component {
             await Auth.signupWithFrontm(userDetails)
                 .then(async data => {
                     if (data.success) {
-                        await AsyncStorage.setItem('userEmail', data.data);
+                        await AsyncStorage.setItem(
+                            'userEmail',
+                            this.state.email
+                        );
                         await AsyncStorage.setItem(
                             'userDisplayName',
                             this.state.name
@@ -182,7 +201,9 @@ export default class SignupScreen extends React.Component {
                     }
                 })
                 .catch(err => {
-                    this.setState({ emailError: 'Email already in use', err });
+                    console.log('error from signup ', err);
+
+                    this.setState({ emailError: 'Email already in use' });
                     this.setState(() => {
                         return { loading: false };
                     });

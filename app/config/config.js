@@ -1,7 +1,7 @@
-import configToUse from './env/prod';
+// import configToUse from './env/prod';
 // import configToUse from './env/local'
-// import configToUse from './env/dev';
-import ReactotronConfig from '../../ReactotronConfig';
+import configToUse from './env/dev';
+// import ReactotronConfig from '../../ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
 // Point to the right environment config based on what is being released
