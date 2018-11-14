@@ -17,6 +17,9 @@ export default StyleSheet.create({
         marginTop: 20
     },
     smartSuggestions: {
-        paddingLeft: 60
+        paddingLeft: 64
+    },
+    emptyFooter: {
+        width: 64
     }
 });
