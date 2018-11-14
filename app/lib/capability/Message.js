@@ -334,12 +334,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
         ) {
             let items = this.getMessage();
-            let titles = _.map(
-                items,
-                item =>
-                    item.value !== undefined
-                        ? item.title + ':' + item.value
-                        : ''
+            let titles = _.map(items, item =>
+                item.value !== undefined ? item.title + ':' + item.value : ''
             );
             return I18n.t('Slider_Response_Message', {
                 lines: titles.join('\n')
