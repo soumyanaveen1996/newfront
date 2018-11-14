@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
-export const FONT_COLOR = GlobalColors.accent;
+export const FONT_COLOR = GlobalColors.black;
 export const FONT_SIZE = 15;
 
 export default StyleSheet.create({
