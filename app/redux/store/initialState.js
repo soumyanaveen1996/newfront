@@ -11,6 +11,9 @@ const initialState = {
         refreshChannels: true,
         refreshContacts: true,
         refreshUserEmail: true
+    },
+    botState: {
+        id: null
     }
 };
 

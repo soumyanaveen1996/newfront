@@ -39,19 +39,19 @@ export default class BotList extends React.Component {
 
         const bots = this.props.bots;
         let conversations =
-            (await Promise.resolve(Conversation.getAllConversations())) || [];
+            (await Promise.resolve(Conversation.getLocalConversations())) || [];
         let user = await Auth.getUser();
         // All
         let allChats = [];
         conversations.forEach(conversation => {
             allChats.push({ key: 'conversation', bot: conversation });
         });
+
         bots.forEach(bot => {
             allChats.push({ key: 'bot', bot: bot });
         });
-
         let allChatsData = await Promise.all(
-            _.map(allChats, async conversation => {
+            _.map(allChats, async (conversation, index) => {
                 let chatData = null;
                 if (conversation.key === 'bot') {
                     chatData = await Promise.resolve(
@@ -63,6 +63,9 @@ export default class BotList extends React.Component {
                             conversation.bot,
                             user
                         )
+                    );
+                    console.log(
+                        '>>>>>> ' + JSON.stringify(chatData, undefined, 2)
                     );
                 }
                 // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
@@ -80,7 +83,6 @@ export default class BotList extends React.Component {
             console.error('Error getting info for timeline', e);
             return [];
         });
-
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,

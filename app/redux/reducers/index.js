@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { UserReducer as user } from '../reducers/UserReducer';
+import { BotReducer as bots } from '../reducers/BotReducer';
 import { ActionTypes as Actions } from '../actions/ActionTypes';
 
 const frontmReducer = combineReducers({
-    user
+    user,
+    bots
 });
 
 const rootReducer = (state, action) => {

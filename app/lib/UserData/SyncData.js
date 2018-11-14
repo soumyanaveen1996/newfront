@@ -3,6 +3,7 @@ import { Contact, Channel } from '../capability';
 import { AppState } from 'react-native';
 import Auth from '../capability/Auth';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import Conversation from '../../lib/conversation/Conversation';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 3000));
 export const synchronizeUserData = async () => {
@@ -11,6 +12,8 @@ export const synchronizeUserData = async () => {
     Channel.refreshChannels();
     await debounce();
     RemoteBotInstall.syncronizeBots();
+    await debounce();
+    Conversation.downloadRemoteConversations();
 };
 
 export const clearDataOnLogout = () => {

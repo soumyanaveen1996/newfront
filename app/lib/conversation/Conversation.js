@@ -1,6 +1,12 @@
 import { ConversationDAO } from '../persistence';
 import sha1 from 'sha1';
 import _ from 'lodash';
+import { Network, Auth, ConversationContext } from '../capability';
+import config from '../../config/config';
+import Utils from '../../components/MainScreen/Utils';
+import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
+import BotContext from '../botcontext/BotContext';
+import SystemBot from '../bot/SystemBot';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 
@@ -26,9 +32,134 @@ export default class Conversation {
             );
         });
 
-    static getAllConversations = () =>
+    /**
+     * Get remote conversations from the backend
+     */
+    static downloadRemoteConversations = () =>
+        new Promise((resolve, reject) => {
+            let user;
+            //remote
+            Auth.getUser()
+                .then(usr => {
+                    user = usr;
+                    const options = {
+                        method: 'GET',
+                        url:
+                            config.proxy.protocol +
+                            config.proxy.host +
+                            '/users/timeline',
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(async res => {
+                    let manifestChan = await Promise.resolve(
+                        SystemBot.get(SystemBot.channelsBotManifestName)
+                    );
+                    let manifest = await Promise.resolve(
+                        SystemBot.get(SystemBot.channelsBotManifestName)
+                    );
+                    let conversations = res.data.content.conversations;
+                    let promise = _.map(conversations, conversation => {
+                        if (conversation.bot === 'im-bot') {
+                            let botContext;
+                            Conversation.createChannelConversation(
+                                conversation.conversationId
+                            )
+                                .then(() => {
+                                    const botScreen = BackgroundTaskProcessor.generateScreen(
+                                        conversation.bot,
+                                        conversation.conversationId
+                                    );
+                                    botContext = new BotContext(
+                                        botScreen,
+                                        manifestChan
+                                    );
+                                    return ConversationContext.createNewChannelConversationContext(
+                                        botContext,
+                                        user,
+                                        conversation.channel
+                                    );
+                                })
+                                .then(newChanConvContext => {
+                                    ConversationContext.updateParticipants(
+                                        newChanConvContext,
+                                        conversation.participants
+                                    );
+                                    return ConversationContext.saveConversationContext(
+                                        newChanConvContext,
+                                        botContext,
+                                        user
+                                    );
+                                });
+                        } else if (conversation.bot.botId === 'im-bot') {
+                            let botContext;
+                            const otherParticipant = {
+                                userName: conversation.contact.userName,
+                                userId: conversation.contact.userId
+                            };
+                            Conversation.createIMConversation(
+                                conversation.conversationId
+                            )
+                                .then(() => {
+                                    const botScreen = BackgroundTaskProcessor.generateScreen(
+                                        conversation.bot.botId,
+                                        conversation.conversationId
+                                    );
+                                    botContext = new BotContext(
+                                        botScreen,
+                                        manifest
+                                    );
+                                    return ConversationContext.createNewConversationContext(
+                                        botContext,
+                                        user,
+                                        conversation.conversationId
+                                    );
+                                })
+                                .then(newConvContext => {
+                                    ConversationContext.updateParticipants(
+                                        newConvContext,
+                                        [otherParticipant]
+                                    );
+                                    return ConversationContext.saveConversationContext(
+                                        newConvContext,
+                                        botContext,
+                                        user
+                                    );
+                                })
+                                .then(() => {
+                                    return ConversationContext.setParticipants(
+                                        conversation.participants,
+                                        botContext
+                                    );
+                                });
+                        } else {
+                            return null;
+                        }
+                    });
+                    return Promise.all(promise);
+                })
+                .then(resolve);
+        });
+
+    /**
+     * Get local conversations from the device database
+     */
+    static getLocalConversations = () =>
         new Promise((resolve, reject) => {
             return resolve(ConversationDAO.selectConversations());
+        });
+
+    /**
+     * Get remote and local conversations
+     */
+    static getAllConversations = () =>
+        new Promise((resolve, reject) => {
+            Conversation.downloadRemoteConversations().then(() => {
+                return resolve(Conversation.getLocalConversations());
+            });
         });
 
     static createConversation = (conversationId, type) =>

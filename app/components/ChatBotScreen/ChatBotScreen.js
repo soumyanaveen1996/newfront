@@ -74,10 +74,13 @@ import {
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
 import { BackgroundImage } from '../BackgroundImage';
+import { setLoadedBot } from '../../redux/actions/BotActions';
+import Store from '../../redux/store/configureStore';
+import { connect } from 'react-redux';
 
 const R = require('ramda');
 
-export default class ChatBotScreen extends React.Component {
+class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
@@ -193,6 +196,7 @@ export default class ChatBotScreen extends React.Component {
 
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
+        Store.dispatch(setLoadedBot(this.bot.botId));
         this.mounted = true;
         let self = this;
 
@@ -487,6 +491,7 @@ export default class ChatBotScreen extends React.Component {
 
     async componentWillUnmount() {
         this.mounted = false;
+        Store.dispatch(setLoadedBot(null));
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
             this.eventSubscription.remove();
@@ -1744,3 +1749,14 @@ export default class ChatBotScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    botState: state.bots
+});
+const mapDispatchToProps = dispatch => {
+    return {
+        setLoadedBot: bot => dispatch(setLoadedBot(bot))
+    };
+};
+
+export default ChatBotScreen;
