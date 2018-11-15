@@ -65,9 +65,19 @@ export default class Conversation {
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
                     let conversations = res.data.content.conversations;
+                    const localConversations = await Conversation.getLocalConversations();
                     let promise = _.map(conversations, conversation => {
                         if (conversation.bot === 'im-bot') {
                             let botContext;
+
+                            const devConv = localConversations.filter(
+                                lconversation =>
+                                    lconversation.conversationId ==
+                                    conversation.conversationId
+                            );
+                            if (devConv.length > 0) {
+                                return null;
+                            }
                             Conversation.createChannelConversation(
                                 conversation.conversationId
                             )
@@ -99,10 +109,21 @@ export default class Conversation {
                                 });
                         } else if (conversation.bot.botId === 'im-bot') {
                             let botContext;
+                            if (!conversation.contact) {
+                                return null;
+                            }
                             const otherParticipant = {
                                 userName: conversation.contact.userName,
                                 userId: conversation.contact.userId
                             };
+                            const devConv = localConversations.filter(
+                                lconversation =>
+                                    lconversation.conversationId ==
+                                    conversation.conversationId
+                            );
+                            if (devConv.length > 0) {
+                                return null;
+                            }
                             Conversation.createIMConversation(
                                 conversation.conversationId
                             )

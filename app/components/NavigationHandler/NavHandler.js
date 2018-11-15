@@ -9,6 +9,12 @@ class NavHandler extends Component {
         super(props);
     }
 
+    componentDidCatch(error, errorInfo) {
+        console.log('Caught an Error');
+        console.trace(errorInfo);
+        console.log(error);
+    }
+
     componentDidMount() {
         //listens to hardwareBackPress
         BackAndroid.addEventListener('hardwareBackPress', () => {

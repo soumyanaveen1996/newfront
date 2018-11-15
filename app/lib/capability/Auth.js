@@ -431,35 +431,7 @@ export default class Auth {
      */
     static logout = () =>
         new Promise((resolve, reject) => {
-            Auth.getUser()
-                .then(user => {
-                    if (user) {
-                        // Twilio.disableVoip(user)
-                        //     .then(data => {
-                        //         if (__DEV__) {
-                        //             console.tron('VOIP HAS been Disabled', data)
-                        //         }
-                        //     })
-                        //     .catch(err => {
-                        //         // Supress Errro and log only
-                        //         if (__DEV__) {
-                        //             console.tron('Cannot Disable VOIP')
-                        //         }
-                        //     })
-                        //     .finally(() => {
-                        //         resolve()
-                        //     })
-                        Twilio.getAccessToken(user).then(accessToken => {
-                            // TwilioVoice.unregister();
-                            resolve();
-                        });
-                    } else {
-                        resolve();
-                    }
-                })
-                .then(() => {
-                    DeviceStorage.delete(USER_SESSION);
-                })
+            DeviceStorage.delete(USER_SESSION)
                 .then(() => {
                     return Bot.unInstallBots();
                 })

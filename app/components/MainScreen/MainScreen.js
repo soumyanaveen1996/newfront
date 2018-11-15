@@ -132,6 +132,10 @@ class MainScreen extends React.Component {
         };
     }
 
+    componentDidCatch(error, errorInfo) {
+        console.log('Caught Error');
+    }
+
     showConnectionMessage(connectionType) {
         let message = I18n.t('Auto_Message');
         if (connectionType === 'gsm') {
