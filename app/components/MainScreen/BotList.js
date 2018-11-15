@@ -60,9 +60,6 @@ export default class BotList extends React.Component {
                             user
                         )
                     );
-                    console.log(
-                        '>>>>>> ' + JSON.stringify(chatData, undefined, 2)
-                    );
                 }
                 // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
                 if (

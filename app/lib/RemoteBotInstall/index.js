@@ -130,6 +130,10 @@ class RemoteBotInstall {
                                 return result === true;
                             })
                         ) {
+                            if (__DEV__) {
+                                console.tron('BOTS INSTALEED');
+                            }
+
                             console.log('Bots installed');
                             Store.dispatch(completeBotInstall(true));
                             return resolve();

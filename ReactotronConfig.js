@@ -6,8 +6,8 @@ const reactotron = Reactotron.configure({
     name: 'FrontM'
 })
     .useReactNative()
-    .use(reactotronRedux()) //  <- here i am!
-    .use(trackGlobalErrors());
+    .use(trackGlobalErrors())
+    .use(reactotronRedux()); //  <- here i am!
 
 if (__DEV__) {
     const scriptURL = NativeModules.SourceCode.scriptURL;

@@ -185,7 +185,6 @@ export default class TwilioVoIP {
     };
 
     connectionDidConnectHandler = data => {
-        console.log('>>>>>>>>>>>CALLL STATE<<<<<<<<<<<<<<<<<', data);
         Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.connectionDidConnect, data);
         // Actions.phone({state: PhoneState.incall, data: data})

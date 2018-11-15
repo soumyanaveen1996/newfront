@@ -26,6 +26,7 @@ class AssetFetcher {
             let fileExists = await AssetFetcher.existsOnDevice(filename);
 
             // Delete if file already exists? - do we need this?
+
             if (fileExists) {
                 await AssetFetcher.deleteFile(filename);
             }
