@@ -88,7 +88,7 @@ export default class BotListScreen extends React.Component {
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast" />
+                <Toast ref="toast" positionValue={250} />
             </View>
         );
     }
