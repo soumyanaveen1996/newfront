@@ -1149,6 +1149,7 @@ class ChatBotScreen extends React.Component {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
         message.stringMessage(messageStr);
+        message.setRead(true);
 
         return self.sendMessage(message);
     }

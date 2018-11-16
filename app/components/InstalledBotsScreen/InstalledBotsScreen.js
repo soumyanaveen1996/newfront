@@ -447,7 +447,7 @@ export default class InstalledBotsScreen extends React.Component {
                             />
                         }
                     />
-                    <Toast ref="toast" />
+                    <Toast ref="toast" positionValue={250} />
                 </View>
             );
         }
