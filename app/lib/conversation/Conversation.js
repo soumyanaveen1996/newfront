@@ -9,6 +9,7 @@ import BotContext from '../botcontext/BotContext';
 import SystemBot from '../bot/SystemBot';
 import { completeConversationsLoad } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
+import Message from '../capability/Message';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 
@@ -157,6 +158,26 @@ export default class Conversation {
                                     return ConversationContext.setParticipants(
                                         conversation.participants,
                                         botContext
+                                    );
+                                })
+                                .then(() => {
+                                    // const message = Message.from(
+                                    //     conversation.lastMessage,
+                                    //     user,
+                                    //     conversation.conversationId
+                                    // )
+                                    const {
+                                        content,
+                                        ...rest
+                                    } = conversation.lastMessage;
+                                    const message = {
+                                        details: [{ message: content[0] }],
+                                        ...rest
+                                    };
+                                    return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                        message,
+                                        conversation.bot.botId,
+                                        conversation.conversationId
                                     );
                                 });
                         } else {

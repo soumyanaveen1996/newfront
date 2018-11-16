@@ -322,6 +322,10 @@ const sendBackgroundIMMessage = async (
     if (!conversationContext) {
         return;
     }
+    if (__DEV__) {
+        console.tron('Sending a Message');
+    }
+
     await processAsyncMessage(message, botManifest, botContext);
 };
 
