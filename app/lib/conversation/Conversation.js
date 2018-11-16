@@ -100,13 +100,32 @@ export default class Conversation {
                                 .then(newChanConvContext => {
                                     ConversationContext.updateParticipants(
                                         newChanConvContext,
-                                        conversation.participants
+                                        conversation.channel.participants
                                     );
                                     return ConversationContext.saveConversationContext(
                                         newChanConvContext,
                                         botContext,
                                         user
-                                    );
+                                    ).then(() => {
+                                        // const message = Message.from(
+                                        //     conversation.lastMessage,
+                                        //     user,
+                                        //     conversation.conversationId
+                                        // )
+                                        const {
+                                            content,
+                                            ...rest
+                                        } = conversation.lastMessage;
+                                        const message = {
+                                            details: [{ message: content[0] }],
+                                            ...rest
+                                        };
+                                        return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                            message,
+                                            conversation.bot,
+                                            conversation.conversationId
+                                        );
+                                    });
                                 });
                         } else if (conversation.bot.botId === 'im-bot') {
                             let botContext;

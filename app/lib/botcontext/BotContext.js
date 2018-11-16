@@ -64,14 +64,23 @@ export default class BotContext {
 
     tell = payload =>
         new Promise(resolve => {
+            const botId = this.getBotId();
             if (typeof payload === 'string') {
                 const Message = this.getCapability('Message');
                 let message = new Message();
                 message.stringMessage(payload);
-                message.messageByBot(true);
+                if (botId !== 'im-bot') {
+                    message.messageByBot(true);
+                } else {
+                    message.messageByBot(false);
+                }
                 resolve(this.botScreen.tell(message));
             } else {
-                payload.messageByBot(true);
+                if (botId !== 'im-bot') {
+                    payload.messageByBot(true);
+                } else {
+                    payload.messageByBot(false);
+                }
                 resolve(this.botScreen.tell(payload));
             }
         });
