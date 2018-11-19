@@ -204,10 +204,12 @@ export default class Conversation {
                         }
                     });
 
-                    Store.dispatch(completeConversationsLoad(true));
                     return Promise.all(promise);
                 })
-                .then(resolve);
+                .then(() => {
+                    Store.dispatch(completeConversationsLoad(true));
+                    return resolve();
+                });
         });
 
     /**

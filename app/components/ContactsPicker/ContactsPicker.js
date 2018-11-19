@@ -101,14 +101,16 @@ class ContactsPicker extends React.Component {
         //     Contact.refreshContacts();
         //     return;
         // }
-        Contact.getAddedContacts().then(contacts => {
-            if (contacts.length === 0) {
-                //If no contacts are added then go directly to contacts bot
-                this.handleAddContact();
-            } else {
-                this.refresh();
-            }
-        });
+        if (this.props.appState.contactsLoaded) {
+            Contact.getAddedContacts().then(contacts => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                } else {
+                    this.refresh();
+                }
+            });
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -116,7 +118,15 @@ class ContactsPicker extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            this.refresh();
+            // this.refresh()
+            Contact.getAddedContacts().then(contacts => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                } else {
+                    this.refresh();
+                }
+            });
         }
 
         if (
@@ -129,9 +139,9 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-        if (user.contactsLoaded === false) {
-            Contact.refreshContacts();
-        }
+        // if (user.contactsLoaded === false) {
+        //     Contact.refreshContacts()
+        // }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
     }
