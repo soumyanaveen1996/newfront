@@ -101,15 +101,15 @@ class ChannelsList extends React.Component {
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
+        const user = Store.getState().user;
+        if (user.allChannelsLoaded === false) {
+            Channel.refreshChannels();
+        }
     }
 
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        const user = Store.getState().user;
-        if (user.allChannelsLoaded === false) {
-            Channel.refreshChannels();
-        }
     }
 
     handleAddChannel = () => {
