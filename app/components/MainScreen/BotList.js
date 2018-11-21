@@ -96,14 +96,16 @@ export default class BotList extends React.Component {
                     {
                         loaded: true,
                         dataSource: ds.cloneWithRows([]),
-                        data: allChatsData
+                        data: allChatsData,
+                        reload: false
                     },
                     function(err, res) {
                         if (!err) {
                             this.setState({
                                 loaded: true,
                                 dataSource: ds.cloneWithRows(allChatsData),
-                                data: allChatsData
+                                data: allChatsData,
+                                reload: true
                             });
                         }
                     }
@@ -116,6 +118,19 @@ export default class BotList extends React.Component {
                 });
             }
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            JSON.stringify(this.state.data) !== JSON.stringify(nextState.data)
+        ) {
+            return true;
+        }
+        if (this.state.reload !== nextState.reload) {
+            return true;
+        }
+
+        return false;
     }
 
     render() {

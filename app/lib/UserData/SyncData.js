@@ -7,14 +7,17 @@ import Conversation from '../../lib/conversation/Conversation';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 export const synchronizeUserData = async () => {
+    try {
+        await Contact.refreshContacts();
+        await debounce();
+    } catch (error) {
+        console.log('Cannot Load Contacts Data', error);
+    }
     Conversation.downloadRemoteConversations();
     await debounce();
     RemoteBotInstall.syncronizeBots();
     await debounce();
-    Contact.refreshContacts();
-    await debounce();
     Channel.refreshChannels();
-    await debounce();
 };
 
 export const clearDataOnLogout = () => {

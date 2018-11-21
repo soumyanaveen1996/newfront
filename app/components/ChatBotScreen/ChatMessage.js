@@ -269,7 +269,9 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BARCODE ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
         ) {
             if (!message.getDisplayMessage()) {
                 return null;

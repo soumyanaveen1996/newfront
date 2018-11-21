@@ -5,6 +5,7 @@ import {
     SectionList,
     TextInput,
     KeyboardAvoidingView,
+    ActivityIndicator,
     Platform
 } from 'react-native';
 import styles from './styles';
@@ -36,6 +37,7 @@ import {
     refreshContacts
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import { MainScreenStyles } from '../MainScreen/styles';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -328,11 +330,26 @@ class ContactsPicker extends React.Component {
             this.state.contactsData,
             section => section.title
         );
+
+        if (
+            !(
+                this.props.appState.contactsLoaded &&
+                this.props.appState.allConversationsLoaded
+            )
+        ) {
+        }
+
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : null}
                 style={styles.addressBookContainer}
             >
+                {!(
+                    this.props.appState.contactsLoaded &&
+                    this.props.appState.allConversationsLoaded
+                ) ? (
+                        <ActivityIndicator size="small" />
+                    ) : null}
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={sectionList => {

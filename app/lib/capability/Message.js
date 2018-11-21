@@ -33,7 +33,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
     MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota',
     MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion',
-    MESSAGE_TYPE_WEB_CARD: 'web_card'
+    MESSAGE_TYPE_WEB_CARD: 'web_card',
+    MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification'
 };
 
 export const IntToMessageTypeConstants = {
@@ -48,7 +49,8 @@ export const IntToMessageTypeConstants = {
     230: MessageTypeConstants.MESSAGE_TYPE_FORM,
     240: MessageTypeConstants.MESSAGE_TYPE_MAP,
     250: MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
-    260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+    260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
+    270: MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -103,6 +105,11 @@ export default class Message {
     stringMessage = str => {
         this._msg = str;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_STRING;
+    };
+
+    standardNotification = str => {
+        this._msg = str;
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION;
     };
 
     imageMessage = imageUrl => {
