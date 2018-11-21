@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import { addButtonConfig, headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
@@ -73,7 +73,9 @@ class ChannelsList extends React.Component {
         //     return Channel.refreshChannels()
         // }
         // this.refresh();
-        this.refresh(false, true);
+        if (this.props.appState.allChannelsLoaded) {
+            this.refresh(false, true);
+        }
     }
 
     shouldComponentUpdate(nextProps) {
@@ -84,7 +86,7 @@ class ChannelsList extends React.Component {
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
-            return this.refresh(true, false);
+            return this.refresh(false, true);
         }
 
         if (
@@ -101,15 +103,15 @@ class ChannelsList extends React.Component {
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
+        const user = Store.getState().user;
+        // if (user.allChannelsLoaded === false) {
+        //     Channel.refreshChannels();
+        // }
     }
 
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        const user = Store.getState().user;
-        if (user.allChannelsLoaded === false) {
-            Channel.refreshChannels();
-        }
     }
 
     handleAddChannel = () => {
@@ -199,6 +201,21 @@ class ChannelsList extends React.Component {
                     extraData={this.state}
                 />
                 <Toast ref="toast" positionValue={200} />
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    {!this.props.appState.allChannelsLoaded ? (
+                        <ActivityIndicator size="small" />
+                    ) : null}
+                </View>
             </BackgroundImage>
         );
     }

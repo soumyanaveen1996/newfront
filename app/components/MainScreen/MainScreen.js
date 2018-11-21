@@ -452,14 +452,24 @@ class MainScreen extends React.Component {
         }
     };
 
+    contentLoading = () => {
+        const {
+            allConversationsLoaded,
+            remoteBotsInstalled
+        } = this.props.appState;
+
+        return !(allConversationsLoaded && remoteBotsInstalled);
+    };
+
     renderMain() {
         const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
             return (
-                <ActivityIndicator
-                    size="small"
-                    style={MainScreenStyles.activityIndicator}
-                />
+                // <ActivityIndicator
+                //     size="small"
+                //     style={MainScreenStyles.activityIndicator}
+                // />
+                <View />
             );
         } else {
             return (
@@ -471,11 +481,28 @@ class MainScreen extends React.Component {
                             : MainScreenStyles.botListContainer
                     }
                 >
+                    {this.contentLoading() ? (
+                        <ActivityIndicator size="small" />
+                    ) : null}
+
                     <BotList
                         ref="botList"
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots}
                     />
+                    {/* <View
+                        style={{
+                            position: 'absolute',
+                            top: 10,
+                            left: 0,
+                            right: 0,
+                            bottom: 0
+                            // justifyContent: 'center',
+                            // alignItems: 'center'
+                        }}
+                    > */}
+
+                    {/* </View> */}
                 </View>
             );
         }
