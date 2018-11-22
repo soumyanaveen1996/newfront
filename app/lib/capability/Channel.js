@@ -264,7 +264,10 @@ export default class Channel {
                         console.log('channels api call ', channels);
 
                         let channelInsertPromises = _.map(channels, channel => {
-                            ChannelDAO.insertIfNotPresent(
+                            if (!channel.channelOwner) {
+                                return Promise.resolve(true);
+                            }
+                            return ChannelDAO.insertIfNotPresent(
                                 channel.channelName,
                                 channel.description,
                                 channel.logo,
@@ -275,18 +278,18 @@ export default class Channel {
                                 channel.channelOwner.userId
                             );
                         });
-                        Store.dispatch(completeChannelInstall(true));
                         return Promise.all(channelInsertPromises);
                     }
                 })
                 .then(() => {
-                    resolve();
+                    Store.dispatch(completeChannelInstall(true));
+                    return resolve();
                 })
                 .catch(() => {
                     if (__DEV__) {
                         console.tron('Cannot Load Cahnnels');
                     }
-                    reject();
+                    return reject();
                 });
         });
 
@@ -318,7 +321,10 @@ export default class Channel {
                         let channels = response.data.content;
                         console.log('unscubscied channels api call ', channels);
                         let channelInsertPromises = _.map(channels, channel => {
-                            ChannelDAO.insertIfNotPresent(
+                            if (!channel.channelOwner) {
+                                return Promise.resolve(true);
+                            }
+                            return ChannelDAO.insertIfNotPresent(
                                 channel.channelName,
                                 channel.description,
                                 channel.logo,
@@ -329,18 +335,21 @@ export default class Channel {
                                 channel.channelOwner.userId
                             );
                         });
-                        Store.dispatch(completeChannelInstall(true));
                         return Promise.all(channelInsertPromises);
                     }
                 })
                 .then(() => {
-                    resolve();
+                    Store.dispatch(completeChannelInstall(true));
+                    return resolve();
                 })
-                .catch(() => {
+                .catch(error => {
                     if (__DEV__) {
-                        console.tron('Cannot Load  unsubscribed Cahnnels');
+                        console.tron(
+                            'Cannot Load  unsubscribed Cahnnels',
+                            error
+                        );
                     }
-                    reject();
+                    return reject();
                 });
         });
 }

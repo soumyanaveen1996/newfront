@@ -95,6 +95,16 @@ function elevenToTwelve() {
         return DbVersionDAO.updateVersion(12);
     });
 }
+function TwelvetoThirteen() {
+    return ChannelDAO.addOwnerName().then(() => {
+        return DbVersionDAO.updateVersion(13);
+    });
+}
+function ThirteentoFourteen() {
+    return ChannelDAO.addOwnerId().then(() => {
+        return DbVersionDAO.updateVersion(14);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -102,6 +112,7 @@ function runMigrations() {
                 if (exists) {
                     return DbVersionDAO.getVersion();
                 } else {
+                    console.log('CREATTING VERSION TABLE FROM START!!');
                     return DbVersionDAO.createVersionTable(0);
                 }
             })
@@ -185,6 +196,20 @@ function runMigrations() {
             .then(version => {
                 if (version === 11) {
                     return elevenToTwelve();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 12) {
+                    return TwelvetoThirteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 13) {
+                    return ThirteentoFourteen();
                 } else {
                     return version;
                 }

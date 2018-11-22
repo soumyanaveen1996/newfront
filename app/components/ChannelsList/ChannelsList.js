@@ -5,7 +5,8 @@ import {
     TextInput,
     ScrollView,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
@@ -195,8 +196,6 @@ class ChannelsList extends React.Component {
     };
 
     renderRowItem = ({ item }) => {
-        console.log('channels lets see ', item);
-
         return (
             <View key={item.id} style={styles.rowContainer}>
                 <View style={styles.rowContent}>{this.renderRow(item)}</View>
@@ -238,6 +237,9 @@ class ChannelsList extends React.Component {
                         underlineColorAndroid="transparent"
                     />
                 </View>
+                {!this.props.appState.allChannelsLoaded ? (
+                    <ActivityIndicator size="small" />
+                ) : null}
                 <ScrollView>
                     <View style={styles.createNewChannelContainer}>
                         <TouchableOpacity

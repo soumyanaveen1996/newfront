@@ -5,10 +5,7 @@ const createChannelsTable = `
         desc text NOT NULL,
         logo text NOT NULL,
         domain text NOT NULL,
-        conversationId text,
-        ownerEmail text NOT NULL,
-        ownerName text NOT NULL,
-        ownerId text NOT NULL
+        conversationId text
     );
 `;
 
@@ -116,7 +113,13 @@ const deleteAllChannels = `
 
 // Add a New owner Column
 const addOwnerColumn = `
-    ALTER TABLE channel ADD (ownerEmail varchar(20), ownerName varchar(20), ownerId varchar(20));
+ALTER TABLE channel ADD ownerEmail varchar(20);
+`;
+const addOwnerName = `
+ALTER TABLE channel ADD ownerName varchar(20);
+`;
+const addOwnerId = `
+ALTER TABLE channel ADD ownerId varchar(20);
 `;
 
 export default {
@@ -130,5 +133,7 @@ export default {
     selectChannelByConversationId,
     deleteAllChannels,
     selectChannelByNameAndDomain,
-    addOwnerColumn
+    addOwnerColumn,
+    addOwnerName,
+    addOwnerId
 };

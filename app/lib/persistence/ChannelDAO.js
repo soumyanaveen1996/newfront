@@ -246,13 +246,6 @@ const insertIfNotPresent = (
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
-                // console.log(
-                //     'selected channel : ',
-                //     name,
-                //     description,
-                //     logo,
-                //     domain
-                // );
                 if (!channel) {
                     return insertChannel(
                         name,
@@ -298,6 +291,40 @@ const addOwnerColumn = () =>
                     return resolve(true);
                 },
                 function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add Owner Email column')
+                    );
+                }
+            );
+        });
+    });
+
+const addOwnerName = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerName,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add Name column'));
+                }
+            );
+        });
+    });
+
+const addOwnerId = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerId,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
                     return reject(new Error('Unable to add status column'));
                 }
             );
@@ -316,5 +343,7 @@ export default {
     selectChannelByNameAndDomain,
     insertIfNotPresent,
     selectChannelByConversationId,
-    addOwnerColumn
+    addOwnerColumn,
+    addOwnerName,
+    addOwnerId
 };
