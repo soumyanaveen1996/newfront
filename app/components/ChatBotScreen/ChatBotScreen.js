@@ -77,6 +77,7 @@ import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
+import { ButtonMessage } from '../ButtonMessage';
 
 const R = require('ramda');
 
@@ -1048,6 +1049,18 @@ class ChatBotScreen extends React.Component {
                     <WebCards
                         webCardsList={message.getMessage()}
                         previews={message.getMessageOptions()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON
+            ) {
+                return (
+                    <ButtonMessage
+                        title={message.getMessage().title}
+                        body={message.getMessage().body}
+                        buttons={message.getMessage().buttons}
+                        onButtonClick={this.onButtonDone.bind()}
                     />
                 );
             } else {

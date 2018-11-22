@@ -189,7 +189,7 @@ export default class Message {
     };
 
     buttonMessage = (buttonData, options) => {
-        this._msg = JSON.stringify(buttonData || []);
+        this._msg = JSON.stringify(buttonData || {});
         if (options) {
             this._options = JSON.stringify(options);
         }
