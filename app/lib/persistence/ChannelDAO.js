@@ -19,9 +19,28 @@ const createChannelsTable = () =>
         });
     });
 
-const insertChannel = (name, description, logo, domain, channelId) =>
+const insertChannel = (
+    name,
+    description,
+    logo,
+    domain,
+    channelId,
+    ownerEmail,
+    ownerName,
+    ownerId
+) =>
     new Promise((resolve, reject) => {
-        const args = [name, description, logo, domain, channelId];
+        const args = [
+            name,
+            description,
+            logo,
+            domain,
+            channelId,
+            ownerEmail,
+            ownerName,
+            ownerId
+        ];
+        console.log('inserting channels in table ', args);
         db.transaction(tx => {
             tx.executeSql(
                 channelSql.insertChannel,
@@ -98,6 +117,7 @@ const selectChannels = () =>
                 [],
                 function success(tx, res) {
                     res = Utils.addArrayToSqlResults(res);
+                    console.log('in the success', res);
                     let dbResults = res.rows
                         ? res.rows._array
                             ? res.rows._array
@@ -120,13 +140,18 @@ const selectChannels = () =>
     });
 
 const channelDataFromDbResult = dbResult => {
+    console.log('dbResults ', dbResult);
+
     return {
         id: dbResult.id,
         channelName: dbResult.name,
         description: dbResult.desc,
         logo: dbResult.logo,
         userDomain: dbResult.domain,
-        channelId: dbResult.conversationId
+        channelId: dbResult.conversationId,
+        ownerEmail: dbResult.ownerEmail,
+        ownerName: dbResult.ownerName,
+        ownerId: dbResult.ownerId
     };
 };
 
@@ -208,7 +233,16 @@ const selectChannelByNameAndDomain = (name, domain) =>
         });
     });
 
-const insertIfNotPresent = (name, description, logo, domain, channelId) =>
+const insertIfNotPresent = (
+    name,
+    description,
+    logo,
+    domain,
+    channelId,
+    ownerEmail,
+    ownerName,
+    ownerId
+) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
@@ -225,7 +259,10 @@ const insertIfNotPresent = (name, description, logo, domain, channelId) =>
                         description,
                         logo,
                         domain,
-                        channelId
+                        channelId,
+                        ownerEmail,
+                        ownerName,
+                        ownerId
                     );
                 } else {
                     resolve();

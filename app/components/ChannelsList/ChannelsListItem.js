@@ -1,10 +1,11 @@
 import React from 'react';
 import { ActivityIndicator, TouchableOpacity, View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import styles from './styles';
 import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
 import { Channel } from '../../lib/capability';
-import { Icons } from '../../config/icons';
+// import { Icons } from '../../config/icons';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
 
@@ -54,6 +55,10 @@ export default class ChannelsListItem extends React.Component {
             });
     }
 
+    editChannel() {
+        console.log('edit channel');
+    }
+
     renderRightArea() {
         if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
             return (
@@ -64,10 +69,14 @@ export default class ChannelsListItem extends React.Component {
         } else {
             return (
                 <View style={styles.rightContainer}>
-                    <TouchableOpacity
-                        onPress={this.unsubscribeChannel.bind(this)}
-                    >
-                        {Icons.delete()}
+                    <TouchableOpacity onPress={this.editChannel.bind(this)}>
+                        {/* {Icons.delete()} */}
+                        <Icon
+                            style={styles.editIcon}
+                            name="edit-2"
+                            size={18}
+                            color="rgba(3,3,3,1)"
+                        />
                     </TouchableOpacity>
                 </View>
             );
@@ -85,27 +94,48 @@ export default class ChannelsListItem extends React.Component {
         console.log('channels details :', channel);
 
         return (
-            <TouchableOpacity
-                style={styles.container}
-                onPress={this.onItemPressed.bind(this)}
-            >
-                <CachedImage
-                    imageTag="channelLogo"
-                    source={{ uri: Utils.channelLogoUrl(channel.logo) }}
-                    style={styles.image}
-                    resizeMode="contain"
-                />
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>{channel.channelName}</Text>
-                    <Text
-                        numberOfLines={subtitleNumberOfLines}
-                        style={styles.subTitle}
-                    >
-                        {channel.description}
-                    </Text>
+            <View style={styles.container}>
+                <View style={styles.channelHeaderPart}>
+                    <View style={styles.imageContainer}>
+                        <CachedImage
+                            imageTag="channelLogo"
+                            source={{ uri: Utils.channelLogoUrl(channel.logo) }}
+                            style={styles.image}
+                            resizeMode="contain"
+                        />
+                    </View>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>{channel.channelName}</Text>
+                        <Text style={styles.channelOwnerDetails}>
+                            Created by you on October 2018
+                        </Text>
+                    </View>
+                </View>
+                <View style={styles.channelDescription}>
+                    <View style={styles.channelType}>
+                        <Text style={styles.channelTypeText}>
+                            Public Channel
+                        </Text>
+                    </View>
+                    <View style={styles.channelDescriptionContainer}>
+                        <Text
+                            numberOfLines={subtitleNumberOfLines}
+                            style={styles.subTitle}
+                        >
+                            {channel.description}
+                        </Text>
+                    </View>
+                    <View style={styles.channelButtonContainer}>
+                        <TouchableOpacity
+                            style={styles.openChannelButtonContainer}
+                            onPress={this.onItemPressed.bind(this)}
+                        >
+                            <Text style={styles.buttonText}>Open</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 {this.renderRightArea()}
-            </TouchableOpacity>
+            </View>
         );
     }
 }

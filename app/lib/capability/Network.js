@@ -130,9 +130,10 @@ function Network(options, queue = false) {
                 const requestOptions = converOptionsToFetchRequest(options);
                 fetch(options.url, requestOptions)
                     .then(response => {
-                        console.log('Response raw : ', response);
+                        // console.log('Response raw : ', response);
                         if (response.status === 200) {
                             response.json().then(json => {
+                                // console.log('get network json', json);
                                 resolve({
                                     data: json,
                                     status: response.status,
