@@ -237,6 +237,10 @@ export default class InstalledBotsScreen extends React.Component {
                     sessionId: user.creds.sessionId
                 }
             };
+            if (__DEV__) {
+                console.tron('I AMMMMMMM');
+            }
+
             await Promise.resolve(Network(options));
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
@@ -443,7 +447,7 @@ export default class InstalledBotsScreen extends React.Component {
                             />
                         }
                     />
-                    <Toast ref="toast" />
+                    <Toast ref="toast" positionValue={250} />
                 </View>
             );
         }

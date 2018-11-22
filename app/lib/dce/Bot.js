@@ -123,9 +123,16 @@ class Bot {
                         this.user
                     );
 
-                    depResp = eval(depResp);
-                    if (ctx) {
-                        ctx.addCapability(depName, depResp);
+                    try {
+                        depResp = eval(depResp);
+                        if (ctx) {
+                            ctx.addCapability(depName, depResp);
+                        }
+                    } catch (e) {
+                        if (__DEV__) {
+                            console.tron('Errro in eval', dep.name);
+                        }
+                        throw e;
                     }
                 })
             ).catch(e => {
@@ -138,7 +145,6 @@ class Bot {
             return botResp;
         } catch (e) {
             // TODO: handle errors
-            console.log('Error occurred!:', e);
             this.Delete(ctx);
             throw e;
         }
@@ -153,9 +159,11 @@ class Bot {
     async Delete(ctx) {
         try {
             // Get the user as we need the creds
+
             this.user = await Promise.resolve(Auth.getUser());
 
             let botDirectoryPath = this.botDirectory;
+
             console.log(
                 'Deleting the bot if it exists locally. botPath = ',
                 botDirectoryPath

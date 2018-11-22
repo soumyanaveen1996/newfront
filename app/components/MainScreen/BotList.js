@@ -33,10 +33,6 @@ export default class BotList extends React.Component {
     async refresh() {
         // TODO: In general overall performance of this is questionable. We need a better way to know what has changed and bubble that up
 
-        if (__DEV__) {
-            console.tron('Start Refresh');
-        }
-
         const bots = this.props.bots;
         let conversations =
             (await Promise.resolve(Conversation.getLocalConversations())) || [];
@@ -63,9 +59,6 @@ export default class BotList extends React.Component {
                             conversation.bot,
                             user
                         )
-                    );
-                    console.log(
-                        '>>>>>> ' + JSON.stringify(chatData, undefined, 2)
                     );
                 }
                 // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
@@ -103,14 +96,16 @@ export default class BotList extends React.Component {
                     {
                         loaded: true,
                         dataSource: ds.cloneWithRows([]),
-                        data: allChatsData
+                        data: allChatsData,
+                        reload: false
                     },
                     function(err, res) {
                         if (!err) {
                             this.setState({
                                 loaded: true,
                                 dataSource: ds.cloneWithRows(allChatsData),
-                                data: allChatsData
+                                data: allChatsData,
+                                reload: true
                             });
                         }
                     }
@@ -123,6 +118,19 @@ export default class BotList extends React.Component {
                 });
             }
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            JSON.stringify(this.state.data) !== JSON.stringify(nextState.data)
+        ) {
+            return true;
+        }
+        if (this.state.reload !== nextState.reload) {
+            return true;
+        }
+
+        return false;
     }
 
     render() {

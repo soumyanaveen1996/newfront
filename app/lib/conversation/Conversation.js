@@ -7,6 +7,9 @@ import Utils from '../../components/MainScreen/Utils';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 import BotContext from '../botcontext/BotContext';
 import SystemBot from '../bot/SystemBot';
+import { completeConversationsLoad } from '../../redux/actions/UserActions';
+import Store from '../../redux/store/configureStore';
+import Message from '../capability/Message';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 
@@ -52,6 +55,7 @@ export default class Conversation {
                             sessionId: user.creds.sessionId
                         }
                     };
+                    Store.dispatch(completeConversationsLoad(false));
                     return Network(options);
                 })
                 .then(async res => {
@@ -62,9 +66,19 @@ export default class Conversation {
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
                     let conversations = res.data.content.conversations;
+                    const localConversations = await Conversation.getLocalConversations();
                     let promise = _.map(conversations, conversation => {
                         if (conversation.bot === 'im-bot') {
                             let botContext;
+
+                            const devConv = localConversations.filter(
+                                lconversation =>
+                                    lconversation.conversationId ==
+                                    conversation.conversationId
+                            );
+                            if (devConv.length > 0) {
+                                return null;
+                            }
                             Conversation.createChannelConversation(
                                 conversation.conversationId
                             )
@@ -86,20 +100,50 @@ export default class Conversation {
                                 .then(newChanConvContext => {
                                     ConversationContext.updateParticipants(
                                         newChanConvContext,
-                                        conversation.participants
+                                        conversation.channel.participants
                                     );
                                     return ConversationContext.saveConversationContext(
                                         newChanConvContext,
                                         botContext,
                                         user
-                                    );
+                                    ).then(() => {
+                                        // const message = Message.from(
+                                        //     conversation.lastMessage,
+                                        //     user,
+                                        //     conversation.conversationId
+                                        // )
+                                        const {
+                                            content,
+                                            ...rest
+                                        } = conversation.lastMessage;
+                                        const message = {
+                                            details: [{ message: content[0] }],
+                                            ...rest
+                                        };
+                                        return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                            message,
+                                            conversation.bot,
+                                            conversation.conversationId
+                                        );
+                                    });
                                 });
                         } else if (conversation.bot.botId === 'im-bot') {
                             let botContext;
+                            if (!conversation.contact) {
+                                return null;
+                            }
                             const otherParticipant = {
                                 userName: conversation.contact.userName,
                                 userId: conversation.contact.userId
                             };
+                            const devConv = localConversations.filter(
+                                lconversation =>
+                                    lconversation.conversationId ==
+                                    conversation.conversationId
+                            );
+                            if (devConv.length > 0) {
+                                return null;
+                            }
                             Conversation.createIMConversation(
                                 conversation.conversationId
                             )
@@ -134,14 +178,38 @@ export default class Conversation {
                                         conversation.participants,
                                         botContext
                                     );
+                                })
+                                .then(() => {
+                                    // const message = Message.from(
+                                    //     conversation.lastMessage,
+                                    //     user,
+                                    //     conversation.conversationId
+                                    // )
+                                    const {
+                                        content,
+                                        ...rest
+                                    } = conversation.lastMessage;
+                                    const message = {
+                                        details: [{ message: content[0] }],
+                                        ...rest
+                                    };
+                                    return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                        message,
+                                        conversation.bot.botId,
+                                        conversation.conversationId
+                                    );
                                 });
                         } else {
                             return null;
                         }
                     });
+
                     return Promise.all(promise);
                 })
-                .then(resolve);
+                .then(() => {
+                    Store.dispatch(completeConversationsLoad(true));
+                    return resolve();
+                });
         });
 
     /**

@@ -1,6 +1,7 @@
 // import configToUse from './env/prod';
 // import configToUse from './env/local'
 import configToUse from './env/dev';
+// import configToUse from './env/stage'
 import ReactotronConfig from '../../ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
@@ -13,11 +14,16 @@ export const overrideConsole = trueConsole => {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
                 // console.tron.log.apply(trueConsole, arguments)
+                Reactotron.log(...arguments);
             }
         },
         error: function() {
             if (global.__DEV__) {
                 trueConsole.log.apply(trueConsole, arguments);
+                Reactotron.display({
+                    name: 'ERRORS',
+                    value: arguments
+                });
             }
         },
         warn: function() {

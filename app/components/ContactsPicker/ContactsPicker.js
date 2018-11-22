@@ -5,6 +5,7 @@ import {
     SectionList,
     TextInput,
     KeyboardAvoidingView,
+    ActivityIndicator,
     Platform
 } from 'react-native';
 import styles from './styles';
@@ -36,6 +37,7 @@ import {
     refreshContacts
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import { MainScreenStyles } from '../MainScreen/styles';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -101,14 +103,16 @@ class ContactsPicker extends React.Component {
         //     Contact.refreshContacts();
         //     return;
         // }
-        Contact.getAddedContacts().then(contacts => {
-            if (contacts.length === 0) {
-                //If no contacts are added then go directly to contacts bot
-                this.handleAddContact();
-            } else {
-                this.refresh();
-            }
-        });
+        if (this.props.appState.contactsLoaded) {
+            Contact.getAddedContacts().then(contacts => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                } else {
+                    this.refresh();
+                }
+            });
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -116,7 +120,15 @@ class ContactsPicker extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            this.refresh();
+            // this.refresh()
+            Contact.getAddedContacts().then(contacts => {
+                if (contacts.length === 0) {
+                    //If no contacts are added then go directly to contacts bot
+                    this.handleAddContact();
+                } else {
+                    this.refresh();
+                }
+            });
         }
 
         if (
@@ -129,9 +141,9 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-        if (user.contactsLoaded === false) {
-            Contact.refreshContacts();
-        }
+        // if (user.contactsLoaded === false) {
+        //     Contact.refreshContacts()
+        // }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
     }
@@ -318,11 +330,26 @@ class ContactsPicker extends React.Component {
             this.state.contactsData,
             section => section.title
         );
+
+        if (
+            !(
+                this.props.appState.contactsLoaded &&
+                this.props.appState.allConversationsLoaded
+            )
+        ) {
+        }
+
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : null}
                 style={styles.addressBookContainer}
             >
+                {!(
+                    this.props.appState.contactsLoaded &&
+                    this.props.appState.allConversationsLoaded
+                ) ? (
+                        <ActivityIndicator size="small" />
+                    ) : null}
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={sectionList => {

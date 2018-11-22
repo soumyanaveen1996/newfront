@@ -5,17 +5,21 @@ import Auth from '../capability/Auth';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import Conversation from '../../lib/conversation/Conversation';
 
-debounce = () => new Promise(resolve => setTimeout(resolve, 3000));
+debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 export const synchronizeUserData = async () => {
-    Contact.refreshContacts();
-    await debounce();
-    Channel.refreshChannels();
+    try {
+        await Contact.refreshContacts();
+        await debounce();
+    } catch (error) {
+        console.log('Cannot Load Contacts Data', error);
+    }
+    Conversation.downloadRemoteConversations();
     await debounce();
     Channel.refreshUnsubscribedChannels();
     await debounce();
     RemoteBotInstall.syncronizeBots();
     await debounce();
-    Conversation.downloadRemoteConversations();
+    Channel.refreshChannels();
 };
 
 export const clearDataOnLogout = () => {

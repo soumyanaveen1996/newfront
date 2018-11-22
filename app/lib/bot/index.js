@@ -38,6 +38,7 @@ class Bot extends events.EventEmitter {
         if (!bot) {
             throw new Error('A valid bot is required for updating a bot');
         }
+
         // First delete the older version
         const bots = await Bot.getInstalledBots();
         const currentBot = _.find(bots, { botId: bot.botId });

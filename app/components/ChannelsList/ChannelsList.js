@@ -83,7 +83,9 @@ class ChannelsList extends React.Component {
         //     return Channel.refreshChannels()
         // }
         // this.refresh();
-        this.refresh(false, true);
+        if (this.props.appState.allChannelsLoaded) {
+            this.refresh(false, true);
+        }
     }
 
     shouldComponentUpdate(nextProps) {
@@ -94,7 +96,7 @@ class ChannelsList extends React.Component {
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
-            return this.refresh(true, false);
+            return this.refresh(false, true);
         }
 
         if (
@@ -111,15 +113,15 @@ class ChannelsList extends React.Component {
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
+        const user = Store.getState().user;
+        // if (user.allChannelsLoaded === false) {
+        //     Channel.refreshChannels();
+        // }
     }
 
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        const user = Store.getState().user;
-        if (user.allChannelsLoaded === false) {
-            Channel.refreshChannels();
-        }
     }
 
     handleAddChannel = () => {

@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import java.util.Random;
 
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.LOG_TAG;
 import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.ACTION_INCOMING_CALL;
+import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.ACTION_REJECT_CALL;
 import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.INCOMING_CALL_INVITE;
 import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.INCOMING_CALL_NOTIFICATION_ID;
 import com.facebook.react.ReactApplication;
@@ -135,8 +138,18 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
                             // Construct and load our normal React JS code bundle
                             ReactInstanceManager mReactInstanceManager = ((ReactApplication) getApplication()).getReactNativeHost().getReactInstanceManager();
                             ReactContext context = mReactInstanceManager.getCurrentReactContext();
+
+
                             // If it's constructed, send a notification
                             if (context != null) {
+                                SharedPreferences sharedPref = context.getSharedPreferences("NativeStorage", Context.MODE_PRIVATE);
+                                String session = sharedPref.getString("SESSION", "none");
+                                String url = sharedPref.getString("URL", "none");
+                                String bot = sharedPref.getString("CONTACTS_BOT", "none");
+
+                                if(session.equalsIgnoreCase("none")){
+                                  return;
+                                }
                                 int appImportance = callNotificationManager.getApplicationImportance((ReactApplicationContext)context);
                                 if (BuildConfig.DEBUG) {
                                     Log.d(TAG, "CONTEXT present appImportance = " + appImportance);
@@ -157,6 +170,14 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
                                 // Otherwise wait for construction, then handle the incoming call
                                 mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
                                     public void onReactContextInitialized(ReactContext context) {
+                                        SharedPreferences sharedPref = context.getSharedPreferences("NativeStorage", Context.MODE_PRIVATE);
+                                        String session = sharedPref.getString("SESSION", "none");
+                                        String url = sharedPref.getString("URL", "none");
+                                        String bot = sharedPref.getString("CONTACTS_BOT", "none");
+
+                                        if(session.equalsIgnoreCase("none")){
+                                            return;
+                                        }
                                         int appImportance = callNotificationManager.getApplicationImportance((ReactApplicationContext)context);
                                         if (BuildConfig.DEBUG) {
                                             Log.d(TAG, "CONTEXT not present appImportance = " + appImportance);

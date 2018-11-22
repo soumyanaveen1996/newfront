@@ -99,18 +99,22 @@ export default class ConversationListItem extends React.Component {
                 />
             );
         } else {
-            return (
-                <CachedImage
-                    imageTag="channelLogo"
-                    source={{
-                        uri: Utils.channelLogoUrl(
-                            this.props.chatData.channel.logo
-                        )
-                    }}
-                    style={BotListItemStyles.conversationImage}
-                    resizeMode="contain"
-                />
-            );
+            if (this.props.chatData.channel) {
+                return (
+                    <CachedImage
+                        imageTag="channelLogo"
+                        source={{
+                            uri: Utils.channelLogoUrl(
+                                this.props.chatData.channel.logo
+                            )
+                        }}
+                        style={BotListItemStyles.conversationImage}
+                        resizeMode="contain"
+                    />
+                );
+            } else {
+                return <View />;
+            }
         }
     }
 

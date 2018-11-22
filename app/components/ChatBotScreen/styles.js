@@ -63,6 +63,20 @@ const stylesheet = StyleSheet.create({
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10
     },
+    stdNotifBubble: {
+        backgroundColor: GlobalColors.stdNotifBlue,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
+    },
+    criticalBubble: {
+        backgroundColor: GlobalColors.criticalYellow,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
+    },
     videoContainer: {
         padding: 5,
         backgroundColor: GlobalColors.botChatBubbleColor
