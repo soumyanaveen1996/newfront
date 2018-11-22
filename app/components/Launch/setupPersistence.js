@@ -91,7 +91,7 @@ function tenToEleven() {
 }
 
 function elevenToTwelve() {
-    return ChannelDAO.createChannelsTable().then(() => {
+    return ChannelDAO.addOwnerColumn().then(() => {
         return DbVersionDAO.updateVersion(12);
     });
 }

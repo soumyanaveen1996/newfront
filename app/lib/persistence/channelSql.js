@@ -22,7 +22,7 @@ const insertChannel = `
         ownerEmail,
         ownerName,
         ownerId
-    ) VALUES (?, ?, ?, ?, ?);
+    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?);
 `;
 
 const deleteChannel = `
@@ -114,6 +114,11 @@ const deleteAllChannels = `
     DELETE from channel
 `;
 
+// Add a New owner Column
+const addOwnerColumn = `
+    ALTER TABLE channel ADD (ownerEmail varchar(20), ownerName varchar(20), ownerId varchar(20));
+`;
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -124,5 +129,6 @@ export default {
     selectChannel,
     selectChannelByConversationId,
     deleteAllChannels,
-    selectChannelByNameAndDomain
+    selectChannelByNameAndDomain,
+    addOwnerColumn
 };
