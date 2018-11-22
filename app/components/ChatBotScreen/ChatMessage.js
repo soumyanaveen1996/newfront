@@ -35,6 +35,7 @@ import { DotIndicator } from 'react-native-indicators';
 import _ from 'lodash';
 import Hyperlink from 'react-native-hyperlink';
 import { Icons } from '../../config/icons';
+import { ButtonMessage } from '../ButtonMessage';
 
 export default class ChatMessage extends React.Component {
     constructor(props) {
@@ -334,36 +335,36 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
-            var buttons = [];
-            for (var i = 0; i < message.getMessage().length; i++) {
-                buttons.push(
-                    <View style={styles.buttonMsgParent} key={i}>
-                        <TouchableOpacity
-                            underlayColor="white"
-                            onPress={this.buttonResponseOnPress.bind(
-                                this,
-                                i,
-                                message.getMessage()[i]
-                            )}
-                            style={buttonStyle(message.getMessage()[i].style)}
-                        >
-                            <Text
-                                style={buttonTextStyle(
-                                    message.getMessage()[i].style
-                                )}
-                            >
-                                {message.getMessage()[i].title}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                );
-            }
+            // var buttons = [];
+            // for (var i = 0; i < message.getMessage().length; i++) {
+            //     buttons.push(
+            //         <View style={styles.buttonMsgParent} key={i}>
+            //             <TouchableOpacity
+            //                 underlayColor="white"
+            //                 onPress={this.buttonResponseOnPress.bind(
+            //                     this,
+            //                     i,
+            //                     message.getMessage()[i]
+            //                 )}
+            //                 style={buttonStyle(message.getMessage()[i].style)}
+            //             >
+            //                 <Text
+            //                     style={buttonTextStyle(
+            //                         message.getMessage()[i].style
+            //                     )}
+            //                 >
+            //                     {message.getMessage()[i].title}
+            //                 </Text>
+            //             </TouchableOpacity>
+            //         </View>
+            //     );
+            // }
 
-            const component = (
-                <View style={{ flexDirection: 'column', width: '70%' }}>
-                    {buttons}
-                </View>
-            );
+            // const component = (
+            //     <View style={{ flexDirection: 'column', width: '70%' }}>
+            //         {buttons}
+            //     </View>
+            // );
             return component;
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
