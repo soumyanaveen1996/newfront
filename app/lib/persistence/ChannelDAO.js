@@ -117,7 +117,7 @@ const selectChannels = () =>
                 [],
                 function success(tx, res) {
                     res = Utils.addArrayToSqlResults(res);
-                    console.log('in the success', res);
+                    console.log('in the success ====== ', res);
                     let dbResults = res.rows
                         ? res.rows._array
                             ? res.rows._array
@@ -288,6 +288,22 @@ const deleteAllChannels = () =>
         });
     });
 
+const addOwnerColumn = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerColumn,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add status column'));
+                }
+            );
+        });
+    });
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -299,5 +315,6 @@ export default {
     deleteAllChannels,
     selectChannelByNameAndDomain,
     insertIfNotPresent,
-    selectChannelByConversationId
+    selectChannelByConversationId,
+    addOwnerColumn
 };

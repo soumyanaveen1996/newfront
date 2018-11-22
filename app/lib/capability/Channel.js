@@ -316,6 +316,7 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
+                        console.log('unscubscied channels api call ', channels);
                         let channelInsertPromises = _.map(channels, channel => {
                             ChannelDAO.insertIfNotPresent(
                                 channel.channelName,
@@ -337,7 +338,7 @@ export default class Channel {
                 })
                 .catch(() => {
                     if (__DEV__) {
-                        console.tron('Cannot Load Cahnnels');
+                        console.tron('Cannot Load  unsubscribed Cahnnels');
                     }
                     reject();
                 });

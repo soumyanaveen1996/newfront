@@ -26,6 +26,8 @@ import {
     refreshChannels
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+
+debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -96,6 +98,7 @@ class ChannelsList extends React.Component {
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
+            await debounce();
             return this.refresh(false, true);
         }
 
