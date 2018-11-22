@@ -117,7 +117,8 @@ export default class SwiperScreen extends Component {
 
     goToSignupPage = () => {
         Actions.signupScreen({
-            type: ActionConst.REPLACE
+            type: ActionConst.PUSH,
+            key: Math.random()
         });
     };
 
