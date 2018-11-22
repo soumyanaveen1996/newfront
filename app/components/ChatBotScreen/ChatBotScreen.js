@@ -279,10 +279,20 @@ class ChatBotScreen extends React.Component {
                 return;
             }
 
+            let serverMessages = [];
+            if (messages.length < 3) {
+                serverMessages = await this.loadOldMessagesFromServer();
+            }
+
+            const allMessages = R.uniqWith(R.eqProps('key'), [
+                ...serverMessages,
+                ...messages
+            ]);
+
             // 4. Update the state of the bot with the messages we have
             this.setState(
                 {
-                    messages: this.addSessionStartMessages(messages),
+                    messages: this.addSessionStartMessages(allMessages),
                     typing: '',
                     showSlider: false
                 },
