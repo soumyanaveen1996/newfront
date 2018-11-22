@@ -10,7 +10,8 @@ const initialState = {
         currentScene: I18n.t('Home'),
         refreshTimeline: true,
         refreshChannels: true,
-        refreshContacts: true
+        refreshContacts: true,
+        refreshUserEmail: true
     },
     botState: {
         id: null

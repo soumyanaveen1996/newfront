@@ -6,10 +6,10 @@ import {
     Alert,
     StatusBar,
     AsyncStorage,
-    SafeAreaView,
     Platform
 } from 'react-native';
 import BotList from './BotList';
+import { SafeAreaView } from 'react-navigation';
 import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
 import images from '../../config/images';
@@ -53,6 +53,7 @@ import {
 import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
+import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',

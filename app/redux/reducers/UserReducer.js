@@ -22,6 +22,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ refreshChannels: action.payload } };
     case Actions.REFRESH_CONTACTS:
         return { ...state, ...{ refreshContacts: action.payload } };
+    case Actions.USER_EMAIL:
+        return { ...state, ...{ refreshUserEmail: action.payload } };
     default:
         return state;
     }

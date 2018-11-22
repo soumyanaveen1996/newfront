@@ -89,6 +89,12 @@ function tenToEleven() {
         return DbVersionDAO.updateVersion(11);
     });
 }
+
+function elevenToTwelve() {
+    return ChannelDAO.createChannelsTable().then(() => {
+        return DbVersionDAO.updateVersion(12);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -172,6 +178,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 10) {
                     return tenToEleven();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 11) {
+                    return elevenToTwelve();
                 } else {
                     return version;
                 }

@@ -5,7 +5,10 @@ const createChannelsTable = `
         desc text NOT NULL,
         logo text NOT NULL,
         domain text NOT NULL,
-        conversationId text
+        conversationId text,
+        ownerEmail text NOT NULL,
+        ownerName text NOT NULL,
+        ownerId text NOT NULL
     );
 `;
 
@@ -15,7 +18,10 @@ const insertChannel = `
         desc,
         logo,
         domain,
-        conversationId
+        conversationId,
+        ownerEmail,
+        ownerName,
+        ownerId
     ) VALUES (?, ?, ?, ?, ?);
 `;
 
@@ -51,7 +57,10 @@ const selectChannels = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     FROM channel
 `;
 
@@ -62,7 +71,10 @@ const selectChannel = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     FROM channel
     WHERE id = ?
 `;
@@ -74,7 +86,10 @@ const selectChannelByConversationId = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     FROM channel
     WHERE conversationId = ?
 `;
@@ -86,7 +101,10 @@ const selectChannelByNameAndDomain = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     FROM channel
     WHERE name = ?
     AND domain = ?

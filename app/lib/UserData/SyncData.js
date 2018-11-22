@@ -15,6 +15,8 @@ export const synchronizeUserData = async () => {
     }
     Conversation.downloadRemoteConversations();
     await debounce();
+    Channel.refreshUnsubscribedChannels();
+    await debounce();
     RemoteBotInstall.syncronizeBots();
     await debounce();
     Channel.refreshChannels();
