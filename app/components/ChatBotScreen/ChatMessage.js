@@ -258,6 +258,10 @@ export default class ChatMessage extends React.Component {
         }
     }
 
+    renderStdNotification(message) {
+        return <Text>{message.getDisplayMessage()}</Text>;
+    }
+    renderCriticalNotification(message) {}
     renderMessage() {
         let { message } = this.props;
 
@@ -269,9 +273,7 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BARCODE ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
         ) {
             if (!message.getDisplayMessage()) {
                 return null;
@@ -315,6 +317,11 @@ export default class ChatMessage extends React.Component {
                 </View>
             );
             return this.wrapBetweenFavAndTalk(message, component);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
+        ) {
+            return this.renderStdNotification(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
         ) {
@@ -483,6 +490,39 @@ export default class ChatMessage extends React.Component {
 
         if (message.isEmptyMessage()) {
             return null;
+        }
+
+        if (
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION
+        ) {
+            const renderedMessage = this.renderMessage();
+            const msgType = message.getMessageType();
+            const notifStyle =
+                msgType === MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
+                    ? [styles.bubble, styles.stdNotifBubble]
+                    : [styles.bubble, styles.criticalBubble];
+            if (renderedMessage) {
+                return (
+                    <View
+                        onLayout={this.onLayout.bind(this)}
+                        style={{
+                            display: 'flex',
+                            flex: 1,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: 30
+                        }}
+                    >
+                        <View style={notifStyle}>{renderedMessage}</View>
+                        {showTime ? this.renderMetadata() : null}
+                    </View>
+                );
+            } else {
+                return null;
+            }
         }
         if (
             message.getMessageType() ===

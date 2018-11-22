@@ -1052,20 +1052,6 @@ class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             if (
                 message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
-            ) {
-                return (
-                    <ChatMessage
-                        showTime={item.showTime}
-                        message={message}
-                        alignRight
-                        user={this.user}
-                    />
-                );
-            }
-
-            if (
-                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
             ) {
                 return (
