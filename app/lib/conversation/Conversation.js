@@ -65,7 +65,9 @@ export default class Conversation {
                     let manifest = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
+                    // And the DS has changed :(
                     let conversations = res.data.content.conversations;
+                    // let conversations = res.data.content
                     const localConversations = await Conversation.getLocalConversations();
                     let promise = _.map(conversations, conversation => {
                         if (conversation.bot === 'im-bot') {

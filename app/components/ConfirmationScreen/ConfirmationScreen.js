@@ -15,6 +15,10 @@ import styles from './styles';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
+import DefaultPreference from 'react-native-default-preference';
+import AfterLogin from '../../services/afterLogin';
+import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import { TwilioVoIP } from '../../lib/twilio';
 
 export default class ConfirmationScreen extends Component {
     constructor(props) {
@@ -100,7 +104,7 @@ export default class ConfirmationScreen extends Component {
             '',
             SYSTEM_BOT_MANIFEST['onboarding-bot'].botId
         )
-            .then(() => {
+            .then(async () => {
                 this.setState({
                     loading: false,
                     code: '',
@@ -108,6 +112,22 @@ export default class ConfirmationScreen extends Component {
                     signupStatus: '',
                     errorMessage: ''
                 });
+                await TwilioVoIP.init();
+                // RemoteBotInstall.syncronizeBots()
+                Auth.getUser().then(user => {
+                    if (Platform.OS === 'android') {
+                        DefaultPreference.setName('NativeStorage');
+                    }
+                    const ContactsURL = `${Config.network.queueProtocol}${
+                        Config.proxy.host
+                    }${Config.network.userDetailsPath}`;
+                    const ContactsBOT = SystemBot.contactsBot.botId;
+                    DefaultPreference.set('SESSION', user.creds.sessionId);
+                    DefaultPreference.set('URL', ContactsURL);
+                    DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
+                });
+                AfterLogin.executeAfterLogin();
+                synchronizeUserData();
                 Actions.timeline({ type: ActionConst.REPLACE });
             })
             .catch(err => {

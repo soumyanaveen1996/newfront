@@ -370,7 +370,10 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
             const component = (
-                <View style={styles.formButtonWrapper} key={i}>
+                <View
+                    style={styles.formButtonWrapper}
+                    key={message.getMessageId()}
+                >
                     <TouchableOpacity
                         onPress={this.openForm.bind(this, message)}
                         style={styles.formButton}
