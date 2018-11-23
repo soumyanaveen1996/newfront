@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Platform } from 'react-native';
 import styles from './styles';
 import Icons from '../../config/icons';
 import Config from './config.js';
@@ -58,7 +58,7 @@ export default class AudioPlayer extends React.Component {
         );
 
         var audioPath = audioSource.uri;
-        if (_.startsWith(audioPath, 'file://')) {
+        if (_.startsWith(audioPath, 'file://') && Platform.OS === 'android') {
             audioPath = audioPath.substr(6);
         }
 
