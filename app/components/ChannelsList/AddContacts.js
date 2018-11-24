@@ -4,7 +4,8 @@ import {
     ScrollView,
     Text,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Image
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
@@ -79,11 +80,101 @@ class AddContacts extends React.Component {
         }
         return navigationOptions;
     }
+    constructor(props) {
+        super(props);
+        this.state = {
+            contact: [
+                {
+                    contactId: '123',
+                    contactName: 'Sid',
+                    contactImage: 'dsa'
+                },
+                {
+                    contactId: '124',
+                    contactName: 'Sid',
+                    contactImage: 'dsa'
+                }
+            ],
+            addedContact: [
+                {
+                    contactId: '124',
+                    contactName: 'dif',
+                    contactImage: 'dsa'
+                }
+            ]
+        };
+    }
+
+    renderContact = () => {
+        console.log('rendering');
+
+        this.state.contact.map((elem, index) => {
+            return (
+                <View style={styles.contactContainer}>
+                    <Image source={images.tabbar_marketplace} />
+                    <Text>{elem.contactName}</Text>
+                </View>
+            );
+        });
+    };
 
     render() {
         return (
             <SafeAreaView style={styles.addContactsContainer}>
-                <Text>Add AddContacts</Text>
+                <ScrollView style={{ backgroundColor: '#f4f4f4', flex: 1 }}>
+                    <View
+                        style={{
+                            alignItems: 'center',
+                            padding: 5
+                        }}
+                    >
+                        {this.state.addedContact.map((elem, index) => {
+                            return (
+                                <View style={styles.contactAddedContainer}>
+                                    <Image
+                                        style={{ marginRight: 10 }}
+                                        source={images.close_btn}
+                                    />
+                                    <Image
+                                        style={styles.contactImage}
+                                        source={images.tabbar_marketplace}
+                                    />
+                                    <Text>{elem.contactName}</Text>
+                                </View>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+                <ScrollView
+                    style={{
+                        flex: 2,
+                        backgroundColor: 'white'
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            alignItems: 'center',
+                            padding: 5
+                        }}
+                    >
+                        {this.state.contact.map((elem, index) => {
+                            return (
+                                <View style={styles.contactContainer}>
+                                    <Image
+                                        style={{ marginRight: 10 }}
+                                        source={images.checkmark_normal}
+                                    />
+                                    <Image
+                                        style={styles.contactImage}
+                                        source={images.tabbar_marketplace}
+                                    />
+                                    <Text>{elem.contactName}</Text>
+                                </View>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         );
     }

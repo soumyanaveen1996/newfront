@@ -89,10 +89,46 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
+    onUnsubscribeButton() {
+        console.log('unsubscribe');
+    }
+
+    onsubscribeButton() {
+        console.log('subscribe');
+    }
+
+    subscriptionButton() {
+        if (this.props.channel.subcription === 'true') {
+            return (
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={styles.openChannelButtonContainer}
+                        onPress={this.onItemPressed.bind(this)}
+                    >
+                        <Text style={styles.buttonText}>Open</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.openChannelButtonContainer}
+                        onPress={this.onItemPressed.bind(this)}
+                    >
+                        <Text style={styles.buttonText}>Unsubscribe</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    style={styles.openChannelButtonContainer}
+                    onPress={this.onsubscribeButton.bind(this)}
+                >
+                    <Text style={styles.buttonText}>Subscribe</Text>
+                </TouchableOpacity>
+            );
+        }
+    }
+
     render() {
         const channel = this.props.channel;
-        console.log('channels details :', channel);
-
         return (
             <View style={styles.container}>
                 <View style={styles.channelHeaderPart}>
@@ -107,7 +143,8 @@ export default class ChannelsListItem extends React.Component {
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{channel.channelName}</Text>
                         <Text style={styles.channelOwnerDetails}>
-                            Created by you on October 2018
+                            Created by {channel.ownerName || 'N/A'} on October
+                            2018
                         </Text>
                     </View>
                 </View>
@@ -126,12 +163,7 @@ export default class ChannelsListItem extends React.Component {
                         </Text>
                     </View>
                     <View style={styles.channelButtonContainer}>
-                        <TouchableOpacity
-                            style={styles.openChannelButtonContainer}
-                            onPress={this.onItemPressed.bind(this)}
-                        >
-                            <Text style={styles.buttonText}>Open</Text>
-                        </TouchableOpacity>
+                        {this.subscriptionButton()}
                     </View>
                 </View>
                 {this.renderRightArea()}

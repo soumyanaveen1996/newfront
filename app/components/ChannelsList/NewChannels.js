@@ -17,7 +17,8 @@ import { HeaderBack, HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
-
+import { Channel } from '../../lib/capability';
+import Loader from '../Loader/Loader';
 import images from '../../images';
 
 class NewChannels extends React.Component {
@@ -93,7 +94,8 @@ class NewChannels extends React.Component {
             channelName: '',
             channelDescription: '',
             typeValue: '',
-            visbilityValue: ''
+            visibilityValue: '',
+            loading: false
         };
 
         this.channelType_radio = [
@@ -108,19 +110,48 @@ class NewChannels extends React.Component {
         this.inputs = {};
     }
 
-    onChangeChannelName(i, text) {
+    onChangeChannelName(text) {
         this.setState({ channelName: text });
     }
 
-    onChangeDescriptionText(i, text) {
+    onChangeDescriptionText(text) {
         this.setState({ channelDescription: text });
     }
 
     focusTheField = id => {
         this.inputs[id].focus();
     };
-    saveChannel() {
-        console.log('save channels');
+
+    async saveChannel() {
+        this.setState({ loading: true });
+        const channelName = this.state.channelName;
+        const description = this.state.channelDescription;
+        const discoverable = this.state.typeValue;
+        const channelType = this.state.visibilityValue;
+        let userDomain = '';
+        if (channelType === 'private') {
+            userDomain = 'inmarsat';
+        } else {
+            userDomain = 'frontmai';
+        }
+        const channelData = {
+            channelName,
+            description,
+            discoverable,
+            channelType,
+            userDomain
+        };
+        console.log('save channels', channelData);
+
+        Channel.create(channelData)
+            .then(data => {
+                console.log('success on creating channel ', data);
+                this.setState({ loading: false });
+                Actions.pop();
+            })
+            .catch(err => {
+                console.log('err on creating channel', err);
+            });
     }
 
     addParticipants() {
@@ -133,6 +164,7 @@ class NewChannels extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                <Loader loading={this.state.loading} />
                 <ScrollView style={styles.scrollViewCreate}>
                     <View style={styles.newChannelContainer}>
                         <View style={styles.channelInfoContainer}>

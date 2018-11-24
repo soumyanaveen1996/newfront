@@ -33,6 +33,7 @@ const images = {
     checkmark_normal: require('./checkbox-empty/checkbox-empty.png'),
     checkmark_selected: require('./checkbox-checked/checkbox-checked.png'),
     btn_close_slider: { uri: 'purple_btn_close' },
+    close_btn: require('./icons/cross-deselect-participant.png'),
     btn_info: require('./slider/btn_info.png'),
     icn_slider: require('./slider/icn_slider.png'),
     walkthrough_image: require('./walkthrough/image.png'),
