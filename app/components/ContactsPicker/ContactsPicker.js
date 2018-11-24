@@ -331,25 +331,14 @@ class ContactsPicker extends React.Component {
             section => section.title
         );
 
-        if (
-            !(
-                this.props.appState.contactsLoaded &&
-                this.props.appState.allConversationsLoaded
-            )
-        ) {
-        }
-
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : null}
                 style={styles.addressBookContainer}
             >
-                {!(
-                    this.props.appState.contactsLoaded &&
-                    this.props.appState.allConversationsLoaded
-                ) ? (
-                        <ActivityIndicator size="small" />
-                    ) : null}
+                {!this.props.appState.contactsLoaded ? (
+                    <ActivityIndicator size="small" />
+                ) : null}
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={sectionList => {

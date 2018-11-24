@@ -143,12 +143,16 @@ function Network(options, queue = false) {
                                 '>>>>>>NETWORK ERROR CODE NE 200',
                                 response
                             );
-                            reject(
-                                new NetworkError(
+                            const loadError = response.statusText
+                                ? new NetworkError(
                                     response.status,
                                     response.statusText
                                 )
-                            );
+                                : new NetworkError(
+                                    response.status,
+                                    'Error Loading Data'
+                                );
+                            reject(loadError);
                         }
                     })
                     .catch(err => {

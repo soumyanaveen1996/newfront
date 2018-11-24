@@ -193,6 +193,10 @@ class ChannelsList extends React.Component {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
+                {!this.props.appState.allChannelsLoaded ? (
+                    <ActivityIndicator size="small" />
+                ) : null}
+
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.id}
@@ -201,21 +205,6 @@ class ChannelsList extends React.Component {
                     extraData={this.state}
                 />
                 <Toast ref="toast" positionValue={200} />
-                <View
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
-                >
-                    {!this.props.appState.allChannelsLoaded ? (
-                        <ActivityIndicator size="small" />
-                    ) : null}
-                </View>
             </BackgroundImage>
         );
     }
