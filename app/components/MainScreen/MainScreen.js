@@ -458,6 +458,7 @@ class MainScreen extends React.Component {
             remoteBotsInstalled
         } = this.props.appState;
 
+        return false;
         return !(allConversationsLoaded && remoteBotsInstalled);
     };
 

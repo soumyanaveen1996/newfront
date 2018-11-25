@@ -336,9 +336,9 @@ class ContactsPicker extends React.Component {
                 behavior={Platform.OS === 'ios' ? 'padding' : null}
                 style={styles.addressBookContainer}
             >
-                {!this.props.appState.contactsLoaded ? (
+                {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
-                ) : null}
+                ) : null} */}
                 <SectionList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={sectionList => {
