@@ -1,9 +1,9 @@
-import { StyleSheet } from 'react-native';
-import { SCREEN_WIDTH, scrollViewConfig } from './config';
+import { StyleSheet, Platform } from 'react-native';
+import { SCREEN_WIDTH, SCREEN_HEIGHT, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
 
 export const ChannelsListItemColors = {
-    titleColor: 'rgba(74, 74, 74, 1)',
+    titleColor: 'rgba(102, 102, 102, 1)',
     subTitleColor: 'rgba(153,153,153,1);',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
@@ -24,8 +24,8 @@ export default StyleSheet.create({
     },
 
     rowContainer: {
-        width: SCREEN_WIDTH,
-        height: 95,
+        width: SCREEN_WIDTH - 20,
+        height: 180,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -34,7 +34,8 @@ export default StyleSheet.create({
         flex: 1,
         marginBottom: 10,
         justifyContent: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        borderRadius: 15
     },
     avatarContainerStyle: {
         height: 50,
@@ -88,40 +89,24 @@ export default StyleSheet.create({
         paddingTop: 15
     },
     container: {
-        flex: 1,
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        paddingVertical: 14,
-        alignItems: 'stretch',
-        backgroundColor: ChannelsListItemColors.backgroundColor
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+        borderRadius: 15,
+        backgroundColor: ChannelsListItemColors.white,
+        position: 'relative'
     },
-    title: {
-        color: ChannelsListItemColors.titleColor,
-        fontFamily: 'SF Pro Text',
-        fontSize: 18,
-        fontWeight: '300'
-    },
-    subTitle: {
-        color: ChannelsListItemColors.subTitleColor,
-        fontSize: 14,
-        fontFamily: 'Roboto',
-        fontWeight: '300',
-        marginTop: 5
-    },
+
     image: {
-        height: 50,
-        width: 50,
+        height: 46,
+        width: 46,
         marginTop: 5
     },
-    textContainer: {
-        flex: 1,
-        marginHorizontal: 10
-    },
+
     rightContainer: {
-        flexDirection: 'row-reverse',
-        alignItems: 'center',
-        alignContent: 'center',
-        marginLeft: 20
+        position: 'absolute',
+        right: 10,
+        top: 10
     },
     hidden: {
         display: 'none'
@@ -137,5 +122,268 @@ export default StyleSheet.create({
         color: ChannelsListItemColors.button,
         fontSize: 12,
         padding: 3
+    },
+    searchSection: {
+        width: SCREEN_WIDTH,
+        height: 40,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff'
+    },
+    searchIcon: {
+        padding: 10
+    },
+
+    input: {
+        flex: 1,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 0,
+        backgroundColor: '#fff',
+        color: 'rgba(155,155,155,1)'
+    },
+    createNewChannelContainer: {
+        width: SCREEN_WIDTH,
+        height: 70,
+        backgroundColor: 'rgba(244,244,244,1)',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonContainer: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: '500',
+        paddingHorizontal: 5
+    },
+    filterContainer: {
+        width: SCREEN_WIDTH,
+        height: 40,
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        paddingHorizontal: 10
+    },
+    filterTextContainer: { flex: 1 },
+    filterText: {
+        color: 'rgba(102, 102, 102, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16
+    },
+    filterArea: { flex: 4 },
+    channelHeaderPart: {
+        width: '100%',
+        height: 70,
+        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+    },
+    imageContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textContainer: {
+        flex: 3,
+        borderLeftWidth: 1,
+        paddingLeft: 20,
+        paddingTop: 15,
+        borderLeftColor: 'rgba(91, 91, 91, 0.2)'
+    },
+
+    title: {
+        color: ChannelsListItemColors.titleColor,
+        fontFamily: 'SF Pro Text',
+        fontSize: 20,
+        fontWeight: '600'
+    },
+    channelOwnerDetails: {
+        color: ChannelsListItemColors.subTitleColor,
+        fontSize: 12,
+        fontFamily: 'SF Pro Text'
+    },
+    channelDescription: {
+        width: '100%',
+        height: 110
+    },
+    channelType: {
+        marginTop: 10
+    },
+    channelTypeText: {
+        fontFamily: 'SF Pro Text',
+        fontSize: 14,
+        textAlign: 'center',
+        color: 'rgba(47,199,111,1)'
+    },
+    channelDescriptionContainer: {
+        marginTop: 5
+    },
+    subTitle: {
+        color: ChannelsListItemColors.subTitleColor,
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'SF Pro Text',
+        fontWeight: '300'
+    },
+    channelButtonContainer: {
+        marginTop: 10,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    openChannelButtonContainer: {
+        height: 30,
+        width: 80,
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+        marginBottom: 25,
+        paddingHorizontal: 5
+    },
+    editIcon: {},
+
+    filterMaincontainer: {
+        backgroundColor: GlobalColors.white,
+        flex: 1
+    },
+    filterScrollView: {
+        flex: 1,
+        backgroundColor: GlobalColors.white
+    },
+    filterChipContainer: {
+        width: SCREEN_WIDTH,
+        height: 90,
+        padding: 20,
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+    },
+    filterbyHeader: {
+        color: '#4A4A4A',
+        fontFamily: 'SF Pro Text',
+        fontSize: 18,
+        marginBottom: 20
+    },
+    filterCheckBoxContainer: {
+        padding: 20,
+        width: SCREEN_WIDTH
+    },
+    filterButtonContainer: {
+        width: SCREEN_WIDTH,
+        marginVertical: 20,
+        height: 120,
+        alignItems: 'center'
+    },
+    clearFilterConatiner: {
+        marginTop: 20,
+        backgroundColor: 'transparent'
+    },
+    clearButtonText: {
+        color: 'rgba(0,189,242,1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16
+    },
+    filterListText: {
+        color: '#666666',
+        fontFamily: 'SF Pro Text',
+        fontSize: 14
+    },
+    scrollViewCreate: {
+        backgroundColor: GlobalColors.white,
+        flex: 1
+    },
+    newChannelContainer: {
+        backgroundColor: GlobalColors.white,
+        flex: 1,
+        alignItems: 'center'
+    },
+    channelInfoContainer: {
+        width: SCREEN_WIDTH - 20,
+        padding: 20,
+        alignItems: 'flex-start',
+        borderBottomColor: '#F4F4F4',
+        borderBottomWidth: 1
+    },
+
+    entryFields: Platform.select({
+        ios: {
+            position: 'relative',
+            width: 300,
+            backgroundColor: 'transparent'
+        },
+        android: {
+            width: 300,
+            backgroundColor: 'transparent'
+        }
+    }),
+
+    inputChannel: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(244,244,244,1)',
+        padding: 10,
+        color: 'rgba(0,0,0,0.8)',
+        fontSize: 16,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10,
+        marginBottom: 10
+    },
+
+    inputChannelDescription: {
+        height: 80,
+        width: 300,
+        justifyContent: 'flex-start',
+        backgroundColor: 'rgba(244,244,244,1)',
+        padding: 10,
+        color: 'rgba(0,0,0,0.8)',
+        fontSize: 16,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10
+    },
+    channelText: {
+        color: '#4A4A4A',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16,
+        marginBottom: 20
+    },
+
+    addContactsContainer: {
+        backgroundColor: GlobalColors.white,
+        flex: 1
+    },
+    contactContainer: {
+        backgroundColor: GlobalColors.white,
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 60,
+        alignItems: 'center',
+        padding: 10
+    },
+    contactAddedContainer: {
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 60,
+        alignItems: 'center',
+        padding: 10
+    },
+    contactImage: {
+        marginRight: 10
     }
 });

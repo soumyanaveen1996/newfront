@@ -244,7 +244,7 @@ export default class Splash extends React.Component {
     };
 
     goToLoginPage = () => {
-        Actions.swiperScreen({ type: ActionConst.REPLACE });
+        Actions.swiperScreen({ type: ActionConst.REPLACE, swiperIndex: 4 });
     };
 
     showMainScreen = (moveToOnboarding = false) => {

@@ -48,3 +48,8 @@ export const refreshContacts = payload => ({
     type: Actions.REFRESH_CONTACTS,
     payload
 });
+
+export const refreshUserEmail = payload => ({
+    type: Actions.USER_EMAIL,
+    payload
+});

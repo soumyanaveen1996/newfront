@@ -15,8 +15,13 @@ const insertChannel = `
         desc,
         logo,
         domain,
-        conversationId
-    ) VALUES (?, ?, ?, ?, ?);
+        conversationId,
+        ownerEmail,
+        ownerName,
+        ownerId,
+        createdOn,
+        subcription
+    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?);
 `;
 
 const deleteChannel = `
@@ -51,7 +56,12 @@ const selectChannels = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
 `;
 
@@ -62,7 +72,12 @@ const selectChannel = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE id = ?
 `;
@@ -74,7 +89,12 @@ const selectChannelByConversationId = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE conversationId = ?
 `;
@@ -86,7 +106,12 @@ const selectChannelByNameAndDomain = `
         name,
         desc,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE name = ?
     AND domain = ?
@@ -94,6 +119,23 @@ const selectChannelByNameAndDomain = `
 
 const deleteAllChannels = `
     DELETE from channel
+`;
+
+// Add a New owner Column
+const addOwnerColumn = `
+ALTER TABLE channel ADD ownerEmail varchar(20);
+`;
+const addOwnerName = `
+ALTER TABLE channel ADD ownerName varchar(20);
+`;
+const addOwnerId = `
+ALTER TABLE channel ADD ownerId varchar(20);
+`;
+const addCreatedOn = `
+ALTER TABLE channel ADD createdOn varchar(20);
+`;
+const addisSubscribed = `
+ALTER TABLE channel ADD subcription varchar(20);
 `;
 
 export default {
@@ -106,5 +148,10 @@ export default {
     selectChannel,
     selectChannelByConversationId,
     deleteAllChannels,
-    selectChannelByNameAndDomain
+    selectChannelByNameAndDomain,
+    addOwnerColumn,
+    addOwnerName,
+    addOwnerId,
+    addCreatedOn,
+    addisSubscribed
 };

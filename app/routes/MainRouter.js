@@ -34,6 +34,9 @@ import { LocationPicker } from '../components/LocationPicker';
 import { VideoRecorder } from '../components/VideoRecorder';
 import { FormPopup } from '../components/FormPopup';
 import { ChannelsList } from '../components/ChannelsList';
+import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
+import NewChannels from '../components/ChannelsList/NewChannels';
+import AddContacts from '../components/ChannelsList/AddContacts';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
@@ -196,6 +199,21 @@ class MainRouter extends React.Component {
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}
                                         component={ChannelChat}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.channelsFilter}
+                                        title="Filter"
+                                        component={ChannelsFilter}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.newChannels}
+                                        title="Filter"
+                                        component={NewChannels}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.addParticipants}
+                                        title="Add participants"
+                                        component={AddContacts}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.slider}

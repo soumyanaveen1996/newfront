@@ -31,14 +31,20 @@ export default class Channel {
         name,
         description,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     ) =>
         ChannelDAO.insertIfNotPresent(
             name,
             description,
             logo,
             domain,
-            channelId
+            channelId,
+            ownerEmail,
+            ownerName,
+            ownerId
         );
 
     static subscribe = channels =>
@@ -99,6 +105,7 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        console.log('creating channels ', channel);
                         let options = {
                             method: 'POST',
                             url: `${config.network.queueProtocol}${
@@ -261,27 +268,99 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
+                        console.log('subscribed channel ', channels);
                         let channelInsertPromises = _.map(channels, channel => {
-                            ChannelDAO.insertIfNotPresent(
+                            if (!channel.channelOwner) {
+                                return Promise.resolve(true);
+                            }
+                            return ChannelDAO.insertIfNotPresent(
                                 channel.channelName,
                                 channel.description,
                                 channel.logo,
                                 channel.userDomain,
-                                channel.channelId
+                                channel.channelId,
+                                channel.channelOwner.emailAddress,
+                                channel.channelOwner.userName,
+                                channel.channelOwner.userId,
+                                channel.createdOn,
+                                'true'
                             );
                         });
-                        Store.dispatch(completeChannelInstall(true));
                         return Promise.all(channelInsertPromises);
                     }
                 })
                 .then(() => {
-                    resolve();
+                    Store.dispatch(completeChannelInstall(true));
+                    return resolve();
                 })
                 .catch(() => {
                     if (__DEV__) {
                         console.tron('Cannot Load Cahnnels');
                     }
-                    reject();
+                    return reject();
+                });
+        });
+
+    static refreshUnsubscribedChannels = () =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'getUnsubscribed',
+                                botId: SystemBot.channelsBot.botId,
+                                domains: user.info.domains
+                            }
+                        };
+                        Store.dispatch(completeChannelInstall(false));
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    if (response.data && response.data.content) {
+                        let channels = response.data.content;
+                        console.log('unsubscribed channel ', channels);
+
+                        let channelInsertPromises = _.map(channels, channel => {
+                            if (!channel.channelOwner) {
+                                return Promise.resolve(true);
+                            }
+                            return ChannelDAO.insertIfNotPresent(
+                                channel.channelName,
+                                channel.description,
+                                channel.logo,
+                                channel.userDomain,
+                                channel.channelId,
+                                channel.channelOwner.emailAddress,
+                                channel.channelOwner.userName,
+                                channel.channelOwner.userId,
+                                channel.createdOn,
+                                'false'
+                            );
+                        });
+                        return Promise.all(channelInsertPromises);
+                    }
+                })
+                .then(() => {
+                    Store.dispatch(completeChannelInstall(true));
+                    return resolve();
+                })
+                .catch(error => {
+                    if (__DEV__) {
+                        console.tron(
+                            'Cannot Load  unsubscribed Cahnnels',
+                            error
+                        );
+                    }
+                    return reject();
                 });
         });
 }

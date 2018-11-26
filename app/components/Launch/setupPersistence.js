@@ -89,6 +89,33 @@ function tenToEleven() {
         return DbVersionDAO.updateVersion(11);
     });
 }
+
+function elevenToTwelve() {
+    return ChannelDAO.addOwnerColumn().then(() => {
+        return DbVersionDAO.updateVersion(12);
+    });
+}
+function TwelvetoThirteen() {
+    return ChannelDAO.addOwnerName().then(() => {
+        return DbVersionDAO.updateVersion(13);
+    });
+}
+function ThirteentoFourteen() {
+    return ChannelDAO.addOwnerId().then(() => {
+        return DbVersionDAO.updateVersion(14);
+    });
+}
+function FourteenToFifteen() {
+    return ChannelDAO.addCreatedOn().then(() => {
+        return DbVersionDAO.updateVersion(15);
+    });
+}
+function FifteenToSixteen() {
+    return ChannelDAO.addisSubscribed().then(() => {
+        return DbVersionDAO.updateVersion(16);
+    });
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -96,6 +123,7 @@ function runMigrations() {
                 if (exists) {
                     return DbVersionDAO.getVersion();
                 } else {
+                    console.log('CREATTING VERSION TABLE FROM START!!');
                     return DbVersionDAO.createVersionTable(0);
                 }
             })
@@ -172,6 +200,41 @@ function runMigrations() {
             .then(version => {
                 if (version === 10) {
                     return tenToEleven();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 11) {
+                    return elevenToTwelve();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 12) {
+                    return TwelvetoThirteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 13) {
+                    return ThirteentoFourteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 14) {
+                    return FourteenToFifteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 15) {
+                    return FifteenToSixteen();
                 } else {
                     return version;
                 }

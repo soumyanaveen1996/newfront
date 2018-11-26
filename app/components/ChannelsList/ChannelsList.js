@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import {
+    View,
+    FlatList,
+    TextInput,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import styles from './styles';
 import { addButtonConfig, headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
@@ -18,9 +27,13 @@ import {
     refreshChannels
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+
+debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
+        console.log('navigation ', state.params.handleAddChannel);
+
         return {
             headerTitle: headerConfig.headerTitle,
             headerRight: (
@@ -86,6 +99,7 @@ class ChannelsList extends React.Component {
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
+            await debounce();
             return this.refresh(false, true);
         }
 
@@ -116,6 +130,7 @@ class ChannelsList extends React.Component {
 
     handleAddChannel = () => {
         SystemBot.get(SystemBot.channelsBotManifestName).then(channelsBot => {
+            console.log('clicking on right button channel ', channelsBot);
             Actions.botChat({ bot: channelsBot, onBack: this.onBack });
         });
     };
@@ -126,8 +141,7 @@ class ChannelsList extends React.Component {
 
     async refresh(onback = false, handleEmptyChannels = true) {
         const channels = await Channel.getSubscribedChannels();
-
-        if (handleEmptyChannels && channels.length == 0) {
+        if (handleEmptyChannels && channels.length === 0) {
             if (onback) {
                 if (this.props.onBack) {
                     this.props.onBack();
@@ -189,22 +203,74 @@ class ChannelsList extends React.Component {
         );
     };
 
+    createChannel() {
+        Actions.newChannels({
+            title: 'Create new channel',
+            onBack: this.props.onBack
+        });
+    }
+
+    onPressFilter() {
+        Actions.channelsFilter({
+            title: 'Filter',
+            onBack: this.props.onBack
+        });
+    }
+
     render() {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
+                <View style={styles.searchSection}>
+                    <Icon
+                        style={styles.searchIcon}
+                        name="search"
+                        size={24}
+                        color="rgba(0, 189, 242, 1)"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search Channel"
+                        onChangeText={searchString => {
+                            this.setState({ searchString });
+                        }}
+                        underlineColorAndroid="transparent"
+                    />
+                </View>
                 {!this.props.appState.allChannelsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null}
-
-                <FlatList
-                    style={styles.flatList}
-                    keyExtractor={(item, index) => item.id}
-                    data={this.state.channels}
-                    renderItem={this.renderRowItem.bind(this)}
-                    extraData={this.state}
-                />
-                <Toast ref="toast" positionValue={200} />
+                <ScrollView>
+                    <View style={styles.createNewChannelContainer}>
+                        <TouchableOpacity
+                            style={styles.buttonContainer}
+                            onPress={this.createChannel.bind(this)}
+                        >
+                            <Text style={styles.buttonText}>New Channel</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.filterContainer}>
+                        <TouchableOpacity
+                            style={styles.filterTextContainer}
+                            onPress={this.onPressFilter.bind(this)}
+                        >
+                            <Text style={styles.filterText}>Filter</Text>
+                        </TouchableOpacity>
+                        <View style={styles.filterArea}>
+                            <Text>filter area</Text>
+                        </View>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <FlatList
+                            style={styles.flatList}
+                            keyExtractor={(item, index) => item.id}
+                            data={this.state.channels}
+                            renderItem={this.renderRowItem.bind(this)}
+                            extraData={this.state}
+                        />
+                        <Toast ref="toast" positionValue={200} />
+                    </View>
+                </ScrollView>
             </BackgroundImage>
         );
     }

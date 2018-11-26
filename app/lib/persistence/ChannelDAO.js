@@ -19,9 +19,32 @@ const createChannelsTable = () =>
         });
     });
 
-const insertChannel = (name, description, logo, domain, channelId) =>
+const insertChannel = (
+    name,
+    description,
+    logo,
+    domain,
+    channelId,
+    ownerEmail,
+    ownerName,
+    ownerId,
+    createdOn,
+    subcription
+) =>
     new Promise((resolve, reject) => {
-        const args = [name, description, logo, domain, channelId];
+        const args = [
+            name,
+            description,
+            logo,
+            domain,
+            channelId,
+            ownerEmail,
+            ownerName,
+            ownerId,
+            createdOn,
+            subcription
+        ];
+        console.log('inserting channels in table ', args);
         db.transaction(tx => {
             tx.executeSql(
                 channelSql.insertChannel,
@@ -98,6 +121,7 @@ const selectChannels = () =>
                 [],
                 function success(tx, res) {
                     res = Utils.addArrayToSqlResults(res);
+                    console.log('in the success ====== ', res);
                     let dbResults = res.rows
                         ? res.rows._array
                             ? res.rows._array
@@ -126,7 +150,12 @@ const channelDataFromDbResult = dbResult => {
         description: dbResult.desc,
         logo: dbResult.logo,
         userDomain: dbResult.domain,
-        channelId: dbResult.conversationId
+        channelId: dbResult.conversationId,
+        ownerEmail: dbResult.ownerEmail,
+        ownerName: dbResult.ownerName,
+        ownerId: dbResult.ownerId,
+        createdOn: dbResult.createdOn,
+        subcription: dbResult.subcription
     };
 };
 
@@ -208,24 +237,33 @@ const selectChannelByNameAndDomain = (name, domain) =>
         });
     });
 
-const insertIfNotPresent = (name, description, logo, domain, channelId) =>
+const insertIfNotPresent = (
+    name,
+    description,
+    logo,
+    domain,
+    channelId,
+    ownerEmail,
+    ownerName,
+    ownerId,
+    createdOn,
+    subcription
+) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
-                // console.log(
-                //     'selected channel : ',
-                //     name,
-                //     description,
-                //     logo,
-                //     domain
-                // );
                 if (!channel) {
                     return insertChannel(
                         name,
                         description,
                         logo,
                         domain,
-                        channelId
+                        channelId,
+                        ownerEmail,
+                        ownerName,
+                        ownerId,
+                        createdOn,
+                        subcription
                     );
                 } else {
                     resolve();
@@ -251,6 +289,88 @@ const deleteAllChannels = () =>
         });
     });
 
+const addOwnerColumn = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerColumn,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add Owner Email column')
+                    );
+                }
+            );
+        });
+    });
+
+const addOwnerName = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerName,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add Name column'));
+                }
+            );
+        });
+    });
+
+const addOwnerId = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addOwnerId,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add status column'));
+                }
+            );
+        });
+    });
+const addCreatedOn = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addCreatedOn,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add createdOn column'));
+                }
+            );
+        });
+    });
+const addisSubscribed = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addisSubscribed,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add subcription column')
+                    );
+                }
+            );
+        });
+    });
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -262,5 +382,10 @@ export default {
     deleteAllChannels,
     selectChannelByNameAndDomain,
     insertIfNotPresent,
-    selectChannelByConversationId
+    selectChannelByConversationId,
+    addOwnerColumn,
+    addOwnerName,
+    addOwnerId,
+    addCreatedOn,
+    addisSubscribed
 };

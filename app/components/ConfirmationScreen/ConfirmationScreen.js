@@ -131,7 +131,8 @@ export default class ConfirmationScreen extends Component {
                 Actions.timeline({ type: ActionConst.REPLACE });
             })
             .catch(err => {
-                this.setState({ errorMessage: err.message });
+                console.log('error on incorrect password ', err);
+                this.setState({ errorMessage: 'Incorrect Password' });
                 this.setState({ loading: false });
             });
 
@@ -150,6 +151,13 @@ export default class ConfirmationScreen extends Component {
             email: this.state.userEmail,
             password: this.state.password,
             signupStatus: this.state.signupStatus
+        });
+    }
+
+    onGoToLoginButton() {
+        Actions.swiperScreen({
+            type: ActionConst.REPLACE,
+            swiperIndex: 4
         });
     }
     checkFieldEmpty = () => {
@@ -266,7 +274,14 @@ export default class ConfirmationScreen extends Component {
             this.state.signupStatus &&
             this.state.signupStatus === 'codeConfirmed'
         ) {
-            return null;
+            return (
+                <TouchableOpacity
+                    style={styles.resendButton}
+                    onPress={this.onGoToLoginButton.bind(this)}
+                >
+                    <Text style={styles.textColor}>Go to Login</Text>
+                </TouchableOpacity>
+            );
         } else {
             return (
                 <TouchableOpacity

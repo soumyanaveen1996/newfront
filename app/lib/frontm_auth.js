@@ -364,10 +364,10 @@ class FrontmAuth {
                         },
                         data: data
                     };
-                    console.log(
-                        'network options : ' +
-                            JSON.stringify(options, undefined, 2)
-                    );
+                    // console.log(
+                    //     'network options : ' +
+                    //         JSON.stringify(options, undefined, 2)
+                    // );
                     Network(options)
                         .then(res => {
                             let resData =
