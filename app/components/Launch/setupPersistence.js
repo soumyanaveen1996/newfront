@@ -105,6 +105,17 @@ function ThirteentoFourteen() {
         return DbVersionDAO.updateVersion(14);
     });
 }
+function FourteenToFifteen() {
+    return ChannelDAO.addCreatedOn().then(() => {
+        return DbVersionDAO.updateVersion(15);
+    });
+}
+function FifteenToSixteen() {
+    return ChannelDAO.addisSubscribed().then(() => {
+        return DbVersionDAO.updateVersion(16);
+    });
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -210,6 +221,20 @@ function runMigrations() {
             .then(version => {
                 if (version === 13) {
                     return ThirteentoFourteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 14) {
+                    return FourteenToFifteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 15) {
+                    return FifteenToSixteen();
                 } else {
                     return version;
                 }

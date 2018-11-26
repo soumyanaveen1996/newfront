@@ -31,14 +31,20 @@ export default class Channel {
         name,
         description,
         logo,
-        domain
+        domain,
+        ownerEmail,
+        ownerName,
+        ownerId
     ) =>
         ChannelDAO.insertIfNotPresent(
             name,
             description,
             logo,
             domain,
-            channelId
+            channelId,
+            ownerEmail,
+            ownerName,
+            ownerId
         );
 
     static subscribe = channels =>
@@ -99,6 +105,7 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        console.log('creating channels ', channel);
                         let options = {
                             method: 'POST',
                             url: `${config.network.queueProtocol}${
@@ -261,8 +268,7 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
-                        console.log('channels api call ', channels);
-
+                        console.log('subscribed channel ', channels);
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);
@@ -275,7 +281,9 @@ export default class Channel {
                                 channel.channelId,
                                 channel.channelOwner.emailAddress,
                                 channel.channelOwner.userName,
-                                channel.channelOwner.userId
+                                channel.channelOwner.userId,
+                                channel.createdOn,
+                                'true'
                             );
                         });
                         return Promise.all(channelInsertPromises);
@@ -319,7 +327,8 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
-                        console.log('unscubscied channels api call ', channels);
+                        console.log('unsubscribed channel ', channels);
+
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);
@@ -332,7 +341,9 @@ export default class Channel {
                                 channel.channelId,
                                 channel.channelOwner.emailAddress,
                                 channel.channelOwner.userName,
-                                channel.channelOwner.userId
+                                channel.channelOwner.userId,
+                                channel.createdOn,
+                                'false'
                             );
                         });
                         return Promise.all(channelInsertPromises);

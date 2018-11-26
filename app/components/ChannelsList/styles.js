@@ -163,7 +163,8 @@ export default StyleSheet.create({
         color: '#fff',
         textAlign: 'center',
         fontSize: 16,
-        fontWeight: '500'
+        fontWeight: '500',
+        paddingHorizontal: 5
     },
     filterContainer: {
         width: SCREEN_WIDTH,
@@ -248,7 +249,9 @@ export default StyleSheet.create({
         borderRadius: 6,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 25
+        marginRight: 10,
+        marginBottom: 25,
+        paddingHorizontal: 5
     },
     editIcon: {},
 
@@ -363,5 +366,24 @@ export default StyleSheet.create({
     addContactsContainer: {
         backgroundColor: GlobalColors.white,
         flex: 1
+    },
+    contactContainer: {
+        backgroundColor: GlobalColors.white,
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 60,
+        alignItems: 'center',
+        padding: 10
+    },
+    contactAddedContainer: {
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 60,
+        alignItems: 'center',
+        padding: 10
+    },
+    contactImage: {
+        marginRight: 10
     }
 });

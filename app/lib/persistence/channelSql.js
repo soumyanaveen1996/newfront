@@ -18,8 +18,10 @@ const insertChannel = `
         conversationId,
         ownerEmail,
         ownerName,
-        ownerId
-    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?);
+        ownerId,
+        createdOn,
+        subcription
+    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?);
 `;
 
 const deleteChannel = `
@@ -57,7 +59,9 @@ const selectChannels = `
         domain,
         ownerEmail,
         ownerName,
-        ownerId
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
 `;
 
@@ -71,7 +75,9 @@ const selectChannel = `
         domain,
         ownerEmail,
         ownerName,
-        ownerId
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE id = ?
 `;
@@ -86,7 +92,9 @@ const selectChannelByConversationId = `
         domain,
         ownerEmail,
         ownerName,
-        ownerId
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE conversationId = ?
 `;
@@ -101,7 +109,9 @@ const selectChannelByNameAndDomain = `
         domain,
         ownerEmail,
         ownerName,
-        ownerId
+        ownerId,
+        createdOn,
+        subcription
     FROM channel
     WHERE name = ?
     AND domain = ?
@@ -121,6 +131,12 @@ ALTER TABLE channel ADD ownerName varchar(20);
 const addOwnerId = `
 ALTER TABLE channel ADD ownerId varchar(20);
 `;
+const addCreatedOn = `
+ALTER TABLE channel ADD createdOn varchar(20);
+`;
+const addisSubscribed = `
+ALTER TABLE channel ADD subcription varchar(20);
+`;
 
 export default {
     createChannelsTable,
@@ -135,5 +151,7 @@ export default {
     selectChannelByNameAndDomain,
     addOwnerColumn,
     addOwnerName,
-    addOwnerId
+    addOwnerId,
+    addCreatedOn,
+    addisSubscribed
 };
