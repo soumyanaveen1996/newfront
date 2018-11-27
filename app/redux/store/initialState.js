@@ -15,6 +15,9 @@ const initialState = {
     },
     botState: {
         id: null
+    },
+    channels: {
+        filters: []
     }
 };
 

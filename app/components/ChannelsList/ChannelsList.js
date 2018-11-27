@@ -27,6 +27,7 @@ import {
     refreshChannels
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import { Auth } from '../../lib/capability';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 class ChannelsList extends React.Component {
@@ -61,7 +62,8 @@ class ChannelsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            channels: []
+            channels: [],
+            filter: []
         };
     }
 
@@ -86,6 +88,7 @@ class ChannelsList extends React.Component {
         //     return Channel.refreshChannels()
         // }
         // this.refresh();
+
         if (this.props.appState.allChannelsLoaded) {
             this.refresh(false, true);
         }
@@ -107,17 +110,13 @@ class ChannelsList extends React.Component {
             prevProps.appState.refreshChannels !==
             this.props.appState.refreshChannels
         ) {
-            if (__DEV__) {
-                console.tron('Refresh Channels');
-            }
-
             return this.refresh(true, false);
         }
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
-        const user = Store.getState().user;
+        // const user = Store.getState().user
         // if (user.allChannelsLoaded === false) {
         //     Channel.refreshChannels();
         // }
@@ -135,8 +134,51 @@ class ChannelsList extends React.Component {
         });
     };
 
-    onBack = () => {
+    applyFilter = async channels => {
+        if (__DEV__) {
+            console.tron('All Channels', channels);
+            console.tron('Filters', this.props.channel.filters);
+        }
+        const filters = this.props.channel.filters;
+        const user = await Auth.getUser();
+
+        const { userId } = user;
+
+        let filteredChannels = channels;
+        for (let filter of filters) {
+            if (!filter) {
+                continue;
+            }
+            const { value } = filter;
+            if (value === 'subscribed') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.subcription === true
+                );
+            }
+
+            if (value === 'created') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.ownerId === userId
+                );
+            }
+
+            if (value === 'unscubscribed') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.subcription === false
+                );
+            }
+            if (value === 'public') {
+            }
+            if (value === 'private') {
+            }
+        }
+        return filteredChannels;
+    };
+    onBack = (filter = null) => {
         // this.refresh()
+        if (__DEV__) {
+            console.tron('I am back', filter);
+        }
     };
 
     async refresh(onback = false, handleEmptyChannels = true) {
@@ -151,7 +193,8 @@ class ChannelsList extends React.Component {
                 this.handleAddChannel();
             }
         } else {
-            this.setState({ channels: channels });
+            const filteredChannels = await this.applyFilter(channels);
+            this.setState({ channels: filteredChannels });
         }
     }
 
@@ -179,7 +222,7 @@ class ChannelsList extends React.Component {
             Actions.channelChat({
                 bot: imBot,
                 channel: channel,
-                onBack: this.props.onBack
+                onBack: this.onBack
             });
         });
     };
@@ -206,14 +249,14 @@ class ChannelsList extends React.Component {
     createChannel() {
         Actions.newChannels({
             title: 'Create new channel',
-            onBack: this.props.onBack
+            onBack: this.onBack
         });
     }
 
     onPressFilter() {
         Actions.channelsFilter({
             title: 'Filter',
-            onBack: this.props.onBack
+            onBack: this.onBack
         });
     }
 
@@ -221,6 +264,9 @@ class ChannelsList extends React.Component {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
+                {!this.props.appState.allChannelsLoaded ? (
+                    <ActivityIndicator size="small" />
+                ) : null}
                 <View style={styles.searchSection}>
                     <Icon
                         style={styles.searchIcon}
@@ -237,18 +283,15 @@ class ChannelsList extends React.Component {
                         underlineColorAndroid="transparent"
                     />
                 </View>
-                {!this.props.appState.allChannelsLoaded ? (
-                    <ActivityIndicator size="small" />
-                ) : null}
+                <View style={styles.createNewChannelContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonContainer}
+                        onPress={this.createChannel.bind(this)}
+                    >
+                        <Text style={styles.buttonText}>New Channel</Text>
+                    </TouchableOpacity>
+                </View>
                 <ScrollView>
-                    <View style={styles.createNewChannelContainer}>
-                        <TouchableOpacity
-                            style={styles.buttonContainer}
-                            onPress={this.createChannel.bind(this)}
-                        >
-                            <Text style={styles.buttonText}>New Channel</Text>
-                        </TouchableOpacity>
-                    </View>
                     <View style={styles.filterContainer}>
                         <TouchableOpacity
                             style={styles.filterTextContainer}
@@ -277,7 +320,8 @@ class ChannelsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    appState: state.user
+    appState: state.user,
+    channel: state.channel
 });
 
 const mapDispatchToProps = dispatch => {

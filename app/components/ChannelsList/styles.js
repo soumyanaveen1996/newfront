@@ -1,6 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_WIDTH, SCREEN_HEIGHT, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const ChannelsListItemColors = {
     titleColor: 'rgba(102, 102, 102, 1)',
@@ -167,8 +171,9 @@ export default StyleSheet.create({
         paddingHorizontal: 5
     },
     filterContainer: {
+        display: 'flex',
         width: SCREEN_WIDTH,
-        height: 40,
+        height: hp('10%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
@@ -257,16 +262,18 @@ export default StyleSheet.create({
 
     filterMaincontainer: {
         backgroundColor: GlobalColors.white,
-        flex: 1
+        height: hp('10%')
     },
     filterScrollView: {
         flex: 1,
         backgroundColor: GlobalColors.white
     },
     filterChipContainer: {
+        display: 'flex',
+        flexDirection: 'row',
         width: SCREEN_WIDTH,
-        height: 90,
-        padding: 20,
+        height: hp('10%'),
+        padding: 10,
         borderBottomWidth: 0.5,
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },

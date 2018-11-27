@@ -24,7 +24,6 @@ import images from '../../images';
 class NewChannels extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        console.log('in new screen ', state.params.button);
 
         let navigationOptions = {
             headerTitle: state.params.title
