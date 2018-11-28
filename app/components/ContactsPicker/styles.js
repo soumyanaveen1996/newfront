@@ -8,20 +8,20 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         flexDirection: 'column'
     },
-    searchBar: Platform.select({
-        ios: {
-            backgroundColor: GlobalColors.white,
-            height: 36
-        },
-        android: {
-            backgroundColor: GlobalColors.white,
-            height: 45
-        }
-    }),
+    searchBar: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: GlobalColors.white,
+        height: 40
+    },
+    searchIcon: {
+        marginLeft: 23
+    },
     searchTextInput: {
-        marginHorizontal: 20,
+        marginHorizontal: 16,
         marginVertical: 5,
-        fontSize: 13,
+        fontSize: 16,
         paddingHorizontal: 5,
         flex: 1,
         backgroundColor: GlobalColors.white,
@@ -30,46 +30,71 @@ const stylesheet = StyleSheet.create({
         height: 24,
         color: GlobalColors.darkGray
     },
+    buttonsContainer: {
+        backgroundColor: GlobalColors.transparent,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 13
+    },
+    button: {
+        width: 170,
+        marginHorizontal: 10,
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    buttonIcon: {
+        marginVertical: 10
+    },
+    buttonText: {
+        fontSize: 16,
+        color: GlobalColors.white,
+        textAlign: 'center',
+        marginLeft: 11,
+        marginVertical: 10
+    },
     addressBookContainer: {
         flex: 1,
-        backgroundColor: GlobalColors.background
+        backgroundColor: GlobalColors.transparent
     },
     addressBook: {
-        flex: 1
+        flex: 1,
+        backgroundColor: GlobalColors.transparent
     },
     sectionHeaderContainer: {
-        backgroundColor: 'rgb(246, 247, 248)',
+        backgroundColor: GlobalColors.transparent,
         height: SECTION_HEADER_HEIGHT,
-        paddingHorizontal: 15,
+        paddingHorizontal: 22,
         alignItems: 'center',
         flexDirection: 'row'
     },
     sectionHeaderTitle: {
-        fontSize: 11,
-        fontWeight: '700',
-        color: 'rgb(23, 21, 21)'
+        fontSize: 24,
+        color: GlobalColors.darkGray,
+        textAlign: 'center'
     },
     contactItemContainer: {
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 55,
-        paddingHorizontal: 10
+        height: 60,
+        paddingHorizontal: 24,
+        paddingVertical: 17
     },
     contactItemImage: {
-        height: 44,
-        width: 44,
-        borderRadius: 22,
-        marginLeft: 10,
-        marginRight: 12
+        height: 26,
+        width: 26,
+        borderRadius: 13,
+        marginRight: 17
     },
     contactItemDetailsContainer: {
         flexDirection: 'column',
         justifyContent: 'space-between'
     },
     contactItemName: {
-        color: 'rgb(23, 19, 19)',
-        fontSize: 16
+        color: GlobalColors.headerBlack,
+        fontSize: 18
     },
     contactItemEmail: {
         color: 'rgb(180, 180, 180)',

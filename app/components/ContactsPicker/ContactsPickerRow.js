@@ -49,9 +49,6 @@ export default class ContactsPickerRow extends React.Component {
                         <Text style={styles.contactItemName}>
                             {contact.name}
                         </Text>
-                        <Text style={styles.contactItemEmail}>
-                            {emails.join(',')}
-                        </Text>
                     </View>
                 </View>
             </TouchableOpacity>
