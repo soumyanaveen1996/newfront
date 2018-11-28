@@ -334,39 +334,44 @@ class ContactsPicker extends React.Component {
         );
     }
 
-    renderButtons() {
-        return (
-            <View style={styles.buttonsContainer}>
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: GlobalColors.sideButtons }
-                    ]}
-                >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="mail"
-                        size={24}
-                        color={GlobalColors.white}
-                    />
-                    <Text style={styles.buttonText}>Invite contact</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: GlobalColors.green }
-                    ]}
-                >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="user-plus"
-                        size={24}
-                        color={GlobalColors.white}
-                    />
-                    <Text style={styles.buttonText}>New contact</Text>
-                </TouchableOpacity>
-            </View>
-        );
+    renderButtons = () => (
+        <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+                style={[
+                    styles.button,
+                    { backgroundColor: GlobalColors.sideButtons }
+                ]}
+            >
+                <Icon
+                    style={styles.buttonIcon}
+                    name="mail"
+                    size={24}
+                    color={GlobalColors.white}
+                />
+                <Text style={styles.buttonText}>Invite contact</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.button, { backgroundColor: GlobalColors.green }]}
+            >
+                <Icon
+                    style={styles.buttonIcon}
+                    name="user-plus"
+                    size={24}
+                    color={GlobalColors.white}
+                />
+                <Text style={styles.buttonText}>New contact</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    sectionHeader({ section }) {
+        if (section.data.length === 0) {
+            console.log('>>> ' + JSON.stringify(section.data));
+            return <View style={{ height: 0 }} />;
+        } else {
+            console.log('<<< ' + JSON.stringify(section.data));
+            return <ContactsPickerSectionHeader title={section.title} />;
+        }
     }
 
     renderContactsList() {
@@ -390,11 +395,10 @@ class ContactsPicker extends React.Component {
                     }}
                     style={styles.addressBook}
                     renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={({ section }) => (
-                        <ContactsPickerSectionHeader title={section.title} />
-                    )}
+                    renderSectionHeader={this.sectionHeader.bind(this)}
                     sections={this.state.contactsData}
                     keyExtractor={(item, index) => item.id}
+                    ListHeaderComponent={this.renderButtons}
                 />
                 <ContactsPickerIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}
@@ -410,7 +414,6 @@ class ContactsPicker extends React.Component {
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
-                    {this.renderButtons()}
                     {this.renderContactsList()}
                 </BackgroundImage>
             </SafeAreaView>
