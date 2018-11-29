@@ -7,12 +7,22 @@ export const ChannelReducer = (state = initialState.channels, action) => {
     case Actions.SET_CHANNEL_FILTER:
         return {
             ...state,
-            ...{ filters: [...state.filters, ...action.payload] }
+            ...{ filters: [...action.payload] }
         };
     case Actions.CLEAR_CHANNEL_FILTER:
         return {
             ...state,
             ...{ filters: [] }
+        };
+    case Actions.SET_CHANNEL_PARTICIPANTS:
+        return {
+            ...state,
+            ...{ participants: [...action.payload] }
+        };
+    case Actions.SET_CHANNEL_TEAM:
+        return {
+            ...state,
+            ...{ team: action.payload }
         };
     default:
         return state;

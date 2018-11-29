@@ -37,6 +37,7 @@ import { ChannelsList } from '../components/ChannelsList';
 import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
 import NewChannels from '../components/ChannelsList/NewChannels';
 import AddContacts from '../components/ChannelsList/AddContacts';
+import SelectTeam from '../components/ChannelsList/SelectTeam';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
@@ -214,6 +215,13 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.addParticipants}
                                         title="Add participants"
                                         component={AddContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.selectTeam}
+                                        title="Select Team"
+                                        component={SelectTeam}
+                                        type="push"
+                                        duration={0}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.slider}

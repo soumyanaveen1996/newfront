@@ -1,6 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import { SECTION_HEADER_HEIGHT } from './config';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const stylesheet = StyleSheet.create({
     container: {
@@ -11,11 +15,11 @@ const stylesheet = StyleSheet.create({
     searchBar: Platform.select({
         ios: {
             backgroundColor: GlobalColors.white,
-            height: 36
+            height: hp('5%')
         },
         android: {
             backgroundColor: GlobalColors.white,
-            height: 45
+            height: hp('5%')
         }
     }),
     searchTextInput: {

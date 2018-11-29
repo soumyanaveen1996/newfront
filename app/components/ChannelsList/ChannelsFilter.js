@@ -10,8 +10,9 @@ import {
     setChannelFilter,
     clearChannelFilter
 } from '../../redux/actions/ChannelActions';
+import { setCurrentScene } from '../../redux/actions/UserActions';
 import { connect } from 'react-redux';
-// import {RNChipView} from 'react-native-chip-view'
+import { RNChipView } from 'react-native-chip-view';
 import images from '../../images';
 
 class ChannelsFilter extends React.Component {
@@ -74,11 +75,12 @@ class ChannelsFilter extends React.Component {
     }
 
     componentDidMount() {
-        const filterList = this.props.channel.filter;
+        const filterList = this.props.channel.filters;
         if (filterList && filterList.length > 0) {
-            this.setState({ filterList: this.props.channel.filters });
+            this.setState({ filterList: filterList });
         }
     }
+
     applyFilters() {
         this.props.setFilter(this.state.filterList);
         Actions.pop();
@@ -114,7 +116,18 @@ class ChannelsFilter extends React.Component {
                         <View style={styles.filterChipContainer}>
                             {this.state.filterList.map(elem => {
                                 return elem && elem.checked ? (
-                                    <Text>{elem.title}</Text>
+                                    <View style={styles.filterSelected}>
+                                        <RNChipView
+                                            title={elem.title}
+                                            titleStyle={
+                                                styles.selectedFilterTitle
+                                            }
+                                            avatar={false}
+                                            backgroundColor="#424B5A"
+                                            borderRadius={6}
+                                            height={20}
+                                        />
+                                    </View>
                                 ) : null;
                             })}
                         </View>
@@ -172,13 +185,15 @@ class ChannelsFilter extends React.Component {
     }
 }
 const mapStateToProps = state => ({
-    channel: state.channel
+    channel: state.channel,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => {
     return {
         setFilter: filter => dispatch(setChannelFilter(filter)),
-        clearFilter: () => dispatch(clearChannelFilter())
+        clearFilter: () => dispatch(clearChannelFilter()),
+        setCurrentScene: scene => dispatch(setCurrentScene(scene))
     };
 };
 

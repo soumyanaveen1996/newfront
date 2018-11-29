@@ -28,8 +28,10 @@ import {
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { Auth } from '../../lib/capability';
+import { RNChipView } from 'react-native-chip-view';
 
-debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+const debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -63,7 +65,10 @@ class ChannelsList extends React.Component {
         super(props);
         this.state = {
             channels: [],
-            filter: []
+            filter: [],
+            searchString: '',
+            user: null,
+            wait: false
         };
     }
 
@@ -89,9 +94,11 @@ class ChannelsList extends React.Component {
         // }
         // this.refresh();
 
-        if (this.props.appState.allChannelsLoaded) {
-            this.refresh(false, true);
+        const user = await Auth.getUser();
+        if (user) {
+            this.setState({ user });
         }
+        this.refresh(false, false);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -135,11 +142,9 @@ class ChannelsList extends React.Component {
     };
 
     applyFilter = async channels => {
-        if (__DEV__) {
-            console.tron('All Channels', channels);
-            console.tron('Filters', this.props.channel.filters);
-        }
-        const filters = this.props.channel.filters;
+        const filters = this.props.channel.filters.filter(
+            filter => filter.checked === true
+        );
         const user = await Auth.getUser();
 
         const { userId } = user;
@@ -152,7 +157,7 @@ class ChannelsList extends React.Component {
             const { value } = filter;
             if (value === 'subscribed') {
                 filteredChannels = filteredChannels.filter(
-                    channel => channel.subcription === true
+                    channel => channel.subcription === 'true'
                 );
             }
 
@@ -164,12 +169,18 @@ class ChannelsList extends React.Component {
 
             if (value === 'unscubscribed') {
                 filteredChannels = filteredChannels.filter(
-                    channel => channel.subcription === false
+                    channel => channel.subcription === 'false'
                 );
             }
             if (value === 'public') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.channelType === 'public'
+                );
             }
             if (value === 'private') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.channelType === 'private'
+                );
             }
         }
         return filteredChannels;
@@ -206,12 +217,31 @@ class ChannelsList extends React.Component {
         );
     };
 
+    onChannelSubscribed = async channel => {
+        await this.refresh(false, false);
+        this.refs.toast.show(
+            I18n.t('Channel_subscribed'),
+            DURATION.LENGTH_SHORT
+        );
+    };
+
     onChannelUnsubscribeFailed = (channel, message) => {
         if (message) {
             this.refs.toast.show(message, DURATION.LENGTH_LONG);
         } else {
             this.refs.toast.show(
                 I18n.t('Channel_unsubscribe_failed'),
+                DURATION.LENGTH_LONG
+            );
+        }
+    };
+
+    onChannelsubscribeFailed = (channel, message) => {
+        if (message) {
+            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+        } else {
+            this.refs.toast.show(
+                I18n.t('Channel_subscribe_failed'),
                 DURATION.LENGTH_LONG
             );
         }
@@ -227,13 +257,19 @@ class ChannelsList extends React.Component {
         });
     };
 
+    setWait = wait => this.setState({ wait });
     renderRow = channel => {
         return (
             <ChannelsListItem
                 channel={channel}
+                user={this.state.user}
+                wait={this.setWait}
                 onUnsubscribe={this.onChannelUnsubscribe.bind(this)}
                 onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)}
+                onSubscribed={this.onChannelSubscribed}
+                onSubscribeFailed={this.onChannelsubscribeFailed}
                 onChannelTapped={this.onChannelTapped.bind(this)}
+                onChannelEdit={() => this.editChannel(channel)}
             />
         );
     };
@@ -247,11 +283,23 @@ class ChannelsList extends React.Component {
     };
 
     createChannel() {
-        Actions.newChannels({
-            title: 'Create new channel',
-            onBack: this.onBack
-        });
+        setTimeout(
+            () =>
+                Actions.newChannels({
+                    title: 'Create new channel',
+                    edit: false
+                }),
+            200
+        );
     }
+
+    editChannel = channel => {
+        Actions.newChannels({
+            title: 'Edit Channel',
+            channel,
+            edit: true
+        });
+    };
 
     onPressFilter() {
         Actions.channelsFilter({
@@ -261,6 +309,15 @@ class ChannelsList extends React.Component {
     }
 
     render() {
+        const filters = this.props.channel.filters.filter(
+            filter => filter.checked === true
+        );
+
+        const channels = this.state.channels.filter(channel =>
+            channel.channelName
+                .toLowerCase()
+                .includes(this.state.searchString.toLowerCase())
+        );
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
@@ -292,7 +349,10 @@ class ChannelsList extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <ScrollView>
-                    <View style={styles.filterContainer}>
+                    <TouchableOpacity
+                        style={styles.filterContainer}
+                        onPress={this.onPressFilter.bind(this)}
+                    >
                         <TouchableOpacity
                             style={styles.filterTextContainer}
                             onPress={this.onPressFilter.bind(this)}
@@ -300,20 +360,57 @@ class ChannelsList extends React.Component {
                             <Text style={styles.filterText}>Filter</Text>
                         </TouchableOpacity>
                         <View style={styles.filterArea}>
-                            <Text>filter area</Text>
+                            {filters.length > 0 ? (
+                                filters.map(filter => {
+                                    return (
+                                        <View style={styles.filterSelected}>
+                                            <RNChipView
+                                                title={filter.title}
+                                                onPress={this.onPressFilter.bind(
+                                                    this
+                                                )}
+                                                titleStyle={
+                                                    styles.selectedFilterTitle
+                                                }
+                                                avatar={false}
+                                                backgroundColor="#424B5A"
+                                                borderRadius={6}
+                                                height={20}
+                                            />
+                                        </View>
+                                    );
+                                })
+                            ) : (
+                                <Text>Tap to Filter</Text>
+                            )}
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <FlatList
                             style={styles.flatList}
-                            keyExtractor={(item, index) => item.id}
-                            data={this.state.channels}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={channels}
                             renderItem={this.renderRowItem.bind(this)}
                             extraData={this.state}
                         />
                         <Toast ref="toast" positionValue={200} />
                     </View>
                 </ScrollView>
+                {this.state.wait ? (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
+                ) : null}
             </BackgroundImage>
         );
     }

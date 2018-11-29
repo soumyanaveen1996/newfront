@@ -8,6 +8,7 @@ import { Channel } from '../../lib/capability';
 // import { Icons } from '../../config/icons';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
+import { Auth } from '../../lib/capability';
 
 const subtitleNumberOfLines = 2;
 
@@ -20,18 +21,64 @@ export default class ChannelsListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ChannelsListItemStates.NONE
+            status: ChannelsListItemStates.NONE,
+            user: null,
+            loading: false
         };
     }
 
-    unsubscribeChannel() {
+    unsubscribeChannel() {}
+
+    editChannel() {
+        this.props.onChannelEdit();
+    }
+
+    renderRightArea(channel, userId) {
+        const isOwner = channel.ownerId === userId ? true : false;
+        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
+            return (
+                <View style={styles.rightContainer}>
+                    <ActivityIndicator size="small" />
+                </View>
+            );
+        } else {
+            if (isOwner) {
+                return (
+                    <View style={styles.rightContainer}>
+                        <TouchableOpacity onPress={this.editChannel.bind(this)}>
+                            {/* {Icons.delete()} */}
+                            <Icon
+                                style={styles.editIcon}
+                                name="edit-2"
+                                size={18}
+                                color="rgba(3,3,3,1)"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                );
+            } else {
+                return null;
+            }
+        }
+    }
+
+    onItemPressed() {
+        if (this.props.onChannelTapped) {
+            this.props.onChannelTapped(this.props.channel);
+        }
+    }
+
+    onUnsubscribeChannel = () => {
+        console.log('unsubscribe', this.props.channel);
         this.setState({
-            status: ChannelsListItemStates.UNSUBSCRIBING
+            loading: true
         });
+
+        this.props.wait(true);
 
         const { channel } = this.props;
 
-        Channel.unsubscribe(this.props.channel)
+        Channel.unsubscribeChannel(channel.channelName, channel.userDomain)
             .then(() => {
                 return Conversation.deleteChannelConversation(
                     channel.channelId
@@ -43,62 +90,39 @@ export default class ChannelsListItem extends React.Component {
             .then(() => {
                 this.props.onUnsubscribe(this.props.channel);
                 this.setState({
-                    status: ChannelsListItemStates.NONE
+                    loading: false
                 });
+                this.props.wait(false);
             })
             .catch(error => {
-                this.props.onUnsubscribeFailed(
-                    this.props.channel,
-                    error.message
-                );
-                this.setState({ status: ChannelsListItemStates.NONE });
+                this.props.onUnsubscribeFailed(this.props.channel);
+                this.setState({ loading: false });
+                this.props.wait(false);
             });
-    }
+    };
 
-    editChannel() {
-        console.log('edit channel');
-    }
+    onsubscribeChannel = channel => {
+        console.log('subscribe', channel);
+        this.setState({ loading: true });
+        this.props.wait(true);
+        Channel.subscribeChannel(channel.channelName, channel.userDomain)
+            .then(data => {
+                this.props.onSubscribed();
+                this.setState({ loading: false });
+                this.props.wait(false);
+            })
+            .catch(err => {
+                console.log('Failed Subscription', err);
+                this.props.onSubscribeFailed();
+                this.setState({ loading: false });
+                this.props.wait(false);
+            });
+    };
 
-    renderRightArea() {
-        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
-            return (
-                <View style={styles.rightContainer}>
-                    <ActivityIndicator size="small" />
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.rightContainer}>
-                    <TouchableOpacity onPress={this.editChannel.bind(this)}>
-                        {/* {Icons.delete()} */}
-                        <Icon
-                            style={styles.editIcon}
-                            name="edit-2"
-                            size={18}
-                            color="rgba(3,3,3,1)"
-                        />
-                    </TouchableOpacity>
-                </View>
-            );
-        }
-    }
+    subscriptionButton(channel, userId) {
+        const isOwner = channel.ownerId === userId ? true : false;
 
-    onItemPressed() {
-        if (this.props.onChannelTapped) {
-            this.props.onChannelTapped(this.props.channel);
-        }
-    }
-
-    onUnsubscribeButton() {
-        console.log('unsubscribe');
-    }
-
-    onsubscribeButton() {
-        console.log('subscribe');
-    }
-
-    subscriptionButton() {
-        if (this.props.channel.subcription === 'true') {
+        if (this.props.channel.subcription === 'true' || isOwner) {
             return (
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
@@ -107,19 +131,22 @@ export default class ChannelsListItem extends React.Component {
                     >
                         <Text style={styles.buttonText}>Open</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.openChannelButtonContainer}
-                        onPress={this.onItemPressed.bind(this)}
-                    >
-                        <Text style={styles.buttonText}>Unsubscribe</Text>
-                    </TouchableOpacity>
+                    {isOwner ? null : (
+                        <TouchableOpacity
+                            style={styles.openChannelButtonContainer}
+                            onPress={this.onUnsubscribeChannel}
+                        >
+                            <Text style={styles.buttonText}>Unsubscribe</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             );
         } else {
             return (
                 <TouchableOpacity
                     style={styles.openChannelButtonContainer}
-                    onPress={this.onsubscribeButton.bind(this)}
+                    onPress={() => this.onsubscribeChannel(channel)}
+                    disabled={this.state.loading}
                 >
                     <Text style={styles.buttonText}>Subscribe</Text>
                 </TouchableOpacity>
@@ -129,6 +156,8 @@ export default class ChannelsListItem extends React.Component {
 
     render() {
         const channel = this.props.channel;
+        const user = this.props.user;
+
         return (
             <View style={styles.container}>
                 <View style={styles.channelHeaderPart}>
@@ -141,7 +170,13 @@ export default class ChannelsListItem extends React.Component {
                         />
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>{channel.channelName}</Text>
+                        <Text
+                            style={styles.title}
+                            ellipsizeMode="tail"
+                            numberOfLines={1}
+                        >
+                            {channel.channelName}
+                        </Text>
                         <Text style={styles.channelOwnerDetails}>
                             Created by {channel.ownerName || 'N/A'} on October
                             2018
@@ -151,11 +186,14 @@ export default class ChannelsListItem extends React.Component {
                 <View style={styles.channelDescription}>
                     <View style={styles.channelType}>
                         <Text style={styles.channelTypeText}>
-                            Public Channel
+                            {channel.channelType === 'public'
+                                ? 'Public Channel'
+                                : 'Private Channel'}
                         </Text>
                     </View>
                     <View style={styles.channelDescriptionContainer}>
                         <Text
+                            ellipsizeMode="tail"
                             numberOfLines={subtitleNumberOfLines}
                             style={styles.subTitle}
                         >
@@ -163,10 +201,10 @@ export default class ChannelsListItem extends React.Component {
                         </Text>
                     </View>
                     <View style={styles.channelButtonContainer}>
-                        {this.subscriptionButton()}
+                        {this.subscriptionButton(channel, user.userId)}
                     </View>
                 </View>
-                {this.renderRightArea()}
+                {this.renderRightArea(channel, user.userId)}
             </View>
         );
     }

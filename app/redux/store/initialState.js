@@ -17,7 +17,9 @@ const initialState = {
         id: null
     },
     channels: {
-        filters: []
+        filters: [],
+        participants: [],
+        team: ''
     }
 };
 

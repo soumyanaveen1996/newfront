@@ -47,6 +47,7 @@
     "react-native-background-task": "^0.2.1",
     "react-native-background-timer": "^2.0.1",
     "react-native-camera": "^1.1.1",
+    "react-native-chip-view": "https://github.com/prscX/react-native-chip-view.git",
     "react-native-code-push": "^5.4.2",
     "react-native-contacts": "^2.1.1",
     "react-native-default-preference": "^1.3.2",

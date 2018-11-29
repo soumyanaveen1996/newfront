@@ -20,7 +20,21 @@ import I18n from '../../config/i18n/i18n';
 import { Channel } from '../../lib/capability';
 import Loader from '../Loader/Loader';
 import images from '../../images';
+import { connect } from 'react-redux';
+import {
+    setChannelParticipants,
+    setChannelTeam
+} from '../../redux/actions/ChannelActions';
+import { setCurrentScene } from '../../redux/actions/UserActions';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Store from '../../redux/store/configureStore';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
+const BUTTON_INNER = hp('2%');
+const BUTTON_OUTER = hp('3%');
 class NewChannels extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -33,15 +47,9 @@ class NewChannels extends React.Component {
         } else {
             navigationOptions.headerLeft = (
                 <HeaderBack
-                    onPress={
-                        state.params.onBack
-                            ? () => {
-                                Actions.pop();
-                                state.params.onBack();
-                            }
-                            : Actions.pop
-                    }
-                    refresh={true}
+                    onPress={() => {
+                        setTimeout(() => Actions.pop(), 200);
+                    }}
                 />
             );
         }
@@ -92,8 +100,8 @@ class NewChannels extends React.Component {
         this.state = {
             channelName: '',
             channelDescription: '',
-            typeValue: '',
-            visibilityValue: '',
+            typeValue: 'platform',
+            visibilityValue: 'public',
             loading: false
         };
 
@@ -109,6 +117,30 @@ class NewChannels extends React.Component {
         this.inputs = {};
     }
 
+    componentDidMount() {
+        if (this.props.edit) {
+            this.setState({
+                channelName: this.props.channel.channelName,
+                channelDescription: this.props.channel.description
+            });
+        }
+    }
+
+    static onEnter() {
+        Store.dispatch(setCurrentScene(ROUTER_SCENE_KEYS.newChannels));
+    }
+
+    componentWillUnmount() {
+        this.props.setParticipants([]);
+        this.props.setTeam('');
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return (
+            this.props.appState.currentScene === ROUTER_SCENE_KEYS.newChannels
+        );
+    }
+
     onChangeChannelName(text) {
         this.setState({ channelName: text });
     }
@@ -121,17 +153,24 @@ class NewChannels extends React.Component {
         this.inputs[id].focus();
     };
 
+    channelTypeSelected = value => {
+        this.setState({ typeValue: value });
+        if (value === 'team') {
+            setTimeout(() => Actions.selectTeam(), 200);
+        }
+    };
+
     async saveChannel() {
         this.setState({ loading: true });
         const channelName = this.state.channelName;
         const description = this.state.channelDescription;
-        const discoverable = this.state.typeValue;
-        const channelType = this.state.visibilityValue;
+        const discoverable = this.state.visibilityValue;
+        const channelType = this.state.typeValue;
         let userDomain = '';
-        if (channelType === 'private') {
-            userDomain = 'inmarsat';
-        } else {
+        if (channelType === 'platform') {
             userDomain = 'frontmai';
+        } else {
+            userDomain = this.props.channels.team;
         }
         const channelData = {
             channelName,
@@ -145,6 +184,38 @@ class NewChannels extends React.Component {
         Channel.create(channelData)
             .then(data => {
                 console.log('success on creating channel ', data);
+                const users = this.props.channels.participants.filter(
+                    user => user.selected === true
+                );
+                const userIds = users.map(user => user.userId);
+                if (users.length > 0) {
+                    Channel.addUsers(
+                        channelData.channelName,
+                        channelData.userDomain,
+                        userIds
+                    ).then(data => {
+                        this.setState({ loading: false });
+                        setTimeout(() => Actions.pop(), 100);
+                    });
+                } else {
+                    this.setState({ loading: false });
+                    setTimeout(() => Actions.pop(), 100);
+                }
+            })
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('err on creating channel', err);
+            });
+    }
+
+    async saveChannelEdit() {
+        this.setState({ loading: true });
+        const channelName = this.state.channelName;
+        const description = this.state.channelDescription;
+        let userDomain = this.props.channel.userDomain;
+        Channel.update(channelName, description, userDomain)
+            .then(data => {
+                console.log('success on creating channel ', data);
                 this.setState({ loading: false });
                 Actions.pop();
             })
@@ -152,12 +223,8 @@ class NewChannels extends React.Component {
                 console.log('err on creating channel', err);
             });
     }
-
     addParticipants() {
-        Actions.addParticipants({
-            title: 'Add participants',
-            onBack: this.props.onBack
-        });
+        Actions.addParticipants();
     }
 
     render() {
@@ -170,6 +237,8 @@ class NewChannels extends React.Component {
                             <View style={styles.entryFields}>
                                 <TextInput
                                     style={styles.inputChannel}
+                                    value={this.state.channelName}
+                                    editable={!this.props.edit}
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                     onChangeText={this.onChangeChannelName.bind(
@@ -190,6 +259,7 @@ class NewChannels extends React.Component {
                             <View style={styles.entryFields}>
                                 <TextInput
                                     style={styles.inputChannelDescription}
+                                    value={this.state.channelDescription}
                                     keyboardType="default"
                                     blurOnSubmit={true}
                                     returnKeyType={'done'}
@@ -209,49 +279,198 @@ class NewChannels extends React.Component {
                                 />
                             </View>
                         </View>
-                        <View style={styles.channelInfoContainer}>
-                            <Text style={styles.channelText}>Channel Type</Text>
-                            <RadioForm
-                                radio_props={this.channelType_radio}
-                                initial={-1}
-                                formHorizontal={true}
-                                animation={true}
-                                onPress={value => {
-                                    this.setState({ typeValue: value });
-                                }}
-                            />
-                        </View>
-
-                        <View style={styles.channelInfoContainer}>
-                            <Text style={styles.channelText}>
-                                Channel visibility
-                            </Text>
-                            <RadioForm
-                                radio_props={this.channelVisibility_radio}
-                                initial={-1}
-                                formHorizontal={true}
-                                animation={true}
-                                onPress={value => {
-                                    this.setState({ visibilityValue: value });
-                                }}
-                            />
-                        </View>
-                        <View style={styles.channelInfoContainer}>
-                            <TouchableOpacity
-                                onPress={this.addParticipants.bind(this)}
-                            >
+                        {this.props.edit ? null : (
+                            <View style={styles.channelInfoContainer}>
                                 <Text style={styles.channelText}>
-                                    Add participants
+                                    Channel Type
                                 </Text>
-                            </TouchableOpacity>
-                        </View>
+                                {/* <RadioForm
+                                    radio_props={this.channelType_radio}
+                                    initial={1}
+                                    formHorizontal={true}
+                                    onPress={this.channelTypeSelected}
+                                /> */}
+                                <RadioForm formHorizontal={true}>
+                                    {this.channelType_radio.map((obj, i) => {
+                                        return (
+                                            <RadioButton
+                                                labelHorizontal={true}
+                                                key={i}
+                                            >
+                                                {/*  You can set RadioButtonLabel before RadioButtonInput */}
+                                                <RadioButtonInput
+                                                    obj={obj}
+                                                    index={i}
+                                                    isSelected={
+                                                        this.state.typeValue ==
+                                                        obj.value
+                                                            ? true
+                                                            : false
+                                                    }
+                                                    onPress={
+                                                        this.channelTypeSelected
+                                                    }
+                                                    borderWidth={1}
+                                                    buttonInnerColor={'#00BDF2'}
+                                                    buttonOuterColor={
+                                                        this.state.typeValue ==
+                                                        obj.value
+                                                            ? '#00BDF2'
+                                                            : '#000'
+                                                    }
+                                                    buttonSize={BUTTON_INNER}
+                                                    buttonOuterSize={
+                                                        BUTTON_OUTER
+                                                    }
+                                                    buttonStyle={
+                                                        i == 1
+                                                            ? styles.radioButton
+                                                            : {}
+                                                    }
+                                                    buttonWrapStyle={{}}
+                                                />
+                                                <RadioButtonLabel
+                                                    obj={obj}
+                                                    index={i}
+                                                    labelHorizontal={true}
+                                                    onPress={
+                                                        this.channelTypeSelected
+                                                    }
+                                                    labelStyle={
+                                                        styles.radioLabel
+                                                    }
+                                                    labelWrapStyle={{}}
+                                                />
+                                            </RadioButton>
+                                        );
+                                    })}
+                                </RadioForm>
+                            </View>
+                        )}
+                        {this.props.channels.team !== '' ? (
+                            <Text
+                                style={{ marginVertical: 5 }}
+                            >{`You selected Team ${this.props.channels.team.toUpperCase()}`}</Text>
+                        ) : null}
+                        {this.props.edit ? null : (
+                            <View>
+                                <View style={styles.channelInfoContainer}>
+                                    <Text style={styles.channelText}>
+                                        Channel visibility
+                                    </Text>
+                                    {/* <RadioForm
+                                        radio_props={
+                                            this.channelVisibility_radio
+                                        }
+                                        initial={0}
+                                        formHorizontal={true}
+                                        onPress={value => {
+                                            this.setState({
+                                                visibilityValue: value
+                                            })
+                                        }}
+                                    /> */}
+                                    <RadioForm formHorizontal={true}>
+                                        {this.channelVisibility_radio.map(
+                                            (obj, i) => {
+                                                return (
+                                                    <RadioButton
+                                                        labelHorizontal={true}
+                                                        key={i}
+                                                    >
+                                                        {/*  You can set RadioButtonLabel before RadioButtonInput */}
+                                                        <RadioButtonInput
+                                                            obj={obj}
+                                                            index={i}
+                                                            isSelected={
+                                                                this.state
+                                                                    .visibilityValue ==
+                                                                obj.value
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            onPress={value => {
+                                                                this.setState({
+                                                                    visibilityValue: value
+                                                                });
+                                                            }}
+                                                            borderWidth={1}
+                                                            buttonInnerColor={
+                                                                '#00BDF2'
+                                                            }
+                                                            buttonOuterColor={
+                                                                this.state
+                                                                    .typeValue ==
+                                                                obj.value
+                                                                    ? '#00BDF2'
+                                                                    : '#000'
+                                                            }
+                                                            buttonSize={
+                                                                BUTTON_INNER
+                                                            }
+                                                            buttonOuterSize={
+                                                                BUTTON_OUTER
+                                                            }
+                                                            buttonStyle={
+                                                                i == 1
+                                                                    ? styles.radioButton
+                                                                    : {}
+                                                            }
+                                                            buttonWrapStyle={{}}
+                                                        />
+                                                        <RadioButtonLabel
+                                                            obj={obj}
+                                                            index={i}
+                                                            labelHorizontal={
+                                                                true
+                                                            }
+                                                            onPress={value => {
+                                                                this.setState({
+                                                                    visibilityValue: value
+                                                                });
+                                                            }}
+                                                            labelStyle={
+                                                                styles.radioLabel
+                                                            }
+                                                            labelWrapStyle={{}}
+                                                        />
+                                                    </RadioButton>
+                                                );
+                                            }
+                                        )}
+                                    </RadioForm>
+                                </View>
+                                <View style={styles.channelInfoContainer}>
+                                    <TouchableOpacity
+                                        onPress={this.addParticipants.bind(
+                                            this
+                                        )}
+                                    >
+                                        <Text style={styles.channelText}>
+                                            Add participants
+                                        </Text>
+                                        <Text>{`You Have Selected ${
+                                            this.props.channels.participants.filter(
+                                                part => part.selected === true
+                                            ).length
+                                        } participants`}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        )}
                         <View style={{ marginVertical: 20 }}>
                             <TouchableOpacity
                                 style={styles.buttonContainer}
-                                onPress={this.saveChannel.bind(this)}
+                                onPress={
+                                    this.props.edit
+                                        ? this.saveChannelEdit.bind(this)
+                                        : this.saveChannel.bind(this)
+                                }
                             >
                                 <Text style={styles.buttonText}>
-                                    Create Channel
+                                    {this.props.edit
+                                        ? 'Save Channel'
+                                        : 'Create Channel'}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -262,4 +481,21 @@ class NewChannels extends React.Component {
     }
 }
 
-export default NewChannels;
+const mapStateToProps = state => ({
+    appState: state.user,
+    channels: state.channel
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setParticipants: participants =>
+            dispatch(setChannelParticipants(participants)),
+        setTeam: team => dispatch(setChannelTeam(team)),
+        setCurrentScene: scene => dispatch(setCurrentScene(scene))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(NewChannels);

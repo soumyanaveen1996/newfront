@@ -20,8 +20,10 @@ const insertChannel = `
         ownerName,
         ownerId,
         createdOn,
-        subcription
-    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?);
+        subcription,
+        isPlatformChannel,
+        channelType
+    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?);
 `;
 
 const deleteChannel = `
@@ -49,6 +51,15 @@ const updateChannel = `
     AND domain = ?
 `;
 
+const setChannelSubscription = `
+    UPDATE channel
+    SET
+        subcription = ?
+    WHERE
+        name = ?
+    AND domain = ?
+`;
+
 const selectChannels = `
     SELECT
         id,
@@ -61,7 +72,9 @@ const selectChannels = `
         ownerName,
         ownerId,
         createdOn,
-        subcription
+        subcription,
+        isPlatformChannel,
+        channelType
     FROM channel
 `;
 
@@ -77,7 +90,9 @@ const selectChannel = `
         ownerName,
         ownerId,
         createdOn,
-        subcription
+        subcription,
+        isPlatformChannel,
+        channelType
     FROM channel
     WHERE id = ?
 `;
@@ -94,7 +109,9 @@ const selectChannelByConversationId = `
         ownerName,
         ownerId,
         createdOn,
-        subcription
+        subcription,
+        isPlatformChannel,
+        channelType
     FROM channel
     WHERE conversationId = ?
 `;
@@ -111,7 +128,9 @@ const selectChannelByNameAndDomain = `
         ownerName,
         ownerId,
         createdOn,
-        subcription
+        subcription,
+        isPlatformChannel,
+        channelType
     FROM channel
     WHERE name = ?
     AND domain = ?
@@ -138,6 +157,13 @@ const addisSubscribed = `
 ALTER TABLE channel ADD subcription varchar(20);
 `;
 
+const addIsPlatformChannel = `
+ALTER TABLE channel ADD isPlatformChannel integer;
+`;
+const addChannelType = `
+ALTER TABLE channel ADD channelType varchar(20);
+`;
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -153,5 +179,8 @@ export default {
     addOwnerName,
     addOwnerId,
     addCreatedOn,
-    addisSubscribed
+    addisSubscribed,
+    addIsPlatformChannel,
+    addChannelType,
+    setChannelSubscription
 };
