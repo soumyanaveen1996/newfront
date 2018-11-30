@@ -290,7 +290,9 @@ class MainScreen extends React.Component {
             ? MainScreenStates.authenticated
             : MainScreenStates.unauthenticated;
         this.setState({ screenState: authStatus, bots: botsList });
-        this.refs.botList.refresh();
+        if (this.botList) {
+            this.botList.refresh();
+        }
         this.checkPollingStrategy();
     };
 
@@ -483,12 +485,15 @@ class MainScreen extends React.Component {
                             : MainScreenStyles.botListContainer
                     }
                 >
-                    {this.contentLoading() ? (
-                        <ActivityIndicator size="small" />
-                    ) : null}
-
+                    <View style={MainScreenStyles.searchArea} />
+                    <View style={MainScreenStyles.buttonArea} />
+                    <View style={MainScreenStyles.chatAreaNoFav} />
                     <BotList
-                        ref="botList"
+                        ref={connectedBot => {
+                            this.botList = connectedBot
+                                ? connectedBot.getWrappedInstance()
+                                : null;
+                        }}
                         onBack={this.onBack.bind(this)}
                         bots={this.state.bots}
                     />

@@ -1,5 +1,9 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const MainScreenStyles = StyleSheet.create({
     container: {
@@ -22,6 +26,21 @@ export const MainScreenStyles = StyleSheet.create({
     },
     activityIndicator: {
         flex: 1
+    },
+    searchArea: {
+        height: hp('3%')
+    },
+    buttonArea: {
+        height: hp('5%')
+    },
+    favArea: {
+        height: hp('20%')
+    },
+    chatArea: {
+        height: hp('60%')
+    },
+    chatAreaNoFav: {
+        height: hp('80%')
     }
 });
 

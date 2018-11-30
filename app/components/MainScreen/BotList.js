@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, ListView, View } from 'react-native';
+import { ActivityIndicator, ListView, View, Text } from 'react-native';
 import { BotListStyles } from './styles';
 import BotListItem from './BotListItem';
 import ConversationListItem from './ConversationListItem';
@@ -9,8 +9,10 @@ import Utils from './Utils';
 import _ from 'lodash';
 import { Promise } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import { connect } from 'react-redux';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
-export default class BotList extends React.Component {
+class BotList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -83,54 +85,55 @@ export default class BotList extends React.Component {
             'desc'
         );
 
-        if (this.mounted) {
-            let currentData = this.state.data;
-            const ds = new ListView.DataSource({
-                rowHasChanged: (r1, r2) => r1 !== r2
-            });
-
-            if (currentData) {
-                // ABOSLUTELY SHITTY HACK DUE TO A BUG IN ListView:
-                // https://stackoverflow.com/questions/31738671/react-native-updating-list-view-datasource
-                this.setState(
-                    {
-                        loaded: true,
-                        dataSource: ds.cloneWithRows([]),
-                        data: allChatsData,
-                        reload: false
-                    },
-                    function(err, res) {
-                        if (!err) {
-                            this.setState({
-                                loaded: true,
-                                dataSource: ds.cloneWithRows(allChatsData),
-                                data: allChatsData,
-                                reload: true
-                            });
-                        }
-                    }
-                );
-            } else {
-                this.setState({
-                    loaded: true,
-                    dataSource: ds.cloneWithRows(allChatsData),
-                    data: allChatsData
-                });
+        this.setState(
+            {
+                loaded: false,
+                data: []
+            },
+            () => {
+                this.setState({ loaded: true, data: allChatsData });
             }
-        }
+        );
+
+        // if (this.mounted) {
+        //     let currentData = this.state.data
+        //     const ds = new ListView.DataSource({
+        //         rowHasChanged: (r1, r2) => r1 !== r2
+        //     })
+
+        //     if (currentData) {
+        //         // ABOSLUTELY SHITTY HACK DUE TO A BUG IN ListView:
+        //         // https://stackoverflow.com/questions/31738671/react-native-updating-list-view-datasource
+        //         this.setState(
+        //             {
+        //                 loaded: true,
+        //                 dataSource: ds.cloneWithRows([]),
+        //                 data: allChatsData,
+        //                 reload: false
+        //             },
+        //             function(err, res) {
+        //                 if (!err) {
+        //                     this.setState({
+        //                         loaded: true,
+        //                         dataSource: ds.cloneWithRows(allChatsData),
+        //                         data: allChatsData,
+        //                         reload: true
+        //                     })
+        //                 }
+        //             }
+        //         )
+        //     } else {
+        //         this.setState({
+        //             loaded: true,
+        //             dataSource: ds.cloneWithRows(allChatsData),
+        //             data: allChatsData
+        //         })
+        //     }
+        // }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (
-            JSON.stringify(this.state.data) !== JSON.stringify(nextState.data)
-        ) {
-            return true;
-        }
-        if (this.state.reload !== nextState.reload) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     render() {
@@ -144,31 +147,79 @@ export default class BotList extends React.Component {
             );
         } else {
             return (
-                <ListView
-                    containerStyles={BotListStyles.container}
-                    style={BotListStyles.listViewStyle}
-                    dataSource={this.state.dataSource}
-                    renderRow={chat =>
-                        chat.key === 'bot' ? (
-                            <BotListItem
-                                bot={chat.bot}
-                                chatData={chat.chatData}
-                                onBack={this.props.onBack}
-                            />
-                        ) : (
-                            <ConversationListItem
-                                conversation={chat.bot}
-                                chatData={chat.chatData}
-                                onBack={this.props.onBack}
-                            />
-                        )
-                    }
-                    renderSeparator={(sectionId, rowId) => (
-                        <View key={rowId} style={BotListStyles.separator} />
-                    )}
-                    enableEmptySections={true}
-                />
+                <View style={BotListStyles.listViewStyle}>
+                    <SwipeListView
+                        useFlatList
+                        data={this.state.data}
+                        randomProp={this.state.updated}
+                        renderItem={(chat, rowMap) => {
+                            const { item, index, separators } = chat;
+                            const rowItem =
+                                item.key === 'bot' ? (
+                                    <BotListItem
+                                        bot={item.bot}
+                                        chatData={item.chatData}
+                                        onBack={this.props.onBack}
+                                    />
+                                ) : (
+                                    <ConversationListItem
+                                        conversation={item.bot}
+                                        chatData={item.chatData}
+                                        onBack={this.props.onBack}
+                                    />
+                                );
+                            return rowItem;
+                        }}
+                        renderHiddenItem={(data, rowMap) => (
+                            <View>
+                                <Text>Left</Text>
+                                <Text>Right</Text>
+                            </View>
+                        )}
+                        leftOpenValue={75}
+                        rightOpenValue={-75}
+                    />
+                </View>
+                // <ListView
+                //     containerStyles={BotListStyles.container}
+                //     style={BotListStyles.listViewStyle}
+                //     dataSource={this.state.dataSource}
+                //     renderRow={chat =>
+                //         chat.key === 'bot' ? (
+                //             <BotListItem
+                //                 bot={chat.bot}
+                //                 chatData={chat.chatData}
+                //                 onBack={this.props.onBack}
+                //             />
+                //         ) : (
+                //             <ConversationListItem
+                //                 conversation={chat.bot}
+                //                 chatData={chat.chatData}
+                //                 onBack={this.props.onBack}
+                //             />
+                //         )
+                //     }
+                //     renderSeparator={(sectionId, rowId) => (
+                //         <View key={rowId} style={BotListStyles.separator} />
+                //     )}
+                //     enableEmptySections={true}
+                // />
             );
         }
     }
 }
+
+const mapStateToProps = state => ({
+    timeline: state.timeline
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    null,
+    { withRef: true }
+)(BotList);

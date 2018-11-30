@@ -7339,6 +7339,10 @@ react-native-svg@^6.5.0:
     lodash "^4.16.6"
     pegjs "^0.10.0"
 
+react-native-swipe-list-view@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-1.5.0.tgz#c197c9afe21889de68df2f63a7dd0162eb6fc411"
+
 react-native-swipeout@^2.3.3:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/react-native-swipeout/-/react-native-swipeout-2.3.6.tgz#47dac8a835825cf3f2eef9e495574a3d9ab6d3fa"

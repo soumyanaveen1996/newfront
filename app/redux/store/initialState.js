@@ -20,6 +20,9 @@ const initialState = {
         filters: [],
         participants: [],
         team: ''
+    },
+    timeline: {
+        allChats: []
     }
 };
 
