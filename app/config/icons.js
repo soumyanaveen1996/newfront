@@ -1,6 +1,10 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
 import Colors from './styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 function icon(
     name,
@@ -176,6 +180,22 @@ export const Icons = {
         30,
         Colors.sideButtons,
         Colors.transparent,
+        '500'
+    ),
+    callW: icon(
+        'ios-call-outline',
+        'ionicon',
+        hp('4%'),
+        Colors.white,
+        Colors.white,
+        '500'
+    ),
+    chatW: icon(
+        'ios-chatbubbles-outline',
+        'ionicon',
+        hp('4%'),
+        Colors.white,
+        Colors.white,
         '500'
     ),
     callDisabled: icon(

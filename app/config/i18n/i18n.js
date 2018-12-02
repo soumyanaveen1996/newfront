@@ -11,6 +11,7 @@ I18n.translations = {
         Description:
             'React Native helps us build cross platform native apps in Javascript.',
         WebM_Bot: 'WebM',
+        Search_conv: 'Search Conversation',
         No_balance: "Oops! You don't have credits to make the call",
         WebM_Bot_Desc: 'Search the web - chat style!',
         Betty_Bot: 'Betty Botter',
@@ -22,6 +23,7 @@ I18n.translations = {
         Chat_Input_BarCode: 'Barcode Reader',
         Add_Contact: 'Add Contact',
         My_Contacts: 'My Contacts',
+        My_Channels: 'My Channels',
         Favorites: 'Favorites',
         Contacts: 'Contacts',
         Channels: 'Channels',
@@ -132,7 +134,8 @@ I18n.translations = {
         From: 'From',
         Dial: 'Dial',
         Enter_valid_number: 'Please enter a valid phone number',
-        Delete: 'Delete'
+        Delete: 'Delete',
+        New_chat: 'New Chat'
     }
 };
 

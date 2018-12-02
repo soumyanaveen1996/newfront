@@ -13,6 +13,7 @@ const ROUTER_SCENE_KEYS = {
     slider: 'slider',
     webview: 'webview',
     addContacts: 'addContacts',
+    addContactsChat: 'addContactsChat',
     info: 'info',
     form: 'form',
     botStore: 'botStore',
@@ -39,8 +40,10 @@ const ROUTER_SCENE_KEYS = {
     tabBar: 'tabbar',
     homeMain: 'homeMain',
     contactsMain: 'contactsMain',
+    contactsMainChat: 'contactsMainChat',
     channelsMenu: 'channelsMenu',
-    marketplaceMenu: 'marketplaceMenu'
+    marketplaceMenu: 'marketplaceMenu',
+    tabBarChat: 'tabBarChat'
 };
 
 export default ROUTER_SCENE_KEYS;

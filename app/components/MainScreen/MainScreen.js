@@ -6,8 +6,12 @@ import {
     Alert,
     StatusBar,
     AsyncStorage,
-    Platform
+    Platform,
+    TextInput,
+    Text,
+    TouchableOpacity
 } from 'react-native';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import BotList from './BotList';
 import { SafeAreaView } from 'react-navigation';
 import FloatingButton from '../FloatingButton';
@@ -129,7 +133,8 @@ class MainScreen extends React.Component {
             screenState: MainScreenStates.notLoaded,
             firstTimer: false,
             showNetworkStatusBar: false,
-            network: null
+            network: null,
+            searchString: ''
         };
     }
 
@@ -485,31 +490,57 @@ class MainScreen extends React.Component {
                             : MainScreenStyles.botListContainer
                     }
                 >
-                    <View style={MainScreenStyles.searchArea} />
-                    <View style={MainScreenStyles.buttonArea} />
-                    <View style={MainScreenStyles.chatAreaNoFav} />
-                    <BotList
-                        ref={connectedBot => {
-                            this.botList = connectedBot
-                                ? connectedBot.getWrappedInstance()
-                                : null;
-                        }}
-                        onBack={this.onBack.bind(this)}
-                        bots={this.state.bots}
-                    />
-                    {/* <View
-                        style={{
-                            position: 'absolute',
-                            top: 10,
-                            left: 0,
-                            right: 0,
-                            bottom: 0
-                            // justifyContent: 'center',
-                            // alignItems: 'center'
-                        }}
-                    > */}
-
-                    {/* </View> */}
+                    <View style={MainScreenStyles.searchArea}>
+                        <Icon
+                            style={MainScreenStyles.searchIcon}
+                            name="search"
+                            size={24}
+                            color="rgba(0, 189, 242, 1)"
+                        />
+                        <TextInput
+                            style={MainScreenStyles.input}
+                            placeholder={I18n.t('Search_conv')}
+                            onChangeText={searchString => {
+                                this.setState({ searchString });
+                            }}
+                            underlineColorAndroid="transparent"
+                        />
+                    </View>
+                    <View style={MainScreenStyles.buttonArea}>
+                        <TouchableOpacity
+                            style={MainScreenStyles.buttonContainerChat}
+                            onPress={() => Actions.tabBarChat()}
+                        >
+                            <View style={{ marginRight: 7 }}>
+                                {Icons.chatW()}
+                            </View>
+                            <Text style={MainScreenStyles.buttonText}>
+                                New Chat
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={MainScreenStyles.buttonContainerCall}
+                            onPress={() => console.log('New Call')}
+                        >
+                            <View style={{ marginRight: 7 }}>
+                                {Icons.callW()}
+                            </View>
+                            <Text style={MainScreenStyles.buttonText}>
+                                New Call
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={MainScreenStyles.chatAreaNoFav}>
+                        <BotList
+                            ref={connectedBot => {
+                                this.botList = connectedBot
+                                    ? connectedBot.getWrappedInstance()
+                                    : null;
+                            }}
+                            onBack={this.onBack.bind(this)}
+                            bots={this.state.bots}
+                        />
+                    </View>
                 </View>
             );
         }

@@ -175,6 +175,8 @@ class ContactsPicker extends React.Component {
     };
 
     updateList = () => {
+        console.log('DATA LIST', this.dataSource.getData());
+
         this.setState({ contactsData: this.dataSource.getData() });
     };
 

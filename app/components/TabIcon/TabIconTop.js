@@ -12,6 +12,10 @@ import styles from './styles';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { setCurrentScene } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default class TabIcon extends React.Component {
     constructor(props) {
@@ -33,11 +37,19 @@ export default class TabIcon extends React.Component {
     };
     render() {
         const { imageSource, titleScreen, imageSelected } = this.props;
-        let color = 'rgba(74,74,74,0.6)';
-        // let color = 'aliceblue'
+        // let color = 'rgba(74,74,74,0.6)'
+        let color = 'aliceblue';
 
         return (
-            <View style={{ alignItems: 'center' }}>
+            <View
+                style={{
+                    width: wp('40%'),
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    justifyContent: 'center'
+                }}
+            >
                 <Image
                     source={
                         this.props.titleScreen === this.state.scene
@@ -48,7 +60,8 @@ export default class TabIcon extends React.Component {
                 <Text
                     style={{
                         textAlign: 'center',
-                        fontSize: 14,
+                        fontSize: hp('2%'),
+                        marginHorizontal: wp('5%'),
                         color
                     }}
                 >
