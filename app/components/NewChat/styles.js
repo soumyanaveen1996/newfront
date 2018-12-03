@@ -60,13 +60,6 @@ const stylesheet = StyleSheet.create({
         height: 55,
         paddingHorizontal: 10
     },
-    contactItemImage: {
-        height: 44,
-        width: 44,
-        borderRadius: 22,
-        marginLeft: 10,
-        marginRight: 12
-    },
     contactItemDetailsContainer: {
         flexDirection: 'column',
         justifyContent: 'space-between'
@@ -128,6 +121,13 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-between',
         paddingTop: 3,
         marginRight: 5
+    },
+    avatarImage: {
+        height: hp('6%'),
+        width: hp('6%'),
+        borderRadius: wp('4%'),
+        marginLeft: wp('2%'),
+        marginRight: wp('2%')
     }
 });
 

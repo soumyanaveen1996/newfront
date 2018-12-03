@@ -13,6 +13,7 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Auth } from '../../lib/capability';
 import { Network } from '../../lib/capability';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 let EventListeners = [];
 export const DiallerState = {
@@ -283,7 +284,12 @@ export default class Dialler extends React.Component {
         const { diallerState } = this.state;
         const digits =
             diallerState === DiallerState.initial
-                ? [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['0']]
+                ? [
+                    ['1', '2', '3'],
+                    ['4', '5', '6'],
+                    ['7', '8', '9'],
+                    ['*', '0', '+']
+                ]
                 : [
                     ['1', '2', '3'],
                     ['4', '5', '6'],
@@ -300,7 +306,7 @@ export default class Dialler extends React.Component {
     }
 
     closeScreen() {
-        Actions.pop();
+        Actions.popTo(ROUTER_SCENE_KEYS.timeline);
     }
 
     renderCloseButton() {

@@ -30,6 +30,7 @@ const ROUTER_SCENE_KEYS = {
     onboarding: 'onboarding',
     videoRecorder: 'videoRecorder',
     channelsList: 'channelsList',
+    channelsListChat: 'channelsListChat',
     phone: 'phone',
     dialler: 'dialler',
     loginScreen: 'loginScreen',
@@ -40,10 +41,18 @@ const ROUTER_SCENE_KEYS = {
     tabBar: 'tabbar',
     homeMain: 'homeMain',
     contactsMain: 'contactsMain',
+    contactsCallMenu: 'contactsCallMenu',
+    contactsCall: 'contactsCall',
+    dialCallMenu: 'dialCallMenu',
+    dialCall: 'dialCall',
     contactsMainChat: 'contactsMainChat',
     channelsMenu: 'channelsMenu',
+    channelsMenuChat: 'channelsMenuChat',
+    botsMenuChat: 'botsMenuChat',
+    botsListChat: 'botsListChat',
     marketplaceMenu: 'marketplaceMenu',
-    tabBarChat: 'tabBarChat'
+    tabBarChat: 'tabBarChat',
+    tabBarCall: 'tabBarCall'
 };
 
 export default ROUTER_SCENE_KEYS;

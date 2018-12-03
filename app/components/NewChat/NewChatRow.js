@@ -7,19 +7,20 @@ import _ from 'lodash';
 import ProfileImage from '../ProfileImage';
 import Images from '../../config/images';
 
-const NewChatRow = ({ item, title, id, onItemPressed, email = undefined }) => {
+const NewChatRow = ({
+    item,
+    title,
+    id,
+    image,
+    onItemPressed,
+    email = undefined
+}) => {
     console.log(title);
 
     return (
         <TouchableOpacity onPress={() => onItemPressed(item)}>
             <View style={styles.contactItemContainer}>
-                <ProfileImage
-                    uuid={id}
-                    placeholder={Images.user_image}
-                    style={styles.contactItemImage}
-                    placeholderStyle={styles.contactItemImage}
-                    resizeMode="cover"
-                />
+                {image}
                 <View style={styles.contactItemDetailsContainer}>
                     <Text style={styles.contactItemName}>{title}</Text>
                     {email ? (

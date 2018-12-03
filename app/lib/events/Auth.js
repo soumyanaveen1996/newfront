@@ -3,7 +3,8 @@ export const AuthEvents = {
     userLoggedOut: 'userLoggedOut',
     userDataFetched: 'userDataFetched',
     userChanged: 'userChanged',
-    tabSelected: 'tabSelected'
+    tabSelected: 'tabSelected',
+    tabTopSelected: 'tabTopSelected'
 };
 
 export default AuthEvents;

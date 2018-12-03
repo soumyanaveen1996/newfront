@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import Dimensions from 'Dimensions';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const Styles = StyleSheet.create({
     container: {
@@ -92,12 +96,11 @@ const Styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     initialMainContainer: {
-        backgroundColor: 'green',
-        flex: 1,
-        paddingTop: 30
+        backgroundColor: 'rgba(47,199,111,1)',
+        height: hp('40%')
     },
     diallerContainer: {
-        height: Dimensions.get('window').height * 0.6,
+        height: hp('50%'),
         backgroundColor: GlobalColors.white
     },
     callQuotaContainer: {
@@ -122,7 +125,8 @@ const Styles = StyleSheet.create({
     },
     diallerButtonContainer: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        height: hp('30%')
         //backgroundColor: 'red',
     },
     incallDiallerContainer: {

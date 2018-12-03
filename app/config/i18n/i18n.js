@@ -24,6 +24,7 @@ I18n.translations = {
         Add_Contact: 'Add Contact',
         My_Contacts: 'My Contacts',
         My_Channels: 'My Channels',
+        My_Bots: 'My Bots',
         Favorites: 'Favorites',
         Contacts: 'Contacts',
         Channels: 'Channels',
@@ -135,7 +136,9 @@ I18n.translations = {
         Dial: 'Dial',
         Enter_valid_number: 'Please enter a valid phone number',
         Delete: 'Delete',
-        New_chat: 'New Chat'
+        New_chat: 'New Chat',
+        Contacts_call: 'Contacts_call',
+        Dial_call: 'Dial_call'
     }
 };
 

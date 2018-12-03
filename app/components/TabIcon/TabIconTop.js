@@ -23,17 +23,18 @@ export default class TabIcon extends React.Component {
     }
 
     state = {
-        scene: 'Home'
+        scene: 'Home',
+        title: ''
     };
     componentDidMount() {
-        EventEmitter.addListener(AuthEvents.tabSelected, this.tabSelected);
+        EventEmitter.addListener(AuthEvents.tabTopSelected, this.tabSelected);
     }
     componentWillUnmount() {
         EventEmitter.removeListener(AuthEvents.tabSelected);
     }
-    tabSelected = scene => {
+    tabSelected = (scene, title) => {
         Store.dispatch(setCurrentScene(scene));
-        this.setState({ scene });
+        this.setState({ scene, title });
     };
     render() {
         const { imageSource, titleScreen, imageSelected } = this.props;
@@ -43,7 +44,7 @@ export default class TabIcon extends React.Component {
         return (
             <View
                 style={{
-                    width: wp('40%'),
+                    width: wp('30%'),
                     flexDirection: 'row',
                     alignItems: 'center',
                     alignSelf: 'center',
@@ -52,7 +53,7 @@ export default class TabIcon extends React.Component {
             >
                 <Image
                     source={
-                        this.props.titleScreen === this.state.scene
+                        this.props.titleScreen === this.state.title
                             ? imageSelected
                             : imageSource
                     }
@@ -60,8 +61,8 @@ export default class TabIcon extends React.Component {
                 <Text
                     style={{
                         textAlign: 'center',
-                        fontSize: hp('2%'),
-                        marginHorizontal: wp('5%'),
+                        fontSize: hp('1.8%'),
+                        marginHorizontal: wp('3%'),
                         color
                     }}
                 >

@@ -520,7 +520,7 @@ class MainScreen extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={MainScreenStyles.buttonContainerCall}
-                            onPress={() => console.log('New Call')}
+                            onPress={() => Actions.tabBarCall()}
                         >
                             <View style={{ marginRight: 7 }}>
                                 {Icons.callW()}

@@ -6,7 +6,9 @@ import {
     TextInput,
     KeyboardAvoidingView,
     ActivityIndicator,
-    Platform
+    Platform,
+    Modal,
+    Text
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -31,35 +33,37 @@ import {
     searchBarConfig,
     addButtonConfig
 } from './config';
-import { Channel } from '../../lib/capability';
-import CachedImage from '../CachedImage';
-import Utils from '../../lib/utils';
+import Images from '../../config/images';
+import ProfileImage from '../ProfileImage';
 const R = require('ramda');
 
-class NewChatContacts extends React.Component {
+class NewCallContacts extends React.Component {
     constructor(props) {
         super(props);
         // this.dataSource = new FrontMAddedContactsPickerDataSource(this)
         this.state = {
-            channelsData: []
+            contactsData: [],
+            contactVisible: false,
+            contactSelected: null
         };
     }
 
     async componentDidMount() {
-        if (this.props.appState.allChannelsLoaded) {
-            Channel.getSubscribedChannels().then(channels => {
-                this.refresh(channels);
+        if (this.props.appState.contactsLoaded) {
+            Contact.getAddedContacts().then(contacts => {
+                this.refresh(contacts);
             });
         }
     }
 
     componentDidUpdate(prevProps) {
         if (
-            prevProps.appState.allChannelsLoaded !==
-            this.props.appState.allChannelsLoaded
+            prevProps.appState.contactsLoaded !==
+            this.props.appState.contactsLoaded
         ) {
-            Channel.getSubscribedChannels().then(channels => {
-                this.refresh(channels);
+            // this.refresh()
+            Contact.getAddedContacts().then(contacts => {
+                this.refresh();
             });
         }
 
@@ -67,9 +71,7 @@ class NewChatContacts extends React.Component {
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
-            Channel.getSubscribedChannels().then(channels => {
-                this.refresh(channels);
-            });
+            this.refresh();
         }
     }
 
@@ -77,126 +79,117 @@ class NewChatContacts extends React.Component {
         const user = Store.getState().user;
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
-            I18n.t('My_Channels'),
-            I18n.t('My_Channels')
+            I18n.t('Contacts_call'),
+            I18n.t('Contacts')
         );
-        Store.dispatch(refreshChannels(true));
+        Store.dispatch(refreshContacts(true));
     }
 
     static onExit() {
-        Store.dispatch(refreshChannels(false));
+        Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {
-        return nextProps.appState.currentScene === I18n.t('My_Channels');
+        return nextProps.appState.currentScene === I18n.t('Contacts_call');
     }
 
-    createChannelBook = channels => {
-        const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
-        const uniqId = R.eqProps('channelId');
-        const channelsUniq = R.uniqWith(uniqId)(channels);
-        // const phoneChannels = channelsUniq.map(channel => ({
-        //     ...channel,
-        //     channelName: channel.channelName
-        //         ? channel.channelName
-        //             .trim()
-        //             .split(' ')
-        //             .map(
-        //                 word =>
-        //                     `${word.charAt(0).toUpperCase()}${word.slice(1)}`
-        //             )
-        //             .join(' ')
-        //         : ''
-        // }))
+    setContactVisible = (value, contact) =>
+        this.setState({ contactVisible: value, contactSelected: contact });
 
-        const phoneChannels = channelsUniq;
-        const PhoneChannels = Alphabets.map(letter => {
-            let channelBook = [];
+    createAddressBook = contacts => {
+        const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
+        const uniqId = R.eqProps('userId');
+        const contactsUniq = R.uniqWith(uniqId)(contacts);
+        const phoneContacts = contactsUniq.map(contact => ({
+            ...contact,
+            userName: contact.userName
+                ? contact.userName
+                    .trim()
+                    .split(' ')
+                    .map(
+                        word =>
+                            `${word.charAt(0).toUpperCase()}${word.slice(1)}`
+                    )
+                    .join(' ')
+                : ''
+        }));
+
+        const PhoneContacts = Alphabets.map(letter => {
+            let contactBook = [];
             if (letter !== '#') {
-                channelBook = phoneChannels
+                contactBook = phoneContacts
                     .filter(
-                        channel =>
-                            channel.channelName.charAt(0).toUpperCase() ===
+                        contact =>
+                            contact.userName.charAt(0).toUpperCase() ===
                             letter.toUpperCase()
                     )
-                    .map(channel => ({
-                        id: channel.channelId,
-                        name: channel.channelName,
-                        description: channel.description,
-                        ownerId: channel.ownerId,
-                        ownerName: channel.ownerName,
-                        channel
+                    .map(contact => ({
+                        id: contact.userId,
+                        name: contact.userName,
+                        emails: [{ email: contact.emailAddress }],
+                        phoneNumbers: contact.phoneNumber || undefined
                     }));
             } else {
-                channelBook = phoneChannels
+                contactBook = phoneContacts
                     .filter(
-                        channel =>
-                            !channel.channelName.charAt(0).match(/[a-z]/i)
+                        contact => !contact.userName.charAt(0).match(/[a-z]/i)
                     )
                     .map(contact => ({
-                        id: channel.channelId,
-                        name: channel.channelName,
-                        description: channel.description,
-                        ownerId: channel.ownerId,
-                        ownerName: channel.ownerName,
-                        channel
+                        id: contact.userId,
+                        name: contact.userName,
+                        emails: [{ email: contact.emailAddress }],
+                        phoneNumbers: contact.phoneNumber || undefined
                     }));
             }
             return {
                 title: letter,
-                data: channelBook
+                data: contactBook
             };
         });
-        console.log(PhoneChannels);
-        return PhoneChannels;
+        console.log(PhoneContacts);
+        return PhoneContacts;
     };
-    refresh = channels => {
+    refresh = contacts => {
         // this.dataSource.loadData()
-        if (!channels) {
+        if (!contacts) {
             return;
         }
-        const subscribedChannels = channels.filter(
-            channel => channel.subcription === 'true'
-        );
-        console.log(channels);
-        const ChannelBook = this.createChannelBook(subscribedChannels);
-        this.setState({ channelsData: ChannelBook });
+        console.log(contacts);
+        const AddressBook = this.createAddressBook(contacts);
+        this.setState({ contactsData: AddressBook });
     };
 
     renderItem(info) {
-        const channel = info.item;
+        const contact = info.item;
         const Image = (
-            <CachedImage
-                imageTag="channelLogo"
-                source={{ uri: Utils.channelLogoUrl(channel.channel.logo) }}
+            <ProfileImage
+                uuid={contact.id}
+                placeholder={Images.user_image}
                 style={styles.avatarImage}
-                resizeMode="contain"
+                placeholderStyle={styles.avatarImage}
+                resizeMode="cover"
             />
         );
         return (
             <NewChatRow
-                key={channel.id}
+                key={contact.id}
+                item={contact}
+                title={contact.name}
                 image={Image}
-                item={channel}
-                title={channel.name}
-                id={channel.id}
-                onItemPressed={this.onChannelsSelected}
+                id={contact.id}
+                onItemPressed={this.onContactSelected}
+                email={contact.emails[0].email}
             />
         );
     }
-    onChannelsSelected = channel => {
-        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
-            Actions.channelChat({
-                bot: imBot,
-                channel: channel.channel,
-                type: ActionConst.REPLACE
-            });
-        });
+    onContactSelected = contact => {
+        console.log('Call This Guy', contact);
+        this.setContactVisible(true, contact);
     };
 
     onSideIndexItemPressed(item) {
         const sectionIndex = _.findIndex(
-            this.state.channelsData,
+            this.state.contactsData,
             section => section.title === item
         );
         this.contactsList.scrollToLocation({
@@ -206,9 +199,9 @@ class NewChatContacts extends React.Component {
         });
     }
 
-    renderChannelsList() {
+    renderContactsList() {
         const sectionTitles = _.map(
-            this.state.channelsData,
+            this.state.contactsData,
             section => section.title
         );
 
@@ -227,7 +220,7 @@ class NewChatContacts extends React.Component {
                     renderSectionHeader={({ section }) => (
                         <NewChatSectionHeader title={section.title} />
                     )}
-                    sections={this.state.channelsData}
+                    sections={this.state.contactsData}
                     keyExtractor={(item, index) => item.id}
                 />
                 <NewChatIndexView
@@ -241,7 +234,22 @@ class NewChatContacts extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                {this.renderChannelsList()}
+                {this.renderContactsList()}
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.contactVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        this.setContactVisible(false, null);
+                    }}
+                >
+                    <View style={{ height: 200, width: 200 }}>
+                        <View>
+                            <Text>Hello World!</Text>
+                        </View>
+                    </View>
+                </Modal>
             </SafeAreaView>
         );
     }
@@ -257,4 +265,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(NewChatContacts);
+)(NewCallContacts);

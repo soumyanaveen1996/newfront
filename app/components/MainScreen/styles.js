@@ -77,7 +77,7 @@ export const MainScreenStyles = StyleSheet.create({
         height: hp('60%')
     },
     chatAreaNoFav: {
-        height: hp('80%')
+        height: hp('70%')
     },
     searchIcon: { paddingHorizontal: 10 },
     input: {

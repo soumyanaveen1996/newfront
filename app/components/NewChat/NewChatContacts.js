@@ -31,6 +31,8 @@ import {
     searchBarConfig,
     addButtonConfig
 } from './config';
+import Images from '../../config/images';
+import ProfileImage from '../ProfileImage';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -71,7 +73,11 @@ class NewChatContacts extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('My_Contacts'));
+        EventEmitter.emit(
+            AuthEvents.tabTopSelected,
+            I18n.t('My_Contacts'),
+            I18n.t('My_Contacts')
+        );
         Store.dispatch(refreshContacts(true));
     }
 
@@ -148,11 +154,21 @@ class NewChatContacts extends React.Component {
 
     renderItem(info) {
         const contact = info.item;
+        const Image = (
+            <ProfileImage
+                uuid={contact.id}
+                placeholder={Images.user_image}
+                style={styles.avatarImage}
+                placeholderStyle={styles.avatarImage}
+                resizeMode="cover"
+            />
+        );
         return (
             <NewChatRow
                 key={contact.id}
                 item={contact}
                 title={contact.name}
+                image={Image}
                 id={contact.id}
                 onItemPressed={this.onContactSelected}
                 email={contact.emails[0].email}

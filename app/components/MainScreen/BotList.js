@@ -42,16 +42,20 @@ class BotList extends React.Component {
         // All
         let allChats = [];
         conversations.forEach(conversation => {
-            allChats.push({ key: 'conversation', bot: conversation });
+            allChats.push({
+                key: conversation.conversationId,
+                type: 'conversation',
+                bot: conversation
+            });
         });
 
         bots.forEach(bot => {
-            allChats.push({ key: 'bot', bot: bot });
+            allChats.push({ key: bot.botId, type: 'bot', bot: bot });
         });
         let allChatsData = await Promise.all(
             _.map(allChats, async (conversation, index) => {
                 let chatData = null;
-                if (conversation.key === 'bot') {
+                if (conversation.type === 'bot') {
                     chatData = await Promise.resolve(
                         Utils.getMessageDataForBot(conversation.bot)
                     );
@@ -155,7 +159,7 @@ class BotList extends React.Component {
                         renderItem={(chat, rowMap) => {
                             const { item, index, separators } = chat;
                             const rowItem =
-                                item.key === 'bot' ? (
+                                item.type === 'bot' ? (
                                     <BotListItem
                                         bot={item.bot}
                                         chatData={item.chatData}
