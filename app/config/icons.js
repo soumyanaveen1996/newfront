@@ -215,6 +215,30 @@ export const Icons = {
         '500'
     ),
     greenCall: icon('ios-call', 'ionicon', 50, Colors.white, 'green', '500'),
+    greenCallOutline: icon(
+        'ios-call-outline',
+        'ionicon',
+        hp('4%'),
+        Colors.white,
+        'green',
+        '500'
+    ),
+    greenCallBlue: icon(
+        'ios-call-outline',
+        'ionicon',
+        hp('3%'),
+        'rgba(0,189,242,1)',
+        'green',
+        '500'
+    ),
+    greenSatBlue: icon(
+        'ios-phone-portrait',
+        'ionicon',
+        hp('3%'),
+        'rgba(0,189,242,1)',
+        'green',
+        '500'
+    ),
     redClose: icon('ios-close', 'ionicon', 50, Colors.white, 'red', '500'),
     delivered: icon('check', 'font-awesome', 10, Colors.white),
     mic: icon('ios-mic', 'ionicon', 50, Colors.darkGray, 'red', '500'),

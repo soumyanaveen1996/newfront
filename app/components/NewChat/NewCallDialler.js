@@ -51,7 +51,9 @@ class NewDialler extends React.Component {
             I18n.t('Dial_call'),
             I18n.t('Dial_call')
         );
-        Actions.dialler();
+        Actions.dialler({
+            newCallScreen: true
+        });
     }
 
     static onExit() {

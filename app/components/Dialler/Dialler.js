@@ -1,5 +1,11 @@
 import React from 'react';
-import { Alert, View, Text, TouchableOpacity } from 'react-native';
+import {
+    Alert,
+    View,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
@@ -14,6 +20,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { Auth } from '../../lib/capability';
 import { Network } from '../../lib/capability';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Modal from 'react-native-modal';
 
 let EventListeners = [];
 export const DiallerState = {
@@ -38,7 +45,8 @@ export default class Dialler extends React.Component {
             callQuotaUpdateError: false,
             updatingCallQuota: false,
             timerId: null,
-            intervalId: null
+            intervalId: null,
+            noBalance: false
         };
     }
 
@@ -73,9 +81,25 @@ export default class Dialler extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
+
+        if (this.props.call && this.props.number) {
+            this.setState({ dialledNumber: this.props.number });
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            prevState.updatingCallQuota !== this.state.updatingCallQuota &&
+            !this.state.updatingCallQuota
+        ) {
+            if (this.props.call) {
+                this.call();
+            }
+        }
     }
 
     async call() {
+        this.setState({ noBalance: false });
         const connection = await Network.isConnected();
         if (!connection) {
             Alert.alert(I18n.t('No_Network'));
@@ -86,6 +110,7 @@ export default class Dialler extends React.Component {
             return;
         }
         if (this.state.callQuota === 0) {
+            this.setState({ noBalance: true });
             Alert.alert(I18n.t('No_balance'));
             return;
         }
@@ -306,7 +331,11 @@ export default class Dialler extends React.Component {
     }
 
     closeScreen() {
-        Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+        if (this.props.newCallScreen) {
+            Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+        } else {
+            Actions.pop();
+        }
     }
 
     renderCloseButton() {
@@ -373,6 +402,15 @@ export default class Dialler extends React.Component {
 
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
+
+        if (this.state.updatingCallQuota && this.props.call) {
+            return (
+                <View style={Styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            );
+        }
+
         if (diallerState === DiallerState.initial) {
             return (
                 <View style={Styles.container}>

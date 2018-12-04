@@ -117,7 +117,7 @@ export const BotListItemColors = {
     subTitleColor: 'rgba(153, 153, 153, 1)',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
-    countColor: 'rgba(0,167,214,1)',
+    countColor: 'rgba(229,69,59,1)',
     countTextColor: GlobalColors.white
 };
 

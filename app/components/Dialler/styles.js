@@ -22,14 +22,15 @@ const Styles = StyleSheet.create({
         color: GlobalColors.botChatBubbleColor,
         fontSize: 20,
         textAlign: 'center',
-        height: 30
+        height: 30,
+        marginTop: hp('5%')
     },
     diallerNumberText: {
         color: GlobalColors.white,
         fontSize: 40,
         textAlign: 'left',
         height: 140,
-        marginTop: 20,
+        marginTop: hp('5%'),
         paddingHorizontal: 10
     },
     callingNumberText: {
@@ -97,7 +98,9 @@ const Styles = StyleSheet.create({
     },
     initialMainContainer: {
         backgroundColor: 'rgba(47,199,111,1)',
-        height: hp('40%')
+        height: hp('40%'),
+        justifyContent: 'center',
+        alignItems: 'flex-start'
     },
     diallerContainer: {
         height: hp('50%'),
@@ -147,6 +150,16 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         backgroundColor: GlobalColors.white
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(4, 4, 4, 0.9)',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

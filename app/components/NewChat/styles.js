@@ -125,9 +125,111 @@ const stylesheet = StyleSheet.create({
     avatarImage: {
         height: hp('6%'),
         width: hp('6%'),
-        borderRadius: wp('4%'),
+        borderRadius: hp('6%') / 2,
         marginLeft: wp('2%'),
         marginRight: wp('2%')
+    },
+    avatarImageModal: {
+        height: hp('15%'),
+        width: hp('15%'),
+        borderRadius: hp('15%') / 2,
+        marginLeft: wp('2%'),
+        marginRight: wp('2%')
+    },
+    contactModal: {
+        height: hp('70%'),
+        width: wp('90%'),
+        backgroundColor: 'white',
+        borderRadius: 10
+    },
+    modalContainer: {
+        margin: 5,
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modalContactName: {
+        fontSize: hp('4%'),
+        fontWeight: '600',
+        color: 'rgba(74,74,74,1)'
+    },
+    nameContainer: {
+        height: hp('10%'),
+        width: '100%',
+        borderBottomWidth: 0.5,
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+    },
+    phoneContainer: {
+        height: hp('10%'),
+        width: '100%',
+        borderBottomWidth: 0.5,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+    },
+    callButton: {
+        height: hp('5%'),
+        width: hp('5%'),
+        borderRadius: hp('5%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(47,199,111,1)'
+    },
+    callButtonDisabled: {
+        height: hp('5%'),
+        width: hp('5%'),
+        borderRadius: hp('5%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#dddddd'
+    },
+    modalTextContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: wp('25%'),
+        marginLeft: 10
+    },
+    modalTextContainerImg: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: wp('25%'),
+        marginLeft: 5
+    },
+    modalNumberContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('50%')
+    },
+    modalCallButContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('10%'),
+        marginRight: 5
+    },
+    modalText: {
+        color: 'rgba(155,155,155,1)',
+        marginLeft: 5
+    },
+    modalImage: {
+        width: wp('5%'),
+        height: wp('5%')
     }
 });
 

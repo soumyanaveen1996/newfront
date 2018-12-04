@@ -59,7 +59,7 @@ class NewChatContacts extends React.Component {
         ) {
             // this.refresh()
             Contact.getAddedContacts().then(contacts => {
-                this.refresh();
+                this.refresh(contacts);
             });
         }
 
@@ -67,7 +67,9 @@ class NewChatContacts extends React.Component {
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
-            this.refresh();
+            Contact.getAddedContacts().then(contacts => {
+                this.refresh(contacts);
+            });
         }
     }
 
