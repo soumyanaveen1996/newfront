@@ -70,6 +70,7 @@ class FormTextInput extends React.Component {
                 containerStyle={Styles.noBorder}
                 secureTextEntry={this.props.secureTextEntry}
                 keyboardType={this.props.keyboardType || 'default'}
+                textContentType={this.props.textContentType || 'default'}
                 autoCapitalize={this.props.autoCapitalize || 'none'}
                 underlineColorAndroid="rgba(0,0,0,0)"
             />
@@ -307,7 +308,13 @@ export default class FormPopup extends React.Component {
                 this.errorMessages[i] = I18n.t('Not_a_number');
                 return false;
             }
-
+            if (
+                formData[i].type === 'phone_field' &&
+                isNaN(+this.formValuesArray[i])
+            ) {
+                this.errorMessages[i] = I18n.t('Not_a_number');
+                return false;
+            }
             if (
                 formData[i].type === 'password_field' &&
                 _.trim(this.formValuesArray[i]) === ''
@@ -397,6 +404,7 @@ export default class FormPopup extends React.Component {
             } else if (
                 formData[i].type === 'text_field' ||
                 formData[i].type === 'number_field' ||
+                formData[i].type === 'phone_field' ||
                 formData[i].type === 'password_field' ||
                 formData[i].type === 'email_field'
             ) {
@@ -415,6 +423,34 @@ export default class FormPopup extends React.Component {
                         />
                     );
                 } else {
+                    let keyboardType;
+                    let textContentType;
+                    switch (formData[i].type) {
+                    case 'number_field': {
+                        keyboardType = 'numeric';
+                        textContentType = 'none';
+                        break;
+                    }
+                    case 'password_field': {
+                        keyboardType = 'default';
+                        textContentType = 'password';
+                        break;
+                    }
+                    case 'email_field': {
+                        keyboardType = 'email-address';
+                        textContentType = 'emailAddress';
+                        break;
+                    }
+                    case 'phone_field': {
+                        keyboardType = 'phone-pad';
+                        textContentType = 'telephoneNumber';
+                        break;
+                    }
+                    default: {
+                        keyboardType = 'default';
+                        textContentType = 'none';
+                    }
+                    }
                     this.formValuesArray[i] =
                         this.formValuesArray[i] || formData[i].value;
                     buttons.push(
@@ -445,11 +481,8 @@ export default class FormPopup extends React.Component {
                                 secureTextEntry={
                                     formData[i].type === 'password_field'
                                 }
-                                keyboardType={
-                                    formData[i].type === 'email_field'
-                                        ? 'email-address'
-                                        : 'default'
-                                }
+                                keyboardType={keyboardType}
+                                textContentType={textContentType}
                             />
                         </View>
                     );

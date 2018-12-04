@@ -18,7 +18,10 @@ import {
     ChannelChat
 } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
-import { ContactsPicker } from '../components/ContactsPicker';
+import {
+    ContactsPicker,
+    ContactDetailsScreen
+} from '../components/ContactsPicker';
 import { Slider } from '../components/Slider';
 import { Launch } from '../components/Launch';
 import I18n from '../config/i18n/i18n';
@@ -195,6 +198,13 @@ class MainRouter extends React.Component {
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.peopleChat}
                                         component={PeopleChat}
+                                    />
+                                    <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.contactDetailsScreen
+                                        }
+                                        title="Contact Details"
+                                        component={ContactDetailsScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}

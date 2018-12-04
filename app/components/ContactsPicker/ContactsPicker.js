@@ -218,6 +218,7 @@ class ContactsPicker extends React.Component {
     }
 
     onContactSelected(contact) {
+        console.log('CONTACT: ' + JSON.stringify(contact, undefined, 2));
         if (this.props.multiSelect) {
             const selectedContact = this.findSelectedContact(contact);
             if (selectedContact) {
@@ -234,20 +235,23 @@ class ContactsPicker extends React.Component {
                 });
             }
         } else {
-            let participants = [
-                {
-                    userId: contact.id,
-                    userName: contact.name
-                }
-            ];
-            SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
-                Actions.peopleChat({
-                    bot: imBot,
-                    otherParticipants: participants,
-                    // type: ActionConst.REPLACE,
-                    onBack: this.props.onBack
-                });
-            });
+            //OPEN contact details
+            Actions.contactDetailsScreen({ contact: contact });
+            //OPEN a chat with the contact
+            // let participants = [
+            //     {
+            //         userId: contact.id,
+            //         userName: contact.name
+            //     }
+            // ];
+            // SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            //     Actions.peopleChat({
+            //         bot: imBot,
+            //         otherParticipants: participants,
+            //         // type: ActionConst.REPLACE,
+            //         onBack: this.props.onBack
+            //     });
+            // });
         }
     }
 
@@ -366,10 +370,8 @@ class ContactsPicker extends React.Component {
 
     sectionHeader({ section }) {
         if (section.data.length === 0) {
-            console.log('>>> ' + JSON.stringify(section.data));
             return <View style={{ height: 0 }} />;
         } else {
-            console.log('<<< ' + JSON.stringify(section.data));
             return <ContactsPickerSectionHeader title={section.title} />;
         }
     }
@@ -399,6 +401,7 @@ class ContactsPicker extends React.Component {
                     sections={this.state.contactsData}
                     keyExtractor={(item, index) => item.id}
                     ListHeaderComponent={this.renderButtons}
+                    stickySectionHeadersEnabled={false}
                 />
                 <ContactsPickerIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}

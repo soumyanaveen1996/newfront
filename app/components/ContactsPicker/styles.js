@@ -144,6 +144,63 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-between',
         paddingTop: 3,
         marginRight: 5
+    },
+
+    //CONTACT DETAILS SCREEN
+    topContainerCD: {
+        backgroundColor: GlobalColors.white,
+        height: 252,
+        justifyContent: 'center'
+    },
+    topAreaCD: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center'
+    },
+    topButtonCD: {
+        width: 46,
+        height: 46,
+        borderRadius: 23,
+        backgroundColor: GlobalColors.white,
+        shadowColor: 'black',
+        shadowRadius: 5,
+        shadowOpacity: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    propicCD: {
+        width: 120,
+        height: 120,
+        borderRadius: 60
+    },
+    nameCD: {
+        fontSize: 26,
+        fontWeight: '600',
+        color: GlobalColors.headerBlack,
+        marginTop: 11,
+        textAlign: 'center'
+    },
+    actionAreaCD: {
+        height: 100,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: GlobalColors.white,
+        borderColor: GlobalColors.translucentDark,
+        borderBottomWidth: 1,
+        borderTopWidth: 1
+    },
+    actionButtonCD: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 100
+    },
+    actionIconCD: {
+        width: 32,
+        height: 32,
+        marginBottom: 5,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
