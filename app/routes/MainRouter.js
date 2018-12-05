@@ -20,7 +20,8 @@ import {
 import { InfoPopup } from '../components/InfoPopup';
 import {
     ContactsPicker,
-    ContactDetailsScreen
+    ContactDetailsScreen,
+    SearchUsers
 } from '../components/ContactsPicker';
 import { Slider } from '../components/Slider';
 import { Launch } from '../components/Launch';
@@ -205,6 +206,11 @@ class MainRouter extends React.Component {
                                         }
                                         title="Contact Details"
                                         component={ContactDetailsScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.searchUsers}
+                                        title="Add Contacts"
+                                        component={SearchUsers}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}

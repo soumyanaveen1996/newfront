@@ -218,7 +218,6 @@ class ContactsPicker extends React.Component {
     }
 
     onContactSelected(contact) {
-        console.log('CONTACT: ' + JSON.stringify(contact, undefined, 2));
         if (this.props.multiSelect) {
             const selectedContact = this.findSelectedContact(contact);
             if (selectedContact) {
@@ -316,6 +315,9 @@ class ContactsPicker extends React.Component {
             viewOffset: SECTION_HEADER_HEIGHT
         });
     }
+    addContacts() {
+        Actions.searchUsers({ multiSelect: true });
+    }
 
     renderSearchBar() {
         return (
@@ -356,6 +358,7 @@ class ContactsPicker extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
                 style={[styles.button, { backgroundColor: GlobalColors.green }]}
+                onPress={this.addContacts.bind(this)}
             >
                 <Icon
                     style={styles.buttonIcon}
@@ -403,10 +406,10 @@ class ContactsPicker extends React.Component {
                     ListHeaderComponent={this.renderButtons}
                     stickySectionHeadersEnabled={false}
                 />
-                <ContactsPickerIndexView
+                {/* <ContactsPickerIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}
                     items={sectionTitles}
-                />
+                /> */}
             </KeyboardAvoidingView>
         );
     }

@@ -1,19 +1,54 @@
 import React from 'react';
-import { View, Text, Image, Button, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    Button,
+    TouchableOpacity,
+    Alert
+} from 'react-native';
+import _ from 'lodash';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { GlobalColors } from '../../config/styles';
 import ProfileImage from '../ProfileImage';
 import Images from '../../config/images';
 import Contact from '../../lib/capability/Contact';
+import config from '../../config/config';
+import { Auth, Network } from '../../lib/capability';
+import { Actions, ActionConst } from 'react-native-router-flux';
+import SystemBot from '../../lib/bot/SystemBot';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.contact = this.props.contact;
     }
 
-    renderNameArea(contact) {
+    startChat() {
+        console.log('ID ' + this.contact.id);
+        let participants = [
+            {
+                userId: this.contact.id,
+                userName: this.contact.name
+            }
+        ];
+        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            Actions.peopleChat({
+                bot: imBot,
+                otherParticipants: participants,
+                // type: ActionConst.REPLACE,
+                onBack: this.props.onBack
+            });
+        });
+    }
+
+    async callContact() {
+        Actions.dialler({ phoneNumber: this.contact.phoneNumbers.mobile });
+    }
+
+    renderNameArea() {
         return (
             <View style={styles.topContainerCD}>
                 <View style={styles.topAreaCD}>
@@ -25,7 +60,7 @@ export default class ContactDetailsScreen extends React.Component {
                         />
                     </TouchableOpacity>
                     <ProfileImage
-                        uuid={contact.id}
+                        uuid={this.contact.id}
                         placeholder={Images.user_image}
                         style={styles.propicCD}
                         placeholderStyle={styles.propicCD}
@@ -39,7 +74,7 @@ export default class ContactDetailsScreen extends React.Component {
                         />
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.nameCD}>{contact.name}</Text>
+                <Text style={styles.nameCD}>{this.contact.name}</Text>
             </View>
         );
     }
@@ -47,7 +82,10 @@ export default class ContactDetailsScreen extends React.Component {
     renderActionButtons() {
         return (
             <View style={styles.actionAreaCD}>
-                <TouchableOpacity style={styles.actionButtonCD}>
+                <TouchableOpacity
+                    style={styles.actionButtonCD}
+                    onPress={this.startChat.bind(this)}
+                >
                     <View
                         style={[
                             styles.actionIconCD,
@@ -58,7 +96,10 @@ export default class ContactDetailsScreen extends React.Component {
                     </View>
                     <Text>Chat</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonCD}>
+                <TouchableOpacity
+                    style={styles.actionButtonCD}
+                    onPress={this.callContact.bind(this)}
+                >
                     <View
                         style={[
                             styles.actionIconCD,
@@ -84,17 +125,30 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
-    renderDetails() {}
+    renderDetails() {
+        return _.map(this.contact.emails, () =>
+            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
+        );
+    }
 
-    renderFooterButtons() {}
+    renderFooterButtons() {
+        return <View style={styles.footerCD} />;
+    }
+
+    renderDetailRow(icon, label, content) {
+        return (
+            <View style={styles.detailRowCD} key={icon}>
+                <Icon name={icon} size={16} color={GlobalColors.sideButtons} />
+                <Text style={styles.labelCD}>{label}</Text>
+                <Text style={styles.rowContentCD}>{content}</Text>
+            </View>
+        );
+    }
 
     render() {
-        Contact.getContactFieldForUUIDs(this.props.contact.id).then(res =>
-            console.log('>>>>>>>>>>' + JSON.stringify(res, undefined, 2))
-        );
         return (
-            <View>
-                {this.renderNameArea(this.props.contact)}
+            <View style={styles.containerCD}>
+                {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}

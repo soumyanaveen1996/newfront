@@ -40,7 +40,8 @@ const ROUTER_SCENE_KEYS = {
     contactsMain: 'contactsMain',
     channelsMenu: 'channelsMenu',
     marketplaceMenu: 'marketplaceMenu',
-    contactDetailsScreen: 'contactDetailsScreen'
+    contactDetailsScreen: 'contactDetailsScreen',
+    searchUsers: 'searchUsers'
 };
 
 export default ROUTER_SCENE_KEYS;

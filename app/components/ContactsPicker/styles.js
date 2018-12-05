@@ -147,6 +147,10 @@ const stylesheet = StyleSheet.create({
     },
 
     //CONTACT DETAILS SCREEN
+    containerCD: {
+        backgroundColor: GlobalColors.white,
+        flex: 1
+    },
     topContainerCD: {
         backgroundColor: GlobalColors.white,
         height: 252,
@@ -201,6 +205,27 @@ const stylesheet = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    detailRowCD: {
+        height: 62,
+        paddingLeft: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white,
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.translucentDark
+    },
+    labelCD: {
+        fontSize: 16,
+        marginLeft: 12,
+        color: GlobalColors.headerBlack
+    },
+    rowContentCD: {
+        fontSize: 16,
+        marginLeft: 64
+    },
+    footerCD: {
+        backgroundColor: GlobalColors.white
     }
 });
 

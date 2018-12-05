@@ -32,8 +32,7 @@ export default class ContactsPickerRow extends React.Component {
 
     render() {
         const contact = this.props.contact;
-        const emails = _.map(contact.emails, item => item.email);
-        const uuid = contact.id;
+        const uuid = contact.id || contact.userId;
         return (
             <TouchableOpacity onPress={this.onItemPressed.bind(this)}>
                 <View style={styles.contactItemContainer}>
@@ -47,7 +46,7 @@ export default class ContactsPickerRow extends React.Component {
                     />
                     <View style={styles.contactItemDetailsContainer}>
                         <Text style={styles.contactItemName}>
-                            {contact.name}
+                            {contact.name || contact.userName}
                         </Text>
                     </View>
                 </View>

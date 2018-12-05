@@ -72,6 +72,9 @@ export default class Dialler extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
+        if (this.props.phoneNumber) {
+            this.setState({ dialledNumber: this.props.phoneNumber });
+        }
     }
 
     async call() {
