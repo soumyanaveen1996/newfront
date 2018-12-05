@@ -520,6 +520,8 @@ export default class Auth {
             return Auth.getUser().then(user => {
                 if (user) {
                     user.info.userName = details.userName || user.info.userName;
+                    user.info.phoneNumbers = details.phoneNumbers || {};
+
                     // user.info.surname = details.surname || user.info.surname;
                     // user.info.givenName =
                     //     details.givenName || user.info.givenName;
