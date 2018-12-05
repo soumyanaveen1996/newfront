@@ -112,8 +112,9 @@ const Styles = StyleSheet.create({
     },
     callQuotaText: {
         fontSize: 20,
-        fontWeight: '800',
-        marginLeft: 10
+        fontWeight: '500',
+        color: 'rgba(0,0,0,1)',
+        marginLeft: 5
     },
     horizontalRuler: {
         borderBottomColor: 'black',

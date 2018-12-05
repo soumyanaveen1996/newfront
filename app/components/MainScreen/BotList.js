@@ -1,6 +1,13 @@
 import React from 'react';
-import { ActivityIndicator, ListView, View, Text } from 'react-native';
-import { BotListStyles } from './styles';
+import {
+    ActivityIndicator,
+    ListView,
+    View,
+    Text,
+    TouchableOpacity,
+    Image
+} from 'react-native';
+import { BotListStyles, MainScreenStyles } from './styles';
 import BotListItem from './BotListItem';
 import ConversationListItem from './ConversationListItem';
 import { Conversation } from '../../lib/conversation';
@@ -12,11 +19,19 @@ import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+
+const hiddenItemWidth = wp('25%');
 class BotList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loaded: false
+            loaded: false,
+            data: [],
+            favData: []
         };
     }
 
@@ -89,59 +104,49 @@ class BotList extends React.Component {
             'desc'
         );
 
+        const favData = allChatsData
+            .filter(chat => chat.type === 'conversation')
+            .filter(chat => chat.bot.favorite == 1);
+        const recentData = allChatsData.filter(
+            chat => !chat.bot.favorite || chat.bot.favorite == 0
+        );
+
         this.setState(
             {
                 loaded: false,
-                data: []
+                data: [],
+                favData: []
             },
             () => {
-                this.setState({ loaded: true, data: allChatsData });
+                this.setState({
+                    loaded: true,
+                    data: recentData,
+                    favData: favData
+                });
             }
         );
-
-        // if (this.mounted) {
-        //     let currentData = this.state.data
-        //     const ds = new ListView.DataSource({
-        //         rowHasChanged: (r1, r2) => r1 !== r2
-        //     })
-
-        //     if (currentData) {
-        //         // ABOSLUTELY SHITTY HACK DUE TO A BUG IN ListView:
-        //         // https://stackoverflow.com/questions/31738671/react-native-updating-list-view-datasource
-        //         this.setState(
-        //             {
-        //                 loaded: true,
-        //                 dataSource: ds.cloneWithRows([]),
-        //                 data: allChatsData,
-        //                 reload: false
-        //             },
-        //             function(err, res) {
-        //                 if (!err) {
-        //                     this.setState({
-        //                         loaded: true,
-        //                         dataSource: ds.cloneWithRows(allChatsData),
-        //                         data: allChatsData,
-        //                         reload: true
-        //                     })
-        //                 }
-        //             }
-        //         )
-        //     } else {
-        //         this.setState({
-        //             loaded: true,
-        //             dataSource: ds.cloneWithRows(allChatsData),
-        //             data: allChatsData
-        //         })
-        //     }
-        // }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return true;
     }
 
+    applyFilter = chats => {
+        if (chats.type === 'bot') {
+            return chats.bot.botName
+                .toLowerCase()
+                .includes(this.props.searchString.toLowerCase());
+        }
+        if (chats.type === 'conversation') {
+            return chats.chatData.chatName
+                .toLowerCase()
+                .includes(this.props.searchString.toLowerCase());
+        }
+    };
     render() {
-        const { loaded } = this.state;
+        const { loaded, data, favData } = this.state;
+        const allFavs = favData.filter(chats => this.applyFilter(chats));
+        const allRecents = data.filter(chats => this.applyFilter(chats));
 
         if (!loaded) {
             return (
@@ -152,37 +157,108 @@ class BotList extends React.Component {
         } else {
             return (
                 <View style={BotListStyles.listViewStyle}>
-                    <SwipeListView
-                        useFlatList
-                        data={this.state.data}
-                        randomProp={this.state.updated}
-                        renderItem={(chat, rowMap) => {
-                            const { item, index, separators } = chat;
-                            const rowItem =
-                                item.type === 'bot' ? (
-                                    <BotListItem
-                                        bot={item.bot}
-                                        chatData={item.chatData}
-                                        onBack={this.props.onBack}
-                                    />
-                                ) : (
-                                    <ConversationListItem
-                                        conversation={item.bot}
-                                        chatData={item.chatData}
-                                        onBack={this.props.onBack}
-                                    />
-                                );
-                            return rowItem;
-                        }}
-                        renderHiddenItem={(data, rowMap) => (
-                            <View>
-                                <Text>Left</Text>
-                                <Text>Right</Text>
-                            </View>
-                        )}
-                        leftOpenValue={75}
-                        rightOpenValue={-75}
-                    />
+                    {allFavs.length > 0 ? (
+                        <View style={MainScreenStyles.favArea}>
+                            <Text style={MainScreenStyles.titleText}>
+                                Favorites
+                            </Text>
+                            <SwipeListView
+                                useFlatList
+                                data={allFavs}
+                                renderItem={(chat, rowMap) => {
+                                    const { item, index, separators } = chat;
+                                    const rowItem =
+                                        item.type === 'bot' ? (
+                                            <BotListItem
+                                                bot={item.bot}
+                                                chatData={item.chatData}
+                                                onBack={this.props.onBack}
+                                            />
+                                        ) : (
+                                            <ConversationListItem
+                                                conversation={item.bot}
+                                                chatData={item.chatData}
+                                                onBack={this.props.onBack}
+                                            />
+                                        );
+                                    return rowItem;
+                                }}
+                                renderHiddenItem={(hdata, rowMap) => {
+                                    const {
+                                        item: { type, bot, chatData }
+                                    } = hdata;
+                                    const Favorite =
+                                        type === 'conversation' ? (
+                                            <FavoriteView
+                                                conversationId={
+                                                    bot.conversationId
+                                                }
+                                                onClick={
+                                                    this.props.unsetFavorite
+                                                }
+                                                chatData={chatData}
+                                                unfavorite
+                                            />
+                                        ) : null;
+                                    return Favorite;
+                                }}
+                                leftOpenValue={hiddenItemWidth}
+                            />
+                        </View>
+                    ) : null}
+                    <View
+                        style={
+                            allFavs.length > 0
+                                ? MainScreenStyles.chatArea
+                                : MainScreenStyles.chatAreaNoFav
+                        }
+                    >
+                        <Text style={MainScreenStyles.titleText}>Recents</Text>
+                        <SwipeListView
+                            useFlatList
+                            data={allRecents}
+                            renderItem={(chat, rowMap) => {
+                                const { item, index, separators } = chat;
+                                let last = false;
+                                if (allRecents.length - 1 === index) {
+                                    last = true;
+                                }
+                                const rowItem =
+                                    item.type === 'bot' ? (
+                                        <BotListItem
+                                            bot={item.bot}
+                                            chatData={item.chatData}
+                                            onBack={this.props.onBack}
+                                            last={last}
+                                        />
+                                    ) : (
+                                        <ConversationListItem
+                                            conversation={item.bot}
+                                            chatData={item.chatData}
+                                            onBack={this.props.onBack}
+                                            last={last}
+                                        />
+                                    );
+                                return rowItem;
+                            }}
+                            renderHiddenItem={(hdata, rowMap) => {
+                                const {
+                                    item: { type, bot, chatData }
+                                } = hdata;
+                                const Favorite =
+                                    type === 'conversation' ? (
+                                        <FavoriteView
+                                            conversationId={bot.conversationId}
+                                            onClick={this.props.setFavorite}
+                                            chatData={chatData}
+                                        />
+                                    ) : null;
+                                return Favorite;
+                            }}
+                            leftOpenValue={hiddenItemWidth}
+                            // rightOpenValue={-75}
+                        />
+                    </View>
                 </View>
                 // <ListView
                 //     containerStyles={BotListStyles.container}
@@ -212,6 +288,25 @@ class BotList extends React.Component {
         }
     }
 }
+
+const FavoriteView = ({
+    conversationId,
+    onClick,
+    chatData,
+    unfavorite = undefined
+}) => (
+    <TouchableOpacity
+        style={BotListStyles.favItemContainer}
+        onPress={() => onClick(conversationId, chatData)}
+    >
+        <Image
+            source={require('../../images/botlist/add-remove-favorite-btn.png')}
+        />
+        <Text style={BotListStyles.favText}>
+            {unfavorite ? 'Remove Favorite' : 'Add Favorite'}
+        </Text>
+    </TouchableOpacity>
+);
 
 const mapStateToProps = state => ({
     timeline: state.timeline

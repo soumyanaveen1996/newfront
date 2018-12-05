@@ -96,7 +96,8 @@ const selectConversations = () =>
                             return {
                                 id: dbResult.id,
                                 conversationId: dbResult.conversationId,
-                                type: dbResult.type
+                                type: dbResult.type,
+                                favorite: dbResult.favorite
                             };
                         });
                         return resolve(formattedResults);
@@ -128,7 +129,8 @@ const selectConversationsByType = type =>
                         let formattedResults = dbResults.map(dbResult => {
                             return {
                                 id: dbResult.id,
-                                conversationId: dbResult.conversationId
+                                conversationId: dbResult.conversationId,
+                                favorite: dbResult.favorite
                             };
                         });
                         return resolve(formattedResults);
@@ -159,7 +161,8 @@ const selectConversationByType = (conversationId, type) =>
                     } else {
                         const formattedResults = {
                             id: dbResults[0].id,
-                            conversationId: dbResults[0].conversationId
+                            conversationId: dbResults[0].conversationId,
+                            favorite: dbResults[0].favorite
                         };
                         return resolve(formattedResults);
                     }
@@ -190,7 +193,8 @@ const selectConversation = conversationId =>
                         const formattedResults = {
                             id: dbResults[0].id,
                             conversationId: dbResults[0].conversationId,
-                            type: dbResults[0].type
+                            type: dbResults[0].type,
+                            favorite: dbResults[0].favorite
                         };
                         return resolve(formattedResults);
                     }
@@ -338,6 +342,41 @@ const deleteAllConversations = () =>
         });
     });
 
+const addFavorite = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                conversationSql.addisFavorite,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add favorite column'));
+                }
+            );
+        });
+    });
+
+const updateConvFavorite = (conversationId, favorite) =>
+    new Promise((resolve, reject) => {
+        const args = [favorite, conversationId];
+        console.log('ConvDAO::updateFavorite::', args);
+        db.transaction(tx => {
+            tx.executeSql(
+                conversationSql.setConvFavorite,
+                args,
+                function success(tx2, res) {
+                    console.log('ConvDAO::Favorite Updated::', args);
+                    return resolve(+res.insertId || 0);
+                },
+                function failure(tx3, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
+
 export default {
     createConversationTable: createConversationTable,
     insertConversation: insertConversation,
@@ -349,5 +388,7 @@ export default {
     updateConversationId: updateConversationId,
     createV2ConversationTable: createV2ConversationTable,
     migrateToV2Conversations: migrateToV2Conversations,
-    deleteAllConversations: deleteAllConversations
+    deleteAllConversations: deleteAllConversations,
+    addFavorite,
+    updateConvFavorite
 };

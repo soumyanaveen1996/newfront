@@ -191,10 +191,7 @@ class NewCallContacts extends React.Component {
         console.log('Call This Guy', contact);
 
         // TEmp Coding
-        this.setContactVisible(true, {
-            ...contact,
-            phoneNumbers: '+919880433199'
-        });
+        this.setContactVisible(true, contact);
     };
 
     onSideIndexItemPressed(item) {
@@ -327,7 +324,7 @@ class NewCallContacts extends React.Component {
                                         >
                                             {contactSelected.phoneNumbers
                                                 ? contactSelected.phoneNumbers
-                                                : 'Not Avalable'}
+                                                : 'Not Available'}
                                         </Text>
                                     </View>
                                     <View style={styles.modalCallButContainer}>

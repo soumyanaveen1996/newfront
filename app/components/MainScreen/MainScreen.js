@@ -35,6 +35,7 @@ import EventEmitter, {
 } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+import { Conversation } from '../../lib/conversation';
 
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
@@ -445,6 +446,30 @@ class MainScreen extends React.Component {
         });
     };
 
+    setConversationFavorite = (conversation, chatData = undefined) => {
+        console.log('Setting favorite..', conversation);
+        let userDomain;
+        if (chatData.channel) {
+            userDomain = chatData.channel.userDomain;
+        }
+        Conversation.setFavorite(conversation, true, userDomain)
+            .then(() => {
+                console.log('Conversation Set as favorite');
+                this.update();
+            })
+            .catch(err => console.log('Cannot set favorite', err));
+    };
+
+    setConversationUnFavorite = conversation => {
+        console.log('Setting unfavorite..', conversation);
+        Conversation.setFavorite(conversation, false)
+            .then(() => {
+                console.log('Conversation Set as unfavorite');
+                this.update();
+            })
+            .catch(err => console.log('Cannot set favorite', err));
+    };
+
     renderNetworkStatusBar = () => {
         const { network, showNetworkStatusBar } = this.state;
         if (
@@ -500,9 +525,9 @@ class MainScreen extends React.Component {
                         <TextInput
                             style={MainScreenStyles.input}
                             placeholder={I18n.t('Search_conv')}
-                            onChangeText={searchString => {
-                                this.setState({ searchString });
-                            }}
+                            onChangeText={searchString =>
+                                this.setState({ searchString })
+                            }
                             underlineColorAndroid="transparent"
                         />
                     </View>
@@ -530,7 +555,7 @@ class MainScreen extends React.Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={MainScreenStyles.chatAreaNoFav}>
+                    <View>
                         <BotList
                             ref={connectedBot => {
                                 this.botList = connectedBot
@@ -539,6 +564,9 @@ class MainScreen extends React.Component {
                             }}
                             onBack={this.onBack.bind(this)}
                             bots={this.state.bots}
+                            setFavorite={this.setConversationFavorite}
+                            unsetFavorite={this.setConversationUnFavorite}
+                            searchString={this.state.searchString}
                         />
                     </View>
                 </View>

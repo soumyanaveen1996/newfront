@@ -46,7 +46,8 @@ export default class Dialler extends React.Component {
             updatingCallQuota: false,
             timerId: null,
             intervalId: null,
-            noBalance: false
+            noBalance: false,
+            bgBotScreen: null
         };
     }
 
@@ -137,15 +138,15 @@ export default class Dialler extends React.Component {
     }
 
     async closeCall() {
-        const { diallerState, timerId, intervalId } = this.state;
-        if (timerId) {
-            clearTimeout(timerId);
-        }
-        if (intervalId) {
-            clearInterval(intervalId);
-        }
+        const { diallerState } = this.state;
+        // if (timerId) {
+        //     clearTimeout(timerId)
+        // }
+        // if (intervalId) {
+        //     clearInterval(intervalId)
+        // }
         TwilioVoice.disconnect();
-        Actions.pop();
+        // Actions.pop()
     }
 
     initBackGroundBot = async () => {
@@ -163,7 +164,7 @@ export default class Dialler extends React.Component {
         await bgBotScreen.initialize();
 
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        this.setState({ updatingCallQuota: true });
+        this.setState({ updatingCallQuota: true, bgBotScreen });
     };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
@@ -188,27 +189,51 @@ export default class Dialler extends React.Component {
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
-            const timerId = setTimeout(
-                this.countMinutes,
-                20000,
-                this.state.callQuota
-            );
-            this.setState({ diallerState: DiallerState.incall, timerId });
+            // const timerId = setTimeout(
+            //     this.countMinutes,
+            //     20000,
+            //     this.state.callQuota
+            // )
+            this.setState({ diallerState: DiallerState.incall });
         }
     }
 
     connectionDidDisconnectHandler(data) {
-        Actions.pop();
+        // Actions.pop()
+        this.setState({
+            diallerState: DiallerState.initial,
+            dialledNumber: '+',
+            dialledDigits: ''
+        });
+        if (this.state.bgBotScreen) {
+            this.setState({ updatingCallQuota: true });
+            setTimeout(() => {
+                console.log('Updating Call Balance......');
+                const message = new Message({
+                    msg: {
+                        callQuotaUsed: 0
+                    },
+                    messageType: MESSAGE_TYPE
+                });
+                message.setCreatedBy({ addedByBot: true });
+                this.state.bgBotScreen.next(
+                    message,
+                    {},
+                    [],
+                    this.state.bgBotScreen.getBotContext()
+                );
+            }, 6000);
+        }
     }
 
     countMinutes = callQuota => {
-        let quotaLeft = callQuota * 60;
-        const intervalId = setInterval(() => {
-            quotaLeft = quotaLeft - 1;
-            if (quotaLeft < 0) {
-                this.closeCall();
-            }
-        }, 1000);
+        // let quotaLeft = callQuota * 60
+        // const intervalId = setInterval(() => {
+        //     quotaLeft = quotaLeft - 1
+        //     if (quotaLeft < 0) {
+        //         this.closeCall()
+        //     }
+        // }, 1000)
         this.setState({ intervalId });
     };
 
@@ -216,7 +241,7 @@ export default class Dialler extends React.Component {
         if (diallerState === Dialler.incall) {
             TwilioVoice.disconnect();
         }
-        Actions.pop();
+        // Actions.pop()
     }
 
     renderButton() {
@@ -427,9 +452,9 @@ export default class Dialler extends React.Component {
                             <Text style={Styles.callQuotaPrice}>
                                 {this.state.updatingCallQuota
                                     ? '...'
-                                    : `Call Balance: ${
+                                    : `Current Balance: $${
                                         this.state.callQuota
-                                    } mins`}
+                                    }`}
                             </Text>
                         </View>
                         <View style={Styles.horizontalRuler} />

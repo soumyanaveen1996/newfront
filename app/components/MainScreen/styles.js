@@ -71,14 +71,25 @@ export const MainScreenStyles = StyleSheet.create({
         fontWeight: '500'
     },
     favArea: {
-        height: hp('20%')
+        height: hp('20%'),
+        display: 'flex',
+        flexDirection: 'column'
     },
     chatArea: {
-        height: hp('60%')
+        height: hp('50%'),
+        display: 'flex',
+        flexDirection: 'column'
     },
     chatAreaNoFav: {
-        height: hp('70%')
+        height: hp('70%'),
+        display: 'flex',
+        flexDirection: 'column'
     },
+    titleText: {
+        color: 'rgba(74,74,74,1)',
+        margin: 5
+    },
+
     searchIcon: { paddingHorizontal: 10 },
     input: {
         flex: 1,
@@ -109,6 +120,18 @@ export const BotListStyles = {
         bottom: 0
         // alignItems: 'center',
         // justifyContent: 'center'
+    },
+    favItemContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('25%'),
+        height: hp('10%')
+    },
+    favText: {
+        color: 'rgba(102,102,102,1)',
+        fontSize: wp('3%')
     }
 };
 
@@ -129,6 +152,15 @@ export const BotListItemStyles = {
         paddingVertical: 12,
         alignItems: 'stretch',
         marginBottom: 10,
+        backgroundColor: BotListItemColors.backgroundColor
+    },
+    containerLast: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        alignItems: 'stretch',
+        marginBottom: 55,
         backgroundColor: BotListItemColors.backgroundColor
     },
     title: {
