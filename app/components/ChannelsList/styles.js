@@ -128,12 +128,13 @@ export default StyleSheet.create({
         padding: 3
     },
     searchSection: {
-        width: SCREEN_WIDTH,
-        height: 40,
+        width: wp('100%'),
+        height: hp('7%'),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        marginTop: 3
     },
     searchIcon: {
         padding: 10
@@ -174,21 +175,34 @@ export default StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: wp('4%'),
         fontWeight: '500',
         paddingHorizontal: 5
     },
     filterContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        width: SCREEN_WIDTH,
+        width: wp('100%'),
         height: hp('8%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
         paddingHorizontal: 10
     },
-    filterTextContainer: { flex: 1 },
+    filterTextContainer: {
+        display: 'flex',
+        width: wp('25%'),
+        height: hp('8%'),
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    filterImage: {
+        width: hp('2%'),
+        height: hp('2%'),
+        marginTop: 4,
+        marginLeft: 10
+    },
     filterText: {
         color: 'rgba(102, 102, 102, 1)',
         fontFamily: 'SF Pro Text',
@@ -224,12 +238,12 @@ export default StyleSheet.create({
     title: {
         color: ChannelsListItemColors.titleColor,
         fontFamily: 'SF Pro Text',
-        fontSize: 20,
+        fontSize: wp('5%'),
         fontWeight: '600'
     },
     channelOwnerDetails: {
         color: ChannelsListItemColors.subTitleColor,
-        fontSize: 12,
+        fontSize: wp('2.8%'),
         fontFamily: 'SF Pro Text'
     },
     channelDescription: {
@@ -340,17 +354,41 @@ export default StyleSheet.create({
         borderBottomWidth: 1
     },
 
+    addParticipantContainer: {
+        width: SCREEN_WIDTH - 20,
+        height: hp('10%'),
+        // padding: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomColor: '#F4F4F4',
+        borderBottomWidth: 1
+    },
     entryFields: Platform.select({
         ios: {
+            display: 'flex',
+            flexDirection: 'column',
             position: 'relative',
-            width: 300,
+            width: wp('80%'),
             backgroundColor: 'transparent'
         },
         android: {
-            width: 300,
+            width: wp('80%'),
             backgroundColor: 'transparent'
         }
     }),
+    errorText: {
+        fontSize: wp('3.5%'),
+        color: GlobalColors.red,
+        paddingBottom: 5
+    },
+
+    channelDescText: {
+        alignSelf: 'flex-end',
+        fontSize: wp('3%'),
+        color: 'rgba(102,102,102,1)'
+    },
 
     inputChannel: {
         height: 40,
@@ -385,7 +423,13 @@ export default StyleSheet.create({
         fontSize: 16,
         marginBottom: 20
     },
-
+    channelTextP: {
+        color: '#4A4A4A',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16,
+        marginBottom: 20,
+        paddingLeft: 20
+    },
     addContactsContainer: {
         backgroundColor: GlobalColors.white,
         flex: 1

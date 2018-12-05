@@ -9,6 +9,7 @@ import { Channel } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
+import moment from 'moment';
 
 const subtitleNumberOfLines = 2;
 
@@ -158,6 +159,15 @@ export default class ChannelsListItem extends React.Component {
         const channel = this.props.channel;
         const user = this.props.user;
 
+        let createdOn;
+        if (channel.createdOn && channel.createdOn !== '') {
+            createdOn = moment(parseInt(channel.createdOn)).format(
+                'MMM Do YYYY'
+            );
+        } else {
+            createdOn = moment().format('MMM Do YYYY');
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.channelHeaderPart}>
@@ -177,16 +187,30 @@ export default class ChannelsListItem extends React.Component {
                         >
                             {channel.channelName}
                         </Text>
-                        <Text style={styles.channelOwnerDetails}>
-                            Created by {channel.ownerName || 'N/A'} on October
-                            2018
+                        <Text
+                            style={styles.channelOwnerDetails}
+                            ellipsizeMode="tail"
+                            numberOfLines={2}
+                        >
+                            Created by{' '}
+                            {(
+                                <Text
+                                    style={{
+                                        fontWeight: '400',
+                                        color: 'black'
+                                    }}
+                                >
+                                    {channel.ownerName}{' '}
+                                </Text>
+                            ) || 'N/A'}{' '}
+                            on {<Text>{createdOn}</Text>}
                         </Text>
                     </View>
                 </View>
                 <View style={styles.channelDescription}>
                     <View style={styles.channelType}>
                         <Text style={styles.channelTypeText}>
-                            {channel.channelType === 'public'
+                            {channel.discoverable === 'public'
                                 ? 'Public Channel'
                                 : 'Private Channel'}
                         </Text>

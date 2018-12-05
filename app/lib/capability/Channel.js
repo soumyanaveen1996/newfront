@@ -6,6 +6,7 @@ import SystemBot from '../bot/SystemBot';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import Store from '../../redux/store/configureStore';
 import { completeChannelInstall } from '../../redux/actions/UserActions';
+const moment = require('moment');
 
 export class ChannelError extends Error {
     constructor(code, message) {
@@ -208,7 +209,7 @@ export default class Channel {
                         return Network(options);
                     }
                 })
-                .then(response => {
+                .then(async response => {
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
                         reject(new ChannelError(+err));
@@ -219,13 +220,28 @@ export default class Channel {
                             response.data.content &&
                             response.data.content.length > 0
                         ) {
+                            const user = await Auth.getUser();
                             const channelId = response.data.content[0];
+                            let isPlatformChannel = false;
+                            if (channel.userDomain === 'frontmai') {
+                                isPlatformChannel = true;
+                            }
                             return ChannelDAO.insertIfNotPresent(
                                 channel.channelName,
                                 channel.description,
                                 'ChannelsBotLogo.png',
                                 channel.userDomain,
-                                channelId
+                                channelId,
+                                user.info.emailAddress,
+                                user.info.userName,
+                                user.info.userId,
+                                moment()
+                                    .valueOf()
+                                    .toString(),
+                                'true',
+                                isPlatformChannel,
+                                channel.channelType,
+                                channel.discoverable
                             );
                         } else {
                             reject(new ChannelError(99));
@@ -422,7 +438,8 @@ export default class Channel {
                                 channel.createdOn,
                                 'true',
                                 channel.isPlatformChannel,
-                                channel.channelType
+                                channel.channelType,
+                                channel.discoverable
                             );
                         });
                         return Promise.all(channelInsertPromises);
@@ -482,7 +499,8 @@ export default class Channel {
                                 channel.createdOn,
                                 'false',
                                 channel.isPlatformChannel,
-                                channel.channelType
+                                channel.channelType,
+                                channel.discoverable
                             );
                         });
                         return Promise.all(channelInsertPromises);

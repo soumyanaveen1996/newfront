@@ -52,7 +52,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
         botName: 'FrontM Assistant',
-        botUrl: 'botfarm/frontmai/onboardingBot/1.9.0/onboardingBot.js',
+        botUrl: 'botfarm/frontmai/onboardingBot/1.11.0/onboardingBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -73,7 +73,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'onboarding-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.9.0'
+        version: '1.11.0'
     },
     'contacts-bot': {
         allowResetConversation: 'false',
