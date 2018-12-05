@@ -70,7 +70,11 @@ export default class BotListItem extends React.Component {
 
         return (
             <TouchableOpacity
-                style={BotListItemStyles.container}
+                style={
+                    this.props.last
+                        ? BotListItemStyles.containerLast
+                        : BotListItemStyles.container
+                }
                 onPress={this.handleBotSelection.bind(this)}
             >
                 <CachedImage

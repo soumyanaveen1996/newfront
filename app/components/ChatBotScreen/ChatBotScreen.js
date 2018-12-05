@@ -324,11 +324,16 @@ class ChatBotScreen extends React.Component {
                         this.props.navigation.setParams({
                             botDone: this.botDone.bind(this)
                         });
+                        if (this.props.call) {
+                            this.showCallMessage();
+                        }
                     } else {
                         console.log('Error setting state with messages', err);
                     }
                 }
             );
+
+            console.log('Props from Contacts Call', this.props);
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors

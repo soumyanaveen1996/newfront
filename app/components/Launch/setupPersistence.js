@@ -115,7 +115,21 @@ function FifteenToSixteen() {
         return DbVersionDAO.updateVersion(16);
     });
 }
-
+function SixteenToSeventeen() {
+    return ChannelDAO.addisPlatform().then(() => {
+        return DbVersionDAO.updateVersion(17);
+    });
+}
+function SeventeenToEighteen() {
+    return ChannelDAO.addChannelType().then(() => {
+        return DbVersionDAO.updateVersion(18);
+    });
+}
+function EighteentoNineteen() {
+    return ConversationDAO.addFavorite().then(() => {
+        return DbVersionDAO.updateVersion(19);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -235,6 +249,27 @@ function runMigrations() {
             .then(version => {
                 if (version === 15) {
                     return FifteenToSixteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 16) {
+                    return SixteenToSeventeen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 17) {
+                    return SeventeenToEighteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 18) {
+                    return EighteentoNineteen();
                 } else {
                     return version;
                 }

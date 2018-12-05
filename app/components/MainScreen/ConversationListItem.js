@@ -121,7 +121,11 @@ export default class ConversationListItem extends React.Component {
     render() {
         return (
             <TouchableOpacity
-                style={BotListItemStyles.container}
+                style={
+                    this.props.last
+                        ? BotListItemStyles.containerLast
+                        : BotListItemStyles.container
+                }
                 onPress={this.handleBotSelection.bind(this)}
             >
                 {this.renderProfileimage()}

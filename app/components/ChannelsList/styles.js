@@ -1,6 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_WIDTH, SCREEN_HEIGHT, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const ChannelsListItemColors = {
     titleColor: 'rgba(102, 102, 102, 1)',
@@ -159,6 +163,14 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    buttonContainerDelete: {
+        height: 40,
+        width: 300,
+        backgroundColor: '#CC0000',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
@@ -167,8 +179,10 @@ export default StyleSheet.create({
         paddingHorizontal: 5
     },
     filterContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
         width: SCREEN_WIDTH,
-        height: 40,
+        height: hp('8%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
@@ -180,7 +194,13 @@ export default StyleSheet.create({
         fontFamily: 'SF Pro Text',
         fontSize: 16
     },
-    filterArea: { flex: 4 },
+    filterArea: {
+        display: 'flex',
+        flex: 5,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start'
+    },
     channelHeaderPart: {
         width: '100%',
         height: 70,
@@ -243,8 +263,8 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     openChannelButtonContainer: {
-        height: 30,
-        width: 80,
+        height: hp('4%'),
+        width: wp('40%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 6,
         alignItems: 'center',
@@ -257,16 +277,19 @@ export default StyleSheet.create({
 
     filterMaincontainer: {
         backgroundColor: GlobalColors.white,
-        flex: 1
+        height: hp('10%')
     },
     filterScrollView: {
         flex: 1,
         backgroundColor: GlobalColors.white
     },
     filterChipContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         width: SCREEN_WIDTH,
-        height: 90,
-        padding: 20,
+        height: hp('10%'),
+        padding: 10,
         borderBottomWidth: 0.5,
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },
@@ -385,5 +408,45 @@ export default StyleSheet.create({
     },
     contactImage: {
         marginRight: 10
+    },
+    selectContactContainer: {
+        height: hp('15%'),
+        backgroundColor: '#f4f4f4'
+    },
+    selectedChip: {
+        paddingHorizontal: wp('2%')
+    },
+    chipFont: {
+        fontSize: wp('3.5%'),
+        color: '#FFFFFF'
+    },
+    participantsContainer: {
+        height: hp('55%')
+    },
+    teamContainer: {
+        height: hp('80%')
+    },
+    participantName: {
+        fontSize: wp('4%'),
+        color: 'rgb(23, 19, 19)'
+    },
+    participantEmail: {
+        fontSize: wp('3%'),
+        color: 'rgb(180, 180, 180)'
+    },
+    filterSelected: {
+        paddingHorizontal: wp('2%'),
+        paddingVertical: wp('1%')
+    },
+    selectedFilterTitle: {
+        fontSize: wp('3%'),
+        color: '#FFFFFF'
+    },
+    radioLabel: {
+        fontSize: hp('2%'),
+        color: '#666666'
+    },
+    radioButton: {
+        marginLeft: wp('10%')
     }
 });

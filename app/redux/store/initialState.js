@@ -15,6 +15,14 @@ const initialState = {
     },
     botState: {
         id: null
+    },
+    channels: {
+        filters: [],
+        participants: [],
+        team: ''
+    },
+    timeline: {
+        allChats: []
     }
 };
 

@@ -29,9 +29,12 @@ const insertChannel = (
     ownerName,
     ownerId,
     createdOn,
-    subcription
+    subcription,
+    isPlatformChannel,
+    channelType
 ) =>
     new Promise((resolve, reject) => {
+        let isPlatform = isPlatformChannel ? 1 : 0;
         const args = [
             name,
             description,
@@ -42,9 +45,10 @@ const insertChannel = (
             ownerName,
             ownerId,
             createdOn,
-            subcription
+            subcription,
+            isPlatform,
+            channelType
         ];
-        console.log('inserting channels in table ', args);
         db.transaction(tx => {
             tx.executeSql(
                 channelSql.insertChannel,
@@ -113,6 +117,25 @@ const updateChannel = (name, domain, desc) =>
         });
     });
 
+const updateChannelSubscription = (name, domain, subscription) =>
+    new Promise((resolve, reject) => {
+        const args = [subscription, name, domain];
+        console.log('ChannelDAO::updateChannel::', args);
+        db.transaction(tx => {
+            tx.executeSql(
+                channelSql.setChannelSubscription,
+                args,
+                function success(tx2, res) {
+                    console.log('ChannelDAO::Subscribe Updated::', args);
+                    return resolve(+res.insertId || 0);
+                },
+                function failure(tx3, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
+
 const selectChannels = () =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
@@ -155,7 +178,9 @@ const channelDataFromDbResult = dbResult => {
         ownerName: dbResult.ownerName,
         ownerId: dbResult.ownerId,
         createdOn: dbResult.createdOn,
-        subcription: dbResult.subcription
+        subcription: dbResult.subcription,
+        isPlatformChannel: dbResult.isPlatformChannel,
+        channelType: dbResult.channelType
     };
 };
 
@@ -247,12 +272,15 @@ const insertIfNotPresent = (
     ownerName,
     ownerId,
     createdOn,
-    subcription
+    subcription,
+    isPlatformChannel,
+    channelType
 ) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
                 if (!channel) {
+                    let isPlatform = isPlatformChannel ? 1 : 0;
                     return insertChannel(
                         name,
                         description,
@@ -263,7 +291,9 @@ const insertIfNotPresent = (
                         ownerName,
                         ownerId,
                         createdOn,
-                        subcription
+                        subcription,
+                        isPlatform,
+                        channelType
                     );
                 } else {
                     resolve();
@@ -371,6 +401,40 @@ const addisSubscribed = () =>
         });
     });
 
+const addisPlatform = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addIsPlatformChannel,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add platform column'));
+                }
+            );
+        });
+    });
+
+const addChannelType = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addChannelType,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add channelType column')
+                    );
+                }
+            );
+        });
+    });
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -387,5 +451,8 @@ export default {
     addOwnerName,
     addOwnerId,
     addCreatedOn,
-    addisSubscribed
+    addisSubscribed,
+    addisPlatform,
+    addChannelType,
+    updateChannelSubscription
 };

@@ -19,41 +19,34 @@ export default class TabIcon extends React.Component {
     }
 
     state = {
-        scene: 'Home'
+        scene: 'Home',
+        title: ''
     };
     componentDidMount() {
-        EventEmitter.addListener(AuthEvents.tabSelected, this.tabSelected);
+        EventEmitter.addListener(AuthEvents.tabTopSelected, this.tabSelected);
     }
     componentWillUnmount() {
         EventEmitter.removeListener(AuthEvents.tabSelected);
     }
-    tabSelected = scene => {
+    tabSelected = (scene, title) => {
         Store.dispatch(setCurrentScene(scene));
-        this.setState({ scene });
+        this.setState({ scene, title });
     };
     render() {
         const { imageSource, titleScreen, imageSelected } = this.props;
-        let color = 'rgba(74,74,74,0.6)';
+        // let color = 'rgba(74,74,74,0.6)'
         // let color = 'aliceblue'
 
         return (
-            <View style={{ alignItems: 'center' }}>
+            <View style={styles.container}>
                 <Image
                     source={
-                        this.props.titleScreen === this.state.scene
+                        this.props.titleScreen === this.state.title
                             ? imageSelected
                             : imageSource
                     }
                 />
-                <Text
-                    style={{
-                        textAlign: 'center',
-                        fontSize: 14,
-                        color
-                    }}
-                >
-                    {titleScreen}
-                </Text>
+                <Text style={styles.text}>{titleScreen}</Text>
             </View>
         );
     }

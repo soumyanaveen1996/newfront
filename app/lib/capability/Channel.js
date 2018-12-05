@@ -100,6 +100,91 @@ export default class Channel {
                 .catch(reject);
         });
 
+    static subscribeChannel = (channelName, domain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let domainChannels = [
+                            { userDomain: domain, channels: [channelName] }
+                        ];
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'Subscribe',
+                                botId: SystemBot.channelsBot.botId,
+                                domainChannels
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        return ChannelDAO.updateChannelSubscription(
+                            channelName,
+                            domain,
+                            'true'
+                        );
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
+    static unsubscribeChannel = (channelName, userDomain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'Unsubscribe',
+                                botId: SystemBot.channelsBot.botId,
+                                userDomain,
+                                channelName
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        let err = _.get(response, 'data.error');
+                        if (err !== '0' && err !== 0) {
+                            reject(new ChannelError(+err));
+                        } else {
+                            return ChannelDAO.updateChannelSubscription(
+                                channelName,
+                                userDomain,
+                                'false'
+                            );
+                        }
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
     static create = channel =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -140,6 +225,59 @@ export default class Channel {
                                 channel.description,
                                 'ChannelsBotLogo.png',
                                 channel.userDomain,
+                                channelId
+                            );
+                        } else {
+                            reject(new ChannelError(99));
+                        }
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
+    static addUsers = (channelName, userDomain, newUserIds) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        console.log('adding users to Channel ', channelName);
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'AddUsers',
+                                botId: SystemBot.channelsBot.botId,
+                                channelName,
+                                userDomain,
+                                newUserIds
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        // TODO(amal) : Hardcoded logo. remove later.
+                        if (
+                            response.data &&
+                            response.data.content &&
+                            response.data.content.length > 0
+                        ) {
+                            const channelId = response.data.content[0];
+                            return ChannelDAO.insertIfNotPresent(
+                                channelName,
+                                'Added Participants',
+                                'ChannelsBotLogo.png',
+                                userDomain,
                                 channelId
                             );
                         } else {
@@ -268,7 +406,6 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
-                        console.log('subscribed channel ', channels);
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);
@@ -283,7 +420,9 @@ export default class Channel {
                                 channel.channelOwner.userName,
                                 channel.channelOwner.userId,
                                 channel.createdOn,
-                                'true'
+                                'true',
+                                channel.isPlatformChannel,
+                                channel.channelType
                             );
                         });
                         return Promise.all(channelInsertPromises);
@@ -327,8 +466,6 @@ export default class Channel {
                 .then(response => {
                     if (response.data && response.data.content) {
                         let channels = response.data.content;
-                        console.log('unsubscribed channel ', channels);
-
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);
@@ -343,7 +480,9 @@ export default class Channel {
                                 channel.channelOwner.userName,
                                 channel.channelOwner.userId,
                                 channel.createdOn,
-                                'false'
+                                'false',
+                                channel.isPlatformChannel,
+                                channel.channelType
                             );
                         });
                         return Promise.all(channelInsertPromises);

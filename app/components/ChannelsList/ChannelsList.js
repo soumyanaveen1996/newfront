@@ -27,8 +27,11 @@ import {
     refreshChannels
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import { Auth } from '../../lib/capability';
+import { RNChipView } from 'react-native-chip-view';
 
-debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+const debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -61,7 +64,11 @@ class ChannelsList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            channels: []
+            channels: [],
+            filter: [],
+            searchString: '',
+            user: null,
+            wait: false
         };
     }
 
@@ -86,9 +93,12 @@ class ChannelsList extends React.Component {
         //     return Channel.refreshChannels()
         // }
         // this.refresh();
-        if (this.props.appState.allChannelsLoaded) {
-            this.refresh(false, true);
+
+        const user = await Auth.getUser();
+        if (user) {
+            this.setState({ user });
         }
+        this.refresh(false, false);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -107,17 +117,13 @@ class ChannelsList extends React.Component {
             prevProps.appState.refreshChannels !==
             this.props.appState.refreshChannels
         ) {
-            if (__DEV__) {
-                console.tron('Refresh Channels');
-            }
-
             return this.refresh(true, false);
         }
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
-        const user = Store.getState().user;
+        // const user = Store.getState().user
         // if (user.allChannelsLoaded === false) {
         //     Channel.refreshChannels();
         // }
@@ -135,8 +141,55 @@ class ChannelsList extends React.Component {
         });
     };
 
-    onBack = () => {
+    applyFilter = async channels => {
+        const filters = this.props.channel.filters.filter(
+            filter => filter.checked === true
+        );
+        const user = await Auth.getUser();
+
+        const { userId } = user;
+
+        let filteredChannels = channels;
+        for (let filter of filters) {
+            if (!filter) {
+                continue;
+            }
+            const { value } = filter;
+            if (value === 'subscribed') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.subcription === 'true'
+                );
+            }
+
+            if (value === 'created') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.ownerId === userId
+                );
+            }
+
+            if (value === 'unscubscribed') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.subcription === 'false'
+                );
+            }
+            if (value === 'public') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.channelType === 'public'
+                );
+            }
+            if (value === 'private') {
+                filteredChannels = filteredChannels.filter(
+                    channel => channel.channelType === 'private'
+                );
+            }
+        }
+        return filteredChannels;
+    };
+    onBack = (filter = null) => {
         // this.refresh()
+        if (__DEV__) {
+            console.tron('I am back', filter);
+        }
     };
 
     async refresh(onback = false, handleEmptyChannels = true) {
@@ -151,7 +204,8 @@ class ChannelsList extends React.Component {
                 this.handleAddChannel();
             }
         } else {
-            this.setState({ channels: channels });
+            const filteredChannels = await this.applyFilter(channels);
+            this.setState({ channels: filteredChannels });
         }
     }
 
@@ -159,6 +213,14 @@ class ChannelsList extends React.Component {
         await this.refresh(false, false);
         this.refs.toast.show(
             I18n.t('Channel_unsubscribed'),
+            DURATION.LENGTH_SHORT
+        );
+    };
+
+    onChannelSubscribed = async channel => {
+        await this.refresh(false, false);
+        this.refs.toast.show(
+            I18n.t('Channel_subscribed'),
             DURATION.LENGTH_SHORT
         );
     };
@@ -174,23 +236,40 @@ class ChannelsList extends React.Component {
         }
     };
 
+    onChannelsubscribeFailed = (channel, message) => {
+        if (message) {
+            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+        } else {
+            this.refs.toast.show(
+                I18n.t('Channel_subscribe_failed'),
+                DURATION.LENGTH_LONG
+            );
+        }
+    };
+
     onChannelTapped = channel => {
         SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
             Actions.channelChat({
                 bot: imBot,
                 channel: channel,
-                onBack: this.props.onBack
+                onBack: this.onBack
             });
         });
     };
 
+    setWait = wait => this.setState({ wait });
     renderRow = channel => {
         return (
             <ChannelsListItem
                 channel={channel}
+                user={this.state.user}
+                wait={this.setWait}
                 onUnsubscribe={this.onChannelUnsubscribe.bind(this)}
                 onUnsubscribeFailed={this.onChannelUnsubscribeFailed.bind(this)}
+                onSubscribed={this.onChannelSubscribed}
+                onSubscribeFailed={this.onChannelsubscribeFailed}
                 onChannelTapped={this.onChannelTapped.bind(this)}
+                onChannelEdit={() => this.editChannel(channel)}
             />
         );
     };
@@ -204,23 +283,47 @@ class ChannelsList extends React.Component {
     };
 
     createChannel() {
-        Actions.newChannels({
-            title: 'Create new channel',
-            onBack: this.props.onBack
-        });
+        setTimeout(
+            () =>
+                Actions.newChannels({
+                    title: 'Create new channel',
+                    edit: false
+                }),
+            200
+        );
     }
+
+    editChannel = channel => {
+        Actions.newChannels({
+            title: 'Edit Channel',
+            channel,
+            edit: true
+        });
+    };
 
     onPressFilter() {
         Actions.channelsFilter({
             title: 'Filter',
-            onBack: this.props.onBack
+            onBack: this.onBack
         });
     }
 
     render() {
+        const filters = this.props.channel.filters.filter(
+            filter => filter.checked === true
+        );
+
+        const channels = this.state.channels.filter(channel =>
+            channel.channelName
+                .toLowerCase()
+                .includes(this.state.searchString.toLowerCase())
+        );
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
+                {!this.props.appState.allChannelsLoaded ? (
+                    <ActivityIndicator size="small" />
+                ) : null}
                 <View style={styles.searchSection}>
                     <Icon
                         style={styles.searchIcon}
@@ -237,19 +340,19 @@ class ChannelsList extends React.Component {
                         underlineColorAndroid="transparent"
                     />
                 </View>
-                {!this.props.appState.allChannelsLoaded ? (
-                    <ActivityIndicator size="small" />
-                ) : null}
+                <View style={styles.createNewChannelContainer}>
+                    <TouchableOpacity
+                        style={styles.buttonContainer}
+                        onPress={this.createChannel.bind(this)}
+                    >
+                        <Text style={styles.buttonText}>New Channel</Text>
+                    </TouchableOpacity>
+                </View>
                 <ScrollView>
-                    <View style={styles.createNewChannelContainer}>
-                        <TouchableOpacity
-                            style={styles.buttonContainer}
-                            onPress={this.createChannel.bind(this)}
-                        >
-                            <Text style={styles.buttonText}>New Channel</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterContainer}>
+                    <TouchableOpacity
+                        style={styles.filterContainer}
+                        onPress={this.onPressFilter.bind(this)}
+                    >
                         <TouchableOpacity
                             style={styles.filterTextContainer}
                             onPress={this.onPressFilter.bind(this)}
@@ -257,27 +360,65 @@ class ChannelsList extends React.Component {
                             <Text style={styles.filterText}>Filter</Text>
                         </TouchableOpacity>
                         <View style={styles.filterArea}>
-                            <Text>filter area</Text>
+                            {filters.length > 0 ? (
+                                filters.map(filter => {
+                                    return (
+                                        <View style={styles.filterSelected}>
+                                            <RNChipView
+                                                title={filter.title}
+                                                onPress={this.onPressFilter.bind(
+                                                    this
+                                                )}
+                                                titleStyle={
+                                                    styles.selectedFilterTitle
+                                                }
+                                                avatar={false}
+                                                backgroundColor="#424B5A"
+                                                borderRadius={6}
+                                                height={20}
+                                            />
+                                        </View>
+                                    );
+                                })
+                            ) : (
+                                <Text>Tap to Filter</Text>
+                            )}
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <FlatList
                             style={styles.flatList}
-                            keyExtractor={(item, index) => item.id}
-                            data={this.state.channels}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={channels}
                             renderItem={this.renderRowItem.bind(this)}
                             extraData={this.state}
                         />
                         <Toast ref="toast" positionValue={200} />
                     </View>
                 </ScrollView>
+                {this.state.wait ? (
+                    <View
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
+                ) : null}
             </BackgroundImage>
         );
     }
 }
 
 const mapStateToProps = state => ({
-    appState: state.user
+    appState: state.user,
+    channel: state.channel
 });
 
 const mapDispatchToProps = dispatch => {

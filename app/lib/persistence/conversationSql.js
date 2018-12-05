@@ -44,7 +44,8 @@ const selectConversationsByType = `
         id,
         conversationId,
         type,
-        created_at_date
+        created_at_date,
+        favorite
     FROM conversation
     WHERE type = ?
     ORDER BY created_at_date desc
@@ -55,7 +56,8 @@ const selectConversations = `
         id,
         conversationId,
         type,
-        created_at_date
+        created_at_date,
+        favorite
     FROM conversation
     ORDER BY created_at_date desc
 `;
@@ -65,7 +67,8 @@ const selectConversationByType = `
         id,
         conversationId,
         type,
-        created_at_date
+        created_at_date,
+        favorite
     FROM conversation
     WHERE type = ?
         AND conversationId = ?
@@ -77,7 +80,8 @@ const selectConversation = `
         id,
         conversationId,
         type,
-        created_at_date
+        created_at_date,
+        favorite
     FROM conversation
     WHERE conversationId = ?
     ORDER BY created_at_date desc
@@ -85,6 +89,17 @@ const selectConversation = `
 
 const deleteAllConversations = `
     DELETE from conversation
+`;
+
+const addisFavorite = `
+ALTER TABLE conversation ADD favorite integer DEFAULT 0;
+`;
+const setConvFavorite = `
+    UPDATE conversation
+    SET
+        favorite = ?
+    WHERE
+    conversationId  = ?
 `;
 
 export default {
@@ -97,5 +112,7 @@ export default {
     selectConversationByType: selectConversationByType,
     updateConversation: updateConversation,
     createV2ConversationTable: createV2ConversationTable,
-    deleteAllConversations: deleteAllConversations
+    deleteAllConversations: deleteAllConversations,
+    addisFavorite,
+    setConvFavorite
 };

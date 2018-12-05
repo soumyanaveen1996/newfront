@@ -5,14 +5,22 @@ import { Actions } from 'react-native-router-flux';
 import { HeaderBack } from '../Header';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
-
+import ROUTER_SCENE_KEYS from '../../../app/routes/RouterSceneKeyConstants';
+import {
+    setChannelFilter,
+    clearChannelFilter
+} from '../../redux/actions/ChannelActions';
+import { setCurrentScene } from '../../redux/actions/UserActions';
+import { connect } from 'react-redux';
+import { RNChipView } from 'react-native-chip-view';
 import images from '../../images';
 
 class ChannelsFilter extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
+
         return {
-            headerTitle: 'Filters',
+            headerTitle: state.params.title,
             headerLeft: (
                 <HeaderBack
                     onPress={
@@ -66,48 +74,61 @@ class ChannelsFilter extends React.Component {
         };
     }
 
+    componentDidMount() {
+        const filterList = this.props.channel.filters;
+        if (filterList && filterList.length > 0) {
+            this.setState({ filterList: filterList });
+        }
+    }
+
     applyFilters() {
-        console.log('apply filters');
+        this.props.setFilter(this.state.filterList);
+        Actions.pop();
     }
     clearFilters() {
-        console.log('clear filters');
+        this.setState({
+            filterList: this.state.filterList.map(filter => ({
+                ...filter,
+                checked: false
+            }))
+        });
+        this.props.clearFilter();
+        Actions.pop();
     }
 
-    unSelectFilter(index) {
+    toggleFilter(index) {
         let array = [...this.state.filterList];
-        let filterArray = [...this.state.filter];
-        array[index].checked = false;
+        // let filterArray = [...this.state.filter]
+        array[index].checked = !array[index].checked;
 
-        var i = filterArray.indexOf(index);
-        if (i > -1) {
-            array.splice(i, 1);
-        }
-
-        this.setState({ filterList: [...array], filter: [...filterArray] });
-    }
-
-    selectFilter(index) {
-        let array = [...this.state.filterList];
-        let filterArray = [...this.state.filter];
-        array[index].checked = true;
-
-        filterArray[index] = this.state.filterList[index];
-        this.setState(
-            { filterList: [...array], filter: [...filterArray] },
-            () => {
-                console.log(this.state.filter);
-            }
-        );
+        // filterArray[index] = this.state.filterList[index]
+        this.setState({
+            filterList: array
+        });
     }
 
     render() {
+        console.log(this.state);
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={styles.filterScrollView}>
                     <View style={styles.filterMaincontainer}>
                         <View style={styles.filterChipContainer}>
-                            {this.state.filter.map((elem, i) => {
-                                return <Text>{elem.title}</Text>;
+                            {this.state.filterList.map(elem => {
+                                return elem && elem.checked ? (
+                                    <View style={styles.filterSelected}>
+                                        <RNChipView
+                                            title={elem.title}
+                                            titleStyle={
+                                                styles.selectedFilterTitle
+                                            }
+                                            avatar={false}
+                                            backgroundColor="#424B5A"
+                                            borderRadius={6}
+                                            height={20}
+                                        />
+                                    </View>
+                                ) : null;
                             })}
                         </View>
                     </View>
@@ -116,51 +137,28 @@ class ChannelsFilter extends React.Component {
 
                         <View style={{ paddingHorizontal: 10 }}>
                             {this.state.filterList.map((elem, index) => {
-                                if (elem.checked) {
-                                    return (
-                                        <TouchableOpacity
-                                            key={index}
-                                            onPress={() =>
-                                                this.unSelectFilter(index)
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => this.toggleFilter(index)}
+                                        style={{
+                                            flexDirection: 'row',
+                                            marginVertical: 10
+                                        }}
+                                    >
+                                        <Image
+                                            source={
+                                                elem.checked
+                                                    ? images.checkmark_selected
+                                                    : images.checkmark_normal
                                             }
-                                            style={{
-                                                flexDirection: 'row',
-                                                marginVertical: 10
-                                            }}
-                                        >
-                                            <Image
-                                                source={
-                                                    images.checkmark_selected
-                                                }
-                                                style={{ marginRight: 10 }}
-                                            />
-                                            <Text style={styles.filterListText}>
-                                                {elem.title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                } else {
-                                    return (
-                                        <TouchableOpacity
-                                            key={index}
-                                            onPress={() =>
-                                                this.selectFilter(index)
-                                            }
-                                            style={{
-                                                flexDirection: 'row',
-                                                marginVertical: 10
-                                            }}
-                                        >
-                                            <Image
-                                                source={images.checkmark_normal}
-                                                style={{ marginRight: 10 }}
-                                            />
-                                            <Text style={styles.filterListText}>
-                                                {elem.title}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                }
+                                            style={{ marginRight: 10 }}
+                                        />
+                                        <Text style={styles.filterListText}>
+                                            {elem.title}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
                             })}
                         </View>
                     </View>
@@ -186,5 +184,22 @@ class ChannelsFilter extends React.Component {
         );
     }
 }
+const mapStateToProps = state => ({
+    channel: state.channel,
+    user: state.user
+});
 
-export default ChannelsFilter;
+const mapDispatchToProps = dispatch => {
+    return {
+        setFilter: filter => dispatch(setChannelFilter(filter)),
+        clearFilter: () => dispatch(clearChannelFilter()),
+        setCurrentScene: scene => dispatch(setCurrentScene(scene))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChannelsFilter);
+
+// export default ChannelsFilter
