@@ -18,6 +18,7 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import _ from 'lodash';
 import { Auth, Network } from '../../lib/capability';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Conversation from '../../lib/conversation/Conversation';
 
 export const PhoneState = {
     init: 'init',
@@ -145,6 +146,7 @@ export default class Phone extends React.Component {
     }
 
     connectionDidDisconnectHandler(data) {
+        Conversation.downloadRemoteConversations();
         const sceneBefore = Actions.currentScene;
         Actions.pop();
         const sceneAfter = Actions.currentScene;

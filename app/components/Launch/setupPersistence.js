@@ -125,6 +125,11 @@ function SeventeenToEighteen() {
         return DbVersionDAO.updateVersion(18);
     });
 }
+function EighteentoNineteen() {
+    return ConversationDAO.addFavorite().then(() => {
+        return DbVersionDAO.updateVersion(19);
+    });
+}
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -258,6 +263,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 17) {
                     return SeventeenToEighteen();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 18) {
+                    return EighteentoNineteen();
                 } else {
                     return version;
                 }

@@ -1,2 +1,3 @@
 import TabIcon from './TabIcon';
-export { TabIcon };
+import TabIconTop from './TabIconTop';
+export { TabIcon, TabIconTop };

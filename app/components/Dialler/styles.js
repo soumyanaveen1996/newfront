@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import Dimensions from 'Dimensions';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const Styles = StyleSheet.create({
     container: {
@@ -18,14 +22,15 @@ const Styles = StyleSheet.create({
         color: GlobalColors.botChatBubbleColor,
         fontSize: 20,
         textAlign: 'center',
-        height: 30
+        height: 30,
+        marginTop: hp('5%')
     },
     diallerNumberText: {
         color: GlobalColors.white,
         fontSize: 40,
         textAlign: 'left',
         height: 140,
-        marginTop: 20,
+        marginTop: hp('5%'),
         paddingHorizontal: 10
     },
     callingNumberText: {
@@ -92,12 +97,13 @@ const Styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     initialMainContainer: {
-        backgroundColor: 'green',
-        flex: 1,
-        paddingTop: 30
+        backgroundColor: 'rgba(47,199,111,1)',
+        height: hp('40%'),
+        justifyContent: 'center',
+        alignItems: 'flex-start'
     },
     diallerContainer: {
-        height: Dimensions.get('window').height * 0.6,
+        height: hp('50%'),
         backgroundColor: GlobalColors.white
     },
     callQuotaContainer: {
@@ -106,8 +112,9 @@ const Styles = StyleSheet.create({
     },
     callQuotaText: {
         fontSize: 20,
-        fontWeight: '800',
-        marginLeft: 10
+        fontWeight: '500',
+        color: 'rgba(0,0,0,1)',
+        marginLeft: 5
     },
     horizontalRuler: {
         borderBottomColor: 'black',
@@ -122,7 +129,8 @@ const Styles = StyleSheet.create({
     },
     diallerButtonContainer: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        height: hp('30%')
         //backgroundColor: 'red',
     },
     incallDiallerContainer: {
@@ -143,6 +151,16 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         backgroundColor: GlobalColors.white
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(4, 4, 4, 0.9)',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

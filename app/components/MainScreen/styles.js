@@ -1,5 +1,9 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const MainScreenStyles = StyleSheet.create({
     container: {
@@ -22,6 +26,79 @@ export const MainScreenStyles = StyleSheet.create({
     },
     activityIndicator: {
         flex: 1
+    },
+    searchArea: {
+        height: hp('5%'),
+        width: wp('100%'),
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff'
+    },
+    buttonArea: {
+        height: hp('9%'),
+        width: wp('100%'),
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonContainerChat: {
+        height: hp('5.5%'),
+        width: wp('40%'),
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: wp('5%'),
+        flex: 1,
+        flexDirection: 'row'
+    },
+    buttonContainerCall: {
+        height: hp('5.5%'),
+        width: wp('40%'),
+        borderRadius: 10,
+        backgroundColor: 'rgba(47,199,111,1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: wp('5%'),
+        flex: 1,
+        flexDirection: 'row'
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: '500'
+    },
+    favArea: {
+        height: hp('20%'),
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    chatArea: {
+        height: hp('50%'),
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    chatAreaNoFav: {
+        height: hp('70%'),
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    titleText: {
+        color: 'rgba(74,74,74,1)',
+        margin: 5
+    },
+
+    searchIcon: { paddingHorizontal: 10 },
+    input: {
+        flex: 1,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 0,
+        backgroundColor: '#fff',
+        color: 'rgba(155,155,155,1)'
     }
 });
 
@@ -30,9 +107,7 @@ export const BotListStyles = {
         flexGrow: 1,
         backgroundColor: GlobalColors.background
     },
-    listViewStyle: {
-        paddingTop: 15
-    },
+    listViewStyle: {},
     separator: {
         height: 0,
         backgroundColor: GlobalColors.background
@@ -45,6 +120,18 @@ export const BotListStyles = {
         bottom: 0
         // alignItems: 'center',
         // justifyContent: 'center'
+    },
+    favItemContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('25%'),
+        height: hp('10%')
+    },
+    favText: {
+        color: 'rgba(102,102,102,1)',
+        fontSize: wp('3%')
     }
 };
 
@@ -53,7 +140,7 @@ export const BotListItemColors = {
     subTitleColor: 'rgba(153, 153, 153, 1)',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
-    countColor: 'rgba(0,167,214,1)',
+    countColor: 'rgba(229,69,59,1)',
     countTextColor: GlobalColors.white
 };
 
@@ -65,6 +152,15 @@ export const BotListItemStyles = {
         paddingVertical: 12,
         alignItems: 'stretch',
         marginBottom: 10,
+        backgroundColor: BotListItemColors.backgroundColor
+    },
+    containerLast: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        alignItems: 'stretch',
+        marginBottom: 55,
         backgroundColor: BotListItemColors.backgroundColor
     },
     title: {

@@ -19,6 +19,11 @@ import {
 } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
 import { ContactsPicker } from '../components/ContactsPicker';
+import NewChatContacts from '../components/NewChat/NewChatContacts';
+import NewChatChannels from '../components/NewChat/NewChatChannels';
+import NewChatBots from '../components/NewChat/NewChatBots';
+import NewCallContacts from '../components/NewChat/NewCallContacts';
+import NewCallDialler from '../components/NewChat/NewCallDialler';
 import { Slider } from '../components/Slider';
 import { Launch } from '../components/Launch';
 import I18n from '../config/i18n/i18n';
@@ -46,7 +51,7 @@ import { SignupScreen } from '../components/Signup';
 import { SwiperScreen } from '../components/Swiper';
 import ConfirmationScreen from '../components/ConfirmationScreen/ConfirmationScreen';
 import { ResendCodeScreen } from '../components/ResendCodeScreen';
-import { TabIcon } from '../components/TabIcon';
+import { TabIcon, TabIconTop } from '../components/TabIcon';
 import EventEmitter, { AuthEvents } from '../lib/events';
 import { Network } from '../lib/capability';
 import NavHandler from '../components/NavigationHandler/NavHandler';
@@ -186,6 +191,132 @@ class MainRouter extends React.Component {
                                                 component={BotStoreScreen}
                                                 title={I18n.t('Bot_Store')}
                                                 type="push"
+                                            />
+                                        </Scene>
+                                    </Tabs>
+                                    <Tabs
+                                        key={ROUTER_SCENE_KEYS.tabBarChat}
+                                        tabBarStyle={{
+                                            backgroundColor:
+                                                'rgba(0,167,214,1)',
+                                            height: 50
+                                        }}
+                                        swipeEnabled={true}
+                                        animationEnabled={true}
+                                        showLabel={false}
+                                        tabBarPosition="top"
+                                        showIcon={true}
+                                        title="New Chat"
+                                        // hideNavBar
+                                    >
+                                        <Scene
+                                            key={
+                                                ROUTER_SCENE_KEYS.contactsMainChat
+                                            }
+                                            titleScreen={I18n.t('My_Contacts')}
+                                            imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                            imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.addContactsChat
+                                                }
+                                                component={NewChatContacts}
+                                                // title={I18n.t('Contacts')}
+                                                hideNavBar={true}
+                                                type="push"
+                                                // back
+                                            />
+                                        </Scene>
+                                        <Scene
+                                            key={
+                                                ROUTER_SCENE_KEYS.channelsMenuChat
+                                            }
+                                            titleScreen={I18n.t('My_Channels')}
+                                            imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
+                                            imageSelected={require('../images/tabbar-channels-active/tabbar-channels-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.channelsListChat
+                                                }
+                                                component={NewChatChannels}
+                                                // title={I18n.t('Channels')}
+                                                type="push"
+                                                hideNavBar={true}
+                                                // back
+                                            />
+                                        </Scene>
+                                        <Scene
+                                            key={ROUTER_SCENE_KEYS.botsMenuChat}
+                                            titleScreen={I18n.t('My_Bots')}
+                                            imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
+                                            imageSelected={require('../images/tabbar-marketplace-active/tabbar-marketplace-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.botsListChat
+                                                }
+                                                component={NewChatBots}
+                                                // title={I18n.t('Channels')}
+                                                type="push"
+                                                hideNavBar={true}
+                                                // back
+                                            />
+                                        </Scene>
+                                    </Tabs>
+                                    <Tabs
+                                        key={ROUTER_SCENE_KEYS.tabBarCall}
+                                        tabBarStyle={{
+                                            backgroundColor:
+                                                'rgba(0,167,214,1)',
+                                            height: 50
+                                        }}
+                                        swipeEnabled={true}
+                                        animationEnabled={true}
+                                        showLabel={false}
+                                        tabBarPosition="top"
+                                        showIcon={true}
+                                        title="New Call"
+                                        // hideNavBar
+                                    >
+                                        <Scene
+                                            key={
+                                                ROUTER_SCENE_KEYS.contactsCallMenu
+                                            }
+                                            titleScreen={I18n.t('Contacts')}
+                                            imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                            imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.contactsCall
+                                                }
+                                                component={NewCallContacts}
+                                                // title={I18n.t('Contacts')}
+                                                hideNavBar={true}
+                                                type="push"
+                                                // back
+                                            />
+                                        </Scene>
+                                        <Scene
+                                            key={ROUTER_SCENE_KEYS.dialCallMenu}
+                                            titleScreen={I18n.t('Dial')}
+                                            imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
+                                            imageSelected={require('../images/tabbar-channels-active/tabbar-channels-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={ROUTER_SCENE_KEYS.dialCall}
+                                                component={NewCallDialler}
+                                                // title={I18n.t('Channels')}
+                                                type="push"
+                                                hideNavBar={true}
+                                                // back
                                             />
                                         </Scene>
                                     </Tabs>

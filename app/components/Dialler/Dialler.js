@@ -1,5 +1,11 @@
 import React from 'react';
-import { Alert, View, Text, TouchableOpacity } from 'react-native';
+import {
+    Alert,
+    View,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator
+} from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
@@ -13,6 +19,8 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Auth } from '../../lib/capability';
 import { Network } from '../../lib/capability';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Modal from 'react-native-modal';
 
 let EventListeners = [];
 export const DiallerState = {
@@ -37,7 +45,9 @@ export default class Dialler extends React.Component {
             callQuotaUpdateError: false,
             updatingCallQuota: false,
             timerId: null,
-            intervalId: null
+            intervalId: null,
+            noBalance: false,
+            bgBotScreen: null
         };
     }
 
@@ -72,9 +82,25 @@ export default class Dialler extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
+
+        if (this.props.call && this.props.number) {
+            this.setState({ dialledNumber: this.props.number });
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            prevState.updatingCallQuota !== this.state.updatingCallQuota &&
+            !this.state.updatingCallQuota
+        ) {
+            if (this.props.call) {
+                this.call();
+            }
+        }
     }
 
     async call() {
+        this.setState({ noBalance: false });
         const connection = await Network.isConnected();
         if (!connection) {
             Alert.alert(I18n.t('No_Network'));
@@ -85,6 +111,7 @@ export default class Dialler extends React.Component {
             return;
         }
         if (this.state.callQuota === 0) {
+            this.setState({ noBalance: true });
             Alert.alert(I18n.t('No_balance'));
             return;
         }
@@ -111,15 +138,15 @@ export default class Dialler extends React.Component {
     }
 
     async closeCall() {
-        const { diallerState, timerId, intervalId } = this.state;
-        if (timerId) {
-            clearTimeout(timerId);
-        }
-        if (intervalId) {
-            clearInterval(intervalId);
-        }
+        const { diallerState } = this.state;
+        // if (timerId) {
+        //     clearTimeout(timerId)
+        // }
+        // if (intervalId) {
+        //     clearInterval(intervalId)
+        // }
         TwilioVoice.disconnect();
-        Actions.pop();
+        // Actions.pop()
     }
 
     initBackGroundBot = async () => {
@@ -137,7 +164,7 @@ export default class Dialler extends React.Component {
         await bgBotScreen.initialize();
 
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        this.setState({ updatingCallQuota: true });
+        this.setState({ updatingCallQuota: true, bgBotScreen });
     };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
@@ -162,27 +189,51 @@ export default class Dialler extends React.Component {
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
-            const timerId = setTimeout(
-                this.countMinutes,
-                20000,
-                this.state.callQuota
-            );
-            this.setState({ diallerState: DiallerState.incall, timerId });
+            // const timerId = setTimeout(
+            //     this.countMinutes,
+            //     20000,
+            //     this.state.callQuota
+            // )
+            this.setState({ diallerState: DiallerState.incall });
         }
     }
 
     connectionDidDisconnectHandler(data) {
-        Actions.pop();
+        // Actions.pop()
+        this.setState({
+            diallerState: DiallerState.initial,
+            dialledNumber: '+',
+            dialledDigits: ''
+        });
+        if (this.state.bgBotScreen) {
+            this.setState({ updatingCallQuota: true });
+            setTimeout(() => {
+                console.log('Updating Call Balance......');
+                const message = new Message({
+                    msg: {
+                        callQuotaUsed: 0
+                    },
+                    messageType: MESSAGE_TYPE
+                });
+                message.setCreatedBy({ addedByBot: true });
+                this.state.bgBotScreen.next(
+                    message,
+                    {},
+                    [],
+                    this.state.bgBotScreen.getBotContext()
+                );
+            }, 6000);
+        }
     }
 
     countMinutes = callQuota => {
-        let quotaLeft = callQuota * 60;
-        const intervalId = setInterval(() => {
-            quotaLeft = quotaLeft - 1;
-            if (quotaLeft < 0) {
-                this.closeCall();
-            }
-        }, 1000);
+        // let quotaLeft = callQuota * 60
+        // const intervalId = setInterval(() => {
+        //     quotaLeft = quotaLeft - 1
+        //     if (quotaLeft < 0) {
+        //         this.closeCall()
+        //     }
+        // }, 1000)
         this.setState({ intervalId });
     };
 
@@ -190,7 +241,7 @@ export default class Dialler extends React.Component {
         if (diallerState === Dialler.incall) {
             TwilioVoice.disconnect();
         }
-        Actions.pop();
+        // Actions.pop()
     }
 
     renderButton() {
@@ -283,7 +334,12 @@ export default class Dialler extends React.Component {
         const { diallerState } = this.state;
         const digits =
             diallerState === DiallerState.initial
-                ? [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['0']]
+                ? [
+                    ['1', '2', '3'],
+                    ['4', '5', '6'],
+                    ['7', '8', '9'],
+                    ['*', '0', '+']
+                ]
                 : [
                     ['1', '2', '3'],
                     ['4', '5', '6'],
@@ -300,7 +356,11 @@ export default class Dialler extends React.Component {
     }
 
     closeScreen() {
-        Actions.pop();
+        if (this.props.newCallScreen) {
+            Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+        } else {
+            Actions.pop();
+        }
     }
 
     renderCloseButton() {
@@ -367,6 +427,15 @@ export default class Dialler extends React.Component {
 
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
+
+        if (this.state.updatingCallQuota && this.props.call) {
+            return (
+                <View style={Styles.loading}>
+                    <ActivityIndicator size="large" />
+                </View>
+            );
+        }
+
         if (diallerState === DiallerState.initial) {
             return (
                 <View style={Styles.container}>
@@ -383,9 +452,9 @@ export default class Dialler extends React.Component {
                             <Text style={Styles.callQuotaPrice}>
                                 {this.state.updatingCallQuota
                                     ? '...'
-                                    : `Call Balance: ${
+                                    : `Current Balance: $${
                                         this.state.callQuota
-                                    } mins`}
+                                    }`}
                             </Text>
                         </View>
                         <View style={Styles.horizontalRuler} />

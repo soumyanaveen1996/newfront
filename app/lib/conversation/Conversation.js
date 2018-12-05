@@ -66,10 +66,22 @@ export default class Conversation {
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
                     // And the DS has changed :(
-                    let conversations = res.data.content.conversations;
+                    let conversations = res.data.content.conversations.map(
+                        conv => ({
+                            ...conv,
+                            favorite: false
+                        })
+                    );
+                    let favorites = res.data.content.favourites.map(conv => ({
+                        ...conv,
+                        favorite: true
+                    }));
+
+                    const allConversations = [...conversations, ...favorites];
+
                     // let conversations = res.data.content
                     const localConversations = await Conversation.getLocalConversations();
-                    let promise = _.map(conversations, conversation => {
+                    let promise = _.map(allConversations, conversation => {
                         if (conversation.bot === 'im-bot') {
                             let botContext;
 
@@ -84,6 +96,12 @@ export default class Conversation {
                             Conversation.createChannelConversation(
                                 conversation.conversationId
                             )
+                                .then(() =>
+                                    ConversationDAO.updateConvFavorite(
+                                        conversation.conversationId,
+                                        conversation.favorite
+                                    )
+                                )
                                 .then(() => {
                                     const botScreen = BackgroundTaskProcessor.generateScreen(
                                         conversation.bot,
@@ -149,6 +167,12 @@ export default class Conversation {
                             Conversation.createIMConversation(
                                 conversation.conversationId
                             )
+                                .then(() =>
+                                    ConversationDAO.updateConvFavorite(
+                                        conversation.conversationId,
+                                        conversation.favorite
+                                    )
+                                )
                                 .then(() => {
                                     const botScreen = BackgroundTaskProcessor.generateScreen(
                                         conversation.bot.botId,
@@ -314,4 +338,52 @@ export default class Conversation {
 
     static isChannelConversation = conversation =>
         conversation.type === CHANNEL_CHAT;
+
+    static setFavorite = (
+        conversationId,
+        favorite,
+        userDomain = 'frontmai'
+    ) => {
+        // Call API And set Favorite- TODO
+
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }/users/favourites`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: favorite ? 'add' : 'remove',
+                                userDomain,
+                                conversationId
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject('Cannot Set Favorites');
+                    } else {
+                        let favoriteDb = 0;
+                        if (favorite) {
+                            favoriteDb = 1;
+                        }
+                        return ConversationDAO.updateConvFavorite(
+                            conversationId,
+                            favoriteDb
+                        );
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    };
 }
