@@ -44,16 +44,19 @@ const buyProduct = async ({
     const isConnected = await connection();
     if (isConnected) {
         try {
-            const itemSkus =
-                productCode === 'bot_1000'
-                    ? Platform.select({
-                        ios: ['bot_2000'],
-                        android: ['bot_1000']
-                    })
-                    : Platform.select({
-                        ios: ['dummy'],
-                        android: ['dummy']
-                    });
+            let itemSkus;
+            if (productCode === 'bot_1000') {
+                itemSkus = Platform.select({
+                    ios: ['bot_2000'],
+                    android: ['bot_1000']
+                });
+            } else {
+                itemSkus = Platform.select({
+                    ios: [productCode],
+                    android: [productCode]
+                });
+            }
+
             const Products = await RNIap.getProducts(itemSkus);
             // throw new Error("Debugging")
 
