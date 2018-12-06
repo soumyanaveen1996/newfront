@@ -454,18 +454,19 @@ export default StyleSheet.create({
         marginRight: 10
     },
     selectContactContainer: {
-        height: hp('15%'),
+        height: hp('20%'),
         backgroundColor: '#f4f4f4'
     },
     selectedChip: {
+        paddingBottom: wp('2%'),
         paddingHorizontal: wp('2%')
     },
     chipFont: {
         fontSize: wp('3.5%'),
-        color: '#FFFFFF'
+        color: 'rgba(102,102,102,1)'
     },
     participantsContainer: {
-        height: hp('55%')
+        height: hp('50%')
     },
     teamContainer: {
         height: hp('80%')

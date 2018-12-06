@@ -128,12 +128,14 @@ export default class Splash extends React.Component {
 
         // Chain all setup stuff
         // Before login
-        persist
-            .runMigrations() // before login
-            .catch(err => {
-                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
-            });
-
+        try {
+            await persist.runMigrations(); // before login
+        } catch (err) {
+            console.error(
+                '>>>>>>>>>>>>Error<<<<<<<<<< : running migrations!!!!',
+                err
+            );
+        }
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         const checkStatus = await AsyncStorage.getItem('signupStage');
 

@@ -366,7 +366,6 @@ class ChannelsList extends React.Component {
                 .toLowerCase()
                 .includes(this.state.searchString.toLowerCase())
         );
-        console.log('Channel DS', channels);
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />

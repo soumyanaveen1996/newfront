@@ -288,6 +288,7 @@ function runMigrations() {
                 }
             })
             .then(() => {
+                console.log('---------------Migrations Completed----------');
                 resolve();
             })
             .catch(error => {
