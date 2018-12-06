@@ -6,7 +6,9 @@ import {
     TextInput,
     KeyboardAvoidingView,
     ActivityIndicator,
-    Platform
+    Platform,
+    Text,
+    TouchableOpacity
 } from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
@@ -38,6 +40,7 @@ import {
 } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
+import Icon from 'react-native-vector-icons/Feather';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -231,20 +234,23 @@ class ContactsPicker extends React.Component {
                 });
             }
         } else {
-            let participants = [
-                {
-                    userId: contact.id,
-                    userName: contact.name
-                }
-            ];
-            SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
-                Actions.peopleChat({
-                    bot: imBot,
-                    otherParticipants: participants,
-                    // type: ActionConst.REPLACE,
-                    onBack: this.props.onBack
-                });
-            });
+            //OPEN contact details
+            Actions.contactDetailsScreen({ contact: contact });
+            //OPEN a chat with the contact
+            // let participants = [
+            //     {
+            //         userId: contact.id,
+            //         userName: contact.name
+            //     }
+            // ];
+            // SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            //     Actions.peopleChat({
+            //         bot: imBot,
+            //         otherParticipants: participants,
+            //         // type: ActionConst.REPLACE,
+            //         onBack: this.props.onBack
+            //     });
+            // });
         }
     }
 
@@ -309,20 +315,68 @@ class ContactsPicker extends React.Component {
             viewOffset: SECTION_HEADER_HEIGHT
         });
     }
+    addContacts() {
+        Actions.searchUsers({ multiSelect: true });
+    }
 
     renderSearchBar() {
         return (
             <View style={styles.searchBar}>
+                <Icon
+                    style={styles.searchIcon}
+                    name="search"
+                    size={24}
+                    color={GlobalColors.sideButtons}
+                />
                 <TextInput
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
-                    placeholder="Search"
+                    placeholder="Search contact"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
                 />
             </View>
         );
+    }
+
+    renderButtons = () => (
+        <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+                style={[
+                    styles.button,
+                    { backgroundColor: GlobalColors.sideButtons }
+                ]}
+            >
+                <Icon
+                    style={styles.buttonIcon}
+                    name="mail"
+                    size={24}
+                    color={GlobalColors.white}
+                />
+                <Text style={styles.buttonText}>Invite contact</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[styles.button, { backgroundColor: GlobalColors.green }]}
+                onPress={this.addContacts.bind(this)}
+            >
+                <Icon
+                    style={styles.buttonIcon}
+                    name="user-plus"
+                    size={24}
+                    color={GlobalColors.white}
+                />
+                <Text style={styles.buttonText}>New contact</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    sectionHeader({ section }) {
+        if (section.data.length === 0) {
+            return <View style={{ height: 0 }} />;
+        } else {
+            return <ContactsPickerSectionHeader title={section.title} />;
+        }
     }
 
     renderContactsList() {
@@ -346,16 +400,16 @@ class ContactsPicker extends React.Component {
                     }}
                     style={styles.addressBook}
                     renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={({ section }) => (
-                        <ContactsPickerSectionHeader title={section.title} />
-                    )}
+                    renderSectionHeader={this.sectionHeader.bind(this)}
                     sections={this.state.contactsData}
                     keyExtractor={(item, index) => item.id}
+                    ListHeaderComponent={this.renderButtons}
+                    stickySectionHeadersEnabled={false}
                 />
-                <ContactsPickerIndexView
+                {/* <ContactsPickerIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}
                     items={sectionTitles}
-                />
+                /> */}
             </KeyboardAvoidingView>
         );
     }
@@ -363,9 +417,11 @@ class ContactsPicker extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <NetworkStatusNotchBar />
-                {this.renderSearchBar()}
-                {this.renderContactsList()}
+                <BackgroundImage>
+                    <NetworkStatusNotchBar />
+                    {this.renderSearchBar()}
+                    {this.renderContactsList()}
+                </BackgroundImage>
             </SafeAreaView>
         );
     }

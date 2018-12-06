@@ -31,7 +31,8 @@ export const GlobalColors = {
     tabBackground: 'rgba(0, 167, 214, 1)',
     chatLeftTextColor: 'rgba(74, 74, 74, 1)',
     chatRightTextColor: 'rgba(245, 255, 255, 1)',
-    satelliteMode: 'rgba(255,238,237,1)'
+    satelliteMode: 'rgba(255,238,237,1)',
+    green: 'rgba(47, 199, 111, 1)'
 };
 
 export default GlobalColors;

@@ -1,3 +1,5 @@
 import ContactsPicker from './ContactsPicker';
+import ContactDetailsScreen from './ContactDetailsScreen';
+import SearchUsers from './SearchUsers';
 
-export { ContactsPicker };
+export { ContactsPicker, ContactDetailsScreen, SearchUsers };

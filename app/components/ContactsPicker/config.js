@@ -20,7 +20,7 @@ export const addButtonConfig = {
     fontWeight: '500'
 };
 
-export const SECTION_HEADER_HEIGHT = 22;
+export const SECTION_HEADER_HEIGHT = 49;
 export const CONTACTS_REQUEST_PAGE_SIZE = 20;
 
 export default {

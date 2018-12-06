@@ -47,10 +47,12 @@ const ROUTER_SCENE_KEYS = {
     dialCall: 'dialCall',
     contactsMainChat: 'contactsMainChat',
     channelsMenu: 'channelsMenu',
+    marketplaceMenu: 'marketplaceMenu',
+    contactDetailsScreen: 'contactDetailsScreen',
+    searchUsers: 'searchUsers',
     channelsMenuChat: 'channelsMenuChat',
     botsMenuChat: 'botsMenuChat',
     botsListChat: 'botsListChat',
-    marketplaceMenu: 'marketplaceMenu',
     tabBarChat: 'tabBarChat',
     tabBarCall: 'tabBarCall'
 };

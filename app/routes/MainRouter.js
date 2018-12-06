@@ -18,7 +18,11 @@ import {
     ChannelChat
 } from '../components/ChatBotScreen';
 import { InfoPopup } from '../components/InfoPopup';
-import { ContactsPicker } from '../components/ContactsPicker';
+import {
+    ContactsPicker,
+    ContactDetailsScreen,
+    SearchUsers
+} from '../components/ContactsPicker';
 import NewChatContacts from '../components/NewChat/NewChatContacts';
 import NewChatChannels from '../components/NewChat/NewChatChannels';
 import NewChatBots from '../components/NewChat/NewChatBots';
@@ -327,6 +331,18 @@ class MainRouter extends React.Component {
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.peopleChat}
                                         component={PeopleChat}
+                                    />
+                                    <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.contactDetailsScreen
+                                        }
+                                        title="Contact Details"
+                                        component={ContactDetailsScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.searchUsers}
+                                        title="Add Contacts"
+                                        component={SearchUsers}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}

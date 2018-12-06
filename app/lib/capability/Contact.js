@@ -265,6 +265,9 @@ export default class Contact {
                     }
                 })
                 .then(response => {
+                    console.log(
+                        'DATA: ' + JSON.stringify(response, undefined, 2)
+                    );
                     if (response.data) {
                         var contacts = _.map(
                             response.data.contacts,

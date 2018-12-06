@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 import { addButtonConfig, headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
