@@ -28,7 +28,8 @@ export const MainScreenStyles = StyleSheet.create({
         flex: 1
     },
     searchArea: {
-        height: hp('5%'),
+        marginTop: 3,
+        height: hp('6%'),
         width: wp('100%'),
         flexDirection: 'row',
         justifyContent: 'center',

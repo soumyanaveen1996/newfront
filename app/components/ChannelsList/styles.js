@@ -129,7 +129,7 @@ export default StyleSheet.create({
     },
     searchSection: {
         width: wp('100%'),
-        height: hp('7%'),
+        height: hp('6%'),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
