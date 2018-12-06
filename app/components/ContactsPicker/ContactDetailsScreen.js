@@ -126,13 +126,50 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderDetails() {
-        return _.map(this.contact.emails, () =>
-            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
+        return (
+            <View>
+                {this.renderEmails()}
+                {this.contact.phoneNumbers ? this.renderNumbers() : null}
+            </View>
         );
     }
 
     renderFooterButtons() {
         return <View style={styles.footerCD} />;
+    }
+
+    renderEmails() {
+        return _.map(this.contact.emails, () =>
+            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
+        );
+    }
+
+    renderNumbers() {
+        return (
+            <View>
+                {this.contact.phoneNumbers.mobile
+                    ? this.renderDetailRow(
+                        'smartphone',
+                        'Mobile',
+                        this.contact.phoneNumbers.mobile
+                    )
+                    : null}
+                {this.contact.phoneNumbers.land
+                    ? this.renderDetailRow(
+                        'local_phone',
+                        'Land',
+                        this.contact.phoneNumbers.land
+                    )
+                    : null}
+                {this.contact.phoneNumbers.satellite
+                    ? this.renderDetailRow(
+                        'satellite',
+                        'Satellite',
+                        this.contact.phoneNumbers.mobile
+                    )
+                    : null}
+            </View>
+        );
     }
 
     renderDetailRow(icon, label, content) {

@@ -82,7 +82,7 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 60,
+        height: 70,
         paddingHorizontal: 24,
         paddingVertical: 17
     },
@@ -118,8 +118,10 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center'
     },
     checkboxIconStyle: {
-        height: 22,
-        width: 22
+        paddingHorizontal: 2,
+        paddingVertical: 1,
+        backgroundColor: GlobalColors.transparent,
+        borderWidth: 0
     },
     separator: {
         height: 1,
@@ -230,6 +232,32 @@ const stylesheet = StyleSheet.create({
     },
     footerCD: {
         backgroundColor: GlobalColors.white
+    },
+    //SEARCH USERS
+    containerSU: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: GlobalColors.white
+    },
+    searchContainerSU: {
+        flexDirection: 'column',
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: GlobalColors.white
+    },
+    selectedContactsList: {
+        height: 400
+    },
+    buttonAreaSU: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
+    },
+    doneButtonSU: {
+        width: 300,
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'center'
     }
 });
 

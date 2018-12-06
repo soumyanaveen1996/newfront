@@ -46,30 +46,8 @@ class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            headerRight: ContactsPicker.rightHeaderView(state)
             // headerLeft: <HeaderBack onPress={Actions.pop} />
         };
-    }
-
-    static rightHeaderView({ params }) {
-        const callButton = (
-            <HeaderRightIcon
-                icon={Icons.call()}
-                onPress={() => {
-                    params.showDialler();
-                }}
-                style={{ marginRight: 0, paddingHorizontal: 0 }}
-            />
-        );
-        return (
-            <View style={styles.headerRightView}>
-                {callButton}
-                <HeaderRightIcon
-                    config={addButtonConfig}
-                    onPress={params.handleAddContact}
-                />
-            </View>
-        );
     }
 
     constructor(props) {

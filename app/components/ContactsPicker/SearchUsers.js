@@ -50,24 +50,9 @@ export default class SearchUsers extends React.Component {
         super(props);
         this.state = {
             contactsData: [],
+            notSelectedContacts: [],
             selectedContacts: []
         };
-    }
-
-    renderItem(info) {
-        const contact = info.item;
-        if (!contact.thumbnail && contact.imageAvailable) {
-            this.dataSource.loadImage(contact.id);
-        }
-        return (
-            <ContactsPickerRow
-                key={contact.id}
-                contact={contact}
-                selected={this.findSelectedContact(contact) !== undefined}
-                checkBoxEnabled={!!this.props.multiSelect}
-                onContactSelected={this.onContactSelected.bind(this)}
-            />
-        );
     }
 
     findSelectedContact(contact) {
@@ -85,25 +70,6 @@ export default class SearchUsers extends React.Component {
     //     }
     //     this.setState({ contactsData: contactsList });
     // }
-
-    onContactSelected(contact) {
-        if (this.props.multiSelect) {
-            const selectedContact = this.findSelectedContact(contact);
-            if (selectedContact) {
-                const contacts = _.remove(this.state.selectedContacts, item => {
-                    return item.userId !== contact.userId;
-                });
-                this.setState({
-                    selectedContacts: contacts
-                });
-            } else {
-                this.state.selectedContacts.push(contact);
-                this.setState({
-                    selectedContacts: this.state.selectedContacts
-                });
-            }
-        }
-    }
 
     search() {
         Auth.getUser()
@@ -126,7 +92,14 @@ export default class SearchUsers extends React.Component {
                 return Network(options);
             })
             .then(res => {
-                this.setState({ contactsData: res.data.content });
+                this.setState({
+                    contactsData: res.data.content,
+                    notSelectedContacts: _.differenceBy(
+                        res.data.content.slice(),
+                        this.state.selectedContacts,
+                        'userId'
+                    )
+                });
             });
     }
 
@@ -162,6 +135,32 @@ export default class SearchUsers extends React.Component {
         });
     }
 
+    onContactSelected(user) {
+        const isAlreadySelected = this.findSelectedContact(user);
+        if (isAlreadySelected) {
+            _.remove(this.state.selectedContacts, item => {
+                return item.userId === user.userId;
+            });
+            this.setState({
+                notSelectedContacts: _.differenceBy(
+                    this.state.contactsData,
+                    this.state.selectedContacts,
+                    'userId'
+                ),
+                selectedContacts: this.state.selectedContacts
+            });
+        } else {
+            _.remove(this.state.notSelectedContacts, item => {
+                return item.userId === user.userId;
+            });
+            this.state.selectedContacts.push(user);
+            this.setState({
+                notSelectedContacts: this.state.notSelectedContacts,
+                selectedContacts: this.state.selectedContacts
+            });
+        }
+    }
+
     renderSearchBar() {
         return (
             <View style={styles.searchBar}>
@@ -193,6 +192,30 @@ export default class SearchUsers extends React.Component {
         }
     }
 
+    renderRow(item, color) {
+        const contact = item;
+        if (!contact.thumbnail && contact.imageAvailable) {
+            this.dataSource.loadImage(contact.userId);
+        }
+        return (
+            <ContactsPickerRow
+                key={contact.userId}
+                contact={contact}
+                selected={this.findSelectedContact(contact) !== undefined}
+                checkBoxEnabled={!!this.props.multiSelect}
+                onContactSelected={this.onContactSelected.bind(this)}
+                color={color}
+            />
+        );
+    }
+
+    renderItem({ item }) {
+        return this.renderRow(item);
+    }
+    renderItemGray({ item }) {
+        return this.renderRow(item, GlobalColors.disabledGray);
+    }
+
     renderContactsList() {
         return (
             <KeyboardAvoidingView
@@ -206,43 +229,56 @@ export default class SearchUsers extends React.Component {
                     }}
                     style={styles.addressBook}
                     renderItem={this.renderItem.bind(this)}
-                    data={this.state.contactsData}
+                    data={this.state.notSelectedContacts}
+                    extraData={this.state.selectedContacts}
                     keyExtractor={(item, index) => item.id}
-                    ListHeaderComponent={this.renderButtons}
+                    ListHeaderComponent={this.renderSelectedContacts.bind(this)}
                 />
             </KeyboardAvoidingView>
         );
     }
 
+    renderSelectedContacts() {
+        return (
+            <FlatList
+                ItemSeparatorComponent={ContactsPickerItemSeparator}
+                ref={flatlist => {
+                    this.selectedContactList = flatlist;
+                }}
+                renderItem={this.renderItemGray.bind(this)}
+                data={this.state.selectedContacts}
+                extraData={this.state.notSelectedContacts}
+                keyExtractor={(item, index) => item.id}
+                // style={styles.selectedContactsListSU}
+            />
+        );
+    }
+
     renderButton() {
         return (
-            <TouchableOpacity
-                style={[
-                    styles.button,
-                    { backgroundColor: GlobalColors.sideButtons }
-                ]}
-                onPress={this.addContacts.bind(this)}
-            >
-                <Icon
-                    style={styles.buttonIcon}
-                    name="user-plus"
-                    size={24}
-                    color={GlobalColors.white}
-                />
-                <Text style={styles.buttonText}>Add contacts</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonAreaSU}>
+                <TouchableOpacity
+                    style={[
+                        styles.doneButtonSU,
+                        { backgroundColor: GlobalColors.sideButtons }
+                    ]}
+                    onPress={this.addContacts.bind(this)}
+                >
+                    <Text style={styles.buttonText}>Done</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <BackgroundImage>
+            <SafeAreaView style={styles.containerSU}>
+                <View style={styles.searchContainerSU}>
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
                     {this.renderContactsList()}
-                    {this.renderButton()}
-                </BackgroundImage>
+                </View>
+                {this.renderButton()}
             </SafeAreaView>
         );
     }

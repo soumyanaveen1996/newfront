@@ -6,6 +6,8 @@ import { CheckBox } from 'react-native-elements';
 import _ from 'lodash';
 import ProfileImage from '../ProfileImage';
 import Images from '../../config/images';
+import { GlobalColors } from '../../config/styles';
+import Icon from 'react-native-vector-icons';
 
 export default class ContactsPickerRow extends React.Component {
     onItemPressed() {
@@ -18,13 +20,14 @@ export default class ContactsPickerRow extends React.Component {
         if (this.props.checkBoxEnabled) {
             return (
                 <CheckBox
-                    style={styles.checkboxIconStyle}
                     uncheckedIcon={checkBoxConfig.uncheckedIcon}
                     checkedIcon={checkBoxConfig.checkedIcon}
                     checkedColor={checkBoxConfig.checkedColor}
                     iconType={checkBoxConfig.iconType}
                     checked={this.props.selected}
                     onPress={this.onItemPressed.bind(this)}
+                    size={22}
+                    containerStyle={styles.checkboxIconStyle}
                 />
             );
         }
@@ -35,7 +38,16 @@ export default class ContactsPickerRow extends React.Component {
         const uuid = contact.id || contact.userId;
         return (
             <TouchableOpacity onPress={this.onItemPressed.bind(this)}>
-                <View style={styles.contactItemContainer}>
+                <View
+                    style={
+                        this.props.color
+                            ? [
+                                styles.contactItemContainer,
+                                { backgroundColor: this.props.color }
+                            ]
+                            : styles.contactItemContainer
+                    }
+                >
                     {this.renderCheckbox()}
                     <ProfileImage
                         uuid={uuid}
