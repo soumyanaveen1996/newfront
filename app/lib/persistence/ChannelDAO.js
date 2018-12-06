@@ -31,7 +31,8 @@ const insertChannel = (
     createdOn,
     subcription,
     isPlatformChannel,
-    channelType
+    channelType,
+    discoverable
 ) =>
     new Promise((resolve, reject) => {
         let isPlatform = isPlatformChannel ? 1 : 0;
@@ -47,7 +48,8 @@ const insertChannel = (
             createdOn,
             subcription,
             isPlatform,
-            channelType
+            channelType,
+            discoverable
         ];
         db.transaction(tx => {
             tx.executeSql(
@@ -180,7 +182,8 @@ const channelDataFromDbResult = dbResult => {
         createdOn: dbResult.createdOn,
         subcription: dbResult.subcription,
         isPlatformChannel: dbResult.isPlatformChannel,
-        channelType: dbResult.channelType
+        channelType: dbResult.channelType,
+        discoverable: dbResult.discoverable
     };
 };
 
@@ -274,7 +277,8 @@ const insertIfNotPresent = (
     createdOn,
     subcription,
     isPlatformChannel,
-    channelType
+    channelType,
+    discoverable = 'public'
 ) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
@@ -293,7 +297,8 @@ const insertIfNotPresent = (
                         createdOn,
                         subcription,
                         isPlatform,
-                        channelType
+                        channelType,
+                        discoverable
                     );
                 } else {
                     resolve();
@@ -435,6 +440,24 @@ const addChannelType = () =>
         });
     });
 
+const addDiscoverable = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addDiscoverable,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(
+                        new Error('Unable to add discoverable column')
+                    );
+                }
+            );
+        });
+    });
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -454,5 +477,6 @@ export default {
     addisSubscribed,
     addisPlatform,
     addChannelType,
-    updateChannelSubscription
+    updateChannelSubscription,
+    addDiscoverable
 };

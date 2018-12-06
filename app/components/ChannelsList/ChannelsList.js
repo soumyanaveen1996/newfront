@@ -6,10 +6,13 @@ import {
     ScrollView,
     Text,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Image,
+    Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
+import { Icons } from '../../config/icons';
 import { addButtonConfig, headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
 import { HeaderRightIcon, HeaderBack } from '../Header';
@@ -29,35 +32,56 @@ import {
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { Auth } from '../../lib/capability';
 import { RNChipView } from 'react-native-chip-view';
+import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
 
-const debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        console.log('navigation ', state.params.handleAddChannel);
-
+        let headerRight = null;
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
         return {
             headerTitle: headerConfig.headerTitle,
-            headerRight: (
-                <HeaderRightIcon
-                    config={addButtonConfig}
-                    onPress={state.params.handleAddChannel}
-                />
-            )
-            // headerLeft: (
-            //     <HeaderBack
-            //         onPress={
-            //             state.params.onBack
-            //                 ? () => {
-            //                     Actions.pop();
-            //                     state.params.onBack();
-            //                 }
-            //                 : Actions.pop
-            //         }
-            //         refresh={true}
-            //     />
-            // )
+            headerRight
         };
     }
 
@@ -73,9 +97,6 @@ class ChannelsList extends React.Component {
     }
 
     async componentDidMount() {
-        this.props.navigation.setParams({
-            handleAddChannel: this.handleAddChannel.bind(this)
-        });
         // const channels = await Channel.getSubscribedChannels()
         // if (channels.length > 0) {
         //     return this.refresh()
@@ -94,6 +115,9 @@ class ChannelsList extends React.Component {
         // }
         // this.refresh();
 
+        this.props.navigation.setParams({
+            showConnectionMessage: this.showConnectionMessage
+        });
         const user = await Auth.getUser();
         if (user) {
             this.setState({ user });
@@ -134,11 +158,36 @@ class ChannelsList extends React.Component {
         Store.dispatch(setCurrentScene('none'));
     }
 
-    handleAddChannel = () => {
-        SystemBot.get(SystemBot.channelsBotManifestName).then(channelsBot => {
-            console.log('clicking on right button channel ', channelsBot);
-            Actions.botChat({ bot: channelsBot, onBack: this.onBack });
-        });
+    showConnectionMessage = connectionType => {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
+            { cancelable: false }
+        );
+    };
+
+    showButton = pollingStrategy => {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    };
+
+    checkPollingStrategy = async () => {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        this.showButton(pollingStrategy);
     };
 
     applyFilter = async channels => {
@@ -200,13 +249,12 @@ class ChannelsList extends React.Component {
                     this.props.onBack();
                 }
                 Actions.pop();
-            } else {
-                this.handleAddChannel();
             }
         } else {
             const filteredChannels = await this.applyFilter(channels);
             this.setState({ channels: filteredChannels });
         }
+        this.checkPollingStrategy();
     }
 
     onChannelUnsubscribe = async channel => {
@@ -318,6 +366,7 @@ class ChannelsList extends React.Component {
                 .toLowerCase()
                 .includes(this.state.searchString.toLowerCase())
         );
+        console.log('Channel DS', channels);
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
@@ -358,10 +407,14 @@ class ChannelsList extends React.Component {
                             onPress={this.onPressFilter.bind(this)}
                         >
                             <Text style={styles.filterText}>Filter</Text>
+                            <Image
+                                source={require('../../images/channels/filter-arrow-down.png')}
+                                style={styles.filterImage}
+                            />
                         </TouchableOpacity>
                         <View style={styles.filterArea}>
-                            {filters.length > 0 ? (
-                                filters.map(filter => {
+                            {filters.length > 0
+                                ? filters.map(filter => {
                                     return (
                                         <View style={styles.filterSelected}>
                                             <RNChipView
@@ -380,9 +433,7 @@ class ChannelsList extends React.Component {
                                         </View>
                                     );
                                 })
-                            ) : (
-                                <Text>Tap to Filter</Text>
-                            )}
+                                : null}
                         </View>
                     </TouchableOpacity>
                     <View style={{ flex: 1, alignItems: 'center' }}>
