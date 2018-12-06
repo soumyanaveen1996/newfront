@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 103
+        versionCode 104
         versionName "3.2"
         multiDexEnabled true
 

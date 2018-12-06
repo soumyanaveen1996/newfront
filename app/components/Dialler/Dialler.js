@@ -252,7 +252,7 @@ export default class Dialler extends React.Component {
         if (diallerState === DiallerState.initial) {
             return (
                 <TouchableOpacity
-                    style={[Styles.button, Styles.callButton]}
+                    style={[Styles.greenCallbutton, Styles.callButton]}
                     onPress={this.call.bind(this)}
                     disabled={this.state.updatingCallQuota}
                 >
@@ -447,20 +447,18 @@ export default class Dialler extends React.Component {
                             {this.phonenumber(diallerState)}
                         </Text>
                     </View>
+                    <View style={Styles.callQuotaContainer}>
+                        <Text style={Styles.callQuotaText}>
+                            {'Call to Phone'}
+                        </Text>
+                        <Text style={Styles.callQuotaPrice}>
+                            {this.state.updatingCallQuota
+                                ? '...'
+                                : `Current Balance: $${this.state.callQuota}`}
+                        </Text>
+                    </View>
+                    <View style={Styles.horizontalRuler} />
                     <View style={Styles.diallerContainer}>
-                        <View style={Styles.callQuotaContainer}>
-                            <Text style={Styles.callQuotaText}>
-                                {'Call to Phone'}
-                            </Text>
-                            <Text style={Styles.callQuotaPrice}>
-                                {this.state.updatingCallQuota
-                                    ? '...'
-                                    : `Current Balance: $${
-                                        this.state.callQuota
-                                    }`}
-                            </Text>
-                        </View>
-                        <View style={Styles.horizontalRuler} />
                         <View style={Styles.diallerButtonContainer}>
                             {this.renderButtons()}
                         </View>

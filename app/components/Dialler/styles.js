@@ -41,7 +41,7 @@ const Styles = StyleSheet.create({
         marginTop: 20
     },
     callButtonContainer: {
-        height: 70,
+        height: hp('10%'),
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -51,6 +51,13 @@ const Styles = StyleSheet.create({
         borderRadius: 36,
         width: 60,
         height: 60,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    greenCallbutton: {
+        borderRadius: hp('8%') / 2,
+        width: hp('8%'),
+        height: hp('8%'),
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -75,9 +82,8 @@ const Styles = StyleSheet.create({
     },
     roundButtonText: {
         color: GlobalColors.black,
-        fontSize: 36,
-        textAlign: 'center',
-        flex: 0
+        fontSize: hp('3.5%'),
+        textAlign: 'center'
     },
     swapButtonContainer: {
         backgroundColor: GlobalColors.white
@@ -86,7 +92,7 @@ const Styles = StyleSheet.create({
         padding: 10
     },
     closeButtonText: {
-        fontSize: 17,
+        fontSize: hp('3%'),
         color: GlobalColors.black
     },
     mainContainer: {
@@ -98,7 +104,7 @@ const Styles = StyleSheet.create({
     },
     initialMainContainer: {
         backgroundColor: 'rgba(47,199,111,1)',
-        height: hp('40%'),
+        height: hp('25%'),
         justifyContent: 'center',
         alignItems: 'flex-start'
     },
@@ -107,11 +113,14 @@ const Styles = StyleSheet.create({
         backgroundColor: GlobalColors.white
     },
     callQuotaContainer: {
+        height: hp('10%'),
+        width: wp('100%'),
+        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
-        margin: 10
+        alignItems: 'center'
     },
     callQuotaText: {
-        fontSize: 20,
+        fontSize: wp('5%'),
         fontWeight: '500',
         color: 'rgba(0,0,0,1)',
         marginLeft: 5
@@ -122,15 +131,17 @@ const Styles = StyleSheet.create({
         opacity: 0.5
     },
     callQuotaPrice: {
-        fontSize: 20,
+        fontSize: wp('5%'),
         marginLeft: 'auto',
+        paddingHorizontal: 10,
         fontWeight: '500',
         opacity: 0.7
     },
     diallerButtonContainer: {
-        flex: 1,
         flexDirection: 'column',
-        height: hp('30%')
+        height: '85%',
+        display: 'flex',
+        justifyContent: 'space-between'
         //backgroundColor: 'red',
     },
     incallDiallerContainer: {
