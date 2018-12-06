@@ -18,11 +18,14 @@ import config from '../../config/config';
 import { Auth, Network } from '../../lib/capability';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
+import CallModal from './CallModal';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            modalVisible: false
+        };
         this.contact = this.props.contact;
     }
 
@@ -44,8 +47,8 @@ export default class ContactDetailsScreen extends React.Component {
         });
     }
 
-    async callContact() {
-        Actions.dialler({ phoneNumber: this.contact.phoneNumbers.mobile });
+    callContact() {
+        this.setModalVisible(true);
     }
 
     renderNameArea() {
@@ -182,6 +185,11 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
+    setModalVisible(value) {
+        this.setState({ modalVisible: value });
+        console.log('VISIBLE');
+    }
+
     render() {
         return (
             <View style={styles.containerCD}>
@@ -189,6 +197,11 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
+                <CallModal
+                    isVisible={this.state.modalVisible}
+                    setVisible={this.setModalVisible.bind(this)}
+                    contact={this.props.contact}
+                />
             </View>
         );
     }

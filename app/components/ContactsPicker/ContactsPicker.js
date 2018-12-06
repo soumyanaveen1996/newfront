@@ -41,6 +41,7 @@ import {
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
+import CallModal from './CallModal';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
