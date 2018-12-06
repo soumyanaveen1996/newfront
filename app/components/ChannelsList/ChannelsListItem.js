@@ -34,35 +34,6 @@ export default class ChannelsListItem extends React.Component {
         this.props.onChannelEdit();
     }
 
-    renderRightArea(channel, userId) {
-        const isOwner = channel.ownerId === userId ? true : false;
-        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
-            return (
-                <View style={styles.rightContainer}>
-                    <ActivityIndicator size="small" />
-                </View>
-            );
-        } else {
-            if (isOwner) {
-                return (
-                    <View style={styles.rightContainer}>
-                        <TouchableOpacity onPress={this.editChannel.bind(this)}>
-                            {/* {Icons.delete()} */}
-                            <Icon
-                                style={styles.editIcon}
-                                name="edit-2"
-                                size={18}
-                                color="rgba(3,3,3,1)"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                );
-            } else {
-                return null;
-            }
-        }
-    }
-
     onItemPressed() {
         if (this.props.onChannelTapped) {
             this.props.onChannelTapped(this.props.channel);
@@ -155,6 +126,34 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
+    renderRightArea(channel, userId) {
+        const isOwner = channel.ownerId === userId ? true : false;
+        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
+            return (
+                <View style={styles.rightContainer}>
+                    <ActivityIndicator size="small" />
+                </View>
+            );
+        } else {
+            if (isOwner) {
+                return (
+                    <View style={styles.rightContainer}>
+                        <TouchableOpacity onPress={this.editChannel.bind(this)}>
+                            {/* {Icons.delete()} */}
+                            <Icon
+                                style={styles.editIcon}
+                                name="edit-2"
+                                size={18}
+                                color="rgba(3,3,3,1)"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                );
+            } else {
+                return <View style={styles.rightContainer} />;
+            }
+        }
+    }
     render() {
         const channel = this.props.channel;
         const user = this.props.user;
@@ -206,6 +205,7 @@ export default class ChannelsListItem extends React.Component {
                             on {<Text>{createdOn}</Text>}
                         </Text>
                     </View>
+                    {this.renderRightArea(channel, user.userId)}
                 </View>
                 <View style={styles.channelDescription}>
                     <View style={styles.channelType}>
@@ -228,7 +228,6 @@ export default class ChannelsListItem extends React.Component {
                         {this.subscriptionButton(channel, user.userId)}
                     </View>
                 </View>
-                {this.renderRightArea(channel, user.userId)}
             </View>
         );
     }

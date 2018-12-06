@@ -112,25 +112,21 @@ class ChannelsFilter extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={styles.filterScrollView}>
-                    <View style={styles.filterMaincontainer}>
-                        <View style={styles.filterChipContainer}>
-                            {this.state.filterList.map(elem => {
-                                return elem && elem.checked ? (
-                                    <View style={styles.filterSelected}>
-                                        <RNChipView
-                                            title={elem.title}
-                                            titleStyle={
-                                                styles.selectedFilterTitle
-                                            }
-                                            avatar={false}
-                                            backgroundColor="#424B5A"
-                                            borderRadius={6}
-                                            height={20}
-                                        />
-                                    </View>
-                                ) : null;
-                            })}
-                        </View>
+                    <View style={styles.filterChipContainer}>
+                        {this.state.filterList.map(elem => {
+                            return elem && elem.checked ? (
+                                <View style={styles.filterSelected}>
+                                    <RNChipView
+                                        title={elem.title}
+                                        titleStyle={styles.selectedFilterTitle}
+                                        avatar={false}
+                                        backgroundColor="#424B5A"
+                                        borderRadius={6}
+                                        height={20}
+                                    />
+                                </View>
+                            ) : null;
+                        })}
                     </View>
                     <View style={styles.filterCheckBoxContainer}>
                         <Text style={styles.filterbyHeader}>Filter by</Text>

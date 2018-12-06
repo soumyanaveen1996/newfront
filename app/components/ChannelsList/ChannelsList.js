@@ -388,19 +388,17 @@ class ChannelsList extends React.Component {
                         underlineColorAndroid="transparent"
                     />
                 </View>
-                <View style={styles.createNewChannelContainer}>
-                    <TouchableOpacity
-                        style={styles.buttonContainer}
-                        onPress={this.createChannel.bind(this)}
-                    >
-                        <Text style={styles.buttonText}>New Channel</Text>
-                    </TouchableOpacity>
-                </View>
                 <ScrollView>
-                    <TouchableOpacity
-                        style={styles.filterContainer}
-                        onPress={this.onPressFilter.bind(this)}
-                    >
+                    <View style={styles.createNewChannelContainer}>
+                        <TouchableOpacity
+                            style={styles.buttonContainer}
+                            onPress={this.createChannel.bind(this)}
+                        >
+                            <Text style={styles.buttonText}>New Channel</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.filterContainer}>
                         <TouchableOpacity
                             style={styles.filterTextContainer}
                             onPress={this.onPressFilter.bind(this)}
@@ -411,30 +409,35 @@ class ChannelsList extends React.Component {
                                 style={styles.filterImage}
                             />
                         </TouchableOpacity>
-                        <View style={styles.filterArea}>
-                            {filters.length > 0
-                                ? filters.map(filter => {
-                                    return (
-                                        <View style={styles.filterSelected}>
-                                            <RNChipView
-                                                title={filter.title}
-                                                onPress={this.onPressFilter.bind(
-                                                    this
-                                                )}
-                                                titleStyle={
-                                                    styles.selectedFilterTitle
-                                                }
-                                                avatar={false}
-                                                backgroundColor="#424B5A"
-                                                borderRadius={6}
-                                                height={20}
-                                            />
-                                        </View>
-                                    );
-                                })
-                                : null}
-                        </View>
-                    </TouchableOpacity>
+                        <ScrollView>
+                            <View style={styles.filterArea}>
+                                {filters.length > 0
+                                    ? filters.map(filter => {
+                                        return (
+                                            <View
+                                                style={styles.filterSelected}
+                                            >
+                                                <RNChipView
+                                                    title={filter.title}
+                                                    onPress={this.onPressFilter.bind(
+                                                        this
+                                                    )}
+                                                    titleStyle={
+                                                        styles.selectedFilterTitle
+                                                    }
+                                                    avatar={false}
+                                                    backgroundColor="#424B5A"
+                                                    borderRadius={6}
+                                                    height={20}
+                                                    cancelable={true}
+                                                />
+                                            </View>
+                                        );
+                                    })
+                                    : null}
+                            </View>
+                        </ScrollView>
+                    </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <FlatList
                             style={styles.flatList}

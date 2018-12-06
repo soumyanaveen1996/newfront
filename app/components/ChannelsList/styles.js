@@ -93,7 +93,7 @@ export default StyleSheet.create({
         paddingTop: 15
     },
     container: {
-        width: '100%',
+        width: wp('100%'),
         height: '100%',
         flexDirection: 'column',
         borderRadius: 15,
@@ -108,9 +108,11 @@ export default StyleSheet.create({
     },
 
     rightContainer: {
-        position: 'absolute',
-        right: 10,
-        top: 10
+        width: '20%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     hidden: {
         display: 'none'
@@ -151,7 +153,6 @@ export default StyleSheet.create({
     },
     createNewChannelContainer: {
         width: SCREEN_WIDTH,
-        height: 70,
         backgroundColor: 'rgba(244,244,244,1)',
         alignItems: 'center',
         justifyContent: 'center'
@@ -162,7 +163,8 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginVertical: 10
     },
     buttonContainerDelete: {
         height: 40,
@@ -183,7 +185,7 @@ export default StyleSheet.create({
         display: 'flex',
         justifyContent: 'space-between',
         width: wp('100%'),
-        height: hp('8%'),
+        height: hp('10%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
@@ -220,17 +222,18 @@ export default StyleSheet.create({
         height: 70,
         flexDirection: 'row',
         borderBottomWidth: 0.5,
-        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)',
+        justifyContent: 'space-between'
     },
     imageContainer: {
-        flex: 1,
+        width: '20%',
         alignItems: 'center',
         justifyContent: 'center'
     },
     textContainer: {
-        flex: 3,
+        width: '60%',
         borderLeftWidth: 1,
-        paddingLeft: 20,
+        paddingLeft: 10,
         paddingTop: 15,
         borderLeftColor: 'rgba(91, 91, 91, 0.2)'
     },
@@ -290,7 +293,6 @@ export default StyleSheet.create({
     editIcon: {},
 
     filterMaincontainer: {
-        backgroundColor: GlobalColors.white,
         height: hp('10%')
     },
     filterScrollView: {
@@ -301,10 +303,11 @@ export default StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        width: SCREEN_WIDTH,
-        height: hp('10%'),
+        width: wp('100%'),
+        height: hp('15%'),
         padding: 10,
         borderBottomWidth: 0.5,
+        backgroundColor: GlobalColors.white,
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },
     filterbyHeader: {
@@ -315,7 +318,7 @@ export default StyleSheet.create({
     },
     filterCheckBoxContainer: {
         padding: 20,
-        width: SCREEN_WIDTH
+        width: wp('100%')
     },
     filterButtonContainer: {
         width: SCREEN_WIDTH,
