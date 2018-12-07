@@ -44,6 +44,7 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
 import { Auth, Network } from '../../lib/capability';
+import { Loader } from '../Loader';
 
 export default class SearchUsers extends React.Component {
     constructor(props) {
@@ -51,7 +52,8 @@ export default class SearchUsers extends React.Component {
         this.state = {
             contactsData: [],
             notSelectedContacts: [],
-            selectedContacts: []
+            selectedContacts: [],
+            loading: false
         };
     }
 
@@ -72,6 +74,7 @@ export default class SearchUsers extends React.Component {
     // }
 
     search() {
+        this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
                 const options = {
@@ -100,6 +103,7 @@ export default class SearchUsers extends React.Component {
                         'userId'
                     )
                 });
+                this.setState({ loading: false });
             });
     }
 
@@ -276,6 +280,7 @@ export default class SearchUsers extends React.Component {
                 <View style={styles.searchContainerSU}>
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
+                    <Loader loading={this.state.loading} />
                     {this.renderContactsList()}
                 </View>
                 {this.renderButton()}

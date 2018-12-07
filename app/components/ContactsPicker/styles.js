@@ -21,7 +21,7 @@ const stylesheet = StyleSheet.create({
         marginTop: 3
     },
     searchIcon: {
-        marginLeft: 23
+        paddingHorizontal: 10
     },
     searchTextInput: {
         flex: 1,
@@ -33,29 +33,26 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(155,155,155,1)'
     },
     buttonsContainer: {
-        backgroundColor: GlobalColors.transparent,
+        width: wp('100%'),
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 13
+        alignItems: 'center'
     },
     button: {
-        width: wp('40%'),
         height: 40,
-        marginHorizontal: wp('5%'),
+        width: wp('40%'),
         borderRadius: 10,
-        flexDirection: 'row',
-        justifyContent: 'center'
-    },
-    buttonIcon: {
-        marginVertical: 10
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: wp('5%'),
+        flex: 1,
+        flexDirection: 'row'
     },
     buttonText: {
-        fontSize: 16,
-        color: GlobalColors.white,
+        color: '#fff',
         textAlign: 'center',
-        marginLeft: 11,
-        marginVertical: 10
+        fontSize: 16,
+        fontWeight: '500'
     },
     addressBookContainer: {
         flex: 1,
@@ -254,9 +251,11 @@ const stylesheet = StyleSheet.create({
     },
     doneButtonSU: {
         width: 300,
+        height: 40,
         borderRadius: 10,
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     //MODAL
     callModal: {
@@ -337,6 +336,51 @@ const stylesheet = StyleSheet.create({
     modalImage: {
         width: wp('5%'),
         height: wp('5%')
+    },
+    //INVITE MODAL
+    inviteTitle: {
+        textAlign: 'left',
+        fontSize: 20,
+        marginTop: 34
+    },
+    inviteText: {
+        textAlign: 'center',
+        fontSize: 16,
+        color: GlobalColors.translucentDark,
+        marginTop: 32,
+        marginBottom: 25
+    },
+    inviteEmail: {
+        fontSize: 14,
+        color: GlobalColors.translucentDark
+    },
+    inviteInput: {
+        backgroundColor: GlobalColors.disabledGray,
+        borderRadius: 5,
+        marginTop: 5,
+        paddingHorizontal: 5,
+        height: 36,
+        fontSize: 16
+    },
+    inviteButtonArea: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 31,
+        paddingVertical: 20,
+        borderTopWidth: 1,
+        borderColor: GlobalColors.translucentDark
+    },
+    inviteButton: {
+        width: 145,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.2,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5
+    },
+    inviteButtonText: {
+        fontSize: 16,
+        marginVertical: 7
     }
 });
 
