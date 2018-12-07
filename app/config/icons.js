@@ -53,6 +53,22 @@ function renderIcon(
 
 export const Icons = {
     renderIcon: renderIcon,
+    addContacts: icon(
+        'ios-person-add-outline',
+        'ionicon',
+        hp('4%'),
+        Colors.white,
+        Colors.white,
+        '500'
+    ),
+    inviteContact: icon(
+        'ios-mail-open-outline',
+        'ionicon',
+        hp('4%'),
+        Colors.white,
+        Colors.white,
+        '500'
+    ),
     search: icon(
         'search',
         'evilicon',

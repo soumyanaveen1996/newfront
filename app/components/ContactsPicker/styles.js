@@ -33,26 +33,26 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(155,155,155,1)'
     },
     buttonsContainer: {
-        height: hp('9%'),
         width: wp('100%'),
         flexDirection: 'row',
-        backgroundColor: GlobalColors.transparent,
         justifyContent: 'center',
         alignItems: 'center'
     },
     button: {
-        width: wp('40%'),
         height: 40,
-        marginHorizontal: wp('5%'),
+        width: wp('40%'),
         borderRadius: 10,
-        flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: wp('5%'),
+        flex: 1,
+        flexDirection: 'row'
     },
-    buttonIcon: {},
     buttonText: {
+        color: '#fff',
+        textAlign: 'center',
         fontSize: 16,
-        color: GlobalColors.white,
-        textAlign: 'center'
+        fontWeight: '500'
     },
     addressBookContainer: {
         flex: 1,
@@ -251,9 +251,11 @@ const stylesheet = StyleSheet.create({
     },
     doneButtonSU: {
         width: 300,
+        height: 40,
         borderRadius: 10,
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     //MODAL
     callModal: {

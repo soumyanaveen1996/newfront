@@ -389,12 +389,9 @@ class ContactsPicker extends React.Component {
                     ]}
                     onPress={this.inviteUser.bind(this)}
                 >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="mail"
-                        size={22}
-                        color={GlobalColors.white}
-                    />
+                    <View style={{ marginRight: 7 }}>
+                        {Icons.inviteContact()}
+                    </View>
                     <Text style={styles.buttonText}>Invite contact</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -404,12 +401,9 @@ class ContactsPicker extends React.Component {
                     ]}
                     onPress={this.addContacts.bind(this)}
                 >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="user-plus"
-                        size={22}
-                        color={GlobalColors.white}
-                    />
+                    <View style={{ marginRight: 7 }}>
+                        {Icons.addContacts()}
+                    </View>
                     <Text style={styles.buttonText}>New contact</Text>
                 </TouchableOpacity>
             </View>
