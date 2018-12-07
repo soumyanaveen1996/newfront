@@ -82,7 +82,7 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 60,
+        height: 70,
         paddingHorizontal: 24,
         paddingVertical: 17
     },
@@ -118,8 +118,10 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center'
     },
     checkboxIconStyle: {
-        height: 22,
-        width: 22
+        paddingHorizontal: 2,
+        paddingVertical: 1,
+        backgroundColor: GlobalColors.transparent,
+        borderWidth: 0
     },
     separator: {
         height: 1,
@@ -230,6 +232,112 @@ const stylesheet = StyleSheet.create({
     },
     footerCD: {
         backgroundColor: GlobalColors.white
+    },
+    //SEARCH USERS
+    containerSU: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: GlobalColors.white
+    },
+    searchContainerSU: {
+        flexDirection: 'column',
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: GlobalColors.white
+    },
+    selectedContactsList: {
+        height: 400
+    },
+    buttonAreaSU: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
+    },
+    doneButtonSU: {
+        width: 300,
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    //MODAL
+    callModal: {
+        flex: 1,
+        borderRadius: 10,
+        backgroundColor: 'rgba(91, 91, 91, 0.2)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modal: {
+        width: wp('90%'),
+        paddingHorizontal: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        flexDirection: 'column'
+    },
+    phoneContainer: {
+        height: hp('10%'),
+        width: '100%',
+        borderBottomWidth: 0.5,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+    },
+    callButton: {
+        height: hp('5%'),
+        width: hp('5%'),
+        borderRadius: hp('5%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(47,199,111,1)'
+    },
+    callButtonDisabled: {
+        height: hp('5%'),
+        width: hp('5%'),
+        borderRadius: hp('5%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#dddddd'
+    },
+    modalTextContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: wp('25%'),
+        marginLeft: 10
+    },
+    modalTextContainerImg: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: wp('25%'),
+        marginLeft: 5
+    },
+    modalNumberContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('50%')
+    },
+    modalCallButContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: wp('10%'),
+        marginRight: 5
+    },
+    modalText: {
+        color: 'rgba(155,155,155,1)',
+        marginLeft: 5
+    },
+    modalImage: {
+        width: wp('5%'),
+        height: wp('5%')
     }
 });
 

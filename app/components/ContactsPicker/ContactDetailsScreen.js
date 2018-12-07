@@ -18,11 +18,14 @@ import config from '../../config/config';
 import { Auth, Network } from '../../lib/capability';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
+import CallModal from './CallModal';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            modalVisible: false
+        };
         this.contact = this.props.contact;
     }
 
@@ -44,8 +47,8 @@ export default class ContactDetailsScreen extends React.Component {
         });
     }
 
-    async callContact() {
-        Actions.dialler({ phoneNumber: this.contact.phoneNumbers.mobile });
+    callContact() {
+        this.setModalVisible(true);
     }
 
     renderNameArea() {
@@ -126,13 +129,50 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderDetails() {
-        return _.map(this.contact.emails, () =>
-            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
+        return (
+            <View>
+                {this.renderEmails()}
+                {this.contact.phoneNumbers ? this.renderNumbers() : null}
+            </View>
         );
     }
 
     renderFooterButtons() {
         return <View style={styles.footerCD} />;
+    }
+
+    renderEmails() {
+        return _.map(this.contact.emails, () =>
+            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
+        );
+    }
+
+    renderNumbers() {
+        return (
+            <View>
+                {this.contact.phoneNumbers.mobile
+                    ? this.renderDetailRow(
+                        'smartphone',
+                        'Mobile',
+                        this.contact.phoneNumbers.mobile
+                    )
+                    : null}
+                {this.contact.phoneNumbers.land
+                    ? this.renderDetailRow(
+                        'local_phone',
+                        'Land',
+                        this.contact.phoneNumbers.land
+                    )
+                    : null}
+                {this.contact.phoneNumbers.satellite
+                    ? this.renderDetailRow(
+                        'satellite',
+                        'Satellite',
+                        this.contact.phoneNumbers.mobile
+                    )
+                    : null}
+            </View>
+        );
     }
 
     renderDetailRow(icon, label, content) {
@@ -145,6 +185,11 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
+    setModalVisible(value) {
+        this.setState({ modalVisible: value });
+        console.log('VISIBLE');
+    }
+
     render() {
         return (
             <View style={styles.containerCD}>
@@ -152,6 +197,11 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
+                <CallModal
+                    isVisible={this.state.modalVisible}
+                    setVisible={this.setModalVisible.bind(this)}
+                    contact={this.props.contact}
+                />
             </View>
         );
     }
