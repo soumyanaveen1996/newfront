@@ -156,6 +156,9 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
+        if (!this.props.appState.allChannelsLoaded) {
+            Channel.refreshChannels();
+        }
     }
 
     showConnectionMessage = connectionType => {
@@ -241,7 +244,7 @@ class ChannelsList extends React.Component {
         }
     };
 
-    async refresh(onback = false, handleEmptyChannels = true) {
+    async refresh(onback = false, handleEmptyChannels = false) {
         const channels = await Channel.getSubscribedChannels();
         if (handleEmptyChannels && channels.length === 0) {
             if (onback) {
@@ -372,23 +375,24 @@ class ChannelsList extends React.Component {
                 {!this.props.appState.allChannelsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null}
-                <View style={styles.searchSection}>
-                    <Icon
-                        style={styles.searchIcon}
-                        name="search"
-                        size={24}
-                        color="rgba(0, 189, 242, 1)"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Search Channel"
-                        onChangeText={searchString => {
-                            this.setState({ searchString });
-                        }}
-                        underlineColorAndroid="transparent"
-                    />
-                </View>
                 <ScrollView>
+                    <View style={styles.searchSection}>
+                        <Icon
+                            style={styles.searchIcon}
+                            name="search"
+                            size={24}
+                            color="rgba(0, 189, 242, 1)"
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Search Channel"
+                            onChangeText={searchString => {
+                                this.setState({ searchString });
+                            }}
+                            underlineColorAndroid="transparent"
+                        />
+                    </View>
+
                     <View style={styles.createNewChannelContainer}>
                         <TouchableOpacity
                             style={styles.buttonContainer}

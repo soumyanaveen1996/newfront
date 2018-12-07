@@ -105,10 +105,12 @@ export default class ChannelsListItem extends React.Component {
                     </TouchableOpacity>
                     {isOwner ? null : (
                         <TouchableOpacity
-                            style={styles.openChannelButtonContainer}
+                            style={styles.openChannelButtonContainerUnSub}
                             onPress={this.onUnsubscribeChannel}
                         >
-                            <Text style={styles.buttonText}>Unsubscribe</Text>
+                            <Text style={styles.buttonTextUnSub}>
+                                Unsubscribe
+                            </Text>
                         </TouchableOpacity>
                     )}
                 </View>

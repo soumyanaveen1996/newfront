@@ -29,7 +29,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH - 20,
-        height: 180,
+        height: 190,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -131,7 +131,7 @@ export default StyleSheet.create({
     },
     searchSection: {
         width: wp('100%'),
-        height: hp('6%'),
+        height: 40,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -173,6 +173,13 @@ export default StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    buttonTextUnSub: {
+        color: 'rgba(0,167,214,1)',
+        textAlign: 'center',
+        fontSize: wp('4%'),
+        fontWeight: '500',
+        paddingHorizontal: 5
     },
     buttonText: {
         color: '#fff',
@@ -279,8 +286,22 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    openChannelButtonContainerUnSub: {
+        height: 30,
+        width: wp('40%'),
+        backgroundColor: 'rgba(255,255,255,1)',
+        borderColor: 'rgba(0,167,214,1)',
+        borderStyle: 'solid',
+        borderWidth: 1.2,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+        marginBottom: 25,
+        paddingHorizontal: 5
+    },
     openChannelButtonContainer: {
-        height: hp('4%'),
+        height: 30,
         width: wp('40%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 6,

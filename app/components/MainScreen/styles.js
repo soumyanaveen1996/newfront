@@ -29,7 +29,7 @@ export const MainScreenStyles = StyleSheet.create({
     },
     searchArea: {
         marginTop: 3,
-        height: hp('6%'),
+        height: 40,
         width: wp('100%'),
         flexDirection: 'row',
         justifyContent: 'center',
@@ -37,14 +37,13 @@ export const MainScreenStyles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     buttonArea: {
-        height: hp('9%'),
         width: wp('100%'),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
     buttonContainerChat: {
-        height: hp('5.5%'),
+        height: 40,
         width: wp('40%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
@@ -55,7 +54,7 @@ export const MainScreenStyles = StyleSheet.create({
         flexDirection: 'row'
     },
     buttonContainerCall: {
-        height: hp('5.5%'),
+        height: 40,
         width: wp('40%'),
         borderRadius: 10,
         backgroundColor: 'rgba(47,199,111,1)',
