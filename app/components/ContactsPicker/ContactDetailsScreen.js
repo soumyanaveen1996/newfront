@@ -5,7 +5,8 @@ import {
     Image,
     Button,
     TouchableOpacity,
-    Alert
+    Alert,
+    ScrollView
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
@@ -131,8 +132,8 @@ export default class ContactDetailsScreen extends React.Component {
     renderDetails() {
         return (
             <View>
-                {this.renderEmails()}
                 {this.contact.phoneNumbers ? this.renderNumbers() : null}
+                {this.renderEmails()}
             </View>
         );
     }
@@ -187,12 +188,11 @@ export default class ContactDetailsScreen extends React.Component {
 
     setModalVisible(value) {
         this.setState({ modalVisible: value });
-        console.log('VISIBLE');
     }
 
     render() {
         return (
-            <View style={styles.containerCD}>
+            <ScrollView style={styles.containerCD}>
                 {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}
@@ -202,7 +202,7 @@ export default class ContactDetailsScreen extends React.Component {
                     setVisible={this.setModalVisible.bind(this)}
                     contact={this.props.contact}
                 />
-            </View>
+            </ScrollView>
         );
     }
 }

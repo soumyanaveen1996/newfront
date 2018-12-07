@@ -26,7 +26,7 @@ import {
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact } from '../../lib/capability';
+import { Contact, Settings } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
@@ -42,13 +42,55 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
 import CallModal from './CallModal';
+import InviteModal from './InviteModal';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        return {
-            // headerLeft: <HeaderBack onPress={Actions.pop} />
+
+        let navigationOptions = {
+            headerTitle: state.params.title
         };
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
+        return navigationOptions;
     }
 
     constructor(props) {
@@ -56,7 +98,8 @@ class ContactsPicker extends React.Component {
         this.dataSource = new FrontMAddedContactsPickerDataSource(this);
         this.state = {
             contactsData: [],
-            selectedContacts: []
+            selectedContacts: [],
+            inviteModalVisible: false
         };
     }
 
@@ -65,6 +108,7 @@ class ContactsPicker extends React.Component {
             handleAddContact: this.handleAddContact.bind(this),
             showDialler: this.showDialler
         });
+        this.checkPollingStrategy();
 
         // const loadedContacts = await Contact.getAddedContacts()
         // if (loadedContacts.length > 0) {
@@ -87,12 +131,7 @@ class ContactsPicker extends React.Component {
         // }
         if (this.props.appState.contactsLoaded) {
             Contact.getAddedContacts().then(contacts => {
-                if (contacts.length === 0) {
-                    //If no contacts are added then go directly to contacts bot
-                    this.handleAddContact();
-                } else {
-                    this.refresh();
-                }
+                this.refresh();
             });
         }
     }
@@ -128,6 +167,23 @@ class ContactsPicker extends React.Component {
         // }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
+    }
+
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    }
+
+    async checkPollingStrategy() {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        this.showButton(pollingStrategy);
     }
 
     static onExit() {
@@ -331,13 +387,11 @@ class ContactsPicker extends React.Component {
                         styles.button,
                         { backgroundColor: GlobalColors.sideButtons }
                     ]}
+                    onPress={this.inviteUser.bind(this)}
                 >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="mail"
-                        size={22}
-                        color={GlobalColors.white}
-                    />
+                    <View style={{ marginRight: 7 }}>
+                        {Icons.inviteContact()}
+                    </View>
                     <Text style={styles.buttonText}>Invite contact</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -347,12 +401,9 @@ class ContactsPicker extends React.Component {
                     ]}
                     onPress={this.addContacts.bind(this)}
                 >
-                    <Icon
-                        style={styles.buttonIcon}
-                        name="user-plus"
-                        size={22}
-                        color={GlobalColors.white}
-                    />
+                    <View style={{ marginRight: 7 }}>
+                        {Icons.addContacts()}
+                    </View>
                     <Text style={styles.buttonText}>New contact</Text>
                 </TouchableOpacity>
             </View>
@@ -402,12 +453,26 @@ class ContactsPicker extends React.Component {
         );
     }
 
+    inviteUser() {
+        this.setInviteVisible(true);
+    }
+
+    setInviteVisible(value) {
+        this.setState({
+            inviteModalVisible: value
+        });
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
                     {this.renderContactsList()}
+                    <InviteModal
+                        isVisible={this.state.inviteModalVisible}
+                        setVisible={this.setInviteVisible.bind(this)}
+                    />
                 </BackgroundImage>
             </SafeAreaView>
         );
