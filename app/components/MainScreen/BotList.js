@@ -22,6 +22,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import I18n from '../../config/i18n/i18n';
 import Icon from 'react-native-vector-icons/EvilIcons';
 
+import { Actions, ActionConst } from 'react-native-router-flux';
 import { Icons } from '../../config/icons';
 import {
     widthPercentageToDP as wp,
