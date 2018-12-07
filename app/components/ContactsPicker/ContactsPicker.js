@@ -89,12 +89,7 @@ class ContactsPicker extends React.Component {
         // }
         if (this.props.appState.contactsLoaded) {
             Contact.getAddedContacts().then(contacts => {
-                if (contacts.length === 0) {
-                    //If no contacts are added then go directly to contacts bot
-                    this.handleAddContact();
-                } else {
-                    this.refresh();
-                }
+                this.refresh();
             });
         }
     }
