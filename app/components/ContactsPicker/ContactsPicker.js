@@ -42,6 +42,7 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
 import CallModal from './CallModal';
+import InviteModal from './InviteModal';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -56,7 +57,8 @@ class ContactsPicker extends React.Component {
         this.dataSource = new FrontMAddedContactsPickerDataSource(this);
         this.state = {
             contactsData: [],
-            selectedContacts: []
+            selectedContacts: [],
+            inviteModalVisible: false
         };
     }
 
@@ -326,6 +328,7 @@ class ContactsPicker extends React.Component {
                     styles.button,
                     { backgroundColor: GlobalColors.sideButtons }
                 ]}
+                onPress={this.inviteUser.bind(this)}
             >
                 <Icon
                     style={styles.buttonIcon}
@@ -393,6 +396,16 @@ class ContactsPicker extends React.Component {
         );
     }
 
+    inviteUser() {
+        this.setInviteVisible(true);
+    }
+
+    setInviteVisible(value) {
+        this.setState({
+            inviteModalVisible: value
+        });
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -400,6 +413,10 @@ class ContactsPicker extends React.Component {
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
                     {this.renderContactsList()}
+                    <InviteModal
+                        isVisible={this.state.inviteModalVisible}
+                        setVisible={this.setInviteVisible.bind(this)}
+                    />
                 </BackgroundImage>
             </SafeAreaView>
         );

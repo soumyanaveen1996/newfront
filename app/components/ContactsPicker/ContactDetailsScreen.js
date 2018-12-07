@@ -187,7 +187,6 @@ export default class ContactDetailsScreen extends React.Component {
 
     setModalVisible(value) {
         this.setState({ modalVisible: value });
-        console.log('VISIBLE');
     }
 
     render() {

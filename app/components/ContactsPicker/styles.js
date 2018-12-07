@@ -338,6 +338,51 @@ const stylesheet = StyleSheet.create({
     modalImage: {
         width: wp('5%'),
         height: wp('5%')
+    },
+    //INVITE MODAL
+    inviteTitle: {
+        textAlign: 'left',
+        fontSize: 20,
+        marginTop: 34
+    },
+    inviteText: {
+        textAlign: 'center',
+        fontSize: 16,
+        color: GlobalColors.translucentDark,
+        marginTop: 32,
+        marginBottom: 25
+    },
+    inviteEmail: {
+        fontSize: 14,
+        color: GlobalColors.translucentDark
+    },
+    inviteInput: {
+        backgroundColor: GlobalColors.disabledGray,
+        borderRadius: 5,
+        marginTop: 5,
+        paddingHorizontal: 5,
+        height: 36,
+        fontSize: 16
+    },
+    inviteButtonArea: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 31,
+        paddingVertical: 20,
+        borderTopWidth: 1,
+        borderColor: GlobalColors.translucentDark
+    },
+    inviteButton: {
+        width: 145,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.2,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5
+    },
+    inviteButtonText: {
+        fontSize: 16,
+        marginVertical: 7
     }
 });
 
