@@ -211,6 +211,7 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Chat"
+
                                         // hideNavBar
                                     >
                                         <Scene

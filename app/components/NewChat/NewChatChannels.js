@@ -214,9 +214,6 @@ class NewChatContacts extends React.Component {
 
         return (
             <View style={styles.addressBookContainer}>
-                {!this.props.appState.contactsLoaded ? (
-                    <ActivityIndicator size="small" />
-                ) : null}
                 <SectionList
                     ItemSeparatorComponent={NewChatItemSeparator}
                     ref={sectionList => {

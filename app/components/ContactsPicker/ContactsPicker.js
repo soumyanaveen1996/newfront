@@ -189,6 +189,9 @@ class ContactsPicker extends React.Component {
     static onExit() {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
+        if (!this.props.appState.contactsLoaded) {
+            Contact.refreshContacts();
+        }
     }
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Contacts');
@@ -360,7 +363,7 @@ class ContactsPicker extends React.Component {
                 <Icon
                     style={styles.searchIcon}
                     name="search"
-                    size={24}
+                    size={18}
                     color={GlobalColors.sideButtons}
                 />
                 <TextInput
@@ -376,34 +379,39 @@ class ContactsPicker extends React.Component {
     }
 
     renderButtons = () => (
-        <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-                style={[
-                    styles.button,
-                    { backgroundColor: GlobalColors.sideButtons }
-                ]}
-                onPress={this.inviteUser.bind(this)}
-            >
-                <Icon
-                    style={styles.buttonIcon}
-                    name="mail"
-                    size={24}
-                    color={GlobalColors.white}
-                />
-                <Text style={styles.buttonText}>Invite contact</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={[styles.button, { backgroundColor: GlobalColors.green }]}
-                onPress={this.addContacts.bind(this)}
-            >
-                <Icon
-                    style={styles.buttonIcon}
-                    name="user-plus"
-                    size={24}
-                    color={GlobalColors.white}
-                />
-                <Text style={styles.buttonText}>New contact</Text>
-            </TouchableOpacity>
+        <View>
+            {this.renderSearchBar()}
+            <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                    style={[
+                        styles.button,
+                        { backgroundColor: GlobalColors.sideButtons }
+                    ]}
+                >
+                    <Icon
+                        style={styles.buttonIcon}
+                        name="mail"
+                        size={22}
+                        color={GlobalColors.white}
+                    />
+                    <Text style={styles.buttonText}>Invite contact</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[
+                        styles.button,
+                        { backgroundColor: GlobalColors.green }
+                    ]}
+                    onPress={this.addContacts.bind(this)}
+                >
+                    <Icon
+                        style={styles.buttonIcon}
+                        name="user-plus"
+                        size={22}
+                        color={GlobalColors.white}
+                    />
+                    <Text style={styles.buttonText}>New contact</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 
@@ -465,7 +473,6 @@ class ContactsPicker extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
-                    {this.renderSearchBar()}
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}

@@ -9,6 +9,7 @@ import { Channel } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
+import moment from 'moment';
 
 const subtitleNumberOfLines = 2;
 
@@ -29,38 +30,9 @@ export default class ChannelsListItem extends React.Component {
 
     unsubscribeChannel() {}
 
-    editChannel() {
-        this.props.onChannelEdit();
-    }
-
-    renderRightArea(channel, userId) {
-        const isOwner = channel.ownerId === userId ? true : false;
-        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
-            return (
-                <View style={styles.rightContainer}>
-                    <ActivityIndicator size="small" />
-                </View>
-            );
-        } else {
-            if (isOwner) {
-                return (
-                    <View style={styles.rightContainer}>
-                        <TouchableOpacity onPress={this.editChannel.bind(this)}>
-                            {/* {Icons.delete()} */}
-                            <Icon
-                                style={styles.editIcon}
-                                name="edit-2"
-                                size={18}
-                                color="rgba(3,3,3,1)"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                );
-            } else {
-                return null;
-            }
-        }
-    }
+    editChannel = channel => {
+        this.props.onChannelEdit(channel);
+    };
 
     onItemPressed() {
         if (this.props.onChannelTapped) {
@@ -133,10 +105,12 @@ export default class ChannelsListItem extends React.Component {
                     </TouchableOpacity>
                     {isOwner ? null : (
                         <TouchableOpacity
-                            style={styles.openChannelButtonContainer}
+                            style={styles.openChannelButtonContainerUnSub}
                             onPress={this.onUnsubscribeChannel}
                         >
-                            <Text style={styles.buttonText}>Unsubscribe</Text>
+                            <Text style={styles.buttonTextUnSub}>
+                                Unsubscribe
+                            </Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -154,9 +128,50 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
+    renderRightArea(channel, userId) {
+        const isOwner = channel.ownerId === userId ? true : false;
+        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
+            return (
+                <View style={styles.rightContainer}>
+                    <ActivityIndicator size="small" />
+                </View>
+            );
+        } else {
+            if (isOwner) {
+                return (
+                    <View style={styles.rightContainer}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.editChannel(channel);
+                            }}
+                        >
+                            {/* {Icons.delete()} */}
+                            <Icon
+                                style={styles.editIcon}
+                                name="edit-2"
+                                size={18}
+                                color="rgba(3,3,3,1)"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                );
+            } else {
+                return <View style={styles.rightContainer} />;
+            }
+        }
+    }
     render() {
         const channel = this.props.channel;
         const user = this.props.user;
+
+        let createdOn;
+        if (channel.createdOn && channel.createdOn !== '') {
+            createdOn = moment(parseInt(channel.createdOn)).format(
+                'MMM Do YYYY'
+            );
+        } else {
+            createdOn = moment().format('MMM Do YYYY');
+        }
 
         return (
             <View style={styles.container}>
@@ -177,16 +192,31 @@ export default class ChannelsListItem extends React.Component {
                         >
                             {channel.channelName}
                         </Text>
-                        <Text style={styles.channelOwnerDetails}>
-                            Created by {channel.ownerName || 'N/A'} on October
-                            2018
+                        <Text
+                            style={styles.channelOwnerDetails}
+                            ellipsizeMode="tail"
+                            numberOfLines={2}
+                        >
+                            Created by{' '}
+                            {(
+                                <Text
+                                    style={{
+                                        fontWeight: '400',
+                                        color: 'black'
+                                    }}
+                                >
+                                    {channel.ownerName}{' '}
+                                </Text>
+                            ) || 'N/A'}{' '}
+                            on {<Text>{createdOn}</Text>}
                         </Text>
                     </View>
+                    {this.renderRightArea(channel, user.userId)}
                 </View>
                 <View style={styles.channelDescription}>
                     <View style={styles.channelType}>
                         <Text style={styles.channelTypeText}>
-                            {channel.channelType === 'public'
+                            {channel.discoverable === 'public'
                                 ? 'Public Channel'
                                 : 'Private Channel'}
                         </Text>
@@ -204,7 +234,6 @@ export default class ChannelsListItem extends React.Component {
                         {this.subscriptionButton(channel, user.userId)}
                     </View>
                 </View>
-                {this.renderRightArea(channel, user.userId)}
             </View>
         );
     }

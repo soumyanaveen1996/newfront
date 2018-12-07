@@ -22,8 +22,9 @@ const insertChannel = `
         createdOn,
         subcription,
         isPlatformChannel,
-        channelType
-    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?);
+        channelType,
+        discoverable
+    ) VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?, ?, ?, ?, ?);
 `;
 
 const deleteChannel = `
@@ -74,7 +75,8 @@ const selectChannels = `
         createdOn,
         subcription,
         isPlatformChannel,
-        channelType
+        channelType,
+        discoverable
     FROM channel
 `;
 
@@ -92,7 +94,8 @@ const selectChannel = `
         createdOn,
         subcription,
         isPlatformChannel,
-        channelType
+        channelType,
+        discoverable
     FROM channel
     WHERE id = ?
 `;
@@ -111,7 +114,8 @@ const selectChannelByConversationId = `
         createdOn,
         subcription,
         isPlatformChannel,
-        channelType
+        channelType,
+        discoverable
     FROM channel
     WHERE conversationId = ?
 `;
@@ -130,7 +134,8 @@ const selectChannelByNameAndDomain = `
         createdOn,
         subcription,
         isPlatformChannel,
-        channelType
+        channelType,
+        discoverable
     FROM channel
     WHERE name = ?
     AND domain = ?
@@ -164,6 +169,10 @@ const addChannelType = `
 ALTER TABLE channel ADD channelType varchar(20);
 `;
 
+const addDiscoverable = `
+ALTER TABLE channel ADD discoverable varchar(20);
+`;
+
 export default {
     createChannelsTable,
     insertChannel,
@@ -182,5 +191,6 @@ export default {
     addisSubscribed,
     addIsPlatformChannel,
     addChannelType,
-    setChannelSubscription
+    setChannelSubscription,
+    addDiscoverable
 };

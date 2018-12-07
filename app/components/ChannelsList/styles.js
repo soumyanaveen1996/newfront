@@ -29,7 +29,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH - 20,
-        height: 180,
+        height: 190,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -93,7 +93,7 @@ export default StyleSheet.create({
         paddingTop: 15
     },
     container: {
-        width: '100%',
+        width: wp('100%'),
         height: '100%',
         flexDirection: 'column',
         borderRadius: 15,
@@ -108,9 +108,11 @@ export default StyleSheet.create({
     },
 
     rightContainer: {
-        position: 'absolute',
-        right: 10,
-        top: 10
+        width: '20%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     hidden: {
         display: 'none'
@@ -128,12 +130,13 @@ export default StyleSheet.create({
         padding: 3
     },
     searchSection: {
-        width: SCREEN_WIDTH,
+        width: wp('100%'),
         height: 40,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        marginTop: 3
     },
     searchIcon: {
         padding: 10
@@ -150,7 +153,6 @@ export default StyleSheet.create({
     },
     createNewChannelContainer: {
         width: SCREEN_WIDTH,
-        height: 70,
         backgroundColor: 'rgba(244,244,244,1)',
         alignItems: 'center',
         justifyContent: 'center'
@@ -161,7 +163,8 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginVertical: 10
     },
     buttonContainerDelete: {
         height: 40,
@@ -171,24 +174,44 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    buttonTextUnSub: {
+        color: 'rgba(0,167,214,1)',
+        textAlign: 'center',
+        fontSize: wp('4%'),
+        fontWeight: '500',
+        paddingHorizontal: 5
+    },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: wp('4%'),
         fontWeight: '500',
         paddingHorizontal: 5
     },
     filterContainer: {
         display: 'flex',
         justifyContent: 'space-between',
-        width: SCREEN_WIDTH,
-        height: hp('8%'),
+        width: wp('100%'),
+        height: hp('10%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
         paddingHorizontal: 10
     },
-    filterTextContainer: { flex: 1 },
+    filterTextContainer: {
+        display: 'flex',
+        width: wp('25%'),
+        height: hp('8%'),
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    filterImage: {
+        width: hp('2%'),
+        height: hp('2%'),
+        marginTop: 4,
+        marginLeft: 10
+    },
     filterText: {
         color: 'rgba(102, 102, 102, 1)',
         fontFamily: 'SF Pro Text',
@@ -206,17 +229,18 @@ export default StyleSheet.create({
         height: 70,
         flexDirection: 'row',
         borderBottomWidth: 0.5,
-        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)',
+        justifyContent: 'space-between'
     },
     imageContainer: {
-        flex: 1,
+        width: '20%',
         alignItems: 'center',
         justifyContent: 'center'
     },
     textContainer: {
-        flex: 3,
+        width: '60%',
         borderLeftWidth: 1,
-        paddingLeft: 20,
+        paddingLeft: 10,
         paddingTop: 15,
         borderLeftColor: 'rgba(91, 91, 91, 0.2)'
     },
@@ -224,12 +248,12 @@ export default StyleSheet.create({
     title: {
         color: ChannelsListItemColors.titleColor,
         fontFamily: 'SF Pro Text',
-        fontSize: 20,
+        fontSize: wp('5%'),
         fontWeight: '600'
     },
     channelOwnerDetails: {
         color: ChannelsListItemColors.subTitleColor,
-        fontSize: 12,
+        fontSize: wp('2.8%'),
         fontFamily: 'SF Pro Text'
     },
     channelDescription: {
@@ -262,8 +286,22 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    openChannelButtonContainerUnSub: {
+        height: 30,
+        width: wp('40%'),
+        backgroundColor: 'rgba(255,255,255,1)',
+        borderColor: 'rgba(0,167,214,1)',
+        borderStyle: 'solid',
+        borderWidth: 1.2,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+        marginBottom: 25,
+        paddingHorizontal: 5
+    },
     openChannelButtonContainer: {
-        height: hp('4%'),
+        height: 30,
         width: wp('40%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 6,
@@ -276,7 +314,6 @@ export default StyleSheet.create({
     editIcon: {},
 
     filterMaincontainer: {
-        backgroundColor: GlobalColors.white,
         height: hp('10%')
     },
     filterScrollView: {
@@ -287,10 +324,11 @@ export default StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        width: SCREEN_WIDTH,
-        height: hp('10%'),
+        width: wp('100%'),
+        height: hp('15%'),
         padding: 10,
         borderBottomWidth: 0.5,
+        backgroundColor: GlobalColors.white,
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },
     filterbyHeader: {
@@ -301,7 +339,7 @@ export default StyleSheet.create({
     },
     filterCheckBoxContainer: {
         padding: 20,
-        width: SCREEN_WIDTH
+        width: wp('100%')
     },
     filterButtonContainer: {
         width: SCREEN_WIDTH,
@@ -340,17 +378,41 @@ export default StyleSheet.create({
         borderBottomWidth: 1
     },
 
+    addParticipantContainer: {
+        width: SCREEN_WIDTH - 20,
+        height: hp('10%'),
+        // padding: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomColor: '#F4F4F4',
+        borderBottomWidth: 1
+    },
     entryFields: Platform.select({
         ios: {
+            display: 'flex',
+            flexDirection: 'column',
             position: 'relative',
-            width: 300,
+            width: wp('80%'),
             backgroundColor: 'transparent'
         },
         android: {
-            width: 300,
+            width: wp('80%'),
             backgroundColor: 'transparent'
         }
     }),
+    errorText: {
+        fontSize: wp('3.5%'),
+        color: GlobalColors.red,
+        paddingBottom: 5
+    },
+
+    channelDescText: {
+        alignSelf: 'flex-end',
+        fontSize: wp('3%'),
+        color: 'rgba(102,102,102,1)'
+    },
 
     inputChannel: {
         height: 40,
@@ -385,7 +447,13 @@ export default StyleSheet.create({
         fontSize: 16,
         marginBottom: 20
     },
-
+    channelTextP: {
+        color: '#4A4A4A',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16,
+        marginBottom: 20,
+        paddingLeft: 20
+    },
     addContactsContainer: {
         backgroundColor: GlobalColors.white,
         flex: 1
@@ -410,18 +478,19 @@ export default StyleSheet.create({
         marginRight: 10
     },
     selectContactContainer: {
-        height: hp('15%'),
+        height: hp('20%'),
         backgroundColor: '#f4f4f4'
     },
     selectedChip: {
+        paddingBottom: wp('2%'),
         paddingHorizontal: wp('2%')
     },
     chipFont: {
         fontSize: wp('3.5%'),
-        color: '#FFFFFF'
+        color: 'rgba(102,102,102,1)'
     },
     participantsContainer: {
-        height: hp('55%')
+        height: hp('50%')
     },
     teamContainer: {
         height: hp('80%')

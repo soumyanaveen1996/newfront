@@ -4,7 +4,8 @@ import {
     ScrollView,
     Text,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Image
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
@@ -32,9 +33,11 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import { Auth } from '../../lib/capability';
 
 const BUTTON_INNER = hp('2%');
 const BUTTON_OUTER = hp('3%');
+const DESC_LENGTH = 60;
 class NewChannels extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -102,7 +105,11 @@ class NewChannels extends React.Component {
             channelDescription: '',
             typeValue: 'platform',
             visibilityValue: 'public',
-            loading: false
+            loading: false,
+            channelNameError: false,
+            channelDescError: false,
+            participantError: false,
+            teamError: false
         };
 
         this.channelType_radio = [
@@ -135,9 +142,10 @@ class NewChannels extends React.Component {
         this.props.setTeam('');
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
-            this.props.appState.currentScene === ROUTER_SCENE_KEYS.newChannels
+            this.props.appState.currentScene ===
+                ROUTER_SCENE_KEYS.newChannels || this.state !== nextState
         );
     }
 
@@ -146,6 +154,9 @@ class NewChannels extends React.Component {
     }
 
     onChangeDescriptionText(text) {
+        if (DESC_LENGTH - this.state.channelDescription <= 0) {
+            return;
+        }
         this.setState({ channelDescription: text });
     }
 
@@ -160,8 +171,51 @@ class NewChannels extends React.Component {
         }
     };
 
+    validateChannel = () => {
+        let validationFailed = false;
+        if (this.state.channelName === '') {
+            this.setState({ channelNameError: true });
+            validationFailed = true;
+        } else {
+            this.setState({ channelNameError: false });
+        }
+
+        if (this.state.channelDescription === '') {
+            validationFailed = true;
+            this.setState({ channelDescError: true });
+        } else {
+            this.setState({ channelDescError: false });
+        }
+
+        const users = this.props.channels.participants.filter(
+            user => user.selected === true
+        );
+        if (users.length === 0) {
+            validationFailed = true;
+            this.setState({ participantError: true });
+        } else {
+            this.setState({ participantError: false });
+        }
+
+        if (
+            this.state.typeValue === 'team' &&
+            (!this.props.channel || this.props.channel.team === '')
+        ) {
+            validationFailed = true;
+            this.setState({ teamError: true });
+        } else {
+            this.setState({ teamError: false });
+        }
+
+        return validationFailed;
+    };
     async saveChannel() {
+        if (this.validateChannel() === true) {
+            return;
+        }
+
         this.setState({ loading: true });
+        // const user = await Auth.getUser()
         const channelName = this.state.channelName;
         const description = this.state.channelDescription;
         const discoverable = this.state.visibilityValue;
@@ -228,6 +282,12 @@ class NewChannels extends React.Component {
     }
 
     render() {
+        const {
+            channelNameError,
+            channelDescError,
+            participantError,
+            teamError
+        } = this.state;
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
@@ -255,28 +315,57 @@ class NewChannels extends React.Component {
                                     placeholderTextColor="rgba(155,155,155,1)"
                                     clearButtonMode="always"
                                 />
+                                {channelNameError ? (
+                                    <Text style={styles.errorText}>
+                                        Channel Name is Required
+                                    </Text>
+                                ) : null}
                             </View>
                             <View style={styles.entryFields}>
-                                <TextInput
-                                    style={styles.inputChannelDescription}
-                                    value={this.state.channelDescription}
-                                    keyboardType="default"
-                                    blurOnSubmit={true}
-                                    returnKeyType={'done'}
-                                    ref={input => {
-                                        this.inputs.description = input;
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
                                     }}
-                                    onChangeText={this.onChangeDescriptionText.bind(
-                                        this
-                                    )}
-                                    placeholder="Description about your channel"
-                                    underlineColorAndroid={'transparent'}
-                                    multiline={true}
-                                    numberOfLines={4}
-                                    maxLength={60}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                    clearButtonMode="always"
-                                />
+                                >
+                                    <TextInput
+                                        style={styles.inputChannelDescription}
+                                        value={this.state.channelDescription}
+                                        keyboardType="default"
+                                        blurOnSubmit={true}
+                                        returnKeyType={'done'}
+                                        ref={input => {
+                                            this.inputs.description = input;
+                                        }}
+                                        onChangeText={this.onChangeDescriptionText.bind(
+                                            this
+                                        )}
+                                        placeholder="Description about your channel"
+                                        underlineColorAndroid={'transparent'}
+                                        multiline={true}
+                                        numberOfLines={4}
+                                        maxLength={60}
+                                        placeholderTextColor="rgba(155,155,155,1)"
+                                        clearButtonMode="always"
+                                    />
+                                    <Text style={styles.channelDescText}>
+                                        {`${
+                                            DESC_LENGTH -
+                                                this.state.channelDescription
+                                                    .length >
+                                            0
+                                                ? DESC_LENGTH -
+                                                  this.state.channelDescription
+                                                      .length
+                                                : 0
+                                        } characters left`}
+                                    </Text>
+                                    {channelDescError ? (
+                                        <Text style={styles.errorText}>
+                                            Channel Description is Required
+                                        </Text>
+                                    ) : null}
+                                </View>
                             </View>
                         </View>
                         {this.props.edit ? null : (
@@ -345,6 +434,11 @@ class NewChannels extends React.Component {
                                         );
                                     })}
                                 </RadioForm>
+                                {teamError ? (
+                                    <Text style={styles.errorText}>
+                                        You need to select a Team
+                                    </Text>
+                                ) : null}
                             </View>
                         )}
                         {this.props.channels.team !== '' ? (
@@ -440,21 +534,40 @@ class NewChannels extends React.Component {
                                         )}
                                     </RadioForm>
                                 </View>
-                                <View style={styles.channelInfoContainer}>
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                >
                                     <TouchableOpacity
                                         onPress={this.addParticipants.bind(
                                             this
                                         )}
+                                        style={styles.addParticipantContainer}
                                     >
-                                        <Text style={styles.channelText}>
+                                        <Text style={styles.channelTextP}>
                                             Add participants
                                         </Text>
-                                        <Text>{`You Have Selected ${
+
+                                        <Image
+                                            style={{ marginHorizontal: 10 }}
+                                            source={images.blue_arrow}
+                                        />
+
+                                        {/* <Text>{`You Have Selected ${
                                             this.props.channels.participants.filter(
                                                 part => part.selected === true
                                             ).length
-                                        } participants`}</Text>
+                                        } participants`}</Text> */}
                                     </TouchableOpacity>
+
+                                    {participantError ? (
+                                        <Text style={styles.errorText}>
+                                            You need to add atleast one
+                                            participant
+                                        </Text>
+                                    ) : null}
                                 </View>
                             </View>
                         )}

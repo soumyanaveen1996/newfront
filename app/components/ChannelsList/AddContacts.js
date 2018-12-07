@@ -26,6 +26,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { GlobalColors } from '../../config/styles';
 
 const R = require('ramda');
+const cancelImg = require('../../images/channels/cross-deselect-participant.png');
 
 class AddContacts extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -118,6 +119,26 @@ class AddContacts extends React.Component {
                 const contactsUniq = R.uniqWith(uniqId)(allContacts);
                 this.setState({ contacts: contactsUniq });
             });
+        } else {
+            Contact.refreshContacts();
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.contactsLoaded !==
+            this.props.appState.contactsLoaded
+        ) {
+            Contact.getAddedContacts().then(contacts => {
+                const allContacts = contacts.map(contact => ({
+                    ...contact,
+                    selected: false
+                }));
+
+                const uniqId = R.eqProps('userId');
+                const contactsUniq = R.uniqWith(uniqId)(allContacts);
+                this.setState({ contacts: contactsUniq });
+            });
         }
     }
 
@@ -189,17 +210,18 @@ class AddContacts extends React.Component {
                         style={{
                             paddingHorizontal: 10,
                             paddingTop: 10,
+                            paddingBottom: 10,
                             color: '#4A4A4A'
                         }}
                     >
                         Selected
                     </Text>
-                    <ScrollView horizontal>
+                    <ScrollView>
                         <View
                             style={{
                                 display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center'
+                                flexDirection: 'column',
+                                alignItems: 'flex-start'
                             }}
                         >
                             {this.state.contacts.map((elem, index) => {
@@ -222,8 +244,16 @@ class AddContacts extends React.Component {
                                                 />
                                             }
                                             avatarStyle={{ margin: 5 }}
-                                            cancelable={true}
-                                            backgroundColor="#424B5A"
+                                            cancelable={
+                                                <Image source={cancelImg} />
+                                            }
+                                            // cancelableStyle={{
+                                            //     backgroundColor:
+                                            //         'rgba(255,255,255,1)'
+                                            // }}
+                                            backgroundColor={
+                                                GlobalColors.transparent
+                                            }
                                             borderRadius={6}
                                             height={30}
                                             onPress={() => {

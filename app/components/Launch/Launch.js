@@ -42,9 +42,9 @@ import DefaultPreference from 'react-native-default-preference';
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
-// const CODE_PUSH_ACTIVATE = true
-const CODE_PUSH_ACTIVATE = false;
-const VERSION = 43; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const CODE_PUSH_ACTIVATE = true;
+// const CODE_PUSH_ACTIVATE = false;
+const VERSION = 44; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -120,7 +120,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            // await BotUtils.copyIntialBots(forceUpdate);
+            await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -128,12 +128,14 @@ export default class Splash extends React.Component {
 
         // Chain all setup stuff
         // Before login
-        persist
-            .runMigrations() // before login
-            .catch(err => {
-                console.error('>>>>>>>>>>>>Error<<<<<<<<<< : ', err);
-            });
-
+        try {
+            await persist.runMigrations(); // before login
+        } catch (err) {
+            console.error(
+                '>>>>>>>>>>>>Error<<<<<<<<<< : running migrations!!!!',
+                err
+            );
+        }
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         const checkStatus = await AsyncStorage.getItem('signupStage');
 

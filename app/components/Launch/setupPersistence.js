@@ -130,6 +130,12 @@ function EighteentoNineteen() {
         return DbVersionDAO.updateVersion(19);
     });
 }
+function NineteentoTwenty() {
+    return ChannelDAO.addDiscoverable().then(() => {
+        return DbVersionDAO.updateVersion(20);
+    });
+}
+
 function runMigrations() {
     return new Promise((resolve, reject) => {
         return DbVersionDAO.isVersionTablePresent()
@@ -274,7 +280,15 @@ function runMigrations() {
                     return version;
                 }
             })
+            .then(version => {
+                if (version === 19) {
+                    return NineteentoTwenty();
+                } else {
+                    return version;
+                }
+            })
             .then(() => {
+                console.log('---------------Migrations Completed----------');
                 resolve();
             })
             .catch(error => {
