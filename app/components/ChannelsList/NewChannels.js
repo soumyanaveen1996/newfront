@@ -142,9 +142,10 @@ class NewChannels extends React.Component {
         this.props.setTeam('');
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
-            this.props.appState.currentScene === ROUTER_SCENE_KEYS.newChannels
+            this.props.appState.currentScene ===
+                ROUTER_SCENE_KEYS.newChannels || this.state !== nextState
         );
     }
 

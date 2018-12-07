@@ -133,7 +133,7 @@ I18n.translations = {
         Initializing: 'Initializing',
         Calling: 'Calling',
         From: 'From',
-        Dial: 'Dial',
+        Dial: 'Dialpad',
         Enter_valid_number: 'Please enter a valid phone number',
         Delete: 'Delete',
         New_chat: 'New Chat',

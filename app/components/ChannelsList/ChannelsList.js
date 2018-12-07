@@ -156,9 +156,9 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        if (!this.props.appState.allChannelsLoaded) {
-            Channel.refreshChannels();
-        }
+        // if (!Store.getState().user.appState.allChannelsLoaded) {
+        //     Channel.refreshChannels()
+        // }
     }
 
     showConnectionMessage = connectionType => {
@@ -372,9 +372,6 @@ class ChannelsList extends React.Component {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
-                {!this.props.appState.allChannelsLoaded ? (
-                    <ActivityIndicator size="small" />
-                ) : null}
                 <ScrollView>
                     <View style={styles.searchSection}>
                         <Icon

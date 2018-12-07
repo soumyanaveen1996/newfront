@@ -30,9 +30,9 @@ export default class ChannelsListItem extends React.Component {
 
     unsubscribeChannel() {}
 
-    editChannel() {
-        this.props.onChannelEdit();
-    }
+    editChannel = channel => {
+        this.props.onChannelEdit(channel);
+    };
 
     onItemPressed() {
         if (this.props.onChannelTapped) {
@@ -140,7 +140,11 @@ export default class ChannelsListItem extends React.Component {
             if (isOwner) {
                 return (
                     <View style={styles.rightContainer}>
-                        <TouchableOpacity onPress={this.editChannel.bind(this)}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.editChannel(channel);
+                            }}
+                        >
                             {/* {Icons.delete()} */}
                             <Icon
                                 style={styles.editIcon}
