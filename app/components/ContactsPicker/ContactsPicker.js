@@ -26,7 +26,7 @@ import {
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact } from '../../lib/capability';
+import { Contact, Settings } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
@@ -47,9 +47,50 @@ import InviteModal from './InviteModal';
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        return {
-            // headerLeft: <HeaderBack onPress={Actions.pop} />
+
+        let navigationOptions = {
+            headerTitle: state.params.title
         };
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
+        return navigationOptions;
     }
 
     constructor(props) {
@@ -67,6 +108,7 @@ class ContactsPicker extends React.Component {
             handleAddContact: this.handleAddContact.bind(this),
             showDialler: this.showDialler
         });
+        this.checkPollingStrategy();
 
         // const loadedContacts = await Contact.getAddedContacts()
         // if (loadedContacts.length > 0) {
@@ -125,6 +167,23 @@ class ContactsPicker extends React.Component {
         // }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
+    }
+
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    }
+
+    async checkPollingStrategy() {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        this.showButton(pollingStrategy);
     }
 
     static onExit() {
