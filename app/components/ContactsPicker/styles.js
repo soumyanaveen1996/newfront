@@ -17,22 +17,20 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: GlobalColors.white,
-        height: 40
+        height: 40,
+        marginTop: 3
     },
     searchIcon: {
         marginLeft: 23
     },
     searchTextInput: {
-        marginHorizontal: 16,
-        marginVertical: 5,
-        fontSize: 16,
-        paddingHorizontal: 5,
         flex: 1,
-        backgroundColor: GlobalColors.white,
-        borderRadius: 2,
-        borderColor: GlobalColors.darkGray,
-        height: 24,
-        color: GlobalColors.darkGray
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 10,
+        backgroundColor: '#fff',
+        color: 'rgba(155,155,155,1)'
     },
     buttonsContainer: {
         backgroundColor: GlobalColors.transparent,
@@ -42,8 +40,9 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 13
     },
     button: {
-        width: 170,
-        marginHorizontal: 10,
+        width: wp('40%'),
+        height: 40,
+        marginHorizontal: wp('5%'),
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center'

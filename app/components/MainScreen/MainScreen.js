@@ -460,6 +460,8 @@ class MainScreen extends React.Component {
         return !(allConversationsLoaded && remoteBotsInstalled);
     };
 
+    onSearch = searchString => this.setState({ searchString });
+
     renderMain() {
         const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
@@ -480,60 +482,19 @@ class MainScreen extends React.Component {
                             : MainScreenStyles.botListContainer
                     }
                 >
-                    <View style={MainScreenStyles.searchArea}>
-                        <Icon
-                            style={MainScreenStyles.searchIcon}
-                            name="search"
-                            size={24}
-                            color="rgba(0, 189, 242, 1)"
-                        />
-                        <TextInput
-                            style={MainScreenStyles.input}
-                            placeholder={I18n.t('Search_conv')}
-                            onChangeText={searchString =>
-                                this.setState({ searchString })
-                            }
-                            underlineColorAndroid="transparent"
-                        />
-                    </View>
-                    <View style={MainScreenStyles.buttonArea}>
-                        <TouchableOpacity
-                            style={MainScreenStyles.buttonContainerChat}
-                            onPress={() => Actions.tabBarChat()}
-                        >
-                            <View style={{ marginRight: 7 }}>
-                                {Icons.chatW()}
-                            </View>
-                            <Text style={MainScreenStyles.buttonText}>
-                                New Chat
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={MainScreenStyles.buttonContainerCall}
-                            onPress={() => Actions.tabBarCall()}
-                        >
-                            <View style={{ marginRight: 7 }}>
-                                {Icons.callW()}
-                            </View>
-                            <Text style={MainScreenStyles.buttonText}>
-                                New Call
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <BotList
-                            ref={connectedBot => {
-                                this.botList = connectedBot
-                                    ? connectedBot.getWrappedInstance()
-                                    : null;
-                            }}
-                            onBack={this.onBack.bind(this)}
-                            bots={this.state.bots}
-                            setFavorite={this.setConversationFavorite}
-                            unsetFavorite={this.setConversationUnFavorite}
-                            searchString={this.state.searchString}
-                        />
-                    </View>
+                    <BotList
+                        ref={connectedBot => {
+                            this.botList = connectedBot
+                                ? connectedBot.getWrappedInstance()
+                                : null;
+                        }}
+                        onBack={this.onBack.bind(this)}
+                        bots={this.state.bots}
+                        setFavorite={this.setConversationFavorite}
+                        unsetFavorite={this.setConversationUnFavorite}
+                        searchString={this.state.searchString}
+                        onSearch={this.onSearch}
+                    />
                 </View>
             );
         }
