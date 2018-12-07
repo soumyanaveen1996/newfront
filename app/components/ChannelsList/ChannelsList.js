@@ -410,7 +410,7 @@ class ChannelsList extends React.Component {
                                 style={styles.filterImage}
                             />
                         </TouchableOpacity>
-                        <ScrollView>
+                        <ScrollView horizontal>
                             <View style={styles.filterArea}>
                                 {filters.length > 0
                                     ? filters.map(filter => {

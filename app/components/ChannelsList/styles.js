@@ -192,7 +192,7 @@ export default StyleSheet.create({
         display: 'flex',
         justifyContent: 'space-between',
         width: wp('100%'),
-        height: hp('10%'),
+        height: hp('5%'),
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#fff',
@@ -325,11 +325,12 @@ export default StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         width: wp('100%'),
-        height: hp('15%'),
+        height: hp('11%'),
         padding: 10,
         borderBottomWidth: 0.5,
         backgroundColor: GlobalColors.white,
-        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)',
+        alignItems: 'center'
     },
     filterbyHeader: {
         color: '#4A4A4A',

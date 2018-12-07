@@ -199,7 +199,7 @@ class NewChannels extends React.Component {
 
         if (
             this.state.typeValue === 'team' &&
-            (!this.props.channel || this.props.channel.team === '')
+            (!this.props.channels || this.props.channels.team === '')
         ) {
             validationFailed = true;
             this.setState({ teamError: true });
@@ -441,11 +441,12 @@ class NewChannels extends React.Component {
                                 ) : null}
                             </View>
                         )}
-                        {this.props.channels.team !== '' ? (
-                            <Text
-                                style={{ marginVertical: 5 }}
-                            >{`You selected Team ${this.props.channels.team.toUpperCase()}`}</Text>
-                        ) : null}
+                        {this.state.typeValue !== 'platform' &&
+                        this.props.channels.team !== '' ? (
+                                <Text
+                                    style={{ marginVertical: 5 }}
+                                >{`You selected Team ${this.props.channels.team.toUpperCase()}`}</Text>
+                            ) : null}
                         {this.props.edit ? null : (
                             <View>
                                 <View style={styles.channelInfoContainer}>
