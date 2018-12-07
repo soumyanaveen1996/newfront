@@ -53,6 +53,13 @@ function renderIcon(
 
 export const Icons = {
     renderIcon: renderIcon,
+    search: icon(
+        'search',
+        'evilicon',
+        24,
+        Colors.sideButtons,
+        Colors.transparent
+    ),
     messageRead: icon('check', 'font-awesome', 16, Colors.accent),
     backArrow: icon(
         'ios-arrow-back',

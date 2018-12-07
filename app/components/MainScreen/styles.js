@@ -98,7 +98,8 @@ export const MainScreenStyles = StyleSheet.create({
         paddingBottom: 10,
         paddingLeft: 0,
         backgroundColor: '#fff',
-        color: 'rgba(155,155,155,1)'
+        color: 'rgba(155,155,155,1)',
+        fontSize: 16
     }
 });
 

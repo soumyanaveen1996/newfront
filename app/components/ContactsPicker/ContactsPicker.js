@@ -387,6 +387,7 @@ class ContactsPicker extends React.Component {
                         styles.button,
                         { backgroundColor: GlobalColors.sideButtons }
                     ]}
+                    onPress={this.inviteUser.bind(this)}
                 >
                     <Icon
                         style={styles.buttonIcon}

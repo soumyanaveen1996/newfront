@@ -21,7 +21,7 @@ const stylesheet = StyleSheet.create({
         marginTop: 3
     },
     searchIcon: {
-        marginLeft: 23
+        paddingHorizontal: 10
     },
     searchTextInput: {
         flex: 1,
@@ -33,11 +33,12 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(155,155,155,1)'
     },
     buttonsContainer: {
-        backgroundColor: GlobalColors.transparent,
+        height: hp('9%'),
+        width: wp('100%'),
         flexDirection: 'row',
+        backgroundColor: GlobalColors.transparent,
         justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 13
+        alignItems: 'center'
     },
     button: {
         width: wp('40%'),
@@ -47,15 +48,11 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center'
     },
-    buttonIcon: {
-        marginVertical: 10
-    },
+    buttonIcon: {},
     buttonText: {
         fontSize: 16,
         color: GlobalColors.white,
-        textAlign: 'center',
-        marginLeft: 11,
-        marginVertical: 10
+        textAlign: 'center'
     },
     addressBookContainer: {
         flex: 1,
