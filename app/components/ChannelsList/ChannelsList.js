@@ -33,6 +33,10 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { Auth } from '../../lib/capability';
 import { RNChipView } from 'react-native-chip-view';
 import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -395,7 +399,12 @@ class ChannelsList extends React.Component {
                             style={styles.buttonContainer}
                             onPress={this.createChannel.bind(this)}
                         >
-                            <Text style={styles.buttonText}>New Channel</Text>
+                            {/* <Text style={styles.buttonText}>New Channel</Text> */}
+                            <Image
+                                source={require('../../images/channels/plus-white-good.png')}
+                                resizeMode="contain"
+                                style={{ height: 20, width: 20 }}
+                            />
                         </TouchableOpacity>
                     </View>
 

@@ -43,26 +43,32 @@ export const MainScreenStyles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonContainerChat: {
-        height: 40,
-        width: wp('40%'),
+        height: hp('6.5%'),
+        width: wp('20%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         margin: wp('5%'),
-        flex: 1,
-        flexDirection: 'row'
+        // flex: 1,
+        flexDirection: 'row',
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 0.7
     },
     buttonContainerCall: {
-        height: 40,
-        width: wp('40%'),
+        height: hp('6.5%'),
+        width: wp('20%'),
         borderRadius: 10,
         backgroundColor: 'rgba(47,199,111,1)',
         justifyContent: 'center',
         alignItems: 'center',
         margin: wp('5%'),
-        flex: 1,
-        flexDirection: 'row'
+        // flex: 1,
+        flexDirection: 'row',
+        shadowOffset: { width: 2, height: 2 },
+        shadowColor: 'black',
+        shadowOpacity: 0.7
     },
     buttonText: {
         color: '#fff',

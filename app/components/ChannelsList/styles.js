@@ -158,13 +158,17 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     buttonContainer: {
-        height: 40,
-        width: 300,
+        height: hp('6%'),
+        width: wp('20%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: 10
+        marginVertical: 10,
+
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 0.7
     },
     buttonContainerDelete: {
         height: 40,

@@ -203,8 +203,13 @@ class BotList extends React.Component {
                         })
                     }
                 >
-                    <View style={{ marginRight: 7 }}>{Icons.chatW()}</View>
-                    <Text style={MainScreenStyles.buttonText}>New Chat</Text>
+                    <Image
+                        source={require('../../images/tabbar-contacts/chat-good.png')}
+                        style={{ height: hp('5.5%'), width: hp('5.5%') }}
+                        resizeMode="contain"
+                    />
+                    {/* <View>{Icons.chatW()}</View> */}
+                    {/* <Text style={MainScreenStyles.buttonText}>New Chat</Text> */}
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={MainScreenStyles.buttonContainerCall}
@@ -214,8 +219,8 @@ class BotList extends React.Component {
                         })
                     }
                 >
-                    <View style={{ marginRight: 7 }}>{Icons.callW()}</View>
-                    <Text style={MainScreenStyles.buttonText}>New Call</Text>
+                    <View>{Icons.callW()}</View>
+                    {/* <Text style={MainScreenStyles.buttonText}>New Call</Text> */}
                 </TouchableOpacity>
             </View>
         );

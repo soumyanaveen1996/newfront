@@ -39,14 +39,17 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        height: 40,
-        width: wp('40%'),
+        height: hp('6.5'),
+        width: wp('20%'),
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         margin: wp('5%'),
-        flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 0.7
     },
     buttonText: {
         color: '#fff',
