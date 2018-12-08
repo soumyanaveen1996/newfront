@@ -34,6 +34,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import { Auth } from '../../lib/capability';
+import { GlobalColors } from '../../config/styles';
 
 const BUTTON_INNER = hp('2%');
 const BUTTON_OUTER = hp('3%');
@@ -289,7 +290,9 @@ class NewChannels extends React.Component {
             teamError
         } = this.state;
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView
+                style={{ flex: 1, backgroundColor: GlobalColors.white }}
+            >
                 <Loader loading={this.state.loading} />
                 <ScrollView style={styles.scrollViewCreate}>
                     <View style={styles.newChannelContainer}>

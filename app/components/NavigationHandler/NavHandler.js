@@ -19,6 +19,7 @@ class NavHandler extends Component {
         //listens to hardwareBackPress
         BackAndroid.addEventListener('hardwareBackPress', () => {
             try {
+                console.log(Actions.prevScene);
                 if (Actions.currentScene === 'resendCodeScreen') {
                     return true;
                 }

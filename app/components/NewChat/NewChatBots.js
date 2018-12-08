@@ -68,7 +68,7 @@ class NewChatContacts extends React.Component {
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
             I18n.t('My_Bots'),
-            I18n.t('My_Bots')
+            I18n.t('Bots')
         );
         Store.dispatch(refreshTimeline(true));
     }
@@ -176,7 +176,7 @@ class NewChatContacts extends React.Component {
         this.botsList.scrollToLocation({
             sectionIndex: sectionIndex,
             itemIndex: 0,
-            viewOffset: SECTION_HEADER_HEIGHT
+            viewOffset: SECTION_HEADER_HEIGHT + 5
         });
     }
 

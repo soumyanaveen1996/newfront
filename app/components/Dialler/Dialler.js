@@ -360,7 +360,9 @@ export default class Dialler extends React.Component {
 
     closeScreen() {
         if (this.props.newCallScreen) {
-            Actions.popTo(ROUTER_SCENE_KEYS.timeline);
+            // Actions.tabBarCall()
+            // Actions.popTo(ROUTER_SCENE_KEYS.tabBarCall);
+            Actions.pop();
         } else {
             Actions.pop();
         }

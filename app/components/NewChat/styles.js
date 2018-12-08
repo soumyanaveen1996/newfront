@@ -36,7 +36,7 @@ const stylesheet = StyleSheet.create({
     },
     addressBookContainer: {
         flex: 1,
-        backgroundColor: GlobalColors.background
+        backgroundColor: 'rgb(246, 247, 248)'
     },
     addressBook: {
         flex: 1

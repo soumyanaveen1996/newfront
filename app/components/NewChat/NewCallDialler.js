@@ -33,6 +33,7 @@ import {
 } from './config';
 import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 const R = require('ramda');
 
@@ -41,7 +42,9 @@ class NewDialler extends React.Component {
         super(props);
     }
 
-    async componentDidMount() {}
+    async componentDidMount() {
+        console.log('Mount');
+    }
 
     componentDidUpdate(prevProps) {}
 
@@ -51,9 +54,15 @@ class NewDialler extends React.Component {
             I18n.t('Dial_call'),
             I18n.t('Dial_call')
         );
-        Actions.dialler({
-            newCallScreen: true
-        });
+        console.log(Actions.prevScene);
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.contactsCall) {
+            Actions.push(ROUTER_SCENE_KEYS.dialler, {
+                newCallScreen: true
+            });
+        }
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.dialler) {
+            Actions.pop();
+        }
     }
 
     static onExit() {

@@ -197,14 +197,22 @@ class BotList extends React.Component {
             <View style={MainScreenStyles.buttonArea}>
                 <TouchableOpacity
                     style={MainScreenStyles.buttonContainerChat}
-                    onPress={() => Actions.tabBarChat()}
+                    onPress={() =>
+                        Actions.tabBarChat({
+                            type: 'push'
+                        })
+                    }
                 >
                     <View style={{ marginRight: 7 }}>{Icons.chatW()}</View>
                     <Text style={MainScreenStyles.buttonText}>New Chat</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={MainScreenStyles.buttonContainerCall}
-                    onPress={() => Actions.tabBarCall()}
+                    onPress={() =>
+                        Actions.tabBarCall({
+                            type: 'push'
+                        })
+                    }
                 >
                     <View style={{ marginRight: 7 }}>{Icons.callW()}</View>
                     <Text style={MainScreenStyles.buttonText}>New Call</Text>

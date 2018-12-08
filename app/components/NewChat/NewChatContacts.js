@@ -78,7 +78,7 @@ class NewChatContacts extends React.Component {
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
             I18n.t('My_Contacts'),
-            I18n.t('My_Contacts')
+            I18n.t('Contacts')
         );
         Store.dispatch(refreshContacts(true));
     }
@@ -202,7 +202,7 @@ class NewChatContacts extends React.Component {
         this.contactsList.scrollToLocation({
             sectionIndex: sectionIndex,
             itemIndex: 0,
-            viewOffset: SECTION_HEADER_HEIGHT
+            viewOffset: SECTION_HEADER_HEIGHT + 5
         });
     }
 

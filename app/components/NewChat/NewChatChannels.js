@@ -78,7 +78,7 @@ class NewChatContacts extends React.Component {
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
             I18n.t('My_Channels'),
-            I18n.t('My_Channels')
+            I18n.t('Channels')
         );
         Store.dispatch(refreshChannels(true));
     }
