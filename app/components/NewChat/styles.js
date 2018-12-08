@@ -172,22 +172,22 @@ const stylesheet = StyleSheet.create({
         borderBottomWidth: 0.5,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },
     callButton: {
-        height: hp('5%'),
-        width: hp('5%'),
-        borderRadius: hp('5%') / 2,
+        height: hp('4%'),
+        width: hp('4%'),
+        borderRadius: hp('4%') / 2,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(47,199,111,1)'
     },
     callButtonDisabled: {
-        height: hp('5%'),
-        width: hp('5%'),
-        borderRadius: hp('5%') / 2,
+        height: hp('4%'),
+        width: hp('4%'),
+        borderRadius: hp('4%') / 2,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#dddddd'
@@ -206,14 +206,14 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: wp('25%'),
-        marginLeft: 5
+        marginHorizontal: 10
     },
     modalNumberContainer: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        width: wp('50%')
+        justifyContent: 'flex-start',
+        width: wp('45%')
     },
     modalCallButContainer: {
         display: 'flex',
@@ -221,15 +221,15 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: wp('10%'),
-        marginRight: 5
+        marginRight: 10
     },
     modalText: {
         color: 'rgba(155,155,155,1)',
-        marginLeft: 5
+        marginLeft: 10
     },
     modalImage: {
-        width: wp('5%'),
-        height: wp('5%')
+        width: 22,
+        height: 22
     }
 });
 

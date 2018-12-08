@@ -310,8 +310,12 @@ class NewCallContacts extends React.Component {
                                 </View>
                                 {/* PSTN Phone */}
                                 <View style={styles.phoneContainer}>
-                                    <View style={styles.modalTextContainer}>
-                                        <View>{Icons.greenCallBlue()}</View>
+                                    <View style={styles.modalTextContainerImg}>
+                                        <Image
+                                            style={{ width: 16, height: 16 }}
+                                            source={require('../../images/tabbar-contacts/phone-good.png')}
+                                            resizeMode="contain"
+                                        />
                                         <Text style={styles.modalText}>
                                             Mobile
                                         </Text>
@@ -319,7 +323,8 @@ class NewCallContacts extends React.Component {
                                     <View style={styles.modalNumberContainer}>
                                         <Text
                                             style={{
-                                                color: 'rgba(155,155,155,1)'
+                                                color: 'rgba(155,155,155,1)',
+                                                alignSelf: 'flex-start'
                                             }}
                                         >
                                             {contactSelected.phoneNumbers
@@ -342,8 +347,12 @@ class NewCallContacts extends React.Component {
                                 </View>
                                 {/* Satellite Call */}
                                 <View style={styles.phoneContainer}>
-                                    <View style={styles.modalTextContainer}>
-                                        <View>{Icons.greenSatBlue()}</View>
+                                    <View style={styles.modalTextContainerImg}>
+                                        <Image
+                                            style={styles.modalImage}
+                                            source={require('../../images/tabbar-contacts/sat-phone-3.png')}
+                                            resizeMode="contain"
+                                        />
                                         <Text style={styles.modalText}>
                                             Satellite
                                         </Text>
@@ -353,6 +362,8 @@ class NewCallContacts extends React.Component {
                                             style={{
                                                 color: 'rgba(155,155,155,1)'
                                             }}
+                                            ellipsizeMode="tail"
+                                            numberOfLines={1}
                                         >
                                             Not Available
                                         </Text>
@@ -383,10 +394,10 @@ class NewCallContacts extends React.Component {
                                     <View style={styles.modalNumberContainer}>
                                         <Text
                                             style={{
-                                                color: 'rgba(155,155,155,1)'
+                                                color: 'rgba(47,199,111,1)'
                                             }}
                                         >
-                                            Free
+                                            *Free
                                         </Text>
                                     </View>
                                     <View style={styles.modalCallButContainer}>

@@ -15,6 +15,8 @@ import { connect } from 'react-redux';
 import { RNChipView } from 'react-native-chip-view';
 import images from '../../images';
 
+const R = require('ramda');
+
 class ChannelsFilter extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -96,7 +98,10 @@ class ChannelsFilter extends React.Component {
         Actions.pop();
     }
 
-    toggleFilter(index) {
+    toggleFilter(elem) {
+        const index = R.findIndex(R.propEq('value', elem.value))(
+            this.state.filterList
+        );
         let array = [...this.state.filterList];
         // let filterArray = [...this.state.filter]
         array[index].checked = !array[index].checked;
@@ -123,6 +128,8 @@ class ChannelsFilter extends React.Component {
                                         backgroundColor="#424B5A"
                                         borderRadius={6}
                                         height={20}
+                                        cancelable={true}
+                                        onPress={() => this.toggleFilter(elem)}
                                     />
                                 </View>
                             ) : null;
@@ -136,7 +143,7 @@ class ChannelsFilter extends React.Component {
                                 return (
                                     <TouchableOpacity
                                         key={index}
-                                        onPress={() => this.toggleFilter(index)}
+                                        onPress={() => this.toggleFilter(elem)}
                                         style={{
                                             flexDirection: 'row',
                                             marginVertical: 10
