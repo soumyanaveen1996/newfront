@@ -36,7 +36,7 @@ import EventEmitter, {
 import Auth from '../../lib/capability/Auth';
 import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
-
+import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
 import { HeaderRightIcon } from '../Header';
@@ -252,6 +252,12 @@ class MainScreen extends React.Component {
     static onExit() {
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
+        if (!Store.getState().user.allConversationsLoaded) {
+            Conversation.downloadRemoteConversations();
+        }
+        if (!Store.getState().user.remoteBotsInstalled) {
+            RemoteBotInstall.syncronizeBots();
+        }
     }
 
     userLoggedOutHandler = async () => {

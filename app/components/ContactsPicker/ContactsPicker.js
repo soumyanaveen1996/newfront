@@ -204,7 +204,7 @@ class ContactsPicker extends React.Component {
     static onExit() {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
-        if (!this.props.appState.contactsLoaded) {
+        if (!Store.getState().user.contactsLoaded) {
             Contact.refreshContacts();
         }
     }

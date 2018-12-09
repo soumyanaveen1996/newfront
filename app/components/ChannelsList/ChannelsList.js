@@ -160,9 +160,10 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        // if (!Store.getState().user.appState.allChannelsLoaded) {
-        //     Channel.refreshChannels()
-        // }
+        const reduxState = Store.getState();
+        if (!reduxState.user.allChannelsLoaded) {
+            Channel.refreshChannels();
+        }
     }
 
     showConnectionMessage = connectionType => {
