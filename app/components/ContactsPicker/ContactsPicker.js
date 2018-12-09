@@ -8,6 +8,7 @@ import {
     ActivityIndicator,
     Platform,
     Text,
+    Alert,
     TouchableOpacity
 } from 'react-native';
 import styles from './styles';
@@ -26,7 +27,7 @@ import {
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact, Settings } from '../../lib/capability';
+import { Contact, Settings, PollingStrategyTypes } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
@@ -105,10 +106,9 @@ class ContactsPicker extends React.Component {
 
     async componentDidMount() {
         this.props.navigation.setParams({
-            handleAddContact: this.handleAddContact.bind(this),
-            showDialler: this.showDialler
+            showConnectionMessage: this.showConnectionMessage
         });
-        this.checkPollingStrategy();
+        // this.checkPollingStrategy()
 
         // const loadedContacts = await Contact.getAddedContacts()
         // if (loadedContacts.length > 0) {
@@ -169,6 +169,21 @@ class ContactsPicker extends React.Component {
         Store.dispatch(refreshContacts(true));
     }
 
+    showConnectionMessage = connectionType => {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
+            { cancelable: false }
+        );
+    };
+
     showButton(pollingStrategy) {
         if (pollingStrategy === PollingStrategyTypes.manual) {
             this.props.navigation.setParams({ button: 'manual' });
@@ -213,6 +228,7 @@ class ContactsPicker extends React.Component {
 
     refresh = () => {
         this.dataSource.loadData();
+        this.checkPollingStrategy();
     };
 
     updateList = () => {

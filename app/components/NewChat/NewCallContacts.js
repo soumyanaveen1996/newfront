@@ -214,9 +214,9 @@ class NewCallContacts extends React.Component {
 
         return (
             <View style={styles.addressBookContainer}>
-                {!this.props.appState.contactsLoaded ? (
+                {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
-                ) : null}
+                ) : null} */}
                 <SectionList
                     ItemSeparatorComponent={NewChatItemSeparator}
                     ref={sectionList => {
@@ -271,7 +271,7 @@ class NewCallContacts extends React.Component {
         this.setContactVisible(false, null);
         Actions.dialler({
             call: true,
-            number: this.state.contactSelected.phoneNumbers,
+            number: this.state.contactSelected.phoneNumbers.mobile,
             newCallScreen: true
         });
     };
@@ -340,6 +340,13 @@ class NewCallContacts extends React.Component {
                                                     : styles.callButtonDisabled
                                             }
                                             onPress={this.makePstnCall}
+                                            disabled={
+                                                !(
+                                                    contactSelected.phoneNumbers &&
+                                                    contactSelected.phoneNumbers
+                                                        .mobile
+                                                )
+                                            }
                                         >
                                             {Icons.greenCallOutline()}
                                         </TouchableOpacity>

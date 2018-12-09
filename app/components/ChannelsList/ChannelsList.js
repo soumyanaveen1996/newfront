@@ -396,7 +396,7 @@ class ChannelsList extends React.Component {
 
                     <View style={styles.createNewChannelContainer}>
                         <TouchableOpacity
-                            style={styles.buttonContainer}
+                            style={styles.buttonContainerCreateChannel}
                             onPress={this.createChannel.bind(this)}
                         >
                             {/* <Text style={styles.buttonText}>New Channel</Text> */}

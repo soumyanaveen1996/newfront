@@ -157,9 +157,22 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    buttonContainer: {
+    buttonContainerCreateChannel: {
         height: hp('6%'),
         width: wp('20%'),
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 10,
+
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: 'black',
+        shadowOpacity: 0.7
+    },
+    buttonContainer: {
+        height: hp('4.5%'),
+        width: wp('50%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',

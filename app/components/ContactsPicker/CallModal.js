@@ -29,8 +29,8 @@ export default class CallModal extends React.Component {
         this.props.setVisible(false);
         let participants = [
             {
-                userId: this.props.contact.userId,
-                userName: this.props.contact.userName
+                userId: this.props.contact.id,
+                userName: this.props.contact.name
             }
         ];
         SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
@@ -79,6 +79,12 @@ export default class CallModal extends React.Component {
                                     contactSelected.phoneNumbers
                                         ? styles.callButton
                                         : styles.callButtonDisabled
+                                }
+                                disabled={
+                                    !(
+                                        contactSelected.phoneNumbers &&
+                                        contactSelected.phoneNumbers.mobile
+                                    )
                                 }
                                 onPress={this.makePhoneCall.bind(this)}
                             >

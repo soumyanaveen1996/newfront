@@ -36,8 +36,8 @@ import {
 import { Auth } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 
-const BUTTON_INNER = hp('2%');
-const BUTTON_OUTER = hp('3%');
+const BUTTON_INNER = hp('1%');
+const BUTTON_OUTER = hp('2.5%');
 const DESC_LENGTH = 60;
 class NewChannels extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -498,7 +498,7 @@ class NewChannels extends React.Component {
                                                             }
                                                             buttonOuterColor={
                                                                 this.state
-                                                                    .typeValue ==
+                                                                    .visibilityValue ==
                                                                 obj.value
                                                                     ? '#00BDF2'
                                                                     : '#000'
