@@ -44,7 +44,7 @@ import DefaultPreference from 'react-native-default-preference';
 // Switch off During FINAL PROD RELEASE
 const CODE_PUSH_ACTIVATE = true;
 // const CODE_PUSH_ACTIVATE = false;
-const VERSION = 45; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 50; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -246,7 +246,7 @@ export default class Splash extends React.Component {
     };
 
     goToLoginPage = () => {
-        Actions.swiperScreen({ type: ActionConst.REPLACE, swiperIndex: 4 });
+        Actions.swiperScreen({ type: ActionConst.REPLACE, swiperIndex: 1 });
     };
 
     showMainScreen = (moveToOnboarding = false) => {
