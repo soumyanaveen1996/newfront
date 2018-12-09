@@ -56,13 +56,13 @@ export default class ContactDetailsScreen extends React.Component {
         return (
             <View style={styles.topContainerCD}>
                 <View style={styles.topAreaCD}>
-                    <TouchableOpacity style={styles.topButtonCD}>
+                    {/* <TouchableOpacity style={styles.topButtonCD}>
                         <Icon
                             name="share"
                             size={16}
                             color={GlobalColors.sideButtons}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <ProfileImage
                         uuid={this.contact.id}
                         placeholder={Images.user_image}
@@ -70,13 +70,13 @@ export default class ContactDetailsScreen extends React.Component {
                         placeholderStyle={styles.propicCD}
                         resizeMode="cover"
                     />
-                    <TouchableOpacity style={styles.topButtonCD}>
+                    {/* <TouchableOpacity style={styles.topButtonCD}>
                         <Icon
                             name="edit"
                             size={16}
                             color={GlobalColors.sideButtons}
                         />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <Text style={styles.nameCD}>{this.contact.name}</Text>
             </View>
