@@ -15,6 +15,11 @@ export const completeChannelInstall = payload => ({
     payload
 });
 
+export const completeCatalogLoad = payload => ({
+    type: Actions.COMPLETE_CATALOG_LOAD,
+    payload
+});
+
 export const completeConversationsLoad = payload => ({
     type: Actions.COMPLETE_CONVERSATIONS_LOAD,
     payload

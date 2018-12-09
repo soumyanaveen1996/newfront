@@ -106,7 +106,7 @@ class Bot extends events.EventEmitter {
 
     static async getCatalog() {
         try {
-            let user = await Promise.resolve(Auth.getUser());
+            let user = await Auth.getUser();
             if (!user) {
                 return {};
             }

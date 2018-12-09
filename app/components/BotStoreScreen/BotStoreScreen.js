@@ -26,6 +26,7 @@ import { BackgroundImage } from '../BackgroundImage';
 import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
+import { completeCatalogLoad } from '../../redux/actions/UserActions';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -117,6 +118,10 @@ class BotStoreScreen extends React.Component {
 
     async updateCatalog() {
         let catalog = await Bot.getCatalog();
+        if (__DEV__) {
+            console.tron('CATALOG STORE LOADED');
+        }
+
         this.setState({
             showSearchBar: false,
             selectedIndex: this.state.selectedIndex || 0,
@@ -139,11 +144,13 @@ class BotStoreScreen extends React.Component {
 
     async componentDidMount() {
         try {
+            setTimeout(() => this.updateCatalog(), 1000);
+
             EventEmitter.addListener(
                 AuthEvents.userChanged,
                 this.userChangedHandler.bind(this)
             );
-            await this.updateCatalog();
+            // await this.updateCatalog()
             if (this.props.navigation) {
                 this.props.navigation.setParams({
                     handleSearchClick: this.handleSearchClick.bind(this),
@@ -166,16 +173,30 @@ class BotStoreScreen extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        return nextProps.appState.currentScene === I18n.t('Bot_Store');
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.catalogLoaded !==
+            this.props.appState.catalogLoaded
+        ) {
+            this.updateCatalog();
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            nextProps.appState.currentScene === I18n.t('Bot_Store') ||
+            this.state !== nextState
+        );
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
+        // Store.dispatch(completeCatalogLoad(true))
     }
 
     static onExit() {
         RemoteBotInstall.syncronizeBots();
         Store.dispatch(setCurrentScene('none'));
+        // Store.dispatch(completeCatalogLoad(false))
     }
 
     async refresh() {
@@ -304,7 +325,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        completeCatalogLoad: loaded => dispatch(completeCatalogLoad(loaded))
+    };
 };
 
 export default connect(
