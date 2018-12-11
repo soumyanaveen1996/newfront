@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import I18n from '../../config/i18n/i18n';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import { setAllChatsData } from '../../redux/actions/TimeLineActions';
 
 import { Actions, ActionConst } from 'react-native-router-flux';
 import { Icons } from '../../config/icons';
@@ -141,18 +142,22 @@ class BotList extends React.Component {
                     ...recentData
                 ];
 
-        this.setState(
-            {
-                loaded: false,
-                data: []
-            },
-            () => {
-                this.setState({
-                    loaded: true,
-                    data: AllTimelineData
-                });
-            }
-        );
+        const prevTimeline = this.props.timeline;
+        if (JSON.stringify(prevTimeline) !== JSON.stringify(AllTimelineData)) {
+            this.props.setAllChatsData(AllTimelineData);
+            this.setState(
+                {
+                    loaded: false,
+                    data: []
+                },
+                () => {
+                    this.setState({
+                        loaded: true,
+                        data: AllTimelineData
+                    });
+                }
+            );
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -343,7 +348,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        setAllChatsData: data => dispatch(setAllChatsData(data))
+    };
 };
 
 export default connect(

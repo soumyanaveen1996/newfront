@@ -194,7 +194,7 @@ class BotStoreScreen extends React.Component {
     }
 
     static onExit() {
-        RemoteBotInstall.syncronizeBots();
+        // RemoteBotInstall.syncronizeBots();
         Store.dispatch(setCurrentScene('none'));
         // Store.dispatch(completeCatalogLoad(false))
     }

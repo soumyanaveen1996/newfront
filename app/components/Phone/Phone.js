@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     Keyboard,
-    Platform
+    Platform,
+    InteractionManager
 } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
@@ -131,6 +132,10 @@ export default class Phone extends React.Component {
         if (this.deviceDidReceiveIncomingListener) {
             this.deviceDidReceiveIncomingListener.remove();
         }
+
+        InteractionManager.runAfterInteractions(() =>
+            Conversation.downloadRemoteConversations()
+        );
     }
 
     connectionDidConnectHandler(data) {

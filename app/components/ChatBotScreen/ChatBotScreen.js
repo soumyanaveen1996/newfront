@@ -384,6 +384,17 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    static onEnter({ navigation, screenProps }) {
+        console.log('Enter Chats Screen', Actions.refs.peopleChat.props);
+        const shouldPop =
+            Actions.refs.peopleChat &&
+            Actions.refs.peopleChat.props.call &&
+            Actions.prevScene === 'phone';
+        if (shouldPop) {
+            Actions.pop();
+        }
+    }
+
     botDone = () => {
         this.loadedBot.done(
             null,
@@ -1723,6 +1734,10 @@ class ChatBotScreen extends React.Component {
                     <ActivityIndicator size="large" />
                 </View>
             );
+        }
+
+        if (this.props.call) {
+            return <View />;
         }
 
         // react-native-router-flux header seems to intefere with padding. So
