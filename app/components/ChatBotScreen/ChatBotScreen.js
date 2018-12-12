@@ -1740,6 +1740,17 @@ class ChatBotScreen extends React.Component {
             return <View />;
         }
 
+        const lastButOne = R.take(
+            this.state.messages.length - 1,
+            this.state.messages
+        );
+        const lastMessage = R.takeLast(1, this.state.messages);
+        const removeButtonMessages = lastButOne.filter(
+            msg =>
+                msg.message.getMessageType() !==
+                MessageTypeConstants.MESSAGE_TYPE_BUTTON
+        );
+        const AllMessages = [...removeButtonMessages, ...lastMessage];
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
@@ -1765,7 +1776,7 @@ class ChatBotScreen extends React.Component {
                                 this.chatList = list;
                                 this.checkForScrolling();
                             }}
-                            data={this.state.messages}
+                            data={AllMessages}
                             renderItem={this.renderItem.bind(this)}
                             onLayout={this.onChatListLayout.bind(this)}
                             refreshControl={

@@ -9,7 +9,8 @@ import {
     BackHandler,
     ScrollView,
     SafeAreaView,
-    Keyboard
+    Keyboard,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -63,9 +64,6 @@ export default class ConfirmationScreen extends Component {
     }
 
     async onFormSubmit() {
-        if (this.textInput) {
-            this.textInput.blur();
-        }
         const getStatus = await AsyncStorage.getItem('signupStage');
 
         if (getStatus && getStatus === 'done') {
@@ -156,6 +154,7 @@ export default class ConfirmationScreen extends Component {
     };
 
     onChangeCode(text) {
+        // Keyboard.dismiss()
         this.setState(() => {
             return { code: text };
         });
@@ -273,12 +272,14 @@ export default class ConfirmationScreen extends Component {
                     <TextInput
                         style={styles.textInput}
                         keyboardType="numeric"
-                        autoFocus={true}
+                        // autoFocus={true}
                         placeholder="------"
                         returnKeyType={'done'}
                         value={this.state.code === 0 ? null : this.state.code}
                         onChangeText={this.onChangeCode.bind(this)}
                         underlineColorAndroid="transparent"
+                        blurOnSubmit={true}
+                        returnKeyType={'done'}
                         maxLength={6} //setting limit of input
                     />
                 </View>
@@ -316,56 +317,63 @@ export default class ConfirmationScreen extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
-                <Loader loading={this.state.loading} />
-                <ScrollView style={{ flex: 1 }}>
-                    <KeyboardAvoidingView
-                        style={styles.container}
-                        keyboardShouldPersistTaps="always"
-                    >
-                        <View style={styles.captionText}>
-                            <Text style={styles.header}>Confirmation code</Text>
-                            <Text style={styles.firstTitle}>
-                                A confirmation code, with a 24 hour validity,
-                                has been sent to{' '}
-                                <Text style={styles.emailText}>
-                                    {this.state.userEmail}
-                                </Text>{' '}
-                            </Text>
-                            <Text style={styles.secondTitle}>
-                                Please enter the code below to complete the
-                                registration process
-                            </Text>
-                        </View>
-                        {this.confirmCodeStatus()}
-                        {this.displayPasswordField()}
-                        <View style={styles.codeButton}>
-                            <TouchableOpacity
-                                disabled={!this.checkFieldEmpty()}
-                                style={
-                                    this.checkFieldEmpty()
-                                        ? styles.buttonContainer
-                                        : styles.diableButton
-                                }
-                                onPress={this.onFormSubmit.bind(this)}
-                            >
-                                <Text style={styles.buttonText}>Done</Text>
-                            </TouchableOpacity>
-                            <View style={{ bottom: 60 }}>
-                                {this.state.errorMessage ? (
-                                    <Text
-                                        style={{
-                                            color: 'rgba(255,0,0,1)'
-                                        }}
-                                    >
-                                        {this.state.errorMessage}
-                                    </Text>
-                                ) : null}
+                <TouchableWithoutFeedback
+                    onPress={Keyboard.dismiss}
+                    accessible={false}
+                >
+                    <Loader loading={this.state.loading} />
+                    <ScrollView style={{ flex: 1 }}>
+                        <KeyboardAvoidingView
+                            style={styles.container}
+                            keyboardShouldPersistTaps="always"
+                        >
+                            <View style={styles.captionText}>
+                                <Text style={styles.header}>
+                                    Confirmation code
+                                </Text>
+                                <Text style={styles.firstTitle}>
+                                    A confirmation code, with a 24 hour
+                                    validity, has been sent to{' '}
+                                    <Text style={styles.emailText}>
+                                        {this.state.userEmail}
+                                    </Text>{' '}
+                                </Text>
+                                <Text style={styles.secondTitle}>
+                                    Please enter the code below to complete the
+                                    registration process
+                                </Text>
                             </View>
-                        </View>
+                            {this.confirmCodeStatus()}
+                            {this.displayPasswordField()}
+                            <View style={styles.codeButton}>
+                                <TouchableOpacity
+                                    disabled={!this.checkFieldEmpty()}
+                                    style={
+                                        this.checkFieldEmpty()
+                                            ? styles.buttonContainer
+                                            : styles.diableButton
+                                    }
+                                    onPress={this.onFormSubmit.bind(this)}
+                                >
+                                    <Text style={styles.buttonText}>Done</Text>
+                                </TouchableOpacity>
+                                <View style={{ bottom: 60 }}>
+                                    {this.state.errorMessage ? (
+                                        <Text
+                                            style={{
+                                                color: 'rgba(255,0,0,1)'
+                                            }}
+                                        >
+                                            {this.state.errorMessage}
+                                        </Text>
+                                    ) : null}
+                                </View>
+                            </View>
 
-                        {this.checkToResendCodeScreen()}
-                    </KeyboardAvoidingView>
-                </ScrollView>
+                            {this.checkToResendCodeScreen()}
+                        </KeyboardAvoidingView>
+                    </ScrollView>
+                </TouchableWithoutFeedback>
             </SafeAreaView>
         );
     }

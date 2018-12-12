@@ -162,7 +162,7 @@ class MainScreen extends React.Component {
     async componentDidMount() {
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime) {
-            this.setState({ firstTimer: false }, () => {
+            this.setState({ firstTimer: true }, () => {
                 firstTimer = this.state.firstTimer;
             });
         } else {
@@ -251,6 +251,11 @@ class MainScreen extends React.Component {
     }
 
     static onExit() {
+        // if (Actions.refs.timeline) {
+        //     Actions.refs.timeline
+        //         .getWrappedInstance()
+        //         .keyboardDidShowListener.remove()
+        // }
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.allConversationsLoaded) {
@@ -550,5 +555,7 @@ const mapDispatchToProps = dispatch => {
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    null,
+    { withRef: true }
 )(MainScreen);

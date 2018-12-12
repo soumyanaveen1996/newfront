@@ -3,6 +3,10 @@ import { GlobalColors } from '../../config/styles';
 import { Dimensions } from 'react-native';
 export const SCREEN_WIDTH = Dimensions.get('window').width;
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default StyleSheet.create({
     modalBackground: {
@@ -146,8 +150,15 @@ export default StyleSheet.create({
         flex: 1
     },
     nextTutorialContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: hp('5%'),
         flex: 1
+    },
+    tutorialArrow: {
+        marginLeft: wp('3%'),
+        marginTop: 1
     },
     skipTutorialButtonText: {
         textAlign: 'center',

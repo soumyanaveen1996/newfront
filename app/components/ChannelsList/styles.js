@@ -469,7 +469,7 @@ export default StyleSheet.create({
         color: '#4A4A4A',
         fontFamily: 'SF Pro Text',
         fontSize: 16,
-        marginBottom: 20,
+        // marginBottom: 20,
         paddingLeft: 20
     },
     addContactsContainer: {

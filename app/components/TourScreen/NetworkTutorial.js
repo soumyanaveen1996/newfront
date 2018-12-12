@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 import images from '../../images';
 
 export default class NetworkTutorial extends Component {
@@ -53,6 +57,9 @@ export default class NetworkTutorial extends Component {
                         onPress={this.props.tabBarScreen}
                     >
                         <Text style={styles.skipTutorialButtonText}>Next</Text>
+                        <View style={styles.tutorialArrow}>
+                            <Image source={images.blue_arrow} />
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>

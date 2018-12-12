@@ -130,7 +130,7 @@ class BotList extends React.Component {
             favData.length > 0
                 ? [
                     { elemType: 'search' },
-                    { elemType: 'buttons' },
+                    // { elemType: 'buttons' },
                     { elemType: 'header', headerText: 'Favourites' },
                     ...favData,
                     { elemType: 'header', headerText: 'Recents' },
@@ -138,7 +138,7 @@ class BotList extends React.Component {
                 ]
                 : [
                     { elemType: 'search' },
-                    { elemType: 'buttons' },
+                    // { elemType: 'buttons' },
                     ...favData,
                     { elemType: 'header', headerText: 'Recents' },
                     ...recentData

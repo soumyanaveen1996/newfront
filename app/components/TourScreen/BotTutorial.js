@@ -65,6 +65,10 @@ export default class BotTutorial extends Component {
                         onPress={this.props.readyScreen}
                     >
                         <Text style={styles.skipTutorialButtonText}>Next</Text>
+
+                        <View style={styles.tutorialArrow}>
+                            <Image source={images.blue_arrow} />
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>

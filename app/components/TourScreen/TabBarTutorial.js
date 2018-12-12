@@ -80,6 +80,10 @@ export default class TabBarTutorial extends Component {
                             <Text style={styles.skipTutorialButtonText}>
                                 Next
                             </Text>
+
+                            <View style={styles.tutorialArrow}>
+                                <Image source={images.blue_arrow} />
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
