@@ -8,7 +8,8 @@ import {
     AsyncStorage,
     BackHandler,
     ScrollView,
-    SafeAreaView
+    SafeAreaView,
+    Keyboard
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -33,6 +34,7 @@ export default class ConfirmationScreen extends Component {
             passwordErrorMessage: '',
             signupStatus: ''
         };
+        this.textInput = null;
     }
 
     componentWillMount() {
@@ -52,7 +54,18 @@ export default class ConfirmationScreen extends Component {
         }
     }
 
+    componentWillUnmount() {
+        Keyboard.dismiss();
+    }
+
+    static onExit() {
+        Keyboard.dismiss();
+    }
+
     async onFormSubmit() {
+        if (this.textInput) {
+            this.textInput.blur();
+        }
         const getStatus = await AsyncStorage.getItem('signupStage');
 
         if (getStatus && getStatus === 'done') {
@@ -128,7 +141,10 @@ export default class ConfirmationScreen extends Component {
                 });
                 AfterLogin.executeAfterLogin();
                 synchronizeUserData();
-                Actions.timeline({ type: ActionConst.REPLACE });
+                setTimeout(
+                    () => Actions.timeline({ type: ActionConst.REPLACE }),
+                    0
+                );
             })
             .catch(err => {
                 console.log('error on incorrect password ', err);
@@ -194,6 +210,7 @@ export default class ConfirmationScreen extends Component {
                         {this.state.confirmPasswordTitle}{' '}
                     </Text>
                     <TextInput
+                        ref={element => (this.textInput = element)}
                         style={styles.input}
                         blurOnSubmit={true}
                         returnKeyType={'done'}

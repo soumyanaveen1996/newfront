@@ -9,7 +9,8 @@ import {
     Platform,
     TextInput,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BotList from './BotList';

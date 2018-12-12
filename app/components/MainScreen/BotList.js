@@ -29,6 +29,8 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+const R = require('ramda');
+const isEqual = require('react-fast-compare');
 
 const hiddenItemWidth = wp('25%');
 class BotList extends React.Component {
@@ -142,13 +144,13 @@ class BotList extends React.Component {
                     ...recentData
                 ];
 
-        const prevTimeline = this.props.timeline;
-        if (JSON.stringify(prevTimeline) !== JSON.stringify(AllTimelineData)) {
+        const prevTimeline = this.props.timeline.allChats;
+        if (!isEqual(prevTimeline, AllTimelineData)) {
             this.props.setAllChatsData(AllTimelineData);
             this.setState(
                 {
-                    loaded: false,
-                    data: []
+                    loaded: true,
+                    data: R.take(AllTimelineData.length - 1, AllTimelineData)
                 },
                 () => {
                     this.setState({
@@ -158,10 +160,6 @@ class BotList extends React.Component {
                 }
             );
         }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
     }
 
     applyFilter = chats => {

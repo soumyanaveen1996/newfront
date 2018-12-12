@@ -66,14 +66,24 @@ const stylesheet = StyleSheet.create({
     stdNotifBubble: {
         backgroundColor: GlobalColors.stdNotifBlue,
         borderTopLeftRadius: 10,
-        borderTopRightRadius: 0,
+        borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
-        borderBottomLeftRadius: 10
+        borderBottomLeftRadius: 10,
+        ...Platform.select({
+            ios: {
+                shadowColor: 'rgba(0,0,0,0.1)',
+                shadowOffset: { width: 1, height: 2 },
+                shadowOpacity: 0.3
+            },
+            android: {
+                elevation: 1
+            }
+        })
     },
     criticalBubble: {
         backgroundColor: GlobalColors.criticalYellow,
         borderTopLeftRadius: 10,
-        borderTopRightRadius: 0,
+        borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10
     },

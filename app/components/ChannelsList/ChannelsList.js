@@ -162,7 +162,8 @@ class ChannelsList extends React.Component {
         Store.dispatch(setCurrentScene('none'));
         const reduxState = Store.getState();
         if (!reduxState.user.allChannelsLoaded) {
-            Channel.refreshChannels();
+            setTimeout(() => Channel.refreshChannels(), 0);
+            setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
         }
     }
 

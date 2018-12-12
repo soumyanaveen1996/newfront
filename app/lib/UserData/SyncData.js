@@ -28,10 +28,10 @@ export const synchronizeUserData = async () => {
         } catch (error) {
             console.log('Cannot Load Contacts');
         }
-        setImmediate(() => Conversation.downloadRemoteConversations());
-        setImmediate(() => Channel.refreshChannels());
-        setImmediate(() => RemoteBotInstall.syncronizeBots());
-        setImmediate(() => Channel.refreshUnsubscribedChannels());
+        setTimeout(() => Conversation.downloadRemoteConversations(), 500);
+        setTimeout(() => RemoteBotInstall.syncronizeBots(), 1000);
+        setTimeout(() => Channel.refreshChannels(), 1500);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 2000);
     });
 };
 

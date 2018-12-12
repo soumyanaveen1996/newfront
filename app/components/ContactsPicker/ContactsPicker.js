@@ -9,7 +9,8 @@ import {
     Platform,
     Text,
     Alert,
-    TouchableOpacity
+    TouchableOpacity,
+    InteractionManager
 } from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
@@ -205,7 +206,9 @@ class ContactsPicker extends React.Component {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.contactsLoaded) {
-            Contact.refreshContacts();
+            InteractionManager.runAfterInteractions(() =>
+                Contact.refreshContacts()
+            );
         }
     }
     shouldComponentUpdate(nextProps) {
