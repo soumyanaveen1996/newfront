@@ -282,7 +282,7 @@ export default class InstalledBotsScreen extends React.Component {
                         <Icon name="delete" color="white" />
                     </View>
                 ),
-                backgroundColor: GlobalColors.red,
+                backgroundColor: GlobalColors.sideButtons,
                 onPress: () => {
                     this.onDeletePress(botData);
                 }
@@ -316,6 +316,37 @@ export default class InstalledBotsScreen extends React.Component {
                     <Text style={BotListItemStyles.title}>
                         {botData.botName}{' '}
                     </Text>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            height: 20,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Text
+                            style={{ color: 'rgba(0,189,242,1)', fontSize: 14 }}
+                        >
+                            Free
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(216,216,216,1)',
+                                fontSize: 16,
+                                fontWeight: '100',
+                                marginHorizontal: 4
+                            }}
+                        >
+                            |
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(102,102,102,1)',
+                                fontSize: 14
+                            }}
+                        >
+                            {botData.developer}
+                        </Text>
+                    </View>
                     <Text
                         numberOfLines={subtitleNumberOfLines}
                         style={BotListItemStyles.subTitle}
@@ -325,12 +356,12 @@ export default class InstalledBotsScreen extends React.Component {
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
                     <TouchableOpacity
-                        style={BotListItemStyles.installButton}
+                        style={BotListItemStyles.openButton}
                         onPress={this.onBotPress.bind(this, botData)}
                     >
                         <Text
                             allowFontScaling={false}
-                            style={BotListItemStyles.installButtonText}
+                            style={BotListItemStyles.openButtonText}
                         >
                             {I18n.t('OPEN')}
                         </Text>
@@ -429,7 +460,7 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
                     <FlatList
                         style={styles.flatList}
                         keyExtractor={(item, index) => item.botId}

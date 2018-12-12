@@ -80,7 +80,7 @@ export default class BotListScreen extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{ flex: 1, alignItems: 'center', padding: 10 }}>
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.botId}

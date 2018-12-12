@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { SCREEN_WIDTH, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
-
 export default StyleSheet.create({
     tileContainer: {
         width: scrollViewConfig.width * 0.5,
@@ -12,20 +11,38 @@ export default StyleSheet.create({
         borderColor: 'transparent',
         borderRadius: 15
     },
-
+    titleBar: {
+        width: SCREEN_WIDTH - 20,
+        height: 45,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        borderColor: 'transparent',
+        borderWidth: 1,
+        borderBottomColor: GlobalColors.borderBottom,
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10
+    },
+    categoryTitleStyle: {
+        fontSize: 20,
+        color: 'rgba(74,74,74,1)'
+    },
     rowContainer: {
         width: SCREEN_WIDTH - 20,
         height: 110,
         borderBottomWidth: 1,
+        backgroundColor: '#fff',
         borderColor: 'transparent',
-        borderRadius: 6,
-        marginBottom: 20
+        borderWidth: 1,
+        borderBottomColor: GlobalColors.borderBottom
     },
     rowContent: {
         flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
-        borderRadius: 6
+        backgroundColor: 'transparent'
     },
     avatarContainerStyle: {
         height: 50,
@@ -61,20 +78,20 @@ export default StyleSheet.create({
     gridStyle: {
         flex: 1
     },
-    headerTitleStyle: {
-        fontSize: 17,
-        color: GlobalColors.white,
-        fontWeight: '500'
-    },
-
-    headerOuterContainerStyles: {
-        position: 'relative',
-        borderBottomColor: GlobalColors.accent
-    },
-    headerinnerContainerForSearch: {
-        marginTop: 50
-    },
     flatList: {
-        height: '100%'
+        flex: 1
+    },
+    toast: {
+        position: 'absolute',
+        bottom: 15
+    },
+    exploreAllFooter: {
+        width: SCREEN_WIDTH - 20,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
     }
 });

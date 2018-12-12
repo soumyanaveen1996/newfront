@@ -6,6 +6,7 @@ import { scrollViewConfig } from './config';
 import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage';
 import GridView from 'react-native-super-grid';
+import BotContainer from '../../BotContainer';
 
 export default class CategoriesTab extends React.Component {
     constructor(props) {
@@ -40,6 +41,7 @@ export default class CategoriesTab extends React.Component {
         let selectedBots = this.props.botsData.filter(bot => {
             return botsId.indexOf(bot.botId) >= 0;
         });
+
         Actions.botList({ data: selectedBots, title: title });
     };
 
@@ -58,15 +60,31 @@ export default class CategoriesTab extends React.Component {
         );
     };
 
+    renderCategoryBots = () => {
+        return this.state.categoriesData.map((data, index) => {
+            let categoryData = this.props.botsData.filter(bot => {
+                return data.botIds.indexOf(bot.botId) >= 0;
+            });
+
+            return (
+                <BotContainer
+                    style={{ flex: 1 }}
+                    key={index}
+                    allBots={this.props.botsData}
+                    botsData={categoryData}
+                    name={data.name}
+                    botIds={data.botIds}
+                    currentIndex={index}
+                />
+            );
+        });
+    };
+
     render() {
         return (
-            <GridView
-                itemDimension={scrollViewConfig.width * 0.5 - 1}
-                spacing={5}
-                renderItem={this.renderGridItem}
-                style={styles.listViewContentContainerStyle}
-                items={this.state.categoriesData}
-            />
+            <View style={{ flex: 1, padding: 10 }}>
+                {this.renderCategoryBots()}
+            </View>
         );
     }
 

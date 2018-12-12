@@ -8,6 +8,7 @@ export const GlobalColors = {
     //header: 'rgb(79,41,191)',
     accent: 'rgb(30,172,193)',
     botChatBubbleColor: 'rgb(70,137,242)',
+    borderBottom: 'rgba(91,91,91,0.2)',
     background: 'rgb(219,225,229)',
     orangeYellow: 'rgb(231,97,33)',
     criticalYellow: 'rgb(237, 250, 28)',

@@ -13,17 +13,20 @@ export default StyleSheet.create({
     },
 
     rowContainer: {
-        width: SCREEN_WIDTH,
-        height: 85,
+        width: SCREEN_WIDTH - 20,
+        height: 110,
         borderBottomWidth: 1,
+        backgroundColor: '#fff',
         borderColor: 'transparent',
-        borderRadius: 15,
+        borderRadius: 6,
         marginBottom: 10
     },
     rowContent: {
         flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white'
+        backgroundColor: 'transparent',
+        marginTop: 20
     },
     avatarContainerStyle: {
         height: 50,

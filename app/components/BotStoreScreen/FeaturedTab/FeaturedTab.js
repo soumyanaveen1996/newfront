@@ -8,7 +8,7 @@ import I18n from '../../../config/i18n/i18n';
 import utils from '../../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 
-export default class FeaturedTabTab extends React.Component {
+export default class FeaturedTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -81,7 +81,7 @@ export default class FeaturedTabTab extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.botId}

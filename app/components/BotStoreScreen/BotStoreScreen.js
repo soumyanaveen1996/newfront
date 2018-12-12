@@ -27,6 +27,7 @@ import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
 import { completeCatalogLoad } from '../../redux/actions/UserActions';
+import { NewProviderPopup } from './NewProviderPopup';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -123,6 +124,7 @@ class BotStoreScreen extends React.Component {
         }
 
         this.setState({
+            showNewProvider: false,
             showSearchBar: false,
             selectedIndex: this.state.selectedIndex || 0,
             catalogData: catalog,
@@ -235,6 +237,18 @@ class BotStoreScreen extends React.Component {
         }
     }
 
+    changeHandler = value => {
+        this.setState({
+            showNewProvider: value
+        });
+    };
+
+    handleCancelNewProvider = value => {
+        this.setState({
+            showNewProvider: value
+        });
+    };
+
     botStoreList() {
         if (this.state.selectedIndex === 2) {
             return (
@@ -243,6 +257,7 @@ class BotStoreScreen extends React.Component {
                     developerData={this.state.catalogData.developer}
                     botsData={this.state.catalogData.bots}
                     onBack={this.onBack.bind(this)}
+                    onChange={this.changeHandler}
                 />
             );
         }
@@ -312,6 +327,11 @@ class BotStoreScreen extends React.Component {
 
         return (
             <BackgroundImage style={{ flex: 1 }}>
+                {this.state.showNewProvider && (
+                    <NewProviderPopup
+                        canelNewProvider={this.handleCancelNewProvider}
+                    />
+                )}
                 <StatusBar backgroundColor="grey" barStyle="light-content" />
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
