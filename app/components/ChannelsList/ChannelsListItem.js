@@ -1,15 +1,23 @@
 import React from 'react';
-import { ActivityIndicator, TouchableOpacity, View, Text } from 'react-native';
+import {
+    ActivityIndicator,
+    TouchableOpacity,
+    View,
+    Text,
+    Image,
+    Alert
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import styles from './styles';
 import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
 import { Channel } from '../../lib/capability';
-// import { Icons } from '../../config/icons';
+import { Icons } from '../../config/icons';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
 import moment from 'moment';
+import ActionSheet from 'react-native-actionsheet';
 
 const subtitleNumberOfLines = 2;
 
@@ -73,7 +81,7 @@ export default class ChannelsListItem extends React.Component {
             });
     };
 
-    onsubscribeChannel = channel => {
+    onsubscribeChannel = (channel, open = false) => {
         console.log('subscribe', channel);
         this.setState({ loading: true });
         this.props.wait(true);
@@ -82,6 +90,9 @@ export default class ChannelsListItem extends React.Component {
                 this.props.onSubscribed();
                 this.setState({ loading: false });
                 this.props.wait(false);
+                if (open) {
+                    this.props.onChannelTapped(channel);
+                }
             })
             .catch(err => {
                 console.log('Failed Subscription', err);
@@ -130,36 +141,145 @@ export default class ChannelsListItem extends React.Component {
 
     renderRightArea(channel, userId) {
         const isOwner = channel.ownerId === userId ? true : false;
-        if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
+
+        if (isOwner) {
             return (
                 <View style={styles.rightContainer}>
-                    <ActivityIndicator size="small" />
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.ActionSheetOwner.show();
+                        }}
+                    >
+                        {Icons.more()}
+                    </TouchableOpacity>
                 </View>
             );
-        } else {
-            if (isOwner) {
-                return (
-                    <View style={styles.rightContainer}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.editChannel(channel);
-                            }}
-                        >
-                            {/* {Icons.delete()} */}
-                            <Icon
-                                style={styles.editIcon}
-                                name="edit-2"
-                                size={18}
-                                color="rgba(3,3,3,1)"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                );
-            } else {
-                return <View style={styles.rightContainer} />;
-            }
         }
+
+        if (channel.subcription === 'true') {
+            return (
+                <View style={styles.rightContainer}>
+                    <TouchableOpacity
+                        style={{ height: 40, width: 40 }}
+                        onPress={() => {
+                            this.ActionSheetSubscribed.show();
+                        }}
+                    >
+                        {Icons.more()}
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+        if (channel.subcription === 'false') {
+            return (
+                <View style={styles.rightContainer}>
+                    <TouchableOpacity
+                        style={{ height: 40, width: 40 }}
+                        onPress={() => {
+                            this.ActionSheetUnSubscribed.show();
+                        }}
+                    >
+                        {Icons.more()}
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+
+        // if (this.state.status === ChannelsListItemStates.UNSUBSCRIBING) {
+        //     return (
+        //         <View style={styles.rightContainer}>
+        //             <ActivityIndicator size="small" />
+        //         </View>
+        //     );
+        // } else {
+        //     if (isOwner) {
+        //         return (
+        //             <View style={styles.rightContainer}>
+        //                 <TouchableOpacity
+        //                     onPress={() => {
+        //                         this.editChannel(channel);
+        //                     }}
+        //                 >
+        //                     {/* {Icons.delete()} */}
+        //                     <Icon
+        //                         style={styles.editIcon}
+        //                         name="edit-2"
+        //                         size={18}
+        //                         color="rgba(3,3,3,1)"
+        //                     />
+        //                 </TouchableOpacity>
+        //             </View>
+        //         );
+        //     } else {
+        //         return <View style={styles.rightContainer} />;
+        //     }
+        // }
     }
+    renderActionSheet = (channel, user) => {
+        return (
+            <View>
+                <ActionSheet
+                    ref={o => (this.ActionSheetOwner = o)}
+                    options={['Edit', 'Cancel']}
+                    cancelButtonIndex={1}
+                    destructiveButtonIndex={1}
+                    onPress={index => {
+                        if (index === 0) {
+                            this.editChannel(channel);
+                        }
+                    }}
+                />
+                <ActionSheet
+                    ref={o => (this.ActionSheetSubscribed = o)}
+                    options={['Unsubscribe', 'Cancel']}
+                    cancelButtonIndex={1}
+                    destructiveButtonIndex={1}
+                    onPress={index => {
+                        if (index === 0) {
+                            this.onUnsubscribeChannel();
+                        }
+                    }}
+                />
+                <ActionSheet
+                    ref={o => (this.ActionSheetUnSubscribed = o)}
+                    options={['Subscribe', 'Cancel']}
+                    cancelButtonIndex={1}
+                    destructiveButtonIndex={1}
+                    onPress={index => {
+                        if (index === 0) {
+                            this.onsubscribeChannel(channel);
+                        }
+                    }}
+                />
+                <ActionSheet
+                    ref={o => (this.ActionSheetSubscribeNOpen = o)}
+                    options={['Subscribe', 'Cancel']}
+                    cancelButtonIndex={1}
+                    destructiveButtonIndex={1}
+                    onPress={index => {
+                        if (index === 0) {
+                            this.onsubscribeChannel(channel, true);
+                        }
+                    }}
+                />
+            </View>
+        );
+    };
+
+    openChannel = (channel, user) => {
+        const isOwner = channel.ownerId === user ? true : false;
+        if (isOwner) {
+            return this.props.onChannelTapped(channel);
+        }
+        if (channel.subcription === 'true') {
+            return this.props.onChannelTapped(channel);
+        }
+
+        if (channel.subcription === 'false') {
+            return this.ActionSheetSubscribeNOpen.show();
+        }
+    };
+
     render() {
         const channel = this.props.channel;
         const user = this.props.user;
@@ -176,7 +296,7 @@ export default class ChannelsListItem extends React.Component {
         return (
             <TouchableOpacity
                 style={styles.container}
-                onPress={this.props.onChannelTapped}
+                onPress={() => this.openChannel(channel, user.userId)}
             >
                 <View style={styles.channelHeaderPart}>
                     <View style={styles.imageContainer}>
@@ -233,10 +353,11 @@ export default class ChannelsListItem extends React.Component {
                             {channel.description}
                         </Text>
                     </View>
-                    <View style={styles.channelButtonContainer}>
+                    {/* <View style={styles.channelButtonContainer}>
                         {this.subscriptionButton(channel, user.userId)}
-                    </View>
+                    </View> */}
                 </View>
+                {this.renderActionSheet(channel, user)}
             </TouchableOpacity>
         );
     }
