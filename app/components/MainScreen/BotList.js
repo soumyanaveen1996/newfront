@@ -112,6 +112,13 @@ class BotList extends React.Component {
             'desc'
         );
 
+        if (
+            this.props.user.remoteBotsInstalled &&
+            this.props.user.allConversationsLoaded &&
+            allChatsData.length == 1
+        ) {
+            this.props.setNoChats(true);
+        }
         const favData = allChatsData
             .filter(chat => chat.type === 'conversation')
             .filter(chat => chat.bot.favorite == 1)
@@ -229,7 +236,11 @@ class BotList extends React.Component {
         );
     };
     renderHeader = ({ headerText }) => {
-        return <Text style={MainScreenStyles.titleText}>{headerText}</Text>;
+        return (
+            <View style={{ height: 30 }}>
+                <Text style={MainScreenStyles.titleText}>{headerText}</Text>
+            </View>
+        );
     };
     render() {
         const { loaded, data } = this.state;
@@ -342,7 +353,8 @@ const FavoriteView = ({
 );
 
 const mapStateToProps = state => ({
-    timeline: state.timeline
+    timeline: state.timeline,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => {

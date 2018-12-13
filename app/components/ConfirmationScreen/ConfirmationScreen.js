@@ -140,7 +140,10 @@ export default class ConfirmationScreen extends Component {
                 AfterLogin.executeAfterLogin();
                 synchronizeUserData();
                 setTimeout(
-                    () => Actions.timeline({ type: ActionConst.REPLACE }),
+                    () =>
+                        Actions.timeline({
+                            type: ActionConst.REPLACE
+                        }),
                     0
                 );
             })
@@ -317,63 +320,56 @@ export default class ConfirmationScreen extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
-                <TouchableWithoutFeedback
-                    onPress={Keyboard.dismiss}
-                    accessible={false}
-                >
-                    <Loader loading={this.state.loading} />
-                    <ScrollView style={{ flex: 1 }}>
-                        <KeyboardAvoidingView
-                            style={styles.container}
-                            keyboardShouldPersistTaps="always"
-                        >
-                            <View style={styles.captionText}>
-                                <Text style={styles.header}>
-                                    Confirmation code
-                                </Text>
-                                <Text style={styles.firstTitle}>
-                                    A confirmation code, with a 24 hour
-                                    validity, has been sent to{' '}
-                                    <Text style={styles.emailText}>
-                                        {this.state.userEmail}
-                                    </Text>{' '}
-                                </Text>
-                                <Text style={styles.secondTitle}>
-                                    Please enter the code below to complete the
-                                    registration process
-                                </Text>
+                <Loader loading={this.state.loading} />
+                <ScrollView style={{ flex: 1 }}>
+                    <KeyboardAvoidingView
+                        style={styles.container}
+                        keyboardShouldPersistTaps="always"
+                    >
+                        <View style={styles.captionText}>
+                            <Text style={styles.header}>Confirmation code</Text>
+                            <Text style={styles.firstTitle}>
+                                A confirmation code, with a 24 hour validity,
+                                has been sent to{' '}
+                                <Text style={styles.emailText}>
+                                    {this.state.userEmail}
+                                </Text>{' '}
+                            </Text>
+                            <Text style={styles.secondTitle}>
+                                Please enter the code below to complete the
+                                registration process
+                            </Text>
+                        </View>
+                        {this.confirmCodeStatus()}
+                        {this.displayPasswordField()}
+                        <View style={styles.codeButton}>
+                            <TouchableOpacity
+                                disabled={!this.checkFieldEmpty()}
+                                style={
+                                    this.checkFieldEmpty()
+                                        ? styles.buttonContainer
+                                        : styles.diableButton
+                                }
+                                onPress={this.onFormSubmit.bind(this)}
+                            >
+                                <Text style={styles.buttonText}>Done</Text>
+                            </TouchableOpacity>
+                            <View style={{ bottom: 60 }}>
+                                {this.state.errorMessage ? (
+                                    <Text
+                                        style={{
+                                            color: 'rgba(255,0,0,1)'
+                                        }}
+                                    >
+                                        {this.state.errorMessage}
+                                    </Text>
+                                ) : null}
                             </View>
-                            {this.confirmCodeStatus()}
-                            {this.displayPasswordField()}
-                            <View style={styles.codeButton}>
-                                <TouchableOpacity
-                                    disabled={!this.checkFieldEmpty()}
-                                    style={
-                                        this.checkFieldEmpty()
-                                            ? styles.buttonContainer
-                                            : styles.diableButton
-                                    }
-                                    onPress={this.onFormSubmit.bind(this)}
-                                >
-                                    <Text style={styles.buttonText}>Done</Text>
-                                </TouchableOpacity>
-                                <View style={{ bottom: 60 }}>
-                                    {this.state.errorMessage ? (
-                                        <Text
-                                            style={{
-                                                color: 'rgba(255,0,0,1)'
-                                            }}
-                                        >
-                                            {this.state.errorMessage}
-                                        </Text>
-                                    ) : null}
-                                </View>
-                            </View>
+                        </View>
 
-                            {this.checkToResendCodeScreen()}
-                        </KeyboardAvoidingView>
-                    </ScrollView>
-                </TouchableWithoutFeedback>
+                        {this.checkToResendCodeScreen()}
+                    </KeyboardAvoidingView>
+                </ScrollView>
             </SafeAreaView>
         );
     }

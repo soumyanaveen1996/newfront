@@ -17,9 +17,9 @@ export default StyleSheet.create({
     welcomeWrapper: {
         backgroundColor: '#ffffff',
         top: '15%',
-        left: (SCREEN_WIDTH - 300) / 2,
-        height: 250,
-        width: 300,
+        left: '10%',
+        height: 300,
+        width: wp('80%'),
         borderRadius: 10,
         display: 'flex',
         alignItems: 'center',
@@ -223,16 +223,14 @@ export default StyleSheet.create({
         }
     }),
     tabBarTutorial: {
-        position: 'absolute',
-        bottom: '10%',
-        right: (SCREEN_WIDTH - 300) / 2,
         backgroundColor: '#ffffff',
         height: 165,
         width: 300,
         borderRadius: 10,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 11
     },
     bottomTriangle: Platform.select({
         ios: {
@@ -299,9 +297,10 @@ export default StyleSheet.create({
         color: 'rgba(74,74,74,0.4)'
     },
     botTutorial: {
-        position: 'absolute',
-        top: '21%',
-        right: (SCREEN_WIDTH - 300) / 2,
+        // position: 'absolute',
+        // top: '21%',
+        // right: (SCREEN_WIDTH - 300) / 2,
+        marginTop: 15,
         backgroundColor: '#ffffff',
         height: 165,
         width: 300,
@@ -348,30 +347,19 @@ export default StyleSheet.create({
             borderColor: 'transparent'
         }
     }),
-    botSreen: Platform.select({
-        ios: {
-            position: 'absolute',
-            top: -(SCREEN_HEIGHT / 8),
-            height: 80,
-            width: SCREEN_WIDTH,
-            backgroundColor: 'rgba(255,255,255,1)',
-            flexDirection: 'row',
-            paddingHorizontal: 10,
-            paddingVertical: 12,
-            alignItems: 'stretch'
-        },
-        android: {
-            position: 'absolute',
-            top: -(SCREEN_HEIGHT / 10),
-            height: 80,
-            width: SCREEN_WIDTH,
-            backgroundColor: 'rgba(255,255,255,1)',
-            flexDirection: 'row',
-            paddingHorizontal: 10,
-            paddingVertical: 12,
-            alignItems: 'stretch'
-        }
-    }),
+    botSreen: {
+        // position: 'absolute',
+        // top: -(SCREEN_HEIGHT / 8),
+        height: 80,
+        width: SCREEN_WIDTH,
+        backgroundColor: 'rgba(255,255,255,1)',
+        display: 'flex',
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+        // paddingVertical: 12,
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
     image: {},
     textContainer: {
         flex: 1,

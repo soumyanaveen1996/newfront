@@ -191,6 +191,8 @@ class NewChannels extends React.Component {
         this.setState({ typeValue: value });
         if (value === 'team') {
             setTimeout(() => Actions.selectTeam(), 200);
+        } else {
+            this.props.setTeam('');
         }
     };
 

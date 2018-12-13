@@ -45,17 +45,31 @@ import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
 import CallModal from './CallModal';
 import InviteModal from './InviteModal';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
 
         let navigationOptions = {
-            headerTitle: state.params.title
+            headerTitle: (
+                <Text
+                    style={
+                        Platform.OS === 'android'
+                            ? { marginLeft: wp('20%'), fontSize: 16 }
+                            : null
+                    }
+                >
+                    {state.params.title}
+                </Text>
+            )
         };
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -64,7 +78,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -73,7 +87,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -82,7 +96,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {

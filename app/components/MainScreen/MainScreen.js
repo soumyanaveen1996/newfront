@@ -76,7 +76,7 @@ class MainScreen extends React.Component {
             headerTitle: <CenterComponent />
         };
         if (appConfig.app.hideFilter !== true) {
-            ret.headerLeft = (
+            ret.headerRight = (
                 <HeaderLeftIcon
                     config={Config.filterButtonConfig}
                     onPress={state.params.openBotFilter}
@@ -86,7 +86,7 @@ class MainScreen extends React.Component {
 
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -95,7 +95,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -104,7 +104,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -113,7 +113,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {
@@ -134,6 +134,7 @@ class MainScreen extends React.Component {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
             firstTimer: false,
+            noChats: false,
             showNetworkStatusBar: false,
             network: null,
             searchString: ''
@@ -166,7 +167,7 @@ class MainScreen extends React.Component {
                 firstTimer = this.state.firstTimer;
             });
         } else {
-            this.setState({ firstTimer: true }, () => {
+            this.setState({ firstTimer: false }, () => {
                 firstTimer = this.state.firstTimer;
             });
         }
@@ -282,6 +283,7 @@ class MainScreen extends React.Component {
         NetworkHandler.readLambda();
     }
 
+    setNoChats = value => this.setState({ noChats: value });
     showButton(pollingStrategy) {
         if (pollingStrategy === PollingStrategyTypes.manual) {
             this.props.navigation.setParams({ button: 'manual' });
@@ -506,6 +508,7 @@ class MainScreen extends React.Component {
                         unsetFavorite={this.setConversationUnFavorite}
                         searchString={this.state.searchString}
                         onSearch={this.onSearch}
+                        setNoChats={this.setNoChats}
                     />
                 </View>
             );
@@ -521,7 +524,7 @@ class MainScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <BackgroundImage>
-                    {this.state.firstTimer && (
+                    {this.state.firstTimer && this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
