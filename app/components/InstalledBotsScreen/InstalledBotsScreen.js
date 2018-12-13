@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Alert,
+    ScrollView,
     RefreshControl
 } from 'react-native';
 import styles, { BotListItemStyles } from './styles';
@@ -313,7 +314,7 @@ export default class InstalledBotsScreen extends React.Component {
                     style={BotListItemStyles.image}
                 />
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={BotListItemStyles.title}>
+                    <Text style={BotListItemStyles.title} numberOfLines={1}>
                         {botData.botName}{' '}
                     </Text>
                     <View
@@ -460,26 +461,28 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                    <FlatList
-                        style={styles.flatList}
-                        keyExtractor={(item, index) => item.botId}
-                        data={this.state.bots}
-                        renderItem={this.renderGridItem.bind(this)}
-                        extraData={this.state}
-                        ItemSeparatorComponent={() => (
-                            <View style={[styles.separator]} />
-                        )}
-                        refreshControl={
-                            <RefreshControl
-                                colors={['#9Bd35A', '#689F38']}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
-                        }
-                    />
-                    <Toast ref="toast" positionValue={250} />
-                </View>
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <FlatList
+                            style={styles.flatList}
+                            keyExtractor={(item, index) => item.botId}
+                            data={this.state.bots}
+                            renderItem={this.renderGridItem.bind(this)}
+                            extraData={this.state}
+                            ItemSeparatorComponent={() => (
+                                <View style={[styles.separator]} />
+                            )}
+                            refreshControl={
+                                <RefreshControl
+                                    colors={['#9Bd35A', '#689F38']}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh.bind(this)}
+                                />
+                            }
+                        />
+                        <Toast ref="toast" positionValue={250} />
+                    </View>
+                </ScrollView>
             );
         }
     }

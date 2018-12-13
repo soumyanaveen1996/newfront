@@ -169,7 +169,9 @@ export default class BotInstallListItem extends React.Component {
                     style={styles.image}
                 />
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}>{bot.botName}</Text>
+                    <Text numberOfLines={1} style={styles.title}>
+                        {bot.botName}
+                    </Text>
                     <View
                         style={{
                             flexDirection: 'row',

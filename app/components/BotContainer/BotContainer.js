@@ -90,8 +90,6 @@ export default class BotContainer extends React.Component {
     };
 
     render() {
-        console.log('bots data ', this.props.imageForHeader);
-
         return (
             <View
                 style={

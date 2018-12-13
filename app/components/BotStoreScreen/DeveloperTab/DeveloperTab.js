@@ -4,9 +4,9 @@ import {
     Text,
     Image,
     TouchableHighlight,
-    TouchableOpacity
+    TouchableOpacity,
+    ScrollView
 } from 'react-native';
-import GridView from 'react-native-super-grid';
 import styles from './styles';
 import images from '../../../config/images';
 import I18n from '../../../config/i18n/i18n';
@@ -153,10 +153,8 @@ export default class DeveloperTab extends React.Component {
     };
 
     render() {
-        console.log('data for image', this.state.developerData);
-
         return (
-            <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }}>
                 <View
                     style={{
                         width: '100%',
@@ -175,7 +173,7 @@ export default class DeveloperTab extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {this.renderCategoryBots()}
-            </View>
+            </ScrollView>
         );
     }
 }

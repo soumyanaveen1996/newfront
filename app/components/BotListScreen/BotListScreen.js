@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { Text, View, FlatList, TextInput } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
 import styles from './styles';
 import { headerConfig } from './config';
 import { Actions } from 'react-native-router-flux';
@@ -22,7 +23,10 @@ export default class BotListScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            botsData: this.props.data
+            botsData: this.props.data,
+            type: this.props.typeScreen,
+            countResults: 0,
+            searchString: ''
         };
     }
 
@@ -70,6 +74,14 @@ export default class BotListScreen extends React.Component {
         Actions.botChat({ bot: item });
     }
 
+    async updateText() {
+        const searchBot = await Bot.searchBots(this.state.searchString);
+        this.setState({
+            botsData: [...searchBot],
+            countResults: searchBot.length
+        });
+    }
+
     renderRowItem = ({ item }) => {
         return (
             <View key={item.botId} style={styles.rowContainer}>
@@ -78,9 +90,52 @@ export default class BotListScreen extends React.Component {
         );
     };
 
+    searchBotFields = () => {
+        if (this.state.type && this.state.type === 'search') {
+            return (
+                <View style={styles.searchSection}>
+                    <Icon
+                        style={styles.searchIcon}
+                        name="search"
+                        size={24}
+                        color="rgba(0, 189, 242, 1)"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search apps"
+                        onChangeText={searchString => {
+                            this.setState({ searchString });
+                        }}
+                        underlineColorAndroid="transparent"
+                        onSubmitEditing={() => this.updateText()}
+                    />
+                </View>
+            );
+        } else {
+            return null;
+        }
+    };
+
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', padding: 10 }}>
+                {this.searchBotFields()}
+                {this.state.countResults > 0 &&
+                    this.state.searchString.length > 0 && (
+                    <View>
+                        <Text
+                            style={{
+                                color: 'rgba(74, 74, 74, 1)',
+                                fontSize: 22,
+                                fontWeight: '600',
+                                marginBottom: 20
+                            }}
+                        >
+                            {this.state.countResults} apps found for search{' '}
+                            {this.state.searchString}
+                        </Text>
+                    </View>
+                )}
                 <FlatList
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.botId}

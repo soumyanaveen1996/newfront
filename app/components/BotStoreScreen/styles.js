@@ -2,6 +2,10 @@ import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_WIDTH } from './config';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default StyleSheet.create({
     headerTitleStyle: {
@@ -81,5 +85,28 @@ export default StyleSheet.create({
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    searchSection: {
+        width: wp('100%'),
+        height: 40,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        marginTop: 3,
+        paddingHorizontal: 20
+    },
+    searchIcon: {
+        padding: 10
+    },
+
+    input: {
+        flex: 1,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 0,
+        backgroundColor: '#fff',
+        color: 'rgba(155,155,155,1)'
     }
 });

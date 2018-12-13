@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    TouchableHighlight,
+    ScrollView
+} from 'react-native';
 import styles from './styles';
 import images from '../../../config/images';
 import { scrollViewConfig } from './config';
@@ -82,9 +88,9 @@ export default class CategoriesTab extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1, padding: 10 }}>
+            <ScrollView style={{ flex: 1, padding: 10 }}>
                 {this.renderCategoryBots()}
-            </View>
+            </ScrollView>
         );
     }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Modal, Text, TextInput, TouchableOpacity } from 'react-native';
 import styles from './styles';
+import Bot from '../../../lib/bot/index';
 
 import { SafeAreaView } from 'react-navigation';
 
@@ -8,17 +9,31 @@ export default class NewProviderPopup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: true
+            show: true,
+            wrongCode: false,
+            code: ''
         };
     }
 
     onChangeName(e) {
-        console.log('change text ', e);
+        this.setState({ code: e });
     }
 
     cancelNewProvider = () => {
         this.props.canelNewProvider(false);
     };
+
+    async newProvider() {
+        const addProvider = await Bot.addNewProvider(this.state.code);
+        if (!addProvider) {
+            this.setState({ wrongCode: true });
+        }
+        if (addProvider && !addProvider[0]) {
+            this.setState({ wrongCode: true });
+        } else {
+            this.cancelNewProvider();
+        }
+    }
 
     render() {
         return (
@@ -61,7 +76,10 @@ export default class NewProviderPopup extends Component {
                                 <Text style={styles.cancelText}>Cancel</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.submitBtn}>
+                            <TouchableOpacity
+                                style={styles.submitBtn}
+                                onPress={this.newProvider.bind(this)}
+                            >
                                 <Text style={styles.submitText}>Submit</Text>
                             </TouchableOpacity>
                         </View>

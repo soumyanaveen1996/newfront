@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, ActivityIndicator, StatusBar } from 'react-native';
+import {
+    View,
+    Text,
+    ActivityIndicator,
+    StatusBar,
+    TextInput,
+    TouchableOpacity
+} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Header, Icon } from 'react-native-elements';
 import { GlobalColors } from '../../config/styles';
@@ -111,6 +118,7 @@ class BotStoreScreen extends React.Component {
         this.state = {
             showSearchBar: false,
             selectedIndex: 0,
+            searchString: '',
             catalogData: Bot.getDefaultCatalog(),
             catalogLoaded: false,
             networkError: false
@@ -305,6 +313,14 @@ class BotStoreScreen extends React.Component {
         );
     }
 
+    onTileCilcked = title => {
+        Actions.botList({
+            data: this.state.catalogData.bots,
+            title: title,
+            typeScreen: 'search'
+        });
+    };
+
     render() {
         if (this.state.networkError) {
             return (
@@ -327,6 +343,29 @@ class BotStoreScreen extends React.Component {
 
         return (
             <BackgroundImage style={{ flex: 1 }}>
+                <TouchableOpacity
+                    style={styles.searchSection}
+                    onPress={() => this.onTileCilcked('Marketplace')}
+                >
+                    <Icon
+                        style={styles.searchIcon}
+                        name="search"
+                        size={24}
+                        color="rgba(0, 189, 242, 1)"
+                    />
+                    <View style={styles.input}>
+                        <Text
+                            style={{
+                                color: 'rgba(155, 155, 155, 1)',
+                                fontSize: 16,
+                                fontFamily: 'SF Pro Text'
+                            }}
+                        >
+                            {' '}
+                            Search apps{' '}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
                 {this.state.showNewProvider && (
                     <NewProviderPopup
                         canelNewProvider={this.handleCancelNewProvider}
