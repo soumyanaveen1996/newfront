@@ -153,9 +153,9 @@ export default StyleSheet.create({
     },
     createNewChannelContainer: {
         width: SCREEN_WIDTH,
-        backgroundColor: 'rgba(244,244,244,1)',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 6
     },
     buttonContainerCreateChannel: {
         height: hp('6%'),
@@ -535,5 +535,21 @@ export default StyleSheet.create({
     },
     radioButton: {
         marginLeft: wp('10%')
+    },
+    headerRight: {
+        display: 'flex',
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        backgroundColor: 'rgba(0,189,242,1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 15,
+        marginBottom: 5,
+        ...Platform.select({
+            android: {
+                marginTop: 2
+            }
+        })
     }
 });

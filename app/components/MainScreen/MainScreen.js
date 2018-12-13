@@ -6,11 +6,12 @@ import {
     Alert,
     StatusBar,
     AsyncStorage,
-    Platform,
     TextInput,
     Text,
     TouchableOpacity,
-    Keyboard
+    Keyboard,
+    Image,
+    Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BotList from './BotList';
@@ -123,6 +124,44 @@ class MainScreen extends React.Component {
                 );
             }
         }
+
+        ret.headerRight = (
+            <View
+                style={[
+                    { display: 'flex', flexDirection: 'row' },
+                    Platform.select({
+                        android: {
+                            marginTop: 2
+                        }
+                    })
+                ]}
+            >
+                <TouchableOpacity
+                    style={MainScreenStyles.headerRightChat}
+                    onPress={() =>
+                        Actions.tabBarChat({
+                            type: 'push'
+                        })
+                    }
+                >
+                    <Image
+                        style={{ width: 25, height: 25 }}
+                        source={require('../../images/tabbar-contacts/chat-good.png')}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={MainScreenStyles.headerRightCall}
+                    onPress={() =>
+                        Actions.tabBarCall({
+                            type: 'push'
+                        })
+                    }
+                >
+                    <View>{Icons.callW()}</View>
+                </TouchableOpacity>
+            </View>
+        );
+
         return ret;
     }
 

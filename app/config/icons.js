@@ -208,7 +208,7 @@ export const Icons = {
     callW: icon(
         'ios-call-outline',
         'ionicon',
-        hp('4%'),
+        20,
         Colors.white,
         Colors.white,
         '500'
@@ -216,7 +216,7 @@ export const Icons = {
     chatW: icon(
         'ios-chatbubbles-outline',
         'ionicon',
-        hp('4%'),
+        15,
         Colors.white,
         Colors.white,
         '500'

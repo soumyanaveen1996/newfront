@@ -8,7 +8,9 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Image,
-    Alert
+    Alert,
+    Platform,
+    AlertIOS
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
@@ -43,10 +45,10 @@ const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        let headerRight = null;
+        let headerLeft = null;
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -55,7 +57,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -64,7 +66,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -73,7 +75,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {
@@ -83,8 +85,34 @@ class ChannelsList extends React.Component {
                 );
             }
         }
+
+        const headerRight = (
+            <TouchableOpacity
+                style={styles.headerRight}
+                onPress={state.params.newChannel}
+            >
+                <Image
+                    source={require('../../images/channels/plus-white-good.png')}
+                    style={{ width: 15, height: 15 }}
+                />
+            </TouchableOpacity>
+        );
+
+        const headerTitle = (
+            <Text
+                style={
+                    Platform.OS === 'android'
+                        ? { marginLeft: wp('20%'), fontSize: 16 }
+                        : null
+                }
+            >
+                {headerConfig.headerTitle}
+            </Text>
+        );
+
         return {
-            headerTitle: headerConfig.headerTitle,
+            headerTitle,
+            headerLeft,
             headerRight
         };
     }
@@ -120,7 +148,8 @@ class ChannelsList extends React.Component {
         // this.refresh();
 
         this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage
+            showConnectionMessage: this.showConnectionMessage,
+            newChannel: this.createChannel.bind(this)
         });
         const user = await Auth.getUser();
         if (user) {
@@ -305,13 +334,15 @@ class ChannelsList extends React.Component {
     };
 
     onChannelTapped = channel => {
-        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
-            Actions.channelChat({
-                bot: imBot,
-                channel: channel,
-                onBack: this.onBack
-            });
-        });
+        AlertIOS.alert('Hello');
+
+        // SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+        //     Actions.channelChat({
+        //         bot: imBot,
+        //         channel: channel,
+        //         onBack: this.onBack
+        //     })
+        // })
     };
 
     setWait = wait => this.setState({ wait });
@@ -396,19 +427,7 @@ class ChannelsList extends React.Component {
                         />
                     </View>
 
-                    <View style={styles.createNewChannelContainer}>
-                        <TouchableOpacity
-                            style={styles.buttonContainerCreateChannel}
-                            onPress={this.createChannel.bind(this)}
-                        >
-                            {/* <Text style={styles.buttonText}>New Channel</Text> */}
-                            <Image
-                                source={require('../../images/channels/plus-white-good.png')}
-                                resizeMode="contain"
-                                style={{ height: 20, width: 20 }}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    <View style={styles.createNewChannelContainer} />
 
                     <View style={styles.filterContainer}>
                         <TouchableOpacity

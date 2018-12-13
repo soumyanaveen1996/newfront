@@ -174,7 +174,10 @@ export default class ChannelsListItem extends React.Component {
         }
 
         return (
-            <View style={styles.container}>
+            <TouchableOpacity
+                style={styles.container}
+                onPress={this.props.onChannelTapped}
+            >
                 <View style={styles.channelHeaderPart}>
                     <View style={styles.imageContainer}>
                         <CachedImage
@@ -234,7 +237,7 @@ export default class ChannelsListItem extends React.Component {
                         {this.subscriptionButton(channel, user.userId)}
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     }
 }

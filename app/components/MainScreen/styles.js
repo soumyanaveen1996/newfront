@@ -105,6 +105,28 @@ export const MainScreenStyles = StyleSheet.create({
         paddingLeft: 0,
         backgroundColor: '#fff',
         color: 'rgba(155,155,155,1)'
+    },
+    headerRightChat: {
+        display: 'flex',
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 5,
+        marginBottom: 5,
+        backgroundColor: 'rgba(0,189,242,1)'
+    },
+    headerRightCall: {
+        display: 'flex',
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        backgroundColor: 'rgba(47,199,111,1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 10,
+        marginBottom: 5
     }
 });
 
