@@ -132,7 +132,7 @@ class NewCallContacts extends React.Component {
                         id: contact.userId,
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: contact.phoneNumber || undefined
+                        phoneNumbers: contact.phoneNumbers || undefined
                     }));
             } else {
                 contactBook = phoneContacts
@@ -329,13 +329,16 @@ class NewCallContacts extends React.Component {
                                         >
                                             {contactSelected.phoneNumbers
                                                 ? contactSelected.phoneNumbers
+                                                    .mobile
                                                 : 'Not Available'}
                                         </Text>
                                     </View>
                                     <View style={styles.modalCallButContainer}>
                                         <TouchableOpacity
                                             style={
+                                                contactSelected.phoneNumbers &&
                                                 contactSelected.phoneNumbers
+                                                    .mobile
                                                     ? styles.callButton
                                                     : styles.callButtonDisabled
                                             }
