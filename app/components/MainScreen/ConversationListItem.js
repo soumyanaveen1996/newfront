@@ -68,21 +68,34 @@ export default class ConversationListItem extends React.Component {
     }
 
     renderSubview() {
-        const { message } = this.state;
+        let message = null;
+        let subTitle = null;
+        let date = null;
+        if (this.props.chatData && this.props.chatData.lastMessage) {
+            message = this.props.chatData.lastMessage;
+            subTitle = message.getDisplayMessage();
+            date = this.props.chatData.lastMessageDate;
+        } else {
+            subTitle = SystemBot.imBot.desc;
+        }
         if (
             message &&
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
         ) {
             return (
-                <Image
-                    style={BotListItemStyles.chatImage}
-                    source={{ uri: message.getMessage() }}
-                />
+                // <Image
+                //     style={BotListItemStyles.chatImage}
+                //     source={{uri: message.getMessage()}}
+                // />
+
+                <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
+                    Image Message
+                </Text>
             );
         } else {
             return (
                 <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
-                    {this.state.subTitle}
+                    {subTitle}
                 </Text>
             );
         }
@@ -131,7 +144,7 @@ export default class ConversationListItem extends React.Component {
                 {this.renderProfileimage()}
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={BotListItemStyles.title}>
-                        {this.state.chatName}
+                        {this.props.chatData.chatName}
                     </Text>
                     {this.renderSubview()}
                 </View>
@@ -141,16 +154,20 @@ export default class ConversationListItem extends React.Component {
                     <Text
                         allowFontScaling={false}
                         style={
-                            this.state.count > 0
+                            this.props.chatData.totalUnread > 0
                                 ? BotListItemStyles.count
                                 : BotListItemStyles.hidden
                         }
                     >
-                        {this.state.count}
+                        {this.props.chatData.totalUnread}
                     </Text>
                 </View>
                 <Text style={BotListItemStyles.time}>
-                    {utils.formattedDate(this.state.date)}
+                    {utils.formattedDate(
+                        this.props.chatData.lastMessageDate
+                            ? this.props.chatData.lastMessageDate
+                            : ''
+                    )}
                 </Text>
             </TouchableOpacity>
         );

@@ -6,6 +6,7 @@ import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import { MessageTypeConstants } from '../../lib/capability';
 import { CachedImage } from '../CachedImage';
+import SystemBot from '../../lib/bot/SystemBot';
 import images from '../../images';
 
 export default class BotListItem extends React.Component {
@@ -45,7 +46,16 @@ export default class BotListItem extends React.Component {
     }
 
     renderSubview() {
-        const { message } = this.state;
+        let message = null;
+        let subTitle = null;
+        let date = null;
+        if (this.props.chatData && this.props.chatData.lastMessage) {
+            message = this.props.chatData.lastMessage;
+            subTitle = message.getDisplayMessage();
+            date = this.props.chatData.lastMessageDate;
+        } else {
+            subTitle = SystemBot.imBot.desc;
+        }
         if (
             message &&
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
@@ -59,7 +69,7 @@ export default class BotListItem extends React.Component {
         } else {
             return (
                 <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
-                    {this.state.subTitle}
+                    {subTitle}
                 </Text>
             );
         }
@@ -97,12 +107,12 @@ export default class BotListItem extends React.Component {
                     <Text
                         allowFontScaling={false}
                         style={
-                            this.state.count > 0
+                            this.props.chatData.totalUnread > 0
                                 ? BotListItemStyles.count
                                 : BotListItemStyles.hidden
                         }
                     >
-                        {this.state.count}
+                        {this.props.chatData.totalUnread}
                     </Text>
                 </View>
                 {/* <Text

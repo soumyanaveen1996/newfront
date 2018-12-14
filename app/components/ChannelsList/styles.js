@@ -171,17 +171,21 @@ export default StyleSheet.create({
         shadowOpacity: 0.7
     },
     buttonContainer: {
-        height: hp('4.5%'),
-        width: wp('50%'),
+        height: 40,
+        width: wp('80%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 10,
-
-        shadowOffset: { width: 1, height: 1 },
+        shadowOffset: { width: 0.5, height: 1 },
         shadowColor: 'black',
-        shadowOpacity: 0.7
+        shadowOpacity: 0.4,
+        ...Platform.select({
+            android: {
+                elevation: 2
+            }
+        })
     },
     buttonContainerDelete: {
         height: 40,
@@ -201,7 +205,7 @@ export default StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontSize: wp('4%'),
+        fontSize: 14,
         fontWeight: '500',
         paddingHorizontal: 5
     },
@@ -511,7 +515,7 @@ export default StyleSheet.create({
         height: hp('50%')
     },
     teamContainer: {
-        height: hp('80%')
+        height: hp('70%')
     },
     participantName: {
         fontSize: wp('4%'),

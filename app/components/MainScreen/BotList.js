@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { Promise } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { connect } from 'react-redux';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import I18n from '../../config/i18n/i18n';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import { setAllChatsData } from '../../redux/actions/TimeLineActions';
@@ -39,7 +39,9 @@ class BotList extends React.Component {
         this.state = {
             loaded: false,
             data: [],
-            favData: []
+            favData: [],
+            rowMap: null,
+            rowKey: null
         };
     }
 
@@ -136,37 +138,53 @@ class BotList extends React.Component {
         const AllTimelineData =
             favData.length > 0
                 ? [
-                    { elemType: 'search' },
+                    { elemType: 'search', key: 'search' },
                     // { elemType: 'buttons' },
-                    { elemType: 'header', headerText: 'Favourites' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Favourites',
+                        key: 'favorites'
+                    },
                     ...favData,
-                    { elemType: 'header', headerText: 'Recents' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Recents',
+                        key: 'recents'
+                    },
                     ...recentData
                 ]
                 : [
-                    { elemType: 'search' },
+                    { elemType: 'search', key: 'search' },
                     // { elemType: 'buttons' },
                     ...favData,
-                    { elemType: 'header', headerText: 'Recents' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Recents',
+                        key: 'recents'
+                    },
                     ...recentData
                 ];
 
-        const prevTimeline = this.props.timeline.allChats;
-        if (!isEqual(prevTimeline, AllTimelineData)) {
-            this.props.setAllChatsData(AllTimelineData);
-            this.setState(
-                {
-                    loaded: true,
-                    data: R.take(AllTimelineData.length - 1, AllTimelineData)
-                },
-                () => {
-                    this.setState({
-                        loaded: true,
-                        data: AllTimelineData
-                    });
-                }
-            );
-        }
+        this.setState({
+            loaded: true,
+            data: AllTimelineData
+        });
+        // const prevTimeline = this.props.timeline.allChats
+        // if (true) {
+        //     this.props.setAllChatsData(AllTimelineData)
+        //     this.setState(
+        //         {
+        //             loaded: true,
+        //             data: R.take(AllTimelineData.length - 1, AllTimelineData)
+        //         },
+        //         () => {
+        //             this.setState({
+        //                 loaded: true,
+        //                 data: AllTimelineData
+        //             })
+        //         }
+        //     )
+        // }
     }
 
     applyFilter = chats => {
@@ -242,6 +260,20 @@ class BotList extends React.Component {
             </View>
         );
     };
+
+    setFavorite = (key, rowMap, conversationId, chatData) => {
+        this.props.setFavorite(conversationId, chatData);
+        if (rowMap[key]) {
+            rowMap[key].closeRow();
+        }
+    };
+
+    unsetFavorite = (key, rowMap, conversationId, chatData) => {
+        this.props.unsetFavorite(conversationId);
+        if (rowMap[key]) {
+            rowMap[key].closeRow();
+        }
+    };
     render() {
         const { loaded, data } = this.state;
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
@@ -260,6 +292,9 @@ class BotList extends React.Component {
                         <SwipeListView
                             useFlatList
                             data={allData}
+                            closeOnScroll={true}
+                            closeOnRowPress={true}
+                            closeOnRowBeginSwipe={true}
                             renderItem={(chat, rowMap) => {
                                 const { item = null, index, separators } = chat;
                                 let rowItem = <View />;
@@ -305,7 +340,8 @@ class BotList extends React.Component {
                                         type = null,
                                         elemType,
                                         bot = null,
-                                        chatData = null
+                                        chatData = null,
+                                        key
                                     }
                                 } = hdata;
 
@@ -315,8 +351,26 @@ class BotList extends React.Component {
                                             conversationId={bot.conversationId}
                                             onClick={
                                                 elemType === 'favorite'
-                                                    ? this.props.unsetFavorite
-                                                    : this.props.setFavorite
+                                                    ? (
+                                                        conversationId,
+                                                        chatData
+                                                    ) =>
+                                                        this.unsetFavorite(
+                                                            key,
+                                                            rowMap,
+                                                            conversationId,
+                                                            chatData
+                                                        )
+                                                    : (
+                                                        conversationId,
+                                                        chatData
+                                                    ) =>
+                                                        this.setFavorite(
+                                                            key,
+                                                            rowMap,
+                                                            conversationId,
+                                                            chatData
+                                                        )
                                             }
                                             chatData={chatData}
                                             unfavorite={elemType === 'favorite'}
@@ -325,6 +379,9 @@ class BotList extends React.Component {
                                 return Favorite;
                             }}
                             leftOpenValue={hiddenItemWidth}
+                            previewRowKey={'0'}
+                            previewOpenValue={-40}
+                            previewOpenDelay={3000}
                         />
                     }
                 </View>
