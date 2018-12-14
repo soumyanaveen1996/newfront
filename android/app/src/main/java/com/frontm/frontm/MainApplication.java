@@ -74,7 +74,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
             BugsnagReactNative.getPackage(),
-            new ActionSheetPackage(),
             new RNDefaultPreferencePackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
           new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
                                                                    // handle microphone

@@ -42,7 +42,6 @@
     "react": "16.6.0-alpha.8af6728",
     "react-fast-compare": "^2.0.4",
     "react-native": "0.57.3",
-    "react-native-actionsheet": "https://github.com/chattes/react-native-actionsheet.git",
     "react-native-android-open-settings": "^1.0.1",
     "react-native-audio": "^3.5.1",
     "react-native-aws-signature": "github:shad0wfax/react-native-aws-signature",

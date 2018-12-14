@@ -17,7 +17,7 @@ import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
 import moment from 'moment';
-import ActionSheet from 'react-native-actionsheet';
+import ActionSheet from '@yfuks/react-native-action-sheet';
 
 const subtitleNumberOfLines = 2;
 
@@ -147,7 +147,23 @@ export default class ChannelsListItem extends React.Component {
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
                         onPress={() => {
-                            this.ActionSheetOwner.show();
+                            // this.ActionSheetOwner.show()
+                            ActionSheet.showActionSheetWithOptions(
+                                {
+                                    options: ['Edit', 'Cancel'],
+                                    cancelButtonIndex: 1,
+                                    destructiveButtonIndex: 1,
+                                    tintColor: 'blue'
+                                },
+                                buttonIndex => {
+                                    if (
+                                        buttonIndex !== undefined &&
+                                        buttonIndex === 0
+                                    ) {
+                                        this.editChannel(channel);
+                                    }
+                                }
+                            );
                         }}
                     >
                         {Icons.more()}
@@ -162,7 +178,23 @@ export default class ChannelsListItem extends React.Component {
                     <TouchableOpacity
                         style={{ height: 40, width: 40 }}
                         onPress={() => {
-                            this.ActionSheetSubscribed.show();
+                            // this.ActionSheetOwner.show()
+                            ActionSheet.showActionSheetWithOptions(
+                                {
+                                    options: ['Unsubscribe', 'Cancel'],
+                                    cancelButtonIndex: 1,
+                                    destructiveButtonIndex: 1,
+                                    tintColor: 'blue'
+                                },
+                                buttonIndex => {
+                                    if (
+                                        buttonIndex !== undefined &&
+                                        buttonIndex === 0
+                                    ) {
+                                        this.onUnsubscribeChannel();
+                                    }
+                                }
+                            );
                         }}
                     >
                         {Icons.more()}
@@ -176,7 +208,23 @@ export default class ChannelsListItem extends React.Component {
                     <TouchableOpacity
                         style={{ height: 40, width: 40 }}
                         onPress={() => {
-                            this.ActionSheetUnSubscribed.show();
+                            // this.ActionSheetOwner.show()
+                            ActionSheet.showActionSheetWithOptions(
+                                {
+                                    options: ['Subscribe', 'Cancel'],
+                                    cancelButtonIndex: 1,
+                                    destructiveButtonIndex: 1,
+                                    tintColor: 'blue'
+                                },
+                                buttonIndex => {
+                                    if (
+                                        buttonIndex !== undefined &&
+                                        buttonIndex === 0
+                                    ) {
+                                        this.onsubscribeChannel(channel);
+                                    }
+                                }
+                            );
                         }}
                     >
                         {Icons.more()}
@@ -215,56 +263,56 @@ export default class ChannelsListItem extends React.Component {
         //     }
         // }
     }
-    renderActionSheet = (channel, user) => {
-        return (
-            <View>
-                <ActionSheet
-                    ref={o => (this.ActionSheetOwner = o)}
-                    options={['Edit', 'Cancel']}
-                    cancelButtonIndex={1}
-                    destructiveButtonIndex={1}
-                    onPress={index => {
-                        if (index === 0) {
-                            this.editChannel(channel);
-                        }
-                    }}
-                />
-                <ActionSheet
-                    ref={o => (this.ActionSheetSubscribed = o)}
-                    options={['Unsubscribe', 'Cancel']}
-                    cancelButtonIndex={1}
-                    destructiveButtonIndex={1}
-                    onPress={index => {
-                        if (index === 0) {
-                            this.onUnsubscribeChannel();
-                        }
-                    }}
-                />
-                <ActionSheet
-                    ref={o => (this.ActionSheetUnSubscribed = o)}
-                    options={['Subscribe', 'Cancel']}
-                    cancelButtonIndex={1}
-                    destructiveButtonIndex={1}
-                    onPress={index => {
-                        if (index === 0) {
-                            this.onsubscribeChannel(channel);
-                        }
-                    }}
-                />
-                <ActionSheet
-                    ref={o => (this.ActionSheetSubscribeNOpen = o)}
-                    options={['Subscribe', 'Cancel']}
-                    cancelButtonIndex={1}
-                    destructiveButtonIndex={1}
-                    onPress={index => {
-                        if (index === 0) {
-                            this.onsubscribeChannel(channel, true);
-                        }
-                    }}
-                />
-            </View>
-        );
-    };
+    // renderActionSheet = (channel, user) => {
+    //     return (
+    //         <View>
+    //             <ActionSheet
+    //                 ref={o => (this.ActionSheetOwner = o)}
+    //                 options={['Edit', 'Cancel']}
+    //                 cancelButtonIndex={1}
+    //                 destructiveButtonIndex={1}
+    //                 onPress={index => {
+    //                     if (index === 0) {
+    //                         this.editChannel(channel)
+    //                     }
+    //                 }}
+    //             />
+    //             <ActionSheet
+    //                 ref={o => (this.ActionSheetSubscribed = o)}
+    //                 options={['Unsubscribe', 'Cancel']}
+    //                 cancelButtonIndex={1}
+    //                 destructiveButtonIndex={1}
+    //                 onPress={index => {
+    //                     if (index === 0) {
+    //                         this.onUnsubscribeChannel()
+    //                     }
+    //                 }}
+    //             />
+    //             <ActionSheet
+    //                 ref={o => (this.ActionSheetUnSubscribed = o)}
+    //                 options={['Subscribe', 'Cancel']}
+    //                 cancelButtonIndex={1}
+    //                 destructiveButtonIndex={1}
+    //                 onPress={index => {
+    //                     if (index === 0) {
+    //                         this.onsubscribeChannel(channel)
+    //                     }
+    //                 }}
+    //             />
+    //             <ActionSheet
+    //                 ref={o => (this.ActionSheetSubscribeNOpen = o)}
+    //                 options={['Subscribe', 'Cancel']}
+    //                 cancelButtonIndex={1}
+    //                 destructiveButtonIndex={1}
+    //                 onPress={index => {
+    //                     if (index === 0) {
+    //                         this.onsubscribeChannel(channel, true)
+    //                     }
+    //                 }}
+    //             />
+    //         </View>
+    //     )
+    // }
 
     openChannel = (channel, user) => {
         const isOwner = channel.ownerId === user ? true : false;
@@ -276,7 +324,19 @@ export default class ChannelsListItem extends React.Component {
         }
 
         if (channel.subcription === 'false') {
-            return this.ActionSheetSubscribeNOpen.show();
+            ActionSheet.showActionSheetWithOptions(
+                {
+                    options: ['Subscribe', 'Cancel'],
+                    cancelButtonIndex: 1,
+                    destructiveButtonIndex: 1,
+                    tintColor: 'blue'
+                },
+                buttonIndex => {
+                    if (buttonIndex !== undefined && buttonIndex === 0) {
+                        this.onsubscribeChannel(channel, true);
+                    }
+                }
+            );
         }
     };
 
@@ -357,7 +417,7 @@ export default class ChannelsListItem extends React.Component {
                         {this.subscriptionButton(channel, user.userId)}
                     </View> */}
                 </View>
-                {this.renderActionSheet(channel, user)}
+                {/* {this.renderActionSheet(channel, user)} */}
             </TouchableOpacity>
         );
     }

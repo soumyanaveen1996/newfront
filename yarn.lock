@@ -7046,10 +7046,6 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.0, react-lifecycles-com
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-"react-native-actionsheet@https://github.com/chattes/react-native-actionsheet.git":
-  version "2.4.2"
-  resolved "https://github.com/chattes/react-native-actionsheet.git#18735974422cdeb40fc2714447d58de1991f135d"
-
 react-native-android-open-settings@^1.0.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-android-open-settings/-/react-native-android-open-settings-1.2.0.tgz#95d045df5da51f52a9ade939ae3c4f28d7d9dec0"
