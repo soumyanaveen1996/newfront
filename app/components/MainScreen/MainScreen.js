@@ -563,7 +563,7 @@ class MainScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <BackgroundImage>
-                    {this.state.firstTimer && this.state.noChats && (
+                    {this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
