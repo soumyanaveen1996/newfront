@@ -22,6 +22,7 @@ export default class CallModal extends React.Component {
         Actions.dialler({
             call: true,
             number: this.props.contact.phoneNumbers.mobile
+            // number: '+919880433199'
         });
     }
 

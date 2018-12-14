@@ -105,8 +105,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 111
-        versionName "3.2"
+        versionCode 113
+        versionName "3.2.1"
         multiDexEnabled true
 
         ndk {
@@ -158,6 +158,8 @@ android {
 }
 
 dependencies {
+    compile project(':bugsnag-react-native')
+    compile project(':@yfuks_react-native-action-sheet')
     compile project(':react-native-default-preference')
     compile project(':react-native-video')
     compile project(':react-native-version-check')

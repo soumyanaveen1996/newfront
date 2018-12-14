@@ -8,7 +8,9 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Image,
-    Alert
+    Alert,
+    Platform,
+    AlertIOS
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
@@ -43,10 +45,10 @@ const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 class ChannelsList extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        let headerRight = null;
+        let headerLeft = null;
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -55,7 +57,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -64,7 +66,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -73,7 +75,7 @@ class ChannelsList extends React.Component {
                     />
                 );
             } else {
-                headerRight = (
+                headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {
@@ -83,8 +85,34 @@ class ChannelsList extends React.Component {
                 );
             }
         }
+
+        const headerRight = (
+            <TouchableOpacity
+                style={styles.headerRight}
+                onPress={state.params.newChannel}
+            >
+                <Image
+                    source={require('../../images/channels/plus-white-good.png')}
+                    style={{ width: 15, height: 15 }}
+                />
+            </TouchableOpacity>
+        );
+
+        const headerTitle = (
+            <Text
+                style={
+                    Platform.OS === 'android'
+                        ? { marginLeft: wp('20%'), fontSize: 16 }
+                        : null
+                }
+            >
+                {headerConfig.headerTitle}
+            </Text>
+        );
+
         return {
-            headerTitle: headerConfig.headerTitle,
+            headerTitle,
+            headerLeft,
             headerRight
         };
     }
@@ -120,7 +148,8 @@ class ChannelsList extends React.Component {
         // this.refresh();
 
         this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage
+            showConnectionMessage: this.showConnectionMessage,
+            newChannel: this.createChannel.bind(this)
         });
         const user = await Auth.getUser();
         if (user) {
@@ -162,7 +191,8 @@ class ChannelsList extends React.Component {
         Store.dispatch(setCurrentScene('none'));
         const reduxState = Store.getState();
         if (!reduxState.user.allChannelsLoaded) {
-            Channel.refreshChannels();
+            setTimeout(() => Channel.refreshChannels(), 0);
+            setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
         }
     }
 
@@ -267,25 +297,19 @@ class ChannelsList extends React.Component {
 
     onChannelUnsubscribe = async channel => {
         await this.refresh(false, false);
-        this.refs.toast.show(
-            I18n.t('Channel_unsubscribed'),
-            DURATION.LENGTH_SHORT
-        );
+        this.toast.show(I18n.t('Channel_unsubscribed'), DURATION.LENGTH_SHORT);
     };
 
     onChannelSubscribed = async channel => {
         await this.refresh(false, false);
-        this.refs.toast.show(
-            I18n.t('Channel_subscribed'),
-            DURATION.LENGTH_SHORT
-        );
+        this.toast.show(I18n.t('Channel_subscribed'), DURATION.LENGTH_SHORT);
     };
 
     onChannelUnsubscribeFailed = (channel, message) => {
         if (message) {
-            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+            this.toast.show(message, DURATION.LENGTH_LONG);
         } else {
-            this.refs.toast.show(
+            this.toast.show(
                 I18n.t('Channel_unsubscribe_failed'),
                 DURATION.LENGTH_LONG
             );
@@ -294,9 +318,9 @@ class ChannelsList extends React.Component {
 
     onChannelsubscribeFailed = (channel, message) => {
         if (message) {
-            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+            this.toast.show(message, DURATION.LENGTH_LONG);
         } else {
-            this.refs.toast.show(
+            this.toast.show(
                 I18n.t('Channel_subscribe_failed'),
                 DURATION.LENGTH_LONG
             );
@@ -304,6 +328,8 @@ class ChannelsList extends React.Component {
     };
 
     onChannelTapped = channel => {
+        // AlertIOS.alert('Hello')
+
         SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
             Actions.channelChat({
                 bot: imBot,
@@ -395,19 +421,7 @@ class ChannelsList extends React.Component {
                         />
                     </View>
 
-                    <View style={styles.createNewChannelContainer}>
-                        <TouchableOpacity
-                            style={styles.buttonContainerCreateChannel}
-                            onPress={this.createChannel.bind(this)}
-                        >
-                            {/* <Text style={styles.buttonText}>New Channel</Text> */}
-                            <Image
-                                source={require('../../images/channels/plus-white-good.png')}
-                                resizeMode="contain"
-                                style={{ height: 20, width: 20 }}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    <View style={styles.createNewChannelContainer} />
 
                     <View style={styles.filterContainer}>
                         <TouchableOpacity
@@ -457,7 +471,6 @@ class ChannelsList extends React.Component {
                             renderItem={this.renderRowItem.bind(this)}
                             extraData={this.state}
                         />
-                        <Toast ref="toast" positionValue={200} />
                     </View>
                 </ScrollView>
                 {this.state.wait ? (
@@ -475,6 +488,7 @@ class ChannelsList extends React.Component {
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 ) : null}
+                <Toast ref={elem => (this.toast = elem)} positionValue={250} />
             </BackgroundImage>
         );
     }

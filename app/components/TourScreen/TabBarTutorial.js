@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 import images from '../../images';
 
@@ -18,69 +22,57 @@ export default class TabBarTutorial extends Component {
 
     render() {
         return (
-            <View style={styles.tabBarTutorial}>
-                <View style={styles.bottomTriangle} />
-                <View style={styles.bottomNavBarTutorial}>
-                    <View style={styles.tabsStyleTutorial}>
-                        <Image
-                            style={styles.tabBarIcon}
-                            source={images.tabbar_home}
-                        />
-                        <Text style={styles.tabBarTitle}>Home</Text>
-                    </View>
-                    <View style={styles.tabsStyleTutorial}>
-                        <Image
-                            style={styles.tabBarIcon}
-                            source={images.tabbar_contacts}
-                        />
-                        <Text style={styles.tabBarTitle}>Contacts</Text>
-                    </View>
-                    <View style={styles.tabsStyleTutorial}>
-                        <Image
-                            style={styles.tabBarIcon}
-                            source={images.tabbar_channels}
-                        />
-                        <Text style={styles.tabBarTitle}>Channels</Text>
-                    </View>
-                    <View style={styles.tabsStyleTutorial}>
-                        <Image
-                            style={styles.tabBarIcon}
-                            source={images.tabbar_marketplace}
-                        />
-                        <Text style={styles.tabBarTitle}>Marketplace</Text>
-                    </View>
-                </View>
-                <View style={{ height: 170 }}>
-                    <View style={styles.topTutorialContainer}>
-                        <Text style={styles.welcomeSubHeader}>
-                            Send a direct message, start a group chat, install
-                            new bots, or configure your account
-                        </Text>
-                        <View style={styles.dotSider}>
-                            <View style={styles.innerWidth}>
-                                <Image source={images.dot_gray} />
-                                <Image source={images.dot_blue} />
-                                <Image source={images.dot_gray} />
+            <View
+                style={{
+                    position: 'absolute',
+                    bottom: 60,
+                    left: 0,
+                    height: hp('30%'),
+                    width: wp('100%'),
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end'
+                }}
+            >
+                <View style={styles.tabBarTutorial}>
+                    <View style={styles.bottomTriangle} />
+                    <View style={{ height: '100%' }}>
+                        <View style={styles.topTutorialContainer}>
+                            <Text style={styles.welcomeSubHeader}>
+                                Send a direct message, start a group chat,
+                                install new bots, or configure your account
+                            </Text>
+                            <View style={styles.dotSider}>
+                                <View style={styles.innerWidth}>
+                                    <Image source={images.dot_gray} />
+                                    <Image source={images.dot_blue} />
+                                    <Image source={images.dot_gray} />
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={styles.bottomTutorialContainer}>
-                        <TouchableOpacity
-                            style={styles.skipTotorialContainer}
-                            onPress={this.props.action}
-                        >
-                            <Text style={styles.skipButtonText}>
-                                Skip this intro
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.nextTutorialContainer}
-                            onPress={this.props.botScreen}
-                        >
-                            <Text style={styles.skipTutorialButtonText}>
-                                Next
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={styles.bottomTutorialContainer}>
+                            <TouchableOpacity
+                                style={styles.skipTotorialContainer}
+                                onPress={this.props.action}
+                            >
+                                <Text style={styles.skipButtonText}>
+                                    Skip this intro
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.nextTutorialContainer}
+                                onPress={this.props.botScreen}
+                            >
+                                <Text style={styles.skipTutorialButtonText}>
+                                    Next
+                                </Text>
+
+                                <View style={styles.tutorialArrow}>
+                                    <Image source={images.blue_arrow} />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </View>

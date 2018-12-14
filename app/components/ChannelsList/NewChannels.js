@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
@@ -52,7 +53,7 @@ class NewChannels extends React.Component {
             navigationOptions.headerLeft = (
                 <HeaderBack
                     onPress={() => {
-                        setTimeout(() => Actions.pop(), 200);
+                        state.params.onBack();
                     }}
                 />
             );
@@ -132,6 +133,8 @@ class NewChannels extends React.Component {
                 channelDescription: this.props.channel.description
             });
         }
+
+        this.props.navigation.setParams({ onBack: this.onBack });
     }
 
     static onEnter() {
@@ -154,6 +157,25 @@ class NewChannels extends React.Component {
         this.setState({ channelName: text });
     }
 
+    onBack = () => {
+        Alert.alert(
+            'Confirmation',
+            'All data will be lost. Are you sure?',
+            [
+                {
+                    text: 'Yes, I will create later',
+                    onPress: () => setTimeout(() => Actions.pop(), 0)
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                }
+            ],
+            { cancelable: true }
+        );
+    };
+
     onChangeDescriptionText(text) {
         if (DESC_LENGTH - this.state.channelDescription <= 0) {
             return;
@@ -169,6 +191,8 @@ class NewChannels extends React.Component {
         this.setState({ typeValue: value });
         if (value === 'team') {
             setTimeout(() => Actions.selectTeam(), 200);
+        } else {
+            this.props.setTeam('');
         }
     };
 
@@ -555,7 +579,10 @@ class NewChannels extends React.Component {
                                         </Text>
 
                                         <Image
-                                            style={{ marginHorizontal: 10 }}
+                                            style={{
+                                                marginHorizontal: 10,
+                                                paddingTop: 6
+                                            }}
                                             source={images.blue_arrow}
                                         />
 

@@ -8,7 +8,9 @@ import {
     AsyncStorage,
     BackHandler,
     ScrollView,
-    SafeAreaView
+    SafeAreaView,
+    Keyboard,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';
@@ -33,6 +35,7 @@ export default class ConfirmationScreen extends Component {
             passwordErrorMessage: '',
             signupStatus: ''
         };
+        this.textInput = null;
     }
 
     componentWillMount() {
@@ -50,6 +53,14 @@ export default class ConfirmationScreen extends Component {
                 password: this.props.password
             });
         }
+    }
+
+    componentWillUnmount() {
+        Keyboard.dismiss();
+    }
+
+    static onExit() {
+        Keyboard.dismiss();
     }
 
     async onFormSubmit() {
@@ -128,7 +139,13 @@ export default class ConfirmationScreen extends Component {
                 });
                 AfterLogin.executeAfterLogin();
                 synchronizeUserData();
-                Actions.timeline({ type: ActionConst.REPLACE });
+                setTimeout(
+                    () =>
+                        Actions.timeline({
+                            type: ActionConst.REPLACE
+                        }),
+                    0
+                );
             })
             .catch(err => {
                 console.log('error on incorrect password ', err);
@@ -140,6 +157,7 @@ export default class ConfirmationScreen extends Component {
     };
 
     onChangeCode(text) {
+        // Keyboard.dismiss()
         this.setState(() => {
             return { code: text };
         });
@@ -194,6 +212,7 @@ export default class ConfirmationScreen extends Component {
                         {this.state.confirmPasswordTitle}{' '}
                     </Text>
                     <TextInput
+                        ref={element => (this.textInput = element)}
                         style={styles.input}
                         blurOnSubmit={true}
                         returnKeyType={'done'}
@@ -256,12 +275,14 @@ export default class ConfirmationScreen extends Component {
                     <TextInput
                         style={styles.textInput}
                         keyboardType="numeric"
-                        autoFocus={true}
+                        // autoFocus={true}
                         placeholder="------"
                         returnKeyType={'done'}
                         value={this.state.code === 0 ? null : this.state.code}
                         onChangeText={this.onChangeCode.bind(this)}
                         underlineColorAndroid="transparent"
+                        blurOnSubmit={true}
+                        returnKeyType={'done'}
                         maxLength={6} //setting limit of input
                     />
                 </View>

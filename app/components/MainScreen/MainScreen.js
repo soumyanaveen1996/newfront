@@ -6,10 +6,12 @@ import {
     Alert,
     StatusBar,
     AsyncStorage,
-    Platform,
     TextInput,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard,
+    Image,
+    Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BotList from './BotList';
@@ -75,7 +77,7 @@ class MainScreen extends React.Component {
             headerTitle: <CenterComponent />
         };
         if (appConfig.app.hideFilter !== true) {
-            ret.headerLeft = (
+            ret.headerRight = (
                 <HeaderLeftIcon
                     config={Config.filterButtonConfig}
                     onPress={state.params.openBotFilter}
@@ -85,7 +87,7 @@ class MainScreen extends React.Component {
 
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -94,7 +96,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -103,7 +105,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -112,7 +114,7 @@ class MainScreen extends React.Component {
                     />
                 );
             } else {
-                ret.headerRight = (
+                ret.headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {
@@ -122,6 +124,44 @@ class MainScreen extends React.Component {
                 );
             }
         }
+
+        ret.headerRight = (
+            <View
+                style={[
+                    { display: 'flex', flexDirection: 'row' },
+                    Platform.select({
+                        android: {
+                            marginTop: 2
+                        }
+                    })
+                ]}
+            >
+                <TouchableOpacity
+                    style={MainScreenStyles.headerRightChat}
+                    onPress={() =>
+                        Actions.tabBarChat({
+                            type: 'push'
+                        })
+                    }
+                >
+                    <Image
+                        style={{ width: 25, height: 25 }}
+                        source={require('../../images/tabbar-contacts/chat-good.png')}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={MainScreenStyles.headerRightCall}
+                    onPress={() =>
+                        Actions.tabBarCall({
+                            type: 'push'
+                        })
+                    }
+                >
+                    <View>{Icons.callW()}</View>
+                </TouchableOpacity>
+            </View>
+        );
+
         return ret;
     }
 
@@ -133,6 +173,7 @@ class MainScreen extends React.Component {
             loginState: false,
             screenState: MainScreenStates.notLoaded,
             firstTimer: false,
+            noChats: false,
             showNetworkStatusBar: false,
             network: null,
             searchString: ''
@@ -161,11 +202,11 @@ class MainScreen extends React.Component {
     async componentDidMount() {
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime) {
-            this.setState({ firstTimer: false }, () => {
+            this.setState({ firstTimer: true }, () => {
                 firstTimer = this.state.firstTimer;
             });
         } else {
-            this.setState({ firstTimer: true }, () => {
+            this.setState({ firstTimer: false }, () => {
                 firstTimer = this.state.firstTimer;
             });
         }
@@ -250,6 +291,11 @@ class MainScreen extends React.Component {
     }
 
     static onExit() {
+        // if (Actions.refs.timeline) {
+        //     Actions.refs.timeline
+        //         .getWrappedInstance()
+        //         .keyboardDidShowListener.remove()
+        // }
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.allConversationsLoaded) {
@@ -276,6 +322,7 @@ class MainScreen extends React.Component {
         NetworkHandler.readLambda();
     }
 
+    setNoChats = value => this.setState({ noChats: value });
     showButton(pollingStrategy) {
         if (pollingStrategy === PollingStrategyTypes.manual) {
             this.props.navigation.setParams({ button: 'manual' });
@@ -500,6 +547,7 @@ class MainScreen extends React.Component {
                         unsetFavorite={this.setConversationUnFavorite}
                         searchString={this.state.searchString}
                         onSearch={this.onSearch}
+                        setNoChats={this.setNoChats}
                     />
                 </View>
             );
@@ -515,7 +563,7 @@ class MainScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <BackgroundImage>
-                    {this.state.firstTimer && (
+                    {this.state.firstTimer && this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
@@ -549,5 +597,7 @@ const mapDispatchToProps = dispatch => {
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    null,
+    { withRef: true }
 )(MainScreen);

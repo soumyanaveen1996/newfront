@@ -29,7 +29,7 @@ export default StyleSheet.create({
 
     rowContainer: {
         width: SCREEN_WIDTH - 20,
-        height: 190,
+        height: 150,
         borderBottomWidth: 1,
         borderColor: 'transparent',
         borderRadius: 15
@@ -153,9 +153,9 @@ export default StyleSheet.create({
     },
     createNewChannelContainer: {
         width: SCREEN_WIDTH,
-        backgroundColor: 'rgba(244,244,244,1)',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: 6
     },
     buttonContainerCreateChannel: {
         height: hp('6%'),
@@ -171,17 +171,21 @@ export default StyleSheet.create({
         shadowOpacity: 0.7
     },
     buttonContainer: {
-        height: hp('4.5%'),
-        width: wp('50%'),
+        height: 40,
+        width: wp('80%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 10,
-
-        shadowOffset: { width: 1, height: 1 },
+        shadowOffset: { width: 0.5, height: 1 },
         shadowColor: 'black',
-        shadowOpacity: 0.7
+        shadowOpacity: 0.4,
+        ...Platform.select({
+            android: {
+                elevation: 2
+            }
+        })
     },
     buttonContainerDelete: {
         height: 40,
@@ -201,7 +205,7 @@ export default StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontSize: wp('4%'),
+        fontSize: 14,
         fontWeight: '500',
         paddingHorizontal: 5
     },
@@ -469,7 +473,7 @@ export default StyleSheet.create({
         color: '#4A4A4A',
         fontFamily: 'SF Pro Text',
         fontSize: 16,
-        marginBottom: 20,
+        // marginBottom: 20,
         paddingLeft: 20
     },
     addContactsContainer: {
@@ -511,7 +515,7 @@ export default StyleSheet.create({
         height: hp('50%')
     },
     teamContainer: {
-        height: hp('80%')
+        height: hp('70%')
     },
     participantName: {
         fontSize: wp('4%'),
@@ -535,5 +539,21 @@ export default StyleSheet.create({
     },
     radioButton: {
         marginLeft: wp('10%')
+    },
+    headerRight: {
+        display: 'flex',
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        backgroundColor: 'rgba(0,189,242,1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 15,
+        marginBottom: 5,
+        ...Platform.select({
+            android: {
+                marginTop: 2
+            }
+        })
     }
 });

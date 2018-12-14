@@ -270,10 +270,9 @@ const stylesheet = StyleSheet.create({
     },
     modal: {
         width: wp('90%'),
-        paddingHorizontal: 20,
-        backgroundColor: 'white',
         borderRadius: 10,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: 'white'
     },
     phoneContainer: {
         height: hp('10%'),
@@ -344,46 +343,82 @@ const stylesheet = StyleSheet.create({
     inviteTitle: {
         textAlign: 'left',
         fontSize: 20,
-        marginTop: 34
+        marginTop: 5,
+        color: 'rgba(68,72,90,1)'
     },
     inviteText: {
-        textAlign: 'center',
+        textAlign: 'left',
         fontSize: 16,
-        color: GlobalColors.translucentDark,
-        marginTop: 32,
-        marginBottom: 25
+        color: 'rgba(102,102,102,1)',
+        marginTop: 26,
+        marginBottom: 15
     },
     inviteEmail: {
-        fontSize: 14,
-        color: GlobalColors.translucentDark
+        fontSize: 16,
+        color: 'rgba(102,102,102,1)',
+        textAlign: 'center',
+        marginVertical: 15
     },
     inviteInput: {
-        backgroundColor: GlobalColors.disabledGray,
+        backgroundColor: 'rgba(255,255,255,1)',
         borderRadius: 5,
         marginTop: 5,
-        paddingHorizontal: 5,
         height: 36,
-        fontSize: 16
+        fontSize: 16,
+        width: wp('80%'),
+        paddingHorizontal: 10,
+        ...Platform.select({
+            android: {
+                height: 40,
+                fontSize: 15
+            }
+        })
     },
     inviteButtonArea: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 31,
-        paddingVertical: 20,
-        borderTopWidth: 1,
-        borderColor: GlobalColors.translucentDark
+        marginVertical: 30
     },
     inviteButton: {
-        width: 145,
+        width: wp('80%'),
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1.2,
         borderColor: GlobalColors.sideButtons,
-        borderRadius: 5
+        borderRadius: 5,
+        height: 30
     },
     inviteButtonText: {
         fontSize: 16,
-        marginVertical: 7
+        color: 'rgba(0,167,214,1)'
+    },
+    headerRight: {
+        display: 'flex',
+        width: 26,
+        height: 26,
+        borderRadius: 13,
+        backgroundColor: 'rgba(0,189,242,1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 15,
+        marginBottom: 5,
+        ...Platform.select({
+            android: {
+                marginTop: 2
+            }
+        })
+    },
+    searchContactButtonContainer: {
+        height: 30,
+        width: wp('80%'),
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    searchText: {
+        fontSize: 16,
+        color: 'rgba(255,255,255,1)'
     }
 });
 

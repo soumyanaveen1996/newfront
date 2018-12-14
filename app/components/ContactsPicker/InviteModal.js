@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+    TextInput,
+    SafeAreaView,
+    Keyboard,
+    TouchableWithoutFeedback
+} from 'react-native';
 import styles from './styles';
 import config from '../../config/config';
 import { Icons } from '../../config/icons';
@@ -16,8 +25,33 @@ export default class InviteModal extends React.Component {
         this.state = {
             contactsData: [],
             isVisible: this.props.isVisible,
-            contactSelected: this.props.contact
+            contactSelected: this.props.contact,
+            keyboard: false
         };
+    }
+
+    componentDidMount() {
+        this.keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            this.keyboardDidShow.bind(this)
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            this.keyboardDidHide.bind(this)
+        );
+    }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    keyboardDidShow() {
+        this.setState({ keyboard: true });
+    }
+
+    keyboardDidHide() {
+        this.setState({ keyboard: false });
     }
 
     cancelInvite() {
@@ -26,6 +60,7 @@ export default class InviteModal extends React.Component {
     }
 
     sendInvite() {
+        Keyboard.dismiss();
         this.props.setVisible(false);
         this.textInput.clear();
         Auth.getUser().then(user => {
@@ -61,45 +96,117 @@ export default class InviteModal extends React.Component {
                 }}
                 onSwipe={() => this.props.setVisible(false)}
                 swipeDirection="right"
+                avoidKeyboard={true}
             >
-                <View style={styles.modal}>
-                    <Text style={styles.inviteTitle}>Invite contacts</Text>
-                    <Text style={styles.inviteText}>
-                        Please enter your contact’s email or import it from your
-                        address book and invite her to use FrontM.
-                    </Text>
-                    <Text style={styles.inviteEmail}>Email</Text>
-                    <TextInput
-                        ref={input => {
-                            this.textInput = input;
-                        }}
-                        onSubmitEditing={this.sendInvite.bind(this)}
-                        onChangeText={text => this.setState({ email: text })}
-                        style={styles.inviteInput}
-                        keyboardType={'email-address'}
-                        textContentType={'emailAddress'}
-                    />
-                    <View style={styles.inviteButtonArea}>
-                        <TouchableOpacity
-                            style={[
-                                styles.inviteButton,
-                                { backgroundColor: GlobalColors.white }
-                            ]}
-                            onPress={this.cancelInvite.bind(this)}
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.modal}>
+                        <View
+                            style={{
+                                // backgroundColor: 'white',
+                                flexDirection: 'column',
+                                paddingHorizontal: 20,
+                                paddingVertical: 10,
+                                marginBottom: 25
+                            }}
                         >
-                            <Text style={styles.inviteButtonText}>Cancel</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[
-                                styles.inviteButton,
-                                { backgroundColor: GlobalColors.sideButtons }
-                            ]}
-                            onPress={this.sendInvite.bind(this)}
+                            <TouchableOpacity
+                                onPress={() => this.props.setVisible(false)}
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    margin: 10
+                                }}
+                            >
+                                <Image
+                                    style={{ width: 14, height: 14 }}
+                                    source={require('../../images/contact/popup-close.png')}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.inviteTitle}>
+                                Add New Contact
+                            </Text>
+                            {this.state.keyboard ? null : (
+                                <View>
+                                    <Text style={styles.inviteText}>
+                                        Search an existing FrontM user. You can
+                                        search by name, email or phone number
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={
+                                            styles.searchContactButtonContainer
+                                        }
+                                        onPress={() => {
+                                            this.props.setVisible(false);
+                                            Actions.searchUsers({
+                                                multiSelect: true
+                                            });
+                                        }}
+                                    >
+                                        <Text style={styles.searchText}>
+                                            Search an existing FrontM user
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                        </View>
+                        <View
+                            style={{
+                                backgroundColor: 'rgba(244,244,244,1)',
+                                width: '100%',
+                                flexDirection: 'column',
+                                borderBottomLeftRadius: 10,
+                                borderBottomRightRadius: 10,
+                                paddingHorizontal: 20,
+                                paddingVertical: 10,
+                                alignItems: 'center'
+                            }}
                         >
-                            <Text style={styles.inviteButtonText}>Done</Text>
-                        </TouchableOpacity>
+                            <Text style={styles.inviteEmail}>
+                                Or invite someone to join FrontM by sending an
+                                email invitation
+                            </Text>
+                            <Text
+                                style={{
+                                    alignSelf: 'flex-start',
+                                    color: 'rgba(74,74,74,1)',
+                                    fontSize: 14
+                                }}
+                            >
+                                Email
+                            </Text>
+                            <TextInput
+                                ref={input => {
+                                    this.textInput = input;
+                                }}
+                                onSubmitEditing={this.sendInvite.bind(this)}
+                                onChangeText={text =>
+                                    this.setState({ email: text })
+                                }
+                                style={styles.inviteInput}
+                                keyboardType={'email-address'}
+                                textContentType={'emailAddress'}
+                                placeholder="email@example.com"
+                                autoCapitalize={false}
+                                autoCorrect={false}
+                            />
+                            <View style={styles.inviteButtonArea}>
+                                <TouchableOpacity
+                                    style={[
+                                        styles.inviteButton,
+                                        { backgroundColor: GlobalColors.white }
+                                    ]}
+                                    onPress={this.sendInvite.bind(this)}
+                                >
+                                    <Text style={styles.inviteButtonText}>
+                                        Send Invite
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
         );
     }

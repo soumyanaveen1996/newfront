@@ -18,9 +18,10 @@ import _ from 'lodash';
 import { Promise } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { connect } from 'react-redux';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import I18n from '../../config/i18n/i18n';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import { setAllChatsData } from '../../redux/actions/TimeLineActions';
 
 import { Actions, ActionConst } from 'react-native-router-flux';
 import { Icons } from '../../config/icons';
@@ -28,6 +29,8 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+const R = require('ramda');
+const isEqual = require('react-fast-compare');
 
 const hiddenItemWidth = wp('25%');
 class BotList extends React.Component {
@@ -36,7 +39,9 @@ class BotList extends React.Component {
         this.state = {
             loaded: false,
             data: [],
-            favData: []
+            favData: [],
+            rowMap: null,
+            rowKey: null
         };
     }
 
@@ -109,6 +114,13 @@ class BotList extends React.Component {
             'desc'
         );
 
+        if (
+            this.props.user.remoteBotsInstalled &&
+            this.props.user.allConversationsLoaded &&
+            allChatsData.length == 1
+        ) {
+            this.props.setNoChats(true);
+        }
         const favData = allChatsData
             .filter(chat => chat.type === 'conversation')
             .filter(chat => chat.bot.favorite == 1)
@@ -126,37 +138,53 @@ class BotList extends React.Component {
         const AllTimelineData =
             favData.length > 0
                 ? [
-                    { elemType: 'search' },
-                    { elemType: 'buttons' },
-                    { elemType: 'header', headerText: 'Favourites' },
+                    { elemType: 'search', key: 'search' },
+                    // { elemType: 'buttons' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Favourites',
+                        key: 'favorites'
+                    },
                     ...favData,
-                    { elemType: 'header', headerText: 'Recents' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Recents',
+                        key: 'recents'
+                    },
                     ...recentData
                 ]
                 : [
-                    { elemType: 'search' },
-                    { elemType: 'buttons' },
+                    { elemType: 'search', key: 'search' },
+                    // { elemType: 'buttons' },
                     ...favData,
-                    { elemType: 'header', headerText: 'Recents' },
+                    {
+                        elemType: 'header',
+                        headerText: 'Recents',
+                        key: 'recents'
+                    },
                     ...recentData
                 ];
 
-        this.setState(
-            {
-                loaded: false,
-                data: []
-            },
-            () => {
-                this.setState({
-                    loaded: true,
-                    data: AllTimelineData
-                });
-            }
-        );
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
+        this.setState({
+            loaded: true,
+            data: AllTimelineData
+        });
+        // const prevTimeline = this.props.timeline.allChats
+        // if (true) {
+        //     this.props.setAllChatsData(AllTimelineData)
+        //     this.setState(
+        //         {
+        //             loaded: true,
+        //             data: R.take(AllTimelineData.length - 1, AllTimelineData)
+        //         },
+        //         () => {
+        //             this.setState({
+        //                 loaded: true,
+        //                 data: AllTimelineData
+        //             })
+        //         }
+        //     )
+        // }
     }
 
     applyFilter = chats => {
@@ -226,7 +254,25 @@ class BotList extends React.Component {
         );
     };
     renderHeader = ({ headerText }) => {
-        return <Text style={MainScreenStyles.titleText}>{headerText}</Text>;
+        return (
+            <View style={{ height: 30 }}>
+                <Text style={MainScreenStyles.titleText}>{headerText}</Text>
+            </View>
+        );
+    };
+
+    setFavorite = (key, rowMap, conversationId, chatData) => {
+        this.props.setFavorite(conversationId, chatData);
+        if (rowMap[key]) {
+            rowMap[key].closeRow();
+        }
+    };
+
+    unsetFavorite = (key, rowMap, conversationId, chatData) => {
+        this.props.unsetFavorite(conversationId);
+        if (rowMap[key]) {
+            rowMap[key].closeRow();
+        }
     };
     render() {
         const { loaded, data } = this.state;
@@ -246,6 +292,9 @@ class BotList extends React.Component {
                         <SwipeListView
                             useFlatList
                             data={allData}
+                            closeOnScroll={true}
+                            closeOnRowPress={true}
+                            closeOnRowBeginSwipe={true}
                             renderItem={(chat, rowMap) => {
                                 const { item = null, index, separators } = chat;
                                 let rowItem = <View />;
@@ -291,7 +340,8 @@ class BotList extends React.Component {
                                         type = null,
                                         elemType,
                                         bot = null,
-                                        chatData = null
+                                        chatData = null,
+                                        key
                                     }
                                 } = hdata;
 
@@ -301,8 +351,26 @@ class BotList extends React.Component {
                                             conversationId={bot.conversationId}
                                             onClick={
                                                 elemType === 'favorite'
-                                                    ? this.props.unsetFavorite
-                                                    : this.props.setFavorite
+                                                    ? (
+                                                        conversationId,
+                                                        chatData
+                                                    ) =>
+                                                        this.unsetFavorite(
+                                                            key,
+                                                            rowMap,
+                                                            conversationId,
+                                                            chatData
+                                                        )
+                                                    : (
+                                                        conversationId,
+                                                        chatData
+                                                    ) =>
+                                                        this.setFavorite(
+                                                            key,
+                                                            rowMap,
+                                                            conversationId,
+                                                            chatData
+                                                        )
                                             }
                                             chatData={chatData}
                                             unfavorite={elemType === 'favorite'}
@@ -311,6 +379,9 @@ class BotList extends React.Component {
                                 return Favorite;
                             }}
                             leftOpenValue={hiddenItemWidth}
+                            previewRowKey={'0'}
+                            previewOpenValue={-40}
+                            previewOpenDelay={3000}
                         />
                     }
                 </View>
@@ -339,11 +410,14 @@ const FavoriteView = ({
 );
 
 const mapStateToProps = state => ({
-    timeline: state.timeline
+    timeline: state.timeline,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        setAllChatsData: data => dispatch(setAllChatsData(data))
+    };
 };
 
 export default connect(

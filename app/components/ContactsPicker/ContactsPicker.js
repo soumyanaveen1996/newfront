@@ -9,7 +9,9 @@ import {
     Platform,
     Text,
     Alert,
-    TouchableOpacity
+    TouchableOpacity,
+    InteractionManager,
+    Image
 } from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
@@ -44,17 +46,31 @@ import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
 import CallModal from './CallModal';
 import InviteModal from './InviteModal';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
 
         let navigationOptions = {
-            headerTitle: state.params.title
+            headerTitle: (
+                <Text
+                    style={
+                        Platform.OS === 'android'
+                            ? { marginLeft: wp('20%'), fontSize: 16 }
+                            : null
+                    }
+                >
+                    {state.params.title}
+                </Text>
+            )
         };
         if (state.params.button) {
             if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         onPress={() => {
                             state.params.refresh();
@@ -63,7 +79,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         image={images.gsm}
                         onPress={() => {
@@ -72,7 +88,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         image={images.satellite}
                         onPress={() => {
@@ -81,7 +97,7 @@ class ContactsPicker extends React.Component {
                     />
                 );
             } else {
-                navigationOptions.headerRight = (
+                navigationOptions.headerLeft = (
                     <HeaderRightIcon
                         icon={Icons.automatic()}
                         onPress={() => {
@@ -91,6 +107,18 @@ class ContactsPicker extends React.Component {
                 );
             }
         }
+
+        navigationOptions.headerRight = (
+            <TouchableOpacity
+                style={styles.headerRight}
+                onPress={state.params.inviteUser}
+            >
+                <Image
+                    source={require('../../images/channels/plus-white-good.png')}
+                    style={{ width: 15, height: 15 }}
+                />
+            </TouchableOpacity>
+        );
         return navigationOptions;
     }
 
@@ -106,7 +134,8 @@ class ContactsPicker extends React.Component {
 
     async componentDidMount() {
         this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage
+            showConnectionMessage: this.showConnectionMessage,
+            inviteUser: this.inviteUser.bind(this)
         });
         // this.checkPollingStrategy()
 
@@ -205,7 +234,9 @@ class ContactsPicker extends React.Component {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.contactsLoaded) {
-            Contact.refreshContacts();
+            InteractionManager.runAfterInteractions(() =>
+                Contact.refreshContacts()
+            );
         }
     }
     shouldComponentUpdate(nextProps) {
@@ -217,9 +248,7 @@ class ContactsPicker extends React.Component {
     };
 
     handleAddContact = () => {
-        SystemBot.get(SystemBot.contactsBotManifestName).then(contactBot => {
-            Actions.botChat({ bot: contactBot, onBack: this.onBack });
-        });
+        return;
     };
 
     onBack = () => {
@@ -394,33 +423,7 @@ class ContactsPicker extends React.Component {
         );
     }
 
-    renderButtons = () => (
-        <View>
-            {this.renderSearchBar()}
-            <View style={styles.buttonsContainer}>
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: GlobalColors.sideButtons }
-                    ]}
-                    onPress={this.inviteUser.bind(this)}
-                >
-                    <View>{Icons.inviteContact()}</View>
-                    {/* <Text style={styles.buttonText}>Invite contact</Text> */}
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.button,
-                        { backgroundColor: GlobalColors.green }
-                    ]}
-                    onPress={this.addContacts.bind(this)}
-                >
-                    <View>{Icons.addContacts()}</View>
-                    {/* <Text style={styles.buttonText}>New contact</Text> */}
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+    renderButtons = () => <View>{this.renderSearchBar()}</View>;
 
     sectionHeader({ section }) {
         if (section.data.length === 0) {
