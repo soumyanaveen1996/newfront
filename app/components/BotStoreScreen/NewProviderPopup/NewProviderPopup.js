@@ -35,6 +35,20 @@ export default class NewProviderPopup extends Component {
         }
     }
 
+    displayErrorMessege = () => {
+        if (this.state.wrongCode) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            Incorrect code. Try again
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
     render() {
         return (
             <Modal
@@ -61,6 +75,7 @@ export default class NewProviderPopup extends Component {
                             placeholderTextColor="rgba(155,155,155,1)"
                             clearButtonMode="always"
                         />
+                        {this.displayErrorMessege()}
                         <View
                             style={{
                                 flexDirection: 'row',

@@ -13,6 +13,7 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     container: {
+        position: 'relative',
         width: 320,
         height: 300,
         backgroundColor: '#fff',
@@ -70,5 +71,48 @@ export default StyleSheet.create({
     },
     submitText: {
         color: 'rgba(255,255,255,1)'
-    }
+    },
+    errorContainer: Platform.select({
+        ios: {
+            flex: 1,
+            alignItems: 'flex-end'
+        },
+        android: {
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+    userError: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            zIndex: 999999,
+            width: 200,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            width: 150,
+            padding: 5,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
+    errorText: Platform.select({
+        ios: {
+            color: '#ffffff',
+            textAlign: 'center'
+        },
+        android: {
+            color: '#ffffff',
+            textAlign: 'center'
+        }
+    })
 });
