@@ -12,4 +12,6 @@ target 'frontm_mobile' do
   pod 'TwilioVoice', '~> 2.0.0'
   pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
 
+  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+
 end
