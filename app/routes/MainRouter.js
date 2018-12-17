@@ -311,8 +311,8 @@ class MainRouter extends React.Component {
                                         <Scene
                                             key={ROUTER_SCENE_KEYS.dialCallMenu}
                                             titleScreen={I18n.t('Dial')}
-                                            imageSource={require('../images/tabbar-channels/tabbar-channels.png')}
-                                            imageSelected={require('../images/tabbar-channels-active/tabbar-channels-active.png')}
+                                            imageSource={require('../images/contact/tab-dialpad-icon-small.png')}
+                                            imageSelected={require('../images/contact/tab-dialpad-icon-active-small.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene

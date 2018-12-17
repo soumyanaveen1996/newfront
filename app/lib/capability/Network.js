@@ -147,7 +147,7 @@ function Network(options, queue = false) {
                                 response
                             );
                             Auth.getUser().then(user => {
-                                Bugsnag.setUser(user.userId);
+                                Bugsnag.setUser(user.info.userName);
                                 Bugsnag.notify(
                                     new Error(JSON.stringify(response))
                                 );

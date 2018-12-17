@@ -52,6 +52,7 @@
 		1F5F715922F241099C363C04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4BF23652804675A540A09D /* libRCTFBSDK.a */; };
 		21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21149E0121930D9200F429AC /* libRNDefaultPreference.a */; };
 		2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2123A5C3216DFA9C00CDC29A /* libCodePush.a */; };
+		212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E0FB6621C3740A00C9B1E4 /* libBugsnagReactNative.a */; };
 		21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37EDD216CB089009C8922 /* StoreKit.framework */; };
 		21D37F5F216CB937009C8922 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37F54216CB925009C8922 /* libRNIap.a */; };
 		24B3AB12AD2B4D52A25AD5DB /* SF-Pro-Text-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C29A44CD6F9D45F3AF2AF810 /* SF-Pro-Text-SemiboldItalic.otf */; };
@@ -837,6 +838,7 @@
 				2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */,
 				21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */,
 				21D37F5F216CB937009C8922 /* libRNIap.a in Frameworks */,
+				212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */,
 				040848DB21201EBD006C45E4 /* libRNTwilioVoice.a in Frameworks */,
 				04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */,
 				B0D42C5020BD781600C8BE47 /* libRNDeviceInfo.a in Frameworks */,
