@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ScrollView } from 'react-native';
 import styles from './styles';
 import BotInstallListItem from '../../BotInstallListItem';
 import Bot from '../../../lib/bot';
@@ -8,7 +8,7 @@ import I18n from '../../../config/i18n/i18n';
 import utils from '../../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 
-export default class FeaturedTabTab extends React.Component {
+export default class FeaturedTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -81,16 +81,18 @@ export default class FeaturedTabTab extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <FlatList
-                    style={styles.flatList}
-                    keyExtractor={(item, index) => item.botId}
-                    data={this.state.botsData}
-                    renderItem={this.renderGridItem.bind(this)}
-                    extraData={this.state}
-                />
-                <Toast ref="toast" positionValue={250} />
-            </View>
+            <ScrollView style={{ flex: 1 }}>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                    <FlatList
+                        style={styles.flatList}
+                        keyExtractor={(item, index) => item.botId}
+                        data={this.state.botsData}
+                        renderItem={this.renderGridItem.bind(this)}
+                        extraData={this.state}
+                    />
+                    <Toast ref="toast" positionValue={250} />
+                </View>
+            </ScrollView>
         );
     }
 

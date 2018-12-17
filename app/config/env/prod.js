@@ -41,7 +41,9 @@ const stageConfig = {
         signupPath: '/signup/frontm',
         signinPath: '/signin/frontm',
         updateSigninPath: '/v2/updateSignin/frontm',
-        deleteUserPath: '/v2/deleteUser'
+        deleteUserPath: '/v2/deleteUser',
+        newProvider: '/v2/subscribeDomain',
+        searchCatalog: '/catalog'
     }
 };
 

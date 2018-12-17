@@ -3,6 +3,18 @@ import { SCREEN_WIDTH, scrollViewConfig } from './config';
 import { GlobalColors } from '../../config/styles';
 import BotListItemStyles from '../BotInstallListItem/styles';
 
+export const BotListItemColors = {
+    titleColor: 'rgba(74,74,74,1)',
+    subTitleColor: 'rgba(153,153,153,1)',
+    dateColor: 'rgb(142, 142, 142)',
+    backgroundColor: GlobalColors.white,
+    countColor: 'rgb(62,137,252)',
+    openButton: 'rgba(0,189,242,1)',
+    installBorder: 'rgba(0,167,214,1)',
+    countTextColor: GlobalColors.white,
+    button: GlobalColors.iosBlue
+};
+
 export default StyleSheet.create({
     tileContainer: {
         width: scrollViewConfig.width * 0.5,
@@ -20,9 +32,11 @@ export default StyleSheet.create({
         margin: 0
     },
     rowContainer: {
-        width: SCREEN_WIDTH,
-        height: 85,
-        borderRadius: 15
+        width: SCREEN_WIDTH - 20,
+        height: 110,
+        borderRadius: 6,
+        backgroundColor: '#fff',
+        marginBottom: 10
     },
     rowContent: {
         flex: 1,
@@ -112,6 +126,20 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    openButton: {
+        borderRadius: 6,
+        backgroundColor: BotListItemColors.openButton,
+        height: 30,
+        width: 70,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    openButtonText: {
+        color: BotListItemColors.backgroundColor,
+        fontFamily: 'SF Pro Text',
+        fontSize: 16,
+        padding: 3
     }
 });
 

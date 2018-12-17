@@ -141,7 +141,7 @@ export default class BotInstallListItem extends React.Component {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
-                        style={styles.installButton}
+                        style={styles.openButton}
                         onPress={this.props.onBotClick.bind(
                             this,
                             this.props.bot
@@ -149,7 +149,7 @@ export default class BotInstallListItem extends React.Component {
                     >
                         <Text
                             allowFontScaling={false}
-                            style={styles.installButtonText}
+                            style={styles.openButtonText}
                         >
                             {I18n.t('OPEN')}
                         </Text>
@@ -169,7 +169,40 @@ export default class BotInstallListItem extends React.Component {
                     style={styles.image}
                 />
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}>{bot.botName}</Text>
+                    <Text numberOfLines={1} style={styles.title}>
+                        {bot.botName}
+                    </Text>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            height: 20,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Text
+                            style={{ color: 'rgba(0,189,242,1)', fontSize: 14 }}
+                        >
+                            Free
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(216,216,216,1)',
+                                fontSize: 16,
+                                fontWeight: '100',
+                                marginHorizontal: 4
+                            }}
+                        >
+                            |
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(102,102,102,1)',
+                                fontSize: 14
+                            }}
+                        >
+                            {bot.developer}
+                        </Text>
+                    </View>
                     <Text
                         numberOfLines={subtitleNumberOfLines}
                         style={styles.subTitle}

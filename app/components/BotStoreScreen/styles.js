@@ -2,6 +2,10 @@ import { StyleSheet, Platform } from 'react-native';
 import { SCREEN_WIDTH } from './config';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default StyleSheet.create({
     headerTitleStyle: {
@@ -20,11 +24,12 @@ export default StyleSheet.create({
 
     tabStyle: {
         backgroundColor: GlobalColors.tabBackground,
-        borderColor: GlobalColors.white
+        borderColor: GlobalColors.white,
+        borderRadius: 0
     },
     tabTextStyle: {
         color: GlobalColors.white,
-        fontSize: 12
+        fontSize: 14
     },
     activeTabStyle: {
         backgroundColor: GlobalColors.white,
@@ -35,11 +40,12 @@ export default StyleSheet.create({
     },
     tabsContainerStyle: {
         alignSelf: 'center',
-        width: SCREEN_WIDTH * 0.95
+        width: SCREEN_WIDTH,
+        borderRadius: 0,
+        height: 40
     },
     segmentedControlTab: {
-        height: 40,
-        backgroundColor: GlobalColors.tabBackground,
+        backgroundColor: 'transparent',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
@@ -47,14 +53,14 @@ export default StyleSheet.create({
     headerOuterContainerStyles: Platform.select({
         ios: {
             position: 'relative',
-            borderBottomColor: GlobalColors.accent,
+            borderBottomColor: GlobalColors.borderBottom,
             paddingLeft: 0,
             paddingBottom: 10,
             height: Utils.isiPhoneX() ? 70 : 60
         },
         android: {
             position: 'relative',
-            borderBottomColor: GlobalColors.accent,
+            borderBottomColor: GlobalColors.borderBottom,
             paddingLeft: 0,
             paddingBottom: 0,
             height: 40
@@ -79,5 +85,28 @@ export default StyleSheet.create({
         bottom: 0,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    searchSection: {
+        width: wp('100%'),
+        height: 40,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        marginTop: 3,
+        paddingHorizontal: 20
+    },
+    searchIcon: {
+        padding: 10
+    },
+
+    input: {
+        flex: 1,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 0,
+        backgroundColor: '#fff',
+        color: 'rgba(155,155,155,1)'
     }
 });
