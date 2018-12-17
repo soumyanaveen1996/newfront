@@ -50,5 +50,19 @@ export default StyleSheet.create({
     },
     rowTitle: {
         textAlign: 'center'
+    },
+    newProvider: {
+        height: 40,
+        width: 300,
+        borderRadius: 10,
+        margin: 10,
+        backgroundColor: 'rgba(0, 189, 242, 1)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    newProviderText: {
+        color: 'rgba(255, 255, 255, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16
     }
 });

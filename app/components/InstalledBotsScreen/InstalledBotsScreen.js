@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Alert,
+    ScrollView,
     RefreshControl
 } from 'react-native';
 import styles, { BotListItemStyles } from './styles';
@@ -282,7 +283,7 @@ export default class InstalledBotsScreen extends React.Component {
                         <Icon name="delete" color="white" />
                     </View>
                 ),
-                backgroundColor: GlobalColors.red,
+                backgroundColor: GlobalColors.sideButtons,
                 onPress: () => {
                     this.onDeletePress(botData);
                 }
@@ -313,9 +314,40 @@ export default class InstalledBotsScreen extends React.Component {
                     style={BotListItemStyles.image}
                 />
                 <View style={BotListItemStyles.textContainer}>
-                    <Text style={BotListItemStyles.title}>
+                    <Text style={BotListItemStyles.title} numberOfLines={1}>
                         {botData.botName}{' '}
                     </Text>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            height: 20,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Text
+                            style={{ color: 'rgba(0,189,242,1)', fontSize: 14 }}
+                        >
+                            Free
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(216,216,216,1)',
+                                fontSize: 16,
+                                fontWeight: '100',
+                                marginHorizontal: 4
+                            }}
+                        >
+                            |
+                        </Text>
+                        <Text
+                            style={{
+                                color: 'rgba(102,102,102,1)',
+                                fontSize: 14
+                            }}
+                        >
+                            {botData.developer}
+                        </Text>
+                    </View>
                     <Text
                         numberOfLines={subtitleNumberOfLines}
                         style={BotListItemStyles.subTitle}
@@ -325,12 +357,12 @@ export default class InstalledBotsScreen extends React.Component {
                 </View>
                 <View style={BotListItemStyles.rightContainer}>
                     <TouchableOpacity
-                        style={BotListItemStyles.installButton}
+                        style={BotListItemStyles.openButton}
                         onPress={this.onBotPress.bind(this, botData)}
                     >
                         <Text
                             allowFontScaling={false}
-                            style={BotListItemStyles.installButtonText}
+                            style={BotListItemStyles.openButtonText}
                         >
                             {I18n.t('OPEN')}
                         </Text>
@@ -429,26 +461,28 @@ export default class InstalledBotsScreen extends React.Component {
             );
         } else {
             return (
-                <View style={{ flex: 1 }}>
-                    <FlatList
-                        style={styles.flatList}
-                        keyExtractor={(item, index) => item.botId}
-                        data={this.state.bots}
-                        renderItem={this.renderGridItem.bind(this)}
-                        extraData={this.state}
-                        ItemSeparatorComponent={() => (
-                            <View style={[styles.separator]} />
-                        )}
-                        refreshControl={
-                            <RefreshControl
-                                colors={['#9Bd35A', '#689F38']}
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />
-                        }
-                    />
-                    <Toast ref="toast" positionValue={250} />
-                </View>
+                <ScrollView style={{ flex: 1 }}>
+                    <View style={{ flex: 1, alignItems: 'center' }}>
+                        <FlatList
+                            style={styles.flatList}
+                            keyExtractor={(item, index) => item.botId}
+                            data={this.state.bots}
+                            renderItem={this.renderGridItem.bind(this)}
+                            extraData={this.state}
+                            ItemSeparatorComponent={() => (
+                                <View style={[styles.separator]} />
+                            )}
+                            refreshControl={
+                                <RefreshControl
+                                    colors={['#9Bd35A', '#689F38']}
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh.bind(this)}
+                                />
+                            }
+                        />
+                        <Toast ref="toast" positionValue={250} />
+                    </View>
+                </ScrollView>
             );
         }
     }
