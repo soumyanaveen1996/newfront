@@ -9,7 +9,7 @@ import {
 
 export default StyleSheet.create({
     headerTitleStyle: {
-        fontSize: 18,
+        fontSize: 16,
         color: GlobalColors.headerBlack,
         fontWeight: '400',
         fontFamily: 'SF Pro Text'
@@ -24,19 +24,19 @@ export default StyleSheet.create({
 
     tabStyle: {
         backgroundColor: GlobalColors.tabBackground,
-        borderColor: GlobalColors.white,
+        borderColor: GlobalColors.tabBackground,
         borderRadius: 0
     },
     tabTextStyle: {
-        color: GlobalColors.white,
+        color: GlobalColors.tabText,
         fontSize: 14
     },
     activeTabStyle: {
-        backgroundColor: GlobalColors.white,
-        borderColor: GlobalColors.white
+        backgroundColor: GlobalColors.tabBackground,
+        borderColor: GlobalColors.tabBackground
     },
     activeTabTextStyle: {
-        color: GlobalColors.accent
+        color: GlobalColors.white
     },
     tabsContainerStyle: {
         alignSelf: 'center',
@@ -48,7 +48,8 @@ export default StyleSheet.create({
         backgroundColor: 'transparent',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderRadius: 0
     },
     headerOuterContainerStyles: Platform.select({
         ios: {
