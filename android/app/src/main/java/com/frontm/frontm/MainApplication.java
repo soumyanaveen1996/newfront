@@ -48,6 +48,8 @@ import com.facebook.FacebookSdk;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mapbox.rctmgl.RCTMGLPackage;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -86,6 +88,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RNCameraPackage(), new BackgroundTimerPackage(), new BackgroundTaskPackage(),
           new ReactNativeAudioPackage(), new AndroidOpenSettingsPackage(), new ActionSheetPackage(),
           new SQLitePluginPackage());
+          new RCTMGLPackage();
     }
 
     @Override

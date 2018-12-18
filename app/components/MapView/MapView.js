@@ -1,11 +1,34 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    Dimensions,
+    Platform,
+    Image,
+    SafeAreaView,
+    Alert
+} from 'react-native';
 import RNMapView from 'react-native-maps';
-import styles from './styles';
+import { styles, layerStyles } from './styles';
 import { Actions } from 'react-native-router-flux';
+import I18n from '../../config/i18n/i18n';
+import { HeaderRightIcon, HeaderBack } from '../Header';
+import {
+    NetworkHandler,
+    AsyncResultEventEmitter,
+    NETWORK_EVENTS_CONSTANTS,
+    Queue
+} from '../../lib/network';
+import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import Icons from '../../config/icons';
 import images from '../../config/images';
 import _ from 'lodash';
+import Mapbox from '@mapbox/react-native-mapbox-gl';
+
+Mapbox.setAccessToken(
+    'pk.eyJ1IjoiZGFtYWNjaGkiLCJhIjoiY2pwbWhwdDc0MDJncjQ4bng2cXlwNnR5aSJ9.F2iu_0iGlGFiXqkDwn1CiA'
+);
 
 class CallOut extends React.Component {
     render() {
@@ -18,6 +41,161 @@ class CallOut extends React.Component {
 }
 
 export default class MapView extends React.Component {
+    static navigationOptions({ navigation, screenProps }) {
+        const { state } = navigation;
+        let navigationOptions = {
+            headerTitle: 'Map'
+        };
+        if (state.params.noBack === true) {
+            navigationOptions.headerLeft = null;
+        } else {
+            navigationOptions.headerLeft = (
+                <HeaderBack
+                    onPress={() => {
+                        Actions.pop();
+                    }}
+                />
+            );
+        }
+
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
+        return navigationOptions;
+    }
+
+    constructor(props) {
+        super(props);
+        const polylines = _.map(this.props.mapData.polylines, polyLine => {
+            return _.map(polyLine.coordinates, coords => {
+                const coordArray = [coords.longitude, coords.latitude];
+                return coordArray;
+            });
+        });
+        this.GEOJson = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    properties: { startingPoint: 'true' },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polylines[0][0]
+                    }
+                },
+                {
+                    type: 'Feature',
+                    properties: { startingPoint: 'false' },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polylines[0][polylines[0].length - 1]
+                    }
+                },
+                {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'MultiLineString',
+                        coordinates: polylines
+                    }
+                }
+            ]
+        };
+    }
+
+    async componentDidMount() {
+        this.props.navigation.setParams({
+            refresh: this.readLambdaQueue.bind(this),
+            showConnectionMessage: this.showConnectionMessage.bind(this)
+        });
+        this.checkPollingStrategy();
+        EventEmitter.addListener(
+            PollingStrategyEvents.changed,
+            this.checkPollingStrategy.bind(this)
+        );
+    }
+
+    componentWillMount() {
+        this.checkPollingStrategy();
+    }
+
+    componentDidUpdate() {
+        this.checkPollingStrategy();
+    }
+
+    readLambdaQueue() {
+        NetworkHandler.readLambda();
+    }
+
+    showConnectionMessage(connectionType) {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
+            { cancelable: false }
+        );
+    }
+
+    async checkPollingStrategy() {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        console.log('Polling strategy changed : ', pollingStrategy);
+        this.showButton(pollingStrategy);
+    }
+
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    }
+
     _close() {
         Actions.pop();
     }
@@ -46,7 +224,7 @@ export default class MapView extends React.Component {
         });
     }
 
-    RenderTrailArrows(polylines) {
+    _renderTrailArrows(polylines) {
         return _.map(polylines, polyline => {
             return polyline.coordinates.map((coo, index, coos) => {
                 if (index === coos.length - 1) {
@@ -96,34 +274,117 @@ export default class MapView extends React.Component {
         return mapData;
     }
 
-    _renderMap() {
-        const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
+    renderLineLayer() {
         return (
-            <RNMapView
-                region={mapData.region}
-                style={styles.mapView}
-                rotateEnabled={false}
+            <Mapbox.ShapeSource id="routeSource" shape={this.GEOJson}>
+                <Mapbox.LineLayer id="route" style={layerStyles.route} />
+                <Mapbox.SymbolLayer
+                    id="startPoints"
+                    filter={['==', 'startingPoint', 'true']}
+                    style={layerStyles.startingPoint}
+                />
+                <Mapbox.SymbolLayer
+                    id="arrivalPoints"
+                    filter={['==', 'startingPoint', 'false']}
+                    style={layerStyles.arrivalPoint}
+                />
+            </Mapbox.ShapeSource>
+        );
+    }
+
+    renderButtons() {
+        return (
+            <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                    style={styles.zoomInButton}
+                    onPress={this.zoomIn.bind(this)}
+                >
+                    {Icons.zoomIn()}
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.zoomOutButton}
+                    onPress={this.zoomOut.bind(this)}
+                >
+                    {Icons.zoomOut()}
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.locateButton}
+                    onPress={this.locateUser.bind(this)}
+                >
+                    {Icons.userPosition()}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    zoomIn() {
+        this.map.getZoom().then(zoom => {
+            this.map.getCenter().then(center => {
+                this.map.setCamera({
+                    centerCoordinate: center,
+                    zoom: zoom + 1,
+                    duration: 500
+                });
+            });
+        });
+    }
+
+    zoomOut() {
+        this.map.getZoom().then(zoom => {
+            this.map.getCenter().then(center => {
+                this.map.setCamera({
+                    centerCoordinate: center,
+                    zoom: zoom - 1,
+                    duration: 500
+                });
+            });
+        });
+    }
+
+    locateUser() {
+        navigator.geolocation.getCurrentPosition(userPosition => {
+            this.map
+                .flyTo(
+                    [
+                        userPosition.coords.longitude,
+                        userPosition.coords.latitude
+                    ],
+                    800
+                )
+                .then(() => {
+                    this.map.zoomTo(13, 200);
+                });
+        });
+    }
+
+    renderMap() {
+        // const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
+        return (
+            <Mapbox.MapView
+                ref={map => (this.map = map)}
+                styleURL={Mapbox.StyleURL.Street}
+                zoomLevel={11}
+                centerCoordinate={[
+                    this.props.mapData.region.longitude,
+                    this.props.mapData.region.latitude
+                ]}
+                showsUserLocation={true}
+                userTrackingMode={1}
+                logoEnabled={false}
+                compassEnabled={true}
+                style={{ flex: 1 }}
             >
-                {this._renderMarkers(mapData.markers)}
-                {this._renderPolygons(mapData.polygons)}
-                {this.RenderTrailArrows(mapData.polylines)}
-                {this._renderPolylines(mapData.polylines)}
-                {this._renderCircles(mapData.circles)}
-            </RNMapView>
+                {this.renderLineLayer()}
+            </Mapbox.MapView>
         );
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                {this._renderMap()}
-                <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={this._close.bind(this)}
-                >
-                    {Icons.mapViewClose()}
-                </TouchableOpacity>
-            </View>
+            <SafeAreaView style={{ flex: 1 }}>
+                {this.renderMap()}
+                {this.renderButtons()}
+            </SafeAreaView>
         );
     }
 }
