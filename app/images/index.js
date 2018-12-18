@@ -73,8 +73,11 @@ const images = {
     frontm_logo: require('./frontm-logo/frontm-logo.png'),
     bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png'),
     frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png'),
+
+    //MAP
     map_starting_point: require('./mapbox/starting-point.png'),
-    map_arrival_point: require('./mapbox/arrival-point.png')
+    map_arrival_point: require('./mapbox/arrival-point.png'),
+    maps_maritime_icon: require('./mapbox/maps-maritime-icon.png')
 };
 
 export default images;

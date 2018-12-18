@@ -108,34 +108,45 @@ export default class MapView extends React.Component {
                 return coordArray;
             });
         });
+        const vessels = _.map(polylines, polyline => {
+            const lastIndex = polyline.length - 1;
+            const deltaLongitude =
+                polyline[lastIndex][0] - polyline[lastIndex - 1][0];
+            const deltaLatitute =
+                polyline[lastIndex][1] - polyline[lastIndex - 1][1];
+            const angle =
+                Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
+            return {
+                type: 'Feature',
+                properties: { type: 'vessel', rotation: angle },
+                geometry: {
+                    type: 'Point',
+                    coordinates: polyline[lastIndex]
+                }
+            };
+        });
         this.GEOJson = {
             type: 'FeatureCollection',
             features: [
                 {
                     type: 'Feature',
-                    properties: { startingPoint: 'true' },
+                    properties: { type: 'startingPoints' },
                     geometry: {
-                        type: 'Point',
-                        coordinates: polylines[0][0]
+                        type: 'MultiPoint',
+                        coordinates: _.map(polylines, polyline => {
+                            return polyline[0];
+                        })
                     }
                 },
                 {
                     type: 'Feature',
-                    properties: { startingPoint: 'false' },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: polylines[0][polylines[0].length - 1]
-                    }
-                },
-                {
-                    type: 'Feature',
-                    properties: {},
+                    properties: { type: 'routes' },
                     geometry: {
                         type: 'MultiLineString',
                         coordinates: polylines
                     }
                 }
-            ]
+            ].concat(vessels)
         };
     }
 
@@ -277,16 +288,16 @@ export default class MapView extends React.Component {
     renderLineLayer() {
         return (
             <Mapbox.ShapeSource id="routeSource" shape={this.GEOJson}>
-                <Mapbox.LineLayer id="route" style={layerStyles.route} />
+                <Mapbox.LineLayer id="routes" style={layerStyles.route} />
                 <Mapbox.SymbolLayer
                     id="startPoints"
-                    filter={['==', 'startingPoint', 'true']}
+                    filter={['==', 'type', 'startingPoints']}
                     style={layerStyles.startingPoint}
                 />
                 <Mapbox.SymbolLayer
-                    id="arrivalPoints"
-                    filter={['==', 'startingPoint', 'false']}
-                    style={layerStyles.arrivalPoint}
+                    id="vessels"
+                    filter={['==', 'type', 'vessel']}
+                    style={layerStyles.vessel}
                 />
             </Mapbox.ShapeSource>
         );
@@ -371,7 +382,6 @@ export default class MapView extends React.Component {
                 showsUserLocation={true}
                 userTrackingMode={1}
                 logoEnabled={false}
-                compassEnabled={true}
                 style={{ flex: 1 }}
             >
                 {this.renderLineLayer()}
