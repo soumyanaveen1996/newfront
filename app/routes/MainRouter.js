@@ -59,6 +59,7 @@ import { TabIcon, TabIconTop } from '../components/TabIcon';
 import EventEmitter, { AuthEvents } from '../lib/events';
 import { Network } from '../lib/capability';
 import NavHandler from '../components/NavigationHandler/NavHandler';
+import CallSummary from '../components/CallSummary/CallSummary';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -467,6 +468,11 @@ class MainRouter extends React.Component {
                         <Scene
                             key={ROUTER_SCENE_KEYS.dialler}
                             component={Dialler}
+                            hideNavBar
+                        />
+                        <Scene
+                            key={ROUTER_SCENE_KEYS.callSummary}
+                            component={CallSummary}
                             hideNavBar
                         />
                     </Lightbox>
