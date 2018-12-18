@@ -123,7 +123,9 @@ const config = {
         getVoIPStatusPath: '/getVoipStatus',
         subscribedBotsPath: '/v2/users/bots',
         subscribeToBot: '/bots/subscribe',
-        unsubscribeFromBot: '/bots/unsubscribe'
+        unsubscribeFromBot: '/bots/unsubscribe',
+        newProvider: '/v2/subscribeDomain',
+        searchCatalog: '/catalog'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'

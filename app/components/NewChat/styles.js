@@ -123,11 +123,11 @@ const stylesheet = StyleSheet.create({
         marginRight: 5
     },
     avatarImage: {
-        height: hp('6%'),
-        width: hp('6%'),
-        borderRadius: hp('6%') / 2,
+        height: 26,
+        width: 26,
+        borderRadius: 13,
         marginLeft: wp('2%'),
-        marginRight: wp('2%')
+        marginRight: wp('3%')
     },
     avatarImageModal: {
         height: hp('15%'),

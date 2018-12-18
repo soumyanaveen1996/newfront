@@ -205,15 +205,16 @@ export const BotListItemStyles = {
         marginTop: 5
     },
     image: {
-        height: 50,
-        width: 50,
+        height: 30,
+        width: 30,
+        borderRadius: 15,
         marginTop: 5
     },
     conversationImage: {
-        height: 50,
-        width: 50,
+        height: 30,
+        width: 30,
         marginTop: 5,
-        borderRadius: 30
+        borderRadius: 15
     },
     textContainer: {
         flex: 1,

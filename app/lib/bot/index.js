@@ -104,6 +104,81 @@ class Bot extends events.EventEmitter {
         }
     }
 
+    static searchBots(searchKey) {
+        const postReq = {
+            query: {
+                searchKey: searchKey
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'POST',
+                            url: `${config.proxy.protocol}${config.proxy.host}${
+                                config.proxy.searchCatalog
+                            }`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: postReq
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        return resolve(response.data);
+                    } else {
+                        reject(null);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    }
+
+    static addNewProvider(key) {
+        const onboadringBot = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
+        const postReq = {
+            verificationCode: key,
+            botId: onboadringBot
+        };
+
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'POST',
+                            url: `${config.proxy.protocol}${config.proxy.host}${
+                                config.proxy.newProvider
+                            }`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: postReq
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    if (
+                        response.data.content &&
+                        response.data.content.length > 0
+                    ) {
+                        return Promise.all(response.data.content);
+                    } else {
+                        reject(null);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    }
+
     static async getCatalog() {
         try {
             let user = await Auth.getUser();
@@ -122,7 +197,9 @@ class Bot extends events.EventEmitter {
                 data: postReq
             };
             let results = await Network(options);
+
             let catalog = _.get(results, 'data');
+
             if (!catalog) {
                 throw new NetworkError('Error getting catalog');
             }

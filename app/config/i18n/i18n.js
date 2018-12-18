@@ -59,7 +59,7 @@ I18n.translations = {
         Bot_update_failed: 'Bot update failed',
         Bot_uninstall_confirmation:
             'Are you sure you want to uninstall the bot ?',
-        Install: 'INSTALL',
+        Install: 'Install',
         Installed: 'Installed',
         Update_Bot: 'UPDATE',
         Tap_To_Load: 'Tap to Load Image',
@@ -81,7 +81,7 @@ I18n.translations = {
         Retry_Now: 'Retry Now',
         Cancel: 'Cancel',
         Use: 'Use',
-        OPEN: 'OPEN',
+        OPEN: 'Open',
         Web_content_shown: 'Web content shown',
         Bot_load_failed_title: 'Bot load failed',
         Bot_load_failed:

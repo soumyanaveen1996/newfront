@@ -9,6 +9,7 @@ import SHA1 from 'crypto-js/sha1';
 import moment from 'moment';
 import _ from 'lodash';
 import Auth from './Auth';
+import Bugsnag from '../../config/ErrorMonitoring';
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -145,6 +146,12 @@ function Network(options, queue = false) {
                                 '>>>>>>NETWORK ERROR CODE NE 200',
                                 response
                             );
+                            Auth.getUser().then(user => {
+                                Bugsnag.setUser(user.userId);
+                                Bugsnag.notify(
+                                    new Error(JSON.stringify(response))
+                                );
+                            });
                             if (response.status === 401) {
                                 console.log('need to logout');
                                 Auth.logout();
@@ -164,6 +171,7 @@ function Network(options, queue = false) {
                     })
                     .catch(err => {
                         console.log('>>>>>>>>>>>>>Network in Catch', err);
+                        Bugsnag.notify(err);
                         reject();
                     });
                 /*

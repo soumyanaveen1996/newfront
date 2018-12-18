@@ -297,25 +297,19 @@ class ChannelsList extends React.Component {
 
     onChannelUnsubscribe = async channel => {
         await this.refresh(false, false);
-        this.refs.toast.show(
-            I18n.t('Channel_unsubscribed'),
-            DURATION.LENGTH_SHORT
-        );
+        this.toast.show(I18n.t('Channel_unsubscribed'), DURATION.LENGTH_SHORT);
     };
 
     onChannelSubscribed = async channel => {
         await this.refresh(false, false);
-        this.refs.toast.show(
-            I18n.t('Channel_subscribed'),
-            DURATION.LENGTH_SHORT
-        );
+        this.toast.show(I18n.t('Channel_subscribed'), DURATION.LENGTH_SHORT);
     };
 
     onChannelUnsubscribeFailed = (channel, message) => {
         if (message) {
-            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+            this.toast.show(message, DURATION.LENGTH_LONG);
         } else {
-            this.refs.toast.show(
+            this.toast.show(
                 I18n.t('Channel_unsubscribe_failed'),
                 DURATION.LENGTH_LONG
             );
@@ -324,9 +318,9 @@ class ChannelsList extends React.Component {
 
     onChannelsubscribeFailed = (channel, message) => {
         if (message) {
-            this.refs.toast.show(message, DURATION.LENGTH_LONG);
+            this.toast.show(message, DURATION.LENGTH_LONG);
         } else {
-            this.refs.toast.show(
+            this.toast.show(
                 I18n.t('Channel_subscribe_failed'),
                 DURATION.LENGTH_LONG
             );
@@ -334,15 +328,15 @@ class ChannelsList extends React.Component {
     };
 
     onChannelTapped = channel => {
-        AlertIOS.alert('Hello');
+        // AlertIOS.alert('Hello')
 
-        // SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
-        //     Actions.channelChat({
-        //         bot: imBot,
-        //         channel: channel,
-        //         onBack: this.onBack
-        //     })
-        // })
+        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            Actions.channelChat({
+                bot: imBot,
+                channel: channel,
+                onBack: this.onBack
+            });
+        });
     };
 
     setWait = wait => this.setState({ wait });
@@ -477,7 +471,6 @@ class ChannelsList extends React.Component {
                             renderItem={this.renderRowItem.bind(this)}
                             extraData={this.state}
                         />
-                        <Toast ref="toast" positionValue={200} />
                     </View>
                 </ScrollView>
                 {this.state.wait ? (
@@ -495,6 +488,7 @@ class ChannelsList extends React.Component {
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 ) : null}
+                <Toast ref={elem => (this.toast = elem)} positionValue={250} />
             </BackgroundImage>
         );
     }

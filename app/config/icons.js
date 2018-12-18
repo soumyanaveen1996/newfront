@@ -77,6 +77,7 @@ export const Icons = {
         Colors.transparent
     ),
     messageRead: icon('check', 'font-awesome', 16, Colors.accent),
+    more: icon('ellipsis-v', 'font-awesome', 16, Colors.accent),
     backArrow: icon(
         'ios-arrow-back',
         'ionicon',

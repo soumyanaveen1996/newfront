@@ -1,6 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableHighlight } from 'react-native';
-import GridView from 'react-native-super-grid';
+import {
+    View,
+    Text,
+    Image,
+    TouchableHighlight,
+    TouchableOpacity,
+    ScrollView
+} from 'react-native';
 import styles from './styles';
 import images from '../../../config/images';
 import I18n from '../../../config/i18n/i18n';
@@ -9,6 +15,7 @@ import CachedImage from '../../CachedImage';
 import _ from 'lodash';
 import { SYSTEM_BOT_MANIFEST } from '../../../lib/bot/SystemBot';
 import { scrollViewConfig } from './config';
+import BotContainer from '../../BotContainer';
 
 export default class DeveloperTab extends React.Component {
     constructor(props) {
@@ -77,10 +84,17 @@ export default class DeveloperTab extends React.Component {
                 -1
             );
         });
+
+        let managmentBots = [];
+
+        domainMgmtBotData.map(data => {
+            managmentBots.push(data.botId);
+        });
+
         this.domainMgmtBotData = {
             name: domainMgmtBotData[0].botName,
             logoUrl: domainMgmtBotData[0].logoUrl,
-            botId: domainMgmtBotData[0].botId
+            botIds: [...managmentBots]
         };
         this.domainMgmtChatBot = domainMgmtBotData[0];
     }
@@ -110,15 +124,56 @@ export default class DeveloperTab extends React.Component {
         );
     };
 
+    renderCategoryBots = () => {
+        return this.state.developerData.map((data, index) => {
+            if (data.botIds) {
+                let developerData = this.props.botsData.filter(bot => {
+                    return data.botIds.indexOf(bot.botId) >= 0;
+                });
+
+                return (
+                    <BotContainer
+                        style={{ flex: 1 }}
+                        key={index}
+                        allBots={this.props.botsData}
+                        botsData={developerData}
+                        name={data.name}
+                        botIds={data.botIds}
+                        currentIndex={index}
+                        imageForHeader={data.logoUrl}
+                        tabStatus="provider"
+                    />
+                );
+            }
+        });
+    };
+
+    newProvider = () => {
+        this.props.onChange(true);
+    };
+
     render() {
         return (
-            <GridView
-                itemDimension={scrollViewConfig.width * 0.5 - 1}
-                spacing={5}
-                renderItem={this.renderGridItem}
-                style={styles.listViewContentContainerStyle}
-                items={this.state.developerData}
-            />
+            <ScrollView style={{ flex: 1 }}>
+                <View
+                    style={{
+                        width: '100%',
+                        height: 80,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <TouchableOpacity
+                        style={styles.newProvider}
+                        onPress={this.newProvider}
+                    >
+                        <Text style={styles.newProviderText}>
+                            + Sign in to a new Provider
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                {this.renderCategoryBots()}
+            </ScrollView>
         );
     }
 }
