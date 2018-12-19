@@ -20,6 +20,8 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import ProfileImage from '../ProfileImage';
+import moment from 'moment';
 
 export default class CallSummary extends React.Component {
     constructor(props) {
@@ -31,6 +33,15 @@ export default class CallSummary extends React.Component {
 
     renderAvatar = () => {
         if (this.props.contact) {
+            return (
+                <ProfileImage
+                    uuid={this.props.contact.id}
+                    placeholder={require('../../images/contact/GreenGoblin.png')}
+                    style={Styles.imageAvatar}
+                    placeholderStyle={Styles.imageAvatar}
+                    resizeMode="center"
+                />
+            );
         }
         return (
             <Image
@@ -96,6 +107,18 @@ export default class CallSummary extends React.Component {
     };
 
     renderCallSummary = () => {
+        const seconds = parseInt(this.props.time, 10);
+        const derivedSeconds = seconds - 10 < 0 ? 0 : seconds - 10;
+
+        const duration =
+            '00' +
+            ':' +
+            moment.duration(derivedSeconds, 'seconds').minutes() +
+            ':' +
+            moment.duration(derivedSeconds, 'seconds').seconds();
+        const callTime = moment
+            .utc(moment.duration(duration).asMilliseconds())
+            .format('mm:ss');
         return (
             <View
                 style={{
@@ -113,7 +136,7 @@ export default class CallSummary extends React.Component {
                         fontWeight: '500'
                     }}
                 >
-                    {this.props.time}
+                    {callTime}
                 </Text>
                 <Text
                     style={{ color: 'rgba(229,69,59,1)', fontSize: hp('1.5%') }}

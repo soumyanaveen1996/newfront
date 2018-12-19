@@ -64,7 +64,7 @@ class NewCallContacts extends React.Component {
             this.props.summary
         ) {
             Actions.callSummary({
-                time: this.props.callTime,
+                time: this.props.time,
                 contact: this.props.dialContact,
                 dialledNumber: this.props.dialledNumber
             });
