@@ -29,6 +29,7 @@ class BackgroundTaskBotScreen {
 
     persistMessage = async message => {
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
+        // Just a check
         if (this.receivedMessage && !this.receivedMessageProcessed) {
             EventEmitter.emit(MessageEvents.messageProcessed, {
                 botId: this.botId || this.receivedMessage.bot,
@@ -322,8 +323,55 @@ const sendBackgroundIMMessage = async (
     if (!conversationContext) {
         return;
     }
-    if (__DEV__) {
-        console.tron('Sending a Message');
+    await processAsyncMessage(message, botManifest, botContext);
+};
+
+const processLastMessageonLoad = async (
+    message,
+    botId,
+    conversationId = undefined,
+    createContext = false
+) => {
+    const user = await Auth.getUser();
+    if (!user) {
+        return;
+    }
+    const botManifest = await getBotManifest(botId);
+    if (!botManifest) {
+        return;
+    }
+    const botScreen = new BackgroundTaskBotScreen(
+        botId,
+        conversationId,
+        message
+    );
+    const botContext = new BotContext(botScreen, botManifest);
+    let conversationContext = await getConversationContext(
+        botId,
+        user,
+        botContext,
+        createContext
+    );
+    if (!conversationContext) {
+        return;
+    }
+
+    let contentType = message.contentType;
+    if (message.createdBy === user.userId) {
+        // Self Message --> Just Persist this
+        if (contentType !== '10') {
+            return;
+        }
+        let myMessage = new Message({
+            uuid: message.messageId,
+            messageDate: message.createdOn
+        });
+        myMessage.setCreatedBy(user.userId);
+        let messageStr = message.details[0].message;
+        myMessage.stringMessage(messageStr);
+        myMessage.setRead(true);
+        botScreen.persistMessage(myMessage);
+        return;
     }
 
     await processAsyncMessage(message, botManifest, botContext);
@@ -335,5 +383,6 @@ export default {
     sendBackgroundMessage: sendBackgroundMessage,
     sendBackgroundIMMessage: sendBackgroundIMMessage,
     sendBackgroundAsyncMessage: sendBackgroundAsyncMessage,
-    sendUnauthBackgroundMessage: sendUnauthBackgroundMessage
+    sendUnauthBackgroundMessage: sendUnauthBackgroundMessage,
+    processLastMessageonLoad: processLastMessageonLoad
 };

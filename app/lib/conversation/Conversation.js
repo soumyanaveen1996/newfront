@@ -140,7 +140,7 @@ export default class Conversation {
                                             details: [{ message: content[0] }],
                                             ...rest
                                         };
-                                        return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                        return BackgroundTaskProcessor.processLastMessageonLoad(
                                             message,
                                             conversation.bot,
                                             conversation.conversationId
@@ -219,7 +219,7 @@ export default class Conversation {
                                         details: [{ message: content[0] }],
                                         ...rest
                                     };
-                                    return BackgroundTaskProcessor.sendBackgroundIMMessage(
+                                    return BackgroundTaskProcessor.processLastMessageonLoad(
                                         message,
                                         conversation.bot.botId,
                                         conversation.conversationId
