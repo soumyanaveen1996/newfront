@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import images from '../../config/images';
+import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 const styles = StyleSheet.create({
     container: {
@@ -41,7 +43,86 @@ const styles = StyleSheet.create({
     callOutText: {
         color: GlobalColors.accent,
         fontSize: 16
+    },
+
+    //Buttons
+    buttonsContainer: {
+        position: 'absolute',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+        right: 16,
+        top: 13
+    },
+    zoomInButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.translucentDark,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
+    },
+    zoomOutButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomLeftRadius: 7,
+        borderBottomRightRadius: 7,
+        borderTopWidth: 1,
+        borderColor: GlobalColors.translucentDark,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4
+    },
+    locateButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 16,
+        borderRadius: 7,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
     }
 });
 
-export default styles;
+const layerStyles = Mapbox.StyleSheet.create({
+    route: {
+        lineCap: 'round',
+        lineWidth: 6,
+        lineJoin: 'round',
+        lineColor: GlobalColors.sideButtons,
+        lineBlur: 1
+    },
+    startingPoint: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_starting_point
+    },
+    arrivalPoint: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_arrival_point
+    },
+    vessel: {
+        iconAllowOverlap: true,
+        iconImage: images.maps_maritime_icon,
+        iconRotationAlignment: 'map',
+        iconRotate: Mapbox.StyleSheet.identity('rotation')
+    }
+});
+
+export { styles, layerStyles };

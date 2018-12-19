@@ -431,12 +431,12 @@ class MainRouter extends React.Component {
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.mapView}
                                     component={MapView}
-                                    hideNavBar
+                                    title="Map"
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.locationPicker}
                                     component={LocationPicker}
-                                    hideNavBar
+                                    title="Map"
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.onboarding}
