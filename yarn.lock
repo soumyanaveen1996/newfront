@@ -2641,6 +2641,7 @@ buffer@^5.0.0, buffer@^5.0.8:
 bugsnag-react-native@^2.12.6:
   version "2.12.6"
   resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-2.12.6.tgz#bb24c70ef79a21ba55b94be6f6c09fb5cb91350e"
+  integrity sha512-KJR1Uab6m2WCEP+HudUxl6w1WalsxLwwKf5YRJHkW0m/LZ72mdEv9ipJ/mEAYbyKPv3bL0y855GnlB4lcQ+7XQ==
   dependencies:
     iserror "^0.0.2"
     promise "^7"
@@ -5526,6 +5527,7 @@ isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
 iserror@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/iserror/-/iserror-0.0.2.tgz#bd53451fe2f668b9f2402c1966787aaa2c7c0bf5"
+  integrity sha1-vVNFH+L2aLnyQCwZZnh6qix8C/U=
 
 isexe@^2.0.0:
   version "2.0.0"
@@ -8096,6 +8098,7 @@ react-fast-compare@^2.0.0:
 react-fast-compare@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
+  integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
 react-is@^16.3.2, react-is@^16.6.0:
   version "16.6.1"

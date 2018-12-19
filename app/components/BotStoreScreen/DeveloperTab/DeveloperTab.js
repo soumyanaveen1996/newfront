@@ -24,7 +24,11 @@ export default class DeveloperTab extends React.Component {
         this.state = {
             // Hide + for now until we have more auth sources
             // developerData : [...this.props.developerData , {name :I18n.t('Authenticate')}]
-            developerData: [...this.props.developerData, this.domainMgmtBotData]
+            developerData: [
+                ...this.props.developerData,
+                this.domainMgmtBotData
+            ],
+            collapse: false
         };
     }
 
@@ -124,6 +128,13 @@ export default class DeveloperTab extends React.Component {
         );
     };
 
+    collapseBtn = () => {
+        console.log('collapsing ', this.state.collapse);
+        this.setState(prevState => ({
+            collapse: !prevState.collapse
+        }));
+    };
+
     renderCategoryBots = () => {
         return this.state.developerData.map((data, index) => {
             if (data.botIds) {
@@ -142,6 +153,8 @@ export default class DeveloperTab extends React.Component {
                         currentIndex={index}
                         imageForHeader={data.logoUrl}
                         tabStatus="provider"
+                        collapse={this.state.collapse}
+                        onChange={this.collapseBtn}
                     />
                 );
             }

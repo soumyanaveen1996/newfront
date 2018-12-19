@@ -26,6 +26,7 @@ export default StyleSheet.create({
         borderTopLeftRadius: 10
     },
     categoryTitleStyle: {
+        paddingLeft: 10,
         fontSize: 20,
         color: 'rgba(74,74,74,1)'
     },

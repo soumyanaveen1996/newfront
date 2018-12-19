@@ -149,9 +149,12 @@ class NewChatContacts extends React.Component {
         if (!contacts) {
             return;
         }
-        console.log(contacts);
+
         const AddressBook = this.createAddressBook(contacts);
-        this.setState({ contactsData: AddressBook });
+        let newAddressBook = AddressBook.filter(elem => {
+            return elem.data.length > 0;
+        });
+        this.setState({ contactsData: newAddressBook });
     };
 
     renderItem(info) {

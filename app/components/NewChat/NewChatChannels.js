@@ -158,9 +158,12 @@ class NewChatContacts extends React.Component {
         const subscribedChannels = channels.filter(
             channel => channel.subcription === 'true'
         );
-        console.log(channels);
+        // console.log(channels);
         const ChannelBook = this.createChannelBook(subscribedChannels);
-        this.setState({ channelsData: ChannelBook });
+        let newChannelBook = ChannelBook.filter(elem => {
+            return elem.data.length > 0;
+        });
+        this.setState({ channelsData: newChannelBook });
     };
 
     renderItem(info) {
