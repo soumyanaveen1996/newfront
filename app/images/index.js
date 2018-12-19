@@ -77,7 +77,8 @@ const images = {
     //MAP
     map_starting_point: require('./mapbox/starting-point.png'),
     map_arrival_point: require('./mapbox/arrival-point.png'),
-    maps_maritime_icon: require('./mapbox/maps-maritime-icon.png')
+    maps_maritime_icon: require('./mapbox/maps-maritime-icon.png'),
+    current_location_inactive: require('./mapbox/current-location-inactive.png')
 };
 
 export default images;
