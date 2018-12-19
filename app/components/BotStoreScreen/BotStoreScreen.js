@@ -4,7 +4,7 @@ import {
     Text,
     ActivityIndicator,
     StatusBar,
-    TextInput,
+    Platform,
     TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
@@ -84,8 +84,6 @@ class BotStoreScreen extends React.Component {
     }
 
     static renderHeader(state) {
-        console.log('search bar', state);
-
         if (state.params.showSearchBar) {
             return (
                 <Header
@@ -260,6 +258,10 @@ class BotStoreScreen extends React.Component {
     };
 
     botStoreList() {
+        let allBots = this.state.catalogData.bots.filter(elem => {
+            return !elem.systemBot;
+        });
+
         if (this.state.selectedIndex === 2) {
             return (
                 <DeveloperTab
@@ -374,7 +376,13 @@ class BotStoreScreen extends React.Component {
                         canelNewProvider={this.handleCancelNewProvider}
                     />
                 )}
-                <StatusBar backgroundColor="grey" barStyle="light-content" />
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="grey"
+                    barStyle={
+                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
+                    }
+                />
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </BackgroundImage>

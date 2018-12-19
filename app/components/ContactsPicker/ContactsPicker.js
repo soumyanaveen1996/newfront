@@ -50,6 +50,8 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import images from '../../config/images';
+import { EmptyContact } from '.';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -269,6 +271,8 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
+        console.log('contact list ', info);
+
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
@@ -438,34 +442,37 @@ class ContactsPicker extends React.Component {
             this.state.contactsData,
             section => section.title
         );
-
-        return (
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : null}
-                style={styles.addressBookContainer}
-            >
-                {/* {!this.props.appState.contactsLoaded ? (
+        if (this.state.contactsData && this.state.contactsData.length > 0) {
+            return (
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : null}
+                    style={styles.addressBookContainer}
+                >
+                    {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
-                <SectionList
-                    ItemSeparatorComponent={ContactsPickerItemSeparator}
-                    ref={sectionList => {
-                        this.contactsList = sectionList;
-                    }}
-                    style={styles.addressBook}
-                    renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={this.sectionHeader.bind(this)}
-                    sections={this.state.contactsData}
-                    keyExtractor={(item, index) => item.id}
-                    ListHeaderComponent={this.renderButtons}
-                    stickySectionHeadersEnabled={false}
-                />
-                {/* <ContactsPickerIndexView
+                    <SectionList
+                        ItemSeparatorComponent={ContactsPickerItemSeparator}
+                        ref={sectionList => {
+                            this.contactsList = sectionList;
+                        }}
+                        style={styles.addressBook}
+                        renderItem={this.renderItem.bind(this)}
+                        renderSectionHeader={this.sectionHeader.bind(this)}
+                        sections={this.state.contactsData}
+                        keyExtractor={(item, index) => item.id}
+                        ListHeaderComponent={this.renderButtons}
+                        stickySectionHeadersEnabled={false}
+                    />
+                    {/* <ContactsPickerIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}
                     items={sectionTitles}
                 /> */}
-            </KeyboardAvoidingView>
-        );
+                </KeyboardAvoidingView>
+            );
+        } else {
+            return <EmptyContact />;
+        }
     }
 
     inviteUser() {

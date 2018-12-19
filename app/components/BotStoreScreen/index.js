@@ -1,2 +1,3 @@
 import BotStoreScreen from './BotStoreScreen';
-export { BotStoreScreen };
+import EmptyInstalledBot from './EmptyInstalledBot';
+export { BotStoreScreen, EmptyInstalledBot };

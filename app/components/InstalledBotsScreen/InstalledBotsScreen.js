@@ -306,6 +306,7 @@ export default class InstalledBotsScreen extends React.Component {
     };
 
     renderRow = botData => {
+        console.log('installed bots ', botData);
         return (
             <View style={BotListItemStyles.container}>
                 <CachedImage

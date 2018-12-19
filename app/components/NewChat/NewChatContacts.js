@@ -33,6 +33,8 @@ import {
 } from './config';
 import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
+import { BackgroundImage } from '../BackgroundImage';
+import { EmptyContact } from '../ContactsPicker';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -215,27 +217,35 @@ class NewChatContacts extends React.Component {
             section => section.title
         );
 
-        return (
-            <View style={styles.addressBookContainer}>
-                <SectionList
-                    ItemSeparatorComponent={NewChatItemSeparator}
-                    ref={sectionList => {
-                        this.contactsList = sectionList;
-                    }}
-                    style={styles.addressBook}
-                    renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={({ section }) => (
-                        <NewChatSectionHeader title={section.title} />
-                    )}
-                    sections={this.state.contactsData}
-                    keyExtractor={(item, index) => item.id}
-                />
-                <NewChatIndexView
-                    onItemPressed={this.onSideIndexItemPressed.bind(this)}
-                    items={sectionTitles}
-                />
-            </View>
-        );
+        if (sectionTitles && sectionTitles.length > 0) {
+            return (
+                <View style={styles.addressBookContainer}>
+                    <BackgroundImage>
+                        <SectionList
+                            ItemSeparatorComponent={NewChatItemSeparator}
+                            ref={sectionList => {
+                                this.contactsList = sectionList;
+                            }}
+                            style={styles.addressBook}
+                            renderItem={this.renderItem.bind(this)}
+                            renderSectionHeader={({ section }) => (
+                                <NewChatSectionHeader title={section.title} />
+                            )}
+                            sections={this.state.contactsData}
+                            keyExtractor={(item, index) => item.id}
+                        />
+                        <NewChatIndexView
+                            onItemPressed={this.onSideIndexItemPressed.bind(
+                                this
+                            )}
+                            items={sectionTitles}
+                        />
+                    </BackgroundImage>
+                </View>
+            );
+        } else {
+            return <EmptyContact />;
+        }
     }
 
     render() {
