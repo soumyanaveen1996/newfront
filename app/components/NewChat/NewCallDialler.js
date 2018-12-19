@@ -54,7 +54,7 @@ class NewDialler extends React.Component {
             this.props.summary
         ) {
             Actions.callSummary({
-                time: this.props.callTime,
+                time: this.props.time,
                 contact: this.props.dialContact,
                 dialledNumber: this.props.dialledNumber
             });
@@ -81,6 +81,9 @@ class NewDialler extends React.Component {
             Actions.push(ROUTER_SCENE_KEYS.dialler, {
                 newCallScreen: true
             });
+        }
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.callSummary) {
+            Actions.pop();
         }
     }
 

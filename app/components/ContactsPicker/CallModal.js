@@ -21,8 +21,9 @@ export default class CallModal extends React.Component {
         this.props.setVisible(false);
         Actions.dialler({
             call: true,
-            number: this.props.contact.phoneNumbers.mobile
-            // number: '+919880433199'
+            number: this.props.contact.phoneNumbers.mobile,
+            contact: this.props.contact,
+            newCallScreen: true
         });
     }
 
