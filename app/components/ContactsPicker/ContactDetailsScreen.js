@@ -49,7 +49,12 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     callContact() {
-        this.setModalVisible(true);
+        console.log(this.props.contact);
+        if (this.props.contact.phoneNumbers) {
+            this.setModalVisible(true);
+            return;
+        }
+        this.makeVoipCall();
     }
 
     renderNameArea() {
@@ -175,6 +180,23 @@ export default class ContactDetailsScreen extends React.Component {
                     : null}
             </View>
         );
+    }
+
+    makeVoipCall() {
+        this.setModalVisible(false);
+        let participants = [
+            {
+                userId: this.props.contact.id,
+                userName: this.props.contact.name
+            }
+        ];
+        SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
+            Actions.peopleChat({
+                bot: imBot,
+                otherParticipants: participants,
+                call: true
+            });
+        });
     }
 
     renderDetailRow(icon, label, content) {
