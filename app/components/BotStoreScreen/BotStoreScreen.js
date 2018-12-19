@@ -84,6 +84,8 @@ class BotStoreScreen extends React.Component {
     }
 
     static renderHeader(state) {
+        console.log('search bar', state);
+
         if (state.params.showSearchBar) {
             return (
                 <Header
@@ -107,7 +109,7 @@ class BotStoreScreen extends React.Component {
                     outerContainerStyles={styles.headerOuterContainerStyles}
                     backgroundColor={GlobalColors.white}
                     centerComponent={BotStoreScreen.renderHeaderTitle()}
-                    // leftComponent={BotStoreScreen.renderLeftIcon(state)}
+                    // Component={BotStoreScreen.renderLeftIcon(state)}
                 />
             );
         }
@@ -301,6 +303,7 @@ class BotStoreScreen extends React.Component {
             <View style={styles.segmentedControlTab}>
                 <SegmentedControlTab
                     tabsContainerStyle={styles.tabsContainerStyle}
+                    borderRadius={0}
                     tabStyle={styles.tabStyle}
                     tabTextStyle={styles.tabTextStyle}
                     activeTabStyle={styles.activeTabStyle}

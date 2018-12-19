@@ -35,6 +35,8 @@ const images = {
     btn_close_slider: { uri: 'purple_btn_close' },
     close_btn: require('./icons/cross-deselect-participant.png'),
     btn_info: require('./slider/btn_info.png'),
+    collapse_gray_arrow_up: require('./collapse-gray-arrow-up/collapse-gray-arrow-up.png'),
+    collapse_gray_arrow_down: require('./collapse-gray-arrow-down/collapse-gray-arrow-down.png'),
     icn_slider: require('./slider/icn_slider.png'),
     walkthrough_image: require('./walkthrough/image.png'),
     gsm: require('./icons/gsm.png'),

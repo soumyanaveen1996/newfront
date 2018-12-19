@@ -165,7 +165,7 @@ export default class InviteModal extends React.Component {
                         >
                             <Text style={styles.inviteEmail}>
                                 Or invite someone to join FrontM by sending an
-                                email invitation
+                                email
                             </Text>
                             <Text
                                 style={{
