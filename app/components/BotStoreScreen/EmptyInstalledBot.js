@@ -31,7 +31,7 @@ export default class EmptyInstalledBot extends React.Component {
                 >
                     <Text
                         style={{ textAlign: 'center', alignSelf: 'center' }}
-                        numberOfLines={2}
+                        numberOfLines={3}
                     >
                         You don’t have any app installed. Search or sign in to a
                         new provider.

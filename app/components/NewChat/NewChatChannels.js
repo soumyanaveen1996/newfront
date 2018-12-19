@@ -35,6 +35,7 @@ import { Channel } from '../../lib/capability';
 import CachedImage from '../CachedImage';
 import Utils from '../../lib/utils';
 import { EmptyChannel } from '../ChannelsList';
+import { BackgroundImage } from '../BackgroundImage';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -232,10 +233,10 @@ class NewChatContacts extends React.Component {
                         sections={this.state.channelsData}
                         keyExtractor={(item, index) => item.id}
                     />
-                    <NewChatIndexView
+                    {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
-                    />
+                    /> */}
                 </View>
             );
         } else {
@@ -246,7 +247,7 @@ class NewChatContacts extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                {this.renderChannelsList()}
+                <BackgroundImage>{this.renderChannelsList()}</BackgroundImage>
             </SafeAreaView>
         );
     }

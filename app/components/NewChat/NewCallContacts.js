@@ -250,10 +250,10 @@ class NewCallContacts extends React.Component {
                         sections={this.state.contactsData}
                         keyExtractor={(item, index) => item.id}
                     />
-                    <NewChatIndexView
+                    {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
-                    />
+                    /> */}
                 </View>
             );
         } else {

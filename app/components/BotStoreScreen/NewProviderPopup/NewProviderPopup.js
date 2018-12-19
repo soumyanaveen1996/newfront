@@ -92,7 +92,12 @@ export default class NewProviderPopup extends Component {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={styles.submitBtn}
+                                style={
+                                    this.state.code.length > 0
+                                        ? styles.submitBtn
+                                        : styles.emptyBtn
+                                }
+                                disabled={this.state.code.length === 0}
                                 onPress={this.newProvider.bind(this)}
                             >
                                 <Text style={styles.submitText}>Submit</Text>

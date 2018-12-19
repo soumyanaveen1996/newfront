@@ -5,12 +5,16 @@ import {
     ActivityIndicator,
     StatusBar,
     Platform,
+    Image,
+    Alert,
     TouchableOpacity
 } from 'react-native';
+
+import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
-import { Header, Icon } from 'react-native-elements';
-import { GlobalColors } from '../../config/styles';
-import { rightIconConfig, headerConfig, tabConfig } from './config';
+import { Icon } from 'react-native-elements';
+
+import { headerConfig, tabConfig } from './config';
 import styles from './styles';
 import DeveloperTab from './DeveloperTab/DeveloperTab';
 import { InstalledBotsScreen } from '../InstalledBotsScreen';
@@ -18,17 +22,13 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import Bot from '../../lib/bot/index';
 import CategoriesTab from './CategoriesTab/CategoriesTab';
 import FeaturedTab from './FeaturedTab/FeaturedTab';
-import { HeaderBack } from '../Header';
+import { HeaderRightIcon } from '../Header';
 import { ErrorMessage } from '../Error';
 import { NetworkError } from '../../lib/network';
-import {
-    EventEmitter,
-    SatelliteConnectionEvents,
-    AuthEvents
-} from '../../lib/events';
+import { EventEmitter, AuthEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
-import { Auth } from '../../lib/capability';
-import RemoteBotInstall from '../../lib/RemoteBotInstall';
+import { Auth, Settings, PollingStrategyTypes } from '../../lib/capability';
+
 import { BackgroundImage } from '../BackgroundImage';
 import { connect } from 'react-redux';
 import Store from '../../redux/store/configureStore';
@@ -39,79 +39,76 @@ import { NewProviderPopup } from './NewProviderPopup';
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
-        return {
-            header: BotStoreScreen.renderHeader(state),
-            headerLeft: BotStoreScreen.renderLeftIcon(state)
-        };
-    }
+        let headerLeft = null;
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                headerLeft = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                headerLeft = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                headerLeft = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                headerLeft = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
 
-    static renderHeaderTitle() {
-        return (
-            <Text style={styles.headerTitleStyle}>
+        const headerRight = (
+            <TouchableOpacity
+                style={styles.headerRight}
+                onPress={state.params.newChannel}
+            >
+                <Image
+                    source={require('../../images/channels/plus-white-good.png')}
+                    style={{ width: 15, height: 15 }}
+                />
+            </TouchableOpacity>
+        );
+
+        const headerTitle = (
+            <Text
+                style={
+                    Platform.OS === 'android'
+                        ? { marginLeft: wp('20%'), fontSize: 16 }
+                        : null
+                }
+            >
                 {headerConfig.headerTitle}
             </Text>
         );
-    }
 
-    static renderLeftIcon(state) {
-        return (
-            <HeaderBack
-                onPress={
-                    state.params.onBack
-                        ? () => {
-                            Actions.pop();
-                            state.params.onBack();
-                        }
-                        : Actions.pop
-                }
-            />
-        );
-    }
-
-    static renderRightIcon(state) {
-        if (state.params.selectedIndex === 2) {
-            return (
-                <Icon
-                    type={rightIconConfig.type}
-                    name={rightIconConfig.name}
-                    size={rightIconConfig.size}
-                    underlayColor={rightIconConfig.underlayColor}
-                    color={rightIconConfig.color}
-                    fontWeight={rightIconConfig.fontWeight}
-                    onPress={state.params.handleSearchClick}
-                />
-            );
-        }
-    }
-
-    static renderHeader(state) {
-        if (state.params.showSearchBar) {
-            return (
-                <Header
-                    innerContainerStyles={styles.headerInnerContainerForSearch}
-                    outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.white}
-                >
-                    {/* <SearchBar
-                    lightTheme
-                    ref={search => { this.search = search }}
-                    onSubmitEditing={state.params.handleSearchSubmit}
-                    inputStyle={{backgroundColor: GlobalColors.white }}
-                    containerStyle={styles.searchBar}
-                /> */}
-                </Header>
-            );
-        } else {
-            return (
-                <Header
-                    innerContainerStyles={styles.headerInnerContainerStyles}
-                    outerContainerStyles={styles.headerOuterContainerStyles}
-                    backgroundColor={GlobalColors.white}
-                    centerComponent={BotStoreScreen.renderHeaderTitle()}
-                    // Component={BotStoreScreen.renderLeftIcon(state)}
-                />
-            );
-        }
+        return {
+            headerTitle,
+            headerLeft,
+            headerRight
+        };
     }
 
     constructor(props) {
@@ -154,6 +151,9 @@ class BotStoreScreen extends React.Component {
     }
 
     async componentDidMount() {
+        this.props.navigation.setParams({
+            showConnectionMessage: this.showConnectionMessage
+        });
         try {
             setTimeout(() => this.updateCatalog(), 1000);
 
@@ -182,6 +182,7 @@ class BotStoreScreen extends React.Component {
                 });
             }
         }
+        this.checkPollingStrategy();
     }
 
     componentDidUpdate(prevProps) {
@@ -216,6 +217,38 @@ class BotStoreScreen extends React.Component {
             this.updateCatalog();
         }
     }
+
+    checkPollingStrategy = async () => {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        this.showButton(pollingStrategy);
+    };
+
+    showConnectionMessage = connectionType => {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
+            { cancelable: false }
+        );
+    };
+
+    showButton = pollingStrategy => {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    };
 
     async userChangedHandler() {
         this.refresh();

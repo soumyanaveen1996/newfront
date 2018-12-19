@@ -67,13 +67,13 @@ const stylesheet = StyleSheet.create({
     },
     sectionHeaderContainer: {
         backgroundColor: GlobalColors.transparent,
-        height: SECTION_HEADER_HEIGHT,
+        height: hp('4%'),
         paddingHorizontal: 22,
         alignItems: 'center',
         flexDirection: 'row'
     },
     sectionHeaderTitle: {
-        fontSize: 24,
+        fontSize: hp('2.5%'),
         color: GlobalColors.darkGray,
         textAlign: 'center'
     },
@@ -81,7 +81,7 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 70,
+        height: 55,
         paddingHorizontal: 24,
         paddingVertical: 17
     },
@@ -97,7 +97,7 @@ const stylesheet = StyleSheet.create({
     },
     contactItemName: {
         color: GlobalColors.headerBlack,
-        fontSize: 18
+        fontSize: 16
     },
     contactItemEmail: {
         color: 'rgb(180, 180, 180)',

@@ -139,8 +139,12 @@ export default class DeveloperTab extends React.Component {
         return this.state.developerData.map((data, index) => {
             if (data.botIds) {
                 let developerData = this.props.botsData.filter(bot => {
-                    return data.botIds.indexOf(bot.botId) >= 0;
+                    return (
+                        data.botIds.indexOf(bot.botId) >= 0 && !bot.systemBot
+                    );
                 });
+
+                console.log('thyyyyyyyy ', developerData);
 
                 return (
                     <BotContainer
