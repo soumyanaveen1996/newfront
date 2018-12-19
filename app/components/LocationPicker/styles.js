@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
+import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 const styles = StyleSheet.create({
     container: {
@@ -34,11 +35,12 @@ const styles = StyleSheet.create({
         right: 0
     },
     bottomLayer: {
-        position: 'absolute',
         padding: 10,
         bottom: 5,
         backgroundColor: GlobalColors.accent,
-        borderRadius: 5
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     bottomLayerText: {
         fontSize: 14,
@@ -47,20 +49,72 @@ const styles = StyleSheet.create({
     },
     doneButton: {
         position: 'absolute',
-        width: 70,
-        height: 30,
-        right: 5,
-        top: Utils.isiPhoneX() ? 30 : 10,
-        backgroundColor: GlobalColors.transparent,
-        flex: 1,
+        width: 140,
+        height: 60,
+        backgroundColor: GlobalColors.sideButtons,
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        alignItems: 'center',
+        borderRadius: 10,
+        bottom: 60,
+        alignSelf: 'center'
     },
     doneButtonText: {
-        color: GlobalColors.accent,
+        color: GlobalColors.white,
         fontSize: 20,
-        position: 'relative',
-        textAlign: 'right'
+        textAlign: 'center'
+    },
+
+    //Buttons
+    buttonsContainer: {
+        position: 'absolute',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+        right: 16,
+        top: 13
+    },
+    zoomInButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.translucentDark,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
+    },
+    zoomOutButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomLeftRadius: 7,
+        borderBottomRightRadius: 7,
+        borderTopWidth: 1,
+        borderColor: GlobalColors.translucentDark,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4
+    },
+    locateButton: {
+        width: 45,
+        height: 45,
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 16,
+        borderRadius: 7,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
     }
 });
 
