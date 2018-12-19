@@ -1,2 +1,3 @@
 import ChannelsList from './ChannelsList';
-export { ChannelsList };
+import EmptyChannel from './EmptyChannel';
+export { ChannelsList, EmptyChannel };

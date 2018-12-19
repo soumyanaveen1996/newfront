@@ -34,6 +34,8 @@ import {
 import { Channel } from '../../lib/capability';
 import CachedImage from '../CachedImage';
 import Utils from '../../lib/utils';
+import { EmptyChannel } from '../ChannelsList';
+import { BackgroundImage } from '../BackgroundImage';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -215,33 +217,37 @@ class NewChatContacts extends React.Component {
             section => section.title
         );
 
-        return (
-            <View style={styles.addressBookContainer}>
-                <SectionList
-                    ItemSeparatorComponent={NewChatItemSeparator}
-                    ref={sectionList => {
-                        this.contactsList = sectionList;
-                    }}
-                    style={styles.addressBook}
-                    renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={({ section }) => (
-                        <NewChatSectionHeader title={section.title} />
-                    )}
-                    sections={this.state.channelsData}
-                    keyExtractor={(item, index) => item.id}
-                />
-                <NewChatIndexView
-                    onItemPressed={this.onSideIndexItemPressed.bind(this)}
-                    items={sectionTitles}
-                />
-            </View>
-        );
+        if (sectionTitles && sectionTitles.length > 0) {
+            return (
+                <View style={styles.addressBookContainer}>
+                    <SectionList
+                        ItemSeparatorComponent={NewChatItemSeparator}
+                        ref={sectionList => {
+                            this.contactsList = sectionList;
+                        }}
+                        style={styles.addressBook}
+                        renderItem={this.renderItem.bind(this)}
+                        renderSectionHeader={({ section }) => (
+                            <NewChatSectionHeader title={section.title} />
+                        )}
+                        sections={this.state.channelsData}
+                        keyExtractor={(item, index) => item.id}
+                    />
+                    {/* <NewChatIndexView
+                        onItemPressed={this.onSideIndexItemPressed.bind(this)}
+                        items={sectionTitles}
+                    /> */}
+                </View>
+            );
+        } else {
+            return <EmptyChannel />;
+        }
     }
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                {this.renderChannelsList()}
+                <BackgroundImage>{this.renderChannelsList()}</BackgroundImage>
             </SafeAreaView>
         );
     }

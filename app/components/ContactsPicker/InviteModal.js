@@ -188,7 +188,7 @@ export default class InviteModal extends React.Component {
                                 keyboardType={'email-address'}
                                 textContentType={'emailAddress'}
                                 placeholder="email@example.com"
-                                autoCapitalize={false}
+                                autoCapitalize="none"
                                 autoCorrect={false}
                             />
                             <View style={styles.inviteButtonArea}>

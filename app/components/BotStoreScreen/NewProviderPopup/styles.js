@@ -64,6 +64,15 @@ export default StyleSheet.create({
     submitBtn: {
         height: 30,
         width: 136,
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 6,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    emptyBtn: {
+        height: 30,
+        width: 136,
         backgroundColor: 'rgba(155,155,155,1)',
         borderRadius: 6,
         justifyContent: 'center',

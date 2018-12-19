@@ -9,7 +9,7 @@ import {
 
 export default StyleSheet.create({
     headerTitleStyle: {
-        fontSize: 16,
+        fontSize: 14,
         color: GlobalColors.headerBlack,
         fontWeight: '400',
         fontFamily: 'SF Pro Text'
@@ -57,7 +57,7 @@ export default StyleSheet.create({
             borderBottomColor: GlobalColors.borderBottom,
             paddingLeft: 0,
             paddingBottom: 10,
-            height: Utils.isiPhoneX() ? 70 : 60
+            height: Utils.isiPhoneX() ? 80 : 70
         },
         android: {
             position: 'relative',

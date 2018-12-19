@@ -37,6 +37,7 @@ import {
 } from '../../lib/capability';
 import config from '../../config/config';
 import { Icons } from '../../config/icons';
+import { EmptyInstalledBot } from '../BotStoreScreen';
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
 const subtitleNumberOfLines = 2;
@@ -460,30 +461,34 @@ export default class InstalledBotsScreen extends React.Component {
                 </View>
             );
         } else {
-            return (
-                <ScrollView style={{ flex: 1 }}>
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        <FlatList
-                            style={styles.flatList}
-                            keyExtractor={(item, index) => item.botId}
-                            data={this.state.bots}
-                            renderItem={this.renderGridItem.bind(this)}
-                            extraData={this.state}
-                            ItemSeparatorComponent={() => (
-                                <View style={[styles.separator]} />
-                            )}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={['#9Bd35A', '#689F38']}
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={this.onRefresh.bind(this)}
-                                />
-                            }
-                        />
-                        <Toast ref="toast" positionValue={250} />
-                    </View>
-                </ScrollView>
-            );
+            if (this.state.bots && this.state.bots.length > 0) {
+                return (
+                    <ScrollView style={{ flex: 1 }}>
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            <FlatList
+                                style={styles.flatList}
+                                keyExtractor={(item, index) => item.botId}
+                                data={this.state.bots}
+                                renderItem={this.renderGridItem.bind(this)}
+                                extraData={this.state}
+                                ItemSeparatorComponent={() => (
+                                    <View style={[styles.separator]} />
+                                )}
+                                refreshControl={
+                                    <RefreshControl
+                                        colors={['#9Bd35A', '#689F38']}
+                                        refreshing={this.state.refreshing}
+                                        onRefresh={this.onRefresh.bind(this)}
+                                    />
+                                }
+                            />
+                            <Toast ref="toast" positionValue={250} />
+                        </View>
+                    </ScrollView>
+                );
+            } else {
+                return <EmptyInstalledBot />;
+            }
         }
     }
 }
