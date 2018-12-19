@@ -37,6 +37,7 @@ import {
 import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
 import Modal from 'react-native-modal';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { Icons } from '../../config/icons';
 const R = require('ramda');
 
@@ -56,6 +57,18 @@ class NewCallContacts extends React.Component {
             Contact.getAddedContacts().then(contacts => {
                 this.refresh(contacts);
             });
+        }
+
+        if (
+            Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
+            this.props.summary
+        ) {
+            Actions.callSummary({
+                time: this.props.time,
+                contact: this.props.dialContact,
+                dialledNumber: this.props.dialledNumber
+            });
+            return;
         }
     }
 
@@ -132,7 +145,7 @@ class NewCallContacts extends React.Component {
                         id: contact.userId,
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: contact.phoneNumber || undefined
+                        phoneNumbers: contact.phoneNumbers || undefined
                     }));
             } else {
                 contactBook = phoneContacts
@@ -161,7 +174,10 @@ class NewCallContacts extends React.Component {
         }
         console.log(contacts);
         const AddressBook = this.createAddressBook(contacts);
-        this.setState({ contactsData: AddressBook });
+        let newAddressBook = AddressBook.filter(elem => {
+            return elem.data.length > 0;
+        });
+        this.setState({ contactsData: newAddressBook });
     };
 
     renderItem(info) {
@@ -272,6 +288,7 @@ class NewCallContacts extends React.Component {
         Actions.dialler({
             call: true,
             number: this.state.contactSelected.phoneNumbers.mobile,
+            contact: this.state.contactSelected,
             newCallScreen: true
         });
     };
@@ -329,13 +346,16 @@ class NewCallContacts extends React.Component {
                                         >
                                             {contactSelected.phoneNumbers
                                                 ? contactSelected.phoneNumbers
+                                                    .mobile
                                                 : 'Not Available'}
                                         </Text>
                                     </View>
                                     <View style={styles.modalCallButContainer}>
                                         <TouchableOpacity
                                             style={
+                                                contactSelected.phoneNumbers &&
                                                 contactSelected.phoneNumbers
+                                                    .mobile
                                                     ? styles.callButton
                                                     : styles.callButtonDisabled
                                             }

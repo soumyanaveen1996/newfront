@@ -144,92 +144,87 @@ export default class ChannelsListItem extends React.Component {
 
         if (isOwner) {
             return (
-                <View style={styles.rightContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            // this.ActionSheetOwner.show()
-                            ActionSheet.showActionSheetWithOptions(
-                                {
-                                    options: ['Edit', 'Cancel'],
-                                    cancelButtonIndex: 1,
-                                    destructiveButtonIndex: 1,
-                                    tintColor: 'blue'
-                                },
-                                buttonIndex => {
-                                    if (
-                                        buttonIndex !== undefined &&
-                                        buttonIndex === 0
-                                    ) {
-                                        this.editChannel(channel);
-                                    }
+                <TouchableOpacity
+                    style={styles.rightContainer}
+                    onPress={() => {
+                        // this.ActionSheetOwner.show()
+                        ActionSheet.showActionSheetWithOptions(
+                            {
+                                options: ['Edit', 'Cancel'],
+                                cancelButtonIndex: 1,
+                                destructiveButtonIndex: 1,
+                                tintColor: 'blue'
+                            },
+                            buttonIndex => {
+                                if (
+                                    buttonIndex !== undefined &&
+                                    buttonIndex === 0
+                                ) {
+                                    this.editChannel(channel);
                                 }
-                            );
-                        }}
-                    >
-                        {Icons.more()}
-                    </TouchableOpacity>
-                </View>
+                            }
+                        );
+                    }}
+                >
+                    {Icons.more()}
+                </TouchableOpacity>
             );
         }
 
         if (channel.subcription === 'true') {
             return (
-                <View style={styles.rightContainer}>
-                    <TouchableOpacity
-                        style={{ height: 40, width: 40 }}
-                        onPress={() => {
-                            // this.ActionSheetOwner.show()
-                            ActionSheet.showActionSheetWithOptions(
-                                {
-                                    options: ['Unsubscribe', 'Cancel'],
-                                    cancelButtonIndex: 1,
-                                    destructiveButtonIndex: 1,
-                                    tintColor: 'blue'
-                                },
-                                buttonIndex => {
-                                    if (
-                                        buttonIndex !== undefined &&
-                                        buttonIndex === 0
-                                    ) {
-                                        this.onUnsubscribeChannel();
-                                    }
+                <TouchableOpacity
+                    style={styles.rightContainer}
+                    onPress={() => {
+                        // this.ActionSheetOwner.show()
+                        ActionSheet.showActionSheetWithOptions(
+                            {
+                                options: ['Unsubscribe', 'Cancel'],
+                                cancelButtonIndex: 1,
+                                destructiveButtonIndex: 1,
+                                tintColor: 'blue'
+                            },
+                            buttonIndex => {
+                                if (
+                                    buttonIndex !== undefined &&
+                                    buttonIndex === 0
+                                ) {
+                                    this.onUnsubscribeChannel();
                                 }
-                            );
-                        }}
-                    >
-                        {Icons.more()}
-                    </TouchableOpacity>
-                </View>
+                            }
+                        );
+                    }}
+                >
+                    {Icons.more()}
+                </TouchableOpacity>
             );
         }
         if (channel.subcription === 'false') {
             return (
-                <View style={styles.rightContainer}>
-                    <TouchableOpacity
-                        style={{ height: 40, width: 40 }}
-                        onPress={() => {
-                            // this.ActionSheetOwner.show()
-                            ActionSheet.showActionSheetWithOptions(
-                                {
-                                    options: ['Subscribe', 'Cancel'],
-                                    cancelButtonIndex: 1,
-                                    destructiveButtonIndex: 1,
-                                    tintColor: 'blue'
-                                },
-                                buttonIndex => {
-                                    if (
-                                        buttonIndex !== undefined &&
-                                        buttonIndex === 0
-                                    ) {
-                                        this.onsubscribeChannel(channel);
-                                    }
+                <TouchableOpacity
+                    style={styles.rightContainer}
+                    onPress={() => {
+                        // this.ActionSheetOwner.show()
+                        ActionSheet.showActionSheetWithOptions(
+                            {
+                                options: ['Subscribe', 'Cancel'],
+                                cancelButtonIndex: 1,
+                                destructiveButtonIndex: 1,
+                                tintColor: 'blue'
+                            },
+                            buttonIndex => {
+                                if (
+                                    buttonIndex !== undefined &&
+                                    buttonIndex === 0
+                                ) {
+                                    this.onsubscribeChannel(channel);
                                 }
-                            );
-                        }}
-                    >
-                        {Icons.more()}
-                    </TouchableOpacity>
-                </View>
+                            }
+                        );
+                    }}
+                >
+                    {Icons.more()}
+                </TouchableOpacity>
             );
         }
 

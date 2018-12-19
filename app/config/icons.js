@@ -53,6 +53,13 @@ function renderIcon(
 
 export const Icons = {
     renderIcon: renderIcon,
+    backSpace: icon(
+        'ios-backspace',
+        'ionicon',
+        hp('3%'),
+        GlobalColors.grey,
+        GlobalColors.white
+    ),
     addContacts: icon(
         'ios-person-add-outline',
         'ionicon',

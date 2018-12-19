@@ -121,7 +121,7 @@ export const MainScreenStyles = StyleSheet.create({
         display: 'flex',
         width: 26,
         height: 26,
-        borderRadius: 13,
+        borderRadius: 15,
         backgroundColor: 'rgba(47,199,111,1)',
         alignItems: 'center',
         justifyContent: 'center',
