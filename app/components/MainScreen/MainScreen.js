@@ -150,14 +150,16 @@ class MainScreen extends React.Component {
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={MainScreenStyles.headerRightCall}
+                    style={{ width: 35, height: 35, marginRight: 10 }}
                     onPress={() =>
                         Actions.tabBarCall({
                             type: 'push'
                         })
                     }
                 >
-                    <View>{Icons.callW()}</View>
+                    <View style={MainScreenStyles.headerRightCall}>
+                        {Icons.callW()}
+                    </View>
                 </TouchableOpacity>
             </View>
         );
@@ -563,7 +565,7 @@ class MainScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <BackgroundImage>
-                    {this.state.firstTimer && this.state.noChats && (
+                    {this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />

@@ -40,7 +40,8 @@ class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         return {
-            header: BotStoreScreen.renderHeader(state)
+            header: BotStoreScreen.renderHeader(state),
+            headerLeft: BotStoreScreen.renderLeftIcon(state)
         };
     }
 

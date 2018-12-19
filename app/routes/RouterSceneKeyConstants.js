@@ -54,7 +54,8 @@ const ROUTER_SCENE_KEYS = {
     botsMenuChat: 'botsMenuChat',
     botsListChat: 'botsListChat',
     tabBarChat: 'tabBarChat',
-    tabBarCall: 'tabBarCall'
+    tabBarCall: 'tabBarCall',
+    callSummary: 'callSummary'
 };
 
 export default ROUTER_SCENE_KEYS;

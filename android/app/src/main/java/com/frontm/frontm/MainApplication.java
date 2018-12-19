@@ -38,7 +38,6 @@ import com.ocetnik.timer.BackgroundTimerPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
-import com.actionsheet.ActionSheetPackage;
 import org.pgsqlite.SQLitePluginPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;

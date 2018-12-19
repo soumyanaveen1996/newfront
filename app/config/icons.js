@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from 'react-native-elements';
-import Colors from './styles';
+import Colors, { GlobalColors } from './styles';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
@@ -53,6 +53,13 @@ function renderIcon(
 
 export const Icons = {
     renderIcon: renderIcon,
+    backSpace: icon(
+        'ios-backspace',
+        'ionicon',
+        hp('3%'),
+        GlobalColors.grey,
+        GlobalColors.white
+    ),
     addContacts: icon(
         'ios-person-add-outline',
         'ionicon',

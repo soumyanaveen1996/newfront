@@ -91,7 +91,7 @@ export default StyleSheet.create({
     networkTutorial: {
         position: 'absolute',
         top: '1.8%',
-        right: '14%',
+        left: '15%',
         backgroundColor: '#ffffff',
         height: 165,
         width: 300,
@@ -167,17 +167,31 @@ export default StyleSheet.create({
         color: 'rgba(0,189,242,1)',
         fontFamily: 'SF Pro Text'
     },
-    satelliteCircle: {
-        position: 'absolute',
-        right: -42,
-        top: -5,
-        width: 35,
-        height: 35,
-        borderRadius: 20,
-        backgroundColor: '#ffffff',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
+    satelliteCircle: Platform.select({
+        ios: {
+            position: 'absolute',
+            left: -44,
+            top: -8,
+            width: 35,
+            height: 35,
+            borderRadius: 20,
+            backgroundColor: '#ffffff',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        android: {
+            position: 'absolute',
+            left: -44,
+            top: -4,
+            width: 35,
+            height: 35,
+            borderRadius: 20,
+            backgroundColor: '#ffffff',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }
+    }),
+
     imageSatellite: {
         width: 25,
         height: 25
@@ -185,8 +199,8 @@ export default StyleSheet.create({
     triangle: Platform.select({
         ios: {
             position: 'absolute',
-            right: -14,
-            top: 4,
+            left: -10,
+            top: 6,
             width: 0,
             height: 0,
             backgroundColor: 'transparent',
@@ -197,7 +211,7 @@ export default StyleSheet.create({
             borderLeftColor: 'transparent',
             borderRightColor: 'transparent',
             borderBottomColor: '#fff',
-            transform: [{ rotate: '90deg' }],
+            transform: [{ rotate: '-90deg' }],
             margin: 0,
             marginLeft: -6,
             borderWidth: 0,
@@ -205,7 +219,7 @@ export default StyleSheet.create({
         },
         android: {
             position: 'absolute',
-            right: -11,
+            left: -6,
             top: 2,
             width: 0,
             height: 0,
@@ -217,7 +231,7 @@ export default StyleSheet.create({
             borderLeftColor: 'transparent',
             borderRightColor: 'transparent',
             borderBottomColor: '#fff',
-            transform: [{ rotate: '90deg' }],
+            transform: [{ rotate: '30deg' }],
             margin: 0,
             borderColor: 'transparent'
         }

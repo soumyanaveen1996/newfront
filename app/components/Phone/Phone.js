@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Keyboard,
     Platform,
-    InteractionManager
+    InteractionManager,
+    Image
 } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
@@ -20,6 +21,7 @@ import _ from 'lodash';
 import { Auth, Network } from '../../lib/capability';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Conversation from '../../lib/conversation/Conversation';
+import ProfileImage from '../ProfileImage';
 
 export const PhoneState = {
     init: 'init',
@@ -44,6 +46,7 @@ export default class Phone extends React.Component {
             phoneState: props.state,
             micOn: true,
             speakerOn: false,
+            userId: null,
             username:
                 props.state === PhoneState.calling ||
                 props.state === PhoneState.init
@@ -82,14 +85,18 @@ export default class Phone extends React.Component {
             const clientDetails = ContactsCache.getUserDetails(clientId);
             if (clientDetails) {
                 if (this.mounted) {
-                    this.setState({ username: clientDetails.userName });
+                    this.setState({
+                        username: clientDetails.userName,
+                        userId: clientId
+                    });
                 }
             } else {
                 ContactsCache.fetchContactDetailsForUser(clientId).then(
                     contactDetails => {
                         if (this.mounted) {
                             this.setState({
-                                username: contactDetails.userName
+                                username: contactDetails.userName,
+                                userId: clientId
                             });
                         }
                     }
@@ -100,6 +107,7 @@ export default class Phone extends React.Component {
 
     async initialize() {
         try {
+            this.setState({ userId: this.props.data.otherUserId });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
                 const user = await Auth.getUser();
@@ -224,6 +232,161 @@ export default class Phone extends React.Component {
         return this.state.username;
     }
 
+    renderCallerInfo = () => {
+        if (
+            this.state.phoneState === PhoneState.calling ||
+            this.state.phoneState === PhoneState.incall
+        ) {
+            return (
+                <View>
+                    <Text style={Styles.callingNumberText}>
+                        {this.state.username}
+                    </Text>
+                </View>
+            );
+        }
+        if (this.state.phoneState === PhoneState.incomingcall) {
+            return (
+                <View>
+                    <Text style={Styles.callingNumberText}>
+                        {this.state.username}
+                    </Text>
+                </View>
+            );
+        }
+
+        return (
+            <View>
+                <Text style={Styles.callingNumberText}>{''}</Text>
+            </View>
+        );
+    };
+
+    renderCallStatus = () => {
+        if (this.state.phoneState === PhoneState.incall) {
+            return <Text style={Styles.callStatusText}>CONNECTED</Text>;
+        }
+
+        if (this.state.phoneState === PhoneState.incomingcall) {
+            return <Text style={Styles.callStatusText}>INCOMING</Text>;
+        }
+
+        if (this.state.phoneState === PhoneState.calling) {
+            return <Text style={Styles.callStatusText}>CONNECTING</Text>;
+        }
+
+        return <Text style={Styles.callStatusText}>CONNECTING</Text>;
+    };
+
+    renderAvatar = () => {
+        if (this.state.userId) {
+            return (
+                <ProfileImage
+                    uuid={this.state.userId}
+                    placeholder={require('../../images/contact/calling-emptyavatar.png')}
+                    style={Styles.avatar}
+                    placeholderStyle={Styles.avatar}
+                    resizeMode="cover"
+                />
+            );
+        }
+
+        return (
+            <Image
+                style={Styles.avatar}
+                source={require('../../images/contact/calling-emptyavatar.png')}
+            />
+        );
+    };
+
+    renderButton = () => {
+        if (
+            this.state.phoneState === PhoneState.incall ||
+            this.state.phoneState === PhoneState.calling
+        ) {
+            return (
+                <View style={Styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={
+                            this.state.micOn
+                                ? Styles.buttonCtr
+                                : Styles.buttonCtrOn
+                        }
+                        onPress={this.toggleMic.bind(this)}
+                    >
+                        <Image
+                            style={Styles.btnImg}
+                            source={require('../../images/contact/call-mute-btn.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={Styles.buttonCtr}
+                        onPress={this.close.bind(this)}
+                    >
+                        <Image
+                            style={Styles.btnImg}
+                            source={require('../../images/contact/call-endcall-btn.png')}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={
+                            this.state.speakerOn
+                                ? Styles.buttonCtrOn
+                                : Styles.buttonCtr
+                        }
+                        onPress={this.toggleSpeaker.bind(this)}
+                    >
+                        <Image
+                            style={Styles.btnImg}
+                            source={require('../../images/contact/call-speaker-btn.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+        if (this.state.phoneState === PhoneState.incomingcall) {
+            return (
+                <View style={Styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={Styles.buttonCtr}
+                        onPress={this.accept.bind(this)}
+                    >
+                        <Image
+                            style={Styles.btnImg}
+                            source={require('../../images/contact/call-btn-large.png')}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={Styles.buttonCtr}
+                        onPress={this.close.bind(this)}
+                    >
+                        <Image
+                            style={Styles.btnImg}
+                            source={require('../../images/contact/call-endcall-btn.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
+            );
+        }
+
+        return <View style={Styles.buttonContainer} />;
+    };
+    renderInCall = () => {
+        return (
+            <View>
+                <View style={Styles.callingContainer}>
+                    <View style={{ display: 'flex', flexDirection: 'column' }}>
+                        {this.renderCallerInfo()}
+                    </View>
+                    {this.renderCallStatus()}
+                    {this.renderAvatar()}
+                </View>
+                {this.renderButton()}
+            </View>
+        );
+    };
     render() {
         const { phoneState } = this.state;
         const message = this.statusMessage({
@@ -231,37 +394,38 @@ export default class Phone extends React.Component {
             userName: this.username()
         });
         console.log('Current Phone State', phoneState);
-        return (
-            <View style={Styles.containerStyle}>
-                <View style={Styles.nameContainer}>
-                    <Text style={Styles.callingText}>{message}</Text>
-                </View>
-                <View style={Styles.buttonContainer}>
-                    {phoneState === PhoneState.incall ? (
-                        <View style={Styles.buttonContainer}>
-                            <TouchableOpacity onPress={this.toggleMic}>
-                                {this.state.micOn
-                                    ? Icons.mic()
-                                    : Icons.micOff()}
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={this.toggleSpeaker}>
-                                {this.state.speakerOn
-                                    ? Icons.speakerOn()
-                                    : Icons.speakerOff()}
-                            </TouchableOpacity>
-                        </View>
-                    ) : null}
-                </View>
-                <View style={Styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={[Styles.button, Styles.closeButton]}
-                        onPress={this.close.bind(this)}
-                    >
-                        {Icons.redClose()}
-                    </TouchableOpacity>
-                    {this.renderAcceptButton()}
-                </View>
-            </View>
-        );
+        return <View style={Styles.container}>{this.renderInCall()}</View>;
+        // return (
+        //     <View style={Styles.containerStyle}>
+        //         <View style={Styles.nameContainer}>
+        //             <Text style={Styles.callingText}>{message}</Text>
+        //         </View>
+        //         <View style={Styles.buttonContainer}>
+        //             {phoneState === PhoneState.incall ? (
+        //                 <View style={Styles.buttonContainer}>
+        //                     <TouchableOpacity onPress={this.toggleMic}>
+        //                         {this.state.micOn
+        //                             ? Icons.mic()
+        //                             : Icons.micOff()}
+        //                     </TouchableOpacity>
+        //                     <TouchableOpacity onPress={this.toggleSpeaker}>
+        //                         {this.state.speakerOn
+        //                             ? Icons.speakerOn()
+        //                             : Icons.speakerOff()}
+        //                     </TouchableOpacity>
+        //                 </View>
+        //             ) : null}
+        //         </View>
+        //         <View style={Styles.buttonContainer}>
+        //             <TouchableOpacity
+        //                 style={[Styles.button, Styles.closeButton]}
+        //                 onPress={this.close.bind(this)}
+        //             >
+        //                 {Icons.redClose()}
+        //             </TouchableOpacity>
+        //             {this.renderAcceptButton()}
+        //         </View>
+        //     </View>
+        // )
     }
 }

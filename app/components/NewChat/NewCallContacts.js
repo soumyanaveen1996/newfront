@@ -37,6 +37,7 @@ import {
 import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
 import Modal from 'react-native-modal';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { Icons } from '../../config/icons';
 import { EmptyContact } from '../ContactsPicker';
 import { BackgroundImage } from '../BackgroundImage';
@@ -58,6 +59,18 @@ class NewCallContacts extends React.Component {
             Contact.getAddedContacts().then(contacts => {
                 this.refresh(contacts);
             });
+        }
+
+        if (
+            Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
+            this.props.summary
+        ) {
+            Actions.callSummary({
+                time: this.props.time,
+                contact: this.props.dialContact,
+                dialledNumber: this.props.dialledNumber
+            });
+            return;
         }
     }
 
@@ -134,7 +147,7 @@ class NewCallContacts extends React.Component {
                         id: contact.userId,
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: contact.phoneNumber || undefined
+                        phoneNumbers: contact.phoneNumbers || undefined
                     }));
             } else {
                 contactBook = phoneContacts
@@ -282,6 +295,7 @@ class NewCallContacts extends React.Component {
         Actions.dialler({
             call: true,
             number: this.state.contactSelected.phoneNumbers.mobile,
+            contact: this.state.contactSelected,
             newCallScreen: true
         });
     };

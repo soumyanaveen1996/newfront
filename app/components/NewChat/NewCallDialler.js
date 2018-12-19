@@ -43,7 +43,26 @@ class NewDialler extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('Mount');
+        console.log('Mount', this.props);
+
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.dialler && this.props.bot) {
+            Actions.botChat({ bot: this.props.bot });
+            return;
+        }
+        if (
+            Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
+            this.props.summary
+        ) {
+            Actions.callSummary({
+                time: this.props.time,
+                contact: this.props.dialContact,
+                dialledNumber: this.props.dialledNumber
+            });
+            return;
+        }
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.dialler) {
+            Actions.pop();
+        }
     }
 
     componentDidUpdate(prevProps) {}
@@ -55,12 +74,15 @@ class NewDialler extends React.Component {
             I18n.t('Dial_call')
         );
         console.log(Actions.prevScene);
-        if (Actions.prevScene === ROUTER_SCENE_KEYS.contactsCall) {
+        if (
+            Actions.prevScene === ROUTER_SCENE_KEYS.contactsCall ||
+            Actions.prevScene === ROUTER_SCENE_KEYS.botChat
+        ) {
             Actions.push(ROUTER_SCENE_KEYS.dialler, {
                 newCallScreen: true
             });
         }
-        if (Actions.prevScene === ROUTER_SCENE_KEYS.dialler) {
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.callSummary) {
             Actions.pop();
         }
     }

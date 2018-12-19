@@ -169,7 +169,8 @@ export default class ContactDetailsScreen extends React.Component {
                     ? this.renderDetailRow(
                         'satellite',
                         'Satellite',
-                        this.contact.phoneNumbers.mobile
+                        // this.contact.phoneNumbers.satellite
+                        'Unavailable'
                     )
                     : null}
             </View>
