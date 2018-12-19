@@ -290,7 +290,12 @@ export const Icons = {
         Colors.darkGray,
         'red',
         '500'
-    )
+    ),
+
+    // MAP
+    zoomIn: icon('md-add', 'ionicon', 15, GlobalColors.headerBlack),
+    zoomOut: icon('md-remove', 'ionicon', 15, GlobalColors.headerBlack),
+    userPosition: icon('md-locate', 'ionicon', 15, GlobalColors.sideButtons)
 };
 
 export default Icons;
