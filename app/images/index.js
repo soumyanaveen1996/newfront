@@ -75,11 +75,13 @@ const images = {
     frontm_logo: require('./frontm-logo/frontm-logo.png'),
     bot_icon_assistant: require('./bot-icon-assistant/bot-icon-assistant.png'),
     frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png'),
-
-    //MAP
+    empty_contact: require('./empty-state-contacts/illus-empty-state-contact.png'),
+    empty_channel: require('./empty-state-channels/illus-empty-state-channels.png'),
+    empty_marketplace: require('./empty-state-marketplace/illus-empty-state-marketplace.png'),
     map_starting_point: require('./mapbox/starting-point.png'),
     map_arrival_point: require('./mapbox/arrival-point.png'),
-    maps_maritime_icon: require('./mapbox/maps-maritime-icon.png')
+    maps_maritime_icon: require('./mapbox/maps-maritime-icon.png'),
+    current_location_inactive: require('./mapbox/current-location-inactive.png')
 };
 
 export default images;

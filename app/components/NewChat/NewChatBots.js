@@ -34,6 +34,7 @@ import {
     addButtonConfig
 } from './config';
 import CachedImage from '../CachedImage';
+import { BackgroundImage } from '../BackgroundImage';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -190,25 +191,27 @@ class NewChatContacts extends React.Component {
         );
 
         return (
-            <View style={styles.addressBookContainer}>
-                <SectionList
-                    ItemSeparatorComponent={NewChatItemSeparator}
-                    ref={sectionList => {
-                        this.botsList = sectionList;
-                    }}
-                    style={styles.addressBook}
-                    renderItem={this.renderItem.bind(this)}
-                    renderSectionHeader={({ section }) => (
-                        <NewChatSectionHeader title={section.title} />
-                    )}
-                    sections={this.state.botsData}
-                    keyExtractor={(item, index) => item.id}
-                />
-                <NewChatIndexView
+            <BackgroundImage style={{ flex: 1 }}>
+                <View style={styles.addressBookContainer}>
+                    <SectionList
+                        ItemSeparatorComponent={NewChatItemSeparator}
+                        ref={sectionList => {
+                            this.botsList = sectionList;
+                        }}
+                        style={styles.addressBook}
+                        renderItem={this.renderItem.bind(this)}
+                        renderSectionHeader={({ section }) => (
+                            <NewChatSectionHeader title={section.title} />
+                        )}
+                        sections={this.state.botsData}
+                        keyExtractor={(item, index) => item.id}
+                    />
+                    {/* <NewChatIndexView
                     onItemPressed={this.onSideIndexItemPressed.bind(this)}
                     items={sectionTitles}
-                />
-            </View>
+                /> */}
+                </View>
+            </BackgroundImage>
         );
     }
 

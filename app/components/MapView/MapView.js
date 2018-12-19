@@ -102,32 +102,59 @@ export default class MapView extends React.Component {
 
     constructor(props) {
         super(props);
+        const vesselsPositions = _.map(this.props.mapData.markers, marker => {
+            const position = [
+                marker.coordinate.longitude,
+                marker.coordinate.latitude
+            ];
+            return position;
+        });
         const polylines = _.map(this.props.mapData.polylines, polyLine => {
             return _.map(polyLine.coordinates, coords => {
                 const coordArray = [coords.longitude, coords.latitude];
                 return coordArray;
             });
         });
-        const vessels = _.map(polylines, polyline => {
+        const movingVessels = _.map(polylines, polyline => {
             const lastIndex = polyline.length - 1;
-            const deltaLongitude =
-                polyline[lastIndex][0] - polyline[lastIndex - 1][0];
-            const deltaLatitute =
-                polyline[lastIndex][1] - polyline[lastIndex - 1][1];
-            const angle =
-                Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
-            return {
-                type: 'Feature',
-                properties: { type: 'vessel', rotation: angle },
-                geometry: {
-                    type: 'Point',
-                    coordinates: polyline[lastIndex]
-                }
-            };
+            //check if the polyline is made of more than one position
+            if (lastIndex > 0) {
+                const deltaLongitude =
+                    polyline[lastIndex][0] - polyline[lastIndex - 1][0];
+                const deltaLatitute =
+                    polyline[lastIndex][1] - polyline[lastIndex - 1][1];
+                const angle =
+                    Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
+                return {
+                    type: 'Feature',
+                    properties: { type: 'movingVessel', rotation: angle },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polyline[lastIndex]
+                    }
+                };
+            } else {
+                return {
+                    type: 'Feature',
+                    properties: { type: 'vesselPosition' },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polyline[0]
+                    }
+                };
+            }
         });
         this.GEOJson = {
             type: 'FeatureCollection',
             features: [
+                {
+                    type: 'Feature',
+                    properties: { type: 'vesselPosition' },
+                    geometry: {
+                        type: 'MultiPoint',
+                        coordinates: vesselsPositions
+                    }
+                },
                 {
                     type: 'Feature',
                     properties: { type: 'startingPoints' },
@@ -146,7 +173,7 @@ export default class MapView extends React.Component {
                         coordinates: polylines
                     }
                 }
-            ].concat(vessels)
+            ].concat(movingVessels)
         };
     }
 
@@ -163,10 +190,6 @@ export default class MapView extends React.Component {
     }
 
     componentWillMount() {
-        this.checkPollingStrategy();
-    }
-
-    componentDidUpdate() {
         this.checkPollingStrategy();
     }
 
@@ -285,19 +308,28 @@ export default class MapView extends React.Component {
         return mapData;
     }
 
-    renderLineLayer() {
+    renderElements() {
         return (
             <Mapbox.ShapeSource id="routeSource" shape={this.GEOJson}>
+                {/* VESSELS ROUTES */}
                 <Mapbox.LineLayer id="routes" style={layerStyles.route} />
+                {/* ROUTES STARTING POINTS */}
                 <Mapbox.SymbolLayer
                     id="startPoints"
                     filter={['==', 'type', 'startingPoints']}
                     style={layerStyles.startingPoint}
                 />
+                {/* VESSELS MOVING ALONG ROUTES */}
                 <Mapbox.SymbolLayer
-                    id="vessels"
-                    filter={['==', 'type', 'vessel']}
-                    style={layerStyles.vessel}
+                    id="movingVessels"
+                    filter={['==', 'type', 'movingVessel']}
+                    style={layerStyles.movingVessel}
+                />
+                {/* STATIC POSITIONS OF VESSELS */}
+                <Mapbox.SymbolLayer
+                    id="vesselsPositions"
+                    filter={['==', 'type', 'vesselPosition']}
+                    style={layerStyles.vesselPosition}
                 />
             </Mapbox.ShapeSource>
         );
@@ -363,7 +395,7 @@ export default class MapView extends React.Component {
                     800
                 )
                 .then(() => {
-                    this.map.zoomTo(13, 200);
+                    this.map.zoomTo(12, 200);
                 });
         });
     }
@@ -384,7 +416,7 @@ export default class MapView extends React.Component {
                 logoEnabled={false}
                 style={{ flex: 1 }}
             >
-                {this.renderLineLayer()}
+                {this.renderElements()}
             </Mapbox.MapView>
         );
     }

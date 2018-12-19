@@ -35,8 +35,7 @@ const stylesheet = StyleSheet.create({
         color: GlobalColors.darkGray
     },
     addressBookContainer: {
-        flex: 1,
-        backgroundColor: 'rgb(246, 247, 248)'
+        flex: 1
     },
     addressBook: {
         flex: 1
