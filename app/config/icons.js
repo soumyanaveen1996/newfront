@@ -295,7 +295,13 @@ export const Icons = {
     // MAP
     zoomIn: icon('md-add', 'ionicon', 15, GlobalColors.headerBlack),
     zoomOut: icon('md-remove', 'ionicon', 15, GlobalColors.headerBlack),
-    userPosition: icon('md-locate', 'ionicon', 15, GlobalColors.sideButtons)
+    userPosition: icon('md-locate', 'ionicon', 15, GlobalColors.headerBlack),
+    userPositionActive: icon(
+        'md-locate',
+        'ionicon',
+        15,
+        GlobalColors.sideButtons
+    )
 };
 
 export default Icons;
