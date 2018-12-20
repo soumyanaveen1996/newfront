@@ -128,10 +128,14 @@ export default class InviteModal extends React.Component {
                                 Add New Contact
                             </Text>
                             {this.state.keyboard ? null : (
-                                <View>
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        textAlign: 'center'
+                                    }}
+                                >
                                     <Text style={styles.inviteText}>
-                                        Search an existing FrontM user. You can
-                                        search by name, email or phone number
+                                        Search with name or email
                                     </Text>
                                     <TouchableOpacity
                                         style={
@@ -145,7 +149,7 @@ export default class InviteModal extends React.Component {
                                         }}
                                     >
                                         <Text style={styles.searchText}>
-                                            Search an existing FrontM user
+                                            Search
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -164,10 +168,9 @@ export default class InviteModal extends React.Component {
                             }}
                         >
                             <Text style={styles.inviteEmail}>
-                                Or invite someone to join FrontM by sending an
-                                email
+                                Or invite a friend with an email
                             </Text>
-                            <Text
+                            {/* <Text
                                 style={{
                                     alignSelf: 'flex-start',
                                     color: 'rgba(74,74,74,1)',
@@ -175,7 +178,7 @@ export default class InviteModal extends React.Component {
                                 }}
                             >
                                 Email
-                            </Text>
+                            </Text> */}
                             <TextInput
                                 ref={input => {
                                     this.textInput = input;
