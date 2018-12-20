@@ -359,17 +359,30 @@ const processLastMessageonLoad = async (
     let contentType = message.contentType;
     if (message.createdBy === user.userId) {
         // Self Message --> Just Persist this
-        if (contentType !== '10') {
-            return;
-        }
         let myMessage = new Message({
             uuid: message.messageId,
             messageDate: message.createdOn
         });
         myMessage.setCreatedBy(user.userId);
-        let messageStr = message.details[0].message;
-        myMessage.stringMessage(messageStr);
         myMessage.setRead(true);
+        let messageStr = message.details[0].message;
+        if (contentType === '30') {
+            myMessage.imageMessage(messageStr);
+            botScreen.persistMessage(myMessage);
+            return;
+        }
+        if (contentType === '40') {
+            myMessage.videoMessage(messageStr);
+            botScreen.persistMessage(myMessage);
+            return;
+        }
+        if (contentType === '60') {
+            myMessage.audioMessage(messageStr);
+            botScreen.persistMessage(myMessage);
+            return;
+        }
+
+        myMessage.stringMessage(messageStr);
         botScreen.persistMessage(myMessage);
         return;
     }
