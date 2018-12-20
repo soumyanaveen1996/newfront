@@ -8,6 +8,10 @@ import I18n from '../../config/i18n/i18n';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import images from '../../images';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default class BotContainer extends React.Component {
     constructor(props) {
@@ -163,18 +167,27 @@ export default class BotContainer extends React.Component {
                             }}
                         >
                             <TouchableOpacity
-                                style={{ width: 10, height: 10 }}
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
                                 onPress={this.collapseCurrent}
                             >
                                 {!this.state.collapseTab ? (
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_down}
+                                        resizeMode="center"
                                     />
                                 ) : (
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_up}
+                                        resizeMode="center"
                                     />
                                 )}
                             </TouchableOpacity>
