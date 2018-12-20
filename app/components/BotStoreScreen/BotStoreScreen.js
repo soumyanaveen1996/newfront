@@ -35,7 +35,10 @@ import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
 import { completeCatalogLoad } from '../../redux/actions/UserActions';
 import { NewProviderPopup } from './NewProviderPopup';
-
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
