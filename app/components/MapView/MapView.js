@@ -103,7 +103,8 @@ export default class MapView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userTrackingMode: 0,
+            userTrackingMode:
+                Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
             locateUserButtonIcon: Icons.userPosition()
         };
         const vesselsPositions = _.map(this.props.mapData.markers, marker => {
@@ -191,7 +192,6 @@ export default class MapView extends React.Component {
             PollingStrategyEvents.changed,
             this.checkPollingStrategy.bind(this)
         );
-        // this.setState({userTrackingMode: Mapbox.UserTrackingModes.none})
     }
 
     componentWillMount() {
@@ -412,6 +412,16 @@ export default class MapView extends React.Component {
         }
     }
 
+    onMapRendered() {
+        if (Platform.OS === 'android') {
+            this.setState({ userTrackingMode: 0 });
+            this.map.moveTo([
+                this.props.mapData.region.longitude,
+                this.props.mapData.region.latitude
+            ]);
+        }
+    }
+
     renderMap() {
         // const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
@@ -428,6 +438,7 @@ export default class MapView extends React.Component {
                 onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
                     this
                 )}
+                onDidFinishRenderingMapFully={this.onMapRendered.bind(this)}
                 logoEnabled={false}
                 style={{ flex: 1 }}
             >

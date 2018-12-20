@@ -39,6 +39,14 @@ export default class LocationPicker extends React.Component {
         }
     }
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            userTrackingMode: Mapbox.UserTrackingModes.Follow,
+            locateUserButtonIcon: Icons.userPosition()
+        };
+    }
+
     close() {
         if (this.props.onCancel) {
             this.props.onCancel();
@@ -169,7 +177,7 @@ export default class LocationPicker extends React.Component {
                     style={styles.locateButton}
                     onPress={this.locateUser.bind(this)}
                 >
-                    {Icons.userPosition()}
+                    {this.state.locateUserButtonIcon}
                 </TouchableOpacity>
             </View>
         );
@@ -200,48 +208,68 @@ export default class LocationPicker extends React.Component {
     }
 
     locateUser() {
-        navigator.geolocation.getCurrentPosition(userPosition => {
-            this.map
-                .flyTo(
-                    [
-                        userPosition.coords.longitude,
-                        userPosition.coords.latitude
-                    ],
-                    800
-                )
-                .then(() => {
-                    this.map.zoomTo(13, 200);
-                });
-        });
+        if (this.state.userTrackingMode === Mapbox.UserTrackingModes.Follow) {
+            this.setState({
+                userTrackingMode: Mapbox.UserTrackingModes.FollowWithHeading
+            });
+        } else {
+            this.setState({
+                userTrackingMode: Mapbox.UserTrackingModes.Follow
+            });
+        }
+        this.setState({ locateUserButtonIcon: Icons.userPositionActive });
+    }
+
+    onUserTrackingModeChange(e) {
+        const mode = e.nativeEvent.payload.userTrackingMode;
+        this.setState({ userTrackingMode: mode });
+        if (mode === 0) {
+            this.setState({ locateUserButtonIcon: Icons.userPosition() });
+        } else {
+            this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
+        }
     }
 
     renderMap() {
         let userPosition;
-        DeviceLocation.getDeviceLocation()
-            .then(location => {
-                userPosition = [location.longitude, location.latitude];
-            })
-            .catch(error => {
-                if (error.code === 2) {
-                    Alert.alert(
-                        I18n.t('Enable_GPS_title'),
-                        I18n.t('Enable_GPS_to_view_currentLocation'),
-                        [{ text: 'OK', onPress: this.goBack }],
-                        { cancelable: false }
-                    );
-                }
-            });
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                userPosition = [
+                    position.coords.longitude,
+                    position.coords.latitude
+                ];
+            },
+            () => {
+                userPosition = null;
+            }
+        );
+        // DeviceLocation.getDeviceLocation()
+        //     .then(location => {
+        //         userPosition = [location.longitude, location.latitude];
+        //     })
+        //     .catch(error => {
+        //         if (error.code === 2) {
+        //             Alert.alert(
+        //                 I18n.t('Enable_GPS_title'),
+        //                 I18n.t('Enable_GPS_to_view_currentLocation'),
+        //                 [{ text: 'OK', onPress: this.goBack }],
+        //                 { cancelable: false }
+        //             );
+        //         }
+        //     });
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <Mapbox.MapView
                     ref={map => (this.map = map)}
                     styleURL={Mapbox.StyleURL.Street}
                     zoomLevel={11}
-                    centerCoordinate={userPosition || null}
+                    centerCoordinate={userPosition}
                     showsUserLocation={true}
-                    userTrackingMode={1}
+                    userTrackingMode={this.state.userTrackingMode}
+                    onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
+                        this
+                    )}
                     logoEnabled={false}
-                    compassEnabled={true}
                     style={{ flex: 1 }}
                     onLongPress={this.onPress.bind(this)}
                     zoomEnabled={true}
