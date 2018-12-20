@@ -127,11 +127,9 @@ class BotStoreScreen extends React.Component {
     }
 
     async updateCatalog() {
-        let catalog = await Bot.getCatalog();
-        if (__DEV__) {
-            console.tron('CATALOG STORE LOADED');
-        }
+        console.log('Catalog Updated');
 
+        let catalog = await Bot.getCatalog();
         this.setState({
             showNewProvider: false,
             showSearchBar: false,
@@ -205,13 +203,13 @@ class BotStoreScreen extends React.Component {
     }
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
-        // Store.dispatch(completeCatalogLoad(true))
+        Store.dispatch(completeCatalogLoad(true));
     }
 
     static onExit() {
         // RemoteBotInstall.syncronizeBots();
         Store.dispatch(setCurrentScene('none'));
-        // Store.dispatch(completeCatalogLoad(false))
+        Store.dispatch(completeCatalogLoad(false));
     }
 
     async refresh() {
