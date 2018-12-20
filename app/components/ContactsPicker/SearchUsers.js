@@ -57,6 +57,12 @@ export default class SearchUsers extends React.Component {
         };
     }
 
+    componentDidMount() {
+        console.log('focus on start');
+
+        this.searchInput.focus();
+    }
+
     findSelectedContact(contact) {
         return _.find(this.state.selectedContacts, item => {
             return item.userId === contact.userId;
@@ -175,9 +181,13 @@ export default class SearchUsers extends React.Component {
                     color={GlobalColors.sideButtons}
                 />
                 <TextInput
+                    ref={ref => {
+                        this.searchInput = ref;
+                    }}
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search contact"
+                    autoFocus={true}
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     enablesReturnKeyAutomatically={true}

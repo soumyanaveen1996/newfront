@@ -17,6 +17,8 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: GlobalColors.white,
+        borderBottomWidth: 1,
+        borderBottomColor: GlobalColors.borderBottom,
         height: 40,
         marginTop: 3
     },
@@ -117,8 +119,12 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center'
     },
     checkboxIconStyle: {
+        width: 30,
+        height: 30,
         paddingHorizontal: 2,
-        paddingVertical: 1,
+        paddingVertical: 2,
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: GlobalColors.transparent,
         borderWidth: 0
     },
@@ -250,7 +256,8 @@ const stylesheet = StyleSheet.create({
     buttonAreaSU: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: GlobalColors.white
+        backgroundColor: GlobalColors.white,
+        paddingBottom: 5
     },
     doneButtonSU: {
         width: 300,
@@ -341,13 +348,13 @@ const stylesheet = StyleSheet.create({
     },
     //INVITE MODAL
     inviteTitle: {
-        textAlign: 'left',
+        textAlign: 'center',
         fontSize: 20,
         marginTop: 5,
         color: 'rgba(68,72,90,1)'
     },
     inviteText: {
-        textAlign: 'left',
+        textAlign: 'center',
         fontSize: 16,
         color: 'rgba(102,102,102,1)',
         marginTop: 26,
