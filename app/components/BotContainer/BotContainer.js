@@ -17,7 +17,7 @@ export default class BotContainer extends React.Component {
             allBots: [...this.props.allBots],
             title: this.props.name,
             botIds: [...this.props.botIds],
-            collapse: this.props.collapse
+            collapseTab: false
         };
     }
 
@@ -91,23 +91,34 @@ export default class BotContainer extends React.Component {
         Actions.botList({ data: selectedBots, title: title });
     };
 
+    collapseCurrent = () => {
+        this.setState(prevState => ({
+            collapseTab: !prevState.collapseTab
+        }));
+    };
+
     render() {
-        if (this.state.botsData && this.state.botsData.length > 0) {
+        let limitedBotData = [];
+
+        let indexBot = 0;
+
+        if (this.state.botsData.length > 1) {
+            while (indexBot < 2) {
+                limitedBotData.push(this.state.botsData[indexBot]);
+                indexBot++;
+            }
+        }
+        if (this.state.botsData.length === 1) {
+            limitedBotData.push(this.state.botsData[0]);
+        }
+
+        if (limitedBotData.length > 0) {
             return (
                 <View
-                    style={
-                        this.props.currentIndex === 0
-                            ? {
-                                height: 295,
-                                alignItems: 'center',
-                                marginBottom: 20
-                            }
-                            : {
-                                height: 185,
-                                alignItems: 'center',
-                                marginBottom: 20
-                            }
-                    }
+                    style={{
+                        alignItems: 'center',
+                        marginBottom: 20
+                    }}
                 >
                     <View style={styles.titleBar}>
                         <View
@@ -153,27 +164,34 @@ export default class BotContainer extends React.Component {
                         >
                             <TouchableOpacity
                                 style={{ width: 10, height: 10 }}
-                                onPress={() => this.props.onChange()}
+                                onPress={this.collapseCurrent}
                             >
-                                <Image
-                                    style={{ width: 10, height: 10 }}
-                                    source={images.collapse_gray_arrow_down}
-                                />
+                                {!this.state.collapseTab ? (
+                                    <Image
+                                        style={{ width: 10, height: 10 }}
+                                        source={images.collapse_gray_arrow_down}
+                                    />
+                                ) : (
+                                    <Image
+                                        style={{ width: 10, height: 10 }}
+                                        source={images.collapse_gray_arrow_up}
+                                    />
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {!this.props.collapse && (
+                    {!this.state.collapseTab ? (
                         <FlatList
                             style={styles.flatList}
                             keyExtractor={(item, index) => item.botId}
-                            data={this.state.botsData}
+                            data={limitedBotData}
                             renderItem={this.renderGridItem.bind(this)}
                             extraData={this.state}
                             scrollEnabled={false}
                             verticalScrollingDisabled={true}
                             showsVerticalScrollIndicator={false}
                         />
-                    )}
+                    ) : null}
 
                     <Toast ref="toast" positionValue={250} />
                     <View style={styles.exploreAllFooter}>

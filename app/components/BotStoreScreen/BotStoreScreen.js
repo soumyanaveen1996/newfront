@@ -35,6 +35,7 @@ import Store from '../../redux/store/configureStore';
 import { setCurrentScene } from '../../redux/actions/UserActions';
 import { completeCatalogLoad } from '../../redux/actions/UserActions';
 import { NewProviderPopup } from './NewProviderPopup';
+import Loader from '../Loader/Loader';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -135,7 +136,8 @@ class BotStoreScreen extends React.Component {
             selectedIndex: this.state.selectedIndex || 0,
             catalogData: catalog,
             catalogLoaded: true,
-            networkError: false
+            networkError: false,
+            loading: false
         });
     }
 
@@ -291,11 +293,11 @@ class BotStoreScreen extends React.Component {
         });
     };
 
-    botStoreList() {
-        let allBots = this.state.catalogData.bots.filter(elem => {
-            return !elem.systemBot;
-        });
+    onSubmit = () => {
+        this.updateCatalog();
+    };
 
+    botStoreList() {
         if (this.state.selectedIndex === 2) {
             return (
                 <DeveloperTab
@@ -382,6 +384,7 @@ class BotStoreScreen extends React.Component {
 
         return (
             <BackgroundImage style={{ flex: 1 }}>
+                <Loader loading={this.state.loading} />
                 <TouchableOpacity
                     style={styles.searchSection}
                     onPress={() => this.onTileCilcked('Marketplace')}
@@ -408,6 +411,7 @@ class BotStoreScreen extends React.Component {
                 {this.state.showNewProvider && (
                     <NewProviderPopup
                         canelNewProvider={this.handleCancelNewProvider}
+                        onSubmit={this.onSubmit}
                     />
                 )}
                 <StatusBar

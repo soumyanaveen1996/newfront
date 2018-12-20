@@ -4,6 +4,7 @@ import styles from './styles';
 import Bot from '../../../lib/bot/index';
 
 import { SafeAreaView } from 'react-navigation';
+import Loader from '../../Loader/Loader';
 
 export default class NewProviderPopup extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ export default class NewProviderPopup extends Component {
         this.state = {
             show: true,
             wrongCode: false,
-            code: ''
+            code: '',
+            loading: false
         };
     }
 
@@ -24,14 +26,19 @@ export default class NewProviderPopup extends Component {
     };
 
     async newProvider() {
+        this.setState({ loading: true });
         const addProvider = await Bot.addNewProvider(this.state.code);
         if (!addProvider) {
+            this.setState({ loading: false });
             this.setState({ wrongCode: true });
         }
         if (addProvider && !addProvider[0]) {
+            this.setState({ loading: false });
             this.setState({ wrongCode: true });
         } else {
+            this.setState({ loading: false });
             this.cancelNewProvider();
+            this.props.onSubmit();
         }
     }
 
@@ -59,6 +66,7 @@ export default class NewProviderPopup extends Component {
                     console.log('close modal');
                 }}
             >
+                <Loader loading={this.state.loading} />
                 <View style={styles.modalBackground}>
                     <View style={styles.container}>
                         <Text style={styles.headerText}>
@@ -73,6 +81,7 @@ export default class NewProviderPopup extends Component {
                             autoCorrect={false}
                             onChangeText={this.onChangeName.bind(this)}
                             placeholderTextColor="rgba(155,155,155,1)"
+                            autoCapitalize="none"
                             clearButtonMode="always"
                         />
                         {this.displayErrorMessege()}
