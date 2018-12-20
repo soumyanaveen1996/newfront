@@ -68,7 +68,7 @@ export default class CategoriesTab extends React.Component {
     };
 
     renderCategoryBots = () => {
-        return this.state.categoriesData.map((data, index) => {
+        return this.props.categoriesData.map((data, index) => {
             let categoryData = this.props.botsData.filter(bot => {
                 return data.botIds.indexOf(bot.botId) >= 0;
             });

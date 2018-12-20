@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import {
+    View,
+    FlatList,
+    Text,
+    TouchableOpacity,
+    Image,
+    ScrollView
+} from 'react-native';
 import styles from './styles';
 import BotInstallListItem from '../BotInstallListItem';
 import Bot from '../../lib/bot';
@@ -194,17 +201,26 @@ export default class BotContainer extends React.Component {
                         </View>
                     </View>
                     {!this.state.collapseTab ? (
-                        <FlatList
-                            style={styles.flatList}
-                            keyExtractor={(item, index) => item.botId}
-                            data={limitedBotData}
-                            renderItem={this.renderGridItem.bind(this)}
-                            extraData={this.state}
-                            scrollEnabled={false}
-                            verticalScrollingDisabled={true}
-                            showsVerticalScrollIndicator={false}
-                        />
-                    ) : null}
+                        <ScrollView>
+                            {limitedBotData.map(item => {
+                                return (
+                                    <View key={item.botId}>
+                                        {this.renderGridItem({ item })}
+                                    </View>
+                                );
+                            })}
+                        </ScrollView>
+                    ) : // <FlatList
+                    //     style={styles.flatList}
+                    //     keyExtractor={(item, index) => item.botId}
+                    //     data={limitedBotData}
+                    //     renderItem={this.renderGridItem.bind(this)}
+                    //     extraData={this.state}
+                    //     scrollEnabled={false}
+                    //     verticalScrollingDisabled={true}
+                    //     showsVerticalScrollIndicator={false}
+                    // />
+                        null}
 
                     <Toast ref="toast" positionValue={250} />
                     <View style={styles.exploreAllFooter}>
