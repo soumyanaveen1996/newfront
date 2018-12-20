@@ -181,11 +181,13 @@ export default class BotContainer extends React.Component {
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_down}
+                                        resizeMode="center"
                                     />
                                 ) : (
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_up}
+                                        resizeMode="center"
                                     />
                                 )}
                             </TouchableOpacity>
