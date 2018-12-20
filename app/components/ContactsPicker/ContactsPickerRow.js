@@ -26,7 +26,7 @@ export default class ContactsPickerRow extends React.Component {
                     iconType={checkBoxConfig.iconType}
                     checked={this.props.selected}
                     onPress={this.onItemPressed.bind(this)}
-                    size={22}
+                    size={20}
                     containerStyle={styles.checkboxIconStyle}
                 />
             );

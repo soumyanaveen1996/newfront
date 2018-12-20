@@ -187,6 +187,7 @@ export default class SearchUsers extends React.Component {
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search contact"
+                    autoFocus={true}
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     enablesReturnKeyAutomatically={true}
