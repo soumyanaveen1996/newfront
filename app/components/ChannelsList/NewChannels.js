@@ -216,8 +216,8 @@ class NewChannels extends React.Component {
             user => user.selected === true
         );
         if (users.length === 0) {
-            validationFailed = true;
-            this.setState({ participantError: true });
+            // validationFailed = true;
+            this.setState({ participantError: false });
         } else {
             this.setState({ participantError: false });
         }

@@ -117,11 +117,17 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconIgnorePlacement: true,
         iconImage: images.map_arrival_point
     },
-    vessel: {
+    movingVessel: {
         iconAllowOverlap: true,
         iconImage: images.maps_maritime_icon,
         iconRotationAlignment: 'map',
         iconRotate: Mapbox.StyleSheet.identity('rotation')
+    },
+    vesselPosition: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.current_location_inactive,
+        iconSize: 1.5
     }
 });
 

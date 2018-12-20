@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { BackAndroid } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 class NavHandler extends Component {
     constructor(props) {
@@ -26,6 +27,13 @@ class NavHandler extends Component {
                 if (Actions.currentScene === 'confirmationScreen') {
                     Actions.swiperScreen({ type: 'reset' });
                     return true;
+                }
+                if (Actions.currentScene === ROUTER_SCENE_KEYS.dialler) {
+                    Actions.pop();
+                    setTimeout(
+                        () => Actions.refresh({ key: Math.random() }),
+                        0
+                    );
                 }
                 if (
                     Actions.currentScene === 'timeline' ||

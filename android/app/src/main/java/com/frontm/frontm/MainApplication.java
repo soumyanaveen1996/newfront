@@ -89,8 +89,9 @@ public class MainApplication extends Application implements ReactApplication {
               getApplicationContext(), BuildConfig.DEBUG),
           new RNCameraPackage(), new BackgroundTimerPackage(), new BackgroundTaskPackage(),
           new ReactNativeAudioPackage(), new AndroidOpenSettingsPackage(), new ActionSheetPackage(),
-          new SQLitePluginPackage());
-          new RCTMGLPackage();
+          new SQLitePluginPackage(),new RCTMGLPackage()
+      );
+
     }
 
     @Override

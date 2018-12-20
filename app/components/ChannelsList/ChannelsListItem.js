@@ -339,6 +339,8 @@ export default class ChannelsListItem extends React.Component {
         const channel = this.props.channel;
         const user = this.props.user;
 
+        const isOwner = channel.ownerId === user.userId ? true : false;
+
         let createdOn;
         if (channel.createdOn && channel.createdOn !== '') {
             createdOn = moment(parseInt(channel.createdOn)).format(
@@ -383,7 +385,7 @@ export default class ChannelsListItem extends React.Component {
                                         color: 'black'
                                     }}
                                 >
-                                    {channel.ownerName}{' '}
+                                    {isOwner ? 'You' : channel.ownerName}{' '}
                                 </Text>
                             ) || 'N/A'}{' '}
                             on {<Text>{createdOn}</Text>}
