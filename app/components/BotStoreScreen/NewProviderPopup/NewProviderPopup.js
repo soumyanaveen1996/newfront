@@ -32,6 +32,7 @@ export default class NewProviderPopup extends Component {
             this.setState({ wrongCode: true });
         } else {
             this.cancelNewProvider();
+            this.props.onSubmit();
         }
     }
 

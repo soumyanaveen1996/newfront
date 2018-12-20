@@ -128,23 +128,19 @@ export default class DeveloperTab extends React.Component {
         );
     };
 
-    collapseBtn = () => {
-        console.log('collapsing ', this.state.collapse);
-        this.setState(prevState => ({
-            collapse: !prevState.collapse
-        }));
-    };
-
     renderCategoryBots = () => {
-        return this.state.developerData.map((data, index) => {
+        this.getDomainMgmtBotData();
+        let developerDataMain = [
+            ...this.props.developerData,
+            this.domainMgmtBotData
+        ];
+        return developerDataMain.map((data, index) => {
             if (data.botIds) {
                 let developerData = this.props.botsData.filter(bot => {
                     return (
                         data.botIds.indexOf(bot.botId) >= 0 && !bot.systemBot
                     );
                 });
-
-                console.log('thyyyyyyyy ', developerData);
 
                 return (
                     <BotContainer
@@ -157,8 +153,6 @@ export default class DeveloperTab extends React.Component {
                         currentIndex={index}
                         imageForHeader={data.logoUrl}
                         tabStatus="provider"
-                        collapse={this.state.collapse}
-                        onChange={this.collapseBtn}
                     />
                 );
             }

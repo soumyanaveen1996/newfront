@@ -291,11 +291,11 @@ class BotStoreScreen extends React.Component {
         });
     };
 
-    botStoreList() {
-        let allBots = this.state.catalogData.bots.filter(elem => {
-            return !elem.systemBot;
-        });
+    onSubmit = () => {
+        this.updateCatalog();
+    };
 
+    botStoreList() {
         if (this.state.selectedIndex === 2) {
             return (
                 <DeveloperTab
@@ -408,6 +408,7 @@ class BotStoreScreen extends React.Component {
                 {this.state.showNewProvider && (
                     <NewProviderPopup
                         canelNewProvider={this.handleCancelNewProvider}
+                        onSubmit={this.onSubmit}
                     />
                 )}
                 <StatusBar
