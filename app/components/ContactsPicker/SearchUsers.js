@@ -9,7 +9,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    InteractionManager
 } from 'react-native';
 import styles from './styles';
 import config from '../../config/config';
@@ -53,7 +54,8 @@ export default class SearchUsers extends React.Component {
             contactsData: [],
             notSelectedContacts: [],
             selectedContacts: [],
-            loading: false
+            loading: false,
+            userFilter: ''
         };
     }
 
@@ -72,6 +74,12 @@ export default class SearchUsers extends React.Component {
     //     }
     //     this.setState({ contactsData: contactsList });
     // }
+
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() =>
+            this.text ? this.text.focus() : this
+        );
+    }
 
     search() {
         this.setState({ loading: true });
@@ -175,6 +183,7 @@ export default class SearchUsers extends React.Component {
                     color={GlobalColors.sideButtons}
                 />
                 <TextInput
+                    ref={el => (this.text = el)}
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search contact"
@@ -182,6 +191,7 @@ export default class SearchUsers extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     enablesReturnKeyAutomatically={true}
                     onSubmitEditing={this.search.bind(this)}
+                    // autoFocus={true}
                     onChangeText={text => this.setState({ userFilter: text })}
                 />
             </View>

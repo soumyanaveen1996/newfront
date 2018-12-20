@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Modal, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Modal,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Alert
+} from 'react-native';
 import styles from './styles';
 import Bot from '../../../lib/bot/index';
 
@@ -13,6 +20,7 @@ export default class NewProviderPopup extends Component {
             show: true,
             wrongCode: false,
             code: '',
+            apiError: false,
             loading: false
         };
     }
@@ -27,18 +35,25 @@ export default class NewProviderPopup extends Component {
 
     async newProvider() {
         this.setState({ loading: true });
-        const addProvider = await Bot.addNewProvider(this.state.code);
-        if (!addProvider) {
+        try {
+            const addProvider = await Bot.addNewProvider(this.state.code);
+            if (!addProvider) {
+                this.setState({ loading: false });
+                this.setState({ wrongCode: true, apiError: false });
+            }
+            if (addProvider && !addProvider[0]) {
+                this.setState({ loading: false });
+                this.setState({ wrongCode: true, apiError: false });
+            } else {
+                this.setState({ loading: false, apiError: false });
+                this.cancelNewProvider();
+                this.props.onSubmit();
+            }
+        } catch (e) {
             this.setState({ loading: false });
-            this.setState({ wrongCode: true });
-        }
-        if (addProvider && !addProvider[0]) {
-            this.setState({ loading: false });
-            this.setState({ wrongCode: true });
-        } else {
-            this.setState({ loading: false });
-            this.cancelNewProvider();
-            this.props.onSubmit();
+            this.setState({ wrongCode: false, apiError: true });
+            // this.cancelNewProvider()
+            // Alert.alert('Cannot add new provider')
         }
     }
 
@@ -49,6 +64,17 @@ export default class NewProviderPopup extends Component {
                     <View style={styles.userError}>
                         <Text style={styles.errorText}>
                             Incorrect code. Try again
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+        if (this.state.apiError) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            Cannot Add Provider. An error occured.
                         </Text>
                     </View>
                 </View>

@@ -175,6 +175,7 @@ class AddContacts extends React.Component {
             <View style={ContactStyles.searchBar}>
                 <TextInput
                     style={ContactStyles.searchTextInput}
+                    autoFocus={true}
                     underlineColorAndroid="transparent"
                     placeholder="Search"
                     selectionColor={GlobalColors.darkGray}
