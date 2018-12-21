@@ -206,7 +206,7 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.tabBarChat}
                                         tabBarStyle={{
                                             backgroundColor:
-                                                'rgba(0,167,214,1)',
+                                                'rgba(0,189,242,1)',
                                             height: 50
                                         }}
                                         swipeEnabled={true}
@@ -216,7 +216,7 @@ class MainRouter extends React.Component {
                                         showIcon={true}
                                         title="New Chat"
                                         navBarButtonColor={{
-                                            color: GlobalColors.sideButtons
+                                            color: 'rgba(22,175,139,1)'
                                         }}
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
@@ -284,7 +284,9 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.tabBarCall}
                                         tabBarStyle={{
                                             backgroundColor:
-                                                'rgba(0,167,214,1)',
+                                                'rgba(0,189,242,1)',
+                                            underlayColor:
+                                                GlobalColors.transparent,
                                             height: 50
                                         }}
                                         swipeEnabled={true}
@@ -294,7 +296,7 @@ class MainRouter extends React.Component {
                                         showIcon={true}
                                         title="New Call"
                                         navBarButtonColor={{
-                                            color: GlobalColors.sideButtons
+                                            color: 'rgba(22,175,139,1)'
                                         }}
                                         titleStyle={{ color: 'black' }}
 
