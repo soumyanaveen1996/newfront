@@ -27,7 +27,7 @@ import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 Mapbox.setAccessToken(
-    'pk.eyJ1IjoiZGFtYWNjaGkiLCJhIjoiY2pwbWhwdDc0MDJncjQ4bng2cXlwNnR5aSJ9.F2iu_0iGlGFiXqkDwn1CiA'
+    'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
 );
 
 class CallOut extends React.Component {
