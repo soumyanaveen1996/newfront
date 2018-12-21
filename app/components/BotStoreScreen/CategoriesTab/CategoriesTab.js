@@ -19,7 +19,7 @@ export default class CategoriesTab extends React.Component {
         super(props);
         this.state = {
             categoriesData: this.props.categoriesData,
-            collapse: false
+            collapseIndex: 0
         };
     }
 
@@ -67,21 +67,37 @@ export default class CategoriesTab extends React.Component {
         );
     };
 
+    onCollapse = i => {
+        this.setState({ collapseIndex: i });
+    };
     renderCategoryBots = () => {
         return this.state.categoriesData.map((data, index) => {
             let categoryData = this.props.botsData.filter(bot => {
                 return data.botIds.indexOf(bot.botId) >= 0;
             });
 
+            let newCategoryData = [];
+            let indexBot = 0;
+            if (categoryData.length === 1) {
+                newCategoryData.push(categoryData[0]);
+            } else if (categoryData.length > 1) {
+                while (indexBot < 2) {
+                    newCategoryData.push(categoryData[indexBot]);
+                    indexBot++;
+                }
+            }
+
             return (
                 <BotContainer
                     style={{ flex: 1 }}
                     key={index}
                     allBots={this.props.botsData}
-                    botsData={categoryData}
+                    botsData={newCategoryData}
                     name={data.name}
                     botIds={data.botIds}
                     currentIndex={index}
+                    clickedIndex={this.state.collapseIndex}
+                    handleCollapse={this.onCollapse}
                 />
             );
         });
