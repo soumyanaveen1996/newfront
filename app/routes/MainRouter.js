@@ -205,8 +205,7 @@ class MainRouter extends React.Component {
                                     <Tabs
                                         key={ROUTER_SCENE_KEYS.tabBarChat}
                                         tabBarStyle={{
-                                            backgroundColor:
-                                                'rgba(0,189,242,1)',
+                                            backgroundColor: 'rgb(0,189,242)',
                                             height: 50
                                         }}
                                         swipeEnabled={true}
@@ -216,7 +215,7 @@ class MainRouter extends React.Component {
                                         showIcon={true}
                                         title="New Chat"
                                         navBarButtonColor={{
-                                            color: 'rgba(22,175,139,1)'
+                                            color: 'rgba(22,175,239,1)'
                                         }}
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
@@ -296,7 +295,7 @@ class MainRouter extends React.Component {
                                         showIcon={true}
                                         title="New Call"
                                         navBarButtonColor={{
-                                            color: 'rgba(22,175,139,1)'
+                                            color: 'rgb(22,175,239)'
                                         }}
                                         titleStyle={{ color: 'black' }}
 

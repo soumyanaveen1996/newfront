@@ -161,12 +161,12 @@ export default class CallSummary extends React.Component {
                         }}
                         onPress={() => Actions.pop()}
                     >
-                        {/* {Icons.backArrow()} */}
-                        <Image
+                        {Icons.backArrow()}
+                        {/* <Image
                             style={Styles.imageBack}
                             source={require('../../images/contact/header-back-arrow.png')}
                             resizeMode="center"
-                        />
+                        /> */}
                     </TouchableOpacity>
                 </View>
                 <View style={Styles.callDetails}>
