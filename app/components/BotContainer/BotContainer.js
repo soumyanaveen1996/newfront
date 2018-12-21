@@ -44,6 +44,28 @@ export default class BotContainer extends React.Component {
         this.mounted = true;
     }
 
+    // componentWillReceiveProps(nextProps) {
+    //     console.log(nextProps.clickedIndex, this.props.currentIndex);
+
+    //     if (this.props.currentIndex === nextProps.clickedIndex) {
+    //         this.setState(prevState => ({
+    //             collapseTab: !prevState.collapseTab
+    //         }));
+    //     }
+    // }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log(nextProps.clickedIndex, this.props.currentIndex);
+
+    //     if (nextProps.clickedIndex === this.props.currentIndex) {
+    //         this.setState(prevState => ({
+    //             collapseTab: !prevState.collapseTab
+    //         }));
+
+    //         return true;
+    //     }
+    // }
+
     async refresh() {
         const bots = await Bot.getTimeLineBots();
         if (this.mounted) {
@@ -106,24 +128,25 @@ export default class BotContainer extends React.Component {
         this.setState(prevState => ({
             collapseTab: !prevState.collapseTab
         }));
+        this.props.handleCollapse(this.props.currentIndex);
     };
 
     render() {
-        let limitedBotData = [];
+        // let limitedBotData = [];
 
-        let indexBot = 0;
+        // let indexBot = 0;
 
-        if (this.state.botsData.length > 1) {
-            while (indexBot < 2) {
-                limitedBotData.push(this.state.botsData[indexBot]);
-                indexBot++;
-            }
-        }
-        if (this.state.botsData.length === 1) {
-            limitedBotData.push(this.state.botsData[0]);
-        }
+        // if (this.state.botsData.length > 1) {
+        //     while (indexBot < 2) {
+        //         limitedBotData.push(this.state.botsData[indexBot]);
+        //         indexBot++;
+        //     }
+        // }
+        // if (this.state.botsData.length === 1) {
+        //     limitedBotData.push(this.state.botsData[0]);
+        // }
 
-        if (limitedBotData.length > 0) {
+        if (this.props.botsData.length > 0) {
             return (
                 <View
                     style={{
@@ -188,13 +211,11 @@ export default class BotContainer extends React.Component {
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_down}
-                                        resizeMode="center"
                                     />
                                 ) : (
                                     <Image
                                         style={{ width: 10, height: 10 }}
                                         source={images.collapse_gray_arrow_up}
-                                        resizeMode="center"
                                     />
                                 )}
                             </TouchableOpacity>
@@ -202,7 +223,7 @@ export default class BotContainer extends React.Component {
                     </View>
                     {!this.state.collapseTab ? (
                         <ScrollView>
-                            {limitedBotData.map(item => {
+                            {this.props.botsData.map(item => {
                                 return (
                                     <View key={item.botId}>
                                         {this.renderGridItem({ item })}

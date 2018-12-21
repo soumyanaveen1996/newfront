@@ -29,7 +29,7 @@ export default class DeveloperTab extends React.Component {
             //     this.domainMgmtBotData
             // ],
             developerData: [...this.props.developerData],
-            collapse: false
+            collapseIndex: 0
         };
     }
 
@@ -129,6 +129,10 @@ export default class DeveloperTab extends React.Component {
     //     );
     // };
 
+    onCollapse = i => {
+        this.setState({ collapseIndex: i });
+    };
+
     renderCategoryBots = () => {
         return this.props.developerData.map((data, index) => {
             if (data.botIds) {
@@ -138,17 +142,30 @@ export default class DeveloperTab extends React.Component {
                     );
                 });
 
+                let newdeveloperData = [];
+                let indexBot = 0;
+                if (developerData.length === 1) {
+                    newdeveloperData.push(developerData[0]);
+                } else if (developerData.length > 1) {
+                    while (indexBot < 2) {
+                        newdeveloperData.push(developerData[indexBot]);
+                        indexBot++;
+                    }
+                }
+
                 return (
                     <BotContainer
                         style={{ flex: 1 }}
                         key={index}
                         allBots={this.props.botsData}
-                        botsData={developerData}
+                        botsData={newdeveloperData}
                         name={data.name}
                         botIds={data.botIds}
                         currentIndex={index}
                         imageForHeader={data.logoUrl}
                         tabStatus="provider"
+                        clickedIndex={this.state.collapseIndex}
+                        handleCollapse={this.onCollapse}
                     />
                 );
             }
