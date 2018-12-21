@@ -7,7 +7,8 @@ import {
     ActionConst,
     Actions,
     Tabs,
-    Stack
+    Stack,
+    Text
 } from 'react-native-router-flux';
 import { LoginScreen } from '../components/Login';
 import { MainScreen, ConversationList } from '../components/MainScreen';
@@ -60,6 +61,8 @@ import EventEmitter, { AuthEvents } from '../lib/events';
 import { Network } from '../lib/capability';
 import NavHandler from '../components/NavigationHandler/NavHandler';
 import CallSummary from '../components/CallSummary/CallSummary';
+import CustomTab from '../components/CustomTab/CustomTab';
+import GlobalColors from '../config/styles';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -212,7 +215,10 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Chat"
-
+                                        navBarButtonColor={{
+                                            color: GlobalColors.sideButtons
+                                        }}
+                                        titleStyle={{ color: 'black' }}
                                         // hideNavBar
                                     >
                                         <Scene
@@ -287,6 +293,11 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Call"
+                                        navBarButtonColor={{
+                                            color: GlobalColors.sideButtons
+                                        }}
+                                        titleStyle={{ color: 'black' }}
+
                                         // hideNavBar
                                     >
                                         <Scene

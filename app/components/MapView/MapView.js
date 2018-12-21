@@ -102,6 +102,11 @@ export default class MapView extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            userTrackingMode:
+                Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
+            locateUserButtonIcon: Icons.userPosition()
+        };
         const vesselsPositions = _.map(this.props.mapData.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
@@ -354,7 +359,7 @@ export default class MapView extends React.Component {
                     style={styles.locateButton}
                     onPress={this.locateUser.bind(this)}
                 >
-                    {Icons.userPosition()}
+                    {this.state.locateUserButtonIcon}
                 </TouchableOpacity>
             </View>
         );
@@ -385,19 +390,36 @@ export default class MapView extends React.Component {
     }
 
     locateUser() {
-        navigator.geolocation.getCurrentPosition(userPosition => {
-            this.map
-                .flyTo(
-                    [
-                        userPosition.coords.longitude,
-                        userPosition.coords.latitude
-                    ],
-                    800
-                )
-                .then(() => {
-                    this.map.zoomTo(12, 200);
-                });
-        });
+        if (this.state.userTrackingMode === Mapbox.UserTrackingModes.Follow) {
+            this.setState({
+                userTrackingMode: Mapbox.UserTrackingModes.FollowWithHeading
+            });
+        } else {
+            this.setState({
+                userTrackingMode: Mapbox.UserTrackingModes.Follow
+            });
+        }
+        this.setState({ locateUserButtonIcon: Icons.userPositionActive });
+    }
+
+    onUserTrackingModeChange(e) {
+        const mode = e.nativeEvent.payload.userTrackingMode;
+        this.setState({ userTrackingMode: mode });
+        if (mode === 0) {
+            this.setState({ locateUserButtonIcon: Icons.userPosition() });
+        } else {
+            this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
+        }
+    }
+
+    onMapRendered() {
+        if (Platform.OS === 'android') {
+            this.setState({ userTrackingMode: 0 });
+            this.map.moveTo([
+                this.props.mapData.region.longitude,
+                this.props.mapData.region.latitude
+            ]);
+        }
     }
 
     renderMap() {
@@ -412,7 +434,11 @@ export default class MapView extends React.Component {
                     this.props.mapData.region.latitude
                 ]}
                 showsUserLocation={true}
-                userTrackingMode={1}
+                userTrackingMode={this.state.userTrackingMode}
+                onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
+                    this
+                )}
+                onDidFinishRenderingMapFully={this.onMapRendered.bind(this)}
                 logoEnabled={false}
                 style={{ flex: 1 }}
             >
