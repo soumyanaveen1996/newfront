@@ -6,6 +6,7 @@ import {
     StatusBar,
     Platform,
     Image,
+    TextInput,
     Alert,
     TouchableOpacity
 } from 'react-native';
@@ -122,6 +123,7 @@ class BotStoreScreen extends React.Component {
             showSearchBar: false,
             selectedIndex: 0,
             searchString: '',
+            countResults: 0,
             catalogData: Bot.getDefaultCatalog(),
             catalogLoaded: false,
             networkError: false
@@ -356,13 +358,29 @@ class BotStoreScreen extends React.Component {
         );
     }
 
-    onTileCilcked = title => {
+    // onTileCilcked = title => {
+    //     Actions.botList({
+    //         data: this.state.catalogData.bots,
+    //         title: title,
+    //         typeScreen: 'search'
+    //     });
+    // };
+
+    async updateText() {
+        const searchBot = await Bot.searchBots(this.state.searchString);
+        this.setState(() => {
+            return {
+                botsData: [...searchBot],
+                countResults: searchBot.length
+            };
+        });
+
         Actions.botList({
-            data: this.state.catalogData.bots,
-            title: title,
+            data: this.state.botsData,
+            title: 'Marketplace',
             typeScreen: 'search'
         });
-    };
+    }
 
     render() {
         if (this.state.networkError) {
@@ -387,7 +405,7 @@ class BotStoreScreen extends React.Component {
         return (
             <BackgroundImage style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={styles.searchSection}
                     onPress={() => this.onTileCilcked('Marketplace')}
                 >
@@ -409,7 +427,24 @@ class BotStoreScreen extends React.Component {
                             Search apps{' '}
                         </Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                <View style={styles.searchSection}>
+                    <Icon
+                        style={styles.searchIcon}
+                        name="search"
+                        size={24}
+                        color="rgba(0, 189, 242, 1)"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Search apps"
+                        onChangeText={searchString => {
+                            this.setState({ searchString });
+                        }}
+                        underlineColorAndroid="transparent"
+                        onSubmitEditing={() => this.updateText()}
+                    />
+                </View>
                 {this.state.showNewProvider && (
                     <NewProviderPopup
                         canelNewProvider={this.handleCancelNewProvider}
