@@ -349,7 +349,12 @@ class BotStoreScreen extends React.Component {
                     tabStyle={styles.tabStyle}
                     tabTextStyle={styles.tabTextStyle}
                     activeTabStyle={styles.activeTabStyle}
+                    badges={['.', '.', '.', '.']}
+                    tabBadgeContainerStyle={styles.badgeContainer}
                     activeTabTextStyle={styles.activeTabTextStyle}
+                    activeTabBadgeContainerStyle={
+                        styles.activeTabBadgeContainer
+                    }
                     values={tabConfig.tabNames}
                     selectedIndex={this.state.selectedIndex}
                     onTabPress={this.onIndexChange.bind(this)}
@@ -378,8 +383,11 @@ class BotStoreScreen extends React.Component {
         Actions.botList({
             data: this.state.botsData,
             title: 'Marketplace',
-            typeScreen: 'search'
+            typeScreen: 'search',
+            searchText: this.state.searchString
         });
+
+        this.setState({ searchString: '' });
     }
 
     render() {
@@ -438,6 +446,7 @@ class BotStoreScreen extends React.Component {
                     <TextInput
                         style={styles.input}
                         placeholder="Search apps"
+                        value={this.state.searchString}
                         onChangeText={searchString => {
                             this.setState({ searchString });
                         }}
