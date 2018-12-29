@@ -10,6 +10,7 @@ import android.os.Build;
 import com.facebook.react.ReactApplication;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
+import com.frontm.frontm.proto.GRPCPackage;
 import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
 import com.brentvatne.react.ReactVideoPackage;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
@@ -89,7 +90,8 @@ public class MainApplication extends Application implements ReactApplication {
               getApplicationContext(), BuildConfig.DEBUG),
           new RNCameraPackage(), new BackgroundTimerPackage(), new BackgroundTaskPackage(),
           new ReactNativeAudioPackage(), new AndroidOpenSettingsPackage(), new ActionSheetPackage(),
-          new SQLitePluginPackage(),new RCTMGLPackage()
+          new SQLitePluginPackage(),new RCTMGLPackage(),
+              new GRPCPackage()
       );
 
     }
