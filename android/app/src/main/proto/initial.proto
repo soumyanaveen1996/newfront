@@ -1,0 +1,20 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.frontm.frontm.proto";
+
+
+package helloworld;
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+}
+
+service FirstService {
+    rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+

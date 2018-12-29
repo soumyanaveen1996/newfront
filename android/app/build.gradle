@@ -157,6 +157,17 @@ android {
     }
 }
 
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+
 dependencies {
     compile (project(':mapbox-react-native-mapbox-gl')) {
         compile ('com.squareup.okhttp3:okhttp:3.6.0') {
@@ -206,6 +217,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:15.0.0'
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:27.1.1" // added this
+    compile 'io.grpc:grpc-okhttp:1.17.1'
+    compile 'io.grpc:grpc-protobuf-lite:1.17.1'
+    compile 'io.grpc:grpc-stub:1.17.1'
+    compileOnly "javax.annotation:javax.annotation-api:1.2"
 }
 
 
@@ -218,3 +233,34 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.google.protobuf'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+    }
+}
+
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:3.5.1-1' }
+    plugins {
+        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.17.1' // CURRENT_GRPC_VERSION
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+                grpc { // Options added to --grpc_out
+                    option 'lite' }
+            }
+        }
+    }
+}
+
