@@ -47,6 +47,8 @@ const CODE_PUSH_ACTIVATE = false;
 const VERSION = 51; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
+import { NativeModules, NativeEventEmitter } from 'react-native';
+
 export default class Splash extends React.Component {
     constructor(props) {
         super(props);
@@ -62,6 +64,27 @@ export default class Splash extends React.Component {
         // Override logging in prod builds
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
+
+        var FirstServiceClient = NativeModules.FirstServiceClient;
+        FirstServiceClient.sayHello('FrontM GRPC', (err, response) => {
+            console.log('GRPC Error : ', err);
+            console.log('GRPC Response : ', response);
+        });
+
+        const QueueServiceClient = NativeModules.QueueServiceClient;
+        eventEmitter = new NativeEventEmitter(QueueServiceClient);
+
+        const subscription = eventEmitter.addListener(
+            'NewQueueMessage',
+            message =>
+                console.log(
+                    'Event GRPC message : ',
+                    message.id,
+                    message.content
+                )
+        );
+
+        QueueServiceClient.subscribeWithSessionId(null);
 
         if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode

@@ -10,8 +10,9 @@ target 'frontm_mobile' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'TwilioVoice', '~> 2.0.0'
-  pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
+  #pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
+  #pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
 
-  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+  pod 'gRPC-ProtoRPC'
 
 end
