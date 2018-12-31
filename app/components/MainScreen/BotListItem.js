@@ -66,10 +66,19 @@ export default class BotListItem extends React.Component {
                     source={{ uri: message.getMessage() }}
                 />
             );
+        } else if (
+            message &&
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
+        ) {
+            return (
+                <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
+                    {JSON.stringify(message.getMessage().region)}
+                </Text>
+            );
         } else {
             return (
                 <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
-                    {subTitle}
+                    {JSON.stringify(subTitle)}
                 </Text>
             );
         }

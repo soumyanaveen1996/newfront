@@ -73,6 +73,7 @@ import {
 } from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
+import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
@@ -711,7 +712,6 @@ class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
-
         this.stopWaiting();
         this.countMessage(message);
 
@@ -724,7 +724,8 @@ class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
         ) {
             this.updateChat(message);
         } else if (
@@ -738,10 +739,6 @@ class ChatBotScreen extends React.Component {
             } else {
                 this.fireSlider(message);
             }
-        } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
-        ) {
-            this.openMap(message);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
@@ -791,9 +788,9 @@ class ChatBotScreen extends React.Component {
         this.setState({ showSlider: true, message: message });
     }
 
-    openMap(message) {
+    openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: message.getMessage() });
+        Actions.mapView({ mapData: mapData });
     }
 
     openChart(message) {
@@ -1069,6 +1066,18 @@ class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={true}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
             ) {
                 return (
@@ -1106,14 +1115,28 @@ class ChatBotScreen extends React.Component {
                 );
             }
         } else {
-            return (
-                <ChatMessage
-                    showTime={item.showTime}
-                    message={message}
-                    alignRight
-                    user={this.user}
-                />
-            );
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else {
+                return (
+                    <ChatMessage
+                        showTime={item.showTime}
+                        message={message}
+                        alignRight
+                        user={this.user}
+                    />
+                );
+            }
         }
     }
 
@@ -1518,6 +1541,17 @@ class ChatBotScreen extends React.Component {
 
     onLocationPicked(locationData) {
         console.log(locationData);
+        const mapData = {
+            region: {
+                longitude: locationData.coordinate[0],
+                latitude: locationData.coordinate[1]
+            }
+        };
+        locationMessage = new Message();
+        locationMessage.mapMessage(mapData);
+        locationMessage.messageByBot(false);
+        locationMessage.setCreatedBy(this.getUserId());
+        this.sendMessage(locationMessage);
     }
 
     onOptionSelected(key) {
