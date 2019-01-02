@@ -35,7 +35,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion',
     MESSAGE_TYPE_WEB_CARD: 'web_card',
     MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
-    MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification'
+    MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
+    MESSAGE_TYPE_LOCATION: 'location'
 };
 
 export const IntToMessageTypeConstants = {
@@ -52,7 +53,8 @@ export const IntToMessageTypeConstants = {
     250: MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
     260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
     270: MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION,
-    280: MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION
+    280: MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION,
+    290: MessageTypeConstants.MESSAGE_TYPE_LOCATION
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -258,6 +260,14 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_MAP;
     };
 
+    locationMessage = (mapData, options) => {
+        this._msg = JSON.stringify(mapData || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_LOCATION;
+    };
+
     chartMessage = (data, options) => {
         this._msg = JSON.stringify(data || []);
         if (options) {
@@ -297,6 +307,7 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
             this._messageType ===
@@ -403,6 +414,12 @@ export default class Message {
             let items = this.getMessage();
             let titles = _.map(items, item => item.title);
             return I18n.t('Button_Message', { lines: titles.join(' or ') });
+        } else if (this.messageType === MessageTypeConstants.MESSAGE_TYPE_MAP) {
+            return '';
+        } else if (
+            this.messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
+        ) {
+            return '';
         } else {
             return this.getMessage();
         }

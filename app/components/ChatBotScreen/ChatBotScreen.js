@@ -725,7 +725,10 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
         ) {
             this.updateChat(message);
         } else if (
@@ -790,7 +793,12 @@ class ChatBotScreen extends React.Component {
 
     openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: mapData });
+        Actions.mapView({ mapData: mapData, isSharedLocation: false });
+    }
+
+    openMapForSharedLocation(mapData) {
+        Keyboard.dismiss();
+        Actions.mapView({ mapData: mapData, isSharedLocation: true });
     }
 
     openChart(message) {
@@ -1078,6 +1086,18 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
             ) {
                 return (
@@ -1124,6 +1144,18 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
                         mapData={message.getMessage()}
                     />
                 );
@@ -1543,15 +1575,26 @@ class ChatBotScreen extends React.Component {
         console.log(locationData);
         const mapData = {
             region: {
-                longitude: locationData.coordinate[0],
-                latitude: locationData.coordinate[1]
-            }
+                latitude: locationData.coordinate[0],
+                longitude: locationData.coordinate[1]
+            },
+            markers: [
+                {
+                    title: 'position',
+                    description: 'shared position',
+                    draggable: false,
+                    coordinate: {
+                        latitude: locationData.coordinate[0],
+                        longitude: locationData.coordinate[1]
+                    }
+                }
+            ]
         };
-        locationMessage = new Message();
-        locationMessage.mapMessage(mapData);
-        locationMessage.messageByBot(false);
-        locationMessage.setCreatedBy(this.getUserId());
-        this.sendMessage(locationMessage);
+        message = new Message();
+        message.locationMessage(mapData);
+        message.messageByBot(false);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
     }
 
     onOptionSelected(key) {
