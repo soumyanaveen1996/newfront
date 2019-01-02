@@ -1575,8 +1575,8 @@ class ChatBotScreen extends React.Component {
         console.log(locationData);
         const mapData = {
             region: {
-                latitude: locationData.coordinate[0],
-                longitude: locationData.coordinate[1]
+                longitude: locationData.coordinate[0],
+                latitude: locationData.coordinate[1]
             },
             markers: [
                 {
@@ -1584,8 +1584,8 @@ class ChatBotScreen extends React.Component {
                     description: 'shared position',
                     draggable: false,
                     coordinate: {
-                        latitude: locationData.coordinate[0],
-                        longitude: locationData.coordinate[1]
+                        longitude: locationData.coordinate[0],
+                        latitude: locationData.coordinate[1]
                     }
                 }
             ]

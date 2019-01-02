@@ -37,7 +37,7 @@ export default class WebCards extends React.Component {
             ],
             width: width,
             height: width,
-            zoomLevel: 13,
+            zoomLevel: 11,
             styleURL: Mapbox.StyleURL.Street,
             writeToDisk: true // creates a temp file
         });
