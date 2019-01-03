@@ -55,12 +55,6 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
-        if (this.props.appState.contactsLoaded) {
-            Contact.getAddedContacts().then(contacts => {
-                this.refresh(contacts);
-            });
-        }
-
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
             this.props.summary
