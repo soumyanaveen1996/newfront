@@ -1572,6 +1572,7 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
+        console.log(JSON.stringify(locationData));
         const mapData = {
             region: {
                 longitude: locationData.coordinate[0],
