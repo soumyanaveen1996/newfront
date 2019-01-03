@@ -128,6 +128,12 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconIgnorePlacement: true,
         iconImage: images.current_location_inactive,
         iconSize: 1.5
+    },
+    sharedLocation: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_pin,
+        iconSize: 1.5
     }
 });
 

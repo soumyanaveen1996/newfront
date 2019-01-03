@@ -330,11 +330,15 @@ export default class MapView extends React.Component {
                     filter={['==', 'type', 'movingVessel']}
                     style={layerStyles.movingVessel}
                 />
-                {/* STATIC POSITIONS OF VESSELS */}
+                {/* STATIC POSITIONS OF VESSELS or SHARED LOCATIONS*/}
                 <Mapbox.SymbolLayer
                     id="vesselsPositions"
                     filter={['==', 'type', 'vesselPosition']}
-                    style={layerStyles.vesselPosition}
+                    style={
+                        this.props.isSharedLocation
+                            ? layerStyles.sharedLocation
+                            : layerStyles.vesselPosition
+                    }
                 />
             </Mapbox.ShapeSource>
         );
