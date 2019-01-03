@@ -282,14 +282,15 @@ class ChatBotScreen extends React.Component {
 
             let serverMessages = [];
             if (messages.length < 3) {
-                serverMessages = await this.loadOldMessagesFromServer();
+                serverMessages = await Promise.resolve(
+                    this.loadOldMessagesFromServer()
+                );
             }
 
             const allMessages = R.uniqWith(R.eqProps('key'), [
                 ...serverMessages,
                 ...messages
             ]);
-
             // 4. Update the state of the bot with the messages we have
             this.setState(
                 {
@@ -306,21 +307,17 @@ class ChatBotScreen extends React.Component {
                             this.state.messages,
                             this.botContext
                         );
-
                         // 6. If there are async results waiting - pass them on to the bot
                         self.flushPendingAsyncResults();
-
                         // 7. Now that bot is open - add a listener for async results coming in
                         self.eventSubscription = EventEmitter.addListener(
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
-
                         // 8. Mark new messages as read
                         MessageHandler.markUnreadMessagesAsRead(
                             this.getBotKey()
                         );
-
                         // 9. Stash the bot for nav back for on exit
                         this.props.navigation.setParams({
                             botDone: this.botDone.bind(this)
@@ -333,7 +330,6 @@ class ChatBotScreen extends React.Component {
                     }
                 }
             );
-
             console.log('Props from Contacts Call', this.props);
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
@@ -1572,7 +1568,6 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
-        console.log(JSON.stringify(locationData));
         const mapData = {
             region: {
                 longitude: locationData.coordinate[0],

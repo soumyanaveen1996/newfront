@@ -575,7 +575,7 @@ export default class Message {
             uuid: json.messageId,
             addedByBot: user && user.userId === json.createdBy ? 0 : 1,
             botKey: json.conversation || conversationId,
-            msg: json.content[0],
+            msg: JSON.stringify(json.content[0]),
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
