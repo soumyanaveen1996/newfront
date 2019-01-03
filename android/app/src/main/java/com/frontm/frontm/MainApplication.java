@@ -8,6 +8,7 @@ import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import com.mapbox.rctmgl.RCTMGLPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
 import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
