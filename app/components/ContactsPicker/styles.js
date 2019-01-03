@@ -358,7 +358,8 @@ const stylesheet = StyleSheet.create({
         fontSize: 16,
         color: 'rgba(102,102,102,1)',
         marginTop: 26,
-        marginBottom: 15
+        marginBottom: 15,
+        fontWeight: '300'
     },
     inviteEmail: {
         fontSize: 16,
@@ -384,7 +385,7 @@ const stylesheet = StyleSheet.create({
     inviteButtonArea: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginVertical: 30
+        marginVertical: 20
     },
     inviteButton: {
         width: wp('80%'),
@@ -426,6 +427,18 @@ const stylesheet = StyleSheet.create({
     searchText: {
         fontSize: 16,
         color: 'rgba(255,255,255,1)'
+    },
+    addressBookContainerStyle: {
+        height: 30,
+        width: wp('80%'),
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    addressBookStyle: {
+        textAlign: 'center',
+        color: 'rgba(0, 189, 242, 1)',
+        fontFamily: 'Roboto',
+        fontSize: 16
     }
 });
 
