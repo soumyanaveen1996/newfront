@@ -271,8 +271,6 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
-        console.log('contact list ', info);
-
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);

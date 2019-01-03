@@ -28,8 +28,15 @@ import CountryCodes from './code';
 import Bot from '../../lib/bot';
 import { Action } from 'rxjs/scheduler/Action';
 import ProfileImage from '../ProfileImage';
+import config from '../../config/config';
 
 const R = require('ramda');
+
+const PSTN_CALL = {
+    SAT_CALL: 'SAT_CALL',
+    NOT_SUPPORTED: 'NOT_SUPPORTED',
+    OTHER_CALL: 'OTHER_CALL'
+};
 
 let EventListeners = [];
 export const DiallerState = {
@@ -116,6 +123,55 @@ export default class Dialler extends React.Component {
         }
     }
 
+    checkSatelliteCall(number) {
+        if (number.startsWith('00870') || number.startsWith('+870')) {
+            return [PSTN_CALL.SAT_CALL];
+        }
+        if (number.startsWith('008816') || number.startsWith('+8816')) {
+            return [PSTN_CALL.NOT_SUPPORTED, I18n.t('Iridium_message')];
+        }
+        if (number.startsWith('00882') || number.startsWith('+882')) {
+            return [PSTN_CALL.NOT_SUPPORTED, I18n.t('Thuraya_message')];
+        }
+        return [PSTN_CALL.OTHER_CALL];
+    }
+    async getSatelliteCallNumber(number, user) {
+        try {
+            const options = {
+                method: 'GET',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    '/v2/satelliteDetails?botId=onboarding-bot',
+                headers: {
+                    sessionId: user.creds.sessionId
+                }
+            };
+            const response = await Network(options);
+            const { data } = response;
+            const { error, content } = data;
+            if (error === 0) {
+                const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
+
+                if (number.startsWith('00870')) {
+                    return [
+                        null,
+                        `${SAT_PHONE_NUM}${SAT_PHONE_PIN}${number.substring(2)}`
+                    ];
+                }
+                if (number.startsWith('+870')) {
+                    return [
+                        null,
+                        `${SAT_PHONE_NUM}${SAT_PHONE_PIN}${number.substring(1)}`
+                    ];
+                }
+            } else {
+                return [error, null];
+            }
+        } catch (error) {
+            return [error, null];
+        }
+    }
     async call() {
         this.setState({ noBalance: false });
         const connection = await Network.isConnected();
@@ -133,13 +189,34 @@ export default class Dialler extends React.Component {
             return;
         }
         try {
+            let toNumber = this.state.dialledNumber;
+            const [call_type, pstnMessage] = this.checkSatelliteCall(
+                this.state.dialledNumber
+            );
+            console.log(call_type);
+
+            if (call_type === PSTN_CALL.NOT_SUPPORTED) {
+                this.setState({ diallerState: DiallerState.initial });
+                Alert.alert(pstnMessage);
+                return;
+            }
+            const user = await Auth.getUser();
+            if (call_type === PSTN_CALL.SAT_CALL) {
+                [error, toNumber] = await this.getSatelliteCallNumber(
+                    this.state.dialledNumber,
+                    user
+                );
+                if (error) {
+                    Alert.alert('Unable to Call number');
+                    return;
+                }
+            }
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                const user = await Auth.getUser();
                 TwilioVoice.connect({
                     CallerId: `${user.info.emailAddress}`,
-                    To: `${this.state.dialledNumber}`
+                    To: `${toNumber}`
                 });
             }
         } catch (err) {

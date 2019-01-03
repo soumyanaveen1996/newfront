@@ -228,7 +228,6 @@ class NewCallContacts extends React.Component {
             section => section.title
         );
 
-        console.log('contact list ========', sectionTitles);
         if (sectionTitles && sectionTitles.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>

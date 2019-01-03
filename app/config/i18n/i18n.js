@@ -138,7 +138,11 @@ I18n.translations = {
         Delete: 'Delete',
         New_chat: 'New Chat',
         Contacts_call: 'Contacts_call',
-        Dial_call: 'Dial_call'
+        Dial_call: 'Dial_call',
+        Iridium_message:
+            'Our team is working hard to be able to initiate calls to Iridium phones. Stay in touch and we will inform you when it becomes available',
+        Thuraya_message:
+            'Our team is working hard to be able to initiate calls to Thuraya phones. Stay in touch and we will inform you when it becomes available'
     }
 };
 

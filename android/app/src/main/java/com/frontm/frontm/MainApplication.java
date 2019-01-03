@@ -50,7 +50,6 @@ import com.facebook.FacebookSdk;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mapbox.rctmgl.RCTMGLPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
