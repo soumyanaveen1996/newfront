@@ -75,7 +75,6 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
-            new RCTMGLPackage(),
             BugsnagReactNative.getPackage(),
             new RNDefaultPreferencePackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
           new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
