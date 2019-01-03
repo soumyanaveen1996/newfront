@@ -8,6 +8,7 @@ import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import com.mapbox.rctmgl.RCTMGLPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
 import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
@@ -74,6 +75,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RCTMGLPackage(),
             BugsnagReactNative.getPackage(),
             new RNDefaultPreferencePackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
           new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
