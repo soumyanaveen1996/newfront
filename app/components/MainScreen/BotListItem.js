@@ -69,7 +69,7 @@ export default class BotListItem extends React.Component {
         } else {
             return (
                 <Text numberOfLines={2} style={BotListItemStyles.subTitle}>
-                    {JSON.stringify(subTitle)}
+                    {subTitle}
                 </Text>
             );
         }

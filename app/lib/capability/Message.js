@@ -414,10 +414,12 @@ export default class Message {
             let items = this.getMessage();
             let titles = _.map(items, item => item.title);
             return I18n.t('Button_Message', { lines: titles.join(' or ') });
-        } else if (this.messageType === MessageTypeConstants.MESSAGE_TYPE_MAP) {
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
+        ) {
             return '';
         } else if (
-            this.messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
         ) {
             return '';
         } else {
