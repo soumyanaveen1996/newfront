@@ -63,6 +63,8 @@ import NavHandler from '../components/NavigationHandler/NavHandler';
 import CallSummary from '../components/CallSummary/CallSummary';
 import CustomTab from '../components/CustomTab/CustomTab';
 import GlobalColors from '../config/styles';
+import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScreen';
+import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -363,6 +365,11 @@ class MainRouter extends React.Component {
                                         component={ChannelChat}
                                     />
                                     <Scene
+                                        key={ROUTER_SCENE_KEYS.botInfoScreen}
+                                        title="Marketplace"
+                                        component={BotInfoScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.channelsFilter}
                                         title="Filter"
                                         component={ChannelsFilter}
@@ -371,6 +378,13 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.newChannels}
                                         title="Filter"
                                         component={NewChannels}
+                                    />
+                                    <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.addressBookScreen
+                                        }
+                                        title="Add new contacts"
+                                        component={AddressBookScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.addParticipants}

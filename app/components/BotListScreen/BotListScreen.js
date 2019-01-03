@@ -25,8 +25,8 @@ export default class BotListScreen extends React.Component {
         this.state = {
             botsData: this.props.data,
             type: this.props.typeScreen,
-            countResults: 0,
-            searchString: ''
+            countResults: this.props.data.length,
+            searchString: this.props.searchText
         };
     }
 
@@ -103,8 +103,9 @@ export default class BotListScreen extends React.Component {
                     <TextInput
                         style={styles.input}
                         placeholder="Search apps"
+                        value={this.state.searchString}
                         onChangeText={searchString => {
-                            this.setState({ searchString });
+                            this.setState({ searchString, countResults: 0 });
                         }}
                         underlineColorAndroid="transparent"
                         onSubmitEditing={() => this.updateText()}

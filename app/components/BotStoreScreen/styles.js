@@ -45,6 +45,7 @@ export default StyleSheet.create({
         height: 40
     },
     segmentedControlTab: {
+        position: 'relative',
         backgroundColor: 'transparent',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -75,6 +76,23 @@ export default StyleSheet.create({
             marginBottom: 5
         }
     }),
+
+    badgeContainer: {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        width: 4,
+        height: 6,
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        bottom: -15,
+        left: SCREEN_WIDTH / 18
+    },
+
+    activeTabBadgeContainer: {
+        backgroundColor: GlobalColors.white
+    },
     headerInnerContainerForSearch: {
         marginTop: 50
     },
