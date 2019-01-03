@@ -14,6 +14,7 @@ import CachedImage from '../CachedImage';
 import utils from '../../lib/utils';
 import { Auth, Network } from '../../lib/capability';
 import config from '../../config/config';
+import { Actions } from 'react-native-router-flux';
 
 const subtitleNumberOfLines = 2;
 
@@ -158,11 +159,26 @@ export default class BotInstallListItem extends React.Component {
             );
         }
     }
+    openBotInfo = botInfo => {
+        const botStatus = this.state.status;
+        console.log(botStatus);
+
+        Actions.botInfoScreen({
+            botInfo: botInfo,
+            status: botStatus,
+            onBack: this.onBack
+        });
+    };
 
     render() {
         const bot = this.props.bot;
         return (
-            <View style={styles.container}>
+            <TouchableOpacity
+                onPress={() => {
+                    this.openBotInfo(bot);
+                }}
+                style={styles.container}
+            >
                 <CachedImage
                     imageTag="botLogo"
                     source={{ uri: bot.logoUrl }}
@@ -211,7 +227,7 @@ export default class BotInstallListItem extends React.Component {
                     </Text>
                 </View>
                 {this.renderRightArea()}
-            </View>
+            </TouchableOpacity>
         );
     }
 }

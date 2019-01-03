@@ -152,7 +152,10 @@ function Network(options, queue = false) {
                                     new Error(JSON.stringify(response))
                                 );
                             });
-                            if (response.status === 401) {
+                            if (
+                                response.status === 401 ||
+                                response.status === 400
+                            ) {
                                 console.log('need to logout');
                                 Auth.logout();
                                 return resolve();

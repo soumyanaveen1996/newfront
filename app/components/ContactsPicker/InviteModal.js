@@ -83,6 +83,12 @@ export default class InviteModal extends React.Component {
         });
     }
 
+    addNewContactScreen() {
+        console.log('go to add new conatct');
+        this.props.setVisible(false);
+        Actions.addressBookScreen({ title: 'Add new contacts' });
+    }
+
     render() {
         const contactSelected = this.state.contactSelected;
         return (
@@ -135,7 +141,7 @@ export default class InviteModal extends React.Component {
                                     }}
                                 >
                                     <Text style={styles.inviteText}>
-                                        Search with name or email
+                                        Search FrontM users with name or email
                                     </Text>
                                     <TouchableOpacity
                                         style={
@@ -207,6 +213,14 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
+                            {/* <TouchableOpacity
+                                style={styles.addressBookContainerStyle}
+                                onPress={this.addNewContactScreen.bind(this)}
+                            >
+                                <Text style={styles.addressBookStyle}>
+                                    Or invite user from address book
+                                </Text>
+                            </TouchableOpacity> */}
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

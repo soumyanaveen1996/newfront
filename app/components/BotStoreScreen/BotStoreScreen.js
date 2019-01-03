@@ -41,6 +41,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import Loader from '../Loader/Loader';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -126,7 +127,9 @@ class BotStoreScreen extends React.Component {
             countResults: 0,
             catalogData: Bot.getDefaultCatalog(),
             catalogLoaded: false,
-            networkError: false
+            networkError: false,
+            showNewProvider: false,
+            qrCodeData: ''
         };
     }
 
@@ -135,7 +138,6 @@ class BotStoreScreen extends React.Component {
 
         let catalog = await Bot.getCatalog();
         this.setState({
-            showNewProvider: false,
             showSearchBar: false,
             selectedIndex: this.state.selectedIndex || 0,
             catalogData: catalog,
@@ -157,6 +159,10 @@ class BotStoreScreen extends React.Component {
     }
 
     async componentDidMount() {
+        if (Actions.prevScene === ROUTER_SCENE_KEYS.barCodeScanner) {
+            this.setState({ showNewProvider: true });
+        }
+
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage
         });
@@ -301,6 +307,10 @@ class BotStoreScreen extends React.Component {
         this.updateCatalog();
     };
 
+    qrCodeSubmit = code => {
+        this.setState({ qrCodeData: code });
+    };
+
     botStoreList() {
         if (this.state.selectedIndex === 2) {
             return (
@@ -349,7 +359,12 @@ class BotStoreScreen extends React.Component {
                     tabStyle={styles.tabStyle}
                     tabTextStyle={styles.tabTextStyle}
                     activeTabStyle={styles.activeTabStyle}
+                    badges={['.', '.', '.', '.']}
+                    tabBadgeContainerStyle={styles.badgeContainer}
                     activeTabTextStyle={styles.activeTabTextStyle}
+                    activeTabBadgeContainerStyle={
+                        styles.activeTabBadgeContainer
+                    }
                     values={tabConfig.tabNames}
                     selectedIndex={this.state.selectedIndex}
                     onTabPress={this.onIndexChange.bind(this)}
@@ -378,8 +393,11 @@ class BotStoreScreen extends React.Component {
         Actions.botList({
             data: this.state.botsData,
             title: 'Marketplace',
-            typeScreen: 'search'
+            typeScreen: 'search',
+            searchText: this.state.searchString
         });
+
+        this.setState({ searchString: '' });
     }
 
     render() {
@@ -438,6 +456,7 @@ class BotStoreScreen extends React.Component {
                     <TextInput
                         style={styles.input}
                         placeholder="Search apps"
+                        value={this.state.searchString}
                         onChangeText={searchString => {
                             this.setState({ searchString });
                         }}
@@ -448,7 +467,9 @@ class BotStoreScreen extends React.Component {
                 {this.state.showNewProvider && (
                     <NewProviderPopup
                         canelNewProvider={this.handleCancelNewProvider}
+                        onSubmittingCode={this.qrCodeSubmit}
                         onSubmit={this.onSubmit}
+                        qrCode={this.state.qrCodeData}
                     />
                 )}
                 <StatusBar
