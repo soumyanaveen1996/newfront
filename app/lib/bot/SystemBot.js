@@ -134,32 +134,32 @@ export const SYSTEM_BOT_MANIFEST = {
         userDomain: 'frontmai',
         version: '1.5.0'
     },
-    // 'domMgmt-bot': {
-    //     allowResetConversation: 'false',
-    //     botId: 'domMgmtBot',
-    //     botName: 'Sign in to a new Provider',
-    //     botUrl: 'botfarm/frontmai/domMgmtBot/1.3.0/domMgmtBot.js',
-    //     category: [],
-    //     dependencies: {
-    //         agentGuardService: {
-    //             remote: true,
-    //             url:
-    //                 'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-    //             version: '1.2.0'
-    //         },
-    //         authContext: {
-    //             remote: true,
-    //             url: 'botfarm/rc/frontmai/authContext/1.4.0/authContext.js',
-    //             version: '1.4.0'
-    //         }
-    //     },
-    //     description: 'Onboarding bot for Frontm',
-    //     logoUrl: botLogoUrl('AuthenticationLogo.png'),
-    //     slug: 'domMgmt-bot',
-    //     systemBot: true,
-    //     userDomain: 'frontmai',
-    //     version: '1.3.0'
-    // },
+    'domMgmt-bot': {
+        allowResetConversation: 'false',
+        botId: 'domMgmtBot',
+        botName: 'Sign in to a new Provider',
+        botUrl: 'botfarm/frontmai/domMgmtBot/1.3.0/domMgmtBot.js',
+        category: [],
+        dependencies: {
+            agentGuardService: {
+                remote: true,
+                url:
+                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+                version: '1.2.0'
+            },
+            authContext: {
+                remote: true,
+                url: 'botfarm/rc/frontmai/authContext/1.4.0/authContext.js',
+                version: '1.4.0'
+            }
+        },
+        description: 'Onboarding bot for Frontm',
+        logoUrl: botLogoUrl('AuthenticationLogo.png'),
+        slug: 'domMgmt-bot',
+        systemBot: true,
+        userDomain: 'frontmai',
+        version: '1.3.0'
+    },
     'backgroundTask-bot': {
         allowResetConversation: 'false',
         botId: 'BackgroundTaskBot',

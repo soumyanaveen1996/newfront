@@ -128,7 +128,7 @@ export default class Dialler extends React.Component {
             return [PSTN_CALL.SAT_CALL];
         }
         if (number.startsWith('008816') || number.startsWith('+8816')) {
-            return [PSTN_CALL.NOT_SUPPORTED, I18n.t('Iridium_message')];
+            return [PSTN_CALL.SAT_CALL];
         }
         if (number.startsWith('00882') || number.startsWith('+882')) {
             return [PSTN_CALL.NOT_SUPPORTED, I18n.t('Thuraya_message')];
@@ -152,24 +152,31 @@ export default class Dialler extends React.Component {
             const { error, content } = data;
             if (error === 0) {
                 const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
+                let callingNumber;
+                if (number.startsWith('00870') || number.startsWith('00816')) {
+                    callingNumber = number.substring(2);
+                }
+                if (number.startsWith('+870') || number.startsWith('+8816')) {
+                    callingNumber = number.substring(1);
+                }
 
-                if (number.startsWith('00870')) {
-                    return [
-                        null,
-                        `${SAT_PHONE_NUM}${SAT_PHONE_PIN}${number.substring(2)}`
-                    ];
-                }
-                if (number.startsWith('+870')) {
-                    return [
-                        null,
-                        `${SAT_PHONE_NUM}${SAT_PHONE_PIN}${number.substring(1)}`
-                    ];
-                }
+                return {
+                    error: null,
+                    sat_phone_number: SAT_PHONE_NUM,
+                    sat_phone_pin: SAT_PHONE_PIN,
+                    phone_number: callingNumber
+                };
             } else {
-                return [error, null];
+                return {
+                    error,
+                    phoneNumber: null
+                };
             }
         } catch (error) {
-            return [error, null];
+            return {
+                error,
+                phoneNumber: null
+            };
         }
     }
     async call() {
@@ -202,7 +209,12 @@ export default class Dialler extends React.Component {
             }
             const user = await Auth.getUser();
             if (call_type === PSTN_CALL.SAT_CALL) {
-                [error, toNumber] = await this.getSatelliteCallNumber(
+                const {
+                    error,
+                    sat_phone_number,
+                    sat_phone_pin,
+                    phone_number
+                } = await this.getSatelliteCallNumber(
                     this.state.dialledNumber,
                     user
                 );
@@ -210,6 +222,18 @@ export default class Dialler extends React.Component {
                     Alert.alert('Unable to Call number');
                     return;
                 }
+                toNumber = sat_phone_number;
+                this.setState({
+                    satCall: true,
+                    satCallPin: sat_phone_pin,
+                    call_to: phone_number
+                });
+            } else {
+                this.setState({
+                    satCall: false,
+                    satCallPin: null,
+                    call_to: null
+                });
             }
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
@@ -279,6 +303,13 @@ export default class Dialler extends React.Component {
     }
 
     connectionDidConnectHandler(data) {
+        if (data.call_state === 'CONNECTED' && this.state.satCall) {
+            TwilioVoice.sendDigits(
+                `wwwwwwwwwwwww1wwwwwww${
+                    this.state.satCallPin
+                }wwwwwwwwwwwwwwww9wwwwwwwwwwwwww${this.state.call_to}`
+            );
+        }
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             const intervalId = setInterval(() => {
                 this.setState({ callTime: this.state.callTime + 1 });
@@ -297,7 +328,10 @@ export default class Dialler extends React.Component {
             diallerState: DiallerState.initial,
             dialledNumber: '',
             dialledDigits: '',
-            intervalId: null
+            intervalId: null,
+            satCall: false,
+            satCallPin: null,
+            call_to: null
         });
         Actions.pop();
         setTimeout(
