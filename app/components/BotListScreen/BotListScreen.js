@@ -26,7 +26,7 @@ export default class BotListScreen extends React.Component {
             botsData: this.props.data,
             type: this.props.typeScreen,
             countResults: this.props.data.length,
-            searchString: this.props.searchText
+            searchString: this.props.searchText || ''
         };
     }
 

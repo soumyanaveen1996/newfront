@@ -158,8 +158,9 @@ class AddContacts extends React.Component {
         this.props.setParticipants(this.state.contacts);
         Actions.pop();
     };
-    toggleSelectContacts = index => {
+    toggleSelectContacts = elem => {
         let array = [...this.state.contacts];
+        const index = R.findIndex(R.propEq('userId', elem.userId))(array);
         array[index].selected = !array[index].selected;
         this.setState({
             contacts: array
@@ -258,9 +259,7 @@ class AddContacts extends React.Component {
                                             borderRadius={6}
                                             height={30}
                                             onPress={() => {
-                                                this.toggleSelectContacts(
-                                                    index
-                                                );
+                                                this.toggleSelectContacts(elem);
                                             }}
                                         />
                                     </View>
@@ -286,7 +285,7 @@ class AddContacts extends React.Component {
                                 return (
                                     <TouchableOpacity
                                         onPress={() =>
-                                            this.toggleSelectContacts(index)
+                                            this.toggleSelectContacts(elem)
                                         }
                                         style={styles.contactContainer}
                                         key={elem.userId}
