@@ -35,17 +35,25 @@ const styles = StyleSheet.create({
         right: 0
     },
     bottomLayer: {
-        padding: 10,
-        bottom: 5,
-        backgroundColor: GlobalColors.accent,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center'
+        paddingVertical: 20,
+        paddingHorizontal: 28,
+        backgroundColor: GlobalColors.white,
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: GlobalColors.translucentDark,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
     },
     bottomLayerText: {
-        fontSize: 14,
-        color: GlobalColors.white,
-        textAlign: 'center'
+        fontSize: 16,
+        color: GlobalColors.black,
+        textAlign: 'left',
+        marginLeft: 20
     },
     doneButton: {
         position: 'absolute',

@@ -8,6 +8,7 @@ import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import com.mapbox.rctmgl.RCTMGLPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
 import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
@@ -49,7 +50,6 @@ import com.facebook.FacebookSdk;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mapbox.rctmgl.RCTMGLPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

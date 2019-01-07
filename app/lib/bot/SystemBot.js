@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.2.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.3.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,7 +46,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.2.0'
+        version: '1.3.0'
     },
     'onboarding-bot': {
         allowResetConversation: 'false',
@@ -75,91 +75,91 @@ export const SYSTEM_BOT_MANIFEST = {
         userDomain: 'frontmai',
         version: '1.11.0'
     },
-    'contacts-bot': {
-        allowResetConversation: 'false',
-        botId: '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
-        botName: 'Address Book Management',
-        botUrl: 'botfarm/frontmai/contactsBot/1.2.0/contactsBot.js',
-        category: [],
-        dependencies: {
-            agentGuardService: {
-                remote: 'true',
-                url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
-            },
-            authContext: {
-                remote: 'true',
-                url: 'botfarm/rc/frontmai/authContext/1.0.0/authContext.js',
-                version: '1.0.0'
-            },
-            autoRenewConversationContext: {
-                remote: 'true',
-                url:
-                    'botfarm/rc/frontmai/autoRenewConversationContext/1.0.0/autoRenewConversationContext.js',
-                version: '1.0.0'
-            }
-        },
-        description: 'Bot to manage your personal address book',
-        logoUrl: botLogoUrl('AddressBookLogo.png'),
-        slug: 'contacts-bot',
-        systemBot: true,
-        userDomain: 'frontmai',
-        version: '1.2.0'
-    },
-    'channels-bot': {
-        allowResetConversation: 'false',
-        botId: 'de3a7fe6-b2a7-4468-8099-40c57848387d',
-        botName: 'Channels',
-        botUrl: 'botfarm/frontmai/channelsBot/1.5.0/channelsBot.js',
-        category: [],
-        dependencies: {
-            agentGuardService: {
-                remote: true,
-                url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
-            },
-            authContext: {
-                remote: true,
-                url: 'botfarm/rc/frontmai/authContext/1.0.0/authContext.js',
-                version: '1.0.0'
-            }
-        },
-        description: 'channels bot',
-        featured: true,
-        logoUrl: botLogoUrl('ChannelsBotLogo.png'),
-        slug: 'channels-bot',
-        systemBot: true,
-        userDomain: 'frontmai',
-        version: '1.5.0'
-    },
-    'domMgmt-bot': {
-        allowResetConversation: 'false',
-        botId: 'domMgmtBot',
-        botName: 'Sign in to a new Provider',
-        botUrl: 'botfarm/frontmai/domMgmtBot/1.3.0/domMgmtBot.js',
-        category: [],
-        dependencies: {
-            agentGuardService: {
-                remote: true,
-                url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
-            },
-            authContext: {
-                remote: true,
-                url: 'botfarm/rc/frontmai/authContext/1.4.0/authContext.js',
-                version: '1.4.0'
-            }
-        },
-        description: 'Onboarding bot for Frontm',
-        logoUrl: botLogoUrl('AuthenticationLogo.png'),
-        slug: 'domMgmt-bot',
-        systemBot: true,
-        userDomain: 'frontmai',
-        version: '1.3.0'
-    },
+    // 'contacts-bot': {
+    //     allowResetConversation: 'false',
+    //     botId: '98ff14b8-6373-417f-bcdf-a9855ebdfbe7',
+    //     botName: 'Address Book Management',
+    //     botUrl: 'botfarm/frontmai/contactsBot/1.2.0/contactsBot.js',
+    //     category: [],
+    //     dependencies: {
+    //         agentGuardService: {
+    //             remote: 'true',
+    //             url:
+    //                 'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+    //             version: '1.2.0'
+    //         },
+    //         authContext: {
+    //             remote: 'true',
+    //             url: 'botfarm/rc/frontmai/authContext/1.0.0/authContext.js',
+    //             version: '1.0.0'
+    //         },
+    //         autoRenewConversationContext: {
+    //             remote: 'true',
+    //             url:
+    //                 'botfarm/rc/frontmai/autoRenewConversationContext/1.0.0/autoRenewConversationContext.js',
+    //             version: '1.0.0'
+    //         }
+    //     },
+    //     description: 'Bot to manage your personal address book',
+    //     logoUrl: botLogoUrl('AddressBookLogo.png'),
+    //     slug: 'contacts-bot',
+    //     systemBot: true,
+    //     userDomain: 'frontmai',
+    //     version: '1.2.0'
+    // },
+    // 'channels-bot': {
+    //     allowResetConversation: 'false',
+    //     botId: 'de3a7fe6-b2a7-4468-8099-40c57848387d',
+    //     botName: 'Channels',
+    //     botUrl: 'botfarm/frontmai/channelsBot/1.5.0/channelsBot.js',
+    //     category: [],
+    //     dependencies: {
+    //         agentGuardService: {
+    //             remote: true,
+    //             url:
+    //                 'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+    //             version: '1.2.0'
+    //         },
+    //         authContext: {
+    //             remote: true,
+    //             url: 'botfarm/rc/frontmai/authContext/1.0.0/authContext.js',
+    //             version: '1.0.0'
+    //         }
+    //     },
+    //     description: 'channels bot',
+    //     featured: true,
+    //     logoUrl: botLogoUrl('ChannelsBotLogo.png'),
+    //     slug: 'channels-bot',
+    //     systemBot: true,
+    //     userDomain: 'frontmai',
+    //     version: '1.5.0'
+    // },
+    // 'domMgmt-bot': {
+    //     allowResetConversation: 'false',
+    //     botId: 'domMgmtBot',
+    //     botName: 'Sign in to a new Provider',
+    //     botUrl: 'botfarm/frontmai/domMgmtBot/1.3.0/domMgmtBot.js',
+    //     category: [],
+    //     dependencies: {
+    //         agentGuardService: {
+    //             remote: true,
+    //             url:
+    //                 'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
+    //             version: '1.2.0'
+    //         },
+    //         authContext: {
+    //             remote: true,
+    //             url: 'botfarm/rc/frontmai/authContext/1.4.0/authContext.js',
+    //             version: '1.4.0'
+    //         }
+    //     },
+    //     description: 'Onboarding bot for Frontm',
+    //     logoUrl: botLogoUrl('AuthenticationLogo.png'),
+    //     slug: 'domMgmt-bot',
+    //     systemBot: true,
+    //     userDomain: 'frontmai',
+    //     version: '1.3.0'
+    // },
     'backgroundTask-bot': {
         allowResetConversation: 'false',
         botId: 'BackgroundTaskBot',

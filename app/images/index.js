@@ -82,6 +82,7 @@ const images = {
     map_arrival_point: require('./mapbox/arrival-point.png'),
     maps_maritime_icon: require('./mapbox/maps-maritime-icon.png'),
     current_location_inactive: require('./mapbox/current-location-inactive.png'),
+    map_pin: require('./mapbox/map-pin.png'),
     qr_code_icon: require('./qr-code-icon/qr-code-icon.png')
 };
 

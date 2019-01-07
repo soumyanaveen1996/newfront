@@ -61,6 +61,23 @@ export default class LocationPicker extends React.Component {
         Actions.pop();
     }
 
+    sendCurrentLocation() {
+        let userPosition;
+        navigator.geolocation.getCurrentPosition(position => {
+            userPosition = [
+                position.coords.longitude,
+                position.coords.latitude
+            ];
+            this.setState({ coordinate: userPosition });
+            if (this.props.onLocationPicked) {
+                this.props.onLocationPicked({
+                    coordinate: this.state.coordinate
+                });
+            }
+            Actions.pop();
+        });
+    }
+
     renderMarker(markers) {
         if (!this.state || !this.state.coordinate) {
             return;
@@ -147,14 +164,14 @@ export default class LocationPicker extends React.Component {
     };
 
     renderBottomLayer() {
-        const message =
-            this.state && this.state.coordinate
-                ? I18n.t('Tap_on_Map_to_Change')
-                : I18n.t('Tap_on_Map');
         return (
-            <View style={styles.bottomLayer}>
-                <Text style={styles.bottomLayerText}>{message}</Text>
-            </View>
+            <TouchableOpacity
+                style={styles.bottomLayer}
+                onPress={this.sendCurrentLocation.bind(this)}
+            >
+                {Icons.userPositionActive()}
+                <Text style={styles.bottomLayerText}>Current Location</Text>
+            </TouchableOpacity>
         );
     }
 
@@ -290,10 +307,10 @@ export default class LocationPicker extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderBottomLayer()}
-            </View>
+            </SafeAreaView>
         );
     }
 }

@@ -73,6 +73,7 @@ import {
 } from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
+import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
@@ -281,14 +282,15 @@ class ChatBotScreen extends React.Component {
 
             let serverMessages = [];
             if (messages.length < 3) {
-                serverMessages = await this.loadOldMessagesFromServer();
+                serverMessages = await Promise.resolve(
+                    this.loadOldMessagesFromServer()
+                );
             }
 
             const allMessages = R.uniqWith(R.eqProps('key'), [
                 ...serverMessages,
                 ...messages
             ]);
-
             // 4. Update the state of the bot with the messages we have
             this.setState(
                 {
@@ -305,21 +307,17 @@ class ChatBotScreen extends React.Component {
                             this.state.messages,
                             this.botContext
                         );
-
                         // 6. If there are async results waiting - pass them on to the bot
                         self.flushPendingAsyncResults();
-
                         // 7. Now that bot is open - add a listener for async results coming in
                         self.eventSubscription = EventEmitter.addListener(
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
-
                         // 8. Mark new messages as read
                         MessageHandler.markUnreadMessagesAsRead(
                             this.getBotKey()
                         );
-
                         // 9. Stash the bot for nav back for on exit
                         this.props.navigation.setParams({
                             botDone: this.botDone.bind(this)
@@ -332,7 +330,6 @@ class ChatBotScreen extends React.Component {
                     }
                 }
             );
-
             console.log('Props from Contacts Call', this.props);
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
@@ -711,7 +708,6 @@ class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
-
         this.stopWaiting();
         this.countMessage(message);
 
@@ -724,7 +720,11 @@ class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
+                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
         ) {
             this.updateChat(message);
         } else if (
@@ -738,10 +738,6 @@ class ChatBotScreen extends React.Component {
             } else {
                 this.fireSlider(message);
             }
-        } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
-        ) {
-            this.openMap(message);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
@@ -791,9 +787,14 @@ class ChatBotScreen extends React.Component {
         this.setState({ showSlider: true, message: message });
     }
 
-    openMap(message) {
+    openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: message.getMessage() });
+        Actions.mapView({ mapData: mapData, isSharedLocation: false });
+    }
+
+    openMapForSharedLocation(mapData) {
+        Keyboard.dismiss();
+        Actions.mapView({ mapData: mapData, isSharedLocation: true });
     }
 
     openChart(message) {
@@ -1069,6 +1070,30 @@ class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={true}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
             ) {
                 return (
@@ -1106,14 +1131,40 @@ class ChatBotScreen extends React.Component {
                 );
             }
         } else {
-            return (
-                <ChatMessage
-                    showTime={item.showTime}
-                    message={message}
-                    alignRight
-                    user={this.user}
-                />
-            );
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else {
+                return (
+                    <ChatMessage
+                        showTime={item.showTime}
+                        message={message}
+                        alignRight
+                        user={this.user}
+                    />
+                );
+            }
         }
     }
 
@@ -1517,7 +1568,28 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
-        console.log(locationData);
+        const mapData = {
+            region: {
+                longitude: locationData.coordinate[0],
+                latitude: locationData.coordinate[1]
+            },
+            markers: [
+                {
+                    title: 'position',
+                    description: 'shared position',
+                    draggable: false,
+                    coordinate: {
+                        longitude: locationData.coordinate[0],
+                        latitude: locationData.coordinate[1]
+                    }
+                }
+            ]
+        };
+        message = new Message();
+        message.locationMessage(mapData);
+        message.messageByBot(false);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
     }
 
     onOptionSelected(key) {
