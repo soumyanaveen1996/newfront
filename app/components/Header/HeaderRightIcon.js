@@ -6,8 +6,6 @@ import Icons from '../../config/icons';
 export default class HeaderRightIcon extends React.Component {
     render() {
         var { config, icon, image } = this.props;
-        console.log('on right icon click ', this.props.onPress);
-
         if (config) {
             return (
                 <TouchableOpacity

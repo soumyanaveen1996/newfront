@@ -440,6 +440,7 @@ class ContactsPicker extends React.Component {
             this.state.contactsData,
             section => section.title
         );
+
         if (this.state.contactsData && this.state.contactsData.length > 0) {
             return (
                 <KeyboardAvoidingView

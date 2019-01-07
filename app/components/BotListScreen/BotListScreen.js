@@ -25,8 +25,8 @@ export default class BotListScreen extends React.Component {
         this.state = {
             botsData: this.props.data,
             type: this.props.typeScreen,
-            countResults: this.props.data.length,
-            searchString: this.props.searchText || ''
+            searchString: this.props.searchText || '',
+            countResults: this.props.count
         };
     }
 
@@ -76,9 +76,10 @@ export default class BotListScreen extends React.Component {
 
     async updateText() {
         const searchBot = await Bot.searchBots(this.state.searchString);
+        let count = searchBot.length;
         this.setState({
             botsData: [...searchBot],
-            countResults: searchBot.length
+            countResults: count
         });
     }
 

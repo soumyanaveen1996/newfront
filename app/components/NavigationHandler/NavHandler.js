@@ -12,7 +12,7 @@ class NavHandler extends Component {
 
     componentDidCatch(error, errorInfo) {
         console.log('Caught an Error');
-        console.trace(errorInfo);
+        console.log(errorInfo);
         console.log(error);
     }
 

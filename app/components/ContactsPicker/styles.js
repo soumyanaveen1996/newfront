@@ -1,6 +1,11 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-import { SECTION_HEADER_HEIGHT } from './config';
+import {
+    SECTION_HEADER_HEIGHT,
+    SCREEN_WIDTH,
+    scrollViewConfig
+} from './config';
+
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
@@ -87,10 +92,23 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 17
     },
+    allSelectedContacts: {
+        flex: 1,
+        alignItems: 'flex-start',
+        paddingVertical: 20,
+        paddingHorizontal: 15
+    },
+    allContacts: {
+        backgroundColor: '#fff',
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 15
+    },
     contactItemImage: {
-        height: 26,
-        width: 26,
-        borderRadius: 13,
+        height: 40,
+        width: 40,
+        borderRadius: 20,
         marginRight: 17
     },
     contactItemDetailsContainer: {
@@ -439,6 +457,56 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(0, 189, 242, 1)',
         fontFamily: 'Roboto',
         fontSize: 16
+    },
+    contactSelectedContainer: {
+        backgroundColor: GlobalColors.transparent,
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 40,
+        marginBottom: 10,
+        alignItems: 'center',
+        padding: 5
+    },
+    contactContainer: {
+        backgroundColor: GlobalColors.white,
+        flexDirection: 'row',
+        width: SCREEN_WIDTH - 40,
+        height: 40,
+        marginBottom: 10,
+        alignItems: 'center',
+        padding: 5
+    },
+    filterButtonContainer: {
+        width: SCREEN_WIDTH,
+        marginVertical: 20,
+        height: 120,
+        alignItems: 'center'
+    },
+    doneButton: {
+        height: 40,
+        width: 300,
+        borderRadius: 10,
+        backgroundColor: 'rgba(0, 189, 242, 1)',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonContainerDone: {
+        backgroundColor: GlobalColors.white,
+        borderTopWidth: 1,
+        borderTopColor: GlobalColors.borderBottom,
+        height: 70,
+        width: '100%',
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    selectedChip: {
+        paddingBottom: wp('2%'),
+        paddingHorizontal: wp('2%')
+    },
+    chipFont: {
+        fontSize: wp('3.5%'),
+        color: 'rgba(102,102,102,1)'
     }
 });
 
