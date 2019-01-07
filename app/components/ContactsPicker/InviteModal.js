@@ -141,7 +141,8 @@ export default class InviteModal extends React.Component {
                                     }}
                                 >
                                     <Text style={styles.inviteText}>
-                                        Search FrontM users with name or email
+                                        Search FrontM users with name, email or
+                                        phone number
                                     </Text>
                                     <TouchableOpacity
                                         style={
@@ -213,14 +214,14 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 style={styles.addressBookContainerStyle}
                                 onPress={this.addNewContactScreen.bind(this)}
                             >
                                 <Text style={styles.addressBookStyle}>
                                     Or invite user from address book
                                 </Text>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

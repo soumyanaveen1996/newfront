@@ -413,7 +413,7 @@ class MainRouter extends React.Component {
                                         title={I18n.t('Bot_Store')}
                                     />
                                     <Scene
-                                        key={ROUTER_SCENE_KEYS.botList}
+                                        key={ROUTER_SCENE_KEYS.botListScreen}
                                         component={BotListScreen}
                                         title={I18n.t('Bots')}
                                     />

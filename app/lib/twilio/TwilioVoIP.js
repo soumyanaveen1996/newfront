@@ -84,7 +84,7 @@ export default class TwilioVoIP {
                 await TwilioVoice.initWithToken(accessToken);
 
                 await Twilio.enableVoIP(user);
-                console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
+                // console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
                         appName: 'FrontM' // Required param

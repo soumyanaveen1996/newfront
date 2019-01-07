@@ -5,10 +5,10 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    SafeAreaView,
     Keyboard,
     ScrollView
 } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import styles from './styles';
 import config from '../../config/config';
 import { Icons } from '../../config/icons';
@@ -18,30 +18,57 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 import FrontMAddedContactsPickerDataSource from './FrontMAddedContactsPickerDataSource';
+import Contacts from 'react-native-contacts';
 import {
     SECTION_HEADER_HEIGHT,
     searchBarConfig,
     addButtonConfig
 } from './config';
 import Icon from 'react-native-vector-icons/Feather';
+import ProfileImage from '../ProfileImage';
+import images from '../../images';
+import { RNChipView } from 'react-native-chip-view';
+const cancelImg = require('../../images/channels/cross-deselect-participant.png');
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
         super(props);
-        this.dataSource = new FrontMAddedContactsPickerDataSource(this);
         this.state = {
             contactsData: [],
-
+            searchText: '',
             keyboard: false
         };
     }
 
-    updateList = () => {
-        this.setState({ contactsData: this.dataSource.getData() });
-    };
+    componentWillMount() {
+        let contactArray = [];
+        Contacts.getAll((err, contacts) => {
+            if (err) {
+                throw err;
+            }
 
-    onDataUpdate() {
-        this.updateList();
+            contacts.forEach((data, index) => {
+                console.log('data for image ', data);
+
+                let contactObj = {
+                    idTemp: index,
+                    emails: [...data.emailAddresses],
+                    profileImage: data.thumbnailPath,
+                    userName: data.givenName.toLowerCase(),
+                    name: data.givenName + ' ' + data.familyName,
+                    phoneNumbers: [...data.phoneNumbers],
+                    selected: false
+                };
+
+                if (data.emailAddresses && data.emailAddresses.length > 0) {
+                    contactArray.push(contactObj);
+                }
+            });
+            this.setState({ contactsData: [...contactArray] }, () => {
+                console.log('al contacts ', this.state.contactsData);
+            });
+            // contacts returned
+        });
     }
 
     onSearchQueryChange(text) {
@@ -52,13 +79,104 @@ export default class AddressBookScreen extends React.Component {
             contactsList = this.dataSource.getFilteredData(text);
         }
         this.setState({ contactsData: contactsList }, () => {
-            console.log(this.state.contactsData);
+            console.log('searching ', this.state.contactsData);
         });
     }
 
+    sendInvitation = () => {
+        console.log('inivitation sent');
+    };
+
+    toggleSelectContacts = index => {
+        let array = [...this.state.contactsData];
+        array[index].selected = !array[index].selected;
+        this.setState({
+            contactsData: array
+        });
+    };
+
+    renderSelectedContacts = () => {
+        return this.state.contactsData.map((elem, index) => {
+            return elem && elem.selected ? (
+                <View style={styles.contactSelectedContainer} key={index}>
+                    <TouchableOpacity
+                        onPress={() => this.toggleSelectContacts(index)}
+                    >
+                        <Image style={{ marginRight: 10 }} source={cancelImg} />
+                    </TouchableOpacity>
+                    <ProfileImage
+                        placeholder={
+                            elem.profileImage && elem.profileImage !== ''
+                                ? elem.profileImage
+                                : images.user_image
+                        }
+                        style={styles.contactItemImage}
+                        placeholderStyle={styles.contactItemImage}
+                        resizeMode="cover"
+                    />
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flex: 1
+                        }}
+                    >
+                        <Text style={styles.participantName}>{elem.name}</Text>
+                    </View>
+                </View>
+            ) : null;
+        });
+    };
+
+    renderContacts = () => {
+        if (this.state.contactsData && this.state.contactsData.length > 0) {
+            return this.state.contactsData.map((elem, index) => {
+                return (
+                    <TouchableOpacity
+                        onPress={() => this.toggleSelectContacts(index)}
+                        style={styles.contactContainer}
+                        key={index}
+                    >
+                        <Image
+                            style={{ marginRight: 10 }}
+                            source={
+                                !elem.selected
+                                    ? images.checkmark_normal
+                                    : images.checkmark_selected
+                            }
+                        />
+                        <ProfileImage
+                            placeholder={
+                                elem.profileImage && elem.profileImage !== ''
+                                    ? elem.profileImage
+                                    : images.user_image
+                            }
+                            style={styles.contactItemImage}
+                            placeholderStyle={styles.contactItemImage}
+                            resizeMode="cover"
+                        />
+                        <View
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                flex: 1
+                            }}
+                        >
+                            <Text style={styles.participantName}>
+                                {elem.name}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                );
+            });
+        } else {
+            return null;
+        }
+    };
+
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.searchBar}>
                     <Icon
                         style={styles.searchIcon}
@@ -78,22 +196,30 @@ export default class AddressBookScreen extends React.Component {
                     />
                 </View>
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1, padding: 20 }}>
-                        <Text>Selected</Text>
+                    <View style={{ flex: 2 }}>
                         <ScrollView>
-                            <Text>Conatct</Text>
+                            <View style={styles.allSelectedContacts}>
+                                {this.renderSelectedContacts()}
+                            </View>
                         </ScrollView>
                     </View>
                     <View style={{ flex: 3, backgroundColor: '#fff' }}>
                         <ScrollView>
-                            <Text>Contacts</Text>
+                            <View style={styles.allContacts}>
+                                {this.renderContacts()}
+                            </View>
                         </ScrollView>
                     </View>
-                    <View style={{ height: 70, width: '100%', padding: 20 }}>
-                        <Text>DONE</Text>
-                    </View>
                 </View>
-            </View>
+                <View style={styles.buttonContainerDone}>
+                    <TouchableOpacity
+                        style={styles.doneButton}
+                        onPress={this.sendInvitation()}
+                    >
+                        <Text style={{ color: '#fff' }}>DONE</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
         );
     }
 }

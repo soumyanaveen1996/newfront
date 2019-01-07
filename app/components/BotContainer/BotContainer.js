@@ -121,7 +121,13 @@ export default class BotContainer extends React.Component {
         let selectedBots = this.state.allBots.filter(bot => {
             return this.state.botIds.indexOf(bot.botId) >= 0;
         });
-        Actions.botList({ data: selectedBots, title: title });
+        let count = selectedBots.length;
+
+        Actions.botListScreen({
+            data: selectedBots,
+            count: count,
+            title: title
+        });
     };
 
     collapseCurrent = () => {
@@ -146,7 +152,7 @@ export default class BotContainer extends React.Component {
         //     limitedBotData.push(this.state.botsData[0]);
         // }
 
-        if (this.props.botsData.length > 0) {
+        if (this.props.botsData && this.props.botsData.length > 0) {
             return (
                 <View
                     style={{
