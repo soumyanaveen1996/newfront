@@ -105,12 +105,11 @@ export default class ProfileImage extends React.Component {
                     style={this.state.style}
                     onLoad={this.onLoad}
                 />
-                {!this.state.loaded &&
-                    !this.state.source && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="small" />
-                        </View>
-                    )}
+                {!this.state.loaded && !this.state.source && (
+                    <View style={styles.loading}>
+                        <ActivityIndicator size="small" />
+                    </View>
+                )}
             </View>
         );
     }

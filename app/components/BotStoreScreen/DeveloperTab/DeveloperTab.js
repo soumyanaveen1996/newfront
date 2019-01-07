@@ -72,7 +72,7 @@ export default class DeveloperTab extends React.Component {
     //     let selectedBots = this.props.botsData.filter(bot => {
     //         return botsId.indexOf(bot.botId) >= 0;
     //     });
-    //     Actions.botList({ data: selectedBots, title: title });
+    //     Actions.botListScreen({ data: selectedBots, title: title });
     // };
 
     // onDomainMgmtTileClicked() {

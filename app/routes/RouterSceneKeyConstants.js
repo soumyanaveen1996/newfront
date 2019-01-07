@@ -19,7 +19,7 @@ const ROUTER_SCENE_KEYS = {
     form: 'form',
     botStore: 'botStore',
     botFilter: 'botFilter',
-    botList: 'botList',
+    botListScreen: 'botListScreen',
     barCodeScanner: 'barCodeScanner',
     botInfoScreen: 'botInfoScreen',
     launch: 'launch',

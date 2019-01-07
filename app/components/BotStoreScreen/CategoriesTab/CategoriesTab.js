@@ -49,7 +49,7 @@ export default class CategoriesTab extends React.Component {
             return botsId.indexOf(bot.botId) >= 0;
         });
 
-        Actions.botList({ data: selectedBots, title: title });
+        Actions.botListScreen({ data: selectedBots, title: title });
     };
 
     renderGridItem = (rowData, index) => {

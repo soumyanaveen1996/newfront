@@ -164,7 +164,7 @@ export default StyleSheet.create({
     },
     infoTable: {
         width: '100%',
-        height: 120,
+        height: 80,
         padding: 10,
         flexDirection: 'column'
     },

@@ -77,6 +77,8 @@ export default class BotInstallListItem extends React.Component {
                         sessionId: user.creds.sessionId
                     }
                 };
+                console.log('data to install ', options);
+
                 await Promise.resolve(Network(options));
                 await Bot.install(dceBot);
             }

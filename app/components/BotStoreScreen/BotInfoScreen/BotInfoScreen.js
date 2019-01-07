@@ -15,10 +15,9 @@ import { Actions } from 'react-native-router-flux';
 import { DURATION } from 'react-native-easy-toast';
 import utils from '../../../lib/utils';
 import dce from '../../../lib/dce';
-import Bot from '../../../lib/bot';
+import Bot from '../../../lib/bot/index';
 import config from '../../../config/config';
 import { Auth, Network } from '../../../lib/capability';
-import GlobalColors from '../../../config/styles';
 
 const BotInstallListItemStates = {
     INSTALLING: 'installing',
@@ -93,6 +92,8 @@ export default class BotInfoScreen extends React.Component {
     }
 
     async performBotInstallation(bot, update) {
+        console.log('will check', bot, update);
+
         if (!utils.isClientSupportedByBot(bot)) {
             Alert.alert(
                 I18n.t('Bot_load_failed_title'),
@@ -104,7 +105,7 @@ export default class BotInfoScreen extends React.Component {
         }
         try {
             const dceBot = dce.bot(bot);
-            if (update) {
+            if (update === BotInstallListItemStates.UPDATE) {
                 await Bot.update(dceBot);
             } else {
                 //first subscribe to the bot
@@ -122,6 +123,8 @@ export default class BotInfoScreen extends React.Component {
                         sessionId: user.creds.sessionId
                     }
                 };
+                console.log('data to install ', options);
+
                 await Promise.resolve(Network(options));
                 await Bot.install(dceBot);
             }
@@ -148,6 +151,8 @@ export default class BotInfoScreen extends React.Component {
             }
             this.setState({ status: BotInstallListItemStates.INSTALLED });
         } catch (e) {
+            console.log('error ', e);
+
             this.setState({ status: BotInstallListItemStates.NOT_INSTALLED });
             if (this.onBotInstallFailed) {
                 this.onBotInstallFailed();
@@ -156,7 +161,6 @@ export default class BotInfoScreen extends React.Component {
     }
 
     onBotInstalled = async () => {
-        await this.refresh();
         this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
     };
 
@@ -206,7 +210,7 @@ export default class BotInfoScreen extends React.Component {
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
                         style={styles.openButton}
-                        onPress={this.onBotClick.bind(this, this.props.bot)}
+                        onPress={this.onBotClick.bind(this, this.props.botInfo)}
                     >
                         <Text
                             allowFontScaling={false}
@@ -283,7 +287,7 @@ export default class BotInfoScreen extends React.Component {
                         {this.renderRightArea()}
                     </View>
                 </View>
-                <View style={styles.midContainer}>
+                {/* <View style={styles.midContainer}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -319,7 +323,7 @@ export default class BotInfoScreen extends React.Component {
                     <View style={styles.reviewContainer}>
                         <Text style={styles.allReviewText}>See all Review</Text>
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.bottomContainer}>
                     <View style={styles.informationHeader}>
                         <Text style={styles.headerInfoText}>Information</Text>
@@ -337,10 +341,10 @@ export default class BotInfoScreen extends React.Component {
                                 {bot.developer}
                             </Text>
                         </View>
-                        <View style={styles.rowView}>
+                        {/* <View style={styles.rowView}>
                             <Text style={styles.textInfoTitle}>Size</Text>
                             <Text style={styles.textInfoTitle}>4 MB</Text>
-                        </View>
+                        </View> */}
                     </View>
                 </View>
             </View>

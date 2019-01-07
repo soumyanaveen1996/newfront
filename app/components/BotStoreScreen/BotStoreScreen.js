@@ -374,7 +374,7 @@ class BotStoreScreen extends React.Component {
     }
 
     // onTileCilcked = title => {
-    //     Actions.botList({
+    //     Actions.botListScreen({
     //         data: this.state.catalogData.bots,
     //         title: title,
     //         typeScreen: 'search'
@@ -390,7 +390,7 @@ class BotStoreScreen extends React.Component {
             };
         });
 
-        Actions.botList({
+        Actions.botListScreen({
             data: this.state.botsData,
             title: 'Marketplace',
             typeScreen: 'search',
