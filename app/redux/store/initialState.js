@@ -12,7 +12,8 @@ const initialState = {
         refreshTimeline: true,
         refreshChannels: true,
         refreshContacts: true,
-        refreshUserEmail: true
+        refreshUserEmail: true,
+        network: 'full'
     },
     botState: {
         id: null

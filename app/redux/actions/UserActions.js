@@ -58,3 +58,8 @@ export const refreshUserEmail = payload => ({
     type: Actions.USER_EMAIL,
     payload
 });
+
+export const setNetwork = payload => ({
+    type: Actions.SET_NETWORK,
+    payload
+});

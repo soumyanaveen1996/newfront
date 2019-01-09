@@ -566,11 +566,7 @@ export function ellipsisMessageBubbleStyle(alignRight = false, imageSource) {
 
 export const ChatStatusBarStyles = StyleSheet.create({
     chatStatusBar: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 24,
+        height: 25,
         flexDirection: 'row',
         backgroundColor: 'rgb(192, 201, 208)',
         alignItems: 'center',
