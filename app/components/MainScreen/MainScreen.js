@@ -203,19 +203,6 @@ class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('>>>>>>> ');
-        PushNotification.configure({
-            onRegister: () => {},
-            onNotification: notification => {
-                console.log(
-                    '>>>>>>> ' + JSON.stringify(notification, undefined, 2)
-                );
-                if (!notification.foreground && notification.userInteraction) {
-                    Actions.replace(ROUTER_SCENE_KEYS.timeline);
-                }
-                NetworkHandler.readLambda();
-            }
-        });
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime) {
             this.setState({ firstTimer: true }, () => {
