@@ -61,6 +61,7 @@ import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
+import PushNotification from 'react-native-push-notification';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -202,6 +203,19 @@ class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        console.log('>>>>>>> ');
+        PushNotification.configure({
+            onRegister: () => {},
+            onNotification: notification => {
+                console.log(
+                    '>>>>>>> ' + JSON.stringify(notification, undefined, 2)
+                );
+                if (!notification.foreground && notification.userInteraction) {
+                    Actions.replace(ROUTER_SCENE_KEYS.timeline);
+                }
+                NetworkHandler.readLambda();
+            }
+        });
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime) {
             this.setState({ firstTimer: true }, () => {
