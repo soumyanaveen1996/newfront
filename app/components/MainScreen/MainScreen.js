@@ -543,29 +543,29 @@ class MainScreen extends React.Component {
             );
         } else {
             return (
-                <View
-                    style={
-                        showNetworkStatusBar &&
-                        (network === 'none' || network === 'satellite')
-                            ? MainScreenStyles.statusBar
-                            : MainScreenStyles.botListContainer
-                    }
-                >
-                    <BotList
-                        ref={connectedBot => {
-                            this.botList = connectedBot
-                                ? connectedBot.getWrappedInstance()
-                                : null;
-                        }}
-                        onBack={this.onBack.bind(this)}
-                        bots={this.state.bots}
-                        setFavorite={this.setConversationFavorite}
-                        unsetFavorite={this.setConversationUnFavorite}
-                        searchString={this.state.searchString}
-                        onSearch={this.onSearch}
-                        setNoChats={this.setNoChats}
-                    />
-                </View>
+                // <View
+                //     style={
+                //         showNetworkStatusBar &&
+                //         (network === 'none' || network === 'satellite')
+                //             ? MainScreenStyles.statusBar
+                //             : MainScreenStyles.botListContainer
+                //     }
+                // >
+                <BotList
+                    ref={connectedBot => {
+                        this.botList = connectedBot
+                            ? connectedBot.getWrappedInstance()
+                            : null;
+                    }}
+                    onBack={this.onBack.bind(this)}
+                    bots={this.state.bots}
+                    setFavorite={this.setConversationFavorite}
+                    unsetFavorite={this.setConversationUnFavorite}
+                    searchString={this.state.searchString}
+                    onSearch={this.onSearch}
+                    setNoChats={this.setNoChats}
+                />
+                // </View>
             );
         }
     }
@@ -578,13 +578,15 @@ class MainScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <BackgroundImage>
+                <BackgroundImage
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                >
                     {this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
                     )}
-                    <StatusBar
+                    {/* <StatusBar
                         hidden={false}
                         backgroundColor="grey"
                         barStyle={
@@ -592,9 +594,11 @@ class MainScreen extends React.Component {
                                 ? 'dark-content'
                                 : 'light-content'
                         }
-                    />
-                    <NetworkStatusNotchBar />
-                    {this.renderMain()}
+                    /> */}
+                    <View>
+                        <NetworkStatusNotchBar />
+                    </View>
+                    <View>{this.renderMain()}</View>
                 </BackgroundImage>
             </SafeAreaView>
         );
