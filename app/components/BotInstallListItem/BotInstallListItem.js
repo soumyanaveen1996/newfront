@@ -77,7 +77,7 @@ export default class BotInstallListItem extends React.Component {
                         sessionId: user.creds.sessionId
                     }
                 };
-                console.log('data to install ', options);
+                // console.log('data to install ', options);
 
                 await Promise.resolve(Network(options));
                 await Bot.install(dceBot);
@@ -163,7 +163,7 @@ export default class BotInstallListItem extends React.Component {
     }
     openBotInfo = botInfo => {
         const botStatus = this.state.status;
-        console.log(botStatus);
+        // console.log(botStatus);
 
         Actions.botInfoScreen({
             botInfo: botInfo,
@@ -174,6 +174,7 @@ export default class BotInstallListItem extends React.Component {
 
     render() {
         const bot = this.props.bot;
+
         return (
             <TouchableOpacity
                 onPress={() => {

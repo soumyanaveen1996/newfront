@@ -521,6 +521,8 @@ export default class Auth {
                 if (user) {
                     user.info.userName = details.userName || user.info.userName;
                     user.info.phoneNumbers = details.phoneNumbers || {};
+                    user.info.searchState = details.searchState || false;
+                    user.info.shareState = details.shareState || false;
 
                     // user.info.surname = details.surname || user.info.surname;
                     // user.info.givenName =
@@ -531,6 +533,38 @@ export default class Auth {
                     reject('No valid user session');
                 }
             });
+        });
+
+    static updatingUserProfile = userDetails =>
+        new Promise((resolve, reject) => {
+            return Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'PUT',
+                            url: `${config.proxy.protocol}${config.proxy.host}${
+                                config.proxy.userInfo
+                            }`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: userDetails
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    if (
+                        response.data.content &&
+                        response.data.content.length > 0
+                    ) {
+                        return Promise.all(response.data.content);
+                    } else {
+                        reject(null);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
         });
 
     static setUserSetting = (key, value) =>

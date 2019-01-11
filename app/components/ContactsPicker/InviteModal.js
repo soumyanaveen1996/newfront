@@ -84,7 +84,6 @@ export default class InviteModal extends React.Component {
     }
 
     addNewContactScreen() {
-        console.log('go to add new conatct');
         this.props.setVisible(false);
         Actions.addressBookScreen({ title: 'Add new contacts' });
     }

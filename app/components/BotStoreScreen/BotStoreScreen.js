@@ -134,8 +134,6 @@ class BotStoreScreen extends React.Component {
     }
 
     async updateCatalog() {
-        console.log('Catalog Updated');
-
         let catalog = await Bot.getCatalog();
         this.setState({
             showSearchBar: false,
@@ -383,15 +381,30 @@ class BotStoreScreen extends React.Component {
 
     async updateText() {
         const searchBot = await Bot.searchBots(this.state.searchString);
+
+        const filteredSearchBot = [];
+
+        for (var arr in this.state.catalogData.bots) {
+            for (var filter in searchBot) {
+                if (
+                    this.state.catalogData.bots[arr].botId ===
+                    searchBot[filter].botId
+                ) {
+                    filteredSearchBot.push(this.state.catalogData.bots[arr]);
+                }
+            }
+        }
+
         this.setState(() => {
             return {
-                botsData: [...searchBot],
+                botsData: [...filteredSearchBot],
                 countResults: searchBot.length
             };
         });
 
         Actions.botListScreen({
             data: this.state.botsData,
+            allBotsData: this.state.catalogData.bots,
             title: 'Marketplace',
             typeScreen: 'search',
             searchText: this.state.searchString

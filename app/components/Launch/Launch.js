@@ -157,7 +157,7 @@ export default class Splash extends React.Component {
                         AfterLogin.executeAfterLogin();
                         this.listenToEvents();
                         const gState = Store.getState();
-                        console.log(gState);
+                        console.log('gState ', gState);
                         const { call_state } = gState;
 
                         if (call_state && call_state === 'PENDING') {
