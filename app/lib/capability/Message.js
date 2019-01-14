@@ -14,6 +14,7 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_LIST: 'list',
     MESSAGE_TYPE_SLIDER: 'slider',
     MESSAGE_TYPE_BUTTON: 'button',
+    MESSAGE_TYPE_FORM2: 'form2',
     MESSAGE_TYPE_FORM: 'form',
     MESSAGE_TYPE_HTML: 'html',
     MESSAGE_TYPE_IMAGE: 'image',
@@ -54,7 +55,8 @@ export const IntToMessageTypeConstants = {
     260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
     270: MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION,
     280: MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION,
-    290: MessageTypeConstants.MESSAGE_TYPE_LOCATION
+    290: MessageTypeConstants.MESSAGE_TYPE_LOCATION,
+    300: MessageTypeConstants.MESSAGE_TYPE_FORM2
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -213,6 +215,14 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE;
     };
 
+    form2Message = (formData, options) => {
+        this._msg = JSON.stringify(formData || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM2;
+    };
+
     formMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -304,6 +314,7 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2 ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
@@ -369,6 +380,10 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
             return this.getMessage().actionText;
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ) {
+            return 'form2';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
@@ -455,6 +470,7 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2 ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE ||

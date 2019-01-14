@@ -301,6 +301,16 @@ export const Icons = {
         'ionicon',
         15,
         GlobalColors.sideButtons
+    ),
+
+    //FORM
+    formMessageArrow: icon(
+        'ios-arrow-forward',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons,
+        'red',
+        '500'
     )
 };
 

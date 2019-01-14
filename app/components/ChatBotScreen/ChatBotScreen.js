@@ -79,6 +79,7 @@ import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
+import { Form2Message } from '../Form2Message';
 
 const R = require('ramda');
 
@@ -1066,6 +1067,7 @@ class ChatBotScreen extends React.Component {
     } */
 
     renderItem({ item }) {
+        console.log(item);
         const message = item.message;
         if (message.isMessageByBot()) {
             if (
@@ -1112,6 +1114,16 @@ class ChatBotScreen extends React.Component {
                         body={message.getMessage().body}
                         buttons={message.getMessage().buttons}
                         onButtonClick={this.onButtonDone.bind()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM2
+            ) {
+                return (
+                    <Form2Message
+                        formData={message.getMessage()}
+                        messageData={message.getMessageOptions()}
                     />
                 );
             } else {
@@ -1827,6 +1839,87 @@ class ChatBotScreen extends React.Component {
         const AllMessages = [...removeButtonMessages, ...lastMessage];
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
+        this.testMessage = {
+            key: '123',
+            message: new Message()
+        };
+        const formData = [
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'text_field',
+                value: '',
+                mandatory: true //Default false
+            },
+            {
+                id: 'field name',
+                title: 'field label text area',
+                type: 'text_area'
+            },
+            {
+                id: 'field name check',
+                title: 'field label check',
+                type: 'checkbox',
+                options: ['box 1', 'box 2']
+            },
+            {
+                id: 'field name check 2',
+                title: 'field label check 2',
+                type: 'checkbox',
+                options: ['box 4', 'box 5']
+            },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'radiobutton',
+                options: ['option 1', 'option 2', 'etc']
+            },
+            // {
+            //     id: 'field name',
+            //     title: 'field label',
+            //     type: 'dropdown',
+            //     options: ['option 1', 'option 2', 'etc'],
+            //     value: 'option 1'
+            // },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'switch',
+                value: false //Default false
+            }
+            // {
+            //     id: 'field name',
+            //     title: 'field label',
+            //     type: 'slider',
+            //     value: 0 //Default 0 percent, maximum 100
+            // },
+            // {
+            //     id: 'field name',
+            //     title: 'field label',
+            //     type: 'date',
+            //     value: 0 //Default 0 percent, maximum 100
+            // },
+            // {
+            //     id: 'field name',
+            //     title: 'field label',
+            //     type: 'multi_selection',
+            //     options: ['option 1', 'option 2', 'etc']
+            // },
+            // {
+            //     id: 'field name',
+            //     title: 'field label',
+            //     type: 'password_field'
+            // }
+        ];
+        const messageData = {
+            formId: 11111,
+            title: 'Vessel details',
+            description: 'Please fill the vessel details',
+            confirm: 'Save', //Default is Done
+            cancel: 'Cancel' //Default is Cancel
+        };
+        this.testMessage.message.messageByBot(true);
+        this.testMessage.message.form2Message(formData, messageData);
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
                 <BackgroundImage
@@ -1850,7 +1943,7 @@ class ChatBotScreen extends React.Component {
                                 this.chatList = list;
                                 this.checkForScrolling();
                             }}
-                            data={AllMessages}
+                            data={AllMessages.concat(this.testMessage)}
                             renderItem={this.renderItem.bind(this)}
                             onLayout={this.onChatListLayout.bind(this)}
                             refreshControl={
