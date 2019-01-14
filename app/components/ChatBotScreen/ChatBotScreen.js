@@ -1863,12 +1863,6 @@ class ChatBotScreen extends React.Component {
                 options: ['box 1', 'box 2']
             },
             {
-                id: 'field name check 2',
-                title: 'field label check 2',
-                type: 'checkbox',
-                options: ['box 4', 'box 5']
-            },
-            {
                 id: 'field name',
                 title: 'field label',
                 type: 'radiobutton',
@@ -1886,30 +1880,30 @@ class ChatBotScreen extends React.Component {
                 title: 'field label',
                 type: 'switch',
                 value: false //Default false
-            }
-            // {
-            //     id: 'field name',
-            //     title: 'field label',
-            //     type: 'slider',
-            //     value: 0 //Default 0 percent, maximum 100
-            // },
-            // {
-            //     id: 'field name',
-            //     title: 'field label',
-            //     type: 'date',
-            //     value: 0 //Default 0 percent, maximum 100
-            // },
+            },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'slider',
+                value: 0 //Default 0 percent, maximum 100
+            },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'date',
+                value: 0 //Default 0 percent, maximum 100
+            },
             // {
             //     id: 'field name',
             //     title: 'field label',
             //     type: 'multi_selection',
             //     options: ['option 1', 'option 2', 'etc']
             // },
-            // {
-            //     id: 'field name',
-            //     title: 'field label',
-            //     type: 'password_field'
-            // }
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'password_field'
+            }
         ];
         const messageData = {
             formId: 11111,

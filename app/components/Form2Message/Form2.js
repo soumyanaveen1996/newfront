@@ -45,7 +45,7 @@ export default class Form2 extends React.Component {
                 answer.value = fieldData.value || false;
                 break;
             case 'slider':
-                answer.value = 0;
+                answer.value = fieldData.value || 0;
                 break;
             case 'date':
                 //?
@@ -131,13 +131,37 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderSlider(content, key) {}
+    renderSlider(key) {
+        return (
+            <Slider
+                maximumValue={100}
+                minimumValue={0}
+                onValueChange={value => {
+                    this.answers[key].value = value;
+                    this.setState({ answers: this.answers });
+                }}
+                value={this.state.answers[key].value}
+            />
+        );
+    }
 
     renderDate(content) {}
 
     renderMultiselection(content) {}
 
-    renderPasswordField() {}
+    renderPasswordField(key) {
+        return (
+            <TextInput
+                onChangeText={text => {
+                    this.answers[key].value = text;
+                    // this.setState({ answers: this.answers })
+                }}
+                secureTextEntry={true}
+                textContentType="password"
+                // value={this.state.answers[key].value}
+            />
+        );
+    }
 
     renderField(fieldData, key) {
         let field;
@@ -161,7 +185,7 @@ export default class Form2 extends React.Component {
             field = this.renderSwitch(key);
             break;
         case 'slider':
-            field = this.renderSlider(fieldData.value, key);
+            field = this.renderSlider(key);
             break;
         case 'date':
             field = this.renderDate(fieldData.value, key);
