@@ -1893,12 +1893,12 @@ class ChatBotScreen extends React.Component {
                 type: 'date',
                 value: 0
             },
-            // {
-            //     id: 'field name',
-            //     title: 'field label',
-            //     type: 'multi_selection',
-            //     options: ['option 1', 'option 2', 'etc']
-            // },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'multi_selection',
+                options: ['option 1', 'option 2', 'etc']
+            },
             {
                 id: 'field name',
                 title: 'field label',

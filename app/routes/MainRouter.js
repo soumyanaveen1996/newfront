@@ -66,6 +66,7 @@ import CustomTab from '../components/CustomTab/CustomTab';
 import GlobalColors from '../config/styles';
 import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScreen';
 import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
+import { Multiselection } from '../components/Multiselection';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -464,6 +465,11 @@ class MainRouter extends React.Component {
                                     key={ROUTER_SCENE_KEYS.form2}
                                     title="Form"
                                     component={Form2}
+                                />
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.multiselection}
+                                    title="Multiple selection"
+                                    component={Multiselection}
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.locationPicker}

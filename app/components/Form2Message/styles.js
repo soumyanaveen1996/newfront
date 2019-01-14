@@ -1,6 +1,5 @@
 import { Platform, StyleSheet, Dimensions } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-import { ButtonStyle } from '../../lib/capability';
 
 export default (stylesheet = StyleSheet.create({
     //MESSAGE

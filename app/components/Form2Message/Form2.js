@@ -56,7 +56,7 @@ export default class Form2 extends React.Component {
                 answer.value = new Date(fieldData.value) || new Date(); //milliseconds. Use getTime() to get the milliseconds to send to backend
                 break;
             case 'multi_selection':
-                answer.value = _.map(fieldData.value, () => {
+                answer.value = _.map(fieldData.options, () => {
                     return false;
                 });
                 break;
@@ -259,7 +259,28 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderMultiselection(content) {}
+    renderMultiselection(content, key) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    Actions.multiselection({
+                        index: key,
+                        options: content,
+                        response: this.answers[key].value,
+                        onDone: this.onMultiselectionDone.bind(this)
+                    });
+                }}
+            >
+                <Text>Multiple selection</Text>
+                {Icons.formMessageArrow()}
+            </TouchableOpacity>
+        );
+    }
+
+    onMultiselectionDone(response, key) {
+        this.answers[key].value = response;
+        this.setState({ answers: this.answers });
+    }
 
     renderPasswordField(key) {
         return (
