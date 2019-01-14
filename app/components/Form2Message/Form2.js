@@ -6,7 +6,9 @@ import {
     SafeAreaView,
     TextInput,
     Switch,
-    Slider
+    Slider,
+    DatePickerIOS,
+    DatePickerAndroid
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -14,6 +16,7 @@ import Icons from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
 import { CheckBox } from 'react-native-elements';
 import { GlobalColors } from '../../config/styles';
+import Modal from 'react-native-modal';
 
 export default class Form2 extends React.Component {
     constructor(props) {
@@ -48,7 +51,7 @@ export default class Form2 extends React.Component {
                 answer.value = fieldData.value || 0;
                 break;
             case 'date':
-                //?
+                answer.value = new Date(fieldData.value) || new Date(); //milliseconds. Use getTime() to get the milliseconds to send to backend
                 break;
             case 'multi_selection':
                 answer.value = _.map(fieldData.value, () => {
@@ -63,7 +66,9 @@ export default class Form2 extends React.Component {
             this.answers.push(answer);
         });
         this.state = {
-            answers: this.answers
+            answers: this.answers,
+            dateModalVisible: false,
+            dateModalValue: new Date()
         };
     }
 
@@ -145,7 +150,52 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderDate(content) {}
+    renderDate(key) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.currentDateModalKey = key;
+                    this.setState({
+                        dateModalValue: this.answers[key].value,
+                        dateModalVisible: true
+                    });
+                }}
+            >
+                <Text>
+                    {this.state.answers[key].value.getDate() +
+                        '/' +
+                        this.state.answers[key].value.getMonth() +
+                        '/' +
+                        this.state.answers[key].value.getFullYear()}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderDateModalIOS() {
+        return (
+            <Modal
+                isVisible={this.state.dateModalVisible}
+                onBackdropPress={() => {
+                    this.setState({
+                        dateModalVisible: false,
+                        answers: this.answers
+                    });
+                }}
+                style={styles.dateModalIOS}
+            >
+                <DatePickerIOS
+                    style={styles.datePickerIOS}
+                    onDateChange={date => {
+                        this.answers[this.currentDateModalKey].value = date;
+                        this.setState({ dateModalValue: date });
+                    }}
+                    date={this.state.dateModalValue}
+                    mode="date"
+                />
+            </Modal>
+        );
+    }
 
     renderMultiselection(content) {}
 
@@ -188,7 +238,7 @@ export default class Form2 extends React.Component {
             field = this.renderSlider(key);
             break;
         case 'date':
-            field = this.renderDate(fieldData.value, key);
+            field = this.renderDate(key);
             break;
         case 'multi_selection':
             field = this.renderMultiselection(fieldData.options, key);
@@ -230,6 +280,8 @@ export default class Form2 extends React.Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                {this.renderDateModalIOS()}
+                {/* {this.renderDropdownModal()} */}
             </SafeAreaView>
         );
     }

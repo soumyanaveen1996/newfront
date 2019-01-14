@@ -56,5 +56,18 @@ export default (stylesheet = StyleSheet.create({
     f2CancelButton: {},
     f2CancelButtonText: {},
     f2DoneButton: {},
-    f2DoneButtonText: {}
+    f2DoneButtonText: {},
+
+    //FORM FIELDS
+
+    //MODALS
+    dateModalIOS: {
+        justifyContent: 'flex-end',
+        margin: 0
+    },
+    datePickerIOS: {
+        backgroundColor: GlobalColors.white,
+        height: '35%',
+        width: '100%'
+    }
 }));

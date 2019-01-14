@@ -1891,7 +1891,7 @@ class ChatBotScreen extends React.Component {
                 id: 'field name',
                 title: 'field label',
                 type: 'date',
-                value: 0 //Default 0 percent, maximum 100
+                value: 0
             },
             // {
             //     id: 'field name',
