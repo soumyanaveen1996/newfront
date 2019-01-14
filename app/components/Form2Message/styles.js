@@ -68,6 +68,24 @@ export default (stylesheet = StyleSheet.create({
     datePickerIOS: {
         backgroundColor: GlobalColors.white,
         height: '35%',
-        width: '100%'
+        width: '100%',
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
+    },
+    dropdownModal: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    dropdownPicker: {
+        width: '80%',
+        height: '40%',
+        borderRadius: 10,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        backgroundColor: GlobalColors.white
     }
 }));

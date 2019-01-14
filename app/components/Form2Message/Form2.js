@@ -8,7 +8,8 @@ import {
     Switch,
     Slider,
     DatePickerIOS,
-    DatePickerAndroid
+    DatePickerAndroid,
+    FlatList
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -38,11 +39,12 @@ export default class Form2 extends React.Component {
                 });
                 break;
             case 'radiobutton':
-                answer.value =
-                        fieldData.options.indexOf(fieldData.value) || null;
+                var v = fieldData.value;
+                answer.value = fieldData.options.indexOf(v); //index
                 break;
             case 'dropdown':
-                answer.value = 0;
+                var v = fieldData.value;
+                answer.value = fieldData.options.indexOf(v); //index
                 break;
             case 'switch':
                 answer.value = fieldData.value || false;
@@ -68,7 +70,10 @@ export default class Form2 extends React.Component {
         this.state = {
             answers: this.answers,
             dateModalVisible: false,
-            dateModalValue: new Date()
+            dateModalValue: new Date(),
+            dropdownModalVisible: false,
+            dropdownModalValue: null,
+            dropdownModalOptions: []
         };
     }
 
@@ -122,7 +127,61 @@ export default class Form2 extends React.Component {
         return options;
     }
 
-    renderDropdown(content, key) {}
+    renderDropdown(content, key) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.currentDropdownModalKey = key;
+                    this.setState({
+                        dropdownModalOptions: content,
+                        dropdownModalValue: this.answers[key].value, //index
+                        dropdownModalVisible: true
+                    });
+                }}
+            >
+                <Text>{content[this.state.answers[key].value]}</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    renderDropdownModal() {
+        return (
+            <Modal
+                isVisible={this.state.dropdownModalVisible}
+                onBackdropPress={() => {
+                    this.answers[
+                        this.currentDropdownModalKey
+                    ].value = this.state.dropdownModalValue;
+                    this.setState({
+                        dropdownModalVisible: false,
+                        answers: this.answers
+                    });
+                }}
+                style={styles.dropdownModal}
+                backdropOpacity={0.1}
+            >
+                <View style={styles.dropdownPicker}>
+                    <FlatList
+                        data={this.state.dropdownModalOptions}
+                        extraData={this.state}
+                        renderItem={({ item, index }) => (
+                            <CheckBox
+                                title={item}
+                                onIconPress={() => {
+                                    this.setState({
+                                        dropdownModalValue: index
+                                    });
+                                }}
+                                checked={
+                                    index === this.state.dropdownModalValue
+                                }
+                            />
+                        )}
+                    />
+                </View>
+            </Modal>
+        );
+    }
 
     renderSwitch(key) {
         return (
@@ -177,17 +236,20 @@ export default class Form2 extends React.Component {
             <Modal
                 isVisible={this.state.dateModalVisible}
                 onBackdropPress={() => {
+                    this.answers[
+                        this.currentDateModalKey
+                    ].value = this.state.dateModalValue;
                     this.setState({
                         dateModalVisible: false,
                         answers: this.answers
                     });
                 }}
                 style={styles.dateModalIOS}
+                backdropOpacity={0.1}
             >
                 <DatePickerIOS
                     style={styles.datePickerIOS}
                     onDateChange={date => {
-                        this.answers[this.currentDateModalKey].value = date;
                         this.setState({ dateModalValue: date });
                     }}
                     date={this.state.dateModalValue}
@@ -281,7 +343,7 @@ export default class Form2 extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {this.renderDateModalIOS()}
-                {/* {this.renderDropdownModal()} */}
+                {this.renderDropdownModal()}
             </SafeAreaView>
         );
     }

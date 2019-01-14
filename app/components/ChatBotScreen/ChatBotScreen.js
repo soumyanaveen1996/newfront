@@ -1868,13 +1868,13 @@ class ChatBotScreen extends React.Component {
                 type: 'radiobutton',
                 options: ['option 1', 'option 2', 'etc']
             },
-            // {
-            //     id: 'field name',
-            //     title: 'field label',
-            //     type: 'dropdown',
-            //     options: ['option 1', 'option 2', 'etc'],
-            //     value: 'option 1'
-            // },
+            {
+                id: 'field name',
+                title: 'field label',
+                type: 'dropdown',
+                options: ['option 1', 'option 2', 'etc'],
+                value: 'option 1'
+            },
             {
                 id: 'field name',
                 title: 'field label',
