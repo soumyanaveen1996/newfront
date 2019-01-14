@@ -32,6 +32,8 @@ const images = {
     btn_send: require('./chat/btn_send.png'),
     checkmark_normal: require('./checkbox-empty/checkbox-empty.png'),
     checkmark_selected: require('./checkbox-checked/checkbox-checked.png'),
+    contact_chat_btn: require('./contacts-chat-btn/contacts-chat-btn.png'),
+    clock_icon: require('./clock-icon/clock-icon.png'),
     btn_close_slider: { uri: 'purple_btn_close' },
     close_btn: require('./icons/cross-deselect-participant.png'),
     btn_info: require('./slider/btn_info.png'),

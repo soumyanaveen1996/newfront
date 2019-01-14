@@ -38,7 +38,7 @@ export default class MyProfileScreen extends React.Component {
     componentDidMount() {
         Auth.getUser()
             .then(userDetails => {
-                // console.log('data', userDetails);
+                console.log('data', userDetails);
 
                 const info = { ...userDetails.info };
                 const emailArray = [];
@@ -47,7 +47,9 @@ export default class MyProfileScreen extends React.Component {
                     this.setState({
                         myName: info.userName,
                         emailAddress: [...emailArray],
-                        phoneNumbers: [...info.phoneNumbers],
+                        phoneNumbers: info.phoneNumbers
+                            ? [...info.phoneNumbers]
+                            : [],
                         searchState: info.searchState || false,
                         shareState: info.shareState || false,
                         myDetails: info

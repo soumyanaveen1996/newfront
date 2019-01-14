@@ -89,8 +89,9 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: 55,
-        paddingHorizontal: 24,
-        paddingVertical: 17
+        paddingHorizontal: 14,
+        paddingVertical: 17,
+        justifyContent: 'space-between'
     },
 
     allSelectedContacts: {

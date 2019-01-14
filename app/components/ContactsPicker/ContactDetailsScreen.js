@@ -20,6 +20,7 @@ import { Auth, Network } from '../../lib/capability';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
 import CallModal from './CallModal';
+import images from '../../images';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
@@ -84,63 +85,113 @@ export default class ContactDetailsScreen extends React.Component {
                     </TouchableOpacity> */}
                 </View>
                 <Text style={styles.nameCD}>{this.contact.name}</Text>
+                {this.contact.isWaitingForConfirmation ? (
+                    <Text
+                        style={{
+                            textAlign: 'center',
+                            color: 'rgba(155, 155, 155, 1)',
+                            fontFamily: 'SF Pro Text',
+                            fontSize: 14
+                        }}
+                    >
+                        Awaiting for authorization
+                    </Text>
+                ) : null}
             </View>
         );
     }
 
     renderActionButtons() {
-        return (
-            <View style={styles.actionAreaCD}>
-                <TouchableOpacity
-                    style={styles.actionButtonCD}
-                    onPress={this.startChat.bind(this)}
+        if (!this.contact.isWaitingForConfirmation) {
+            return (
+                <View style={styles.actionAreaCD}>
+                    <TouchableOpacity
+                        style={styles.actionButtonCD}
+                        onPress={this.startChat.bind(this)}
+                    >
+                        <View
+                            style={[
+                                styles.actionIconCD,
+                                { backgroundColor: GlobalColors.sideButtons }
+                            ]}
+                        >
+                            <Icon name="chat" size={16} color={'white'} />
+                        </View>
+                        <Text>Chat</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.actionButtonCD}
+                        onPress={this.callContact.bind(this)}
+                    >
+                        <View
+                            style={[
+                                styles.actionIconCD,
+                                { backgroundColor: GlobalColors.green }
+                            ]}
+                        >
+                            <Icon name="call" size={16} color={'white'} />
+                        </View>
+                        <Text>Call</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.actionButtonCD}>
+                        <View
+                            style={[
+                                styles.actionIconCD,
+                                { backgroundColor: GlobalColors.darkGray }
+                            ]}
+                        >
+                            <Icon name="star" size={16} color={'white'} />
+                        </View>
+                        <Text>Favourite</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        } else {
+            return (
+                <View
+                    style={{
+                        height: 75,
+                        borderTopColor: 'rgba(221,222,227,1)',
+                        borderTopWidth: 1,
+                        borderBottomWidth: 5,
+                        borderBottomColor: 'rgba(221,222,227,1)',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
                 >
-                    <View
-                        style={[
-                            styles.actionIconCD,
-                            { backgroundColor: GlobalColors.sideButtons }
-                        ]}
+                    <TouchableOpacity
+                        style={styles.actionButtonCD}
+                        onPress={this.startChat.bind(this)}
                     >
-                        <Icon name="chat" size={16} color={'white'} />
-                    </View>
-                    <Text>Chat</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.actionButtonCD}
-                    onPress={this.callContact.bind(this)}
-                >
-                    <View
-                        style={[
-                            styles.actionIconCD,
-                            { backgroundColor: GlobalColors.green }
-                        ]}
-                    >
-                        <Icon name="call" size={16} color={'white'} />
-                    </View>
-                    <Text>Call</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButtonCD}>
-                    <View
-                        style={[
-                            styles.actionIconCD,
-                            { backgroundColor: GlobalColors.darkGray }
-                        ]}
-                    >
-                        <Icon name="star" size={16} color={'white'} />
-                    </View>
-                    <Text>Favourite</Text>
-                </TouchableOpacity>
-            </View>
-        );
+                        <View
+                            style={[
+                                styles.actionIconCD,
+                                { backgroundColor: GlobalColors.sideButtons }
+                            ]}
+                        >
+                            <Image
+                                style={{ width: 32, height: 32 }}
+                                source={images.contact_chat_btn}
+                            />
+                        </View>
+                        <Text>Conversation</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+        }
     }
 
     renderDetails() {
-        return (
-            <View>
-                {this.contact.phoneNumbers ? this.renderNumbers() : null}
-                {this.renderEmails()}
-            </View>
-        );
+        if (!this.contact.isWaitingForConfirmation) {
+            return (
+                <View>
+                    {this.contact.phoneNumbers ? this.renderNumbers() : null}
+                    {this.renderEmails()}
+                </View>
+            );
+        } else {
+            return null;
+        }
     }
 
     renderFooterButtons() {
@@ -148,38 +199,48 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderEmails() {
-        return _.map(this.contact.emails, () =>
-            this.renderDetailRow('email', 'Email', this.contact.emails[0].email)
-        );
+        if (!this.contact.isWaitingForConfirmation) {
+            return _.map(this.contact.emails, () =>
+                this.renderDetailRow(
+                    'email',
+                    'Email',
+                    this.contact.emails[0].email
+                )
+            );
+        }
     }
 
     renderNumbers() {
-        return (
-            <View>
-                {this.contact.phoneNumbers.mobile
-                    ? this.renderDetailRow(
-                        'smartphone',
-                        'Mobile',
-                        this.contact.phoneNumbers.mobile
-                    )
-                    : null}
-                {this.contact.phoneNumbers.land
-                    ? this.renderDetailRow(
-                        'local_phone',
-                        'Land',
-                        this.contact.phoneNumbers.land
-                    )
-                    : null}
-                {this.contact.phoneNumbers.satellite
-                    ? this.renderDetailRow(
-                        'satellite',
-                        'Satellite',
-                        // this.contact.phoneNumbers.satellite
-                        'Unavailable'
-                    )
-                    : null}
-            </View>
-        );
+        if (this.contact.isWaitingForConfirmation) {
+            return (
+                <View>
+                    {this.contact.phoneNumbers.mobile
+                        ? this.renderDetailRow(
+                            'smartphone',
+                            'Mobile',
+                            this.contact.phoneNumbers.mobile
+                        )
+                        : null}
+                    {this.contact.phoneNumbers.land
+                        ? this.renderDetailRow(
+                            'local_phone',
+                            'Land',
+                            this.contact.phoneNumbers.land
+                        )
+                        : null}
+                    {this.contact.phoneNumbers.satellite
+                        ? this.renderDetailRow(
+                            'satellite',
+                            'Satellite',
+                            // this.contact.phoneNumbers.satellite
+                            'Unavailable'
+                        )
+                        : null}
+                </View>
+            );
+        } else {
+            return null;
+        }
     }
 
     makeVoipCall() {
@@ -214,6 +275,8 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
+        console.log('contact ', this.contact);
+
         return (
             <ScrollView style={styles.containerCD}>
                 {this.renderNameArea()}

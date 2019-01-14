@@ -35,7 +35,8 @@ export default class ContactsPickerDataSource {
                 id: data.userId,
                 name: data.userName,
                 emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
-                phoneNumbers: data.phoneNumbers
+                phoneNumbers: data.phoneNumbers,
+                isWaitingForConfirmation: data.waitingForConfirmation || false
             };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));
