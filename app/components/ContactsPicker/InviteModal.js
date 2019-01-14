@@ -213,14 +213,14 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={styles.addressBookContainerStyle}
                                 onPress={this.addNewContactScreen.bind(this)}
                             >
                                 <Text style={styles.addressBookStyle}>
                                     Or invite user from address book
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

@@ -1652,6 +1652,8 @@ class ChatBotScreen extends React.Component {
             this.getBotId(),
             this.oldestLoadedDate()
         );
+        console.log(messages);
+
         return messages;
     }
 

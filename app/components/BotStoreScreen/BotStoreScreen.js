@@ -42,6 +42,7 @@ import {
 } from 'react-native-responsive-screen';
 import Loader from '../Loader/Loader';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import EmptyInstalledBot from './EmptyInstalledBot';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -414,6 +415,10 @@ class BotStoreScreen extends React.Component {
     }
 
     render() {
+        if (this.props.appState.network === 'none') {
+            return <EmptyInstalledBot noNetwork={true} />;
+        }
+
         if (this.state.networkError) {
             return (
                 <ErrorMessage
@@ -485,13 +490,13 @@ class BotStoreScreen extends React.Component {
                         qrCode={this.state.qrCodeData}
                     />
                 )}
-                <StatusBar
+                {/* <StatusBar
                     hidden={false}
                     backgroundColor="grey"
                     barStyle={
                         Platform.OS === 'ios' ? 'dark-content' : 'light-content'
                     }
-                />
+                /> */}
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </BackgroundImage>

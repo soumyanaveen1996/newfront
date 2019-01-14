@@ -11,7 +11,10 @@ import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
 import Store from '../../lib/Store';
 import PushNotification from 'react-native-push-notification';
+import {} from '../../redux/actions/UserActions';
 
+import RStore from '../../redux/store/configureStore';
+import { setNetwork } from '../../redux/actions/UserActions';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 /**
@@ -161,9 +164,11 @@ const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
         EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
         Store.updateStore({ satelliteConnection: true });
+        RStore.dispatch(setNetwork('satellite'));
     } else {
         EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
         Store.updateStore({ satelliteConnection: false });
+        RStore.dispatch(setNetwork('full'));
     }
 };
 
