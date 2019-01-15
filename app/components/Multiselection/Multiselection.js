@@ -143,10 +143,11 @@ export default class Multiselection extends React.Component {
                 key={index}
                 title={item}
                 onIconPress={() => {
-                    console.log(this.state.response);
-                    let res = this.state.response;
-                    res[index] = !res[index];
-                    this.setState({ response: res });
+                    if (!this.props.disabled) {
+                        let res = this.state.response;
+                        res[index] = !res[index];
+                        this.setState({ response: res });
+                    }
                 }}
                 checked={this.state.response[index]}
                 textStyle={styles.optionText}
@@ -174,7 +175,12 @@ export default class Multiselection extends React.Component {
                     <TouchableOpacity
                         style={styles.button}
                         onPress={() => {
-                            this.props.onDone(this.state.response, this.key);
+                            if (!this.props.disabled) {
+                                this.props.onDone(
+                                    this.state.response,
+                                    this.key
+                                );
+                            }
                             Actions.pop();
                         }}
                     >

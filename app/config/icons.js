@@ -312,12 +312,7 @@ export const Icons = {
         'red',
         '500'
     ),
-    formCompletedCheck: icon(
-        'ios-checkmark',
-        'ionicon',
-        20,
-        GlobalColors.green
-    ),
+    formCompletedCheck: icon('md-checkmark', 'ionicon', 20, GlobalColors.green),
     formDownArrow: icon(
         'ios-arrow-down',
         'ionicon',
@@ -329,7 +324,8 @@ export const Icons = {
         'ionicon',
         20,
         GlobalColors.sideButtons
-    )
+    ),
+    circleSlice: icon('time-slot', 'entypo', 20, 'gold')
 };
 
 export default Icons;

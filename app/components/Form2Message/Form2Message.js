@@ -3,30 +3,44 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Icons from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
-
+import { formStatus } from './config';
 export default class Form2Message extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            formCompleted: false
+            status: formStatus.NEW
         };
     }
 
     openForm() {
+        if (this.state.status === formStatus.NEW) {
+            this.setState({ status: formStatus.OPENED });
+        }
         Actions.form2({
             formData: this.props.formData,
             id: this.props.messageData.id,
             title: this.props.messageData.title,
             cancel: this.props.messageData.cancel,
             confirm: this.props.messageData.confirm,
-            onDone: this.onFormCompleted.bind(this)
+            onDone: this.onFormCompleted.bind(this),
+            formStatus: this.state.status
         });
     }
 
     onFormCompleted(response) {
         console.log(response, 'Form response');
-        this.setState({ formCompleted: true });
+        this.setState({ status: formStatus.COMPLETED });
         // this.props.onSubmit(response)
+    }
+
+    renderTopRightIcon() {
+        if (this.state.status === formStatus.NEW) {
+            return Icons.formMessageArrow();
+        } else if (this.state.status === formStatus.OPENED) {
+            return Icons.circleSlice();
+        } else if (this.state.status === formStatus.COMPLETED) {
+            return this.renderCompletedCheck();
+        }
     }
 
     renderCompletedCheck() {
@@ -46,11 +60,9 @@ export default class Form2Message extends React.Component {
                     </Text>
                     <TouchableOpacity
                         onPress={this.openForm.bind(this)}
-                        disabled={this.state.formCompleted}
+                        disabled={this.state.status === formStatus.COMPLETED}
                     >
-                        {this.state.formCompleted
-                            ? this.renderCompletedCheck()
-                            : Icons.formMessageArrow()}
+                        {this.renderTopRightIcon()}
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.description}>
@@ -58,7 +70,7 @@ export default class Form2Message extends React.Component {
                 </Text>
                 <TouchableOpacity
                     style={
-                        this.state.formCompleted
+                        this.state.status === formStatus.COMPLETED
                             ? styles.buttonSee
                             : styles.buttonContinue
                     }
@@ -66,12 +78,14 @@ export default class Form2Message extends React.Component {
                 >
                     <Text
                         style={
-                            this.state.formCompleted
+                            this.state.status === formStatus.COMPLETED
                                 ? styles.buttonTextSee
                                 : styles.buttonTextContinue
                         }
                     >
-                        {this.state.formCompleted ? 'See form' : 'Continue'}
+                        {this.state.status === formStatus.COMPLETED
+                            ? 'See form'
+                            : 'Continue'}
                     </Text>
                 </TouchableOpacity>
             </View>

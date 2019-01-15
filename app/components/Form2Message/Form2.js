@@ -26,6 +26,7 @@ import images from '../../config/images';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
+import { formStatus } from './config';
 
 export default class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -183,7 +184,7 @@ export default class Form2 extends React.Component {
             dropdownModalOptions: [],
             dropdownModalTitle: ''
         };
-
+        this.disabled = this.props.formStatus === formStatus.COMPLETED;
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage
         });
@@ -244,6 +245,7 @@ export default class Form2 extends React.Component {
     renderTextField(content, key) {
         return (
             <TextInput
+                editable={!this.disabled}
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -260,12 +262,15 @@ export default class Form2 extends React.Component {
         let options = _.map(content, (option, index) => {
             return (
                 <CheckBox
+                    disabled={this.disabled}
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        this.answers[key].value[index] = !this.answers[key]
-                            .value[index];
-                        this.setState({ answers: this.answers });
+                        if (!this.disabled) {
+                            this.answers[key].value[index] = !this.answers[key]
+                                .value[index];
+                            this.setState({ answers: this.answers });
+                        }
                     }}
                     checked={this.state.answers[key].value[index]}
                     textStyle={styles.optionText}
@@ -288,8 +293,10 @@ export default class Form2 extends React.Component {
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        this.answers[key].value = index;
-                        this.setState({ answers: this.answers });
+                        if (!this.disabled) {
+                            this.answers[key].value = index;
+                            this.setState({ answers: this.answers });
+                        }
                     }}
                     checked={this.state.answers[key].value === index}
                     textStyle={styles.optionText}
@@ -308,6 +315,7 @@ export default class Form2 extends React.Component {
     renderDropdown(content, key) {
         return (
             <TouchableOpacity
+                disabled={this.disabled}
                 onPress={() => {
                     this.currentDropdownModalKey = key;
                     this.setState({
@@ -389,6 +397,7 @@ export default class Form2 extends React.Component {
     renderSwitch(key) {
         return (
             <Switch
+                disabled={this.disabled}
                 onValueChange={value => {
                     this.answers[key].value = value;
                     this.setState({ answers: this.answers });
@@ -401,6 +410,7 @@ export default class Form2 extends React.Component {
     renderSlider(key) {
         return (
             <Slider
+                disabled={this.disabled}
                 maximumValue={100}
                 minimumValue={0}
                 onValueChange={value => {
@@ -418,6 +428,7 @@ export default class Form2 extends React.Component {
     renderDate(key) {
         return (
             <TouchableOpacity
+                disabled={this.disabled}
                 onPress={() => {
                     this.currentDateModalKey = key;
                     this.setState({
@@ -488,7 +499,8 @@ export default class Form2 extends React.Component {
                         index: key,
                         options: content,
                         response: this.answers[key].value,
-                        onDone: this.onMultiselectionDone.bind(this)
+                        onDone: this.onMultiselectionDone.bind(this),
+                        disabled: this.disabled
                     });
                 }}
                 style={styles.multiselectionContainer}
@@ -507,6 +519,7 @@ export default class Form2 extends React.Component {
     renderPasswordField(key) {
         return (
             <TextInput
+                editable={!this.disabled}
                 onChangeText={text => {
                     this.answers[key].value = text;
                     // this.setState({ answers: this.answers })
@@ -587,6 +600,7 @@ export default class Form2 extends React.Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
+                            disabled={this.disabled}
                             style={styles.f2DoneButton}
                             onPress={() => {
                                 let response = this.getResponse();

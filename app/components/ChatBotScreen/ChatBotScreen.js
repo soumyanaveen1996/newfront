@@ -725,7 +725,8 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
             this.updateChat(message);
         } else if (
@@ -744,10 +745,6 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
             this.queueMessage(message);
-        } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
-        ) {
-            this.updateChat(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {

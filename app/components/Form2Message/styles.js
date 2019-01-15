@@ -30,7 +30,7 @@ export default (stylesheet = StyleSheet.create({
         color: GlobalColors.headerBlack
     },
     description: {
-        fontSize: 12,
+        fontSize: 14,
         color: GlobalColors.darkGray,
         paddingVertical: 12
     },
@@ -61,8 +61,8 @@ export default (stylesheet = StyleSheet.create({
         color: GlobalColors.sideButtons
     },
     completedCheck: {
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: GlobalColors.disabledGray,
