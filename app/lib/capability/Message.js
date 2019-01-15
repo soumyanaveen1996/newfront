@@ -192,11 +192,8 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER;
     };
 
-    dataCard = (cardData, options) => {
-        this._msg = JSON.stringify(cardData || []);
-        if (options) {
-            this._options = JSON.stringify(options);
-        }
+    datacard = (cardData, options) => {
+        this._msg = cardData || [];
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_DATACARD;
     };
 
@@ -458,6 +455,7 @@ export default class Message {
         }
         if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
@@ -601,6 +599,7 @@ export default class Message {
     isEmptyMessage() {
         const emptyMessages = [
             MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
+            MessageTypeConstants.MESSAGE_TYPE_DATACARD,
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
