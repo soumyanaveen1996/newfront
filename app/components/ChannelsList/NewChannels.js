@@ -258,11 +258,9 @@ class NewChannels extends React.Component {
             channelType,
             userDomain
         };
-        console.log('save channels', channelData);
 
         Channel.create(channelData)
             .then(data => {
-                console.log('success on creating channel ', data);
                 const users = this.props.channels.participants.filter(
                     user => user.selected === true
                 );

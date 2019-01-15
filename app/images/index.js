@@ -32,6 +32,8 @@ const images = {
     btn_send: require('./chat/btn_send.png'),
     checkmark_normal: require('./checkbox-empty/checkbox-empty.png'),
     checkmark_selected: require('./checkbox-checked/checkbox-checked.png'),
+    contact_chat_btn: require('./contacts-chat-btn/contacts-chat-btn.png'),
+    clock_icon: require('./clock-icon/clock-icon.png'),
     btn_close_slider: { uri: 'purple_btn_close' },
     close_btn: require('./icons/cross-deselect-participant.png'),
     btn_info: require('./slider/btn_info.png'),
@@ -83,7 +85,12 @@ const images = {
     maps_maritime_icon: require('./mapbox/maps-maritime-icon.png'),
     current_location_inactive: require('./mapbox/current-location-inactive.png'),
     map_pin: require('./mapbox/map-pin.png'),
-    qr_code_icon: require('./qr-code-icon/qr-code-icon.png')
+    qr_code_icon: require('./qr-code-icon/qr-code-icon.png'),
+    cross_deselect: require('./cross-deselect-participant/cross-deselect-participant.png'),
+    smile_contact_placeholder: require('./smile-contact-placeholder/smile-contact-placeholder.png'),
+    phone_icon: require('./phone-icon-copy/phone_icon_copy.png'),
+    remove_icon: require('./remove-icon/remove-icon.png'),
+    email_icon: require('./email-icon/email-icon.png')
 };
 
 export default images;

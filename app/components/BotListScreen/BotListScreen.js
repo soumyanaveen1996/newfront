@@ -76,9 +76,22 @@ export default class BotListScreen extends React.Component {
 
     async updateText() {
         const searchBot = await Bot.searchBots(this.state.searchString);
+        const filteredSearchBot = [];
+
+        for (var arr in this.props.allBotsData) {
+            for (var filter in searchBot) {
+                if (
+                    this.props.allBotsData[arr].botId ===
+                    searchBot[filter].botId
+                ) {
+                    filteredSearchBot.push(this.props.allBotsData[arr]);
+                }
+            }
+        }
+
         let count = searchBot.length;
         this.setState({
-            botsData: [...searchBot],
+            botsData: [...filteredSearchBot],
             countResults: count
         });
     }
