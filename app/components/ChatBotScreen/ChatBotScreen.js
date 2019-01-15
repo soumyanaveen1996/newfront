@@ -1124,6 +1124,7 @@ class ChatBotScreen extends React.Component {
                     <Form2Message
                         formData={message.getMessage()}
                         messageData={message.getMessageOptions()}
+                        // onSubmit={}
                     />
                 );
             } else {
@@ -1845,14 +1846,14 @@ class ChatBotScreen extends React.Component {
         };
         const formData = [
             {
-                id: 'field name',
+                id: 'text field',
                 title: 'field label',
                 type: 'text_field',
                 value: '',
                 mandatory: true //Default false
             },
             {
-                id: 'field name',
+                id: 'field name text area',
                 title: 'field label text area',
                 type: 'text_area'
             },
@@ -1863,44 +1864,44 @@ class ChatBotScreen extends React.Component {
                 options: ['box 1', 'box 2']
             },
             {
-                id: 'field name',
+                id: 'field name radio',
                 title: 'field label',
                 type: 'radiobutton',
                 options: ['option 1', 'option 2', 'etc']
             },
             {
-                id: 'field name',
+                id: 'field name drop',
                 title: 'field label',
                 type: 'dropdown',
                 options: ['option 1', 'option 2', 'etc'],
                 value: 'option 1'
             },
             {
-                id: 'field name',
+                id: 'field name switch',
                 title: 'field label',
                 type: 'switch',
                 value: false //Default false
             },
             {
-                id: 'field name',
+                id: 'field name slider',
                 title: 'field label',
                 type: 'slider',
                 value: 0 //Default 0 percent, maximum 100
             },
             {
-                id: 'field name',
+                id: 'field name date',
                 title: 'field label',
                 type: 'date',
                 value: 0
             },
             {
-                id: 'field name',
+                id: 'field name multi',
                 title: 'field label',
                 type: 'multi_selection',
                 options: ['option 1', 'option 2', 'etc']
             },
             {
-                id: 'field name',
+                id: 'field name pass',
                 title: 'field label',
                 type: 'password_field'
             }

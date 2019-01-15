@@ -311,6 +311,24 @@ export const Icons = {
         GlobalColors.sideButtons,
         'red',
         '500'
+    ),
+    formCompletedCheck: icon(
+        'ios-checkmark',
+        'ionicon',
+        20,
+        GlobalColors.green
+    ),
+    formDownArrow: icon(
+        'ios-arrow-down',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons
+    ),
+    formCalendar: icon(
+        'ios-calendar-outline',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons
     )
 };
 
