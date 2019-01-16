@@ -116,6 +116,7 @@ export default class SearchUsers extends React.Component {
     }
 
     addContacts() {
+        this.setState({ loading: true });
         Contact.addContacts(this.state.selectedContacts).then(() => {
             Auth.getUser()
                 .then(user => {
@@ -142,6 +143,7 @@ export default class SearchUsers extends React.Component {
                     return Network(options);
                 })
                 .then(() => {
+                    this.setState({ loading: false });
                     Actions.pop();
                 });
         });
