@@ -4,10 +4,13 @@ const CATALOG_HOST = 'localhost:3000';
 const QUEUE_HOST = 'localhost:3000';
 const PROXY_HOST = 'localhost:3000';
 let pollingInterval;
+let clearQueue;
 if (Platform.OS === 'android') {
-    pollingInterval = 20000;
+    pollingInterval = 35000;
+    clearQueue = 120000;
 } else {
     pollingInterval = 180000;
+    clearQueue = 600000;
 }
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.
 const config = {
@@ -80,11 +83,13 @@ const config = {
     network: {
         satellite: {
             pollingInterval: 600000,
-            keepAliveInterval: 120000
+            keepAliveInterval: 120000,
+            clearQueue
         },
         gsm: {
             pollingInterval: pollingInterval,
-            backgroundPollingInterval: 300000
+            backgroundPollingInterval: 300000,
+            clearQueue: clearQueue
         },
         queueProtocol: 'http://',
         queueHost: QUEUE_HOST,

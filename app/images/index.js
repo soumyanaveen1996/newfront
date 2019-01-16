@@ -1,5 +1,6 @@
 const images = {
     logo: require('./logo/logo.png'),
+    avatar_icon_placeholder: require('./avatar-icon-placeholder/avatar-icon-placeholder.png'),
     front_bot_logo: require('./bots/FrontBotLogo.png'),
     icn_channel: require('./addlist/icn_channel.png'),
     icn_chatbot: require('./addlist/icn_chatbot.png'),
@@ -23,6 +24,7 @@ const images = {
     botsbg: require('./bots/botsbg.png'),
     channels_bot_logo: require('./bots/ChannelsBotLogo.png'),
     emojis: require('./bots/emojis.png'),
+    edit_btn: require('./edit-btn/edit-btn.png'),
     location_services: require('./bots/LocationServices.png'),
     push_notifications: require('./bots/PushNotifications.png'),
     btn_back: require('./chat/btn_back.png'),

@@ -6,23 +6,39 @@ import {
     Switch,
     TouchableOpacity,
     TextInput,
-    ScrollView
+    Keyboard,
+    ScrollView,
+    Platform
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
 import { SafeAreaView } from 'react-navigation';
 import images from '../../config/images';
+import Config from './config';
 import config from '../../config/config';
-import { Auth, Network } from '../../lib/capability';
+import {
+    Auth,
+    Network,
+    Media,
+    ResourceTypes,
+    Resource
+} from '../../lib/capability';
+import Utils from '../../lib/utils';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import PhoneTypeModal from './PhoneTypeModal';
 import Loader from '../Loader/Loader';
+import { BotInputBarCapabilities } from '../ChatBotScreen/BotConstants';
+import ActionSheet from '@yfuks/react-native-action-sheet';
+import I18n from '../../config/i18n/i18n';
+import Constants from '../../config/constants';
+import ProfileImage from '../ProfileImage';
 
 export default class MyProfileScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            myDetails: {},
+            profileImage: '',
+            userId: this.props.userId,
             myName: '',
             phoneNumbers: [],
             emailAddress: [],
@@ -38,22 +54,35 @@ export default class MyProfileScreen extends React.Component {
     componentDidMount() {
         Auth.getUser()
             .then(userDetails => {
-                console.log('data', userDetails);
+                console.log('data', userDetails.info);
+                const imageUrl =
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    config.proxy.profileImage +
+                    userDetails.userId +
+                    '.png';
+
+                this.setState({ profileImage: imageUrl });
 
                 const info = { ...userDetails.info };
                 const emailArray = [];
                 emailArray.push(info.emailAddress);
                 if (this.mounted) {
-                    this.setState({
-                        myName: info.userName,
-                        emailAddress: [...emailArray],
-                        phoneNumbers: info.phoneNumbers
-                            ? [...info.phoneNumbers]
-                            : [],
-                        searchState: info.searchState || false,
-                        shareState: info.shareState || false,
-                        myDetails: info
-                    });
+                    this.setState(
+                        {
+                            myName: info.userName,
+                            emailAddress: [...emailArray],
+                            phoneNumbers: info.phoneNumbers
+                                ? [...info.phoneNumbers]
+                                : [],
+                            searchState: info.searchState || false,
+                            shareState: info.shareState || false,
+                            userId: info.userId
+                        },
+                        () => {
+                            console.log('user id ', this.state.userId);
+                        }
+                    );
                 }
             })
             .catch(err => {
@@ -256,7 +285,102 @@ export default class MyProfileScreen extends React.Component {
         }
     }
 
+    async sendImage(imageUri, base64) {
+        console.log('images ', imageUri);
+
+        const PROFILE_PIC_BUCKET = 'profile-pics';
+        const toUri = await Utils.copyFileAsync(
+            imageUri,
+            Constants.IMAGES_DIRECTORY
+        );
+
+        Auth.getUser()
+            .then(user => {
+                // console.log('user ', user);
+                // Send the file to the S3/backend and then let the user know
+                return Resource.uploadFile(
+                    base64,
+                    toUri,
+                    PROFILE_PIC_BUCKET,
+                    user.userId,
+                    ResourceTypes.Image,
+                    user,
+                    true
+                );
+            })
+            .then(fileUrl => {
+                if (_.isNull(fileUrl)) {
+                    console.log(
+                        'You have disabled access to media library. Please enable access to upload a profile picture'
+                    );
+                } else {
+                    console.log('file url upload image ', fileUrl);
+                }
+            });
+    }
+
+    async takePicture() {
+        Keyboard.dismiss();
+        let result = await Media.takePicture(Config.CameraOptions);
+        if (!result.cancelled) {
+            this.sendImage(result.uri, result.base64);
+        }
+    }
+
+    async pickImage() {
+        Keyboard.dismiss();
+        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
+        // Have to filter out videos ?
+        if (!result.cancelled) {
+            this.sendImage(result.uri, result.base64);
+        }
+    }
+
+    onOptionSelected(key) {
+        if (key === BotInputBarCapabilities.camera) {
+            this.takePicture();
+        } else if (key === BotInputBarCapabilities.photo_library) {
+            this.pickImage();
+        }
+    }
+
+    showOptions() {
+        const moreOptions = [
+            {
+                key: BotInputBarCapabilities.camera,
+                label: I18n.t('Chat_Input_Camera')
+            },
+            {
+                key: BotInputBarCapabilities.photo_library,
+                label: I18n.t('Chat_Input_Photo_Library')
+            }
+        ];
+
+        const cancelButtonIndex = moreOptions.length;
+        let optionLabels = moreOptions.map(elem => elem.label);
+        if (Platform.OS === 'ios') {
+            optionLabels.push('Cancel');
+        }
+
+        ActionSheet.showActionSheetWithOptions(
+            {
+                options: optionLabels,
+                cancelButtonIndex: cancelButtonIndex
+            },
+            buttonIndex => {
+                if (
+                    buttonIndex !== undefined &&
+                    buttonIndex !== cancelButtonIndex
+                ) {
+                    this.onOptionSelected(moreOptions[buttonIndex].key);
+                }
+            }
+        );
+    }
+
     render() {
+        console.log('profile image', this.state.userId);
+
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={{ flex: 1 }}>
@@ -269,10 +393,37 @@ export default class MyProfileScreen extends React.Component {
                             settingType={this.setupType.bind(this)}
                         />
                         <View style={styles.profileImageContainer}>
-                            <Image
-                                source={images.user_image}
-                                style={styles.profileImgStyle}
-                            />
+                            <View
+                                style={{
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: 60
+                                }}
+                            >
+                                <ProfileImage
+                                    uuid={this.state.userId}
+                                    placeholder={require('../../images/contact/GreenGoblin.png')}
+                                    style={styles.profilePic}
+                                    placeholderStyle={styles.profileImgStyle}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <TouchableOpacity
+                                style={{
+                                    position: 'absolute',
+                                    right: 20
+                                }}
+                                accessibilityLabel="More Button"
+                                onPress={this.showOptions.bind(this)}
+                            >
+                                <Image
+                                    style={{
+                                        width: 45,
+                                        height: 45
+                                    }}
+                                    source={images.edit_btn}
+                                />
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.nameContainerStyle}>
                             <View
@@ -381,7 +532,7 @@ export default class MyProfileScreen extends React.Component {
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
-                                    tintColor="rgba(244,244,244,1)"
+                                    // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
                                         this.state.searchState
                                             ? 'rgba(0,189,242,1)'
@@ -429,7 +580,7 @@ export default class MyProfileScreen extends React.Component {
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
-                                    tintColor="rgba(244,244,244,1)"
+                                    // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
                                         this.state.shareState
                                             ? 'rgba(0,189,242,1)'
@@ -448,6 +599,9 @@ export default class MyProfileScreen extends React.Component {
                             }}
                         >
                             <TouchableOpacity
+                                onPress={() => {
+                                    Actions.pop();
+                                }}
                                 style={{
                                     width: 150,
                                     height: 30,
