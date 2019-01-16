@@ -11,6 +11,17 @@ export const searchBarConfig = {
     placeholderTextColor: GlobalColors.headerTextInputPlaceholder
 };
 
+export const CameraOptions = {
+    allowsEditing: false,
+    exif: true,
+    base64: true
+};
+
+export const ChatImageOptions = {
+    width: 220,
+    height: 220
+};
+
 export const addButtonConfig = {
     type: 'Content',
     name: 'add',
@@ -26,6 +37,8 @@ export const CONTACTS_REQUEST_PAGE_SIZE = 20;
 export default {
     checkBoxConfig,
     searchBarConfig,
+    CameraOptions,
+    ChatImageOptions,
     CONTACTS_REQUEST_PAGE_SIZE,
     SECTION_HEADER_HEIGHT
 };

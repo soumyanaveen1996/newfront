@@ -43,7 +43,9 @@ const devConfig = {
         updateSigninPath: '/v2/updateSignin/frontm',
         deleteUserPath: '/v2/deleteUser',
         newProvider: '/v2/subscribeDomain',
-        searchCatalog: '/catalog'
+        searchCatalog: '/catalog',
+        userInfo: '/user',
+        profileImage: '/v2/file/profile-pics/'
     }
 };
 

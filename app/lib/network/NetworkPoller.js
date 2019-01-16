@@ -17,8 +17,10 @@ import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 import { BackgroundBotChat } from '../BackgroundTask';
 import SystemBot from '../bot/SystemBot';
 import RemoteBotInstall from '../RemoteBotInstall';
+import { NetworkDAO } from '../../lib/persistence';
 
 const POLL_KEY = 'poll_key';
+const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
 
 const NetworkPollerStates = {
@@ -294,6 +296,7 @@ class NetworkPoller {
             this.appState === 'active'
                 ? config.network.gsm.pollingInterval
                 : config.network.gsm.backgroundPollingInterval;
+        const clearQueue = config.network.gsm.clearQueue;
         console.log(
             'Network Poller: Starting GSM Polling with polling at ' +
                 pollingInterval +
@@ -305,17 +308,25 @@ class NetworkPoller {
             this.process();
         }, pollingInterval);
 
+        const clearQueueIntervalId = BackgroundTimer.setInterval(() => {
+            this.clearQueue();
+        }, clearQueue);
+
         await DeviceStorage.save(POLL_KEY, newIntervalId);
+        await DeviceStorage.save(CLEAR_KEY, clearQueueIntervalId);
     };
 
     stopAndroidSatellitePolling = async () => {
         const intervalId = await DeviceStorage.get(POLL_KEY);
         const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
+        const clearQueueId = await DeviceStorage.get(CLEAR_KEY);
         if (intervalId) {
             BackgroundTimer.clearInterval(intervalId);
             BackgroundTimer.clearInterval(keepAliveId);
+            BackgroundTimer.clearInterval(clearQueueId);
             await DeviceStorage.delete(POLL_KEY);
             await DeviceStorage.delete(KEEPALIVE_KEY);
+            await DeviceStorage.delete(CLEAR_KEY);
         }
     };
 
@@ -372,6 +383,9 @@ class NetworkPoller {
     process = () => {
         NetworkHandler.poll();
         BackgroundTaskProcessor.process();
+    };
+    clearQueue = () => {
+        NetworkDAO.deleteAllRows();
     };
 }
 

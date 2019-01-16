@@ -308,7 +308,6 @@ export default class InstalledBotsScreen extends React.Component {
 
     openBotInfo = botInfo => {
         const botStatus = 'installed';
-        console.log(botStatus);
 
         Actions.botInfoScreen({
             botInfo: botInfo,

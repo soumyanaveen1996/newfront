@@ -65,6 +65,7 @@ import CustomTab from '../components/CustomTab/CustomTab';
 import GlobalColors from '../config/styles';
 import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScreen';
 import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
+import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -361,12 +362,17 @@ class MainRouter extends React.Component {
                                         component={SearchUsers}
                                     />
                                     <Scene
+                                        key={ROUTER_SCENE_KEYS.myProfileScreen}
+                                        title="My Profile"
+                                        component={MyProfileScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}
                                         component={ChannelChat}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.botInfoScreen}
-                                        title="Marketplace"
+                                        title={I18n.t('Bot_Store')}
                                         component={BotInfoScreen}
                                     />
                                     <Scene
@@ -383,17 +389,17 @@ class MainRouter extends React.Component {
                                         key={
                                             ROUTER_SCENE_KEYS.addressBookScreen
                                         }
-                                        title="Add new contacts"
+                                        title={I18n.t('Add_new_contacts')}
                                         component={AddressBookScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.addParticipants}
-                                        title="Add participants"
+                                        title={I18n.t('Add_participants')}
                                         component={AddContacts}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}
-                                        title="Select Team"
+                                        title={I18n.t('Select_team')}
                                         component={SelectTeam}
                                         type="push"
                                         duration={0}

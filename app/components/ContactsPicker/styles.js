@@ -89,10 +89,13 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: 55,
-        paddingHorizontal: 24,
-        paddingVertical: 17
+        paddingHorizontal: 14,
+        paddingVertical: 17,
+        justifyContent: 'space-between'
     },
+
     allSelectedContacts: {
+        backgroundColor: '#F4F4F4',
         flex: 1,
         alignItems: 'flex-start',
         paddingVertical: 20,
@@ -105,10 +108,30 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 15
     },
+    profileImageStyle: {
+        height: 35,
+        width: 35,
+        borderRadius: 17,
+        marginRight: 17
+    },
+    emptyProfileContainer: {
+        height: 35,
+        width: 35,
+        borderRadius: 17,
+        backgroundColor: 'rgba(244,244,244,1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 17
+    },
+    emptyContactItemImage: {
+        height: 20,
+        width: 20,
+        borderRadius: 10
+    },
     contactItemImage: {
-        height: 40,
-        width: 40,
-        borderRadius: 20,
+        height: 35,
+        width: 35,
+        borderRadius: 17,
         marginRight: 17
     },
     contactItemDetailsContainer: {
@@ -507,6 +530,154 @@ const stylesheet = StyleSheet.create({
     chipFont: {
         fontSize: wp('3.5%'),
         color: 'rgba(102,102,102,1)'
+    },
+    contactNameContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1
+    },
+    myProfileContainer: {
+        width: wp('100%'),
+        height: 80,
+        backgroundColor: GlobalColors.white,
+        paddingVertical: 10,
+        paddingHorizontal: 20
+    },
+    myProfileItemContainer: {
+        backgroundColor: GlobalColors.white,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    myProfileItemImage: {
+        height: 60,
+        width: 60,
+        borderRadius: 30,
+        marginRight: 17
+    },
+    myProfileName: {
+        color: GlobalColors.headerBlack,
+        fontSize: 18,
+        lineHeight: 21,
+        fontWeight: '600',
+        fontFamily: 'SF Pro Text'
+    },
+    input: {
+        height: 40,
+        width: 300,
+        backgroundColor: 'rgba(244,244,244,1)',
+        padding: 10,
+        color: '#666666',
+        fontSize: 16,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10
+    },
+    inputNumber: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        color: 'rgba(102, 102, 102, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12
+    },
+    mainInfoRenderContainer: {
+        width: '100%',
+        height: 50,
+        flexDirection: 'row',
+        borderBottomColor: 'rgba(221,222,227,1)',
+        borderBottomWidth: 1
+    },
+    labelContainer: {
+        flex: 2,
+        flexDirection: 'row',
+        borderRightColor: 'rgba(221,222,227,1)',
+        borderRightWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    phoneIcon: { width: 16, height: 16 },
+    satelliteIcon: { width: 24, height: 24 },
+    emailIcon: { width: 20, height: 14 },
+    labelStyle: {
+        color: 'rgba(155, 155, 155, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12
+    },
+    arrowStyle: { width: 12, height: 7 },
+    infoContainer: {
+        flex: 3,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    infoLabelStyle: {
+        color: 'rgba(102, 102, 102, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12
+    },
+    safeAreaStyle: { flex: 1, backgroundColor: GlobalColors.white },
+    mainViewContainer: {
+        flex: 1,
+        backgroundColor: GlobalColors.white,
+        paddingVertical: 20
+    },
+    profileImageContainer: {
+        width: '100%',
+        position: 'relative',
+        height: 130,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    profilePic: {
+        width: 120,
+        height: 120
+    },
+    profileImgStyle: {
+        width: 120,
+        height: 120,
+        borderRadius: 60
+    },
+    nameContainerStyle: {
+        width: '100%',
+        height: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 30
+    },
+    nameLabel: {
+        textAlign: 'left',
+        marginBottom: 10,
+        color: '#4A4A4A',
+        fontSize: 14,
+        fontFamily: 'SF Pro Text'
+    },
+    userInfoNumberContainer: {
+        borderTopColor: 'rgba(222,222,222,1)',
+        borderTopWidth: 5,
+        marginBottom: 25
+    },
+    userInfoEmailContainer: {
+        borderTopColor: 'rgba(222,222,222,1)',
+        borderTopWidth: 1,
+        marginBottom: 25
+    },
+    addContainer: {
+        height: 30,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 24
+    },
+    iconStyle: {
+        height: 8,
+        width: 8,
+        marginRight: 15
+    },
+    addLabel: {
+        color: 'rgba(0, 189, 242, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12
     }
 });
 
