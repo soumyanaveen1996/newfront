@@ -142,6 +142,10 @@ class ContactsPicker extends React.Component {
     }
 
     componentWillMount() {
+        this.gettingUserDetails();
+    }
+
+    gettingUserDetails() {
         Auth.getUser()
             .then(userDetails => {
                 const info = { ...userDetails.info };
@@ -279,6 +283,7 @@ class ContactsPicker extends React.Component {
     refresh = () => {
         this.dataSource.loadData();
         this.checkPollingStrategy();
+        this.gettingUserDetails();
     };
 
     updateList = () => {
