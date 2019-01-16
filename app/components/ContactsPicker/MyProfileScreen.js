@@ -32,7 +32,6 @@ import ActionSheet from '@yfuks/react-native-action-sheet';
 import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
-import CachedImage from '../CachedImage';
 
 export default class MyProfileScreen extends React.Component {
     constructor(props) {
@@ -297,7 +296,7 @@ export default class MyProfileScreen extends React.Component {
 
         Auth.getUser()
             .then(user => {
-                console.log('user ', user);
+                // console.log('user ', user);
                 // Send the file to the S3/backend and then let the user know
                 return Resource.uploadFile(
                     base64,
@@ -316,7 +315,6 @@ export default class MyProfileScreen extends React.Component {
                     );
                 } else {
                     console.log('file url upload image ', fileUrl);
-                    // console.log('user details', this.state.u);
                 }
             });
     }
