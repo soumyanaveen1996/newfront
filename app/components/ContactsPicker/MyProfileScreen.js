@@ -534,7 +534,7 @@ export default class MyProfileScreen extends React.Component {
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
-                                    tintColor="rgba(244,244,244,1)"
+                                    // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
                                         this.state.searchState
                                             ? 'rgba(0,189,242,1)'
@@ -582,7 +582,7 @@ export default class MyProfileScreen extends React.Component {
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
-                                    tintColor="rgba(244,244,244,1)"
+                                    // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
                                         this.state.shareState
                                             ? 'rgba(0,189,242,1)'
