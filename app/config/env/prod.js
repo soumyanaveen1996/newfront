@@ -44,7 +44,8 @@ const stageConfig = {
         deleteUserPath: '/v2/deleteUser',
         newProvider: '/v2/subscribeDomain',
         searchCatalog: '/catalog',
-        userInfo: '/user'
+        userInfo: '/user',
+        profileImage: '/v2/file/profile-pics/'
     }
 };
 
