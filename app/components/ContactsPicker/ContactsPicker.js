@@ -446,7 +446,7 @@ class ContactsPicker extends React.Component {
 
     goToMyProfile = () => {
         // console.log('go to profile page using ', this.state.userInfo);
-        Actions.myProfileScreen();
+        Actions.myProfileScreen({ userId: this.state.userInfo.userId });
     };
 
     renderButtons = () => (
@@ -459,9 +459,17 @@ class ContactsPicker extends React.Component {
                     }}
                 >
                     <View style={styles.myProfileItemContainer}>
-                        <Image
+                        {/* <Image
                             source={images.user_image}
                             style={styles.myProfileItemImage}
+                        /> */}
+
+                        <ProfileImage
+                            uuid={this.state.userInfo.userId}
+                            placeholder={images.user_image}
+                            style={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfileItemImage}
+                            resizeMode="center"
                         />
                         <View style={styles.contactItemDetailsContainer}>
                             <Text style={styles.myProfileName}>
