@@ -325,7 +325,11 @@ export const Icons = {
         20,
         GlobalColors.sideButtons
     ),
-    circleSlice: icon('time-slot', 'entypo', 20, 'gold')
+    circleSlice: icon('time-slot', 'entypo', 20, 'gold'),
+
+    //DATACARD
+    cardsTrue: icon('ios-checkmark-circle', 'ionicon', 25, GlobalColors.green),
+    cardsFalse: icon('ios-close-circle', 'ionicon', 25, GlobalColors.red)
 };
 
 export default Icons;

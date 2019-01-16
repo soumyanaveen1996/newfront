@@ -142,7 +142,10 @@ I18n.translations = {
         Iridium_message:
             'Our team is working hard to be able to initiate calls to Iridium phones. Stay in touch and we will inform you when it becomes available',
         Thuraya_message:
-            'Our team is working hard to be able to initiate calls to Thuraya phones. Stay in touch and we will inform you when it becomes available'
+            'Our team is working hard to be able to initiate calls to Thuraya phones. Stay in touch and we will inform you when it becomes available',
+        Add_participants: 'Add participants',
+        Add_new_contacts: 'Add new contacts',
+        Select_team: 'Select Team'
     }
 };
 

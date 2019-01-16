@@ -92,7 +92,7 @@ export default class BotInfoScreen extends React.Component {
     }
 
     async performBotInstallation(bot, update) {
-        console.log('will check', bot, update);
+        // console.log('will check', bot, update);
 
         if (!utils.isClientSupportedByBot(bot)) {
             Alert.alert(
@@ -123,7 +123,7 @@ export default class BotInfoScreen extends React.Component {
                         sessionId: user.creds.sessionId
                     }
                 };
-                console.log('data to install ', options);
+                // console.log('data to install ', options);
 
                 await Promise.resolve(Network(options));
                 await Bot.install(dceBot);

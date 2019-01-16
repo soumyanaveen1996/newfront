@@ -86,7 +86,7 @@ export default class LoginScreen extends React.Component {
             email: this.state.email,
             password: this.state.password
         };
-        console.log('userDetails ', userDetails);
+        // console.log('userDetails ', userDetails);
 
         Auth.loginWithFrontm(
             userDetails,

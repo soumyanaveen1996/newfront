@@ -59,7 +59,8 @@ const ROUTER_SCENE_KEYS = {
     tabBarChat: 'tabBarChat',
     tabBarCall: 'tabBarCall',
     callSummary: 'callSummary',
-    multiselection: 'multiselection'
+    multiselection: 'multiselection',
+    myProfileScreen: 'myProfileScreen'
 };
 
 export default ROUTER_SCENE_KEYS;

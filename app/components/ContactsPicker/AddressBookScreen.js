@@ -28,7 +28,6 @@ import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
 import { RNChipView } from 'react-native-chip-view';
-const cancelImg = require('../../images/channels/cross-deselect-participant.png');
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -36,11 +35,12 @@ export default class AddressBookScreen extends React.Component {
         this.state = {
             contactsData: [],
             searchText: '',
+            email: [],
             keyboard: false
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         let contactArray = [];
         Contacts.getAll((err, contacts) => {
             if (err) {
@@ -48,8 +48,6 @@ export default class AddressBookScreen extends React.Component {
             }
 
             contacts.forEach((data, index) => {
-                console.log('data for image ', data);
-
                 let contactObj = {
                     idTemp: index,
                     emails: [...data.emailAddresses],
@@ -64,9 +62,7 @@ export default class AddressBookScreen extends React.Component {
                     contactArray.push(contactObj);
                 }
             });
-            this.setState({ contactsData: [...contactArray] }, () => {
-                console.log('al contacts ', this.state.contactsData);
-            });
+            this.setState({ contactsData: [...contactArray] });
             // contacts returned
         });
     }
@@ -83,16 +79,45 @@ export default class AddressBookScreen extends React.Component {
         });
     }
 
-    sendInvitation = () => {
-        console.log('inivitation sent');
-    };
-
     toggleSelectContacts = index => {
         let array = [...this.state.contactsData];
+        let emailArray = [];
         array[index].selected = !array[index].selected;
-        this.setState({
-            contactsData: array
-        });
+
+        this.setState(
+            {
+                contactsData: array
+            },
+            () => {
+                this.state.contactsData.forEach(elem => {
+                    if (elem.selected) {
+                        emailArray.push(elem.emails[0].email);
+                    }
+                });
+
+                this.setState({ email: [...emailArray] });
+            }
+        );
+    };
+
+    renderProfileImage = profileImageSource => {
+        if (profileImageSource && profileImageSource !== '') {
+            return (
+                <Image
+                    style={styles.profileImageStyle}
+                    source={{ uri: 'file://' + profileImageSource }}
+                />
+            );
+        } else {
+            return (
+                <View style={styles.emptyProfileContainer}>
+                    <Image
+                        source={images.smile_contact_placeholder}
+                        style={styles.emptyContactItemImage}
+                    />
+                </View>
+            );
+        }
     };
 
     renderSelectedContacts = () => {
@@ -102,25 +127,13 @@ export default class AddressBookScreen extends React.Component {
                     <TouchableOpacity
                         onPress={() => this.toggleSelectContacts(index)}
                     >
-                        <Image style={{ marginRight: 10 }} source={cancelImg} />
+                        <Image
+                            style={{ width: 24, height: 24, marginRight: 10 }}
+                            source={images.cross_deselect}
+                        />
                     </TouchableOpacity>
-                    <ProfileImage
-                        placeholder={
-                            elem.profileImage && elem.profileImage !== ''
-                                ? elem.profileImage
-                                : images.user_image
-                        }
-                        style={styles.contactItemImage}
-                        placeholderStyle={styles.contactItemImage}
-                        resizeMode="cover"
-                    />
-                    <View
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1
-                        }}
-                    >
+                    {this.renderProfileImage(elem.profileImage)}
+                    <View style={styles.contactNameContainer}>
                         <Text style={styles.participantName}>{elem.name}</Text>
                     </View>
                 </View>
@@ -145,23 +158,8 @@ export default class AddressBookScreen extends React.Component {
                                     : images.checkmark_selected
                             }
                         />
-                        <ProfileImage
-                            placeholder={
-                                elem.profileImage && elem.profileImage !== ''
-                                    ? elem.profileImage
-                                    : images.user_image
-                            }
-                            style={styles.contactItemImage}
-                            placeholderStyle={styles.contactItemImage}
-                            resizeMode="cover"
-                        />
-                        <View
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                flex: 1
-                            }}
-                        >
+                        {this.renderProfileImage(elem.profileImage)}
+                        <View style={styles.contactNameContainer}>
                             <Text style={styles.participantName}>
                                 {elem.name}
                             </Text>
@@ -171,6 +169,44 @@ export default class AddressBookScreen extends React.Component {
             });
         } else {
             return null;
+        }
+    };
+
+    sendInvite() {
+        Auth.getUser()
+            .then(user => {
+                const options = {
+                    method: 'post',
+                    url:
+                        config.proxy.protocol +
+                        config.proxy.host +
+                        '/contactsActions',
+                    headers: {
+                        sessionId: user.creds.sessionId
+                    },
+                    data: {
+                        capability: 'InviteUsers',
+                        botId: 'onboarding-bot',
+                        emailIds: this.state.email
+                    }
+                };
+                return Network(options);
+            })
+            .then(
+                data => {
+                    if (data.status === 200 && data.data.error === 0) {
+                        console.log('invitation sent');
+                    }
+                },
+                err => {
+                    console.log('error in sending invitation', err);
+                }
+            );
+    }
+
+    sendInvitationToEmail = async () => {
+        if (this.state.email && this.state.email.length > 0) {
+            this.sendInvite();
         }
     };
 
@@ -196,7 +232,12 @@ export default class AddressBookScreen extends React.Component {
                     />
                 </View>
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 2 }}>
+                    <View
+                        style={{
+                            flex: 2,
+                            backgroundColor: 'rgba(244,244,244,1)'
+                        }}
+                    >
                         <ScrollView>
                             <View style={styles.allSelectedContacts}>
                                 {this.renderSelectedContacts()}
@@ -214,7 +255,9 @@ export default class AddressBookScreen extends React.Component {
                 <View style={styles.buttonContainerDone}>
                     <TouchableOpacity
                         style={styles.doneButton}
-                        onPress={this.sendInvitation()}
+                        onPress={() => {
+                            this.sendInvitationToEmail();
+                        }}
                     >
                         <Text style={{ color: '#fff' }}>DONE</Text>
                     </TouchableOpacity>

@@ -29,7 +29,12 @@ import {
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact, Settings, PollingStrategyTypes } from '../../lib/capability';
+import {
+    Contact,
+    Settings,
+    PollingStrategyTypes,
+    Auth
+} from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
@@ -52,6 +57,7 @@ import {
 } from 'react-native-responsive-screen';
 import images from '../../config/images';
 import { EmptyContact } from '.';
+import ProfileImage from '../ProfileImage';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -130,8 +136,20 @@ class ContactsPicker extends React.Component {
         this.state = {
             contactsData: [],
             selectedContacts: [],
-            inviteModalVisible: false
+            inviteModalVisible: false,
+            userInfo: {}
         };
+    }
+
+    componentWillMount() {
+        Auth.getUser()
+            .then(userDetails => {
+                const info = { ...userDetails.info };
+                this.setState({ userInfo: info });
+            })
+            .catch(err => {
+                console.log('Error Loading User details', err);
+            });
     }
 
     async componentDidMount() {
@@ -193,6 +211,7 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
+
         // if (user.contactsLoaded === false) {
         //     Contact.refreshContacts()
         // }
@@ -425,7 +444,46 @@ class ContactsPicker extends React.Component {
         );
     }
 
-    renderButtons = () => <View>{this.renderSearchBar()}</View>;
+    goToMyProfile = () => {
+        // console.log('go to profile page using ', this.state.userInfo);
+        Actions.myProfileScreen({ userId: this.state.userInfo.userId });
+    };
+
+    renderButtons = () => (
+        <View>
+            {this.renderSearchBar()}
+            <View style={styles.myProfileContainer}>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.goToMyProfile();
+                    }}
+                >
+                    <View style={styles.myProfileItemContainer}>
+                        {/* <Image
+                            source={images.user_image}
+                            style={styles.myProfileItemImage}
+                        /> */}
+
+                        <ProfileImage
+                            uuid={this.state.userInfo.userId}
+                            placeholder={images.user_image}
+                            style={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfileItemImage}
+                            resizeMode="center"
+                        />
+                        <View style={styles.contactItemDetailsContainer}>
+                            <Text style={styles.myProfileName}>
+                                {this.state.userInfo.userName}
+                            </Text>
+                            <Text style={styles.contactItemEmail}>
+                                My Profile
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 
     sectionHeader({ section }) {
         if (section.data.length === 0) {
@@ -489,6 +547,7 @@ class ContactsPicker extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
+
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}
