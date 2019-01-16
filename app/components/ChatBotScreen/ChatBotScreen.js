@@ -19,6 +19,7 @@ import ChatInputBar from './ChatInputBar';
 import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import CallModal from './CallModal';
+import ChatModal from './ChatModal';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
 import {
@@ -79,6 +80,7 @@ import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
+import { Datacard } from '../Datacard';
 
 const R = require('ramda');
 
@@ -167,7 +169,9 @@ class ChatBotScreen extends React.Component {
             typing: '',
             showSlider: false,
             refreshing: false,
-            sliderClosed: false
+            sliderClosed: false,
+            chatModalContent: {},
+            isModalVisible: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -724,7 +728,9 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_DATACARD
         ) {
             this.updateChat(message);
         } else if (
@@ -1104,6 +1110,16 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_DATACARD
+            ) {
+                return (
+                    <Datacard
+                        datacardList={message.getMessage()}
+                        onCardSelected={this.openModalWithContent.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
             ) {
                 return (
@@ -1166,6 +1182,13 @@ class ChatBotScreen extends React.Component {
                 );
             }
         }
+    }
+
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
     }
 
     waitForQueueProcessing() {
@@ -1801,6 +1824,21 @@ class ChatBotScreen extends React.Component {
         );
     };
 
+    renderChatModal() {
+        return (
+            <ChatModal
+                content={this.state.chatModalContent}
+                isVisible={this.state.isModalVisible}
+                backdropOpacity={0.1}
+                onBackButtonPress={() =>
+                    this.setState({ isModalVisible: false })
+                }
+                onBackdropPress={() => this.setState({ isModalVisible: false })}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            />
+        );
+    }
+
     render() {
         if (!this.botLoaded) {
             return (
@@ -1871,7 +1909,8 @@ class ChatBotScreen extends React.Component {
                         </View>
 
                         {this.renderNetworkStatusBar()}
-                        {this.renderCallModal()}
+                        {/* {this.renderCallModal()} */}
+                        {this.renderChatModal()}
                     </KeyboardAvoidingView>
                 </BackgroundImage>
             </SafeAreaView>

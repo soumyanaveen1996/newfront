@@ -36,7 +36,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_WEB_CARD: 'web_card',
     MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
     MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
-    MESSAGE_TYPE_LOCATION: 'location'
+    MESSAGE_TYPE_LOCATION: 'location',
+    MESSAGE_TYPE_DATACARD: 'datacard'
 };
 
 export const IntToMessageTypeConstants = {
@@ -54,7 +55,9 @@ export const IntToMessageTypeConstants = {
     260: MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
     270: MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION,
     280: MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION,
-    290: MessageTypeConstants.MESSAGE_TYPE_LOCATION
+    290: MessageTypeConstants.MESSAGE_TYPE_LOCATION,
+    300: MessageTypeConstants.MESSAGE_TYPE_FORM2,
+    310: MessageTypeConstants.MESSAGE_TYPE_DATACARD
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -187,6 +190,11 @@ export default class Message {
             this._options = JSON.stringify(options);
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER;
+    };
+
+    datacard = (cardData, options) => {
+        this._msg = cardData || [];
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_DATACARD;
     };
 
     sliderResponseMessage = (sliderData, options) => {
@@ -447,6 +455,7 @@ export default class Message {
         }
         if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
@@ -590,6 +599,7 @@ export default class Message {
     isEmptyMessage() {
         const emptyMessages = [
             MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
+            MessageTypeConstants.MESSAGE_TYPE_DATACARD,
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,

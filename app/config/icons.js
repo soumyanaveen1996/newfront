@@ -301,7 +301,11 @@ export const Icons = {
         'ionicon',
         15,
         GlobalColors.sideButtons
-    )
+    ),
+
+    //DATACARD
+    cardsTrue: icon('ios-checkmark-circle', 'ionicon', 25, GlobalColors.green),
+    cardsFalse: icon('ios-close-circle', 'ionicon', 25, GlobalColors.red)
 };
 
 export default Icons;

@@ -624,9 +624,14 @@ const stylesheet = StyleSheet.create({
     },
     profileImageContainer: {
         width: '100%',
+        position: 'relative',
         height: 130,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    profilePic: {
+        width: 120,
+        height: 120
     },
     profileImgStyle: {
         width: 120,
