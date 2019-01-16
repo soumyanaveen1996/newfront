@@ -413,6 +413,9 @@ export default class ConversationContext {
     };
 
     static getChatName = function(conversationContext, user) {
+        if (!conversationContext) {
+            return;
+        }
         if (conversationContext.onChannels.length > 0) {
             return conversationContext.onChannels[0].channelName;
         } else {
@@ -441,6 +444,9 @@ export default class ConversationContext {
         });
 
     static getOtherUserId = function(conversationContext, user) {
+        if (!conversationContext) {
+            return;
+        }
         const otherParticipants = _.filter(
             conversationContext.participantsInfo,
             p => {
