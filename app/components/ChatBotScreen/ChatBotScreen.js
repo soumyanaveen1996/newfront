@@ -186,38 +186,6 @@ class ChatBotScreen extends React.Component {
         this.dce_bot = dce.bot(this.bot, this.botContext);
         this.user = null;
         this.conversationContext = null;
-
-        //TEST
-        const cardData = [
-            {
-                title: 'field1 contact',
-                field2: 12345,
-                field3: true,
-                field4: 'etc',
-                field5: 'etc'
-            },
-            {
-                title: 'field1 contact',
-                field2: new Date(),
-                field3: false,
-                field4: 'etc',
-                field5: 'etc'
-            },
-            {
-                title: 'field1 contact',
-                field2: 12345,
-                field3: null,
-                field4: 'etc',
-                field5: 'etc'
-            },
-            {
-                title: 'field1 contact',
-                field2: 12345
-            }
-        ];
-        this.testMessage = new Message();
-        this.testMessage.datacard(cardData);
-        this.testMessage.messageByBot(true);
     }
 
     loadBot = async () => {
@@ -1920,9 +1888,7 @@ class ChatBotScreen extends React.Component {
                                 this.chatList = list;
                                 this.checkForScrolling();
                             }}
-                            data={AllMessages.concat({
-                                message: this.testMessage
-                            })}
+                            data={AllMessages}
                             renderItem={this.renderItem.bind(this)}
                             onLayout={this.onChatListLayout.bind(this)}
                             refreshControl={
