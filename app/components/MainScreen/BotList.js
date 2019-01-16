@@ -96,7 +96,8 @@ class BotList extends React.Component {
                 if (
                     (chatData.lastMessage &&
                         chatData.lastMessage.getMessageType() === 'web_card') ||
-                    chatData.lastMessage.getMessageType() === 'datacard'
+                    chatData.lastMessage.getMessageType() === 'datacard' ||
+                    chatData.lastMessage.getMessageType() === 'form2'
                 ) {
                     chatData.lastMessage = null;
                 }

@@ -114,8 +114,15 @@ export default class Form2 extends React.Component {
             case 'text_area': //no answer
                 break;
             case 'checkbox':
-                answer.value = _.map(fieldData.options, () => {
-                    return false;
+                answer.value = _.map(fieldData.options, option => {
+                    if (
+                        fieldData.value &&
+                            _.includes(fieldData.value, option)
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 });
                 answer.getResponse = () => {
                     return _.filter(fieldData.options, (option, i) => {
@@ -156,8 +163,15 @@ export default class Form2 extends React.Component {
                 };
                 break;
             case 'multi_selection':
-                answer.value = _.map(fieldData.options, () => {
-                    return false;
+                answer.value = _.map(fieldData.options, option => {
+                    if (
+                        fieldData.value &&
+                            _.includes(fieldData.value, option)
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 });
                 answer.getResponse = () => {
                     return _.filter(fieldData.options, (option, i) => {
@@ -242,6 +256,14 @@ export default class Form2 extends React.Component {
         return response;
     }
 
+    saveFormData() {
+        const data = _.map(this.props.formData, (field, index) => {
+            field.value = this.answers[index].getResponse();
+            return field;
+        });
+        return data;
+    }
+
     renderTextField(content, key) {
         return (
             <TextInput
@@ -251,7 +273,7 @@ export default class Form2 extends React.Component {
                     this.answers[key].value = text;
                     // this.setState({ answers: this.answers })
                 }}
-                placeholder={content}
+                placeholder={content.value}
                 placeholderTextColor={GlobalColors.disabledGray}
                 // value={this.state.answers[key].value}
             />
@@ -259,7 +281,7 @@ export default class Form2 extends React.Component {
     }
 
     renderCheckbox(content, key) {
-        let options = _.map(content, (option, index) => {
+        let options = _.map(content.options, (option, index) => {
             return (
                 <CheckBox
                     disabled={this.disabled}
@@ -287,7 +309,7 @@ export default class Form2 extends React.Component {
     }
 
     renderRadioButton(content, key) {
-        let options = _.map(content, (option, index) => {
+        let options = _.map(content.options, (option, index) => {
             return (
                 <CheckBox
                     key={index}
@@ -319,7 +341,7 @@ export default class Form2 extends React.Component {
                 onPress={() => {
                     this.currentDropdownModalKey = key;
                     this.setState({
-                        dropdownModalOptions: content,
+                        dropdownModalOptions: content.options,
                         dropdownModalValue: this.answers[key].value, //index
                         dropdownModalVisible: true,
                         dropdownModalTitle: this.props.formData[key].title
@@ -327,7 +349,7 @@ export default class Form2 extends React.Component {
                 }}
                 style={styles.textField}
             >
-                <Text>{content[this.state.answers[key].value]}</Text>
+                <Text>{content.options[this.state.answers[key].value]}</Text>
                 {Icons.formDownArrow()}
             </TouchableOpacity>
         );
@@ -394,7 +416,7 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderSwitch(key) {
+    renderSwitch(content, key) {
         return (
             <Switch
                 disabled={this.disabled}
@@ -407,7 +429,7 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderSlider(key) {
+    renderSlider(content, key) {
         return (
             <Slider
                 disabled={this.disabled}
@@ -425,7 +447,7 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderDate(key) {
+    renderDate(content, key) {
         return (
             <TouchableOpacity
                 disabled={this.disabled}
@@ -497,7 +519,7 @@ export default class Form2 extends React.Component {
                 onPress={() => {
                     Actions.multiselection({
                         index: key,
-                        options: content,
+                        options: content.options,
                         response: this.answers[key].value,
                         onDone: this.onMultiselectionDone.bind(this),
                         disabled: this.disabled
@@ -516,7 +538,7 @@ export default class Form2 extends React.Component {
         this.setState({ answers: this.answers });
     }
 
-    renderPasswordField(key) {
+    renderPasswordField(content, key) {
         return (
             <TextInput
                 editable={!this.disabled}
@@ -536,34 +558,34 @@ export default class Form2 extends React.Component {
         let field;
         switch (fieldData.type) {
         case 'text_field':
-            field = this.renderTextField(fieldData.value, key);
+            field = this.renderTextField(fieldData, key);
             break;
         case 'text_area': //render only the label
             field = null;
             break;
         case 'checkbox':
-            field = this.renderCheckbox(fieldData.options, key);
+            field = this.renderCheckbox(fieldData, key);
             break;
         case 'radiobutton':
-            field = this.renderRadioButton(fieldData.options, key);
+            field = this.renderRadioButton(fieldData, key);
             break;
         case 'dropdown':
-            field = this.renderDropdown(fieldData.options, key);
+            field = this.renderDropdown(fieldData, key);
             break;
         case 'switch':
-            field = this.renderSwitch(key);
+            field = this.renderSwitch(fieldData, key);
             break;
         case 'slider':
-            field = this.renderSlider(key);
+            field = this.renderSlider(fieldData, key);
             break;
         case 'date':
-            field = this.renderDate(key);
+            field = this.renderDate(fieldData, key);
             break;
         case 'multi_selection':
-            field = this.renderMultiselection(fieldData.options, key);
+            field = this.renderMultiselection(fieldData, key);
             break;
         case 'password_field':
-            field = this.renderPasswordField(key);
+            field = this.renderPasswordField(fieldData, key);
             break;
         default:
         }
@@ -592,6 +614,9 @@ export default class Form2 extends React.Component {
                         <TouchableOpacity
                             style={styles.f2CancelButton}
                             onPress={() => {
+                                if (!this.disabled) {
+                                    this.props.saveMessage(this.saveFormData());
+                                }
                                 Actions.pop();
                             }}
                         >
@@ -604,7 +629,10 @@ export default class Form2 extends React.Component {
                             style={styles.f2DoneButton}
                             onPress={() => {
                                 let response = this.getResponse();
-                                this.props.onDone(response);
+                                this.props.onDone(
+                                    this.saveFormData(),
+                                    response
+                                );
                                 Actions.pop();
                             }}
                         >

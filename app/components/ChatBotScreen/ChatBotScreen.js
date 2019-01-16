@@ -733,7 +733,8 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_HTML ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD
+                MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
         ) {
             this.updateChat(message);
         } else if (
@@ -1138,7 +1139,9 @@ class ChatBotScreen extends React.Component {
                     <Form2Message
                         formData={message.getMessage()}
                         messageData={message.getMessageOptions()}
-                        // onSubmit={}
+                        message={message}
+                        saveMessage={this.persistMessage.bind(this)}
+                        // onSubmit = {}
                     />
                 );
             } else {
