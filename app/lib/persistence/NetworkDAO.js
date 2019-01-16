@@ -371,8 +371,9 @@ const migrateToV3NetworkQueue = () =>
         });
     });
 
-const deleteAllRows = () =>
-    new Promise((resolve, reject) => {
+const deleteAllRows = () => {
+    console.log('Deleting Network Queue...');
+    return new Promise((resolve, reject) => {
         db.transaction(transaction => {
             transaction.executeSql(
                 networkSql.deleteAllRows,
@@ -386,6 +387,7 @@ const deleteAllRows = () =>
             );
         });
     });
+};
 
 export default {
     createNetworkRequestQueueTable: createNetworkRequestQueueTable,

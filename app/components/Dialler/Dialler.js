@@ -26,7 +26,6 @@ import Modal from 'react-native-modal';
 import GlobalColors from '../../config/styles';
 import CountryCodes from './code';
 import Bot from '../../lib/bot';
-import { Action } from 'rxjs/scheduler/Action';
 import ProfileImage from '../ProfileImage';
 import config from '../../config/config';
 
