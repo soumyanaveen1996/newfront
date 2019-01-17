@@ -80,6 +80,7 @@ import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
+import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 
 const R = require('ramda');
@@ -730,7 +731,10 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD
+                MessageTypeConstants.MESSAGE_TYPE_HTML ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
         ) {
             this.updateChat(message);
         } else if (
@@ -749,10 +753,6 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
             this.queueMessage(message);
-        } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
-        ) {
-            this.updateChat(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
@@ -928,18 +928,12 @@ class ChatBotScreen extends React.Component {
         }
     };
 
-    onFormDone = (formItems, formMessage) => {
-        formMessage.setCompleted(true);
-        formMessage.formMessage(formItems);
-        formMessage.setRead(true);
-        this.persistMessage(formMessage).then(() => {
-            this.replaceUpdatedMessage(formMessage);
-            let message = new Message({ addedByBot: false });
-            message.formResponseMessage(formItems);
-            message.setCreatedBy(this.getUserId());
-            return this.sendMessage(message);
-        });
-    };
+    onFormDone(response) {
+        let message = new Message({ addedByBot: false });
+        message.formResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
 
     onFormOpen = formMessage => {
         let message = new Message({ addedByBot: false });
@@ -1072,6 +1066,7 @@ class ChatBotScreen extends React.Component {
     } */
 
     renderItem({ item }) {
+        console.log(item);
         const message = item.message;
         if (message.isMessageByBot()) {
             if (
@@ -1128,6 +1123,19 @@ class ChatBotScreen extends React.Component {
                         body={message.getMessage().body}
                         buttons={message.getMessage().buttons}
                         onButtonClick={this.onButtonDone.bind()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM2
+            ) {
+                return (
+                    <Form2Message
+                        formData={message.getMessage()}
+                        messageData={message.getMessageOptions()}
+                        message={message}
+                        saveMessage={this.persistMessage.bind(this)}
+                        onSubmit={this.onFormDone.bind(this)}
                     />
                 );
             } else {
@@ -1211,8 +1219,13 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         this.countMessage(message);
-        this.updateChat(message);
-        this.scrollToBottom = true;
+        if (
+            !message.getMessageType() !==
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+        ) {
+            this.updateChat(message);
+            this.scrollToBottom = true;
+        }
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1228,7 +1241,12 @@ class ChatBotScreen extends React.Component {
                 console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
-                    this.updateChat(message);
+                    if (
+                        !message.getMessageType() !==
+                        MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+                    ) {
+                        this.updateChat(message);
+                    }
                 }
             });
         } else {

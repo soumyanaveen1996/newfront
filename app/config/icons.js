@@ -303,6 +303,30 @@ export const Icons = {
         GlobalColors.sideButtons
     ),
 
+    //FORM
+    formMessageArrow: icon(
+        'ios-arrow-forward',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons,
+        'red',
+        '500'
+    ),
+    formCompletedCheck: icon('md-checkmark', 'ionicon', 20, GlobalColors.green),
+    formDownArrow: icon(
+        'ios-arrow-down',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons
+    ),
+    formCalendar: icon(
+        'ios-calendar-outline',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons
+    ),
+    circleSlice: icon('time-slot', 'entypo', 20, 'gold'),
+
     //DATACARD
     cardsTrue: icon('ios-checkmark-circle', 'ionicon', 25, GlobalColors.green),
     cardsFalse: icon('ios-close-circle', 'ionicon', 25, GlobalColors.red)

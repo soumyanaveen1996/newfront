@@ -35,7 +35,8 @@ export const GlobalColors = {
     chatRightTextColor: 'rgba(245, 255, 255, 1)',
     satelliteMode: 'rgba(255,238,237,1)',
     green: 'rgba(47, 199, 111, 1)',
-    tabText: 'rgba(255,255,255,0.6)'
+    tabText: 'rgba(255,255,255,0.6)',
+    textField: 'rgba(100,100,100,0.1)'
 };
 
 export default GlobalColors;
