@@ -68,21 +68,15 @@ export default class MyProfileScreen extends React.Component {
                 const emailArray = [];
                 emailArray.push(info.emailAddress);
                 if (this.mounted) {
-                    this.setState(
-                        {
-                            myName: info.userName,
-                            emailAddress: [...emailArray],
-                            phoneNumbers: info.phoneNumbers
-                                ? [...info.phoneNumbers]
-                                : [],
-                            searchState: info.searchState || false,
-                            shareState: info.shareState || false,
-                            userId: info.userId
-                        },
-                        () => {
-                            console.log('user id ', this.state.userId);
-                        }
-                    );
+                    this.setState({
+                        myName: info.userName,
+                        emailAddress: [...emailArray],
+                        phoneNumbers: info.phoneNumbers
+                            ? [...info.phoneNumbers]
+                            : [],
+                        searchState: info.searchState || false,
+                        shareState: info.shareState || false
+                    });
                 }
             })
             .catch(err => {
@@ -140,6 +134,7 @@ export default class MyProfileScreen extends React.Component {
             Auth.updateUserDetails(userDetails)
                 .then(data => {
                     this.setState({ loading: false });
+                    Actions.pop();
                 })
                 .catch(err => {
                     this.setState({ loading: false });
@@ -212,6 +207,12 @@ export default class MyProfileScreen extends React.Component {
                         )}
                         {type === 'phNumber' ? (
                             <TouchableOpacity
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
                                     this.selectNumberType(index);
                                 }}
@@ -243,6 +244,12 @@ export default class MyProfileScreen extends React.Component {
                         )}
                         {type === 'phNumber' ? (
                             <TouchableOpacity
+                                style={{
+                                    width: 40,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
                                     this.removephone(index);
                                 }}
@@ -286,8 +293,8 @@ export default class MyProfileScreen extends React.Component {
     }
 
     async sendImage(imageUri, base64) {
-        console.log('images ', imageUri);
-
+        // console.log('images ', imageUri);
+        this.setState({ loading: true });
         const PROFILE_PIC_BUCKET = 'profile-pics';
         const toUri = await Utils.copyFileAsync(
             imageUri,
@@ -315,6 +322,7 @@ export default class MyProfileScreen extends React.Component {
                     );
                 } else {
                     console.log('file url upload image ', fileUrl);
+                    this.setState({ loading: false });
                 }
             });
     }
@@ -379,7 +387,7 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
-        console.log('profile image', this.state.userId);
+        console.log('profile image', this.props.userId);
 
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
@@ -401,7 +409,7 @@ export default class MyProfileScreen extends React.Component {
                                 }}
                             >
                                 <ProfileImage
-                                    uuid={this.state.userId}
+                                    uuid={this.props.userId}
                                     placeholder={require('../../images/contact/GreenGoblin.png')}
                                     style={styles.profilePic}
                                     placeholderStyle={styles.profileImgStyle}
