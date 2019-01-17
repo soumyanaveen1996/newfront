@@ -1219,13 +1219,10 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         this.countMessage(message);
-        if (
-            !message.getMessageType() !==
-            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-        ) {
-            this.updateChat(message);
-            this.scrollToBottom = true;
-        }
+
+        this.updateChat(message);
+        this.scrollToBottom = true;
+
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1241,12 +1238,8 @@ class ChatBotScreen extends React.Component {
                 console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
-                    if (
-                        !message.getMessageType() !==
-                        MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-                    ) {
-                        this.updateChat(message);
-                    }
+
+                    this.updateChat(message);
                 }
             });
         } else {

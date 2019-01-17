@@ -376,13 +376,7 @@ export default class Message {
             this._messageType ===
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
         ) {
-            let items = this.getMessage();
-            let titles = _.map(items, item =>
-                item.value !== undefined ? item.title + ':' + item.value : ''
-            );
-            return I18n.t('Slider_Response_Message', {
-                lines: titles.join('\n')
-            });
+            return '';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
@@ -442,6 +436,11 @@ export default class Message {
             return '';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
+        ) {
+            return '';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATACARD
         ) {
             return '';
         } else {
@@ -621,7 +620,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
-            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;
