@@ -8,20 +8,20 @@ export default class Form2Message extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: this.props.message.getStage()
-                ? this.props.message.getStage()
+            status: this.props.messageData.stage
+                ? this.props.messageData.stage
                 : formStatus.NEW
         };
+        this.props.messageData.stage = this.state.status;
     }
 
     openForm() {
         if (this.state.status === formStatus.NEW) {
             this.setState({ status: formStatus.OPENED });
-            this.props.message.setStage(this.state.status);
         }
         Actions.form2({
             formData: this.props.formData,
-            id: this.props.messageData.id,
+            id: this.props.messageData.formId,
             title: this.props.messageData.title,
             cancel: this.props.messageData.cancel,
             confirm: this.props.messageData.confirm,
@@ -32,8 +32,8 @@ export default class Form2Message extends React.Component {
     }
 
     saveMessage(formData) {
+        this.props.messageData.stage = this.state.status;
         this.props.message.form2Message(formData, this.props.messageData);
-        this.props.message.setStage(this.state.status);
         this.props.saveMessage(this.props.message);
     }
 

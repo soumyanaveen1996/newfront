@@ -86,7 +86,6 @@ export default class Message {
         this._createdBy = opts.createdBy;
         this._completed = opts.completed || false;
         this._status = opts.status || 0;
-        this._stage = opts.stage || 0;
     }
 
     /**
@@ -391,7 +390,7 @@ export default class Message {
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2
         ) {
-            return 'form2';
+            return 'Form';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
@@ -539,9 +538,6 @@ export default class Message {
     getStatus = () => this._status;
     setStatus = status => (this._status = status);
 
-    getStage = () => this._stage;
-    setStage = stage => (this._stage = stage);
-
     /**
      * Return a JSON object representing the message - for persistence / to send to remote server etc
      *
@@ -559,8 +555,7 @@ export default class Message {
             messageDate: this.getMessageDate(),
             botKey: this.getBotKey(),
             createdBy: this.getCreatedBy(),
-            status: this.getStatus(),
-            stage: this.getStage()
+            status: this.getStatus()
         };
     };
 

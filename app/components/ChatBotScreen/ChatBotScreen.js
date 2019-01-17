@@ -928,18 +928,12 @@ class ChatBotScreen extends React.Component {
         }
     };
 
-    onFormDone = (formItems, formMessage) => {
-        formMessage.setCompleted(true);
-        formMessage.formMessage(formItems);
-        formMessage.setRead(true);
-        this.persistMessage(formMessage).then(() => {
-            this.replaceUpdatedMessage(formMessage);
-            let message = new Message({ addedByBot: false });
-            message.formResponseMessage(formItems);
-            message.setCreatedBy(this.getUserId());
-            return this.sendMessage(message);
-        });
-    };
+    onFormDone(response) {
+        let message = new Message({ addedByBot: false });
+        message.formResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
 
     onFormOpen = formMessage => {
         let message = new Message({ addedByBot: false });
@@ -1141,7 +1135,7 @@ class ChatBotScreen extends React.Component {
                         messageData={message.getMessageOptions()}
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
-                        // onSubmit = {}
+                        onSubmit={this.onFormDone.bind(this)}
                     />
                 );
             } else {
@@ -1225,8 +1219,13 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         this.countMessage(message);
-        this.updateChat(message);
-        this.scrollToBottom = true;
+        if (
+            !message.getMessageType() !==
+            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+        ) {
+            this.updateChat(message);
+            this.scrollToBottom = true;
+        }
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1242,7 +1241,12 @@ class ChatBotScreen extends React.Component {
                 console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
-                    this.updateChat(message);
+                    if (
+                        !message.getMessageType() !==
+                        MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+                    ) {
+                        this.updateChat(message);
+                    }
                 }
             });
         } else {
