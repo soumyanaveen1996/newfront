@@ -37,14 +37,14 @@ export default class Phone extends React.Component {
         if (Platform.OS === 'ios') {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
-            if (call_from.startsWith('client:')) {
+            if (call_from && call_from.startsWith('client:')) {
                 call_from = '';
             }
         }
         if (Platform.OS === 'android') {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
-            if (call_from.startsWith('client:')) {
+            if (call_from && call_from.startsWith('client:')) {
                 call_from = '';
             }
         }
