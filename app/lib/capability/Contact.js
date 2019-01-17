@@ -83,6 +83,30 @@ export default class Contact {
                 });
         });
 
+    static confirmContact = contact =>
+        new Promise((resolve, reject) => {
+            Contact.getAddedContacts()
+                .then(data => {
+                    let contactArray = data.map(elem => {
+                        if (
+                            contact.waitingForConfirmation &&
+                            elem.userId === contact.userId
+                        ) {
+                            elem.waitingForConfirmation =
+                                contact.waitingForConfirmation;
+                        }
+                    });
+
+                    return Contact.saveContacts(contactArray);
+                })
+                .then(function(cts) {
+                    return resolve(cts);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
     /**
      * Adds the ignore flag for the Contact. If no contact with userId present,
      * it adds a contact with ignore flag true.
