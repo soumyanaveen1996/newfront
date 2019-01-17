@@ -88,13 +88,14 @@ export default class Contact {
             Contact.getAddedContacts()
                 .then(data => {
                     let contactArray = data.map(elem => {
-                        if (
-                            contact.waitingForConfirmation &&
-                            elem.userId === contact.userId
-                        ) {
+                        if (elem.userId === contact.userId) {
                             elem.waitingForConfirmation =
                                 contact.waitingForConfirmation;
+                            elem.userName = contact.userName;
+                            elem.emailAddress = contact.emailAddress;
+                            elem.phoneNumbers = contact.phoneNumbers;
                         }
+                        return elem;
                     });
 
                     return Contact.saveContacts(contactArray);
