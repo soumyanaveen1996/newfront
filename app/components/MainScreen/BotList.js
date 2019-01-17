@@ -94,9 +94,10 @@ class BotList extends React.Component {
                 }
                 // QUICK FIX AS WEB CARD CRASHES UI---> DAVIDE TO CHECK LATER
                 if (
-                    chatData.lastMessage &&
-                    (chatData.lastMessage.getMessageType() === 'web_card' ||
-                        chatData.lastMessage.getMessageType() === 'datacard')
+                    (chatData.lastMessage &&
+                        chatData.lastMessage.getMessageType() === 'web_card') ||
+                    chatData.lastMessage.getMessageType() === 'datacard' ||
+                    chatData.lastMessage.getMessageType() === 'form2'
                 ) {
                     chatData.lastMessage = null;
                 }
