@@ -111,7 +111,11 @@ export default class Form2 extends React.Component {
                     return answer.value;
                 };
                 break;
-            case 'text_area': //no answer
+            case 'text_area':
+                answer.value = '';
+                answer.getResponse = () => {
+                    return answer.value;
+                };
                 break;
             case 'checkbox':
                 answer.value = _.map(fieldData.options, option => {
@@ -269,6 +273,23 @@ export default class Form2 extends React.Component {
             <TextInput
                 editable={!this.disabled}
                 style={styles.textField}
+                onChangeText={text => {
+                    this.answers[key].value = text;
+                    // this.setState({ answers: this.answers })
+                }}
+                placeholder={content.value}
+                placeholderTextColor={GlobalColors.disabledGray}
+                // value={this.state.answers[key].value}
+            />
+        );
+    }
+
+    renderTextArea(content, key) {
+        return (
+            <TextInput
+                multiline={true}
+                editable={!this.disabled}
+                style={styles.textArea}
                 onChangeText={text => {
                     this.answers[key].value = text;
                     // this.setState({ answers: this.answers })
@@ -513,7 +534,7 @@ export default class Form2 extends React.Component {
         );
     }
 
-    renderMultiselection(content, key) {
+    renderMultiselection(content, key, title) {
         return (
             <TouchableOpacity
                 onPress={() => {
@@ -527,7 +548,9 @@ export default class Form2 extends React.Component {
                 }}
                 style={styles.multiselectionContainer}
             >
-                <Text style={styles.optionText}>Multiple selection</Text>
+                <Text style={styles.optionText}>
+                    {title || 'Multiple selection'}
+                </Text>
                 {Icons.formMessageArrow()}
             </TouchableOpacity>
         );
@@ -560,8 +583,8 @@ export default class Form2 extends React.Component {
         case 'text_field':
             field = this.renderTextField(fieldData, key);
             break;
-        case 'text_area': //render only the label
-            field = null;
+        case 'text_area':
+            field = this.renderTextArea(fieldData, key);
             break;
         case 'checkbox':
             field = this.renderCheckbox(fieldData, key);
@@ -582,7 +605,11 @@ export default class Form2 extends React.Component {
             field = this.renderDate(fieldData, key);
             break;
         case 'multi_selection':
-            field = this.renderMultiselection(fieldData, key);
+            return this.renderMultiselection(
+                fieldData,
+                key,
+                fieldData.title
+            );
             break;
         case 'password_field':
             field = this.renderPasswordField(fieldData, key);
