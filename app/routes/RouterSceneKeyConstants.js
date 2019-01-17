@@ -24,6 +24,7 @@ const ROUTER_SCENE_KEYS = {
     botInfoScreen: 'botInfoScreen',
     launch: 'launch',
     mapView: 'mapView',
+    form2: 'form2',
     imageViewer: 'imageViewer',
     SNRChart: 'SNRChart',
     conversations: 'conversations',
@@ -58,6 +59,7 @@ const ROUTER_SCENE_KEYS = {
     tabBarChat: 'tabBarChat',
     tabBarCall: 'tabBarCall',
     callSummary: 'callSummary',
+    multiselection: 'multiselection',
     myProfileScreen: 'myProfileScreen'
 };
 

@@ -14,6 +14,7 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_LIST: 'list',
     MESSAGE_TYPE_SLIDER: 'slider',
     MESSAGE_TYPE_BUTTON: 'button',
+    MESSAGE_TYPE_FORM2: 'form2',
     MESSAGE_TYPE_FORM: 'form',
     MESSAGE_TYPE_HTML: 'html',
     MESSAGE_TYPE_IMAGE: 'image',
@@ -221,6 +222,14 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE;
     };
 
+    form2Message = (formData, options) => {
+        this._msg = JSON.stringify(formData || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM2;
+    };
+
     formMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -312,6 +321,7 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2 ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
@@ -377,6 +387,10 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
             return this.getMessage().actionText;
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ) {
+            return 'Form';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
@@ -464,6 +478,7 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM2 ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE ||
@@ -522,6 +537,7 @@ export default class Message {
 
     getStatus = () => this._status;
     setStatus = status => (this._status = status);
+
     /**
      * Return a JSON object representing the message - for persistence / to send to remote server etc
      *
