@@ -472,19 +472,42 @@ export default class Form2 extends React.Component {
         return (
             <TouchableOpacity
                 disabled={this.disabled}
-                onPress={() => {
-                    this.currentDateModalKey = key;
-                    this.setState({
-                        dateModalValue: this.answers[key].value,
-                        dateModalVisible: true
-                    });
+                onPress={async () => {
+                    if (Platform.OS === 'android') {
+                        DatePickerAndroid.open({
+                            date: this.answers[key].value,
+                            mode: 'calendar'
+                        })
+                            .then(date => {
+                                if (
+                                    date.action ===
+                                    DatePickerAndroid.dateSetAction
+                                ) {
+                                    this.answers[key].value = new Date(
+                                        date.year,
+                                        date.month,
+                                        date.day
+                                    );
+                                    this.setState({ answers: this.answers });
+                                }
+                            })
+                            .then(() => {
+                                resolve();
+                            });
+                    } else {
+                        this.currentDateModalKey = key;
+                        this.setState({
+                            dateModalValue: this.answers[key].value,
+                            dateModalVisible: true
+                        });
+                    }
                 }}
                 style={styles.dateField}
             >
                 <Text>
                     {this.state.answers[key].value.getDate() +
                         '/' +
-                        this.state.answers[key].value.getMonth() +
+                        (this.state.answers[key].value.getMonth() + 1) +
                         '/' +
                         this.state.answers[key].value.getFullYear()}
                 </Text>
