@@ -143,8 +143,10 @@ export default class SearchUsers extends React.Component {
                     return Network(options);
                 })
                 .then(() => {
-                    this.setState({ loading: false });
-                    Actions.pop();
+                    Contact.refreshContacts().then(() => {
+                        this.setState({ loading: false });
+                        Actions.pop();
+                    });
                 });
         });
     }
