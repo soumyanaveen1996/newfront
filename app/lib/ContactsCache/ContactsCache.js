@@ -26,8 +26,19 @@ class ContactsCache {
                 .catch(reject);
         });
 
-    getUserDetails = userId => {
-        return this.contactsCache[userId];
+    getUserDetails = async userId => {
+        let contact;
+        try {
+            contact = this.contactsCache[userId];
+            if (contact) {
+                return contact;
+            }
+            contact = await this.fetchContactDetailsForUser(userId);
+            return contact;
+        } catch (error) {
+            console.log('Error Fetch Contacts from Server', error);
+            return contact;
+        }
     };
 }
 
