@@ -20,6 +20,7 @@ import { searchBarConfig } from './config';
 import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
+import I18n from '../../config/i18n/i18n';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -280,7 +281,9 @@ export default class AddressBookScreen extends React.Component {
                             this.sendInvitationToEmail();
                         }}
                     >
-                        <Text style={{ color: '#fff' }}>DONE</Text>
+                        <Text style={{ color: '#fff' }}>
+                            {I18n.t('Done_caps')}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
