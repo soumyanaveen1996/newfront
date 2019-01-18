@@ -6,6 +6,7 @@ import {
     Image,
     TextInput,
     Platform,
+    Alert,
     ScrollView,
     PermissionsAndroid
 } from 'react-native';
@@ -21,6 +22,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
 import I18n from '../../config/i18n/i18n';
+import { Loader } from '../Loader';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -30,7 +32,8 @@ export default class AddressBookScreen extends React.Component {
             searchContact: [],
             searchText: '',
             email: [],
-            keyboard: false
+            keyboard: false,
+            loading: false
         };
     }
 
@@ -206,6 +209,8 @@ export default class AddressBookScreen extends React.Component {
     };
 
     sendInvite() {
+        // console.log('send invitation');
+        this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
                 const options = {
@@ -229,13 +234,35 @@ export default class AddressBookScreen extends React.Component {
                 data => {
                     if (data.status === 200 && data.data.error === 0) {
                         console.log('invitation sent');
+                        this.setState({ loading: false }, () => {
+                            if (!this.state.loading) {
+                                console.log(' show alert ');
+                                // this.invitationSent();
+                                Actions.pop();
+                            }
+                        });
                     }
                 },
                 err => {
                     console.log('error in sending invitation', err);
+                    this.setState({ loading: false });
                 }
             );
     }
+
+    invitationSent = () => {
+        return Alert.alert(
+            'Invitation Sent',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => console.log('OK Pressed')
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     sendInvitationToEmail = async () => {
         if (this.state.email && this.state.email.length > 0) {
@@ -246,6 +273,7 @@ export default class AddressBookScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                <Loader loading={this.state.loading} />
                 <View style={styles.searchBar}>
                     <Icon
                         style={styles.searchIcon}
