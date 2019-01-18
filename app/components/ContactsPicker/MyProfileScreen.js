@@ -16,15 +16,9 @@ import { SafeAreaView } from 'react-navigation';
 import images from '../../config/images';
 import Config from './config';
 import config from '../../config/config';
-import {
-    Auth,
-    Network,
-    Media,
-    ResourceTypes,
-    Resource
-} from '../../lib/capability';
+import { Auth, Media, ResourceTypes, Resource } from '../../lib/capability';
 import Utils from '../../lib/utils';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import PhoneTypeModal from './PhoneTypeModal';
 import Loader from '../Loader/Loader';
 import { BotInputBarCapabilities } from '../ChatBotScreen/BotConstants';
