@@ -46,9 +46,13 @@ export default class MyProfileScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.gettingUserProfile();
+    }
+
+    gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
-                console.log('data', userDetails.info);
+                // console.log('data', userDetails.info);
                 const imageUrl =
                     config.proxy.protocol +
                     config.proxy.host +
@@ -76,7 +80,7 @@ export default class MyProfileScreen extends React.Component {
             .catch(err => {
                 console.log('Error Loading User details', err);
             });
-    }
+    };
 
     componentWillUnmount() {
         this.mounted = false;
@@ -197,7 +201,9 @@ export default class MyProfileScreen extends React.Component {
                         {type === 'phNumber' ? (
                             <Text style={styles.labelStyle}>{info.label}</Text>
                         ) : (
-                            <Text style={styles.labelStyle}>Email</Text>
+                            <Text style={styles.labelStyle}>
+                                {I18n.t('Email')}
+                            </Text>
                         )}
                         {type === 'phNumber' ? (
                             <TouchableOpacity
@@ -316,7 +322,10 @@ export default class MyProfileScreen extends React.Component {
                     );
                 } else {
                     console.log('file url upload image ', fileUrl);
-                    this.setState({ loading: false });
+                    this.setState({
+                        loading: false,
+                        userId: this.props.userId
+                    });
                 }
             });
     }
@@ -381,7 +390,7 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
-        console.log('profile image', this.props.userId);
+        // console.log('profile image', this.props.userId);
 
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
@@ -403,7 +412,7 @@ export default class MyProfileScreen extends React.Component {
                                 }}
                             >
                                 <ProfileImage
-                                    uuid={this.props.userId}
+                                    uuid={this.state.userId}
                                     placeholder={require('../../images/chat/avatar-1577909_1280.png')}
                                     style={styles.profilePic}
                                     placeholderStyle={styles.profileImgStyle}
@@ -431,7 +440,9 @@ export default class MyProfileScreen extends React.Component {
                             <View
                                 style={{ width: 300, alignItems: 'flex-start' }}
                             >
-                                <Text style={styles.nameLabel}>Name</Text>
+                                <Text style={styles.nameLabel}>
+                                    {I18n.t('Name')}
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     autoCorrect={false}
@@ -463,7 +474,7 @@ export default class MyProfileScreen extends React.Component {
                                     }}
                                 >
                                     <Text style={styles.addLabel}>
-                                        Add phone
+                                        {I18n.t('Add_phone')}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -492,38 +503,13 @@ export default class MyProfileScreen extends React.Component {
                                 </Text>
                             </View> */}
                         </View>
-                        <View
-                            style={{
-                                height: 130,
-                                width: '100%',
-                                borderBottomWidth: 5,
-                                borderTopWidth: 5,
-                                borderColor: 'rgba(222,222,222,1)'
-                            }}
-                        >
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-evenly'
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: 'rgba(102, 102, 102, 1)',
-                                        fontFamily: 'SF Pro Text',
-                                        fontSize: 14
-                                    }}
-                                >
-                                    I don't want to appear in searches
+                        <View style={styles.bottomSettingContainer}>
+                            <View style={styles.switchContainer}>
+                                <Text style={styles.longTextStyle}>
+                                    {I18n.t('Search_my_info_text')}
                                 </Text>
                                 <Switch
-                                    style={{
-                                        borderWidth: 1,
-                                        borderColor: 'rgba(222,222,222,1);',
-                                        borderRadius: 15
-                                    }}
+                                    style={styles.switchStyle}
                                     value={this.state.searchState}
                                     onValueChange={val => {
                                         let stateTint = this.state.searchState;
@@ -549,29 +535,12 @@ export default class MyProfileScreen extends React.Component {
                                     backgroundColor: 'rgba(221,222,227,1)'
                                 }}
                             />
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-evenly'
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: 'rgba(102, 102, 102, 1)',
-                                        fontFamily: 'SF Pro Text',
-                                        fontSize: 14
-                                    }}
-                                >
-                                    Share my information with my contacts
+                            <View style={styles.switchContainer}>
+                                <Text style={styles.longTextStyle}>
+                                    {I18n.t('Share_my_info_text')}
                                 </Text>
                                 <Switch
-                                    style={{
-                                        borderWidth: 1,
-                                        borderColor: 'rgba(222,222,222,1);',
-                                        borderRadius: 15
-                                    }}
+                                    style={styles.switchStyle}
                                     value={this.state.shareState}
                                     onValueChange={val => {
                                         let stateTint = this.state.shareState;
@@ -591,61 +560,25 @@ export default class MyProfileScreen extends React.Component {
                                 />
                             </View>
                         </View>
-                        <View
-                            style={{
-                                height: 90,
-                                width: '100%',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                                alignItems: 'center'
-                            }}
-                        >
+                        <View style={styles.btn_container}>
                             <TouchableOpacity
                                 onPress={() => {
                                     Actions.pop();
                                 }}
-                                style={{
-                                    width: 150,
-                                    height: 30,
-                                    backgroundColor: '#ffffff',
-                                    borderColor: 'rgba(0,167,214,1)',
-                                    borderWidth: 1,
-                                    borderRadius: 6,
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
+                                style={styles.cancel_btn}
                             >
-                                <Text
-                                    style={{
-                                        color: 'rgba(0,167,214,1)',
-                                        fontFamily: 'SF Pro Text',
-                                        fontSize: 16
-                                    }}
-                                >
-                                    Cancel
+                                <Text style={styles.cancel_text}>
+                                    {I18n.t('Cancel')}
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
                                     this.saveProfile();
                                 }}
-                                style={{
-                                    width: 150,
-                                    height: 30,
-                                    backgroundColor: 'rgba(0,189,242,1)',
-                                    borderRadius: 6,
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
+                                style={styles.save_btn}
                             >
-                                <Text
-                                    style={{
-                                        color: 'rgba(255,255,255,1)',
-                                        fontFamily: 'SF Pro Text',
-                                        fontSize: 16
-                                    }}
-                                >
-                                    Save
+                                <Text style={styles.save_btn_text}>
+                                    {I18n.t('SAVE')}
                                 </Text>
                             </TouchableOpacity>
                         </View>

@@ -464,11 +464,6 @@ class ContactsPicker extends React.Component {
                     }}
                 >
                     <View style={styles.myProfileItemContainer}>
-                        {/* <Image
-                            source={images.user_image}
-                            style={styles.myProfileItemImage}
-                        /> */}
-
                         <ProfileImage
                             uuid={this.state.userInfo.userId}
                             placeholder={images.user_image}

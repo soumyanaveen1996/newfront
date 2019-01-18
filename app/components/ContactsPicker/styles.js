@@ -678,6 +678,67 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(0, 189, 242, 1)',
         fontFamily: 'SF Pro Text',
         fontSize: 12
+    },
+    bottomSettingContainer: {
+        height: 130,
+        width: '100%',
+        borderBottomWidth: 5,
+        borderTopWidth: 5,
+        borderColor: 'rgba(222,222,222,1)'
+    },
+    switchContainer: {
+        flex: 1,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        textAlign: 'left',
+        justifyContent: 'space-between'
+    },
+    swithcStyle: {
+        borderWidth: 1,
+        borderColor: 'rgba(222,222,222,1);',
+        borderRadius: 15
+    },
+    btn_container: {
+        height: 90,
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    longTextStyle: {
+        color: 'rgba(102, 102, 102, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 14,
+        textAlign: 'left'
+    },
+    cancel_text: {
+        color: 'rgba(0,167,214,1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16
+    },
+    cancel_btn: {
+        width: 150,
+        height: 30,
+        backgroundColor: '#ffffff',
+        borderColor: 'rgba(0,167,214,1)',
+        borderWidth: 1,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    save_btn: {
+        width: 150,
+        height: 30,
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    save_btn_text: {
+        color: 'rgba(255,255,255,1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 16
     }
 });
 

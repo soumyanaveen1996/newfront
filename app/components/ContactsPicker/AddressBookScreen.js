@@ -20,12 +20,14 @@ import { searchBarConfig } from './config';
 import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
+import I18n from '../../config/i18n/i18n';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             contactsData: [],
+            searchContact: [],
             searchText: '',
             email: [],
             keyboard: false
@@ -83,18 +85,28 @@ export default class AddressBookScreen extends React.Component {
                     contactArray.push(contactObj);
                 }
             });
-            this.setState({ contactsData: [...contactArray] });
+            this.setState({
+                contactsData: [...contactArray],
+                searchContact: [...contactArray]
+            });
             // contacts returned
         });
     };
 
     onSearchQueryChange(text) {
-        let contactsList = [];
-        if (!text || text === '') {
-            contactsList = this.dataSource.getData();
-        } else {
-            contactsList = this.dataSource.getFilteredData(text);
+        let searchContactList = [...this.state.searchContact];
+        let contactsList = [...this.state.contactsData];
+        let keyword = text.toLowerCase();
+
+        if (!text && text === '') {
+            contactsList = [...searchContactList];
         }
+
+        contactsList = searchContactList.filter(user => {
+            user = user.name.toLowerCase();
+            return user.indexOf(keyword) > -1;
+        });
+
         this.setState({ contactsData: contactsList }, () => {
             console.log('searching ', this.state.contactsData);
         });
@@ -280,7 +292,9 @@ export default class AddressBookScreen extends React.Component {
                             this.sendInvitationToEmail();
                         }}
                     >
-                        <Text style={{ color: '#fff' }}>DONE</Text>
+                        <Text style={{ color: '#fff' }}>
+                            {I18n.t('Done_caps')}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
