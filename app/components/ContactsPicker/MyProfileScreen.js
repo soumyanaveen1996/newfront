@@ -410,7 +410,7 @@ export default class MyProfileScreen extends React.Component {
                             >
                                 <ProfileImage
                                     uuid={this.props.userId}
-                                    placeholder={require('../../images/contact/GreenGoblin.png')}
+                                    placeholder={require('../../images/chat/avatar-1577909_1280.png')}
                                     style={styles.profilePic}
                                     placeholderStyle={styles.profileImgStyle}
                                     resizeMode="cover"
