@@ -12,16 +12,20 @@ export const ButtonStyle = {
 export const MessageTypeConstants = {
     MESSAGE_TYPE_STRING: 'string',
     MESSAGE_TYPE_LIST: 'list',
-    MESSAGE_TYPE_SLIDER: 'slider',
+    MESSAGE_TYPE_SLIDER: 'slider', //Legacy
+    MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion',
+    MESSAGE_TYPE_WEB_CARD: 'web_card',
+    MESSAGE_TYPE_DATA_CARD: 'data_card',
+    MESSAGE_TYPE_TABLE: 'table',
     MESSAGE_TYPE_BUTTON: 'button',
+    MESSAGE_TYPE_FORM: 'form', //Legacy
     MESSAGE_TYPE_FORM2: 'form2',
-    MESSAGE_TYPE_FORM: 'form',
     MESSAGE_TYPE_HTML: 'html',
     MESSAGE_TYPE_IMAGE: 'image',
     MESSAGE_TYPE_VIDEO: 'video',
     MESSAGE_TYPE_MAP: 'map',
-    MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response',
-    MESSAGE_TYPE_SLIDER_CANCEL: 'slider_cancel',
+    MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response', //Legacy
+    MESSAGE_TYPE_SLIDER_CANCEL: 'slider_cancel', //Legacy
     MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
     MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
     MESSAGE_TYPE_AUDIO: 'audio',
@@ -32,13 +36,14 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_FORM_OPEN: 'form_open',
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
     MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
+    MESSAGE_TYPE_PDF: 'pdf',
+    MESSAGE_TYPE_TEXT: 'txt',
+    MESSAGE_TYPE_OTHER_FILE: 'other_file',
+    MESSAGE_TYPE_CSV: 'csv',
+    MESSAGE_TYPE_JAVASCRIPT: 'js',
+    MESSAGE_TYPE_CONTACT_CARD: 'contact_card',
     MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota',
-    MESSAGE_TYPE_SMART_SUGGESTIONS: 'smart_suggestion',
-    MESSAGE_TYPE_WEB_CARD: 'web_card',
-    MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
-    MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
-    MESSAGE_TYPE_LOCATION: 'location',
-    MESSAGE_TYPE_DATACARD: 'datacard'
+    MESSAGE_TYPE_MENU: 'menu'
 };
 
 export const IntToMessageTypeConstants = {
@@ -57,8 +62,16 @@ export const IntToMessageTypeConstants = {
     270: MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION,
     280: MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION,
     290: MessageTypeConstants.MESSAGE_TYPE_LOCATION,
-    300: MessageTypeConstants.MESSAGE_TYPE_FORM2,
-    310: MessageTypeConstants.MESSAGE_TYPE_DATACARD
+    310: MessageTypeConstants.MESSAGE_TYPE_PDF,
+    320: MessageTypeConstants.MESSAGE_TYPE_TEXT,
+    330: MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE,
+    340: MessageTypeConstants.MESSAGE_TYPE_CSV,
+    350: MessageTypeConstants.MESSAGE_TYPE_JAVASCRIPT,
+    400: MessageTypeConstants.MESSAGE_TYPE_FORM2,
+    410: MessageTypeConstants.MESSAGE_TYPE_MENU,
+    420: MessageTypeConstants.MESSAGE_TYPE_TABLE,
+    430: MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD,
+    440: MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -193,9 +206,17 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SLIDER;
     };
 
-    datacard = (cardData, options) => {
+    contactCard = (userId, options) => {
+        this._msg = userId;
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD;
+    };
+
+    dataCard = (cardData, options) => {
         this._msg = cardData || [];
-        this._messageType = MessageTypeConstants.MESSAGE_TYPE_DATACARD;
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_DATA_CARD;
     };
 
     sliderResponseMessage = (sliderData, options) => {
@@ -440,9 +461,13 @@ export default class Message {
             return '';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATACARD
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
         ) {
             return '';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
+        ) {
+            return 'Contact';
         } else {
             return this.getMessage();
         }
@@ -468,7 +493,7 @@ export default class Message {
         }
         if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_SLIDER ||
@@ -492,7 +517,8 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
             this._messageType ===
-                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
         ) {
             try {
                 return JSON.parse(this._options);
@@ -614,7 +640,7 @@ export default class Message {
     isEmptyMessage() {
         const emptyMessages = [
             MessageTypeConstants.MESSAGE_TYPE_WEB_CARD,
-            MessageTypeConstants.MESSAGE_TYPE_DATACARD,
+            MessageTypeConstants.MESSAGE_TYPE_DATA_CARD,
             MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN,
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,

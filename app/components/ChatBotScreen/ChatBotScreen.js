@@ -733,7 +733,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_HTML ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
+                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
         ) {
             this.updateChat(message);
@@ -1105,7 +1105,7 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD
+                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
             ) {
                 return (
                     <Datacard
@@ -1626,6 +1626,20 @@ class ChatBotScreen extends React.Component {
         this.sendMessage(message);
     }
 
+    pickContact() {
+        Actions.addParticipants({ onSelected: this.shareContacts.bind(this) });
+    }
+
+    shareContacts(selectedContacts) {
+        _.map(selectedContacts, contact => {
+            message = new Message();
+            message.contactCard(contact);
+            message.messageByBot(false);
+            message.setCreatedBy(this.getUserId());
+            this.sendMessage(message);
+        });
+    }
+
     onOptionSelected(key) {
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
@@ -1644,6 +1658,9 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
         }
+        // } else if (key === BotInputBarCapabilities.share_contact) {
+        //     this.pickContact();
+        // }
     }
 
     async loadMessages() {
@@ -1775,14 +1792,11 @@ class ChatBotScreen extends React.Component {
                 key: BotInputBarCapabilities.pick_location,
                 label: I18n.t('Pick_Location')
             }
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     label: I18n.t('Share_Contact')
+            // }
         ];
-
-        if (this.bot.allowResetConversation) {
-            moreOptions.push({
-                key: BotInputBarCapabilities.reset_conversation,
-                label: I18n.t('Reset_Conversation')
-            });
-        }
         if (appConfig.app.hideAddContacts !== true) {
             moreOptions.push({
                 key: BotInputBarCapabilities.add_contact,
