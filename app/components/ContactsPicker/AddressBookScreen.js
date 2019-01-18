@@ -5,29 +5,21 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Keyboard,
-    ScrollView
+    Platform,
+    ScrollView,
+    PermissionsAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import styles from './styles';
 import config from '../../config/config';
-import { Icons } from '../../config/icons';
-import Modal from 'react-native-modal';
-import { Actions, ActionConst } from 'react-native-router-flux';
-import SystemBot from '../../lib/bot/SystemBot';
+import { Actions } from 'react-native-router-flux';
 import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
-import FrontMAddedContactsPickerDataSource from './FrontMAddedContactsPickerDataSource';
 import Contacts from 'react-native-contacts';
-import {
-    SECTION_HEADER_HEIGHT,
-    searchBarConfig,
-    addButtonConfig
-} from './config';
+import { searchBarConfig } from './config';
 import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
-import { RNChipView } from 'react-native-chip-view';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -41,6 +33,30 @@ export default class AddressBookScreen extends React.Component {
     }
 
     componentDidMount() {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        this.gettingAllCOntactData();
+                    } else {
+                        Actions.pop();
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            this.gettingAllCOntactData();
+        }
+    }
+
+    gettingAllCOntactData = () => {
         let contactArray = [];
         Contacts.getAll((err, contacts) => {
             if (err) {
@@ -48,24 +64,29 @@ export default class AddressBookScreen extends React.Component {
             }
 
             contacts.forEach((data, index) => {
-                let contactObj = {
-                    idTemp: index,
-                    emails: [...data.emailAddresses],
-                    profileImage: data.thumbnailPath,
-                    userName: data.givenName.toLowerCase(),
-                    name: data.givenName + ' ' + data.familyName,
-                    phoneNumbers: [...data.phoneNumbers],
-                    selected: false
-                };
-
+                let contactName = '';
                 if (data.emailAddresses && data.emailAddresses.length > 0) {
+                    if (data.givenName && data.familyName) {
+                        contactName = data.givenName + ' ' + data.familyName;
+                    } else {
+                        contactName = data.givenName;
+                    }
+                    let contactObj = {
+                        idTemp: index,
+                        emails: [...data.emailAddresses],
+                        profileImage: data.thumbnailPath,
+                        userName: data.givenName.toLowerCase(),
+                        name: contactName,
+                        phoneNumbers: [...data.phoneNumbers],
+                        selected: false
+                    };
                     contactArray.push(contactObj);
                 }
             });
             this.setState({ contactsData: [...contactArray] });
             // contacts returned
         });
-    }
+    };
 
     onSearchQueryChange(text) {
         let contactsList = [];
