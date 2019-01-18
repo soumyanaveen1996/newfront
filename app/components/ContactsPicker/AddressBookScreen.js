@@ -27,6 +27,7 @@ export default class AddressBookScreen extends React.Component {
         super(props);
         this.state = {
             contactsData: [],
+            searchContact: [],
             searchText: '',
             email: [],
             keyboard: false
@@ -84,18 +85,28 @@ export default class AddressBookScreen extends React.Component {
                     contactArray.push(contactObj);
                 }
             });
-            this.setState({ contactsData: [...contactArray] });
+            this.setState({
+                contactsData: [...contactArray],
+                searchContact: [...contactArray]
+            });
             // contacts returned
         });
     };
 
     onSearchQueryChange(text) {
-        let contactsList = [];
-        if (!text || text === '') {
-            contactsList = this.dataSource.getData();
-        } else {
-            contactsList = this.dataSource.getFilteredData(text);
+        let searchContactList = [...this.state.searchContact];
+        let contactsList = [...this.state.contactsData];
+        let keyword = text.toLowerCase();
+
+        if (!text && text === '') {
+            contactsList = [...searchContactList];
         }
+
+        contactsList = searchContactList.filter(user => {
+            user = user.name.toLowerCase();
+            return user.indexOf(keyword) > -1;
+        });
+
         this.setState({ contactsData: contactsList }, () => {
             console.log('searching ', this.state.contactsData);
         });

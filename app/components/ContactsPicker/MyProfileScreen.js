@@ -46,6 +46,10 @@ export default class MyProfileScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.gettingUserProfile();
+    }
+
+    gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
                 // console.log('data', userDetails.info);
@@ -76,7 +80,7 @@ export default class MyProfileScreen extends React.Component {
             .catch(err => {
                 console.log('Error Loading User details', err);
             });
-    }
+    };
 
     componentWillUnmount() {
         this.mounted = false;
@@ -318,7 +322,10 @@ export default class MyProfileScreen extends React.Component {
                     );
                 } else {
                     console.log('file url upload image ', fileUrl);
-                    this.setState({ loading: false });
+                    this.setState({
+                        loading: false,
+                        userId: this.props.userId
+                    });
                 }
             });
     }
@@ -405,7 +412,7 @@ export default class MyProfileScreen extends React.Component {
                                 }}
                             >
                                 <ProfileImage
-                                    uuid={this.props.userId}
+                                    uuid={this.state.userId}
                                     placeholder={require('../../images/chat/avatar-1577909_1280.png')}
                                     style={styles.profilePic}
                                     placeholderStyle={styles.profileImgStyle}
