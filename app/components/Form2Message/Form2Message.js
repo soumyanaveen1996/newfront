@@ -12,7 +12,6 @@ export default class Form2Message extends React.Component {
                 ? this.props.messageData.stage
                 : formStatus.NEW
         };
-        this.props.messageData.stage = this.state.status;
     }
 
     openForm() {
@@ -38,9 +37,10 @@ export default class Form2Message extends React.Component {
     }
 
     onFormCompleted(formData, response) {
-        this.setState({ status: formStatus.COMPLETED });
-        this.saveMessage(formData);
-        this.props.onSubmit(response);
+        this.setState({ status: formStatus.COMPLETED }, () => {
+            this.saveMessage(formData);
+            this.props.onSubmit(response);
+        });
     }
 
     renderTopRightIcon() {

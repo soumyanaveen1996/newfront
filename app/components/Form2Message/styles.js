@@ -81,7 +81,10 @@ export default (stylesheet = StyleSheet.create({
     },
     f2FieldContainer: {
         marginTop: 25,
-        marginHorizontal: '10%'
+        paddingBottom: 15,
+        marginHorizontal: '10%',
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.disabledGray
     },
     f2LabelTitle: {
         marginBottom: 13,
@@ -134,6 +137,16 @@ export default (stylesheet = StyleSheet.create({
         borderRadius: 5,
         borderTopRightRadius: 0
     },
+    textArea: {
+        height: 120,
+        paddingHorizontal: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.textField,
+        borderRadius: 5,
+        borderTopRightRadius: 0
+    },
     checkbox: {
         backgroundColor: GlobalColors.transparent,
         borderWidth: 0,
@@ -161,7 +174,7 @@ export default (stylesheet = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
-        borderTopWidth: 1,
+        marginHorizontal: '10%',
         borderBottomWidth: 1,
         borderColor: GlobalColors.disabledGray
     },
