@@ -150,6 +150,7 @@ export default class Datacard extends React.Component {
                     horizontal={true}
                     style={styles.dataCards}
                     showsHorizontalScrollIndicator={false}
+                    ListFooterComponent={<View style={styles.emptyFooter} />}
                 />
             </View>
         );
