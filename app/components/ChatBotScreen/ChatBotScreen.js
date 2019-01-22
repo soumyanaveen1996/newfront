@@ -82,6 +82,7 @@ import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
+import PushNotification from 'react-native-push-notification';
 
 const R = require('ramda');
 
@@ -1066,7 +1067,6 @@ class ChatBotScreen extends React.Component {
     } */
 
     renderItem({ item }) {
-        console.log(item);
         const message = item.message;
         if (message.isMessageByBot()) {
             if (
@@ -1151,6 +1151,10 @@ class ChatBotScreen extends React.Component {
                         onFormCancel={this.onFormCancel.bind(this)}
                         onFormOpen={this.onFormOpen.bind(this)}
                         showTime={item.showTime}
+                        openModalWithContent={this.openModalWithContent.bind(
+                            this
+                        )}
+                        hideChatModal={this.hideChatModal.bind(this)}
                     />
                 );
             }
@@ -1186,6 +1190,10 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         alignRight
                         user={this.user}
+                        openModalWithContent={this.openModalWithContent.bind(
+                            this
+                        )}
+                        hideChatModal={this.hideChatModal.bind(this)}
                     />
                 );
             }
@@ -1657,10 +1665,9 @@ class ChatBotScreen extends React.Component {
             this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
+        } else if (key === BotInputBarCapabilities.share_contact) {
+            this.pickContact();
         }
-        // } else if (key === BotInputBarCapabilities.share_contact) {
-        //     this.pickContact();
-        // }
     }
 
     async loadMessages() {
@@ -1791,11 +1798,11 @@ class ChatBotScreen extends React.Component {
             {
                 key: BotInputBarCapabilities.pick_location,
                 label: I18n.t('Pick_Location')
+            },
+            {
+                key: BotInputBarCapabilities.share_contact,
+                label: I18n.t('Share_Contact')
             }
-            // {
-            //     key: BotInputBarCapabilities.share_contact,
-            //     label: I18n.t('Share_Contact')
-            // }
         ];
         if (appConfig.app.hideAddContacts !== true) {
             moreOptions.push({
@@ -1855,13 +1862,15 @@ class ChatBotScreen extends React.Component {
                 content={this.state.chatModalContent}
                 isVisible={this.state.isModalVisible}
                 backdropOpacity={0.1}
-                onBackButtonPress={() =>
-                    this.setState({ isModalVisible: false })
-                }
+                onBackButtonPress={this.hideChatModal.bind(this)}
                 onBackdropPress={() => this.setState({ isModalVisible: false })}
                 style={{ justifyContent: 'center', alignItems: 'center' }}
             />
         );
+    }
+
+    hideChatModal() {
+        this.setState({ isModalVisible: false });
     }
 
     render() {

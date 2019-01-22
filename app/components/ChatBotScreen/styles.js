@@ -422,6 +422,64 @@ const stylesheet = StyleSheet.create({
         shadowRadius: 10,
         width: screen.width - 100,
         height: 250
+    },
+
+    //CONTACT_CARD
+    contactMessage: {
+        padding: 15
+    },
+    contactCardModalContainer: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        paddingHorizontal: 20,
+        paddingVertical: 25,
+        backgroundColor: GlobalColors.white,
+        borderRadius: 10,
+        borderWidth: 0.2,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
+    },
+    contactCardModalText: {
+        textAlign: 'left',
+        fontSize: 16,
+        color: GlobalColors.headerBlack,
+        fontWeight: '100'
+    },
+    contactCardModalBottomArea: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 50
+    },
+    contactCardModalCancelButton: {
+        width: '40%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 8,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        backgroundColor: GlobalColors.white,
+        borderRadius: 5
+    },
+    contactCardModalCancelButtonText: {
+        fontSize: 16,
+        color: GlobalColors.sideButtons
+    },
+    contactCardModalOkButton: {
+        width: '40%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 8,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        backgroundColor: GlobalColors.sideButtons,
+        borderRadius: 5
+    },
+    contactCardModalOkButtonText: {
+        fontSize: 16,
+        color: GlobalColors.white
     }
 });
 

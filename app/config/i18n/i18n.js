@@ -145,7 +145,8 @@ I18n.translations = {
             'Our team is working hard to be able to initiate calls to Thuraya phones. Stay in touch and we will inform you when it becomes available',
         Add_participants: 'Add participants',
         Add_new_contacts: 'Add new contacts',
-        Select_team: 'Select Team'
+        Select_team: 'Select Team',
+        Share_Contact: 'Share contact'
     }
 };
 
