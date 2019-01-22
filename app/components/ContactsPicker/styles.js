@@ -554,6 +554,12 @@ const stylesheet = StyleSheet.create({
         borderRadius: 30,
         marginRight: 17
     },
+    myProfilePlaceholderImage: {
+        height: 60,
+        width: 60,
+        borderRadius: 30,
+        marginRight: 17
+    },
     myProfileName: {
         color: GlobalColors.headerBlack,
         fontSize: 18,

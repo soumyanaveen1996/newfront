@@ -326,6 +326,7 @@ export default class MyProfileScreen extends React.Component {
                         loading: false,
                         userId: this.props.userId
                     });
+                    Actions.pop();
                 }
             });
     }
@@ -413,7 +414,7 @@ export default class MyProfileScreen extends React.Component {
                             >
                                 <ProfileImage
                                     uuid={this.state.userId}
-                                    placeholder={require('../../images/chat/avatar-1577909_1280.png')}
+                                    placeholder={images.user_image}
                                     style={styles.profilePic}
                                     placeholderStyle={styles.profileImgStyle}
                                     resizeMode="cover"

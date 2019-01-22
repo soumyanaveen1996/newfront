@@ -210,11 +210,9 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = () => {
-        console.log('>>>>>configNot0');
         Notification.deviceInfo()
             .then(info => {
                 if (info) {
-                    console.log('>>>>>configNot');
                     Notification.configure(this.handleNotification);
                 }
             })

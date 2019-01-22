@@ -3,6 +3,11 @@ import { GlobalColors } from '../../config/styles';
 import Config from './config';
 import { ButtonStyle } from '../../lib/capability';
 
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+
 var screen = Dimensions.get('window');
 
 const stylesheet = StyleSheet.create({
@@ -142,10 +147,47 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white,
         minHeight: 28
     },
+    moreOptionContainer: {
+        width: wp('85%'),
+        height: 170,
+        borderRadius: 10,
+        backgroundColor: 'rgba(255,255,255,1)',
+        marginBottom: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        alignContent: 'space-between'
+    },
+    moreOptionImageContainer: {
+        width: 45,
+        height: 45,
+        borderRadius: 25,
+        backgroundColor: 'rgba(244,244,244,1)',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    optionContainer: {
+        width: wp('85%') / 4,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    optionText: {
+        color: 'rgba(158, 158, 158, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12
+    },
     chatBarMoreButton: {
         width: 16,
         height: 15,
         marginLeft: 10
+    },
+    closeMoreButton: {
+        width: 16,
+        height: 15,
+        marginLeft: 10,
+        transform: [{ rotate: '45deg' }]
     },
     cancelButton: {
         width: 32,
