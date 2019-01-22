@@ -43,6 +43,7 @@ I18n.translations = {
         Search: 'Search',
         Installed_bots: 'Installed Bots',
         Done: 'Done',
+        Done_caps: 'DONE',
         Button: 'Button',
         Image_Save_Failed: 'Saving the image to the Photo Album failed.',
         Image_Save_Success: 'Saved the image to the Photos Album',
@@ -146,7 +147,17 @@ I18n.translations = {
         Add_participants: 'Add participants',
         Add_new_contacts: 'Add new contacts',
         Select_team: 'Select Team',
-        Share_Contact: 'Share contact'
+        Share_Contact: 'Share contact',
+        SAVE: 'Save',
+        Search_my_info_text: "I don't want to appear in searches",
+        Share_my_info_text: 'Share my information with my contacts',
+        Add_phone: 'Add phone',
+        Camera_option: 'Camera',
+        Gallery_option: 'Photo Library',
+        Bar_code_option: 'Code',
+        File_option: 'File',
+        Contact_option: 'Contact',
+        Location_option: 'Location'
     }
 };
 

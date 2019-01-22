@@ -46,9 +46,9 @@ const images = {
     gsm: require('./icons/gsm.png'),
     satellite: require('./icons/satellite.png'),
     refresh: require('./icons/network-icon-refresh.png'),
-    user_image: require('./chat/avatar-1577909_1280.png'),
+    avatar_image: require('./chat/avatar-image.png'),
     // user_image: require('./chat/user_image.png'),
-    user_image_big: require('./chat/user_image_big.png'),
+    user_image: require('./chat/user_image_big.png'),
     splash_page_logo: { uri: 'FM-logo-landing page' },
     trail_arrow: require('./map/trail_arrow.png'),
     btn_pressed_facebook: require('./facebook/btn-facebook-pressed.png'),
@@ -92,7 +92,13 @@ const images = {
     smile_contact_placeholder: require('./smile-contact-placeholder/smile-contact-placeholder.png'),
     phone_icon: require('./phone-icon-copy/phone_icon_copy.png'),
     remove_icon: require('./remove-icon/remove-icon.png'),
-    email_icon: require('./email-icon/email-icon.png')
+    email_icon: require('./email-icon/email-icon.png'),
+    share_camera: require('./share-camera/share-camera.png'),
+    share_photo_library: require('./share-photo-library/share-photo-library.png'),
+    share_file: require('./share-file/share-file.png'),
+    share_contact: require('./share-contact/share-contact.png'),
+    share_location: require('./share-location/share-location.png'),
+    share_code: require('./share-code/share-code.png')
 };
 
 export default images;

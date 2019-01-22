@@ -45,7 +45,8 @@ export default class ChatMessage extends React.Component {
         let { message } = this.props;
         this.state = {
             read: message.isRead(),
-            isFavorite: message.isFavorite()
+            isFavorite: message.isFavorite(),
+            userName: null
         };
     }
 
@@ -88,6 +89,13 @@ export default class ChatMessage extends React.Component {
         ) {
             this.openForm(message);
         }
+        if (message.getCreatedBy()) {
+            ContactsCache.getUserDetails(message.getCreatedBy()).then(user => {
+                const userName = user ? user.userName : I18n.t('Unknown');
+                this.setState({ userName });
+            });
+        }
+
         MessageHandler.markBotMessageAsRead(
             message.getBotKey(),
             message.getMessageId()
@@ -263,13 +271,18 @@ export default class ChatMessage extends React.Component {
         let { message, shouldShowUserName } = this.props;
         //console.log(shouldShowUserName, message.isMessageByBot())
         if (shouldShowUserName && message.getCreatedBy()) {
-            let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            // let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            // const userName = user ? user.userName : I18n.t('Unknown');
+            // console.log(userName);
+
             return (
                 <View style={{ flexDirection: 'column' }}>
-                    <Text style={styles.userNameStyle}>
-                        {user ? user.userName : I18n.t('Unknown')}
-                    </Text>
-                    {component}
+                    {this.state.userName ? (
+                        <Text style={styles.userNameStyle}>
+                            {this.state.userName}
+                        </Text>
+                    ) : null}
+                    <View>{component}</View>
                 </View>
             );
         } else {

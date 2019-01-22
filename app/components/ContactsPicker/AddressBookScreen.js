@@ -5,42 +5,64 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Keyboard,
-    ScrollView
+    Platform,
+    Alert,
+    ScrollView,
+    PermissionsAndroid,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import styles from './styles';
 import config from '../../config/config';
-import { Icons } from '../../config/icons';
-import Modal from 'react-native-modal';
-import { Actions, ActionConst } from 'react-native-router-flux';
-import SystemBot from '../../lib/bot/SystemBot';
+import { Actions } from 'react-native-router-flux';
 import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
-import FrontMAddedContactsPickerDataSource from './FrontMAddedContactsPickerDataSource';
 import Contacts from 'react-native-contacts';
-import {
-    SECTION_HEADER_HEIGHT,
-    searchBarConfig,
-    addButtonConfig
-} from './config';
+import { searchBarConfig } from './config';
 import Icon from 'react-native-vector-icons/Feather';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
-import { RNChipView } from 'react-native-chip-view';
+import I18n from '../../config/i18n/i18n';
+import { Loader } from '../Loader';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             contactsData: [],
+            searchContact: [],
             searchText: '',
             email: [],
-            keyboard: false
+            keyboard: false,
+            loading: false
         };
     }
 
     componentDidMount() {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        this.gettingAllCOntactData();
+                    } else {
+                        Actions.pop();
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            this.gettingAllCOntactData();
+        }
+    }
+
+    gettingAllCOntactData = () => {
         let contactArray = [];
         Contacts.getAll((err, contacts) => {
             if (err) {
@@ -48,32 +70,47 @@ export default class AddressBookScreen extends React.Component {
             }
 
             contacts.forEach((data, index) => {
-                let contactObj = {
-                    idTemp: index,
-                    emails: [...data.emailAddresses],
-                    profileImage: data.thumbnailPath,
-                    userName: data.givenName.toLowerCase(),
-                    name: data.givenName + ' ' + data.familyName,
-                    phoneNumbers: [...data.phoneNumbers],
-                    selected: false
-                };
-
+                let contactName = '';
                 if (data.emailAddresses && data.emailAddresses.length > 0) {
+                    if (data.givenName && data.familyName) {
+                        contactName = data.givenName + ' ' + data.familyName;
+                    } else {
+                        contactName = data.givenName;
+                    }
+                    let contactObj = {
+                        idTemp: index,
+                        emails: [...data.emailAddresses],
+                        profileImage: data.thumbnailPath,
+                        userName: data.givenName.toLowerCase(),
+                        name: contactName,
+                        phoneNumbers: [...data.phoneNumbers],
+                        selected: false
+                    };
                     contactArray.push(contactObj);
                 }
             });
-            this.setState({ contactsData: [...contactArray] });
+            this.setState({
+                contactsData: [...contactArray],
+                searchContact: [...contactArray]
+            });
             // contacts returned
         });
-    }
+    };
 
     onSearchQueryChange(text) {
-        let contactsList = [];
-        if (!text || text === '') {
-            contactsList = this.dataSource.getData();
-        } else {
-            contactsList = this.dataSource.getFilteredData(text);
+        let searchContactList = [...this.state.searchContact];
+        let contactsList = [...this.state.contactsData];
+        let keyword = text.toLowerCase();
+
+        if (!text && text === '') {
+            contactsList = [...searchContactList];
         }
+
+        contactsList = searchContactList.filter(user => {
+            user = user.name.toLowerCase();
+            return user.indexOf(keyword) > -1;
+        });
+
         this.setState({ contactsData: contactsList }, () => {
             console.log('searching ', this.state.contactsData);
         });
@@ -173,6 +210,8 @@ export default class AddressBookScreen extends React.Component {
     };
 
     sendInvite() {
+        // console.log('send invitation');
+        this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
                 const options = {
@@ -196,13 +235,39 @@ export default class AddressBookScreen extends React.Component {
                 data => {
                     if (data.status === 200 && data.data.error === 0) {
                         console.log('invitation sent');
+                        this.setState({ loading: false }, () => {
+                            if (!this.state.loading) {
+                                console.log(' show alert ');
+                                setTimeout(() => {
+                                    this.invitationSent();
+                                }, 500);
+                            }
+                        });
                     }
                 },
                 err => {
                     console.log('error in sending invitation', err);
+                    this.setState({ loading: false });
                 }
             );
     }
+
+    invitationSent = () => {
+        return Alert.alert(
+            'Invitation Sent',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                        Actions.pop();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     sendInvitationToEmail = async () => {
         if (this.state.email && this.state.email.length > 0) {
@@ -213,6 +278,7 @@ export default class AddressBookScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                <Loader loading={this.state.loading} />
                 <View style={styles.searchBar}>
                     <Icon
                         style={styles.searchIcon}
@@ -252,16 +318,24 @@ export default class AddressBookScreen extends React.Component {
                         </ScrollView>
                     </View>
                 </View>
-                <View style={styles.buttonContainerDone}>
-                    <TouchableOpacity
-                        style={styles.doneButton}
-                        onPress={() => {
-                            this.sendInvitationToEmail();
-                        }}
-                    >
-                        <Text style={{ color: '#fff' }}>DONE</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableWithoutFeedback
+                    onPress={() => {
+                        this.sendInvitationToEmail();
+                    }}
+                >
+                    <View style={styles.buttonContainerDone}>
+                        <TouchableOpacity
+                            style={styles.doneButton}
+                            onPress={() => {
+                                this.sendInvitationToEmail();
+                            }}
+                        >
+                            <Text style={{ color: '#fff' }}>
+                                {I18n.t('Done_caps')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableWithoutFeedback>
             </SafeAreaView>
         );
     }

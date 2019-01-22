@@ -52,7 +52,7 @@ export default class Dialler extends React.Component {
         super(props);
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '',
+            dialledNumber: '+',
             dialledDigits: '',
             micOn: true,
             speakerOn: false,
@@ -189,7 +189,7 @@ export default class Dialler extends React.Component {
             Alert.alert(I18n.t('Enter_valid_number'));
             return;
         }
-        if (this.state.callQuota === 0) {
+        if (this.state.callQuota <= 0) {
             this.setState({ noBalance: true });
             Alert.alert(I18n.t('No_balance'));
             return;

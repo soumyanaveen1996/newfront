@@ -17,15 +17,15 @@ export default class CallModal extends React.Component {
         };
     }
 
-    makePhoneCall() {
+    makePhoneCall = number => {
         this.props.setVisible(false);
         Actions.dialler({
             call: true,
-            number: this.props.contact.phoneNumbers.mobile,
+            number: number,
             contact: this.props.contact,
             newCallScreen: true
         });
-    }
+    };
 
     makeVoipCall() {
         this.props.setVisible(false);
@@ -90,7 +90,9 @@ export default class CallModal extends React.Component {
                                             contactSelected.phoneNumbers.mobile
                                         )
                                     }
-                                    onPress={this.makePhoneCall.bind(this)}
+                                    onPress={() =>
+                                        this.makePhoneCall(phoneNumbers.mobile)
+                                    }
                                 >
                                     {Icons.greenCallOutline()}
                                 </TouchableOpacity>
@@ -109,14 +111,17 @@ export default class CallModal extends React.Component {
                                         color: 'rgba(155,155,155,1)'
                                     }}
                                 >
-                                    Not Available
+                                    {phoneNumbers.satellite}
                                 </Text>
                             </View>
                             <View style={styles.modalCallButContainer}>
                                 <TouchableOpacity
-                                    disabled={true}
-                                    style={styles.callButtonDisabled}
-                                    onPress={() => console.log('Call Phone')}
+                                    style={styles.callButton}
+                                    onPress={() => {
+                                        this.makePhoneCall(
+                                            phoneNumbers.satellite
+                                        );
+                                    }}
                                 >
                                     {Icons.greenCallOutline()}
                                 </TouchableOpacity>

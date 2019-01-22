@@ -139,7 +139,8 @@ class ContactsPicker extends React.Component {
             contactsData: [],
             selectedContacts: [],
             inviteModalVisible: false,
-            userInfo: {}
+            userInfo: {},
+            userId: ''
         };
     }
 
@@ -151,6 +152,8 @@ class ContactsPicker extends React.Component {
         Auth.getUser()
             .then(userDetails => {
                 const info = { ...userDetails.info };
+                console.log('info ', info);
+
                 this.setState({ userInfo: info });
             })
             .catch(err => {
@@ -495,16 +498,11 @@ class ContactsPicker extends React.Component {
                     }}
                 >
                     <View style={styles.myProfileItemContainer}>
-                        {/* <Image
-                            source={images.user_image}
-                            style={styles.myProfileItemImage}
-                        /> */}
-
                         <ProfileImage
                             uuid={this.state.userInfo.userId}
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}
-                            placeholderStyle={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfilePlaceholderImage}
                             resizeMode="center"
                         />
                         <View style={styles.contactItemDetailsContainer}>
