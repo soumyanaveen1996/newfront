@@ -238,8 +238,9 @@ export default class AddressBookScreen extends React.Component {
                         this.setState({ loading: false }, () => {
                             if (!this.state.loading) {
                                 console.log(' show alert ');
-                                // this.invitationSent();
-                                Actions.pop();
+                                setTimeout(() => {
+                                    this.invitationSent();
+                                }, 500);
                             }
                         });
                     }
@@ -258,7 +259,10 @@ export default class AddressBookScreen extends React.Component {
             [
                 {
                     text: 'OK',
-                    onPress: () => console.log('OK Pressed')
+                    onPress: () => {
+                        console.log('OK Pressed');
+                        Actions.pop();
+                    }
                 }
             ],
             { cancelable: false }
