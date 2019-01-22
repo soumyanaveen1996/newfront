@@ -736,7 +736,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_HTML ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD ||
+                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
         ) {
             this.updateChat(message);
@@ -1108,7 +1108,7 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATACARD
+                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
             ) {
                 return (
                     <Datacard
@@ -1222,13 +1222,10 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         this.countMessage(message);
-        if (
-            !message.getMessageType() !==
-            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-        ) {
-            this.updateChat(message);
-            this.scrollToBottom = true;
-        }
+
+        this.updateChat(message);
+        this.scrollToBottom = true;
+
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1244,12 +1241,8 @@ class ChatBotScreen extends React.Component {
                 console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
-                    if (
-                        !message.getMessageType() !==
-                        MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-                    ) {
-                        this.updateChat(message);
-                    }
+
+                    this.updateChat(message);
                 }
             });
         } else {
@@ -1809,6 +1802,10 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
             }
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     label: I18n.t('Share_Contact')
+            // }
         ];
 
         // if (this.bot.allowResetConversation) {

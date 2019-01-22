@@ -52,6 +52,9 @@ export default StyleSheet.create({
         fontSize: 19,
         color: GlobalColors.sideButtons
     },
+    emptyFooter: {
+        width: 64
+    },
 
     //MODAL
 

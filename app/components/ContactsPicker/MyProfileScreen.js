@@ -231,7 +231,7 @@ export default class MyProfileScreen extends React.Component {
                                 value={info.number}
                                 keyboardType="phone-pad"
                                 autoCorrect={false}
-                                maxLength={10}
+                                maxLength={15}
                                 blurOnSubmit={false}
                                 onChangeText={val => {
                                     this.setPhoneNumber(val, index);

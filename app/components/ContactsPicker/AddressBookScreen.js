@@ -8,7 +8,8 @@ import {
     Platform,
     Alert,
     ScrollView,
-    PermissionsAndroid
+    PermissionsAndroid,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import styles from './styles';
@@ -317,18 +318,24 @@ export default class AddressBookScreen extends React.Component {
                         </ScrollView>
                     </View>
                 </View>
-                <View style={styles.buttonContainerDone}>
-                    <TouchableOpacity
-                        style={styles.doneButton}
-                        onPress={() => {
-                            this.sendInvitationToEmail();
-                        }}
-                    >
-                        <Text style={{ color: '#fff' }}>
-                            {I18n.t('Done_caps')}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableWithoutFeedback
+                    onPress={() => {
+                        this.sendInvitationToEmail();
+                    }}
+                >
+                    <View style={styles.buttonContainerDone}>
+                        <TouchableOpacity
+                            style={styles.doneButton}
+                            onPress={() => {
+                                this.sendInvitationToEmail();
+                            }}
+                        >
+                            <Text style={{ color: '#fff' }}>
+                                {I18n.t('Done_caps')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableWithoutFeedback>
             </SafeAreaView>
         );
     }
