@@ -2,6 +2,8 @@ import DeviceStorage from './DeviceStorage';
 import { UUID } from './Utils';
 import { newBotConversationId } from '../utils';
 import _ from 'lodash';
+import Constants from '../../config/constants';
+import constants from '../../config/constants';
 
 /**
  * Format of a conversation context
@@ -173,7 +175,8 @@ export default class ConversationContext {
                     ],
                     participants: [user.userId],
                     onChannels: [],
-                    closed: false
+                    closed: false,
+                    conversationContext: constants.SOURCE
                 };
                 resolve(context);
             } else {
@@ -184,6 +187,7 @@ export default class ConversationContext {
                     participantsInfo: [],
                     participants: [],
                     onChannels: [],
+                    conversationContext: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);
@@ -207,6 +211,7 @@ export default class ConversationContext {
                             userDomain: channel.userDomain
                         }
                     ],
+                    conversationContext: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);
@@ -216,6 +221,7 @@ export default class ConversationContext {
                     participantsInfo: [],
                     participants: [],
                     onChannels: [],
+                    conversationContext: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);

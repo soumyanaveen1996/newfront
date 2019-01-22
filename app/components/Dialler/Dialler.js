@@ -45,11 +45,23 @@ export const DiallerState = {
     incall_digits: 'incall_digits'
 };
 
+const kSort = src => {
+    const keys = Object.keys(src);
+    keys.sort();
+    return keys.reduce((target, key) => {
+        target[key] = src[key];
+        return target;
+    }, {});
+};
+
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 export default class Dialler extends React.Component {
     constructor(props) {
         super(props);
+        const { Inmarsat, ...rest } = CountryCodes();
+        const countries = kSort(rest);
+        const countryCodes = { Inmarsat, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
             dialledNumber: '+',
@@ -64,7 +76,7 @@ export default class Dialler extends React.Component {
             intervalId: null,
             noBalance: false,
             bgBotScreen: null,
-            codes: CountryCodes(),
+            codes: countryCodes,
             showCodes: false,
             countryElements: []
         };

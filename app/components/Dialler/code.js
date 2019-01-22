@@ -253,7 +253,26 @@ const CountryCodes = () => {
         Mozambique: '258'
     };
 
-    return codes;
+    let keys = Object.keys(codes);
+    const corrected = keys.reduce((acc, mykey) => {
+        if (codes[mykey].startsWith('+')) {
+            return {
+                ...acc,
+                ...{
+                    [mykey]: codes[mykey]
+                }
+            };
+        } else {
+            return {
+                ...acc,
+                ...{
+                    [mykey]: `+${codes[mykey]}`
+                }
+            };
+        }
+    }, {});
+
+    return corrected;
 };
 
 export default CountryCodes;

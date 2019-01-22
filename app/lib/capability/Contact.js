@@ -339,7 +339,8 @@ export default class Contact {
                         return ChannelContactDAO.insertChannelContact(
                             contact.userId,
                             contact.userName,
-                            contact.emailAddress,
+                            '',
+                            // contact.emailAddress,
                             contact.screenName,
                             contact.givenName,
                             contact.surname
