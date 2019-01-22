@@ -215,7 +215,10 @@ export default class Message {
     };
 
     dataCard = (cardData, options) => {
-        this._msg = cardData || [];
+        this._msg = JSON.stringify(cardData || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_DATA_CARD;
     };
 
@@ -361,7 +364,8 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE ||
             this._messageType ===
-                MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+                MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
         ) {
             try {
                 return JSON.parse(this._msg);

@@ -65,32 +65,6 @@ export default class Datacard extends React.Component {
     renderValue(value, isModal) {
         if (value === null || value === undefined) {
             return <Text style={styles.fieldText}>-</Text>;
-        } else if (_.isDate(value)) {
-            const date =
-                value.getDate() +
-                '-' +
-                value.getMonth() +
-                '-' +
-                value.getFullYear() +
-                '\n' +
-                value.getHours() +
-                ':' +
-                value.getMinutes() +
-                ':' +
-                value.getSeconds();
-            if (isModal) {
-                return <Text style={styles.fieldText}>{date}</Text>;
-            } else {
-                return (
-                    <Text
-                        style={styles.fieldText}
-                        numberOfLines={1}
-                        ellipsizeMode={'tail'}
-                    >
-                        {date}
-                    </Text>
-                );
-            }
         } else if (typeof value === 'boolean') {
             if (value) {
                 return Icons.cardsTrue();
