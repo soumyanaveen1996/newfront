@@ -8,7 +8,9 @@ import {
     RefreshControl,
     View,
     Alert,
-    BackHandler,
+    Image,
+    TouchableOpacity,
+    Text,
     SafeAreaView,
     Platform
 } from 'react-native';
@@ -172,7 +174,8 @@ class ChatBotScreen extends React.Component {
             refreshing: false,
             sliderClosed: false,
             chatModalContent: {},
-            isModalVisible: false
+            isModalVisible: false,
+            showOptions: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -1633,7 +1636,11 @@ class ChatBotScreen extends React.Component {
         this.sendMessage(message);
     }
 
-    onOptionSelected(key) {
+    onOptionSelected() {
+        this.setState({ showOptions: !this.state.showOptions });
+    }
+
+    selectOption = key => {
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
         } else if (key === BotInputBarCapabilities.video) {
@@ -1651,7 +1658,7 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
         }
-    }
+    };
 
     async loadMessages() {
         let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
@@ -1766,48 +1773,204 @@ class ChatBotScreen extends React.Component {
         const moreOptions = [
             {
                 key: BotInputBarCapabilities.camera,
-                label: I18n.t('Chat_Input_Camera')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_camera,
+                label: I18n.t('Camera_option')
             },
             // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
             // { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
             {
                 key: BotInputBarCapabilities.photo_library,
-                label: I18n.t('Chat_Input_Photo_Library')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_photo_library,
+                label: I18n.t('Gallery_option')
             },
             {
                 key: BotInputBarCapabilities.bar_code_scanner,
-                label: I18n.t('Chat_Input_BarCode')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_code,
+                label: I18n.t('Bar_code_option')
+            },
+            {
+                key: BotInputBarCapabilities.file,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_file,
+                label: I18n.t('File_option')
+            },
+            {
+                key: BotInputBarCapabilities.add_contact,
+                imageStyle: { width: 16, height: 16 },
+                imageSource: images.share_contact,
+                label: I18n.t('Add_Contact')
             },
             {
                 key: BotInputBarCapabilities.pick_location,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
             }
         ];
 
-        if (this.bot.allowResetConversation) {
-            moreOptions.push({
-                key: BotInputBarCapabilities.reset_conversation,
-                label: I18n.t('Reset_Conversation')
-            });
-        }
-        if (appConfig.app.hideAddContacts !== true) {
-            moreOptions.push({
-                key: BotInputBarCapabilities.add_contact,
-                label: I18n.t('Add_Contact')
-            });
-        }
+        // if (this.bot.allowResetConversation) {
+        //     moreOptions.push({
+        //         key: BotInputBarCapabilities.reset_conversation,
+        //         label: I18n.t('Reset_Conversation')
+        //     });
+        // }
+        // if (appConfig.app.hideAddContacts !== true) {
+        //     moreOptions.push({
+        //         key: BotInputBarCapabilities.add_contact,
+        //         imageStyle: { width: 16, height: 16 },
+        //         imageSource: images.share_contact,
+        //         label: I18n.t('Add_Contact')
+        //     });
+        // }
 
         return (
-            <ChatInputBar
-                accessibilityLabel="Chat Input Bar"
-                testID="chat-input-bar"
-                network={this.state.network}
-                onSend={this.onSendMessage.bind(this)}
-                onSendAudio={this.onSendAudio.bind(this)}
-                options={moreOptions}
-                botId={this.getBotId()}
-                onOptionSelected={this.onOptionSelected.bind(this)}
-            />
+            <View>
+                {this.state.showOptions && (
+                    <View style={chatStyles.moreOptionContainer}>
+                        {moreOptions.map((elem, index) => {
+                            return (
+                                <TouchableOpacity
+                                    keys={index}
+                                    onPress={() => {
+                                        this.selectOption(elem.key);
+                                    }}
+                                    style={chatStyles.optionContainer}
+                                >
+                                    <View
+                                        style={
+                                            chatStyles.moreOptionImageContainer
+                                        }
+                                    >
+                                        <Image
+                                            style={elem.imageStyle}
+                                            source={elem.imageSource}
+                                        />
+                                    </View>
+                                    <Text style={chatStyles.optionText}>
+                                        {elem.label}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+
+                        {/* <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.camera
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_camera}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Camera</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.photo_library
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_photo_library}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>
+                                Photo Library
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.bar_code_scanner
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_code}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Code</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(BotInputBarCapabilities.file);
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 14, height: 16 }}
+                                    source={images.share_file}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>File</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.add_contact
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 16 }}
+                                    source={images.share_contact}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Contact</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.pick_location
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 14, height: 16 }}
+                                    source={images.share_location}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Location</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                )}
+
+                <ChatInputBar
+                    accessibilityLabel="Chat Input Bar"
+                    testID="chat-input-bar"
+                    network={this.state.network}
+                    onSend={this.onSendMessage.bind(this)}
+                    onSendAudio={this.onSendAudio.bind(this)}
+                    options={moreOptions}
+                    botId={this.getBotId()}
+                    onOptionSelected={this.onOptionSelected.bind(this)}
+                    showMoreOption={this.state.showOptions}
+                />
+            </View>
         );
     }
 

@@ -150,7 +150,13 @@ I18n.translations = {
         SAVE: 'Save',
         Search_my_info_text: "I don't want to appear in searches",
         Share_my_info_text: 'Share my information with my contacts',
-        Add_phone: 'Add phone'
+        Add_phone: 'Add phone',
+        Camera_option: 'Camera',
+        Gallery_option: 'Photo Library',
+        Bar_code_option: 'Code',
+        File_option: 'File',
+        Contact_option: 'Contact',
+        Location_option: 'Location'
     }
 };
 
