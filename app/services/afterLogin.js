@@ -8,12 +8,11 @@ import { TwilioVoIP } from '../lib/twilio';
 export default class AfterLogin {
     static executeAfterLogin = async () => {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
-
         if (isUserLoggedIn) {
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();
-            // this.configureNotifications();
+            this.configureNotifications();
             TwilioVoIP.init();
         }
     };
@@ -31,8 +30,48 @@ export default class AfterLogin {
     };
 
     handleNotification = notification => {
+        let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            Actions.replace(ROUTER_SCENE_KEYS.timeline);
+            Conversation.getIMConversation(notification.conversationId)
+                .then(conv => {
+                    conversation = conv;
+                    return SystemBot.get(SystemBot.imBotManifestName);
+                })
+                .then(imBot => {
+                    if (conversation.type === IM_CHAT) {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.peopleChat
+                        ) {
+                            Actions.replace(ROUTER_SCENE_KEYS.peopleChat, {
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                        Actions.peopleChat({
+                            bot: imBot,
+                            conversation: conversation
+                            // onBack: this.props.onBack
+                        });
+                    } else {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.channelChat
+                        ) {
+                            Actions.replace(ROUTER_SCENE_KEYS.channelChat, {
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                        Actions.channelChat({
+                            bot: imBot,
+                            conversation: conversation
+                            // onBack: this.props.onBack
+                        });
+                    }
+                });
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
