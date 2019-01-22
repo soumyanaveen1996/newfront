@@ -6,6 +6,7 @@ import { AssetFetcher } from '../dce';
 import Bot from '../bot/index';
 import Twilio from '../twilio';
 import DefaultPreference from 'react-native-default-preference';
+import PushNotification from 'react-native-push-notification';
 
 class DataManager {
     init = async () => {
@@ -33,6 +34,9 @@ class DataManager {
     };
 
     handleAppStateChange = async nextAppState => {
+        if (nextAppState === 'active') {
+            PushNotification.cancelAllLocalNotifications();
+        }
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (isUserLoggedIn) {
             if (nextAppState === 'active') {
