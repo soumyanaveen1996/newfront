@@ -157,7 +157,8 @@ I18n.translations = {
         Bar_code_option: 'Code',
         File_option: 'File',
         Contact_option: 'Contact',
-        Location_option: 'Location'
+        Location_option: 'Location',
+        Contact: 'Contact'
     }
 };
 

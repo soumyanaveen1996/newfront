@@ -1637,6 +1637,21 @@ class ChatBotScreen extends React.Component {
         this.sendMessage(message);
     }
 
+    pickContact() {
+        Keyboard.dismiss();
+        Actions.addParticipants({ onSelected: this.shareContacts.bind(this) });
+    }
+
+    shareContacts(selectedContacts) {
+        _.map(selectedContacts, contact => {
+            message = new Message();
+            message.contactCard(contact);
+            message.messageByBot(false);
+            message.setCreatedBy(this.getUserId());
+            this.sendMessage(message);
+        });
+    }
+
     onOptionSelected() {
         this.setState({ showOptions: !this.state.showOptions });
     }
@@ -1650,16 +1665,16 @@ class ChatBotScreen extends React.Component {
             this.readBarCode();
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
-        } else if (key === BotInputBarCapabilities.add_contact) {
-            this.addContactsToBot();
+        } else if (key === BotInputBarCapabilities.share_contact) {
+            this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
         } else if (key === BotInputBarCapabilities.pick_location) {
             this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
-        } else if (key === BotInputBarCapabilities.share_contact) {
-            this.pickContact();
+            // } else if (key === BotInputBarCapabilities.share_contact) {
+            //     this.pickContact();
         }
     };
 
@@ -1801,21 +1816,21 @@ class ChatBotScreen extends React.Component {
                 label: I18n.t('File_option')
             },
             {
-                key: BotInputBarCapabilities.add_contact,
+                key: BotInputBarCapabilities.share_contact,
                 imageStyle: { width: 16, height: 16 },
                 imageSource: images.share_contact,
-                label: I18n.t('Add_Contact')
+                label: I18n.t('Contact')
             },
             {
                 key: BotInputBarCapabilities.pick_location,
                 imageStyle: { width: 14, height: 16 },
                 imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
-            },
-            {
-                key: BotInputBarCapabilities.share_contact,
-                label: I18n.t('Share_Contact')
             }
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     label: I18n.t('Share_Contact')
+            // }
         ];
 
         // if (this.bot.allowResetConversation) {
