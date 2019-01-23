@@ -150,7 +150,10 @@ export default class InviteModal extends React.Component {
                                         onPress={() => {
                                             this.props.setVisible(false);
                                             Actions.searchUsers({
-                                                multiSelect: true
+                                                multiSelect: true,
+                                                onDone: this.props.addContacts.bind(
+                                                    this
+                                                )
                                             });
                                         }}
                                     >

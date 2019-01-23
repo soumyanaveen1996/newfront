@@ -33,7 +33,8 @@ import {
     Contact,
     Settings,
     PollingStrategyTypes,
-    Auth
+    Auth,
+    Network
 } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
@@ -58,6 +59,7 @@ import {
 import images from '../../config/images';
 import { EmptyContact } from '.';
 import ProfileImage from '../ProfileImage';
+import config from '../../config/config';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -427,8 +429,37 @@ class ContactsPicker extends React.Component {
             viewOffset: SECTION_HEADER_HEIGHT
         });
     }
-    addContacts() {
-        Actions.searchUsers({ multiSelect: true });
+
+    addContacts(selectedContacts) {
+        return new Promise((resolve, reject) => {
+            Contact.addContacts(selectedContacts)
+                .then(() => {
+                    return Auth.getUser();
+                })
+                .then(user => {
+                    const options = {
+                        method: 'post',
+                        url:
+                            config.proxy.protocol +
+                            config.proxy.host +
+                            '/contactsActions',
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            capability: 'AddContact',
+                            botId: 'onboarding-bot',
+                            users: _.map(selectedContacts, contact => {
+                                return contact.userId;
+                            })
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(() => {
+                    resolve();
+                });
+        });
     }
 
     renderSearchBar() {
@@ -555,6 +586,7 @@ class ContactsPicker extends React.Component {
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}
                         setVisible={this.setInviteVisible.bind(this)}
+                        addContacts={this.addContacts.bind(this)}
                     />
                 </BackgroundImage>
             </SafeAreaView>
