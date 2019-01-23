@@ -27,20 +27,6 @@ import {
     addButtonConfig
 } from './config';
 import _ from 'lodash';
-import { HeaderRightIcon, HeaderBack } from '../Header';
-import SystemBot from '../../lib/bot/SystemBot';
-import { Contact } from '../../lib/capability';
-import { Icons } from '../../config/icons';
-import { BackgroundImage } from '../BackgroundImage';
-import EventEmitter, { AuthEvents } from '../../lib/events';
-import { connect } from 'react-redux';
-import I18n from '../../config/i18n/i18n';
-import Store from '../../redux/store/configureStore';
-import {
-    setCurrentScene,
-    completeContactsLoad,
-    refreshContacts
-} from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
@@ -115,39 +101,11 @@ export default class SearchUsers extends React.Component {
             });
     }
 
-    addContacts() {
+    onDone() {
         this.setState({ loading: true });
-        Contact.addContacts(this.state.selectedContacts).then(() => {
-            Auth.getUser()
-                .then(user => {
-                    const options = {
-                        method: 'post',
-                        url:
-                            config.proxy.protocol +
-                            config.proxy.host +
-                            '/contactsActions',
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            capability: 'AddContact',
-                            botId: 'onboarding-bot',
-                            users: _.map(
-                                this.state.selectedContacts,
-                                contact => {
-                                    return contact.userId;
-                                }
-                            )
-                        }
-                    };
-                    return Network(options);
-                })
-                .then(() => {
-                    Contact.refreshContacts().then(() => {
-                        this.setState({ loading: false });
-                        Actions.pop();
-                    });
-                });
+        this.props.onDone(this.state.selectedContacts).then(() => {
+            this.setState({ loading: false });
+            Actions.pop();
         });
     }
 
@@ -281,7 +239,7 @@ export default class SearchUsers extends React.Component {
                         styles.doneButtonSU,
                         { backgroundColor: GlobalColors.sideButtons }
                     ]}
-                    onPress={this.addContacts.bind(this)}
+                    onPress={this.onDone.bind(this)}
                 >
                     <Text style={styles.buttonText}>Done</Text>
                 </TouchableOpacity>

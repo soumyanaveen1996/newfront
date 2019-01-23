@@ -19,7 +19,7 @@ import {
     buttonStyle,
     buttonTextStyle
 } from './styles';
-import { MessageTypeConstants } from '../../lib/capability';
+import { MessageTypeConstants, Auth, Network } from '../../lib/capability';
 import utils from '../../lib/utils';
 import AudioPlayer from '../AudioPlayer';
 import CachedImage from '../CachedImage';
@@ -36,6 +36,8 @@ import _ from 'lodash';
 import Hyperlink from 'react-native-hyperlink';
 import { Icons } from '../../config/icons';
 import { ButtonMessage } from '../ButtonMessage';
+import config from '../../config/config';
+import ContactCard from './ContactCard';
 
 export default class ChatMessage extends React.Component {
     constructor(props) {
@@ -230,6 +232,22 @@ export default class ChatMessage extends React.Component {
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
+    contactMessage(message) {
+        let userId = message.getMessage();
+        return (
+            <ContactCard
+                id={userId}
+                alignRight={this.props.alignRight}
+                imageSource={this.props.imageSource}
+                openModalWithContent={this.props.openModalWithContent.bind(
+                    this
+                )}
+                hideChatModal={this.props.hideChatModal.bind(this)}
+                disabled={this.props.alignRight}
+            />
+        );
+    }
+
     favoriteIconClicked() {
         let { message } = this.props;
 
@@ -275,10 +293,11 @@ export default class ChatMessage extends React.Component {
     renderStdNotification(message) {
         return <Text>{message.getDisplayMessage()}</Text>;
     }
+
     renderCriticalNotification(message) {}
+
     renderMessage() {
         let { message } = this.props;
-
         if (
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_STRING ||
@@ -441,6 +460,12 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_AUDIO
         ) {
             return this.renderAudioMessage(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
+        ) {
+            component = this.contactMessage(message);
+            return this.wrapBetweenFavAndTalk(message, component);
         }
     }
 
@@ -504,7 +529,6 @@ export default class ChatMessage extends React.Component {
 
     render() {
         let { message, showTime } = this.props;
-
         if (message.isEmptyMessage()) {
             return null;
         }
