@@ -24,6 +24,7 @@ import { RNChipView } from 'react-native-chip-view';
 import ProfileImage from '../ProfileImage';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { GlobalColors } from '../../config/styles';
+import _ from 'lodash';
 
 const R = require('ramda');
 const cancelImg = require('../../images/channels/cross-deselect-participant.png');
@@ -155,9 +156,19 @@ class AddContacts extends React.Component {
     }
 
     selectContacts = () => {
+        if (this.props.onSelected) {
+            const selectedContacts = _.filter(this.state.contacts, contact => {
+                return contact.selected;
+            });
+            const users = _.map(selectedContacts, contact => {
+                return contact.userId;
+            });
+            this.props.onSelected(users);
+        }
         this.props.setParticipants(this.state.contacts);
         Actions.pop();
     };
+
     toggleSelectContacts = elem => {
         let array = [...this.state.contacts];
         const index = R.findIndex(R.propEq('userId', elem.userId))(array);

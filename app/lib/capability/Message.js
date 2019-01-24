@@ -71,7 +71,8 @@ export const IntToMessageTypeConstants = {
     410: MessageTypeConstants.MESSAGE_TYPE_MENU,
     420: MessageTypeConstants.MESSAGE_TYPE_TABLE,
     430: MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD,
-    440: MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
+    440: MessageTypeConstants.MESSAGE_TYPE_DATA_CARD,
+    450: MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -650,8 +651,7 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
-            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
-            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;

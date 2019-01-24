@@ -14,7 +14,8 @@ export const BotInputBarCapabilities = {
     bar_code_scanner: 'bar_code_scanner',
     add_contact: 'add_contact',
     reset_conversation: 'reset_conversation',
-    pick_location: 'pick_location'
+    pick_location: 'pick_location',
+    share_contact: 'share_contact'
 };
 
 export const SLIDER_HEIGHT = SCREEN_HEIGHT / 2.4;
