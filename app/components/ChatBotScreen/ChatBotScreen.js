@@ -1634,6 +1634,7 @@ class ChatBotScreen extends React.Component {
     }
 
     selectOption = key => {
+        this.setState({ showOptions: false });
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
         } else if (key === BotInputBarCapabilities.video) {
@@ -1784,12 +1785,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            {
-                key: BotInputBarCapabilities.file,
-                imageStyle: { width: 14, height: 16 },
-                imageSource: images.share_file,
-                label: I18n.t('File_option')
-            },
+            // {
+            //     key: BotInputBarCapabilities.file,
+            //     imageStyle: { width: 14, height: 16 },
+            //     imageSource: images.share_file,
+            //     label: I18n.t('File_option')
+            // },
             {
                 key: BotInputBarCapabilities.add_contact,
                 imageStyle: { width: 16, height: 16 },
@@ -1830,7 +1831,7 @@ class ChatBotScreen extends React.Component {
                         {moreOptions.map((elem, index) => {
                             return (
                                 <TouchableOpacity
-                                    keys={index}
+                                    key={index}
                                     onPress={() => {
                                         this.selectOption(elem.key);
                                     }}
@@ -1966,6 +1967,9 @@ class ChatBotScreen extends React.Component {
                     botId={this.getBotId()}
                     onOptionSelected={this.onOptionSelected.bind(this)}
                     showMoreOption={this.state.showOptions}
+                    closeShowOptions={() => {
+                        this.setState({ showOptions: false });
+                    }}
                 />
             </View>
         );

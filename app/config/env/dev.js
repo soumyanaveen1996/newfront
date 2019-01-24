@@ -45,7 +45,8 @@ const devConfig = {
         newProvider: '/v2/subscribeDomain',
         searchCatalog: '/catalog',
         userInfo: '/user',
-        profileImage: '/v2/file/profile-pics/'
+        profileImage: '/v2/file/profile-pics/',
+        addFavourite: '/users/favourites'
     }
 };
 

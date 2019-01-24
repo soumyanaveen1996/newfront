@@ -73,6 +73,7 @@ export default class ChatInputBar extends React.Component {
     }
 
     onChangeText(text) {
+        this.props.closeShowOptions();
         if (text) {
             this.setState({ text: text, chatState: ChatInputBarState.TYPING });
         } else {

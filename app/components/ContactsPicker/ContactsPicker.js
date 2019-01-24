@@ -150,9 +150,7 @@ class ContactsPicker extends React.Component {
         Auth.getUser()
             .then(userDetails => {
                 const info = { ...userDetails.info };
-                console.log('info ', info);
-
-                this.setState({ userInfo: info });
+                this.setState({ userInfo: info, userId: info.userId });
             })
             .catch(err => {
                 console.log('Error Loading User details', err);
@@ -212,6 +210,7 @@ class ContactsPicker extends React.Component {
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
+            this.gettingUserDetails();
             this.refresh();
         }
     }
@@ -286,7 +285,6 @@ class ContactsPicker extends React.Component {
     refresh = () => {
         this.dataSource.loadData();
         this.checkPollingStrategy();
-        this.gettingUserDetails();
     };
 
     updateList = () => {
@@ -468,7 +466,7 @@ class ContactsPicker extends React.Component {
                 >
                     <View style={styles.myProfileItemContainer}>
                         <ProfileImage
-                            uuid={this.state.userInfo.userId}
+                            uuid={this.state.userId}
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}
                             placeholderStyle={styles.myProfilePlaceholderImage}

@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     TextInput,
     Keyboard,
+    Alert,
     ScrollView,
     Platform
 } from 'react-native';
@@ -118,6 +119,8 @@ export default class MyProfileScreen extends React.Component {
                 detailObj.phoneNumbers[elem.text] = elem.number;
             }
         });
+
+        // console.log('beforeing saving profile ', detailObj);
 
         const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
 
@@ -322,13 +325,35 @@ export default class MyProfileScreen extends React.Component {
                     );
                 } else {
                     console.log('file url upload image ', fileUrl);
-                    this.setState({
-                        loading: false,
-                        userId: this.props.userId
-                    });
-                    Actions.pop();
+                    this.setState(
+                        {
+                            loading: false,
+                            userId: this.props.userId
+                        },
+                        () => {
+                            setTimeout(() => {
+                                this.showAlert();
+                            }, 200);
+                        }
+                    );
                 }
             });
+    }
+
+    showAlert() {
+        Alert.alert(
+            '',
+            'Profile image updated',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        Actions.pop();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     }
 
     async takePicture() {
