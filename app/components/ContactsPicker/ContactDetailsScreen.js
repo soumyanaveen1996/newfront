@@ -101,6 +101,40 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
+    // addToFavourite = () => {
+    //     console.log('add to favourite');
+
+    //     Auth.getUser()
+    //         .then(user => {
+    //             const options = {
+    //                 method: 'post',
+    //                 url:
+    //                     config.proxy.protocol +
+    //                     config.proxy.host +
+    //                     config.proxy.addFavourite,
+    //                 headers: {
+    //                     sessionId: user.creds.sessionId
+    //                 },
+    //                 data: {
+    //                     conversationId: '',
+    //                     userDomain: '',
+    //                     action: 'add'
+    //                 }
+    //             };
+    //             return Network(options);
+    //         })
+    //         .then(
+    //             data => {
+    //                 if (data.status === 200 && data.data.error === 0) {
+    //                     console.log('added favourite');
+    //                 }
+    //             },
+    //             err => {
+    //                 console.log('error in favourite', err);
+    //             }
+    //         );
+    // };
+
     renderActionButtons() {
         if (!this.contact.isWaitingForConfirmation) {
             return (
@@ -133,7 +167,12 @@ export default class ContactDetailsScreen extends React.Component {
                         </View>
                         <Text>Call</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.actionButtonCD}>
+                    <TouchableOpacity
+                        style={styles.actionButtonCD}
+                        onPress={() => {
+                            this.addToFavourite();
+                        }}
+                    >
                         <View
                             style={[
                                 styles.actionIconCD,
