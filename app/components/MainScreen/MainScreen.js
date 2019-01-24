@@ -519,6 +519,8 @@ class MainScreen extends React.Component {
     onSearch = searchString => this.setState({ searchString });
 
     renderMain() {
+        // console.log('list of bots ', this.state.bots);
+
         const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
             return (
