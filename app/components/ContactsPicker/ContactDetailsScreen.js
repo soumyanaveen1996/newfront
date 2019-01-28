@@ -167,7 +167,7 @@ export default class ContactDetailsScreen extends React.Component {
                         </View>
                         <Text>Call</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={styles.actionButtonCD}
                         onPress={() => {
                             this.addToFavourite();
@@ -182,7 +182,7 @@ export default class ContactDetailsScreen extends React.Component {
                             <Icon name="star" size={16} color={'white'} />
                         </View>
                         <Text>Favourite</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             );
         } else {
