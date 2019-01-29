@@ -85,6 +85,7 @@ export default class BotListItem extends React.Component {
                         ? BotListItemStyles.containerLast
                         : BotListItemStyles.container
                 }
+                activeOpacity={1}
                 onPress={this.handleBotSelection.bind(this)}
             >
                 <CachedImage

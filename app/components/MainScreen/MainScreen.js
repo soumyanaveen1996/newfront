@@ -467,13 +467,32 @@ class MainScreen extends React.Component {
         });
     };
 
-    setConversationFavorite = (conversation, chatData = undefined) => {
-        console.log('Setting favorite..', conversation);
-        let userDomain;
-        if (chatData.channel) {
-            userDomain = chatData.channel.userDomain;
+    setConversationFavorite = (conversation, chatData = undefined, type) => {
+        console.log('Setting favorite..', conversation, type);
+
+        let data;
+
+        if (type === 'conversation') {
+            data = {
+                conversationId: conversation,
+                action: 'add',
+                userDomain: 'frontmai'
+            };
+        } else if (type === 'channel') {
+            data = {
+                channelName: chatData.channel.channelName,
+                action: 'add',
+                userDomain: chatData.channel.userDomain
+            };
+        } else {
+            data = {
+                botId: conversation,
+                action: 'add',
+                userDomain: 'frontmai'
+            };
         }
-        Conversation.setFavorite(conversation, true, userDomain)
+
+        Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as favorite');
                 this.update();
@@ -481,9 +500,31 @@ class MainScreen extends React.Component {
             .catch(err => console.log('Cannot set favorite', err));
     };
 
-    setConversationUnFavorite = conversation => {
+    setConversationUnFavorite = (conversation, chatData = undefined, type) => {
         console.log('Setting unfavorite..', conversation);
-        Conversation.setFavorite(conversation, false)
+
+        let data;
+
+        if (type === 'conversation') {
+            data = {
+                conversationId: conversation,
+                action: 'remove',
+                userDomain: 'frontmai'
+            };
+        } else if (type === 'channel') {
+            data = {
+                channelName: chatData.channel.channelName,
+                action: 'remove',
+                userDomain: chatData.channel.userDomain
+            };
+        } else {
+            data = {
+                botId: conversation,
+                action: 'remove',
+                userDomain: 'frontmai'
+            };
+        }
+        Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as unfavorite');
                 this.update();

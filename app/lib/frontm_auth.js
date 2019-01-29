@@ -208,7 +208,7 @@ class FrontmAuth {
                     })
                 })
                     .then(res => {
-                        console.log('res : ', res);
+                        // console.log('res : ', res);
                         user.idToken = res.data.id_token;
                         user.refreshToken = res.data.refresh_token;
                         user.accessToken = res.data.access_token;
