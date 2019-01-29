@@ -36,6 +36,11 @@ export const MainScreenStyles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff'
     },
+    swipeBtnStyle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     buttonArea: {
         width: wp('100%'),
         flexDirection: 'row',
@@ -151,11 +156,12 @@ export const BotListStyles = {
     },
     favItemContainer: {
         display: 'flex',
+        backgroundColor: 'rgba(244,244,244,1)',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         width: wp('25%'),
-        height: hp('10%')
+        height: hp('8%')
     },
     favText: {
         color: 'rgba(102,102,102,1)',

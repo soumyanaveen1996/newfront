@@ -63,7 +63,7 @@ export default class Contact {
             if (!Array.isArray(contacts)) {
                 contacts = [contacts];
             }
-            console.log('Added Contacts : ', contacts);
+
             Contact.getAddedContacts()
                 .then(function(cts) {
                     cts = cts || [];
@@ -291,6 +291,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
+                        console.log(
+                            'all conatcts ======================= >',
+                            response.data
+                        );
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -303,6 +307,7 @@ export default class Contact {
                             return _.extend({}, contact, { ignored: true });
                         });
                         var allContacts = _.concat(contacts, ignored);
+
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
                         resolve();
@@ -333,7 +338,6 @@ export default class Contact {
                     }
                 })
                 .then(response => {
-                    console.log('Contact response data ', response.data);
                     if (response.data) {
                         let contact = response.data;
                         return ChannelContactDAO.insertChannelContact(
