@@ -26,7 +26,7 @@ import images from '../../config/images';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
-import { formStatus } from './config';
+import { formStatus, fieldType } from './config';
 
 export default class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -105,19 +105,25 @@ export default class Form2 extends React.Component {
                 getResponse: () => {}
             };
             switch (fieldData.type) {
-            case 'text_field':
-                answer.value = '';
+            case fieldType.textField:
+                answer.value = fieldData.value || '';
                 answer.getResponse = () => {
                     return answer.value;
                 };
                 break;
-            case 'text_area':
-                answer.value = '';
+            case fieldType.number:
+                answer.value = fieldData.value || '';
                 answer.getResponse = () => {
                     return answer.value;
                 };
                 break;
-            case 'checkbox':
+            case fieldType.textArea:
+                answer.value = fieldData.value || '';
+                answer.getResponse = () => {
+                    return answer.value;
+                };
+                break;
+            case fieldType.checkbox:
                 answer.value = _.map(fieldData.options, option => {
                     if (
                         fieldData.value &&
@@ -134,39 +140,39 @@ export default class Form2 extends React.Component {
                     });
                 };
                 break;
-            case 'radiobutton':
+            case fieldType.radioButton:
                 var v = fieldData.value;
                 answer.value = fieldData.options.indexOf(v); //index
                 answer.getResponse = () => {
                     return fieldData.options[answer.value];
                 };
                 break;
-            case 'dropdown':
+            case fieldType.dropdown:
                 var v = fieldData.value;
                 answer.value = fieldData.options.indexOf(v); //index
                 answer.getResponse = () => {
                     return fieldData.options[answer.value];
                 };
                 break;
-            case 'switch':
+            case fieldType.switch:
                 answer.value = fieldData.value || false;
                 answer.getResponse = () => {
                     return answer.value;
                 };
                 break;
-            case 'slider':
+            case fieldType.slider:
                 answer.value = fieldData.value || 0;
                 answer.getResponse = () => {
                     return answer.value;
                 };
                 break;
-            case 'date':
+            case fieldType.date:
                 answer.value = new Date(fieldData.value) || new Date(); //milliseconds. Use getTime() to get the milliseconds to send to backend
                 answer.getResponse = () => {
                     return answer.value.getTime();
                 };
                 break;
-            case 'multi_selection':
+            case fieldType.multiselection:
                 answer.value = _.map(fieldData.options, option => {
                     if (
                         fieldData.value &&
@@ -183,8 +189,8 @@ export default class Form2 extends React.Component {
                     });
                 };
                 break;
-            case 'password_field':
-                answer.value = '';
+            case fieldType.passwordField:
+                answer.value = fieldData.value || '';
                 answer.getResponse = () => {
                     return answer.value;
                 };
@@ -275,11 +281,25 @@ export default class Form2 extends React.Component {
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    // this.setState({ answers: this.answers })
+                    this.setState({ answers: this.answers });
                 }}
-                placeholder={content.value}
                 placeholderTextColor={GlobalColors.disabledGray}
-                // value={this.state.answers[key].value}
+                value={this.state.answers[key].value}
+            />
+        );
+    }
+    renderNumberField(content, key) {
+        return (
+            <TextInput
+                editable={!this.disabled}
+                style={styles.textField}
+                onChangeText={text => {
+                    this.answers[key].value = text;
+                    this.setState({ answers: this.answers });
+                }}
+                placeholderTextColor={GlobalColors.disabledGray}
+                keyboardType="numeric"
+                value={this.state.answers[key].value}
             />
         );
     }
@@ -292,11 +312,10 @@ export default class Form2 extends React.Component {
                 style={styles.textArea}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    // this.setState({ answers: this.answers })
+                    this.setState({ answers: this.answers });
                 }}
-                placeholder={content.value}
                 placeholderTextColor={GlobalColors.disabledGray}
-                // value={this.state.answers[key].value}
+                value={this.state.answers[key].value}
             />
         );
     }
@@ -590,12 +609,12 @@ export default class Form2 extends React.Component {
                 editable={!this.disabled}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    // this.setState({ answers: this.answers })
+                    this.setState({ answers: this.answers });
                 }}
                 secureTextEntry={true}
                 textContentType="password"
                 style={styles.textField}
-                // value={this.state.answers[key].value}
+                value={this.state.answers[key].value}
             />
         );
     }
@@ -603,38 +622,41 @@ export default class Form2 extends React.Component {
     renderField(fieldData, key) {
         let field;
         switch (fieldData.type) {
-        case 'text_field':
+        case fieldType.textField:
             field = this.renderTextField(fieldData, key);
             break;
-        case 'text_area':
+        case fieldType.number:
+            field = this.renderNumberField(fieldData, key);
+            break;
+        case fieldType.textArea:
             field = this.renderTextArea(fieldData, key);
             break;
-        case 'checkbox':
+        case fieldType.checkbox:
             field = this.renderCheckbox(fieldData, key);
             break;
-        case 'radiobutton':
+        case fieldType.radioButton:
             field = this.renderRadioButton(fieldData, key);
             break;
-        case 'dropdown':
+        case fieldType.dropdown:
             field = this.renderDropdown(fieldData, key);
             break;
-        case 'switch':
+        case fieldType.switch:
             field = this.renderSwitch(fieldData, key);
             break;
-        case 'slider':
+        case fieldType.slider:
             field = this.renderSlider(fieldData, key);
             break;
-        case 'date':
+        case fieldType.date:
             field = this.renderDate(fieldData, key);
             break;
-        case 'multi_selection':
+        case fieldType.multiselection:
             return this.renderMultiselection(
                 fieldData,
                 key,
                 fieldData.title
             );
             break;
-        case 'password_field':
+        case fieldType.passwordField:
             field = this.renderPasswordField(fieldData, key);
             break;
         default:

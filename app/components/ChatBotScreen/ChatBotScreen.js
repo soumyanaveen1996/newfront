@@ -155,7 +155,6 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
