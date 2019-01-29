@@ -127,6 +127,8 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
+    // console.log('option in network ', options);
+
     return new Promise((resolve, reject) => {
         Network.isConnected().then(connected => {
             if (connected) {

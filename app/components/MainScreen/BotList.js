@@ -19,6 +19,7 @@ import { Promise } from '../../lib/capability';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import { connect } from 'react-redux';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+import Swipeout from 'react-native-swipeout';
 import I18n from '../../config/i18n/i18n';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import { setAllChatsData } from '../../redux/actions/TimeLineActions';
@@ -31,7 +32,7 @@ import {
 } from 'react-native-responsive-screen';
 const R = require('ramda');
 const isEqual = require('react-fast-compare');
-
+import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
 class BotList extends React.Component {
     constructor(props) {
@@ -100,6 +101,9 @@ class BotList extends React.Component {
             console.error('Error getting info for timeline', e);
             return [];
         });
+
+        // console.log('getting all chat data ', allChatsData);
+
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,
@@ -254,23 +258,50 @@ class BotList extends React.Component {
         );
     };
 
-    setFavorite = (key, rowMap, conversationId, chatData) => {
-        this.props.setFavorite(conversationId, chatData);
+    setFavorite = (key, rowMap, conversationId, botId, chatData, type) => {
+        let setType = type;
+        let favId = conversationId;
+
+        if (type === 'conversation') {
+            if (chatData.channel) {
+                setType = 'channel';
+            }
+        }
+
+        if (type === 'bot') {
+            favId = botId;
+        }
+        console.log('data setFavorite ', favId, botId, setType);
+        this.props.setFavorite(favId, chatData, setType);
         if (rowMap[key]) {
             rowMap[key].closeRow();
         }
     };
 
-    unsetFavorite = (key, rowMap, conversationId, chatData) => {
-        this.props.unsetFavorite(conversationId);
+    unsetFavorite = (key, rowMap, conversationId, botId, chatData, type) => {
+        let setType = type;
+        let favId = conversationId;
+        if (type === 'conversation') {
+            if (chatData.channel) {
+                setType = 'channel';
+            }
+        }
+        if (type === 'bot') {
+            favId = botId;
+        }
+        console.log('data unFavorite ', favId, botId, chatData, type);
+
+        this.props.unsetFavorite(favId, chatData, setType);
         if (rowMap[key]) {
             rowMap[key].closeRow();
         }
     };
     render() {
         const { loaded, data } = this.state;
+
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
+        // console.log('data on main page list ', allData);
 
         if (!loaded) {
             return (
@@ -340,36 +371,46 @@ class BotList extends React.Component {
                                 } = hdata;
 
                                 const Favorite =
-                                    type && type === 'conversation' ? (
-                                        <FavoriteView
-                                            conversationId={bot.conversationId}
-                                            onClick={
-                                                elemType === 'favorite'
-                                                    ? (
-                                                        conversationId,
-                                                        chatData
-                                                    ) =>
-                                                        this.unsetFavorite(
-                                                            key,
-                                                            rowMap,
+                                    type &&
+                                    (type === 'conversation' ||
+                                        type === 'bot') ? (
+                                            <FavoriteView
+                                                conversationId={bot.conversationId}
+                                                botId={bot.botId}
+                                                onClick={
+                                                    elemType === 'favorite'
+                                                        ? (
                                                             conversationId,
+                                                            botId,
                                                             chatData
-                                                        )
-                                                    : (
-                                                        conversationId,
-                                                        chatData
-                                                    ) =>
-                                                        this.setFavorite(
-                                                            key,
-                                                            rowMap,
+                                                        ) =>
+                                                            this.unsetFavorite(
+                                                                key,
+                                                                rowMap,
+                                                                conversationId,
+                                                                botId,
+                                                                chatData,
+                                                                type
+                                                            )
+                                                        : (
                                                             conversationId,
+                                                            botId,
                                                             chatData
-                                                        )
-                                            }
-                                            chatData={chatData}
-                                            unfavorite={elemType === 'favorite'}
-                                        />
-                                    ) : null;
+                                                        ) =>
+                                                            this.setFavorite(
+                                                                key,
+                                                                rowMap,
+                                                                conversationId,
+                                                                botId,
+                                                                chatData,
+                                                                type
+                                                            )
+                                                }
+                                                chatData={chatData}
+                                                chatType={type}
+                                                unfavorite={elemType === 'favorite'}
+                                            />
+                                        ) : null;
                                 return Favorite;
                             }}
                             leftOpenValue={hiddenItemWidth}
@@ -386,19 +427,21 @@ class BotList extends React.Component {
 
 const FavoriteView = ({
     conversationId,
+    botId,
     onClick,
     chatData,
-    unfavorite = undefined
+    unfavorite = undefined,
+    chatType
 }) => (
     <TouchableOpacity
         style={BotListStyles.favItemContainer}
-        onPress={() => onClick(conversationId, chatData)}
+        onPress={() => onClick(conversationId, botId, chatData, chatType)}
     >
         <Image
             source={require('../../images/botlist/add-remove-favorite-btn.png')}
         />
         <Text style={BotListStyles.favText}>
-            {unfavorite ? 'Remove Favorite' : 'Add Favorite'}
+            {unfavorite ? 'Remove favorite' : 'Add To Favorite'}
         </Text>
     </TouchableOpacity>
 );

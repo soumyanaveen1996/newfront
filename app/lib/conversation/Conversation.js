@@ -339,17 +339,21 @@ export default class Conversation {
     static isChannelConversation = conversation =>
         conversation.type === CHANNEL_CHAT;
 
-    static setFavorite = (
-        conversationId,
-        favorite,
-        userDomain = 'frontmai'
-    ) => {
+    static setFavorite = data => {
         // Call API And set Favorite- TODO
+        let favorite = false;
+        if (data.action === 'add') {
+            favorite = true;
+        }
+
+        let currentUserId;
+        console.log('data before sending ', data);
 
         return new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        currentUserId = user.userId;
                         let options = {
                             method: 'POST',
                             url: `${config.network.queueProtocol}${
@@ -359,15 +363,15 @@ export default class Conversation {
                                 sessionId: user.creds.sessionId
                             },
                             data: {
-                                action: favorite ? 'add' : 'remove',
-                                userDomain,
-                                conversationId
+                                ...data
                             }
                         };
                         return Network(options);
                     }
                 })
                 .then(response => {
+                    console.log('response fav ', response);
+
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
                         reject('Cannot Set Favorites');
@@ -376,10 +380,17 @@ export default class Conversation {
                         if (favorite) {
                             favoriteDb = 1;
                         }
-                        return ConversationDAO.updateConvFavorite(
-                            conversationId,
-                            favoriteDb
-                        );
+
+                        if (data.conversationId) {
+                            return ConversationDAO.updateConvFavorite(
+                                data.conversationId,
+                                favoriteDb
+                            );
+                        }
+
+                        if (data.userId) {
+                            return Promise.resolve(data.userId, currentUserId);
+                        }
                     }
                 })
                 .then(resolve)
