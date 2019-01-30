@@ -367,7 +367,7 @@ const updateConvFavorite = (conversationId, favorite) =>
                 conversationSql.setConvFavorite,
                 args,
                 function success(tx2, res) {
-                    console.log('ConvDAO::Favorite Updated::', args);
+                    console.log('ConvDAO::Favorite Updated::', args, res);
                     return resolve(+res.insertId || 0);
                 },
                 function failure(tx3, err) {

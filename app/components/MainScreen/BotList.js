@@ -12,7 +12,7 @@ import { BotListStyles, MainScreenStyles } from './styles';
 import BotListItem from './BotListItem';
 import ConversationListItem from './ConversationListItem';
 import { Conversation } from '../../lib/conversation';
-import { Auth } from '../../lib/capability';
+import { Auth, DeviceStorage } from '../../lib/capability';
 import Utils from './Utils';
 import _ from 'lodash';
 import { Promise } from '../../lib/capability';
@@ -34,6 +34,7 @@ const R = require('ramda');
 const isEqual = require('react-fast-compare');
 import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
+export const FAVOURITE_BOTS = 'favourite_bots';
 class BotList extends React.Component {
     constructor(props) {
         super(props);
@@ -75,9 +76,23 @@ class BotList extends React.Component {
             });
         });
 
-        bots.forEach(bot => {
+        let favBotsArray = await DeviceStorage.get(FAVOURITE_BOTS);
+
+        let allBots = bots.map(bot => {
+            let botIndex = bot.botId;
+            if (favBotsArray.indexOf(botIndex) !== -1) {
+                bot.favorite = 1;
+            }
+
+            return bot;
+        });
+
+        // console.log('all fav array ===============', favBotsArray);
+
+        allBots.forEach(bot => {
             allChats.push({ key: bot.botId, type: 'bot', bot: bot });
         });
+
         let allChatsData = await Promise.all(
             _.map(allChats, async (conversation, index) => {
                 let chatData = null;
@@ -119,7 +134,6 @@ class BotList extends React.Component {
             this.props.setNoChats(true);
         }
         const favData = allChatsData
-            .filter(chat => chat.type === 'conversation')
             .filter(chat => chat.bot.favorite == 1)
             .map(chat => ({
                 ...chat,
@@ -271,8 +285,8 @@ class BotList extends React.Component {
         if (type === 'bot') {
             favId = botId;
         }
-        console.log('data setFavorite ', favId, botId, setType);
-        this.props.setFavorite(favId, chatData, setType);
+        console.log('data setFavorite ', favId, botId, setType, chatData);
+        this.props.setFavorite(favId, chatData, setType, chatData.otherUserId);
         if (rowMap[key]) {
             rowMap[key].closeRow();
         }
@@ -291,7 +305,12 @@ class BotList extends React.Component {
         }
         console.log('data unFavorite ', favId, botId, chatData, type);
 
-        this.props.unsetFavorite(favId, chatData, setType);
+        this.props.unsetFavorite(
+            favId,
+            chatData,
+            setType,
+            chatData.otherUserId
+        );
         if (rowMap[key]) {
             rowMap[key].closeRow();
         }

@@ -1,7 +1,12 @@
 import { ConversationDAO } from '../persistence';
 import sha1 from 'sha1';
 import _ from 'lodash';
-import { Network, Auth, ConversationContext } from '../capability';
+import {
+    Network,
+    Auth,
+    ConversationContext,
+    DeviceStorage
+} from '../capability';
 import config from '../../config/config';
 import Utils from '../../components/MainScreen/Utils';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
@@ -12,6 +17,7 @@ import Store from '../../redux/store/configureStore';
 import Message from '../capability/Message';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
+export const FAVOURITE_BOTS = 'favourite_bots';
 
 /**
  * Can be used for people chat - for person to person, peer to peer or channels
@@ -347,12 +353,14 @@ export default class Conversation {
         }
 
         let currentUserId;
-        console.log('data before sending ', data);
+        // console.log('data before sending ', data);
 
         return new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        // console.log('user details  ', user);
+
                         currentUserId = user.userId;
                         let options = {
                             method: 'POST',
@@ -369,8 +377,8 @@ export default class Conversation {
                         return Network(options);
                     }
                 })
-                .then(response => {
-                    console.log('response fav ', response);
+                .then(async response => {
+                    // console.log('response fav ', response);
 
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
@@ -388,8 +396,37 @@ export default class Conversation {
                             );
                         }
 
+                        if (data.botId) {
+                            // console.log('favoriteDb ', favoriteDb);
+                            let favArry = await DeviceStorage.get(
+                                FAVOURITE_BOTS
+                            );
+
+                            if (favoriteDb === 1) {
+                                if (favArry.indexOf(data.botId) === -1) {
+                                    favArry.push(data.botId);
+                                }
+                            } else {
+                                if (favArry.indexOf(data.botId) !== -1) {
+                                    favArry.splice(
+                                        favArry.indexOf(data.botId),
+                                        1
+                                    );
+                                }
+                            }
+
+                            // console.log('new array to update ', favArry);
+                            DeviceStorage.update(FAVOURITE_BOTS, favArry);
+
+                            return resolve();
+                        }
+
                         if (data.userId) {
-                            return Promise.resolve(data.userId, currentUserId);
+                            const otherUserId = data.userId;
+                            return Promise.resolve({
+                                otherUserId,
+                                currentUserId
+                            });
                         }
                     }
                 })
