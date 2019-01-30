@@ -167,6 +167,14 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    moreOptionImageContainerHide: {
+        width: 45,
+        height: 45,
+        borderRadius: 25,
+        backgroundColor: GlobalColors.transparent,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     optionContainer: {
         width: wp('85%') / 4,
         justifyContent: 'center',

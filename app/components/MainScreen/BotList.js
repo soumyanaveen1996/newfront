@@ -338,6 +338,7 @@ class BotList extends React.Component {
                             closeOnScroll={true}
                             closeOnRowPress={true}
                             closeOnRowBeginSwipe={true}
+                            recalculateHiddenLayout={true}
                             renderItem={(chat, rowMap) => {
                                 const { item = null, index, separators } = chat;
                                 let rowItem = <View />;
