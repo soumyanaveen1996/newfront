@@ -36,7 +36,12 @@ import EventEmitter, {
     TwilioEvents
 } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
-import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+import {
+    PollingStrategyTypes,
+    Settings,
+    Network,
+    Contact
+} from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import Bot from '../../lib/bot';
@@ -291,6 +296,7 @@ class MainScreen extends React.Component {
         Store.dispatch(setCurrentScene('Home'));
         Store.dispatch(refreshTimeline(true));
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
+        console.log('coming back from other page');
     }
 
     static onExit() {
@@ -467,7 +473,12 @@ class MainScreen extends React.Component {
         });
     };
 
-    setConversationFavorite = (conversation, chatData = undefined, type) => {
+    setConversationFavorite = (
+        conversation,
+        chatData = undefined,
+        type,
+        otherUserId
+    ) => {
         console.log('Setting favorite..', conversation, type);
 
         let data;
@@ -495,12 +506,27 @@ class MainScreen extends React.Component {
         Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as favorite');
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === otherUserId) {
+                            elem.isFavourite = true;
+                        }
+
+                        return elem;
+                    });
+                    Contact.saveContacts(updateContacts);
+                });
                 this.update();
             })
             .catch(err => console.log('Cannot set favorite', err));
     };
 
-    setConversationUnFavorite = (conversation, chatData = undefined, type) => {
+    setConversationUnFavorite = (
+        conversation,
+        chatData = undefined,
+        type,
+        otherUserId
+    ) => {
         console.log('Setting unfavorite..', conversation);
 
         let data;
@@ -527,6 +553,16 @@ class MainScreen extends React.Component {
         Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as unfavorite');
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === otherUserId) {
+                            elem.isFavourite = false;
+                        }
+
+                        return elem;
+                    });
+                    Contact.saveContacts(updateContacts);
+                });
                 this.update();
             })
             .catch(err => console.log('Cannot set favorite', err));
