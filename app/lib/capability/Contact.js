@@ -12,6 +12,10 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
 
+const R = require('ramda');
+
+const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
+
 /**
  * Expected format per contact:
  * {
@@ -162,10 +166,30 @@ export default class Contact {
         });
 
     static saveContacts = contacts =>
-        new Promise((resolve, reject) => {
-            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, contacts)
+        new Promise(async (resolve, reject) => {
+            const localContacts = await Contact.getAddedContacts();
+            const localContactsAccepted = localContacts.filter(
+                contact => contact.ignored == false
+            );
+            const remoteContacts = contacts.filter(
+                contact => contact.ignored === false
+            );
+            let AllContacts = [];
+            for (let contact of remoteContacts) {
+                const localContact = R.find(R.propEq('userId', contact.userId))(
+                    localContactsAccepted
+                );
+                const mergedContact = R.mergeDeepWithKey(
+                    mergeValues,
+                    localContact,
+                    contact
+                );
+                AllContacts.push(mergedContact);
+            }
+
+            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
-                    return resolve(contacts);
+                    return resolve(AllContacts);
                 })
                 .catch(err => {
                     return reject(err);
