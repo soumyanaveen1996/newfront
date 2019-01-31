@@ -71,10 +71,7 @@ import {
     GoogleAnalyticsCategories,
     GoogleAnalyticsEvents
 } from '../../lib/GoogleAnalytics';
-import {
-    DocumentPicker,
-    DocumentPickerUtil
-} from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
 import { MapMessage } from '../MapMessage';
@@ -159,7 +156,6 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -1500,31 +1496,27 @@ class ChatBotScreen extends React.Component {
             this.sendImage(result.uri, result.base64);
         }
     }
-    async uploadFile(uri) {
+    async uploadFile(file) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
-
         const uploadedUrl = await Resource.uploadFile(
-            null,
-            toUri,
+            null, //base64 will be created in Resource.uploadFile()
+            file.uri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Audio,
+            file.type,
             this.user
         );
     }
 
     async pickFile() {
         Keyboard.dismiss();
-        DocumentPicker.show(
-            {
-                filetype: [DocumentPickerUtil.allFiles()]
-            },
-            (error, res) => {
-                this.uploadFile();
-                console.log(res.uri, res.type, res.fileName, res.fileSize);
-            }
-        );
+        DocumentPicker.pick({
+            type: [DocumentPicker.types.allFiles]
+        }).then(res => {
+            console.log(res, 'file selected');
+            this.uploadFile(res);
+        });
     }
 
     onBarcodeRead(barCodeData) {
@@ -1666,6 +1658,7 @@ class ChatBotScreen extends React.Component {
     }
 
     selectOption = key => {
+        console.log(key, '>>>key');
         this.setState({ showOptions: false });
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
@@ -1820,12 +1813,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            // {
-            //     key: BotInputBarCapabilities.file,
-            //     imageStyle: { width: 14, height: 16 },
-            //     imageSource: images.share_file,
-            //     label: I18n.t('File_option')
-            // },
+            {
+                key: BotInputBarCapabilities.file,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_file,
+                label: I18n.t('File_option')
+            },
             {
                 key: BotInputBarCapabilities.share_contact,
                 imageStyle: { width: 16, height: 16 }

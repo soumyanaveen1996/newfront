@@ -43,7 +43,10 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_JAVASCRIPT: 'js',
     MESSAGE_TYPE_CONTACT_CARD: 'contact_card',
     MESSAGE_TYPE_UPDATE_CALL_QUOTA: 'update_call_quota',
-    MESSAGE_TYPE_MENU: 'menu'
+    MESSAGE_TYPE_MENU: 'menu',
+    MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
+    MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
+    MESSAGE_TYPE_LOCATION: 'location'
 };
 
 export const IntToMessageTypeConstants = {

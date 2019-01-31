@@ -90,7 +90,7 @@ export default class FeaturedTab extends React.Component {
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}
                     />
-                    <Toast ref="toast" positionValue={250} />
+                    <Toast ref="toast" position="bottom" positionValue={350} />
                 </View>
             </ScrollView>
         );
