@@ -98,7 +98,8 @@ const images = {
     share_file: require('./share-file/share-file.png'),
     share_contact: require('./share-contact/share-contact.png'),
     share_location: require('./share-location/share-location.png'),
-    share_code: require('./share-code/share-code.png')
+    share_code: require('./share-code/share-code.png'),
+    add_remove_favourite: require('./add-remove-favorite-btn/add-remove-favorite-btn.png')
 };
 
 export default images;

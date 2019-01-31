@@ -3,7 +3,7 @@ import {
     View,
     Text,
     Image,
-    Button,
+    AsyncStorage,
     TouchableOpacity,
     Alert,
     ScrollView
@@ -23,13 +23,15 @@ import CallModal from './CallModal';
 import images from '../../images';
 import { Conversation } from '../../lib/conversation';
 import { ConversationDAO } from '../../lib/persistence';
+import { Loader } from '../Loader';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             modalVisible: false,
-            isFavourite: this.props.contact.isFavourite
+            isFavourite: this.props.contact.isFavourite,
+            loading: false
         };
         this.contact = this.props.contact;
     }
@@ -105,7 +107,8 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     addToFavourite = () => {
-        console.log('contacts details ', this.props.contact);
+        // console.log('contacts details ', this.props.contact);
+        this.setState({ loading: true });
         let data = {
             userId: this.props.contact.id,
             action: 'add',
@@ -113,11 +116,11 @@ export default class ContactDetailsScreen extends React.Component {
         };
 
         Conversation.setFavorite(data)
-            .then((value, currentUserId) => {
-                console.log('contacts Set as favorite');
+            .then(value => {
+                console.log('contacts Set as favorite', value);
                 Contact.getAddedContacts().then(contactsData => {
                     let updateContacts = contactsData.map(elem => {
-                        if (elem.userId === value) {
+                        if (elem.userId === value.otherUserId) {
                             elem.isFavourite = true;
                         }
 
@@ -130,30 +133,23 @@ export default class ContactDetailsScreen extends React.Component {
                 });
 
                 let conversationId = Conversation.getIMConversationId(
-                    currentUserId,
-                    value
+                    value.otherUserId,
+                    value.currentUserId
                 );
 
                 if (conversationId) {
-                    ConversationDAO.updateConvFavorite(conversationId, 1);
-                    // newData = {
-                    //     conversationId: conversationId,
-                    //     action: 'add',
-                    //     userDomain: 'frontmai'
-                    // };
-                    // Conversation.setFavorite(newData)
-                    //     .then(() => {
-                    //         console.log('Conversation Set as favorite');
-                    //         this.props.updateList();
-                    //     })
-                    //     .catch(err => console.log('Cannot set favorite', err));
+                    ConversationDAO.updateConvFavorite(conversationId, 1)
+                        .then(() => console.log('Updated db>>>>>>>'))
+                        .catch(() => console.log('DB Update Failed>>>>>>'));
                 }
+                this.setState({ loading: false });
             })
             .catch(err => console.log('Cannot set favorite', err));
     };
 
     removeFavourite = () => {
-        console.log('contacts details ', this.props.contact);
+        // console.log('contacts details ', this.props.contact);
+        this.setState({ loading: true });
         let data = {
             userId: this.props.contact.id,
             action: 'remove',
@@ -161,11 +157,11 @@ export default class ContactDetailsScreen extends React.Component {
         };
 
         Conversation.setFavorite(data)
-            .then((value, currentUserId) => {
-                console.log('Conversation remove as favorite');
+            .then(value => {
+                console.log('contacts Set as unfavorite', value);
                 Contact.getAddedContacts().then(contactsData => {
                     let updateContacts = contactsData.map(elem => {
-                        if (elem.userId === value) {
+                        if (elem.userId === value.otherUserId) {
                             elem.isFavourite = false;
                         }
 
@@ -178,11 +174,13 @@ export default class ContactDetailsScreen extends React.Component {
                     });
                 });
                 let conversationId = Conversation.getIMConversationId(
-                    currentUserId,
-                    value
+                    value.otherUserId,
+                    value.currentUserId
                 );
                 if (conversationId) {
-                    ConversationDAO.updateConvFavorite(conversationId, 0);
+                    ConversationDAO.updateConvFavorite(conversationId, 0)
+                        .then(() => console.log('Updated db>>>>>>>'))
+                        .catch(() => console.log('DB Update Failed>>>>>>'));
 
                     // newData = {
                     //     conversationId: conversationId,
@@ -198,8 +196,25 @@ export default class ContactDetailsScreen extends React.Component {
                 }
 
                 // console.log('conversation ID', conversationId);
+                this.setState({ loading: false });
             })
             .catch(err => console.log('Cannot remove favorite', err));
+    };
+
+    invitationSent = () => {
+        return Alert.alert(
+            'Contact added to your favourite',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     };
 
     renderActionButtons() {
@@ -247,7 +262,10 @@ export default class ContactDetailsScreen extends React.Component {
                                     { backgroundColor: GlobalColors.darkGray }
                                 ]}
                             >
-                                <Icon name="star" size={16} color={'white'} />
+                                <Image
+                                    source={images.add_remove_favourite}
+                                    style={{ width: 32, height: 32 }}
+                                />
                             </View>
                             <Text>Remove Favourite</Text>
                         </TouchableOpacity>
@@ -264,7 +282,10 @@ export default class ContactDetailsScreen extends React.Component {
                                     { backgroundColor: GlobalColors.darkGray }
                                 ]}
                             >
-                                <Icon name="star" size={16} color={'white'} />
+                                <Image
+                                    source={images.add_remove_favourite}
+                                    style={{ width: 32, height: 32 }}
+                                />
                             </View>
                             <Text>Favourite</Text>
                         </TouchableOpacity>
@@ -402,6 +423,7 @@ export default class ContactDetailsScreen extends React.Component {
     render() {
         return (
             <ScrollView style={styles.containerCD}>
+                <Loader loading={this.state.loading} />
                 {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}
