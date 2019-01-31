@@ -262,6 +262,14 @@ export const Icons = {
         'green',
         '500'
     ),
+    greenCallLocal: icon(
+        'ios-call-outline',
+        'ionicon',
+        hp('3%'),
+        GlobalColors.grey,
+        'green',
+        '500'
+    ),
     greenSatBlue: icon(
         'ios-phone-portrait',
         'ionicon',
