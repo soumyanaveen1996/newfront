@@ -79,9 +79,11 @@ class BotList extends React.Component {
         let favBotsArray = await DeviceStorage.get(FAVOURITE_BOTS);
 
         let allBots = bots.map(bot => {
-            let botIndex = bot.botId;
-            if (favBotsArray.indexOf(botIndex) !== -1) {
-                bot.favorite = 1;
+            if (bot.botId) {
+                let botIndex = bot.botId;
+                if (favBotsArray.indexOf(botIndex) !== -1) {
+                    bot.favorite = 1;
+                }
             }
 
             return bot;

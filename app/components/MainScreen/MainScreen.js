@@ -479,24 +479,28 @@ class MainScreen extends React.Component {
         type,
         otherUserId
     ) => {
-        console.log('Setting favorite..', conversation, type);
+        console.log('Setting favorite..', conversation, type, chatData);
 
         let data;
 
         if (type === 'conversation') {
             data = {
+                type: type,
                 conversationId: conversation,
                 action: 'add',
                 userDomain: 'frontmai'
             };
         } else if (type === 'channel') {
             data = {
+                type: type,
+                channelConvId: conversation,
                 channelName: chatData.channel.channelName,
                 action: 'add',
                 userDomain: chatData.channel.userDomain
             };
         } else {
             data = {
+                type: type,
                 botId: conversation,
                 action: 'add',
                 userDomain: 'frontmai'
@@ -527,24 +531,28 @@ class MainScreen extends React.Component {
         type,
         otherUserId
     ) => {
-        console.log('Setting unfavorite..', conversation);
+        console.log('Setting unfavorite..', conversation, type, chatData);
 
         let data;
 
         if (type === 'conversation') {
             data = {
+                type: type,
                 conversationId: conversation,
                 action: 'remove',
                 userDomain: 'frontmai'
             };
         } else if (type === 'channel') {
             data = {
+                type: type,
+                channelConvId: conversation,
                 channelName: chatData.channel.channelName,
                 action: 'remove',
                 userDomain: chatData.channel.userDomain
             };
         } else {
             data = {
+                type: type,
                 botId: conversation,
                 action: 'remove',
                 userDomain: 'frontmai'

@@ -110,6 +110,7 @@ export default class ContactDetailsScreen extends React.Component {
         // console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
         let data = {
+            type: 'conversation',
             userId: this.props.contact.id,
             action: 'add',
             userDomain: 'frontmai'
@@ -151,6 +152,7 @@ export default class ContactDetailsScreen extends React.Component {
         // console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
         let data = {
+            type: 'conversation',
             userId: this.props.contact.id,
             action: 'remove',
             userDomain: 'frontmai'

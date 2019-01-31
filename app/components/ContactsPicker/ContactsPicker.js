@@ -576,12 +576,36 @@ class ContactsPicker extends React.Component {
         this.setInviteVisible(true);
     }
 
-    setInviteVisible(value) {
-        this.setState({
-            inviteModalVisible: value
-        });
+    setInviteVisible(value, sent = null) {
+        this.setState(
+            {
+                inviteModalVisible: value
+            },
+            () => {
+                if (sent !== null) {
+                    setTimeout(() => {
+                        this.invitationSent();
+                    }, 500);
+                }
+            }
+        );
     }
 
+    invitationSent = () => {
+        return Alert.alert(
+            'Invitation sent successfully',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
     render() {
         return (
             <SafeAreaView style={styles.container}>
