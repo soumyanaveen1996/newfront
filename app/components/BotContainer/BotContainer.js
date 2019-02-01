@@ -78,13 +78,6 @@ export default class BotContainer extends React.Component {
         this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
     };
 
-    onBotInstallFailed = () => {
-        this.refs.toast.show(
-            I18n.t('Bot_install_failed'),
-            DURATION.LENGTH_SHORT
-        );
-    };
-
     checkBotStatus = bot => {
         return utils.checkBotStatus(this.state.installedBots, bot);
     };
@@ -97,7 +90,7 @@ export default class BotContainer extends React.Component {
                 bot={bot}
                 key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
-                onBotInstallFailed={this.onBotInstallFailed}
+                onBotInstallFailed={this.props.onBotInstallFailed}
                 installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
                 update={botStatus.update}
@@ -248,8 +241,6 @@ export default class BotContainer extends React.Component {
                     //     showsVerticalScrollIndicator={false}
                     // />
                         null}
-
-                    <Toast ref="toast" positionValue={250} />
                     <View style={styles.exploreAllFooter}>
                         <TouchableOpacity
                             onPress={() => this.onTileCilcked(this.state.title)}

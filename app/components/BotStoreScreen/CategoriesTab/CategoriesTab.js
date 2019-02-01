@@ -13,6 +13,8 @@ import { Actions } from 'react-native-router-flux';
 import CachedImage from '../../CachedImage';
 import GridView from 'react-native-super-grid';
 import BotContainer from '../../BotContainer';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import I18n from '../../../config/i18n/i18n';
 
 export default class CategoriesTab extends React.Component {
     constructor(props) {
@@ -98,15 +100,24 @@ export default class CategoriesTab extends React.Component {
                     currentIndex={index}
                     clickedIndex={this.state.collapseIndex}
                     handleCollapse={this.onCollapse}
+                    onBotInstallFailed={this.onBotInstallFailed}
                 />
             );
         });
+    };
+
+    onBotInstallFailed = () => {
+        this.refs.toast.show(
+            I18n.t('Bot_install_failed'),
+            DURATION.LENGTH_SHORT
+        );
     };
 
     render() {
         return (
             <ScrollView style={{ flex: 1, padding: 10 }}>
                 {this.renderCategoryBots()}
+                <Toast ref="toast" position="bottom" positionValue={350} />
             </ScrollView>
         );
     }

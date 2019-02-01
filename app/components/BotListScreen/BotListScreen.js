@@ -63,6 +63,7 @@ export default class BotListScreen extends React.Component {
             <BotInstallListItem
                 bot={bot}
                 onBotInstalled={this.onBotInstalled}
+                onBotInstallFailed={this.onBotInstallFailed}
                 installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
                 update={botStatus.update}
@@ -158,7 +159,7 @@ export default class BotListScreen extends React.Component {
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast" positionValue={250} />
+                <Toast ref="toast" position="bottom" positionValue={350} />
             </View>
         );
     }
