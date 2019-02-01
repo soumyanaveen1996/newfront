@@ -111,6 +111,12 @@ class RemoteBotInstall {
                     //     subscribedBotsIds
                     // );
 
+                    if (
+                        subscribedBotsIds.favourites === undefined ||
+                        subscribedBotsIds.favourites === null
+                    ) {
+                        subscribedBotsIds.favourites = [];
+                    }
                     DeviceStorage.save(
                         FAVOURITE_BOTS,
                         subscribedBotsIds.favourites

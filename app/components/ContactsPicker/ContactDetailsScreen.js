@@ -5,9 +5,10 @@ import {
     Image,
     AsyncStorage,
     TouchableOpacity,
-    Alert,
     ScrollView,
-    Platform
+    Platform,
+    Alert,
+    PermissionsAndroid
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
@@ -138,32 +139,15 @@ export default class ContactDetailsScreen extends React.Component {
         });
     };
 
-    importLocalContacts = async () => {
-        let localContacts;
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(async granted => {
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        localContacts = await this.getLocalContacts();
-                    } else {
-                        console.log('Cannot get permission for Contacts');
-                    }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            localContacts = await this.getLocalContacts();
-        }
+    addLocalConatcts = localContacts => {
         console.log(localContacts);
+        if (localContacts.length === 0) {
+            // this.setState({ loading: false });
+            return Alert.alert('No Local Contacts Found');
+        }
         const localPhone = localContacts[0].phoneNumbers[0].number;
         if (localPhone && localPhone !== '') {
+            this.setState({ loading: true });
             Contact.getAddedContacts().then(contactsData => {
                 let updateContacts = contactsData.map(elem => {
                     if (elem.userId === this.props.contact.id) {
@@ -177,6 +161,7 @@ export default class ContactDetailsScreen extends React.Component {
 
                     setTimeout(async () => {
                         const allContacts = await Contact.getAddedContacts();
+                        this.setState({ loading: false });
                         const newContact = allContacts
                             .filter(contact => contact.ignored === false)
                             .filter(
@@ -202,6 +187,32 @@ export default class ContactDetailsScreen extends React.Component {
                     // this.setState({ isFavourite: true });
                 });
             });
+        }
+    };
+    importLocalContacts = async () => {
+        let localContacts;
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(async granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        localContacts = await this.getLocalContacts();
+                        this.addLocalConatcts(localContacts);
+                    } else {
+                        console.log('Cannot get permission for Contacts');
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            localContacts = await this.getLocalContacts();
+            this.addLocalConatcts(localContacts);
         }
     };
     addToFavourite = () => {
@@ -441,6 +452,9 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderFooterButtons() {
+        if (this.props.contact.isWaitingForConfirmation) {
+            return <View />;
+        }
         return (
             <View
                 style={{

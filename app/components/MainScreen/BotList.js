@@ -80,7 +80,7 @@ class BotList extends React.Component {
 
         let allBots = bots.map(bot => {
             let botIndex = bot.botId;
-            if (favBotsArray.indexOf(botIndex) !== -1) {
+            if (favBotsArray && favBotsArray.indexOf(botIndex) !== -1) {
                 bot.favorite = 1;
             }
 
