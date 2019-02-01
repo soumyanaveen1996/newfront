@@ -368,14 +368,19 @@ export default class Conversation {
                 userDomain: data.userDomain
             };
             break;
-
+        case 'contacts':
+            jsonData = {
+                userId: data.userId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
         default:
             jsonData = {
                 botId: data.botId,
                 action: data.action,
                 userDomain: data.userDomain
             };
-
             break;
         }
 

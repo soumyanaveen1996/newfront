@@ -489,7 +489,10 @@ class ContactsPicker extends React.Component {
 
     goToMyProfile = () => {
         // console.log('go to profile page using ', this.state.userInfo);
-        Actions.myProfileScreen({ userId: this.state.userInfo.userId });
+        Actions.myProfileScreen({
+            userId: this.state.userInfo.userId,
+            updateContactScreen: this.updateList.bind(this)
+        });
     };
 
     renderButtons = () => (
