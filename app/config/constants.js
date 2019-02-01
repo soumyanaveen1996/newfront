@@ -7,5 +7,6 @@ export default {
     IMAGES_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/images',
     AUDIO_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/audio',
     VIDEO_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/video',
-    OTHER_FILE_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/documents'
+    OTHER_FILE_DIRECTORY: 'file://' + RNFS.DocumentDirectoryPath + '/documents',
+    SOURCE: 'mobile'
 };

@@ -285,11 +285,13 @@ class ContactsPicker extends React.Component {
     };
 
     refresh = () => {
+        // console.log('is it happening again ===============================');
         this.dataSource.loadData();
         this.checkPollingStrategy();
     };
 
     updateList = () => {
+        // console.log('clicked on fav');
         this.setState({ contactsData: this.dataSource.getData() });
     };
 
@@ -347,7 +349,11 @@ class ContactsPicker extends React.Component {
             }
         } else {
             //OPEN contact details
-            Actions.contactDetailsScreen({ contact: contact });
+            Actions.contactDetailsScreen({
+                contact: contact,
+                updateList: this.onDataUpdate.bind(this),
+                updateContactScreen: this.updateList.bind(this)
+            });
             //OPEN a chat with the contact
             // let participants = [
             //     {
@@ -526,10 +532,12 @@ class ContactsPicker extends React.Component {
     }
 
     renderContactsList() {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
-        );
+        // const sectionTitles = _.map(
+        //     this.state.contactsData,
+        //     section => section.title
+        // );
+
+        // console.log('contact list ', this.state.contactsData);
 
         if (this.state.contactsData && this.state.contactsData.length > 0) {
             return (

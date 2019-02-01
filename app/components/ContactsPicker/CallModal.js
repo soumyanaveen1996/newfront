@@ -99,6 +99,45 @@ export default class CallModal extends React.Component {
                             </View>
                         </View>
                     ) : null}
+                    {phoneNumbers && phoneNumbers.local ? (
+                        <View style={styles.phoneContainer}>
+                            <View style={styles.modalTextContainer}>
+                                <View>{Icons.greenCallLocal()}</View>
+                                <Text style={styles.modalText}>Phone*</Text>
+                            </View>
+                            <View style={styles.modalNumberContainer}>
+                                <Text
+                                    style={{
+                                        color: 'rgba(155,155,155,1)'
+                                    }}
+                                >
+                                    {contactSelected.phoneNumbers
+                                        ? contactSelected.phoneNumbers.local
+                                        : 'Not Available'}
+                                </Text>
+                            </View>
+                            <View style={styles.modalCallButContainer}>
+                                <TouchableOpacity
+                                    style={
+                                        contactSelected.phoneNumbers
+                                            ? styles.callButton
+                                            : styles.callButtonDisabled
+                                    }
+                                    disabled={
+                                        !(
+                                            contactSelected.phoneNumbers &&
+                                            contactSelected.phoneNumbers.mobile
+                                        )
+                                    }
+                                    onPress={() =>
+                                        this.makePhoneCall(phoneNumbers.local)
+                                    }
+                                >
+                                    {Icons.greenCallOutline()}
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ) : null}
                     {phoneNumbers && phoneNumbers.satellite ? (
                         <View style={styles.phoneContainer}>
                             <View style={styles.modalTextContainer}>

@@ -20,6 +20,8 @@ export default class ContactsPickerDataSource {
     loadData() {
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length > 0) {
+                // console.log('load data ', contacts);
+
                 this.updateData(contacts);
             }
             this.pageLoaded += 1;
@@ -36,7 +38,8 @@ export default class ContactsPickerDataSource {
                 name: data.userName,
                 emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
                 phoneNumbers: data.phoneNumbers,
-                isWaitingForConfirmation: data.waitingForConfirmation || false
+                isWaitingForConfirmation: data.waitingForConfirmation || false,
+                isFavourite: data.isFavourite || false
             };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));
@@ -57,6 +60,8 @@ export default class ContactsPickerDataSource {
         return _.reduce(
             this.allContactIds,
             (result, contactId) => {
+                // console.log('coatct filterrrrr', result);
+
                 const contact = this.idToContacts[contactId];
                 if (filterFunc === undefined || filterFunc(contact.name)) {
                     let firstChar =

@@ -46,7 +46,7 @@ import { IM_CHAT } from '../../lib/conversation/Conversation';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 53; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 55; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 export default class Splash extends React.Component {
@@ -122,7 +122,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 

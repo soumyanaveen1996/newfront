@@ -44,6 +44,12 @@ import Loader from '../Loader/Loader';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import EmptyInstalledBot from './EmptyInstalledBot';
 
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsCategories,
+    GoogleAnalyticsEvents
+} from '../../lib/GoogleAnalytics';
+
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -214,6 +220,13 @@ class BotStoreScreen extends React.Component {
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
         Store.dispatch(completeCatalogLoad(true));
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEvents.OPENED_MARKETPLACE,
+            'Visited',
+            null,
+            0,
+            null
+        );
     }
 
     static onExit() {

@@ -3,10 +3,11 @@ import {
     View,
     Text,
     Image,
-    Button,
+    AsyncStorage,
     TouchableOpacity,
     Alert,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
@@ -21,22 +22,36 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
 import CallModal from './CallModal';
 import images from '../../images';
+import { Conversation } from '../../lib/conversation';
+import { ConversationDAO } from '../../lib/persistence';
+import Contacts from 'react-native-contacts';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+const R = require('ramda');
+import { Loader } from '../Loader';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalVisible: false
+            modalVisible: false,
+            isFavourite: this.props.contact.isFavourite,
+            loading: false
         };
-        this.contact = this.props.contact;
+    }
+
+    componentDidMount() {
+        // this.props.contact = this.props.contact;
     }
 
     startChat() {
-        console.log('ID ' + this.contact.id);
+        // console.log('ID ' + this.props.contact.id);
         let participants = [
             {
-                userId: this.contact.id,
-                userName: this.contact.name
+                userId: this.props.contact.id,
+                userName: this.props.contact.name
             }
         ];
         SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
@@ -50,7 +65,7 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     callContact() {
-        console.log(this.props.contact);
+        // console.log(this.props.contact);
         if (this.props.contact.phoneNumbers) {
             this.setModalVisible(true);
             return;
@@ -70,7 +85,7 @@ export default class ContactDetailsScreen extends React.Component {
                         />
                     </TouchableOpacity> */}
                     <ProfileImage
-                        uuid={this.contact.id}
+                        uuid={this.props.contact.id}
                         placeholder={Images.user_image}
                         style={styles.propicCD}
                         placeholderStyle={styles.propicCD}
@@ -84,8 +99,8 @@ export default class ContactDetailsScreen extends React.Component {
                         />
                     </TouchableOpacity> */}
                 </View>
-                <Text style={styles.nameCD}>{this.contact.name}</Text>
-                {this.contact.isWaitingForConfirmation ? (
+                <Text style={styles.nameCD}>{this.props.contact.name}</Text>
+                {this.props.contact.isWaitingForConfirmation ? (
                     <Text
                         style={{
                             textAlign: 'center',
@@ -101,42 +116,207 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
-    // addToFavourite = () => {
-    //     console.log('add to favourite');
+    compareEmail = contact => {
+        const { emailAddresses = [] } = contact;
+        const phoneEmails = emailAddresses.map(email => email.email);
+        const { emails } = this.props.contact;
+        const contactEmail = emails.map(email => email.email);
+        return R.intersection(contactEmail, phoneEmails).length > 0;
+    };
 
-    //     Auth.getUser()
-    //         .then(user => {
-    //             const options = {
-    //                 method: 'post',
-    //                 url:
-    //                     config.proxy.protocol +
-    //                     config.proxy.host +
-    //                     config.proxy.addFavourite,
-    //                 headers: {
-    //                     sessionId: user.creds.sessionId
-    //                 },
-    //                 data: {
-    //                     conversationId: '',
-    //                     userDomain: '',
-    //                     action: 'add'
-    //                 }
-    //             };
-    //             return Network(options);
-    //         })
-    //         .then(
-    //             data => {
-    //                 if (data.status === 200 && data.data.error === 0) {
-    //                     console.log('added favourite');
-    //                 }
-    //             },
-    //             err => {
-    //                 console.log('error in favourite', err);
-    //             }
-    //         );
-    // };
+    getLocalContacts = async () => {
+        return new Promise((resolve, reject) => {
+            Contacts.getAllWithoutPhotos((error, contacts) => {
+                if (error) {
+                    return reject('Cannt Find Local Contacts');
+                }
+                const foundLocalContact = R.filter(this.compareEmail, contacts);
+                return resolve(foundLocalContact);
+
+                // R.filter();
+            });
+        });
+    };
+
+    importLocalContacts = async () => {
+        let localContacts;
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(async granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        localContacts = await this.getLocalContacts();
+                    } else {
+                        console.log('Cannot get permission for Contacts');
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            localContacts = await this.getLocalContacts();
+        }
+        console.log(localContacts);
+        const localPhone = localContacts[0].phoneNumbers[0].number;
+        if (localPhone && localPhone !== '') {
+            Contact.getAddedContacts().then(contactsData => {
+                let updateContacts = contactsData.map(elem => {
+                    if (elem.userId === this.props.contact.id) {
+                        elem.phoneNumbers.local = localPhone;
+                    }
+
+                    return elem;
+                });
+                Contact.saveContacts(updateContacts).then(() => {
+                    this.props.updateContactScreen();
+
+                    setTimeout(async () => {
+                        const allContacts = await Contact.getAddedContacts();
+                        const newContact = allContacts
+                            .filter(contact => contact.ignored === false)
+                            .filter(
+                                contact =>
+                                    contact.userId === this.props.contact.id
+                            );
+                        const reloadContact = newContact.map(data => ({
+                            id: data.userId,
+                            name: data.userName,
+                            emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
+                            phoneNumbers: data.phoneNumbers,
+                            isWaitingForConfirmation:
+                                data.waitingForConfirmation || false,
+                            isFavourite: data.isFavourite || false
+                        }));
+                        Actions.refresh({
+                            key: Math.random(),
+                            contact: reloadContact[0],
+                            updateList: this.props.updateList,
+                            updateContactScreen: this.props.updateContactScreen
+                        });
+                    }, 2000);
+                    // this.setState({ isFavourite: true });
+                });
+            });
+        }
+    };
+    addToFavourite = () => {
+        // console.log('contacts details ', this.props.contact);
+        this.setState({ loading: true });
+        let data = {
+            userId: this.props.contact.id,
+            action: 'add',
+            userDomain: 'frontmai'
+        };
+
+        Conversation.setFavorite(data)
+            .then(value => {
+                console.log('contacts Set as favorite', value);
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === value.otherUserId) {
+                            elem.isFavourite = true;
+                        }
+
+                        return elem;
+                    });
+                    Contact.saveContacts(updateContacts).then(() => {
+                        this.props.updateContactScreen();
+                        this.setState({ isFavourite: true });
+                    });
+                });
+
+                let conversationId = Conversation.getIMConversationId(
+                    value.otherUserId,
+                    value.currentUserId
+                );
+
+                if (conversationId) {
+                    ConversationDAO.updateConvFavorite(conversationId, 1)
+                        .then(() => console.log('Updated db>>>>>>>'))
+                        .catch(() => console.log('DB Update Failed>>>>>>'));
+                }
+                this.setState({ loading: false });
+            })
+            .catch(err => console.log('Cannot set favorite', err));
+    };
+
+    removeFavourite = () => {
+        // console.log('contacts details ', this.props.contact);
+        this.setState({ loading: true });
+        let data = {
+            userId: this.props.contact.id,
+            action: 'remove',
+            userDomain: 'frontmai'
+        };
+
+        Conversation.setFavorite(data)
+            .then(value => {
+                console.log('contacts Set as unfavorite', value);
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === value.otherUserId) {
+                            elem.isFavourite = false;
+                        }
+
+                        return elem;
+                    });
+
+                    Contact.saveContacts(updateContacts).then(() => {
+                        this.props.updateContactScreen();
+                        this.setState({ isFavourite: false });
+                    });
+                });
+                let conversationId = Conversation.getIMConversationId(
+                    value.otherUserId,
+                    value.currentUserId
+                );
+                if (conversationId) {
+                    ConversationDAO.updateConvFavorite(conversationId, 0)
+                        .then(() => console.log('Updated db>>>>>>>'))
+                        .catch(() => console.log('DB Update Failed>>>>>>'));
+
+                    // newData = {
+                    //     conversationId: conversationId,
+                    //     action: 'remove',
+                    //     userDomain: 'frontmai'
+                    // };
+                    // Conversation.setFavorite(newData)
+                    //     .then(() => {
+                    //         console.log('Conversation Set as favorite');
+                    //         this.props.updateList();
+                    //     })
+                    //     .catch(err => console.log('Cannot set favorite', err));
+                }
+
+                // console.log('conversation ID', conversationId);
+                this.setState({ loading: false });
+            })
+            .catch(err => console.log('Cannot remove favorite', err));
+    };
+
+    invitationSent = () => {
+        return Alert.alert(
+            'Contact added to your favourite',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     renderActionButtons() {
-        if (!this.contact.isWaitingForConfirmation) {
+        if (!this.props.contact.isWaitingForConfirmation) {
             return (
                 <View style={styles.actionAreaCD}>
                     <TouchableOpacity
@@ -167,22 +347,47 @@ export default class ContactDetailsScreen extends React.Component {
                         </View>
                         <Text>Call</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.actionButtonCD}
-                        onPress={() => {
-                            this.addToFavourite();
-                        }}
-                    >
-                        <View
-                            style={[
-                                styles.actionIconCD,
-                                { backgroundColor: GlobalColors.darkGray }
-                            ]}
+                    {this.state.isFavourite ? (
+                        <TouchableOpacity
+                            style={styles.actionButtonCD}
+                            onPress={() => {
+                                this.removeFavourite();
+                            }}
                         >
-                            <Icon name="star" size={16} color={'white'} />
-                        </View>
-                        <Text>Favourite</Text>
-                    </TouchableOpacity>
+                            <View
+                                style={[
+                                    styles.actionIconCD,
+                                    { backgroundColor: GlobalColors.darkGray }
+                                ]}
+                            >
+                                <Image
+                                    source={images.add_remove_favourite}
+                                    style={{ width: 32, height: 32 }}
+                                />
+                            </View>
+                            <Text>Remove Favourite</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity
+                            style={styles.actionButtonCD}
+                            onPress={() => {
+                                this.addToFavourite();
+                            }}
+                        >
+                            <View
+                                style={[
+                                    styles.actionIconCD,
+                                    { backgroundColor: GlobalColors.darkGray }
+                                ]}
+                            >
+                                <Image
+                                    source={images.add_remove_favourite}
+                                    style={{ width: 32, height: 32 }}
+                                />
+                            </View>
+                            <Text>Favourite</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             );
         } else {
@@ -221,10 +426,12 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderDetails() {
-        if (!this.contact.isWaitingForConfirmation) {
+        if (!this.props.contact.isWaitingForConfirmation) {
             return (
                 <View>
-                    {this.contact.phoneNumbers ? this.renderNumbers() : null}
+                    {this.props.contact.phoneNumbers
+                        ? this.renderNumbers()
+                        : null}
                     {this.renderEmails()}
                 </View>
             );
@@ -234,45 +441,80 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderFooterButtons() {
-        return <View style={styles.footerCD} />;
+        return (
+            <View
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 10
+                }}
+            >
+                <TouchableOpacity
+                    onPress={this.importLocalContacts}
+                    style={{
+                        borderWidth: 0.5,
+                        borderColor: 'rgba(0,167,214,1)',
+                        borderRadius: 6,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 40,
+                        width: wp('70%')
+                    }}
+                >
+                    <Text style={{ color: 'rgba(0,167,214,1)' }}>
+                        Import Phone from address book
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        );
     }
 
     renderEmails() {
-        if (!this.contact.isWaitingForConfirmation) {
-            return _.map(this.contact.emails, () =>
+        if (!this.props.contact.isWaitingForConfirmation) {
+            return _.map(this.props.contact.emails, () =>
                 this.renderDetailRow(
                     'email',
                     'Email',
-                    this.contact.emails[0].email
+                    this.props.contact.emails[0].email
                 )
             );
         }
     }
 
     renderNumbers() {
-        if (this.contact.isWaitingForConfirmation) {
+        if (!this.props.contact.isWaitingForConfirmation) {
             return (
                 <View>
-                    {this.contact.phoneNumbers.mobile
+                    {this.props.contact.phoneNumbers.mobile
                         ? this.renderDetailRow(
                             'smartphone',
                             'Mobile',
-                            this.contact.phoneNumbers.mobile
+                            this.props.contact.phoneNumbers.mobile
                         )
                         : null}
-                    {this.contact.phoneNumbers.land
+                    {this.props.contact.phoneNumbers.land
                         ? this.renderDetailRow(
                             'local_phone',
                             'Land',
-                            this.contact.phoneNumbers.land
+                            this.props.contact.phoneNumbers.land
                         )
                         : null}
-                    {this.contact.phoneNumbers.satellite
+                    {this.props.contact.phoneNumbers.satellite
                         ? this.renderDetailRow(
                             'satellite',
                             'Satellite',
-                            // this.contact.phoneNumbers.satellite
-                            'Unavailable'
+                            this.props.contact.phoneNumbers.satellite
+                            // 'Unavailable'
+                        )
+                        : null}
+                    {this.props.contact.phoneNumbers.local
+                        ? this.renderDetailRow(
+                            'smartphone',
+                            'Phone*',
+                            this.props.contact.phoneNumbers.local
+                            // 'Unavailable'
                         )
                         : null}
                 </View>
@@ -302,7 +544,15 @@ export default class ContactDetailsScreen extends React.Component {
     renderDetailRow(icon, label, content) {
         return (
             <View style={styles.detailRowCD} key={icon}>
-                <Icon name={icon} size={16} color={GlobalColors.sideButtons} />
+                <Icon
+                    name={icon}
+                    size={16}
+                    color={
+                        label === 'Phone*'
+                            ? GlobalColors.grey
+                            : GlobalColors.sideButtons
+                    }
+                />
                 <Text style={styles.labelCD}>{label}</Text>
                 <Text style={styles.rowContentCD}>{content}</Text>
             </View>
@@ -314,10 +564,12 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
-        console.log('contact ', this.contact);
-
+        if (!this.props.contact) {
+            return <View />;
+        }
         return (
             <ScrollView style={styles.containerCD}>
+                <Loader loading={this.state.loading} />
                 {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}

@@ -68,7 +68,8 @@ import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
 import {
     GoogleAnalytics,
-    GoogleAnalyticsCategories
+    GoogleAnalyticsCategories,
+    GoogleAnalyticsEvents
 } from '../../lib/GoogleAnalytics';
 import DocumentPicker from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
@@ -1227,6 +1228,14 @@ class ChatBotScreen extends React.Component {
     sendMessage = async message => {
         this.countMessage(message);
 
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEvents.SEND_MESSAGE,
+            'Message',
+            this.props.bot.botName,
+            0,
+            null
+        );
+
         this.updateChat(message);
         this.scrollToBottom = true;
 
@@ -1667,6 +1676,7 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
         } else if (key === BotInputBarCapabilities.share_contact) {
+            return;
             this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
@@ -1818,9 +1828,9 @@ class ChatBotScreen extends React.Component {
             },
             {
                 key: BotInputBarCapabilities.share_contact,
-                imageStyle: { width: 16, height: 16 },
-                imageSource: images.share_contact,
-                label: I18n.t('Contact')
+                imageStyle: { width: 16, height: 16 }
+                // imageSource: images.share_contact,
+                // label: I18n.t('Contact')
             },
             {
                 key: BotInputBarCapabilities.pick_location,
@@ -1857,6 +1867,10 @@ class ChatBotScreen extends React.Component {
                             return (
                                 <TouchableOpacity
                                     key={index}
+                                    disabled={
+                                        elem.key ===
+                                        BotInputBarCapabilities.share_contact
+                                    }
                                     onPress={() => {
                                         this.selectOption(elem.key);
                                     }}
@@ -1864,7 +1878,10 @@ class ChatBotScreen extends React.Component {
                                 >
                                     <View
                                         style={
-                                            chatStyles.moreOptionImageContainer
+                                            elem.key ===
+                                            BotInputBarCapabilities.share_contact
+                                                ? chatStyles.moreOptionImageContainerHide
+                                                : chatStyles.moreOptionImageContainer
                                         }
                                     >
                                         <Image

@@ -28,6 +28,7 @@ import CountryCodes from './code';
 import Bot from '../../lib/bot';
 import ProfileImage from '../ProfileImage';
 import config from '../../config/config';
+import Sound from 'react-native-sound';
 
 const R = require('ramda');
 
@@ -45,11 +46,23 @@ export const DiallerState = {
     incall_digits: 'incall_digits'
 };
 
+const kSort = src => {
+    const keys = Object.keys(src);
+    keys.sort();
+    return keys.reduce((target, key) => {
+        target[key] = src[key];
+        return target;
+    }, {});
+};
+
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 export default class Dialler extends React.Component {
     constructor(props) {
         super(props);
+        const { Inmarsat, ...rest } = CountryCodes();
+        const countries = kSort(rest);
+        const countryCodes = { Inmarsat, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
             dialledNumber: '+',
@@ -64,7 +77,7 @@ export default class Dialler extends React.Component {
             intervalId: null,
             noBalance: false,
             bgBotScreen: null,
-            codes: CountryCodes(),
+            codes: countryCodes,
             showCodes: false,
             countryElements: []
         };
@@ -109,6 +122,19 @@ export default class Dialler extends React.Component {
         if (this.props.call && this.props.number) {
             this.setState({ dialledNumber: this.props.number });
         }
+
+        // Sound.setCategory('Playback');
+        // const filler = new Sound(
+        //     'https://api.twilio.com/cowbell.mp3',
+        //     undefined,
+        //     error => {
+        //         if (error) {
+        //             return console.log('Failed to load sound', error);
+        //         }
+
+        //         this.setState({ filler });
+        //     }
+        // );
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -221,7 +247,8 @@ export default class Dialler extends React.Component {
                     Alert.alert('Unable to Call number');
                     return;
                 }
-                toNumber = sat_phone_number;
+                // toNumber = sat_phone_number;
+                toNumber = `SAT:${sat_phone_number}:${sat_phone_pin}:${phone_number}`;
                 this.setState({
                     satCall: true,
                     satCallPin: sat_phone_pin,
@@ -303,17 +330,28 @@ export default class Dialler extends React.Component {
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'CONNECTED' && this.state.satCall) {
-            TwilioVoice.sendDigits(
-                `wwwwwwwwwwwww1wwwwwww${
-                    this.state.satCallPin
-                }wwwwwwwwwwwwwwww9wwwwwwwwwwwwww${this.state.call_to}`
-            );
+            // TwilioVoice.sendDigits(
+            //     `wwwwwwwwwwwww1wwwwwww${
+            //         this.state.satCallPin
+            //     }wwwwwwwwwwwwwwww9wwwwwwwwwwwwww${this.state.call_to}`
+            // );
+            // TwilioVoice.setMuted();
         }
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             const intervalId = setInterval(() => {
                 this.setState({ callTime: this.state.callTime + 1 });
             }, 1000);
             this.setState({ diallerState: DiallerState.incall, intervalId });
+            // this.state.filler.play(success => {
+            //     if (success) {
+            //         console.log('Played Sound');
+            //     } else {
+            //         console.log('playback failed due to audio decoding errors');
+            //         // reset the player to its uninitialized state (android only)
+            //         // this is the only option to recover after an error occured and use the player again
+            //         filler.release();
+            //     }
+            // });
         }
     }
 

@@ -117,10 +117,6 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
         sessionId: user.creds.sessionId
     });
 
-    console.log(
-        `Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`
-    );
-
     return headers;
 }
 

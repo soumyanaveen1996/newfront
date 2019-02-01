@@ -209,6 +209,7 @@ export default class LoginScreen extends React.Component {
     };
 
     renderFacebookBtn = () => {
+        return <View />;
         let imgSource = this.state.pressedFbBtn
             ? images.btn_pressed_facebook
             : images.btn_facebook;
@@ -365,11 +366,11 @@ export default class LoginScreen extends React.Component {
                             Or log in with social media
                         </Text>
                         <View style={styles.socialMediaButtons}>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 onPress={() => this.loginWithFacebook()}
                             >
                                 {this.renderFacebookBtn()}
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity
                                 onPress={() => this.loginWithGoogle()}

@@ -12,6 +12,10 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
 
+const R = require('ramda');
+
+const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
+
 /**
  * Expected format per contact:
  * {
@@ -63,7 +67,7 @@ export default class Contact {
             if (!Array.isArray(contacts)) {
                 contacts = [contacts];
             }
-            console.log('Added Contacts : ', contacts);
+
             Contact.getAddedContacts()
                 .then(function(cts) {
                     cts = cts || [];
@@ -162,10 +166,30 @@ export default class Contact {
         });
 
     static saveContacts = contacts =>
-        new Promise((resolve, reject) => {
-            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, contacts)
+        new Promise(async (resolve, reject) => {
+            const localContacts = await Contact.getAddedContacts();
+            const localContactsAccepted = localContacts.filter(
+                contact => contact.ignored == false
+            );
+            const remoteContacts = contacts.filter(
+                contact => contact.ignored === false
+            );
+            let AllContacts = [];
+            for (let contact of remoteContacts) {
+                const localContact = R.find(R.propEq('userId', contact.userId))(
+                    localContactsAccepted
+                );
+                const mergedContact = R.mergeDeepWithKey(
+                    mergeValues,
+                    localContact,
+                    contact
+                );
+                AllContacts.push(mergedContact);
+            }
+
+            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
-                    return resolve(contacts);
+                    return resolve(AllContacts);
                 })
                 .catch(err => {
                     return reject(err);
@@ -291,6 +315,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
+                        // console.log(
+                        //     'all conatcts ======================= >',
+                        //     response.data
+                        // );
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -303,6 +331,7 @@ export default class Contact {
                             return _.extend({}, contact, { ignored: true });
                         });
                         var allContacts = _.concat(contacts, ignored);
+
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
                         resolve();
@@ -333,13 +362,13 @@ export default class Contact {
                     }
                 })
                 .then(response => {
-                    console.log('Contact response data ', response.data);
                     if (response.data) {
                         let contact = response.data;
                         return ChannelContactDAO.insertChannelContact(
                             contact.userId,
                             contact.userName,
-                            contact.emailAddress,
+                            '',
+                            // contact.emailAddress,
                             contact.screenName,
                             contact.givenName,
                             contact.surname
