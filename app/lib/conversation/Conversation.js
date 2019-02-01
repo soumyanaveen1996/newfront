@@ -351,9 +351,42 @@ export default class Conversation {
         if (data.action === 'add') {
             favorite = true;
         }
+        let jsonData;
+
+        switch (data.type) {
+        case 'conversation':
+            jsonData = {
+                conversationId: data.conversationId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        case 'channel':
+            jsonData = {
+                channelName: data.channelName,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        case 'contacts':
+            jsonData = {
+                userId: data.userId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        default:
+            jsonData = {
+                botId: data.botId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        }
 
         let currentUserId;
-        // console.log('data before sending ', data);
+
+        console.log('data before sending ', jsonData);
 
         return new Promise((resolve, reject) => {
             Auth.getUser()
@@ -371,7 +404,7 @@ export default class Conversation {
                                 sessionId: user.creds.sessionId
                             },
                             data: {
-                                ...data
+                                ...jsonData
                             }
                         };
                         return Network(options);
@@ -394,6 +427,20 @@ export default class Conversation {
                                 data.conversationId,
                                 favoriteDb
                             );
+                        }
+
+                        if (data.channelName) {
+                            if (data.channelConvId) {
+                                console.log(
+                                    'channel conversation id',
+                                    data.channelConvId
+                                );
+
+                                return ConversationDAO.updateConvFavorite(
+                                    data.channelConvId,
+                                    favoriteDb
+                                );
+                            }
                         }
 
                         if (data.botId) {

@@ -219,6 +219,7 @@ export default class ContactDetailsScreen extends React.Component {
         // console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
         let data = {
+            type: 'contacts',
             userId: this.props.contact.id,
             action: 'add',
             userDomain: 'frontmai'
@@ -260,6 +261,7 @@ export default class ContactDetailsScreen extends React.Component {
         // console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
         let data = {
+            type: 'contacts',
             userId: this.props.contact.id,
             action: 'remove',
             userDomain: 'frontmai'
@@ -290,18 +292,6 @@ export default class ContactDetailsScreen extends React.Component {
                     ConversationDAO.updateConvFavorite(conversationId, 0)
                         .then(() => console.log('Updated db>>>>>>>'))
                         .catch(() => console.log('DB Update Failed>>>>>>'));
-
-                    // newData = {
-                    //     conversationId: conversationId,
-                    //     action: 'remove',
-                    //     userDomain: 'frontmai'
-                    // };
-                    // Conversation.setFavorite(newData)
-                    //     .then(() => {
-                    //         console.log('Conversation Set as favorite');
-                    //         this.props.updateList();
-                    //     })
-                    //     .catch(err => console.log('Cannot set favorite', err));
                 }
 
                 // console.log('conversation ID', conversationId);

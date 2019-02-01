@@ -61,26 +61,41 @@ export default class InviteModal extends React.Component {
 
     sendInvite() {
         Keyboard.dismiss();
-        this.props.setVisible(false);
+
         this.textInput.clear();
-        Auth.getUser().then(user => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    '/contactsActions',
-                headers: {
-                    sessionId: user.creds.sessionId
-                },
-                data: {
-                    capability: 'InviteUsers',
-                    botId: 'onboarding-bot',
-                    emailIds: this.state.email
+        Auth.getUser()
+            .then(user => {
+                const options = {
+                    method: 'post',
+                    url:
+                        config.proxy.protocol +
+                        config.proxy.host +
+                        '/contactsActions',
+                    headers: {
+                        sessionId: user.creds.sessionId
+                    },
+                    data: {
+                        capability: 'InviteUsers',
+                        botId: 'onboarding-bot',
+                        emailIds: this.state.email
+                    }
+                };
+                return Network(options);
+            })
+            .then(data => {
+                console.log('sent invite done', data);
+
+                if (data.error > 0) {
+                    console.log('error in sending invite');
                 }
-            };
-            return Network(options);
-        });
+                this.props.setVisible(false, 'done');
+
+                console.log('Invite sent successfully');
+            })
+            .catch(err => {
+                this.props.setVisible(false);
+                console.log('error in sending invite ', err);
+            });
     }
 
     addNewContactScreen() {

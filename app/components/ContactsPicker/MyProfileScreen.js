@@ -331,6 +331,7 @@ export default class MyProfileScreen extends React.Component {
                             userId: this.props.userId
                         },
                         () => {
+                            this.props.updateContactScreen();
                             setTimeout(() => {
                                 this.showAlert();
                             }, 200);
@@ -348,7 +349,7 @@ export default class MyProfileScreen extends React.Component {
                 {
                     text: 'OK',
                     onPress: () => {
-                        Actions.pop();
+                        console.log('image changed');
                     }
                 }
             ],
