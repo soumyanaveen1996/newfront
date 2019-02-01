@@ -1289,6 +1289,25 @@ class ChatBotScreen extends React.Component {
         return this.user.userId;
     };
 
+    async pickImage() {
+        Keyboard.dismiss();
+        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
+        // Have to filter out videos ?
+        if (!result.cancelled) {
+            this.sendImage(result.uri, result.base64);
+        }
+    }
+
+    async pickFile() {
+        Keyboard.dismiss();
+        DocumentPicker.pick({
+            type: [DocumentPicker.types.allFiles]
+        }).then(res => {
+            console.log(res, 'file selected');
+            this.sendFile(res.uri, res.type);
+        });
+    }
+
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
             imageUri,
@@ -1307,7 +1326,27 @@ class ChatBotScreen extends React.Component {
             this.user
         );
         message.imageMessage(uploadedUrl);
+        return this.sendMessage(message);
+    }
 
+    async sendFile(fileUri, fileType) {
+        const toUri = await Utils.copyFileAsync(
+            fileUri,
+            Constants.DOCUMENT_DIRECTORY
+        );
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+
+        // Send the file to the S3/backend and then let the user know
+        const uploadedUrl = await Resource.uploadFile(
+            null, //base64 will be created in Resource.uploadFile()
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            fileType,
+            this.user
+        );
+        message.otherFileMessage(uploadedUrl, { type: fileType });
         return this.sendMessage(message);
     }
 
@@ -1479,37 +1518,6 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    async pickImage() {
-        Keyboard.dismiss();
-        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
-        // Have to filter out videos ?
-        if (!result.cancelled) {
-            this.sendImage(result.uri, result.base64);
-        }
-    }
-    async uploadFile(file) {
-        let message = new Message();
-        message.setCreatedBy(this.getUserId());
-        const uploadedUrl = await Resource.uploadFile(
-            null, //base64 will be created in Resource.uploadFile()
-            file.uri,
-            this.conversationContext.conversationId,
-            message.getMessageId(),
-            file.type,
-            this.user
-        );
-    }
-
-    async pickFile() {
-        Keyboard.dismiss();
-        DocumentPicker.pick({
-            type: [DocumentPicker.types.allFiles]
-        }).then(res => {
-            console.log(res, 'file selected');
-            this.uploadFile(res);
-        });
-    }
-
     onBarcodeRead(barCodeData) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
@@ -1649,7 +1657,6 @@ class ChatBotScreen extends React.Component {
     }
 
     selectOption = key => {
-        console.log(key, '>>>key');
         this.setState({ showOptions: false });
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
