@@ -1307,14 +1307,14 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    async pickFile() {
-        Keyboard.dismiss();
-        DocumentPicker.pick({
-            type: [DocumentPicker.types.allFiles]
-        }).then(res => {
-            this.sendFile(res.uri, res.type);
-        });
-    }
+    // async pickFile() {
+    //     Keyboard.dismiss();
+    //     DocumentPicker.pick({
+    //         type: [DocumentPicker.types.allFiles]
+    //     }).then(res => {
+    //         this.sendFile(res.uri, res.type);
+    //     });
+    // }
 
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
@@ -1337,28 +1337,28 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    async sendFile(fileUri, fileType) {
-        let message = new Message();
-        message.setCreatedBy(this.getUserId());
-        let rename = message.getMessageId() + '.' + fileType.split('/')[1];
-        const toUri = await Utils.copyFileAsync(
-            decodeURI(fileUri),
-            Constants.OTHER_FILE_DIRECTORY,
-            rename
-        );
+    // async sendFile(fileUri, fileType) {
+    //     let message = new Message();
+    //     message.setCreatedBy(this.getUserId());
+    //     let rename = message.getMessageId() + '.' + fileType.split('/')[1];
+    //     const toUri = await Utils.copyFileAsync(
+    //         decodeURI(fileUri),
+    //         Constants.OTHER_FILE_DIRECTORY,
+    //         rename
+    //     );
 
-        // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(
-            null, //base64 will be created in Resource.uploadFile()
-            toUri,
-            this.conversationContext.conversationId,
-            message.getMessageId(),
-            fileType,
-            this.user
-        );
-        message.otherFileMessage(uploadedUrl, { type: fileType });
-        return this.sendMessage(message);
-    }
+    //     // Send the file to the S3/backend and then let the user know
+    //     const uploadedUrl = await Resource.uploadFile(
+    //         null, //base64 will be created in Resource.uploadFile()
+    //         toUri,
+    //         this.conversationContext.conversationId,
+    //         message.getMessageId(),
+    //         fileType,
+    //         this.user
+    //     );
+    //     message.otherFileMessage(uploadedUrl, { type: fileType });
+    //     return this.sendMessage(message);
+    // }
 
     onSendAudio = audioURI => {
         this.sendAudio(audioURI);
