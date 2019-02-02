@@ -337,7 +337,21 @@ export const Icons = {
 
     //DATACARD
     cardsTrue: icon('ios-checkmark-circle', 'ionicon', 25, GlobalColors.green),
-    cardsFalse: icon('ios-close-circle', 'ionicon', 25, GlobalColors.red)
+    cardsFalse: icon('ios-close-circle', 'ionicon', 25, GlobalColors.red),
+
+    //FILES
+    fileIcon: icon(
+        'ios-document-outline',
+        'ionicon',
+        50,
+        GlobalColors.headerBlack
+    ),
+    downloadFile: icon(
+        'arrow-collapse-down',
+        'material-community',
+        30,
+        GlobalColors.white
+    )
 };
 
 export default Icons;
