@@ -1312,7 +1312,6 @@ class ChatBotScreen extends React.Component {
         DocumentPicker.pick({
             type: [DocumentPicker.types.allFiles]
         }).then(res => {
-            console.log(res, 'file selected');
             this.sendFile(res.uri, res.type);
         });
     }
@@ -1339,12 +1338,14 @@ class ChatBotScreen extends React.Component {
     }
 
     async sendFile(fileUri, fileType) {
-        const toUri = await Utils.copyFileAsync(
-            fileUri,
-            Constants.DOCUMENT_DIRECTORY
-        );
         let message = new Message();
         message.setCreatedBy(this.getUserId());
+        let rename = message.getMessageId() + '.' + fileType.split('/')[1];
+        const toUri = await Utils.copyFileAsync(
+            decodeURI(fileUri),
+            Constants.OTHER_FILE_DIRECTORY,
+            rename
+        );
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(
@@ -1382,7 +1383,6 @@ class ChatBotScreen extends React.Component {
             ResourceTypes.Audio,
             this.user
         );
-
         message.audioMessage(uploadedUrl);
         return this.sendMessage(message);
     };
@@ -1820,12 +1820,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            {
-                key: BotInputBarCapabilities.file,
-                imageStyle: { width: 14, height: 16 },
-                imageSource: images.share_file,
-                label: I18n.t('File_option')
-            },
+            // {
+            //     key: BotInputBarCapabilities.file,
+            //     imageStyle: { width: 14, height: 16 },
+            //     imageSource: images.share_file,
+            //     label: I18n.t('File_option')
+            // },
             {
                 key: BotInputBarCapabilities.share_contact,
                 imageStyle: { width: 16, height: 16 }
