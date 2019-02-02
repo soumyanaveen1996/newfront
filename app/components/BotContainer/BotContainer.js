@@ -32,15 +32,14 @@ export default class BotContainer extends React.Component {
         };
     }
 
-    async componentWillMount() {
-        this.refresh();
-    }
-
     componentWillUnmount() {
         this.mounted = false;
     }
 
     componentDidMount() {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+        });
         this.mounted = true;
     }
 
@@ -66,34 +65,25 @@ export default class BotContainer extends React.Component {
     //     }
     // }
 
-    async refresh() {
-        const bots = await Bot.getTimeLineBots();
-        if (this.mounted) {
-            this.setState({ installedBots: bots });
-        }
-    }
-
     onBotInstalled = async () => {
-        await this.refresh();
-        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
-    };
-
-    checkBotStatus = bot => {
-        return utils.checkBotStatus(this.state.installedBots, bot);
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.refs.toast.show(
+                I18n.t('Bot_installed'),
+                DURATION.LENGTH_SHORT
+            );
+        });
     };
 
     renderBot = bot => {
-        const botStatus = this.checkBotStatus(bot);
-
         return (
             <BotInstallListItem
                 bot={bot}
                 key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
                 onBotInstallFailed={this.props.onBotInstallFailed}
-                installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update}
+                installedBots={this.state.installedBots}
             />
         );
     };

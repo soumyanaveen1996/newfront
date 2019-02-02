@@ -30,20 +30,21 @@ export default class BotListScreen extends React.Component {
         };
     }
 
-    async componentWillMount() {
-        this.refresh();
-    }
-
-    async refresh() {
-        const bots = await Bot.getTimeLineBots();
-        this.setState({
-            installedBots: bots
+    componentDidMount() {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
         });
+        this.mounted = true;
     }
 
     onBotInstalled = async () => {
-        await this.refresh();
-        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.refs.toast.show(
+                I18n.t('Bot_installed'),
+                DURATION.LENGTH_SHORT
+            );
+        });
     };
 
     onBotInstallFailed = () => {
@@ -53,20 +54,15 @@ export default class BotListScreen extends React.Component {
         );
     };
 
-    checkBotStatus = bot => {
-        return utils.checkBotStatus(this.state.installedBots, bot);
-    };
-
     renderRow = bot => {
-        const botStatus = this.checkBotStatus(bot);
         return (
             <BotInstallListItem
                 bot={bot}
+                key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
                 onBotInstallFailed={this.onBotInstallFailed}
-                installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update}
+                installedBots={this.state.installedBots}
             />
         );
     };
