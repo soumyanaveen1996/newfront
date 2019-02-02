@@ -904,6 +904,9 @@ class ChatBotScreen extends React.Component {
     }
 
     sendButtonResponseMessage(selectedItem) {
+        if (selectedItem.action === 'AcceptContact') {
+            setTimeout(() => Contact.refreshContacts(), 5000);
+        }
         let message = new Message({ addedByBot: false });
         message.buttonResponseMessage(selectedItem);
         message.setCreatedBy(this.getUserId());
