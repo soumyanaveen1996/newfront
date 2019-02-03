@@ -151,9 +151,13 @@ export default class ContactDetailsScreen extends React.Component {
             Contact.getAddedContacts().then(contactsData => {
                 let updateContacts = contactsData.map(elem => {
                     if (elem.userId === this.props.contact.id) {
-                        elem.phoneNumbers.local = localPhone;
+                        const localPhonePath = R.lensPath([
+                            'phoneNumbers',
+                            'local'
+                        ]);
+                        elem = R.set(localPhonePath, localPhone, elem);
+                        // elem.phoneNumbers.local = localPhone;
                     }
-
                     return elem;
                 });
                 Contact.saveContacts(updateContacts).then(() => {
