@@ -542,7 +542,7 @@ class ContactsPicker extends React.Component {
 
         // console.log('contact list ', this.state.contactsData);
 
-        if (this.state.contactsData && this.state.contactsData.length > 0) {
+        if (this.state.contactsData) {
             return (
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : null}

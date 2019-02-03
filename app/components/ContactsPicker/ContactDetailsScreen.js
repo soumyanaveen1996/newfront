@@ -442,7 +442,10 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderFooterButtons() {
-        if (this.props.contact.isWaitingForConfirmation) {
+        if (
+            this.props.contact.isWaitingForConfirmation ||
+            !this.props.contact.emails[0].email
+        ) {
             return <View />;
         }
         return (
@@ -476,7 +479,10 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderEmails() {
-        if (!this.props.contact.isWaitingForConfirmation) {
+        if (
+            !this.props.contact.isWaitingForConfirmation &&
+            this.props.contact.emails[0].email
+        ) {
             return _.map(this.props.contact.emails, () =>
                 this.renderDetailRow(
                     'email',
