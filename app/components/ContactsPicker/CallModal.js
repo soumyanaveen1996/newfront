@@ -126,7 +126,7 @@ export default class CallModal extends React.Component {
                                     disabled={
                                         !(
                                             contactSelected.phoneNumbers &&
-                                            contactSelected.phoneNumbers.mobile
+                                            contactSelected.phoneNumbers.local
                                         )
                                     }
                                     onPress={() =>
