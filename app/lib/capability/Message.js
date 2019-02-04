@@ -655,7 +655,11 @@ export default class Message {
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
-            messageDate: parseInt(json.createdOn, 10)
+            messageDate: parseInt(json.createdOn, 10),
+            options:
+                typeof json.options === 'string'
+                    ? json.options
+                    : JSON.stringify(json.options)
         };
         return new Message(options);
     }
