@@ -4,7 +4,8 @@ import {
     Text,
     Image,
     TouchableHighlight,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 import styles from './styles';
 import images from '../../../config/images';
@@ -113,11 +114,19 @@ export default class CategoriesTab extends React.Component {
         );
     };
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <ScrollView style={{ flex: 1, padding: 10 }}>
                 {this.renderCategoryBots()}
-                <Toast ref="toast" position="bottom" positionValue={350} />
+                {this.renderToast()}
             </ScrollView>
         );
     }
