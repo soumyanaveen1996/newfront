@@ -33,6 +33,11 @@ class RemoteBotInstall {
                     }
                 })
                 .then(subscribedBots => {
+                    console.log(
+                        'list of bots installed ========== ',
+                        subscribedBots
+                    );
+
                     resolve(subscribedBots.data.content);
                 })
                 .catch(reject);
