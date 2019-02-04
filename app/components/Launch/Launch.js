@@ -228,7 +228,7 @@ export default class Splash extends React.Component {
     handleNotification = notification => {
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            Conversation.getIMConversation(notification.conversationId)
+            Conversation.getConversation(notification.conversationId)
                 .then(conv => {
                     conversation = conv;
                     return SystemBot.get(SystemBot.imBotManifestName);
@@ -239,8 +239,8 @@ export default class Splash extends React.Component {
                             Actions.currentScene ===
                             ROUTER_SCENE_KEYS.peopleChat
                         ) {
-                            console.log('>>>>refresh');
-                            Actions.refresh(ROUTER_SCENE_KEYS.peopleChat, {
+                            Actions.refresh({
+                                key: Math.random(),
                                 bot: imBot,
                                 conversation: conversation
                                 // onBack: this.props.onBack
@@ -257,7 +257,8 @@ export default class Splash extends React.Component {
                             Actions.currentScene ===
                             ROUTER_SCENE_KEYS.channelChat
                         ) {
-                            Actions.replace(ROUTER_SCENE_KEYS.channelChat, {
+                            Actions.refresh({
+                                key: Math.random(),
                                 bot: imBot,
                                 conversation: conversation
                                 // onBack: this.props.onBack
