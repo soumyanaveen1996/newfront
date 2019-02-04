@@ -142,10 +142,19 @@ export default class Message {
         this._messageType =
             MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION;
     };
+
     imageMessage = imageUrl => {
         // TODO: validate a valid url? - string for now
         this._msg = imageUrl;
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_IMAGE;
+    };
+
+    otherFileMessage = (fileUrl, options) => {
+        this._msg = fileUrl;
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE;
     };
 
     videoMessage = videoUrl => {
@@ -375,7 +384,8 @@ export default class Message {
                 return JSON.parse(this._msg);
             } catch (error) {
                 // bubble the error
-                throw error;
+                // throw error;
+                console.log(error);
             }
         }
 
@@ -431,6 +441,10 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_AUDIO
         ) {
             return 'Audio';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
+        ) {
+            return 'File';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO
         ) {

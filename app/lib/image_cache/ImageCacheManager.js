@@ -246,12 +246,8 @@ export default class ImageCacheManager {
         if (cache.path) {
             RNFetchBlob.fs.exists(cache.path).then(exists => {
                 if (exists) {
-                    console.log('Image Exists', uri);
-
                     this.notifyImageFromCache(uri);
                 } else {
-                    console.log('Download Image', cache.path);
-
                     this.download(cache);
                 }
             });

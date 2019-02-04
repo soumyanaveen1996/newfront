@@ -904,6 +904,9 @@ class ChatBotScreen extends React.Component {
     }
 
     sendButtonResponseMessage(selectedItem) {
+        if (selectedItem.action === 'AcceptContact') {
+            setTimeout(() => Contact.refreshContacts(), 5000);
+        }
         let message = new Message({ addedByBot: false });
         message.buttonResponseMessage(selectedItem);
         message.setCreatedBy(this.getUserId());
@@ -1298,6 +1301,24 @@ class ChatBotScreen extends React.Component {
         return this.user.userId;
     };
 
+    async pickImage() {
+        Keyboard.dismiss();
+        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
+        // Have to filter out videos ?
+        if (!result.cancelled) {
+            this.sendImage(result.uri, result.base64);
+        }
+    }
+
+    // async pickFile() {
+    //     Keyboard.dismiss();
+    //     DocumentPicker.pick({
+    //         type: [DocumentPicker.types.allFiles]
+    //     }).then(res => {
+    //         this.sendFile(res.uri, res.type);
+    //     });
+    // }
+
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
             imageUri,
@@ -1316,9 +1337,31 @@ class ChatBotScreen extends React.Component {
             this.user
         );
         message.imageMessage(uploadedUrl);
-
         return this.sendMessage(message);
     }
+
+    // async sendFile(fileUri, fileType) {
+    //     let message = new Message();
+    //     message.setCreatedBy(this.getUserId());
+    //     let rename = message.getMessageId() + '.' + fileType.split('/')[1];
+    //     const toUri = await Utils.copyFileAsync(
+    //         decodeURI(fileUri),
+    //         Constants.OTHER_FILE_DIRECTORY,
+    //         rename
+    //     );
+
+    //     // Send the file to the S3/backend and then let the user know
+    //     const uploadedUrl = await Resource.uploadFile(
+    //         null, //base64 will be created in Resource.uploadFile()
+    //         toUri,
+    //         this.conversationContext.conversationId,
+    //         message.getMessageId(),
+    //         fileType,
+    //         this.user
+    //     );
+    //     message.otherFileMessage(uploadedUrl, { type: fileType });
+    //     return this.sendMessage(message);
+    // }
 
     onSendAudio = audioURI => {
         this.sendAudio(audioURI);
@@ -1343,7 +1386,6 @@ class ChatBotScreen extends React.Component {
             ResourceTypes.Audio,
             this.user
         );
-
         message.audioMessage(uploadedUrl);
         return this.sendMessage(message);
     };
@@ -1488,37 +1530,6 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    async pickImage() {
-        Keyboard.dismiss();
-        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
-        // Have to filter out videos ?
-        if (!result.cancelled) {
-            this.sendImage(result.uri, result.base64);
-        }
-    }
-    async uploadFile(file) {
-        let message = new Message();
-        message.setCreatedBy(this.getUserId());
-        const uploadedUrl = await Resource.uploadFile(
-            null, //base64 will be created in Resource.uploadFile()
-            file.uri,
-            this.conversationContext.conversationId,
-            message.getMessageId(),
-            file.type,
-            this.user
-        );
-    }
-
-    async pickFile() {
-        Keyboard.dismiss();
-        DocumentPicker.pick({
-            type: [DocumentPicker.types.allFiles]
-        }).then(res => {
-            console.log(res, 'file selected');
-            this.uploadFile(res);
-        });
-    }
-
     onBarcodeRead(barCodeData) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
@@ -1658,7 +1669,6 @@ class ChatBotScreen extends React.Component {
     }
 
     selectOption = key => {
-        console.log(key, '>>>key');
         this.setState({ showOptions: false });
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
@@ -1813,12 +1823,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            {
-                key: BotInputBarCapabilities.file,
-                imageStyle: { width: 14, height: 16 },
-                imageSource: images.share_file,
-                label: I18n.t('File_option')
-            },
+            // {
+            //     key: BotInputBarCapabilities.file,
+            //     imageStyle: { width: 14, height: 16 },
+            //     imageSource: images.share_file,
+            //     label: I18n.t('File_option')
+            // },
             {
                 key: BotInputBarCapabilities.share_contact,
                 imageStyle: { width: 16, height: 16 }

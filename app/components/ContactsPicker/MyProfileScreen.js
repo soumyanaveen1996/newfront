@@ -28,6 +28,8 @@ import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
 
+const R = require('ramda');
+
 export default class MyProfileScreen extends React.Component {
     constructor(props) {
         super(props);

@@ -4,6 +4,7 @@ import { Auth, Notification } from '../lib/capability';
 
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
+import { Platform } from 'react-native';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {

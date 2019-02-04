@@ -27,6 +27,9 @@ const getMessageDataForConversation = (conversation, user) =>
             )
                 .then(conversationContext => {
                     context = conversationContext;
+                    if (context === null) {
+                        return Promise.resolve([]);
+                    }
                     chatName = ConversationContext.getChatName(context, user);
                     otherUserId = ConversationContext.getOtherUserId(
                         context,
@@ -61,6 +64,9 @@ const getMessageDataForConversation = (conversation, user) =>
             )
                 .then(conversationContext => {
                     context = conversationContext;
+                    if (context === null) {
+                        return Promise.resolve([]);
+                    }
                     chatName = ConversationContext.getChatName(context, user);
                     return ChannelDAO.selectChannelByConversationId(
                         conversation.conversationId

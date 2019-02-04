@@ -1,6 +1,4 @@
 rootProject.name = 'frontm_mobile'
-include ':@mapbox_react-native-mapbox-gl'
-project(':@mapbox_react-native-mapbox-gl').projectDir = new File(rootProject.projectDir, '../node_modules/@mapbox/react-native-mapbox-gl/android/rctmgl')
 include ':bugsnag-react-native'
 project(':bugsnag-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/bugsnag-react-native/android')
 include ':@yfuks_react-native-action-sheet'

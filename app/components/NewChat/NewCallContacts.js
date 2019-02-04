@@ -460,7 +460,7 @@ class NewCallContacts extends React.Component {
                                                             contactSelected.phoneNumbers &&
                                                             contactSelected
                                                                 .phoneNumbers
-                                                                .mobile
+                                                                .local
                                                         )
                                                     }
                                                 >

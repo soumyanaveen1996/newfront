@@ -6,7 +6,8 @@ import ImageResizer from 'react-native-image-resizer';
 export const ResourceTypes = {
     Image: 'image',
     Video: 'video',
-    Audio: 'audio'
+    Audio: 'audio',
+    OtherFile: 'other_file'
 };
 
 export default class Resource {

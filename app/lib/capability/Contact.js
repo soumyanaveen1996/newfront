@@ -77,7 +77,13 @@ export default class Contact {
                         contact => contact.userId
                     );
                     const newContacts = cts.concat(notPresentContacts);
-                    return Contact.saveContacts(newContacts);
+                    const newContacts_Unconfirmed = newContacts.map(
+                        contact => ({
+                            waitingForConfirmation: true,
+                            ...contact
+                        })
+                    );
+                    return Contact.saveContacts(newContacts_Unconfirmed);
                 })
                 .then(function(cts) {
                     return resolve(cts);
@@ -167,13 +173,31 @@ export default class Contact {
 
     static saveContacts = contacts =>
         new Promise(async (resolve, reject) => {
+            const incomingContacts = contacts.map(contact => {
+                if (!contact.waitingForConfirmation) {
+                    contact.waitingForConfirmation = false;
+                }
+                return contact;
+            });
             const localContacts = await Contact.getAddedContacts();
-            const localContactsAccepted = localContacts.filter(
-                contact => contact.ignored == false
-            );
-            const remoteContacts = contacts.filter(
-                contact => contact.ignored === false
-            );
+            const localContactsAccepted = localContacts.filter(contact => {
+                if (contact.ignored === undefined) {
+                    return true;
+                }
+                if (contact.ignored === false) {
+                    return true;
+                }
+                return false;
+            });
+            const remoteContacts = incomingContacts.filter(contact => {
+                if (contact.ignored === undefined) {
+                    return true;
+                }
+                if (contact.ignored === false) {
+                    return true;
+                }
+                return false;
+            });
             let AllContacts = [];
             for (let contact of remoteContacts) {
                 const localContact = R.find(R.propEq('userId', contact.userId))(

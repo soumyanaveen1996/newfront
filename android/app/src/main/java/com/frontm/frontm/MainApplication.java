@@ -9,7 +9,6 @@ import android.os.Build;
 
 import com.facebook.react.ReactApplication;
 import com.mapbox.rctmgl.RCTMGLPackage;
-import com.mapbox.rctmgl.RCTMGLPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
 import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage;
@@ -31,7 +30,7 @@ import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.rnfs.RNFSPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+//import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.microsoft.codepush.react.CodePush;
@@ -75,7 +74,6 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
-            new RCTMGLPackage(),
             BugsnagReactNative.getPackage(),
             new RNDefaultPreferencePackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
           new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
@@ -85,7 +83,8 @@ public class MainApplication extends Application implements ReactApplication {
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
           new MapsPackage(), new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
           new RNIapPackage(), new RNI18nPackage(), new RNGoogleSignInPackage(), new RNFSPackage(),
-          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager), new ReactNativeDocumentPicker(),
+          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager),
+//              new ReactNativeDocumentPicker(),
           new RNDeviceInfo(), new ReactNativeContacts(),
           new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),
               getApplicationContext(), BuildConfig.DEBUG),

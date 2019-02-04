@@ -28,23 +28,35 @@ const BotInstallListItemStates = {
 export default class BotInstallListItem extends React.Component {
     constructor(props) {
         super(props);
+        let botStatus = utils.checkBotStatus(
+            this.props.installedBots,
+            this.props.bot
+        );
         this.state = {
-            status: props.installed
-                ? props.update
+            status: botStatus.installed
+                ? botStatus.update
                     ? BotInstallListItemStates.UPDATE
                     : BotInstallListItemStates.INSTALLED
                 : BotInstallListItemStates.NOT_INSTALLED
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            status: nextProps.installed
-                ? nextProps.update
-                    ? BotInstallListItemStates.UPDATE
-                    : BotInstallListItemStates.INSTALLED
-                : BotInstallListItemStates.NOT_INSTALLED
-        });
+    componentDidUpdate(prevProps) {
+        if (prevProps.installedBots !== this.props.installedBots) {
+            let botStatus = utils.checkBotStatus(
+                this.props.installedBots,
+                this.props.bot
+            );
+            botStatus.installed
+                ? botStatus.update
+                    ? this.setState({ status: BotInstallListItemStates.UPDATE })
+                    : this.setState({
+                        status: BotInstallListItemStates.INSTALLED
+                    })
+                : this.setState({
+                    status: BotInstallListItemStates.NOT_INSTALLED
+                });
+        }
     }
 
     async performBotInstallation(bot, update) {
@@ -88,15 +100,17 @@ export default class BotInstallListItem extends React.Component {
     }
 
     async installBot() {
-        if (this.props.installed && !this.props.update) {
+        let botStatus = utils.checkBotStatus(
+            this.props.installedBots,
+            this.props.bot
+        );
+        if (botStatus.installed && !botStatus.update) {
             return;
         }
-        const isUpdate = this.props.update;
-
         this.setState({ status: BotInstallListItemStates.INSTALLING });
         const bot = this.props.bot;
         try {
-            await this.performBotInstallation(bot, isUpdate);
+            await this.performBotInstallation(bot, botStatus.update);
             if (this.props.onBotInstalled) {
                 this.props.onBotInstalled();
             }
