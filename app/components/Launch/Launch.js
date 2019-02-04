@@ -239,17 +239,19 @@ export default class Splash extends React.Component {
                             Actions.currentScene ===
                             ROUTER_SCENE_KEYS.peopleChat
                         ) {
-                            Actions.replace(ROUTER_SCENE_KEYS.peopleChat, {
+                            console.log('>>>>refresh');
+                            Actions.refresh(ROUTER_SCENE_KEYS.peopleChat, {
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        } else {
+                            Actions.peopleChat({
                                 bot: imBot,
                                 conversation: conversation
                                 // onBack: this.props.onBack
                             });
                         }
-                        Actions.peopleChat({
-                            bot: imBot,
-                            conversation: conversation
-                            // onBack: this.props.onBack
-                        });
                     } else {
                         if (
                             Actions.currentScene ===
@@ -260,12 +262,13 @@ export default class Splash extends React.Component {
                                 conversation: conversation
                                 // onBack: this.props.onBack
                             });
+                        } else {
+                            Actions.channelChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
                         }
-                        Actions.channelChat({
-                            bot: imBot,
-                            conversation: conversation
-                            // onBack: this.props.onBack
-                        });
                     }
                 });
         }

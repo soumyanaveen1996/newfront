@@ -203,6 +203,7 @@ class ChatBotScreen extends React.Component {
     };
 
     async componentDidMount() {
+        console.log('>>>>>>>>UUU');
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         Store.dispatch(setLoadedBot(this.bot.botId));
         this.mounted = true;
