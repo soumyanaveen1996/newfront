@@ -384,7 +384,8 @@ export default class Message {
                 return JSON.parse(this._msg);
             } catch (error) {
                 // bubble the error
-                throw error;
+                // throw error;
+                console.log(error);
             }
         }
 
