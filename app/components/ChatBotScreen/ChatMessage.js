@@ -38,7 +38,7 @@ import { Icons } from '../../config/icons';
 import { ButtonMessage } from '../ButtonMessage';
 import config from '../../config/config';
 import ContactCard from './ContactCard';
-// import TapToOpenFile from './TapToOpenFile';
+import TapToOpenFile from './TapToOpenFile';
 
 export default class ChatMessage extends React.Component {
     constructor(props) {
@@ -170,21 +170,21 @@ export default class ChatMessage extends React.Component {
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
-    // renderFileMessage(message) {
-    //     const url = message.getMessage();
-    //     const type = message.getMessageOptions().type;
-    //     let headers =
-    //         utils.s3DownloadHeaders(url, this.props.user) || undefined;
-    //     const imageComponent = (
-    //         <TapToOpenFile
-    //             alignRight={this.props.alignRight}
-    //             source={{ uri: url, headers: headers, type: type }}
-    //             onImagePress={this.onImagePress.bind(this, headers)}
-    //         />
-    //     );
-    //     const component = this.wrapWithTitle(imageComponent);
-    //     return this.wrapBetweenFavAndTalk(message, component);
-    // }
+    renderFileMessage(message) {
+        const url = message.getMessage();
+        const type = message.getMessageOptions().type;
+        let headers =
+            utils.s3DownloadHeaders(url, this.props.user) || undefined;
+        const imageComponent = (
+            <TapToOpenFile
+                alignRight={this.props.alignRight}
+                source={{ uri: url, headers: headers, type: type }}
+                onImagePress={this.onImagePress.bind(this, headers)}
+            />
+        );
+        const component = this.wrapWithTitle(imageComponent);
+        return this.wrapBetweenFavAndTalk(message, component);
+    }
 
     renderVideoMessage(message) {
         const url = message.getMessage();
@@ -376,11 +376,11 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
         ) {
             return this.renderImageMessage(message);
-            // } else if (
-            //     message.getMessageType() ===
-            //     MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
-            // ) {
-            //     return this.renderFileMessage(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
+        ) {
+            return this.renderFileMessage(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_VIDEO
         ) {

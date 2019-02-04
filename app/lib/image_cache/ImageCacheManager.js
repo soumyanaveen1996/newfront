@@ -1,4 +1,4 @@
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import SHA1 from 'crypto-js/sha1';
 import URL from 'url';
 import PathParse from 'path-parse';

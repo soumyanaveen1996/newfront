@@ -69,6 +69,9 @@ export default class Resource {
         } else if (resourceType === ResourceTypes.Video) {
             contentType = 'video/mp4';
             extension = 'mp4';
+        } else {
+            contentType = resourceType;
+            extension = resourceType.split('/')[1];
         }
         if (!base64Data) {
             fileUri = decodeURI(fileUri);

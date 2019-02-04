@@ -539,7 +539,9 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
         ) {
             try {
                 return JSON.parse(this._options);
