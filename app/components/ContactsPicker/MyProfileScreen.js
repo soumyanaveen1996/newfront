@@ -220,11 +220,15 @@ export default class MyProfileScreen extends React.Component {
 
     infoRender = (type, myInfoData) => {
         return myInfoData.map((info, index) => {
+            // console.log('all th data ', info);
+
             let key;
             let phValue;
 
-            key = Object.keys(info)[0];
-            phValue = info[key];
+            if (type === 'phNumber') {
+                key = Object.keys(info)[0];
+                phValue = info[key];
+            }
 
             return (
                 <View
