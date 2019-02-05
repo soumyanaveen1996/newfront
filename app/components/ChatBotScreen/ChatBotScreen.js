@@ -1685,6 +1685,7 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
         } else if (key === BotInputBarCapabilities.share_contact) {
+            return;
             this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
@@ -1692,8 +1693,6 @@ class ChatBotScreen extends React.Component {
             this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
-            // } else if (key === BotInputBarCapabilities.share_contact) {
-            //     this.pickContact();
         }
     };
 
@@ -1836,9 +1835,9 @@ class ChatBotScreen extends React.Component {
             },
             {
                 key: BotInputBarCapabilities.share_contact,
-                imageStyle: { width: 16, height: 16 },
-                imageSource: images.share_contact,
-                label: I18n.t('Contact')
+                imageStyle: { width: 16, height: 16 }
+                // imageSource: images.share_contact,
+                // label: I18n.t('Contact')
             },
             {
                 key: BotInputBarCapabilities.pick_location,
