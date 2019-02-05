@@ -69,21 +69,23 @@ export default class MyProfileScreen extends React.Component {
                 const emailArray = [];
                 let phoneArray = [];
 
-                let phoneObject = { ...info.phoneNumbers };
+                if (Array.isArray(info.phoneNumbers)) {
+                    phoneArray = [...info.phoneNumbers];
+                } else {
+                    let phoneObject = { ...info.phoneNumbers };
 
-                for (var key in phoneObject) {
-                    let tempObj = {};
-                    if (phoneObject.hasOwnProperty(key)) {
-                        const keyName = key;
-                        tempObj = {
-                            [keyName]: phoneObject[key]
-                        };
+                    for (var key in phoneObject) {
+                        let tempObj = {};
+                        if (phoneObject.hasOwnProperty(key)) {
+                            const keyName = key;
+                            tempObj = {
+                                [keyName]: phoneObject[key]
+                            };
+                        }
+
+                        phoneArray.push(tempObj);
                     }
-
-                    phoneArray.push(tempObj);
                 }
-
-                console.log('phone numbers ', phoneArray);
 
                 emailArray.push(info.emailAddress);
                 if (this.mounted) {
@@ -150,7 +152,7 @@ export default class MyProfileScreen extends React.Component {
             delete detailObj.phoneNumbers;
         }
 
-        console.log('beforeing saving profile ', detailObj, userDetails);
+        // console.log('beforeing saving profile ', detailObj, userDetails);
 
         const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
 
@@ -176,7 +178,6 @@ export default class MyProfileScreen extends React.Component {
 
     selectNumberType = index => {
         this.setState({ currentIndex: index });
-        console.log('select type');
         this.setState({
             inviteModalVisible: !this.state.inviteModalVisible
         });
@@ -217,16 +218,12 @@ export default class MyProfileScreen extends React.Component {
     };
 
     infoRender = (type, myInfoData) => {
-        // console.log('all phones data', myInfoData);
-
         return myInfoData.map((info, index) => {
             let key;
             let phValue;
 
             key = Object.keys(info)[0];
             phValue = info[key];
-
-            console.log('all phones data', info, index, key, phValue);
 
             return (
                 <View
@@ -323,13 +320,10 @@ export default class MyProfileScreen extends React.Component {
 
     setupType(val) {
         let numbers = [...this.state.phoneNumbers];
-
         this.setState({ inviteModalVisible: false });
 
         let currentJson = numbers[this.state.currentIndex];
-
         let newObj = {};
-
         let key;
         let phValue;
 
@@ -481,8 +475,6 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
-        console.log('phone NUmber', this.state.phoneNumbers);
-
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={{ flex: 1 }}>
