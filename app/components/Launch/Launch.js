@@ -41,6 +41,8 @@ import AfterLogin from '../../services/afterLogin';
 import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
 import { IM_CHAT } from '../../lib/conversation/Conversation';
+import ReduxStore from '../../redux/store/configureStore';
+
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
@@ -239,12 +241,18 @@ export default class Splash extends React.Component {
                             Actions.currentScene ===
                             ROUTER_SCENE_KEYS.peopleChat
                         ) {
-                            Actions.refresh({
-                                key: Math.random(),
-                                bot: imBot,
-                                conversation: conversation
-                                // onBack: this.props.onBack
-                            });
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
                         } else {
                             Actions.peopleChat({
                                 bot: imBot,
@@ -257,12 +265,18 @@ export default class Splash extends React.Component {
                             Actions.currentScene ===
                             ROUTER_SCENE_KEYS.channelChat
                         ) {
-                            Actions.refresh({
-                                key: Math.random(),
-                                bot: imBot,
-                                conversation: conversation
-                                // onBack: this.props.onBack
-                            });
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
                         } else {
                             Actions.channelChat({
                                 bot: imBot,

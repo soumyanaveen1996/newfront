@@ -83,6 +83,7 @@ import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
+import { setCurrentConversationId } from '../../redux/actions/UserActions';
 
 const R = require('ramda');
 
@@ -203,7 +204,6 @@ class ChatBotScreen extends React.Component {
     };
 
     async componentDidMount() {
-        console.log('>>>>>>>>UUU');
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         Store.dispatch(setLoadedBot(this.bot.botId));
         this.mounted = true;
@@ -386,6 +386,9 @@ class ChatBotScreen extends React.Component {
             0,
             null
         );
+        Store.dispatch(
+            setCurrentConversationId(this.conversationContext.conversationId)
+        );
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -522,6 +525,7 @@ class ChatBotScreen extends React.Component {
 
     async componentWillUnmount() {
         this.mounted = false;
+        Store.dispatch(setCurrentConversationId(''));
         Store.dispatch(setLoadedBot(null));
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {

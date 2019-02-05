@@ -28,6 +28,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ refreshUserEmail: action.payload } };
     case Actions.SET_NETWORK:
         return { ...state, ...{ network: action.payload } };
+    case Actions.SET_CURRENT_CONVERSATION_ID:
+        return { ...state, ...{ currentConversationId: action.payload } };
     default:
         return state;
     }

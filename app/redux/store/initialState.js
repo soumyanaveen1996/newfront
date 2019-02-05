@@ -13,7 +13,8 @@ const initialState = {
         refreshChannels: true,
         refreshContacts: true,
         refreshUserEmail: true,
-        network: 'full'
+        network: 'full',
+        currentConversationId: ''
     },
     botState: {
         id: null

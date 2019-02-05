@@ -63,3 +63,8 @@ export const setNetwork = payload => ({
     type: Actions.SET_NETWORK,
     payload
 });
+
+export const setCurrentConversationId = payload => ({
+    type: Actions.SET_CURRENT_CONVERSATION_ID,
+    payload
+});
