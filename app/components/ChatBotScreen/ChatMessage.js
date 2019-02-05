@@ -173,15 +173,55 @@ export default class ChatMessage extends React.Component {
     renderFileMessage(message) {
         const url = message.getMessage();
         const type = message.getMessageOptions().type;
+        const name = message.getMessageOptions().fileName;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
-        const imageComponent = (
-            <TapToOpenFile
-                alignRight={this.props.alignRight}
-                source={{ uri: url, headers: headers, type: type }}
-                onImagePress={this.onImagePress.bind(this, headers)}
-            />
-        );
+        let imageComponent;
+        if (this.props.alignRight) {
+            imageComponent = (
+                <View
+                    style={chatMessageBubbleStyle(
+                        this.props.alignRight,
+                        this.props.imageSource
+                    )}
+                >
+                    <TapToOpenFile
+                        alignRight
+                        source={{
+                            uri: url,
+                            headers: headers,
+                            type: type,
+                            name: name
+                        }}
+                        onImagePress={this.onImagePress.bind(this, headers)}
+                    />
+                    <Text
+                        style={[
+                            chatMessageTextStyle(this.props.alignRight),
+                            { maxWidth: 125 }
+                        ]}
+                        overflow="hidden"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                    >
+                        {name}
+                    </Text>
+                </View>
+            );
+        } else {
+            imageComponent = (
+                <TapToOpenFile
+                    source={{
+                        uri: url,
+                        headers: headers,
+                        type: type,
+                        name: name
+                    }}
+                    onImagePress={this.onImagePress.bind(this, headers)}
+                />
+            );
+        }
+
         const component = this.wrapWithTitle(imageComponent);
         return this.wrapBetweenFavAndTalk(message, component);
     }

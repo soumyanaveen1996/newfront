@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     Text,
     SafeAreaView,
-    Platform
+    Platform,
+    PermissionsAndroid
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -83,6 +84,7 @@ import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
+import RNFS from 'react-native-fs';
 
 const R = require('ramda');
 
@@ -1315,7 +1317,7 @@ class ChatBotScreen extends React.Component {
         DocumentPicker.pick({
             type: [DocumentPicker.types.allFiles]
         }).then(res => {
-            this.sendFile(res.uri, res.type);
+            this.sendFile(res.uri, res.type, res.name);
         });
     }
 
@@ -1340,7 +1342,8 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    async sendFile(fileUri, fileType) {
+    async sendFile(fileUri, fileType, fileName) {
+        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
         let message = new Message();
         message.setCreatedBy(this.getUserId());
         let rename = message.getMessageId() + '.' + fileType.split('/')[1];
@@ -1359,7 +1362,10 @@ class ChatBotScreen extends React.Component {
             fileType,
             this.user
         );
-        message.otherFileMessage(uploadedUrl, { type: fileType });
+        message.otherFileMessage(uploadedUrl, {
+            type: fileType,
+            fileName: fileName
+        });
         return this.sendMessage(message);
     }
 

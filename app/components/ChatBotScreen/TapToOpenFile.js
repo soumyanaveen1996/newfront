@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Platform,
-    View
+    View,
+    PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
 import I18n from '../../config/i18n/i18n';
@@ -15,6 +16,7 @@ import Constants from '../../config/constants';
 import { AssetFetcher } from '../../lib/dce';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
+import GlobalColors from '../../config/styles';
 
 const FileState = {
     REMOTE: 'remote',
@@ -25,7 +27,6 @@ const FileState = {
 export default class TapToOpenFile extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props, '>>>>props');
         this.uri = this.props.source.uri;
         this.type = this.props.source.type;
         this.headers = this.props.source.headers;
@@ -41,29 +42,28 @@ export default class TapToOpenFile extends React.Component {
 
     async componentDidMount() {
         AssetFetcher.existsOnDevice(this.localPath).then(exist => {
-            console.log(exist, this.localPath, '>>>>exist');
             if (exist) {
                 this.setState({ status: FileState.SAVED });
             }
         });
     }
 
-    downloadFile() {
+    async downloadFile() {
         AssetFetcher.existsOnDevice(this.localPath)
             .then(exist => {
                 if (!exist) {
-                    console.log(exist, this.localPath, '>>>>existCheck');
-                    AssetFetcher.downloadFile(
+                    return AssetFetcher.downloadFile(
                         this.localPath,
                         this.uri,
                         this.headers,
                         true,
                         false
                     );
+                } else {
+                    return;
                 }
-                return;
             })
-            .then(() => {
+            .then(res => {
                 this.setState({ status: FileState.SAVED });
             })
             .catch(e => {
@@ -73,12 +73,12 @@ export default class TapToOpenFile extends React.Component {
             });
     }
 
-    openFile() {
+    async openFile() {
         AssetFetcher.existsOnDevice(this.localPath).then(exists => {
             if (exists) {
                 if (Platform.OS === 'android') {
                     RNFetchBlob.android.actionViewIntent(
-                        this.localPath,
+                        this.localPath.slice(7),
                         this.type
                     );
                 } else if (Platform.OS === 'ios') {
@@ -90,29 +90,78 @@ export default class TapToOpenFile extends React.Component {
         });
     }
 
-    onTap() {
+    async onTap() {
         if (this.state.status === FileState.REMOTE) {
             this.setState({ status: FileState.DOWNLOADING });
-            this.downloadFile();
+            await this.downloadFile();
         } else if (this.state.status === FileState.SAVED) {
             this.openFile();
         }
     }
 
-    render() {
+    renderActivityIndicator() {
         return (
-            <TouchableOpacity
-                onPress={this.onTap.bind(this)}
-                disabled={this.state.status === FileState.DOWNLOADING}
-            >
-                {Icons.fileIcon()}
-                <Text>{this.type.split('/')[1]}</Text>
-                <View>
-                    {this.state.status === FileState.REMOTE
-                        ? Icons.downloadFile()
-                        : null}
-                </View>
-            </TouchableOpacity>
+            <ActivityIndicator size="small" color={GlobalColors.sideButtons} />
         );
+    }
+
+    renderFileExtension() {
+        return <Text style={styles.fileType}>{this.type.split('/')[1]}</Text>;
+    }
+
+    renderDownloadIcon() {
+        return (
+            <View
+                style={
+                    this.props.alignRight
+                        ? styles.downloadIconRight
+                        : styles.downloadIcon
+                }
+            >
+                {Icons.downloadFile()}
+            </View>
+        );
+    }
+
+    renderSmallCard() {
+        if (this.state.status === FileState.REMOTE) {
+            return this.renderDownloadIcon();
+        } else if (this.state.status === FileState.DOWNLOADING) {
+            return this.renderActivityIndicator();
+        } else if (this.state.status === FileState.SAVED) {
+            return Icons.fileIconSmall();
+        }
+    }
+
+    render() {
+        if (this.props.alignRight) {
+            return (
+                <TouchableOpacity
+                    onPress={this.onTap.bind(this)}
+                    disabled={this.state.status === FileState.DOWNLOADING}
+                    style={styles.fileCardSmall}
+                >
+                    {this.renderSmallCard()}
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    onPress={this.onTap.bind(this)}
+                    disabled={this.state.status === FileState.DOWNLOADING}
+                    style={styles.fileCard}
+                >
+                    {this.state.status === FileState.DOWNLOADING
+                        ? this.renderActivityIndicator()
+                        : Icons.fileIcon()}
+                    {this.state.status === FileState.DOWNLOADING
+                        ? null
+                        : this.renderFileExtension()}
+                    {this.state.status === FileState.REMOTE
+                        ? this.renderDownloadIcon()
+                        : null}
+                </TouchableOpacity>
+            );
+        }
     }
 }
