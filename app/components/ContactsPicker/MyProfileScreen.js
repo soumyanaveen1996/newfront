@@ -28,6 +28,8 @@ import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
 
+const R = require('ramda');
+
 export default class MyProfileScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -53,7 +55,7 @@ export default class MyProfileScreen extends React.Component {
     gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
-                // console.log('data', userDetails.info);
+                console.log('data', userDetails.info);
                 const imageUrl =
                     config.proxy.protocol +
                     config.proxy.host +
@@ -65,16 +67,32 @@ export default class MyProfileScreen extends React.Component {
 
                 const info = { ...userDetails.info };
                 const emailArray = [];
+                let phoneArray = [];
+
+                let phoneObject = { ...info.phoneNumbers };
+
+                for (var key in phoneObject) {
+                    let tempObj = {};
+                    if (phoneObject.hasOwnProperty(key)) {
+                        const keyName = key;
+                        tempObj = {
+                            [keyName]: phoneObject[key]
+                        };
+                    }
+
+                    phoneArray.push(tempObj);
+                }
+
+                console.log('phone numbers ', phoneArray);
+
                 emailArray.push(info.emailAddress);
                 if (this.mounted) {
                     this.setState({
                         myName: info.userName,
                         emailAddress: [...emailArray],
-                        phoneNumbers: info.phoneNumbers
-                            ? [...info.phoneNumbers]
-                            : [],
-                        searchState: info.searchState || false,
-                        shareState: info.shareState || false
+                        phoneNumbers: info.phoneNumbers ? [...phoneArray] : [],
+                        searchState: info.searchable || false,
+                        shareState: info.visible || false
                     });
                 }
             })
@@ -87,40 +105,52 @@ export default class MyProfileScreen extends React.Component {
         this.mounted = false;
     }
 
-    setPhoneNumber = (number, index) => {
+    setPhoneNumber = (number, index, key) => {
         let getPhoneNumbers = [...this.state.phoneNumbers];
-        getPhoneNumbers[index].number = number;
+        getPhoneNumbers[index][key] = number;
         this.setState({ phoneNumbers: [...getPhoneNumbers] });
     };
 
     saveProfile = async () => {
-        this.setState({ loading: true });
+        // this.setState({ loading: true });
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
-            phoneNumbers: {
-                land: '',
-                mobile: '',
-                satellite: ''
-            },
             searchable: this.state.searchState,
             visible: this.state.shareState
         };
 
         let userDetails = {
             userName: this.state.myName,
-            phoneNumbers: [],
             searchState: this.state.searchState,
             shareState: this.state.shareState
         };
 
-        this.state.phoneNumbers.forEach(elem => {
-            userDetails.phoneNumbers.push(elem);
-            if (elem.text in detailObj.phoneNumbers) {
-                detailObj.phoneNumbers[elem.text] = elem.number;
-            }
-        });
+        if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
+            let phoneNum = {};
+            this.state.phoneNumbers.forEach(elem => {
+                let key;
+                let phValue;
 
-        // console.log('beforeing saving profile ', detailObj);
+                key = Object.keys(elem)[0];
+                phValue = elem[key];
+                if (elem.number === '') {
+                    console.log('its empty');
+                } else {
+                    phoneNum[key] = phValue;
+                }
+            });
+            userDetails.phoneNumbers = { ...phoneNum };
+            detailObj.phoneNumbers = { ...phoneNum };
+        }
+
+        if (
+            userDetails.phoneNumbers &&
+            Object.keys(userDetails.phoneNumbers).length === 0
+        ) {
+            delete detailObj.phoneNumbers;
+        }
+
+        console.log('beforeing saving profile ', detailObj, userDetails);
 
         const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
 
@@ -154,8 +184,10 @@ export default class MyProfileScreen extends React.Component {
 
     addNewNumber = () => {
         let number = [...this.state.phoneNumbers];
-        number.push({ label: 'Mobile', number: '', text: 'mobile' });
-        this.setState({ phoneNumbers: [...number] });
+        number.push({ mobile: '' });
+        this.setState(() => {
+            return { phoneNumbers: [...number] };
+        });
     };
 
     removephone = index => {
@@ -165,19 +197,19 @@ export default class MyProfileScreen extends React.Component {
     };
 
     getTheIcon = phoneLabel => {
-        if (phoneLabel === 'Mobile') {
+        if (phoneLabel === 'Mobile' || phoneLabel === 'mobile') {
             return (
                 <Image source={images.phone_icon} style={styles.phoneIcon} />
             );
         }
 
-        if (phoneLabel === 'Land') {
+        if (phoneLabel === 'Land' || phoneLabel === 'land') {
             return (
                 <Image source={images.phone_icon} style={styles.phoneIcon} />
             );
         }
 
-        if (phoneLabel === 'Satellite') {
+        if (phoneLabel === 'Satellite' || phoneLabel === 'satellite') {
             return (
                 <Image source={images.satellite} style={styles.satelliteIcon} />
             );
@@ -185,7 +217,17 @@ export default class MyProfileScreen extends React.Component {
     };
 
     infoRender = (type, myInfoData) => {
+        // console.log('all phones data', myInfoData);
+
         return myInfoData.map((info, index) => {
+            let key;
+            let phValue;
+
+            key = Object.keys(info)[0];
+            phValue = info[key];
+
+            console.log('all phones data', info, index, key, phValue);
+
             return (
                 <View
                     key={index}
@@ -194,7 +236,7 @@ export default class MyProfileScreen extends React.Component {
                 >
                     <View style={styles.labelContainer}>
                         {type === 'phNumber' ? (
-                            this.getTheIcon(info.label)
+                            this.getTheIcon(key)
                         ) : (
                             <Image
                                 source={images.email_icon}
@@ -202,7 +244,7 @@ export default class MyProfileScreen extends React.Component {
                             />
                         )}
                         {type === 'phNumber' ? (
-                            <Text style={styles.labelStyle}>{info.label}</Text>
+                            <Text style={styles.labelStyle}>{key}</Text>
                         ) : (
                             <Text style={styles.labelStyle}>
                                 {I18n.t('Email')}
@@ -231,13 +273,13 @@ export default class MyProfileScreen extends React.Component {
                         {type === 'phNumber' ? (
                             <TextInput
                                 style={styles.inputNumber}
-                                value={info.number}
+                                value={phValue}
                                 keyboardType="phone-pad"
                                 autoCorrect={false}
                                 maxLength={15}
                                 blurOnSubmit={false}
-                                onChangeText={val => {
-                                    this.setPhoneNumber(val, index);
+                                onChangeText={value => {
+                                    this.setPhoneNumber(value, index, key);
                                 }}
                                 underlineColorAndroid={'transparent'}
                                 placeholderTextColor="rgba(155,155,155,1)"
@@ -275,24 +317,46 @@ export default class MyProfileScreen extends React.Component {
         });
     }
 
+    fix_key(key) {
+        return key.replace(/^element_/, '');
+    }
+
     setupType(val) {
-        console.log('setting yp type ', val);
         let numbers = [...this.state.phoneNumbers];
 
         this.setState({ inviteModalVisible: false });
 
-        if (val === 'mobile') {
-            numbers[this.state.currentIndex].label = 'Mobile';
-            numbers[this.state.currentIndex].text = 'mobile';
-        }
-        if (val === 'satellite') {
-            numbers[this.state.currentIndex].label = 'Satellite';
-            numbers[this.state.currentIndex].text = 'satellite';
-        }
-        if (val === 'land') {
-            numbers[this.state.currentIndex].label = 'Land';
-            numbers[this.state.currentIndex].text = 'land';
-        }
+        let currentJson = numbers[this.state.currentIndex];
+
+        let newObj = {};
+
+        let key;
+        let phValue;
+
+        key = Object.keys(currentJson)[0];
+        phValue = currentJson[key];
+
+        newObj = {
+            [val]: phValue
+        };
+        numbers.splice(this.state.currentIndex, 1);
+
+        numbers[this.state.currentIndex] = newObj;
+
+        this.setState({ phoneNumbers: [...numbers] });
+
+        // if (val === 'mobile') {
+        //     numbers[this.state.currentIndex].label = 'Mobile';
+        //     numbers[this.state.currentIndex].text = 'mobile';
+        // }
+        // if (val === 'satellite') {
+        //     numbers[this.state.currentIndex].label = 'Satellite';
+        //     numbers[this.state.currentIndex].text = 'satellite';
+        // }
+        // if (val === 'land') {
+        //     numbers[this.state.currentIndex].label = 'Land';
+        //     numbers[this.state.currentIndex].text = 'land';
+        // }
     }
 
     async sendImage(imageUri, base64) {
@@ -417,7 +481,7 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
-        // console.log('profile image', this.props.userId);
+        console.log('phone NUmber', this.state.phoneNumbers);
 
         return (
             <SafeAreaView style={styles.safeAreaStyle}>

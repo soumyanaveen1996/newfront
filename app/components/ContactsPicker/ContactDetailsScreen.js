@@ -151,9 +151,13 @@ export default class ContactDetailsScreen extends React.Component {
             Contact.getAddedContacts().then(contactsData => {
                 let updateContacts = contactsData.map(elem => {
                     if (elem.userId === this.props.contact.id) {
-                        elem.phoneNumbers.local = localPhone;
+                        const localPhonePath = R.lensPath([
+                            'phoneNumbers',
+                            'local'
+                        ]);
+                        elem = R.set(localPhonePath, localPhone, elem);
+                        // elem.phoneNumbers.local = localPhone;
                     }
-
                     return elem;
                 });
                 Contact.saveContacts(updateContacts).then(() => {
@@ -442,7 +446,10 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderFooterButtons() {
-        if (this.props.contact.isWaitingForConfirmation) {
+        if (
+            this.props.contact.isWaitingForConfirmation ||
+            !this.props.contact.emails[0].email
+        ) {
             return <View />;
         }
         return (
@@ -476,7 +483,10 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderEmails() {
-        if (!this.props.contact.isWaitingForConfirmation) {
+        if (
+            !this.props.contact.isWaitingForConfirmation &&
+            this.props.contact.emails[0].email
+        ) {
             return _.map(this.props.contact.emails, () =>
                 this.renderDetailRow(
                     'email',

@@ -176,7 +176,7 @@ export default class ConversationContext {
                     participants: [user.userId],
                     onChannels: [],
                     closed: false,
-                    conversationContext: constants.SOURCE
+                    client: constants.SOURCE
                 };
                 resolve(context);
             } else {
@@ -187,7 +187,7 @@ export default class ConversationContext {
                     participantsInfo: [],
                     participants: [],
                     onChannels: [],
-                    conversationContext: constants.SOURCE,
+                    client: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);
@@ -211,7 +211,7 @@ export default class ConversationContext {
                             userDomain: channel.userDomain
                         }
                     ],
-                    conversationContext: constants.SOURCE,
+                    client: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);
@@ -221,7 +221,7 @@ export default class ConversationContext {
                     participantsInfo: [],
                     participants: [],
                     onChannels: [],
-                    conversationContext: constants.SOURCE,
+                    client: constants.SOURCE,
                     closed: false
                 };
                 resolve(context);
