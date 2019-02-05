@@ -68,22 +68,23 @@ export default class MyProfileScreen extends React.Component {
                 const info = { ...userDetails.info };
                 const emailArray = [];
                 let phoneArray = [];
+                if (info.phoneNumbers) {
+                    if (Array.isArray(info.phoneNumbers)) {
+                        phoneArray = [...info.phoneNumbers];
+                    } else {
+                        let phoneObject = { ...info.phoneNumbers };
 
-                if (Array.isArray(info.phoneNumbers)) {
-                    phoneArray = [...info.phoneNumbers];
-                } else {
-                    let phoneObject = { ...info.phoneNumbers };
+                        for (var key in phoneObject) {
+                            let tempObj = {};
+                            if (phoneObject.hasOwnProperty(key)) {
+                                const keyName = key;
+                                tempObj = {
+                                    [keyName]: phoneObject[key]
+                                };
+                            }
 
-                    for (var key in phoneObject) {
-                        let tempObj = {};
-                        if (phoneObject.hasOwnProperty(key)) {
-                            const keyName = key;
-                            tempObj = {
-                                [keyName]: phoneObject[key]
-                            };
+                            phoneArray.push(tempObj);
                         }
-
-                        phoneArray.push(tempObj);
                     }
                 }
 
