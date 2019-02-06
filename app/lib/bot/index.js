@@ -31,7 +31,12 @@ class Bot extends events.EventEmitter {
             );
         }
 
-        await bot.Load();
+        try {
+            await bot.Load();
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     };
 
     static update = async bot => {
