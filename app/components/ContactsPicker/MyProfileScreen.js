@@ -27,14 +27,34 @@ import ActionSheet from '@yfuks/react-native-action-sheet';
 import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
+import { HeaderBack } from '../Header';
 
 const R = require('ramda');
 
 export default class MyProfileScreen extends React.Component {
+    static navigationOptions({ navigation, screenProps }) {
+        return {
+            headerTitle:
+                navigation.state.params.title || headerConfig.headerTitle,
+            headerLeft: (
+                <HeaderBack
+                    onPress={() => {
+                        Actions.pop();
+                        setTimeout(() => {
+                            Actions.refresh({
+                                key: Math.random()
+                            });
+                        }, 100);
+                    }}
+                />
+            )
+        };
+    }
     constructor(props) {
         super(props);
         this.state = {
             profileImage: '',
+            reloadProfileImage: '',
             userId: this.props.userId,
             myName: '',
             phoneNumbers: [],
@@ -168,7 +188,9 @@ export default class MyProfileScreen extends React.Component {
             Auth.updateUserDetails(userDetails)
                 .then(data => {
                     this.setState({ loading: false });
-                    Actions.pop();
+                    setTimeout(() => {
+                        this.showAlert('Profile updated');
+                    }, 200);
                 })
                 .catch(err => {
                     this.setState({ loading: false });
@@ -343,19 +365,6 @@ export default class MyProfileScreen extends React.Component {
         numbers[this.state.currentIndex] = newObj;
 
         this.setState({ phoneNumbers: [...numbers] });
-
-        // if (val === 'mobile') {
-        //     numbers[this.state.currentIndex].label = 'Mobile';
-        //     numbers[this.state.currentIndex].text = 'mobile';
-        // }
-        // if (val === 'satellite') {
-        //     numbers[this.state.currentIndex].label = 'Satellite';
-        //     numbers[this.state.currentIndex].text = 'satellite';
-        // }
-        // if (val === 'land') {
-        //     numbers[this.state.currentIndex].label = 'Land';
-        //     numbers[this.state.currentIndex].text = 'land';
-        // }
     }
 
     async sendImage(imageUri, base64) {
@@ -391,12 +400,12 @@ export default class MyProfileScreen extends React.Component {
                     this.setState(
                         {
                             loading: false,
-                            userId: this.props.userId
+                            reloadProfileImage: imageUri
                         },
                         () => {
                             this.props.updateContactScreen();
                             setTimeout(() => {
-                                this.showAlert();
+                                this.showAlert('Profile image updated');
                             }, 200);
                         }
                     );
@@ -404,10 +413,10 @@ export default class MyProfileScreen extends React.Component {
             });
     }
 
-    showAlert() {
+    showAlert(msg) {
         Alert.alert(
             '',
-            'Profile image updated',
+            msg,
             [
                 {
                     text: 'OK',
@@ -480,6 +489,8 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
+        console.log('image url ', this.state.reloadProfileImage);
+
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={{ flex: 1 }}>
@@ -499,13 +510,29 @@ export default class MyProfileScreen extends React.Component {
                                     borderRadius: 60
                                 }}
                             >
-                                <ProfileImage
-                                    uuid={this.state.userId}
-                                    placeholder={images.user_image}
-                                    style={styles.profilePic}
-                                    placeholderStyle={styles.profileImgStyle}
-                                    resizeMode="cover"
-                                />
+                                {this.state.reloadProfileImage ? (
+                                    <Image
+                                        source={{
+                                            uri: this.state.reloadProfileImage
+                                        }}
+                                        style={styles.profileImgStyle}
+                                    />
+                                ) : (
+                                    <ProfileImage
+                                        uuid={this.state.userId}
+                                        placeholder={images.user_image}
+                                        style={styles.profilePic}
+                                        placeholderStyle={
+                                            styles.profileImgStyle
+                                        }
+                                        resizeMode="cover"
+                                        changeProfileImageBack={() => {
+                                            this.changeProfileStatuBack.bind(
+                                                this
+                                            );
+                                        }}
+                                    />
+                                )}
                             </View>
                             <TouchableOpacity
                                 style={{
@@ -651,7 +678,9 @@ export default class MyProfileScreen extends React.Component {
                         <View style={styles.btn_container}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    Actions.pop();
+                                    Actions.pop(
+                                        this.props.updateContactScreen()
+                                    );
                                 }}
                                 style={styles.cancel_btn}
                             >

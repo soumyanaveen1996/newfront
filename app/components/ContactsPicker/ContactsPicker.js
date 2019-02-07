@@ -219,7 +219,6 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-
         // if (user.contactsLoaded === false) {
         //     Contact.refreshContacts()
         // }
@@ -281,7 +280,7 @@ class ContactsPicker extends React.Component {
     };
 
     onBack = () => {
-        // this.refresh()
+        this.onDataUpdate();
     };
 
     refresh = () => {
@@ -610,6 +609,8 @@ class ContactsPicker extends React.Component {
         );
     };
     render() {
+        // console.log('all contact data', this.state.contactsData);
+
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
