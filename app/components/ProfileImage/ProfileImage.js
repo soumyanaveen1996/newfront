@@ -31,7 +31,8 @@ export default class ProfileImage extends React.Component {
                 if (this.mounted) {
                     this.setState({
                         source: { uri: path },
-                        style: this.props.placeholderStyle
+                        style: this.props.placeholderStyle,
+                        loaded: true
                     });
                 }
                 ImageCache.imageCacheManager.checkAndUpdateIfModified(
