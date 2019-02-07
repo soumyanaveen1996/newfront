@@ -115,6 +115,7 @@ export default class ImageCacheManager {
 
     isLastCheckedWithinThreshold(uri) {
         // Not checking if previously checked in last 2 hours.
+        return false;
         if (
             this.lastChecked[uri] &&
             moment().diff(this.lastChecked[uri]) < 2 * 60 * 60 * 1000
