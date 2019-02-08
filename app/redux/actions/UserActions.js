@@ -63,3 +63,7 @@ export const setNetwork = payload => ({
     type: Actions.SET_NETWORK,
     payload
 });
+
+export const uploadImage = () => ({
+    type: Actions.UPLOAD_IMAGE
+});

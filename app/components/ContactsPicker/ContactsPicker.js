@@ -59,6 +59,7 @@ import {
 import images from '../../config/images';
 import { EmptyContact } from '.';
 import ProfileImage from '../ProfileImage';
+import { MyProfileImage } from '../ProfileImage';
 import config from '../../config/config';
 
 class ContactsPicker extends React.Component {
@@ -504,7 +505,7 @@ class ContactsPicker extends React.Component {
                     }}
                 >
                     <View style={styles.myProfileItemContainer}>
-                        <ProfileImage
+                        <MyProfileImage
                             uuid={this.state.userId}
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}

@@ -27,11 +27,14 @@ import ActionSheet from '@yfuks/react-native-action-sheet';
 import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
+import { MyProfileImage } from '../ProfileImage';
 import { HeaderBack } from '../Header';
+import { connect } from 'react-redux';
+import { uploadImage } from '../../redux/actions/UserActions';
 
 const R = require('ramda');
 
-export default class MyProfileScreen extends React.Component {
+class MyProfileScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         return {
             headerTitle:
@@ -369,6 +372,7 @@ export default class MyProfileScreen extends React.Component {
 
     async sendImage(imageUri, base64) {
         // console.log('images ', imageUri);
+        this.props.uploadImage();
         this.setState({ loading: true });
         const PROFILE_PIC_BUCKET = 'profile-pics';
         const toUri = await Utils.copyFileAsync(
@@ -387,6 +391,7 @@ export default class MyProfileScreen extends React.Component {
                     user.userId,
                     ResourceTypes.Image,
                     user,
+                    true,
                     true
                 );
             })
@@ -518,7 +523,7 @@ export default class MyProfileScreen extends React.Component {
                                         style={styles.profileImgStyle}
                                     />
                                 ) : (
-                                    <ProfileImage
+                                    <MyProfileImage
                                         uuid={this.state.userId}
                                         placeholder={images.user_image}
                                         style={styles.profilePic}
@@ -705,3 +710,18 @@ export default class MyProfileScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        uploadImage: () => dispatch(uploadImage())
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MyProfileScreen);

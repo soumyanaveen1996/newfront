@@ -5,8 +5,9 @@ import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
 import styles from './styles';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
-export default class ProfileImage extends React.Component {
+class MyProfileImage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,6 +20,8 @@ export default class ProfileImage extends React.Component {
     }
 
     async componentDidMount() {
+        console.log('In Profile Image>>>>>>>>>>>>>', this.props.user.upload);
+        const uploadNumber = this.props.user.upload;
         this.mounted = true;
         const user = await Auth.getUser();
         if (!user) {
@@ -27,7 +30,9 @@ export default class ProfileImage extends React.Component {
         let uri = this.getUri();
         let headers = utils.s3DownloadHeaders(uri, user) || undefined;
         if (uri && this.isRemoteUri(uri)) {
-            let path = await this.getImagePathFromCache(uri);
+            let path = await this.getImagePathFromCache(
+                uploadNumber > 0 ? `${uri}?u=${uploadNumber}` : uri
+            );
             if (path) {
                 if (this.mounted) {
                     this.setState({
@@ -123,3 +128,16 @@ export default class ProfileImage extends React.Component {
         }
     };
 }
+
+const mapStateToProps = state => ({
+    user: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MyProfileImage);
