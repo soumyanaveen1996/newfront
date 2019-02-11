@@ -7,7 +7,8 @@ import {
     Platform,
     Image,
     SafeAreaView,
-    Alert
+    Alert,
+    LayoutAnimation
 } from 'react-native';
 import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
@@ -25,6 +26,8 @@ import Icons from '../../config/icons';
 import images from '../../config/images';
 import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
+import ContextSlideshow from './ContextSlideshow';
+import ChatModal from '../ChatBotScreen/ChatModal';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
@@ -105,7 +108,11 @@ export default class MapView extends React.Component {
         this.state = {
             userTrackingMode:
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
-            locateUserButtonIcon: Icons.userPosition()
+            locateUserButtonIcon: Icons.userPosition(),
+            slideshowOpen: false,
+            slideshowContext: [],
+            chatModalContent: {},
+            isModalVisible: false
         };
         const vesselsPositions = _.map(this.props.mapData.markers, marker => {
             const position = [
@@ -451,11 +458,49 @@ export default class MapView extends React.Component {
         );
     }
 
+    closeAndOpenSlideshow() {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState({ slideshowOpen: !this.state.slideshowOpen });
+    }
+
+    renderChatModal() {
+        return (
+            <ChatModal
+                content={this.state.chatModalContent}
+                isVisible={this.state.isModalVisible}
+                backdropOpacity={0.1}
+                onBackButtonPress={this.hideChatModal.bind(this)}
+                onBackdropPress={() => this.setState({ isModalVisible: false })}
+                style={{ justifyContent: 'center', alignItems: 'center' }}
+            />
+        );
+    }
+
+    hideChatModal() {
+        this.setState({ isModalVisible: false });
+    }
+
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
+    }
+
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 {this.renderMap()}
                 {this.renderButtons()}
+                <ContextSlideshow
+                    contentData={this.state.slideshowContext}
+                    isOpen={this.state.slideshowOpen}
+                    closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
+                        this
+                    )}
+                    onDataCardSelected={this.openModalWithContent.bind(this)}
+                />
+                {this.renderChatModal()}
             </SafeAreaView>
         );
     }

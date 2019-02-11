@@ -96,6 +96,33 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 4
+    },
+
+    //CONTEXT SLIDESHOW
+    CSContainer: {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        right: 0,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch'
+    },
+    smallCard: {
+        height: 130,
+        width: 130,
+        marginHorizontal: 10,
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        backgroundColor: GlobalColors.white
+    },
+    bigCard: {
+        height: 180,
+        width: 280,
+        marginHorizontal: 10,
+        borderRadius: 12,
+        backgroundColor: GlobalColors.white
     }
 });
 
