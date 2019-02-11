@@ -62,8 +62,8 @@ class MyProfileScreen extends React.Component {
             myName: '',
             phoneNumbers: [],
             emailAddress: [],
-            searchState: false,
-            shareState: false,
+            searchable: false,
+            visible: false,
             inviteModalVisible: false,
             currentIndex: null,
             loading: false
@@ -78,7 +78,7 @@ class MyProfileScreen extends React.Component {
     gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
-                console.log('data', userDetails.info);
+                // console.log('data', userDetails.info);
                 const imageUrl =
                     config.proxy.protocol +
                     config.proxy.host +
@@ -117,8 +117,8 @@ class MyProfileScreen extends React.Component {
                         myName: info.userName,
                         emailAddress: [...emailArray],
                         phoneNumbers: info.phoneNumbers ? [...phoneArray] : [],
-                        searchState: info.searchable || false,
-                        shareState: info.visible || false
+                        searchable: info.searchable || false,
+                        visible: info.visible || false
                     });
                 }
             })
@@ -141,14 +141,14 @@ class MyProfileScreen extends React.Component {
         // this.setState({ loading: true });
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
-            searchable: this.state.searchState,
-            visible: this.state.shareState
+            searchable: this.state.searchable,
+            visible: this.state.visible
         };
 
         let userDetails = {
             userName: this.state.myName,
-            searchState: this.state.searchState,
-            shareState: this.state.shareState
+            searchable: this.state.searchable,
+            visible: this.state.visible
         };
 
         if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
@@ -176,7 +176,7 @@ class MyProfileScreen extends React.Component {
             delete detailObj.phoneNumbers;
         }
 
-        // console.log('beforeing saving profile ', detailObj, userDetails);
+        console.log('beforeing saving profile ', detailObj, userDetails);
 
         const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
 
@@ -190,6 +190,8 @@ class MyProfileScreen extends React.Component {
         } else {
             Auth.updateUserDetails(userDetails)
                 .then(data => {
+                    // console.log('saved data ', data);
+
                     this.setState({ loading: false });
                     setTimeout(() => {
                         this.showAlert('Profile updated');
@@ -630,19 +632,19 @@ class MyProfileScreen extends React.Component {
                                 </Text>
                                 <Switch
                                     style={styles.switchStyle}
-                                    value={this.state.searchState}
+                                    value={this.state.searchable}
                                     onValueChange={val => {
-                                        let stateTint = this.state.searchState;
+                                        let stateTint = this.state.searchable;
                                         stateTint = !stateTint;
                                         this.setState({
-                                            searchState: stateTint
+                                            searchable: stateTint
                                         });
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
                                     // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
-                                        this.state.searchState
+                                        this.state.searchable
                                             ? 'rgba(0,189,242,1)'
                                             : 'rgba(102,102,102,1)'
                                     }
@@ -661,19 +663,19 @@ class MyProfileScreen extends React.Component {
                                 </Text>
                                 <Switch
                                     style={styles.switchStyle}
-                                    value={this.state.shareState}
+                                    value={this.state.visible}
                                     onValueChange={val => {
-                                        let stateTint = this.state.shareState;
+                                        let stateTint = this.state.visible;
                                         stateTint = !stateTint;
                                         this.setState({
-                                            shareState: stateTint
+                                            visible: stateTint
                                         });
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
                                     // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
-                                        this.state.shareState
+                                        this.state.visible
                                             ? 'rgba(0,189,242,1)'
                                             : 'rgba(102,102,102,1)'
                                     }

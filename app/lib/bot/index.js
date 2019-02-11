@@ -174,6 +174,8 @@ class Bot extends events.EventEmitter {
                         response.data.content &&
                         response.data.content.length > 0
                     ) {
+                        console.log('installing bot ', response.data);
+
                         return Promise.all(response.data.content);
                     } else {
                         reject(null);
