@@ -14,7 +14,7 @@ import Bot from '../../../lib/bot/index';
 import { SafeAreaView } from 'react-navigation';
 import Loader from '../../Loader/Loader';
 import images from '../../../images';
-import { Media } from '../../../lib/capability';
+import { Media, RemoteBotInstall } from '../../../lib/capability';
 
 export default class NewProviderPopup extends Component {
     constructor(props) {
@@ -54,9 +54,16 @@ export default class NewProviderPopup extends Component {
                 this.setState({ loading: false });
                 this.setState({ wrongCode: true, apiError: false });
             } else {
-                this.setState({ loading: false, apiError: false });
-                this.cancelNewProvider();
-                this.props.onSubmit();
+                RemoteBotInstall.syncronizeBots()
+                    .then(data => {
+                        this.setState({ loading: false, apiError: false });
+                        // console.log('lets see the data ', data);
+                        this.cancelNewProvider();
+                        this.props.onSubmit();
+                    })
+                    .catch(err => {
+                        console.log('error occured ', err);
+                    });
             }
         } catch (e) {
             this.setState({ loading: false });

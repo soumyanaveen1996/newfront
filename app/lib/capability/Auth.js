@@ -551,8 +551,8 @@ export default class Auth {
                 if (user) {
                     user.info.userName = details.userName || user.info.userName;
                     user.info.phoneNumbers = details.phoneNumbers || {};
-                    user.info.searchState = details.searchState || false;
-                    user.info.shareState = details.shareState || false;
+                    user.info.searchable = details.searchable || false;
+                    user.info.visible = details.visible || false;
 
                     // user.info.surname = details.surname || user.info.surname;
                     // user.info.givenName =

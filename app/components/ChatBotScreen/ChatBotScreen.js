@@ -5,6 +5,7 @@ import {
     FlatList,
     Keyboard,
     KeyboardAvoidingView,
+    TouchableWithoutFeedback,
     RefreshControl,
     View,
     Alert,
@@ -1869,41 +1870,47 @@ class ChatBotScreen extends React.Component {
         return (
             <View>
                 {this.state.showOptions && (
-                    <View style={chatStyles.moreOptionContainer}>
-                        {moreOptions.map((elem, index) => {
-                            return (
-                                <TouchableOpacity
-                                    key={index}
-                                    disabled={
-                                        elem.key ===
-                                        BotInputBarCapabilities.share_contact
-                                    }
-                                    onPress={() => {
-                                        this.selectOption(elem.key);
-                                    }}
-                                    style={chatStyles.optionContainer}
-                                >
-                                    <View
-                                        style={
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            // console.log('more option');
+                            this.setState({ showOptions: true });
+                        }}
+                    >
+                        <View style={chatStyles.moreOptionContainer}>
+                            {moreOptions.map((elem, index) => {
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        disabled={
                                             elem.key ===
                                             BotInputBarCapabilities.share_contact
-                                                ? chatStyles.moreOptionImageContainerHide
-                                                : chatStyles.moreOptionImageContainer
                                         }
+                                        onPress={() => {
+                                            this.selectOption(elem.key);
+                                        }}
+                                        style={chatStyles.optionContainer}
                                     >
-                                        <Image
-                                            style={elem.imageStyle}
-                                            source={elem.imageSource}
-                                        />
-                                    </View>
-                                    <Text style={chatStyles.optionText}>
-                                        {elem.label}
-                                    </Text>
-                                </TouchableOpacity>
-                            );
-                        })}
+                                        <View
+                                            style={
+                                                elem.key ===
+                                                BotInputBarCapabilities.share_contact
+                                                    ? chatStyles.moreOptionImageContainerHide
+                                                    : chatStyles.moreOptionImageContainer
+                                            }
+                                        >
+                                            <Image
+                                                style={elem.imageStyle}
+                                                source={elem.imageSource}
+                                            />
+                                        </View>
+                                        <Text style={chatStyles.optionText}>
+                                            {elem.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
 
-                        {/* <TouchableOpacity
+                            {/* <TouchableOpacity
                             onPress={() => {
                                 this.selectOption(
                                     BotInputBarCapabilities.camera
@@ -2003,7 +2010,8 @@ class ChatBotScreen extends React.Component {
                             </View>
                             <Text style={chatStyles.optionText}>Location</Text>
                         </TouchableOpacity> */}
-                    </View>
+                        </View>
+                    </TouchableWithoutFeedback>
                 )}
 
                 <ChatInputBar
@@ -2104,47 +2112,55 @@ class ChatBotScreen extends React.Component {
                     accessibilityLabel="Messages List"
                     testID="messages-list"
                 >
-                    <KeyboardAvoidingView
-                        style={chatStyles.container}
-                        behavior={Platform.OS === 'ios' ? 'padding' : null}
-                        keyboardVerticalOffset={
-                            Constants.DEFAULT_HEADER_HEIGHT +
-                            (Utils.isiPhoneX() ? 24 : 0)
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                showOptions: !this.state.showOptions
+                            })
                         }
                     >
-                        <FlatList
-                            style={chatStyles.messagesList}
-                            ListFooterComponent={this.renderSmartSuggestions()}
-                            accessibilityLabel="Messages List"
-                            testID="messages-list"
-                            ref={list => {
-                                this.chatList = list;
-                                this.checkForScrolling();
-                            }}
-                            data={AllMessages}
-                            renderItem={this.renderItem.bind(this)}
-                            onLayout={this.onChatListLayout.bind(this)}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={['#9Bd35A', '#689F38']}
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={this.onRefresh.bind(this)}
-                                />
+                        <KeyboardAvoidingView
+                            style={chatStyles.container}
+                            behavior={Platform.OS === 'ios' ? 'padding' : null}
+                            keyboardVerticalOffset={
+                                Constants.DEFAULT_HEADER_HEIGHT +
+                                (Utils.isiPhoneX() ? 24 : 0)
                             }
-                            onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
-                                this
-                            )}
-                        />
-                        {this.state.showSlider ? this.renderSlider() : null}
-                        {/* {this.renderSmartSuggestions()} */}
-                        <View style={{ alignItems: 'center' }}>
-                            {this.renderChatInputBar()}
-                        </View>
+                        >
+                            <FlatList
+                                style={chatStyles.messagesList}
+                                ListFooterComponent={this.renderSmartSuggestions()}
+                                accessibilityLabel="Messages List"
+                                testID="messages-list"
+                                ref={list => {
+                                    this.chatList = list;
+                                    this.checkForScrolling();
+                                }}
+                                data={AllMessages}
+                                renderItem={this.renderItem.bind(this)}
+                                onLayout={this.onChatListLayout.bind(this)}
+                                refreshControl={
+                                    <RefreshControl
+                                        colors={['#9Bd35A', '#689F38']}
+                                        refreshing={this.state.refreshing}
+                                        onRefresh={this.onRefresh.bind(this)}
+                                    />
+                                }
+                                onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
+                                    this
+                                )}
+                            />
+                            {this.state.showSlider ? this.renderSlider() : null}
+                            {/* {this.renderSmartSuggestions()} */}
+                            <View style={{ alignItems: 'center' }}>
+                                {this.renderChatInputBar()}
+                            </View>
 
-                        {this.renderNetworkStatusBar()}
-                        {/* {this.renderCallModal()} */}
-                        {this.renderChatModal()}
-                    </KeyboardAvoidingView>
+                            {this.renderNetworkStatusBar()}
+                            {/* {this.renderCallModal()} */}
+                            {this.renderChatModal()}
+                        </KeyboardAvoidingView>
+                    </TouchableWithoutFeedback>
                 </BackgroundImage>
             </SafeAreaView>
         );
