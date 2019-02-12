@@ -95,6 +95,8 @@ export default class BotInstallListItem extends React.Component {
                 await Bot.install(dceBot);
             }
         } catch (e) {
+            console.error('bot not installed ', e);
+
             throw e;
         }
     }
@@ -188,6 +190,10 @@ export default class BotInstallListItem extends React.Component {
 
     render() {
         const bot = this.props.bot;
+
+        // console.log('bot name : ', bot);
+        // console.log('bot status :', this.state.status);
+        // console.log('installed bot :', this.props.installedBots);
 
         return (
             <TouchableOpacity

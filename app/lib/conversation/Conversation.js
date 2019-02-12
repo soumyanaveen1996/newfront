@@ -300,6 +300,42 @@ export default class Conversation {
     static deleteChannelConversation = conversationId =>
         Conversation.removeConversation(conversationId, CHANNEL_CHAT);
 
+    static deleteContacts = body => {
+        console.log('sending data for delete before', body);
+        let currentUserId;
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        currentUserId = user.userId;
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.proxy.deleteContacts}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                ...body
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(async response => {
+                    console.log('response fav ', response);
+                    const otherUserId = body.users[0];
+                    return Promise.resolve({
+                        otherUserId,
+                        currentUserId
+                    });
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    };
+
     static updateConversation = (oldConversationId, newConversationId) =>
         new Promise((resolve, reject) => {
             ConversationDAO.updateConversationId(

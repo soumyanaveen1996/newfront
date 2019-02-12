@@ -56,7 +56,7 @@ const insertChannel = (
                 channelSql.insertChannel,
                 args,
                 function success(tx2, res) {
-                    console.log('res : ', res);
+                    // console.log('res : ', res);
                     return resolve(+res.insertId || 0);
                 },
                 function failure(tx3, err) {
