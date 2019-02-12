@@ -2,6 +2,9 @@ import { AssetFetcher } from '../dce';
 import Auth from './Auth';
 import ImageCache from '../../lib/image_cache';
 import ImageResizer from 'react-native-image-resizer';
+import { lastDayOfISOWeek } from 'date-fns';
+import moment from 'moment';
+import Store from '../../redux/store/configureStore';
 
 export const ResourceTypes = {
     Image: 'image',
@@ -30,7 +33,8 @@ export default class Resource {
         filenameWithoutExtension,
         resourceType,
         user = undefined,
-        clearCache = false
+        clearCache = false,
+        forceReload = false
     ) {
         if (!user) {
             user = await Auth.getUser();
@@ -84,9 +88,19 @@ export default class Resource {
             extension,
             user
         );
+        const reduxState = Store.getState();
+        console.log('Upload Number>>>>>>>>>>>>>>>>', reduxState.user.upload);
+        const uploadNumber = reduxState.user.upload;
         if (res && resourceType === ResourceTypes.Image) {
             if (clearCache) {
-                await ImageCache.imageCacheManager.removeFromCache(res);
+                let delImagePath =
+                    uploadNumber > 1 ? `${res}?u=${uploadNumber - 1}` : res;
+                await ImageCache.imageCacheManager.removeFromCache(
+                    delImagePath
+                );
+            }
+            if (forceReload) {
+                res = `${res}?u=${uploadNumber}`;
             }
             await ImageCache.imageCacheManager.storeIncache(res, fileUri);
         }

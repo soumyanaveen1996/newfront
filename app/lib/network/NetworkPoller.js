@@ -8,7 +8,7 @@ import EventEmitter, {
     PollingStrategyEvents,
     SatelliteConnectionEvents
 } from '../events';
-import { AppState, Platform } from 'react-native';
+import { AppState, Platform, InteractionManager } from 'react-native';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 import BackgroundTask from 'react-native-background-task';
 import RNEventSource from 'react-native-event-source';
@@ -381,11 +381,13 @@ class NetworkPoller {
     };
 
     process = () => {
-        NetworkHandler.poll();
-        BackgroundTaskProcessor.process();
+        setTimeout(() => NetworkHandler.poll(), 1000);
+        setTimeout(() => BackgroundTaskProcessor.process(), 5000);
     };
     clearQueue = () => {
-        NetworkDAO.deleteAllRows();
+        InteractionManager.runAfterInteractions(() => {
+            setTimeout(() => NetworkDAO.deleteAllRows(), 500);
+        });
     };
 }
 

@@ -316,7 +316,17 @@ class BotStoreScreen extends React.Component {
     };
 
     onSubmit = () => {
-        this.updateCatalog();
+        // this.updateCatalog();
+        this.setState({ selectedIndex: 2 });
+        this.refresh();
+
+        // setTimeout(() => {
+        //     this.setState({ selectedIndex: 2 });
+        //     this.refresh();
+        //     Actions.refresh({
+        //         key: Math.random()
+        //     });
+        // }, 2000);
     };
 
     qrCodeSubmit = code => {

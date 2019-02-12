@@ -28,6 +28,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ refreshUserEmail: action.payload } };
     case Actions.SET_NETWORK:
         return { ...state, ...{ network: action.payload } };
+    case Actions.UPLOAD_IMAGE:
+        return { ...state, ...{ upload: state.upload + 1 } };
     default:
         return state;
     }

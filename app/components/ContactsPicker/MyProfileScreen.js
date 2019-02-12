@@ -27,20 +27,43 @@ import ActionSheet from '@yfuks/react-native-action-sheet';
 import I18n from '../../config/i18n/i18n';
 import Constants from '../../config/constants';
 import ProfileImage from '../ProfileImage';
+import { MyProfileImage } from '../ProfileImage';
+import { HeaderBack } from '../Header';
+import { connect } from 'react-redux';
+import { uploadImage } from '../../redux/actions/UserActions';
 
 const R = require('ramda');
 
-export default class MyProfileScreen extends React.Component {
+class MyProfileScreen extends React.Component {
+    static navigationOptions({ navigation, screenProps }) {
+        return {
+            headerTitle:
+                navigation.state.params.title || headerConfig.headerTitle,
+            headerLeft: (
+                <HeaderBack
+                    onPress={() => {
+                        Actions.pop();
+                        setTimeout(() => {
+                            Actions.refresh({
+                                key: Math.random()
+                            });
+                        }, 100);
+                    }}
+                />
+            )
+        };
+    }
     constructor(props) {
         super(props);
         this.state = {
             profileImage: '',
+            reloadProfileImage: '',
             userId: this.props.userId,
             myName: '',
             phoneNumbers: [],
             emailAddress: [],
-            searchState: false,
-            shareState: false,
+            searchable: false,
+            visible: false,
             inviteModalVisible: false,
             currentIndex: null,
             loading: false
@@ -55,7 +78,7 @@ export default class MyProfileScreen extends React.Component {
     gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
-                console.log('data', userDetails.info);
+                // console.log('data', userDetails.info);
                 const imageUrl =
                     config.proxy.protocol +
                     config.proxy.host +
@@ -68,22 +91,25 @@ export default class MyProfileScreen extends React.Component {
                 const info = { ...userDetails.info };
                 const emailArray = [];
                 let phoneArray = [];
+                if (info.phoneNumbers) {
+                    if (Array.isArray(info.phoneNumbers)) {
+                        phoneArray = [...info.phoneNumbers];
+                    } else {
+                        let phoneObject = { ...info.phoneNumbers };
 
-                let phoneObject = { ...info.phoneNumbers };
+                        for (var key in phoneObject) {
+                            let tempObj = {};
+                            if (phoneObject.hasOwnProperty(key)) {
+                                const keyName = key;
+                                tempObj = {
+                                    [keyName]: phoneObject[key]
+                                };
+                            }
 
-                for (var key in phoneObject) {
-                    let tempObj = {};
-                    if (phoneObject.hasOwnProperty(key)) {
-                        const keyName = key;
-                        tempObj = {
-                            [keyName]: phoneObject[key]
-                        };
+                            phoneArray.push(tempObj);
+                        }
                     }
-
-                    phoneArray.push(tempObj);
                 }
-
-                console.log('phone numbers ', phoneArray);
 
                 emailArray.push(info.emailAddress);
                 if (this.mounted) {
@@ -91,8 +117,8 @@ export default class MyProfileScreen extends React.Component {
                         myName: info.userName,
                         emailAddress: [...emailArray],
                         phoneNumbers: info.phoneNumbers ? [...phoneArray] : [],
-                        searchState: info.searchable || false,
-                        shareState: info.visible || false
+                        searchable: info.searchable || false,
+                        visible: info.visible || false
                     });
                 }
             })
@@ -115,14 +141,14 @@ export default class MyProfileScreen extends React.Component {
         // this.setState({ loading: true });
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
-            searchable: this.state.searchState,
-            visible: this.state.shareState
+            searchable: this.state.searchable,
+            visible: this.state.visible
         };
 
         let userDetails = {
             userName: this.state.myName,
-            searchState: this.state.searchState,
-            shareState: this.state.shareState
+            searchable: this.state.searchable,
+            visible: this.state.visible
         };
 
         if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
@@ -164,8 +190,12 @@ export default class MyProfileScreen extends React.Component {
         } else {
             Auth.updateUserDetails(userDetails)
                 .then(data => {
+                    // console.log('saved data ', data);
+
                     this.setState({ loading: false });
-                    Actions.pop();
+                    setTimeout(() => {
+                        this.showAlert('Profile updated');
+                    }, 200);
                 })
                 .catch(err => {
                     this.setState({ loading: false });
@@ -176,7 +206,6 @@ export default class MyProfileScreen extends React.Component {
 
     selectNumberType = index => {
         this.setState({ currentIndex: index });
-        console.log('select type');
         this.setState({
             inviteModalVisible: !this.state.inviteModalVisible
         });
@@ -217,16 +246,16 @@ export default class MyProfileScreen extends React.Component {
     };
 
     infoRender = (type, myInfoData) => {
-        // console.log('all phones data', myInfoData);
-
         return myInfoData.map((info, index) => {
+            // console.log('all th data ', info);
+
             let key;
             let phValue;
 
-            key = Object.keys(info)[0];
-            phValue = info[key];
-
-            console.log('all phones data', info, index, key, phValue);
+            if (type === 'phNumber') {
+                key = Object.keys(info)[0];
+                phValue = info[key];
+            }
 
             return (
                 <View
@@ -323,13 +352,10 @@ export default class MyProfileScreen extends React.Component {
 
     setupType(val) {
         let numbers = [...this.state.phoneNumbers];
-
         this.setState({ inviteModalVisible: false });
 
         let currentJson = numbers[this.state.currentIndex];
-
         let newObj = {};
-
         let key;
         let phValue;
 
@@ -344,23 +370,11 @@ export default class MyProfileScreen extends React.Component {
         numbers[this.state.currentIndex] = newObj;
 
         this.setState({ phoneNumbers: [...numbers] });
-
-        // if (val === 'mobile') {
-        //     numbers[this.state.currentIndex].label = 'Mobile';
-        //     numbers[this.state.currentIndex].text = 'mobile';
-        // }
-        // if (val === 'satellite') {
-        //     numbers[this.state.currentIndex].label = 'Satellite';
-        //     numbers[this.state.currentIndex].text = 'satellite';
-        // }
-        // if (val === 'land') {
-        //     numbers[this.state.currentIndex].label = 'Land';
-        //     numbers[this.state.currentIndex].text = 'land';
-        // }
     }
 
     async sendImage(imageUri, base64) {
         // console.log('images ', imageUri);
+        this.props.uploadImage();
         this.setState({ loading: true });
         const PROFILE_PIC_BUCKET = 'profile-pics';
         const toUri = await Utils.copyFileAsync(
@@ -379,6 +393,7 @@ export default class MyProfileScreen extends React.Component {
                     user.userId,
                     ResourceTypes.Image,
                     user,
+                    true,
                     true
                 );
             })
@@ -392,12 +407,12 @@ export default class MyProfileScreen extends React.Component {
                     this.setState(
                         {
                             loading: false,
-                            userId: this.props.userId
+                            reloadProfileImage: imageUri
                         },
                         () => {
                             this.props.updateContactScreen();
                             setTimeout(() => {
-                                this.showAlert();
+                                this.showAlert('Profile image updated');
                             }, 200);
                         }
                     );
@@ -405,10 +420,10 @@ export default class MyProfileScreen extends React.Component {
             });
     }
 
-    showAlert() {
+    showAlert(msg) {
         Alert.alert(
             '',
-            'Profile image updated',
+            msg,
             [
                 {
                     text: 'OK',
@@ -481,7 +496,7 @@ export default class MyProfileScreen extends React.Component {
     }
 
     render() {
-        console.log('phone NUmber', this.state.phoneNumbers);
+        console.log('image url ', this.state.reloadProfileImage);
 
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
@@ -502,13 +517,29 @@ export default class MyProfileScreen extends React.Component {
                                     borderRadius: 60
                                 }}
                             >
-                                <ProfileImage
-                                    uuid={this.state.userId}
-                                    placeholder={images.user_image}
-                                    style={styles.profilePic}
-                                    placeholderStyle={styles.profileImgStyle}
-                                    resizeMode="cover"
-                                />
+                                {this.state.reloadProfileImage ? (
+                                    <Image
+                                        source={{
+                                            uri: this.state.reloadProfileImage
+                                        }}
+                                        style={styles.profileImgStyle}
+                                    />
+                                ) : (
+                                    <MyProfileImage
+                                        uuid={this.state.userId}
+                                        placeholder={images.user_image}
+                                        style={styles.profilePic}
+                                        placeholderStyle={
+                                            styles.profileImgStyle
+                                        }
+                                        resizeMode="cover"
+                                        changeProfileImageBack={() => {
+                                            this.changeProfileStatuBack.bind(
+                                                this
+                                            );
+                                        }}
+                                    />
+                                )}
                             </View>
                             <TouchableOpacity
                                 style={{
@@ -601,19 +632,19 @@ export default class MyProfileScreen extends React.Component {
                                 </Text>
                                 <Switch
                                     style={styles.switchStyle}
-                                    value={this.state.searchState}
+                                    value={this.state.searchable}
                                     onValueChange={val => {
-                                        let stateTint = this.state.searchState;
+                                        let stateTint = this.state.searchable;
                                         stateTint = !stateTint;
                                         this.setState({
-                                            searchState: stateTint
+                                            searchable: stateTint
                                         });
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
                                     // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
-                                        this.state.searchState
+                                        this.state.searchable
                                             ? 'rgba(0,189,242,1)'
                                             : 'rgba(102,102,102,1)'
                                     }
@@ -632,19 +663,19 @@ export default class MyProfileScreen extends React.Component {
                                 </Text>
                                 <Switch
                                     style={styles.switchStyle}
-                                    value={this.state.shareState}
+                                    value={this.state.visible}
                                     onValueChange={val => {
-                                        let stateTint = this.state.shareState;
+                                        let stateTint = this.state.visible;
                                         stateTint = !stateTint;
                                         this.setState({
-                                            shareState: stateTint
+                                            visible: stateTint
                                         });
                                     }}
                                     trackColor="rgba(244,244,244,1)"
                                     onTintColor="rgba(244,244,244,1)"
                                     // tintColor="rgba(244,244,244,1)"
                                     thumbColor={
-                                        this.state.shareState
+                                        this.state.visible
                                             ? 'rgba(0,189,242,1)'
                                             : 'rgba(102,102,102,1)'
                                     }
@@ -654,7 +685,9 @@ export default class MyProfileScreen extends React.Component {
                         <View style={styles.btn_container}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    Actions.pop();
+                                    Actions.pop(
+                                        this.props.updateContactScreen()
+                                    );
                                 }}
                                 style={styles.cancel_btn}
                             >
@@ -679,3 +712,18 @@ export default class MyProfileScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        uploadImage: () => dispatch(uploadImage())
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MyProfileScreen);
