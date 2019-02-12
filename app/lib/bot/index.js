@@ -31,7 +31,12 @@ class Bot extends events.EventEmitter {
             );
         }
 
-        await bot.Load();
+        try {
+            await bot.Load();
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     };
 
     static update = async bot => {
@@ -169,6 +174,8 @@ class Bot extends events.EventEmitter {
                         response.data.content &&
                         response.data.content.length > 0
                     ) {
+                        console.log('installing bot ', response.data);
+
                         return Promise.all(response.data.content);
                     } else {
                         reject(null);

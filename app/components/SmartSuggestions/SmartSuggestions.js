@@ -9,6 +9,9 @@ export default class SmartSuggestions extends React.Component {
         this.state = {
             suggestions: [] //array
         };
+    }
+
+    componentDidMount() {
         this.update([]);
     }
 

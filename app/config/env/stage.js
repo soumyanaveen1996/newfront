@@ -46,7 +46,8 @@ const stageConfig = {
         searchCatalog: '/catalog',
         userInfo: '/user',
         profileImage: '/v2/file/profile-pics/',
-        addFavourite: '/users/favourites'
+        addFavourite: '/users/favourites',
+        deleteContacts: '/contactsActions'
     }
 };
 

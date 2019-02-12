@@ -30,6 +30,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ network: action.payload } };
     case Actions.SET_CURRENT_CONVERSATION_ID:
         return { ...state, ...{ currentConversationId: action.payload } };
+    case Actions.UPLOAD_IMAGE:
+        return { ...state, ...{ upload: state.upload + 1 } };
     default:
         return state;
     }

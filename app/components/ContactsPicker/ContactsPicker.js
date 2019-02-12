@@ -59,6 +59,7 @@ import {
 import images from '../../config/images';
 import { EmptyContact } from '.';
 import ProfileImage from '../ProfileImage';
+import { MyProfileImage } from '../ProfileImage';
 import config from '../../config/config';
 
 class ContactsPicker extends React.Component {
@@ -219,7 +220,6 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-
         // if (user.contactsLoaded === false) {
         //     Contact.refreshContacts()
         // }
@@ -281,7 +281,7 @@ class ContactsPicker extends React.Component {
     };
 
     onBack = () => {
-        // this.refresh()
+        this.onDataUpdate();
     };
 
     refresh = () => {
@@ -505,7 +505,7 @@ class ContactsPicker extends React.Component {
                     }}
                 >
                     <View style={styles.myProfileItemContainer}>
-                        <ProfileImage
+                        <MyProfileImage
                             uuid={this.state.userId}
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}
@@ -610,6 +610,8 @@ class ContactsPicker extends React.Component {
         );
     };
     render() {
+        // console.log('all contact data', this.state.contactsData);
+
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>

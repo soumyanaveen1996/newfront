@@ -165,7 +165,8 @@ const stylesheet = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'rgba(244,244,244,1)',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        zIndex: 99
     },
     moreOptionImageContainerHide: {
         width: 45,
