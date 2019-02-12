@@ -12,7 +12,8 @@ import { styles } from './styles';
 import { BlurView } from 'react-native-blur';
 import Icons from '../../config/icons';
 import { MapCardType, MapCardDesign } from './config';
-import Actions from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
+import _ from 'lodash';
 
 export default class ContextSlideshow extends React.Component {
     constructor(props) {
@@ -21,11 +22,11 @@ export default class ContextSlideshow extends React.Component {
         this.testData = [
             {
                 cardId: 1234,
-                cardType: 'Type',
+                cardType: MapCardType.DATA_CARD,
                 design: 'small', //small or big
                 title: 'Title',
                 description: 'description',
-                imageurl: '',
+                imageUrl: '',
                 seeMoreUrl: '',
                 data: {
                     title: 'field1 contact',
@@ -36,42 +37,121 @@ export default class ContextSlideshow extends React.Component {
                 }
             },
             {
-                content: 'TEST COMMAND',
-                type: MapCardType.COMMAND_CARD
+                cardId: 1235,
+                cardType: MapCardType.URL_CARD,
+                design: 'small', //small or big
+                title:
+                    'url title small url title small url title small url title small',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: 'www.frontm.com'
             },
             {
-                content: 'TEST COMMAND',
-                type: MapCardType.COMMAND_CARD
+                cardId: 1236,
+                cardType: MapCardType.URL_CARD,
+                design: 'big', //small or big
+                title:
+                    'url title big url title big url title big url title big url title big',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: 'http://www.cupcakeipsum.com'
             },
             {
-                content: 'TEST COMMAND',
-                type: MapCardType.COMMAND_CARD
+                cardId: 1237,
+                cardType: MapCardType.ACTION_CARD,
+                design: 'small', //small or big
+                title:
+                    'Small action card Small action card Small action card Small action card Small action card Small action card ',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: ''
             },
             {
-                content: 'TEST COMMAND',
-                type: MapCardType.COMMAND_CARD
+                cardId: 1238,
+                cardType: MapCardType.ACTION_CARD,
+                design: 'big', //small or big
+                title:
+                    'Big action card Big action card Big action card Big action card Big action card Big action card ',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: ''
             },
             {
-                content: 'TEST COMMAND',
-                type: MapCardType.COMMAND_CARD
+                cardId: 1239,
+                cardType: MapCardType.DATA_CARD,
+                design: 'small', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: ''
+            },
+            {
+                cardId: 1239,
+                cardType: MapCardType.URL_CARD,
+                design: 'big', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: 3
+            },
+            {
+                cardId: 1239,
+                cardType: MapCardType.DATA_CARD,
+                design: 'small', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: ''
             }
         ];
     }
 
     renderUrlBigCard(item) {
+        if (
+            !item.seeMoreUrl ||
+            typeof item.seeMoreUrl !== 'string' ||
+            item.seeMoreUrl === ''
+        ) {
+            return this.renderErrorCard('url missing');
+        }
         const content = (
-            <View>
-                <View>
-                    <Text>{item.title}</Text>
-                    <Text>{item.description}</Text>
-                    <Text>See more</Text>
+            <View style={styles.horizontalContainer}>
+                <View
+                    style={[
+                        styles.verticalContainer,
+                        { paddingVertical: 20, paddingHorizontal: 15 }
+                    ]}
+                >
+                    <View>
+                        <Text
+                            style={styles.title}
+                            numberOfLines={1}
+                            ellipsizeMode={'tail'}
+                        >
+                            {item.title}
+                        </Text>
+                        <Text
+                            style={styles.description}
+                            numberOfLines={4}
+                            ellipsizeMode={'tail'}
+                        >
+                            {item.description}
+                        </Text>
+                    </View>
+                    <Text style={styles.seeMore}>See more</Text>
                 </View>
-                <Image />
+                <Image style={{ flex: 1 }} source={{ uri: item.imageUrl }} />
             </View>
         );
-        const action = () => {
-            Actions.webview(item.seeMoreUrl);
-        };
+        const action = () => Actions.webview({ url: item.seeMoreUrl });
         return {
             action: action,
             content: content
@@ -79,8 +159,15 @@ export default class ContextSlideshow extends React.Component {
     }
 
     renderUrlSmallCard(item) {
+        if (
+            !item.seeMoreUrl ||
+            typeof item.seeMoreUrl !== 'string' ||
+            item.seeMoreUrl === ''
+        ) {
+            return this.renderErrorCard('url missing');
+        }
         const content = (
-            <View>
+            <View style={styles.verticalContainer}>
                 <Text
                     style={styles.smallCardTitle}
                     numberOfLines={3}
@@ -88,12 +175,16 @@ export default class ContextSlideshow extends React.Component {
                 >
                     {item.title}
                 </Text>
-                <Text>{item.seeMoreUrl}</Text>
+                <Text
+                    style={styles.footer}
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                >
+                    {item.seeMoreUrl}
+                </Text>
             </View>
         );
-        const action = () => {
-            Actions.webview(item.seeMoreUrl);
-        };
+        const action = () => Actions.webview({ url: item.seeMoreUrl });
         return {
             action: action,
             content: content
@@ -102,10 +193,33 @@ export default class ContextSlideshow extends React.Component {
 
     renderActionBigCard(item) {
         const content = (
-            <View>
-                <Image />
-                <Text>{item.title}</Text>
-                <Text>{item.description}</Text>
+            <View style={styles.verticalContainer}>
+                <View style={styles.verticalContainer}>
+                    <Image
+                        style={{ flex: 1 }}
+                        source={{ uri: item.imageUrl }}
+                    />
+                    <Text
+                        style={[
+                            styles.description,
+                            { marginTop: 5, marginHorizontal: 15 }
+                        ]}
+                        numberOfLines={2}
+                        ellipsizeMode={'tail'}
+                    >
+                        {item.title}
+                    </Text>
+                </View>
+                <Text
+                    style={[
+                        styles.footer,
+                        { marginHorizontal: 15, marginBottom: 20 }
+                    ]}
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                >
+                    {item.description}
+                </Text>
             </View>
         );
         const action = () => null; //Will implement actions later
@@ -117,7 +231,7 @@ export default class ContextSlideshow extends React.Component {
 
     renderActionSmallCard(item) {
         const content = (
-            <View>
+            <View style={styles.verticalContainer}>
                 <Text
                     style={styles.smallCardTitle}
                     numberOfLines={3}
@@ -135,8 +249,15 @@ export default class ContextSlideshow extends React.Component {
     }
 
     renderDataCard(item) {
+        if (
+            !item.data ||
+            typeof item.data !== 'object' ||
+            item.data.length < 1
+        ) {
+            return this.renderErrorCard('data not found');
+        }
         const content = (
-            <View>
+            <View style={styles.verticalContainer}>
                 <View>
                     <Text
                         style={styles.smallCardTitle}
@@ -146,7 +267,7 @@ export default class ContextSlideshow extends React.Component {
                         {item.title}
                     </Text>
                 </View>
-                <Text style={styles.info} numberOfLines={1}>
+                <Text style={styles.seeMore} numberOfLines={1}>
                     More info
                 </Text>
             </View>
@@ -173,10 +294,8 @@ export default class ContextSlideshow extends React.Component {
         return (
             <View style={styles.modal}>
                 <ScrollView>
-                    <View style={styles.topArea}>
-                        <Text style={styles.cardTitle}>{cardData.title}</Text>
-                        {fields}
-                    </View>
+                    <Text style={styles.dataTitle}>{cardData.title}</Text>
+                    {fields}
                 </ScrollView>
             </View>
         );
@@ -211,8 +330,12 @@ export default class ContextSlideshow extends React.Component {
     renderErrorCard(error) {
         const content = (
             <View>
-                <Text>ERROR:</Text>
-                <Text>{error}</Text>
+                <Text style={[styles.smallCardTitle, { color: 'red' }]}>
+                    ERROR:
+                </Text>
+                <Text style={[styles.smallCardTitle, { color: 'red' }]}>
+                    {error}
+                </Text>
             </View>
         );
         const action = () => null;
@@ -224,11 +347,11 @@ export default class ContextSlideshow extends React.Component {
 
     renderBigCard(item) {
         let card;
-        if (item.type === MapCardType.URL_CARD) {
+        if (item.cardType === MapCardType.URL_CARD) {
             card = this.renderUrlBigCard(item);
-        } else if (item.type === MapCardType.ACTION_CARD) {
+        } else if (item.cardType === MapCardType.ACTION_CARD) {
             card = this.renderActionBigCard(item);
-        } else if (item.type === MapCardType.DATA_CARD) {
+        } else if (item.cardType === MapCardType.DATA_CARD) {
             card = this.renderDataCard(item);
         } else {
             card = this.renderErrorCard('Card type not found');
@@ -242,11 +365,11 @@ export default class ContextSlideshow extends React.Component {
 
     renderSmallCard(item) {
         let card;
-        if (item.type === MapCardType.URL_CARD) {
+        if (item.cardType === MapCardType.URL_CARD) {
             card = this.renderUrlSmallCard(item);
-        } else if (item.type === MapCardType.ACTION_CARD) {
+        } else if (item.cardType === MapCardType.ACTION_CARD) {
             card = this.renderActionSmallCard(item);
-        } else if (item.type === MapCardType.DATA_CARD) {
+        } else if (item.cardType === MapCardType.DATA_CARD) {
             card = this.renderDataCard(item);
         } else {
             card = this.renderErrorCard('Card type not found');

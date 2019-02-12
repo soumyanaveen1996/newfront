@@ -416,6 +416,11 @@ class MainRouter extends React.Component {
                                         hideNavBar
                                     />
                                     <Scene
+                                        key={ROUTER_SCENE_KEYS.mapView}
+                                        component={MapView}
+                                        title="Map"
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.botStore}
                                         component={BotStoreScreen}
                                         title={I18n.t('Bot_Store')}
@@ -462,11 +467,7 @@ class MainRouter extends React.Component {
                                     component={BotFilter}
                                     hideNavBar
                                 />
-                                <Scene
-                                    key={ROUTER_SCENE_KEYS.mapView}
-                                    component={MapView}
-                                    title="Map"
-                                />
+
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.form2}
                                     title="Form"
