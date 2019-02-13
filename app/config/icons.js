@@ -310,6 +310,18 @@ export const Icons = {
         15,
         GlobalColors.sideButtons
     ),
+    contextSlideshowButtonUp: icon(
+        'ios-arrow-up',
+        'ionicon',
+        20,
+        GlobalColors.headerBlack
+    ),
+    contextSlideshowButtonDown: icon(
+        'ios-arrow-down',
+        'ionicon',
+        20,
+        GlobalColors.headerBlack
+    ),
 
     //FORM
     formMessageArrow: icon(
