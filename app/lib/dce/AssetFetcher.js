@@ -2,7 +2,7 @@ import _ from 'lodash';
 import RNFS from 'react-native-fs';
 import config from '../../config/config.js';
 import { Utils, Promise, Auth } from '../capability';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import buildUrl from 'build-url';
 
 class AssetFetcher {
