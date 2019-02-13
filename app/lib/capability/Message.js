@@ -46,7 +46,9 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_MENU: 'menu',
     MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
     MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
-    MESSAGE_TYPE_LOCATION: 'location'
+    MESSAGE_TYPE_LOCATION: 'location',
+    MESSAGE_TYPE_STRIPE: 'stripe',
+    MESSAGE_TYPE_STRIPE_RESPONSE: 'stripe_response'
 };
 
 export const IntToMessageTypeConstants = {
@@ -75,7 +77,9 @@ export const IntToMessageTypeConstants = {
     420: MessageTypeConstants.MESSAGE_TYPE_TABLE,
     430: MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD,
     440: MessageTypeConstants.MESSAGE_TYPE_DATA_CARD,
-    450: MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+    450: MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
+    460: MessageTypeConstants.MESSAGE_TYPE_STRIPE,
+    470: MessageTypeConstants.MESSAGE_TYPE_STRIPE_RESPONSE
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);

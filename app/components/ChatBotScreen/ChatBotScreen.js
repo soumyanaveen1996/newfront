@@ -85,6 +85,7 @@ import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
+import { setCurrentConversationId } from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
 
 const R = require('ramda');
@@ -388,6 +389,9 @@ class ChatBotScreen extends React.Component {
             0,
             null
         );
+        Store.dispatch(
+            setCurrentConversationId(this.conversationContext.conversationId)
+        );
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -524,6 +528,7 @@ class ChatBotScreen extends React.Component {
 
     async componentWillUnmount() {
         this.mounted = false;
+        Store.dispatch(setCurrentConversationId(''));
         Store.dispatch(setLoadedBot(null));
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
