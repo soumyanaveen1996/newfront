@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Text,
     Image,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 import { styles } from './styles';
 import { BlurView } from 'react-native-blur';
@@ -311,14 +312,30 @@ export default class ContextSlideshow extends React.Component {
         }
     }
 
-    render() {
+    renderBlur() {
         return (
             <BlurView
                 blurType="xlight"
                 blurAmount={10}
-                style={styles.CSContainer}
+                style={styles.blurContent}
+            />
+        );
+    }
+
+    render() {
+        return (
+            <View
+                style={
+                    Platform.OS === 'ios'
+                        ? styles.CSContainer
+                        : [
+                            styles.CSContainer,
+                            { backgroundColor: 'rgba(255, 255, 255, 0.7)' }
+                        ]
+                }
             >
-                <SafeAreaView>
+                {Platform.OS === 'ios' ? this.renderBlur() : null}
+                <SafeAreaView style={{ flex: 1 }}>
                     <TouchableOpacity
                         onPress={this.props.closeAndOpenSlideshow}
                         style={{ paddingVertical: 10 }}
@@ -329,7 +346,7 @@ export default class ContextSlideshow extends React.Component {
                     </TouchableOpacity>
                     {this.renderFlatList()}
                 </SafeAreaView>
-            </BlurView>
+            </View>
         );
     }
 }

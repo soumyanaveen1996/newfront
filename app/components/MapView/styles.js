@@ -104,9 +104,18 @@ const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0,
+        paddingBottom: 10,
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'stretch'
+        alignItems: 'stretch',
+        backgroundColor: GlobalColors.transparent
+    },
+    blurContent: {
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        position: 'absolute'
     },
     smallCard: {
         height: 130,
@@ -116,6 +125,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 15,
         borderRadius: 10,
+        borderColor: 'gray',
+        borderWidth: 0.1,
         backgroundColor: GlobalColors.white
     },
     bigCard: {
@@ -124,6 +135,8 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         marginHorizontal: 10,
         borderRadius: 12,
+        borderColor: 'gray',
+        borderWidth: 0.1,
         backgroundColor: GlobalColors.white
     },
     verticalContainer: {
