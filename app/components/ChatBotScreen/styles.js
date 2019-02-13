@@ -530,6 +530,55 @@ const stylesheet = StyleSheet.create({
     contactCardModalOkButtonText: {
         fontSize: 16,
         color: GlobalColors.white
+    },
+
+    //TAPTOOPENFILE
+    fileCard: {
+        backgroundColor: GlobalColors.white,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: GlobalColors.disabledGray,
+        width: 110,
+        height: 110,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 2
+    },
+    fileCardSmall: {
+        backgroundColor: GlobalColors.white,
+        borderRadius: 5,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    fileType: {
+        position: 'absolute',
+        alignSelf: 'center',
+        color: GlobalColors.disabledGray,
+        fontWeight: 'bold'
+    },
+    downloadIcon: {
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 15,
+        position: 'absolute',
+        right: '15%',
+        bottom: '15%',
+        backgroundColor: GlobalColors.sideButtons
+    },
+    downloadIconRight: {
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 15,
+        backgroundColor: GlobalColors.sideButtons
     }
 });
 
