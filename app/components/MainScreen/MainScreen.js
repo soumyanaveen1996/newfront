@@ -175,15 +175,6 @@ class MainScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        Actions.mapView({
-            isSharedLocation: false,
-            mapData: {
-                region: {
-                    longitude: -81.3878,
-                    latitude: 30.2878
-                }
-            }
-        });
         // Susbscribe to async result handler
         this.eventSubscription = null;
         this.state = {

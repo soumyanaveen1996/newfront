@@ -14,7 +14,6 @@ export default class WebViewScreen extends React.Component {
     };
 
     render() {
-        console.log('GGGGGGGGG');
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 <TouchableOpacity

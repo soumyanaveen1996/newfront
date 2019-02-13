@@ -110,7 +110,9 @@ export default class MapView extends React.Component {
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
             locateUserButtonIcon: Icons.userPosition(),
             slideshowOpen: false,
-            slideshowContext: this.props.mapData.options.cards || [],
+            slideshowContext: this.props.mapData.options
+                ? this.props.mapData.options.cards
+                : [],
             chatModalContent: {},
             isModalVisible: false
         };
@@ -493,7 +495,7 @@ export default class MapView extends React.Component {
                 {this.renderMap()}
                 {this.renderButtons()}
                 <ContextSlideshow
-                    contentData={this.state.slideshowContext}
+                    contentData={this.state.slideshowContext || []}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
                         this

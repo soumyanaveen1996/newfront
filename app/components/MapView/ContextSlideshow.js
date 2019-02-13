@@ -300,10 +300,10 @@ export default class ContextSlideshow extends React.Component {
         if (this.props.isOpen) {
             return (
                 <FlatList
-                    data={this.props.contentData}
+                    data={this.props.contentData || []}
                     // data={this.testData}
                     renderItem={this.renderItem.bind(this)}
-                    extraData={this.props.contentData}
+                    extraData={this.props}
                     horizontal={true}
                     style={{ paddingHorizontal: 15 }}
                 />
