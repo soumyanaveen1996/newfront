@@ -65,7 +65,7 @@ export default class Dialler extends React.Component {
         const countryCodes = { Inmarsat, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '+',
+            dialledNumber: '+870776225331',
             dialledDigits: '',
             micOn: true,
             speakerOn: false,
@@ -123,18 +123,18 @@ export default class Dialler extends React.Component {
             this.setState({ dialledNumber: this.props.number });
         }
 
-        // Sound.setCategory('Playback');
-        // const filler = new Sound(
-        //     'https://api.twilio.com/cowbell.mp3',
-        //     undefined,
-        //     error => {
-        //         if (error) {
-        //             return console.log('Failed to load sound', error);
-        //         }
+        Sound.setCategory('Playback');
+        const filler = new Sound(
+            'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/media/Hold+Music.mp3',
+            undefined,
+            error => {
+                if (error) {
+                    return console.log('Failed to load sound', error);
+                }
 
-        //         this.setState({ filler });
-        //     }
-        // );
+                this.setState({ filler });
+            }
+        );
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -342,16 +342,22 @@ export default class Dialler extends React.Component {
                 this.setState({ callTime: this.state.callTime + 1 });
             }, 1000);
             this.setState({ diallerState: DiallerState.incall, intervalId });
-            // this.state.filler.play(success => {
-            //     if (success) {
-            //         console.log('Played Sound');
-            //     } else {
-            //         console.log('playback failed due to audio decoding errors');
-            //         // reset the player to its uninitialized state (android only)
-            //         // this is the only option to recover after an error occured and use the player again
-            //         filler.release();
-            //     }
-            // });
+            if (this.state.satCall) {
+                this.state.filler.setNumberOfLoops(-1);
+                this.state.filler.play(success => {
+                    if (success) {
+                        console.log('Played Sound');
+                    } else {
+                        console.log(
+                            'playback failed due to audio decoding errors'
+                        );
+                        // reset the player to its uninitialized state (android only)
+                        // this is the only option to recover after an error occured and use the player again
+                        filler.release();
+                    }
+                });
+                setTimeout(() => this.state.filler.stop(), 43000);
+            }
         }
     }
 
