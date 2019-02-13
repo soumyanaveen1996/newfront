@@ -14,6 +14,7 @@ const initialState = {
         refreshContacts: true,
         refreshUserEmail: true,
         network: 'full',
+        currentConversationId: '',
         upload: 0
     },
     botState: {
