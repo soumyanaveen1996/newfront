@@ -1,4 +1,6 @@
 rootProject.name = 'frontm_mobile'
+include ':rn-fetch-blob'                                                                                                  
+project(':rn-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fetch-blob/android')
 include ':bugsnag-react-native'
 project(':bugsnag-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/bugsnag-react-native/android')
 include ':@yfuks_react-native-action-sheet'
@@ -46,8 +48,6 @@ include ':react-native-google-sign-in'
 project(':react-native-google-sign-in').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-sign-in/android')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')
-include ':react-native-fetch-blob'
-project(':react-native-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fetch-blob/android')
 include ':react-native-fbsdk'
 project(':react-native-fbsdk').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk/android')
 include ':react-native-document-picker'
@@ -131,9 +131,6 @@ project(':react-native-i18n').projectDir = new File(rootProject.projectDir, '../
 
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')
-
-include ':react-native-fetch-blob'
-project(':react-native-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fetch-blob/android')
 
 include ':react-native-contacts'
 project(':react-native-contacts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-contacts/android')

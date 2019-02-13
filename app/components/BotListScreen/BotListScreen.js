@@ -128,6 +128,14 @@ export default class BotListScreen extends React.Component {
         }
     };
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', padding: 10 }}>
@@ -155,7 +163,7 @@ export default class BotListScreen extends React.Component {
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast" position="bottom" positionValue={350} />
+                {this.renderToast()}
             </View>
         );
     }
