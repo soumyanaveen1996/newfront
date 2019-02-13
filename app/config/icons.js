@@ -355,13 +355,19 @@ export const Icons = {
     fileIcon: icon(
         'ios-document-outline',
         'ionicon',
-        50,
-        GlobalColors.headerBlack
+        70,
+        GlobalColors.disabledGray
+    ),
+    fileIconSmall: icon(
+        'ios-document-outline',
+        'ionicon',
+        30,
+        GlobalColors.darkGray
     ),
     downloadFile: icon(
         'arrow-collapse-down',
         'material-community',
-        30,
+        15,
         GlobalColors.white
     )
 };

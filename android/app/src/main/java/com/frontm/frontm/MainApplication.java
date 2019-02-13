@@ -9,6 +9,7 @@ import android.os.Build;
 
 import com.facebook.react.ReactApplication;
 import com.cmcewen.blurview.BlurViewPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.mapbox.rctmgl.RCTMGLPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.actionsheet.ActionSheetPackage;
@@ -29,9 +30,8 @@ import com.dooboolab.RNIap.RNIapPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.rnfs.RNFSPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-//import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.microsoft.codepush.react.CodePush;
@@ -85,8 +85,7 @@ public class MainApplication extends Application implements ReactApplication {
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
           new MapsPackage(), new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
           new RNIapPackage(), new RNI18nPackage(), new RNGoogleSignInPackage(), new RNFSPackage(),
-          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager),
-//              new ReactNativeDocumentPicker(),
+          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager), new DocumentPickerPackage(),
           new RNDeviceInfo(), new ReactNativeContacts(),
           new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),
               getApplicationContext(), BuildConfig.DEBUG),

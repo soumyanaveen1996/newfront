@@ -13,7 +13,8 @@ import {
     TouchableOpacity,
     Text,
     SafeAreaView,
-    Platform
+    Platform,
+    PermissionsAndroid
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -84,6 +85,7 @@ import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
+import RNFS from 'react-native-fs';
 
 const R = require('ramda');
 
@@ -1311,14 +1313,14 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    // async pickFile() {
-    //     Keyboard.dismiss();
-    //     DocumentPicker.pick({
-    //         type: [DocumentPicker.types.allFiles]
-    //     }).then(res => {
-    //         this.sendFile(res.uri, res.type);
-    //     });
-    // }
+    async pickFile() {
+        Keyboard.dismiss();
+        DocumentPicker.pick({
+            type: [DocumentPicker.types.allFiles]
+        }).then(res => {
+            this.sendFile(res.uri, res.type, res.name);
+        });
+    }
 
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
@@ -1341,28 +1343,32 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    // async sendFile(fileUri, fileType) {
-    //     let message = new Message();
-    //     message.setCreatedBy(this.getUserId());
-    //     let rename = message.getMessageId() + '.' + fileType.split('/')[1];
-    //     const toUri = await Utils.copyFileAsync(
-    //         decodeURI(fileUri),
-    //         Constants.OTHER_FILE_DIRECTORY,
-    //         rename
-    //     );
+    async sendFile(fileUri, fileType, fileName) {
+        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        let rename = message.getMessageId() + '.' + fileType.split('/')[1];
+        const toUri = await Utils.copyFileAsync(
+            decodeURI(fileUri),
+            Constants.OTHER_FILE_DIRECTORY,
+            rename
+        );
 
-    //     // Send the file to the S3/backend and then let the user know
-    //     const uploadedUrl = await Resource.uploadFile(
-    //         null, //base64 will be created in Resource.uploadFile()
-    //         toUri,
-    //         this.conversationContext.conversationId,
-    //         message.getMessageId(),
-    //         fileType,
-    //         this.user
-    //     );
-    //     message.otherFileMessage(uploadedUrl, { type: fileType });
-    //     return this.sendMessage(message);
-    // }
+        // Send the file to the S3/backend and then let the user know
+        const uploadedUrl = await Resource.uploadFile(
+            null, //base64 will be created in Resource.uploadFile()
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            fileType,
+            this.user
+        );
+        message.otherFileMessage(uploadedUrl, {
+            type: fileType,
+            fileName: fileName
+        });
+        return this.sendMessage(message);
+    }
 
     onSendAudio = audioURI => {
         this.sendAudio(audioURI);
@@ -1688,8 +1694,6 @@ class ChatBotScreen extends React.Component {
             this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
-            // } else if (key === BotInputBarCapabilities.share_contact) {
-            //     this.pickContact();
         }
     };
 
@@ -1824,12 +1828,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            // {
-            //     key: BotInputBarCapabilities.file,
-            //     imageStyle: { width: 14, height: 16 },
-            //     imageSource: images.share_file,
-            //     label: I18n.t('File_option')
-            // },
+            {
+                key: BotInputBarCapabilities.file,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_file,
+                label: I18n.t('File_option')
+            },
             {
                 key: BotInputBarCapabilities.share_contact,
                 imageStyle: { width: 16, height: 16 }
