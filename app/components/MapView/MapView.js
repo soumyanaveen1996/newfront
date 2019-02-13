@@ -110,7 +110,7 @@ export default class MapView extends React.Component {
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
             locateUserButtonIcon: Icons.userPosition(),
             slideshowOpen: false,
-            slideshowContext: this.props.mapData.options.cards || [],
+            slideshowContext: [],
             chatModalContent: {},
             isModalVisible: false
         };

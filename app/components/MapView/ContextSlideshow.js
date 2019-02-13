@@ -19,6 +19,99 @@ export default class ContextSlideshow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.testData = [
+            {
+                cardId: 1234,
+                cardType: MapCardType.DATA_CARD,
+                design: 'small', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: '',
+                data: {
+                    title: 'field1 contact',
+                    field2: 12345,
+                    field3: true,
+                    field4: 'etc',
+                    field5: 'etc'
+                }
+            },
+            {
+                cardId: 1235,
+                cardType: MapCardType.URL_CARD,
+                design: 'small', //small or big
+                title:
+                    'url title small url title small url title small url title small',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: 'www.frontm.com'
+            },
+            {
+                cardId: 1236,
+                cardType: MapCardType.URL_CARD,
+                design: 'big', //small or big
+                title:
+                    'url title big url title big url title big url title big url title big',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: 'http://www.cupcakeipsum.com'
+            },
+            {
+                cardId: 1237,
+                cardType: MapCardType.ACTION_CARD,
+                design: 'small', //small or big
+                title:
+                    'Small action card Small action card Small action card Small action card Small action card Small action card ',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: ''
+            },
+            {
+                cardId: 1238,
+                cardType: MapCardType.ACTION_CARD,
+                design: 'big', //small or big
+                title:
+                    'Big action card Big action card Big action card Big action card Big action card Big action card ',
+                description:
+                    'Sesame snaps bear claw biscuit croissant chupa chups halvah tootsie roll tootsie roll. Tart sugar plum danish liquorice dessert chocolate jujubes sweet toffee. Gummi bears sweet pudding carrot cake. Biscuit pastry caramels marshmallow jelly beans. Jujubes carrot cake cotton candy candy canes jelly cookie candy canes. Lemon drops tootsie roll brownie tiramisu bonbon. Chupa chups chocolate cake chupa chups caramels liquorice jujubes brownie sweet oat cake. Sesame snaps dessert sugar plum toffee marshmallow pudding cupcake chupa chups pie. Macaroon',
+                imageUrl:
+                    'http://likeafishinwater.com/wp-content/uploads/2012/10/20121014-k2-2.jpg',
+                seeMoreUrl: ''
+            },
+            {
+                cardId: 1239,
+                cardType: MapCardType.DATA_CARD,
+                design: 'small', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: ''
+            },
+            {
+                cardId: 1239,
+                cardType: MapCardType.URL_CARD,
+                design: 'big', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: 3
+            },
+            {
+                cardId: 1239,
+                cardType: MapCardType.DATA_CARD,
+                design: 'small', //small or big
+                title: 'Title',
+                description: 'description',
+                imageUrl: '',
+                seeMoreUrl: ''
+            }
+        ];
     }
 
     renderUrlBigCard(item) {
@@ -300,8 +393,8 @@ export default class ContextSlideshow extends React.Component {
         if (this.props.isOpen) {
             return (
                 <FlatList
-                    data={this.props.contentData}
-                    // data={this.testData}
+                    // data={this.props.contentData}
+                    data={this.testData}
                     renderItem={this.renderItem.bind(this)}
                     extraData={this.props.contentData}
                     horizontal={true}
