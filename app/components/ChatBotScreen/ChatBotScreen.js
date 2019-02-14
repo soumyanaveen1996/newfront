@@ -804,7 +804,11 @@ class ChatBotScreen extends React.Component {
 
     openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: mapData, isSharedLocation: false });
+        Actions.mapView({
+            mapData: mapData,
+            isSharedLocation: false,
+            onAction: this.sendMapResponse.bind(this)
+        });
     }
 
     openMapForSharedLocation(mapData) {
@@ -939,6 +943,20 @@ class ChatBotScreen extends React.Component {
             });
         }
     };
+
+    sendMapResponse(cardId, markerId, center, zoom) {
+        content = {
+            mapId: this.props.mapData.options.mapId,
+            cardId: cardId,
+            markerId: markerId,
+            center: center,
+            zoom: zoom
+        };
+        message = new Message();
+        message.mapResponseMessage(content);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
 
     onFormDone(response) {
         let message = new Message({ addedByBot: false });

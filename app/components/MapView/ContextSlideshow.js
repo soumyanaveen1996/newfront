@@ -15,6 +15,7 @@ import Icons from '../../config/icons';
 import { MapCardType, MapCardDesign } from './config';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
+import { Message } from '../../lib/capability';
 
 export default class ContextSlideshow extends React.Component {
     constructor(props) {
@@ -130,7 +131,7 @@ export default class ContextSlideshow extends React.Component {
                 </Text>
             </View>
         );
-        const action = () => null; //Will implement actions later
+        const action = () => this.props.onCardSelected(item.cardId);
         return {
             action: action,
             content: content
@@ -149,7 +150,7 @@ export default class ContextSlideshow extends React.Component {
                 </Text>
             </View>
         );
-        const action = () => null; //Will implement actions later
+        const action = () => this.props.onCardSelected(item.cardId);
         return {
             action: action,
             content: content

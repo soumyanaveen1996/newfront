@@ -504,6 +504,7 @@ export default class MapView extends React.Component {
                         this
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
+                    onCardSelected={this.props.onAction || null}
                 />
                 {this.renderChatModal()}
             </SafeAreaView>
