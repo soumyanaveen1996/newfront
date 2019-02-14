@@ -1686,6 +1686,7 @@ class ChatBotScreen extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
             Keyboard.dismiss();
+            this.sliderPreviousState = this.state.showSlider;
             this.setState({
                 showOptions: true,
                 showSlider: false
@@ -1696,7 +1697,7 @@ class ChatBotScreen extends React.Component {
             );
             this.setState({
                 showOptions: false,
-                showSlider: true
+                showSlider: this.sliderPreviousState || false
             });
         }
     }

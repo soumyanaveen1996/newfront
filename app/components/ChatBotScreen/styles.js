@@ -141,6 +141,7 @@ const stylesheet = StyleSheet.create({
         paddingRight: 10
     },
     chatTextInput: {
+        marginVertical: 7,
         paddingRight: 20,
         paddingLeft: 10,
         paddingTop: 7,
@@ -163,7 +164,10 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        alignContent: 'stretch'
+        alignContent: 'stretch',
+        shadowOffset: { width: 0, height: 0 },
+        shadowColor: 'black',
+        shadowOpacity: 0.15
     },
     moreOptionImageContainer: {
         width: 45,
@@ -450,7 +454,6 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
-        paddingVertical: 7,
         borderWidth: 1,
         borderRadius: 10,
         marginBottom: 10,
