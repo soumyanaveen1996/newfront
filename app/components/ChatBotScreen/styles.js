@@ -141,23 +141,29 @@ const stylesheet = StyleSheet.create({
         paddingRight: 10
     },
     chatTextInput: {
-        paddingHorizontal: 20,
+        paddingRight: 20,
+        paddingLeft: 10,
+        paddingTop: 7,
+        paddingBottom: Platform.OS === 'android' ? 10 : 0,
         fontSize: 16,
+        alignSelf: 'center',
         flex: 1,
         backgroundColor: GlobalColors.white,
-        minHeight: 28
+        height: 35
     },
     moreOptionContainer: {
+        position: 'absolute',
+        bottom: 70,
         width: wp('85%'),
-        height: 170,
+        height: 180,
         borderRadius: 10,
-        backgroundColor: 'rgba(255,255,255,1)',
-        marginBottom: 10,
+        backgroundColor: 'white',
         paddingHorizontal: 15,
         paddingVertical: 15,
-        justifyContent: 'space-between',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         flexWrap: 'wrap',
-        alignContent: 'space-between'
+        alignContent: 'stretch'
     },
     moreOptionImageContainer: {
         width: 45,
@@ -177,7 +183,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center'
     },
     optionContainer: {
-        width: wp('85%') / 4,
+        width: '33.33%',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -189,12 +195,12 @@ const stylesheet = StyleSheet.create({
     chatBarMoreButton: {
         width: 16,
         height: 15,
-        marginLeft: 10
+        marginHorizontal: 10
     },
     closeMoreButton: {
         width: 16,
         height: 15,
-        marginLeft: 10,
+        marginHorizontal: 10,
         transform: [{ rotate: '45deg' }]
     },
     cancelButton: {
@@ -441,8 +447,6 @@ const stylesheet = StyleSheet.create({
     },
     chatBar: {
         width: '85%',
-        minHeight: 40,
-        maxHeight: 95,
         flexDirection: 'row',
         backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
