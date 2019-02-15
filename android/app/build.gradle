@@ -108,11 +108,11 @@ android {
         versionCode 166
         versionName "3.7"
         multiDexEnabled true
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
     }
 
     signingConfigs {

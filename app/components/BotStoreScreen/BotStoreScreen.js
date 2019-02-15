@@ -507,7 +507,7 @@ class BotStoreScreen extends React.Component {
                 </View>
                 {this.state.showNewProvider && (
                     <NewProviderPopup
-                        canelNewProvider={this.handleCancelNewProvider}
+                        cancelNewProvider={this.handleCancelNewProvider}
                         onSubmittingCode={this.qrCodeSubmit}
                         onSubmit={this.onSubmit}
                         qrCode={this.state.qrCodeData}
