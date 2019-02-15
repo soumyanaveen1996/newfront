@@ -1864,7 +1864,7 @@ class ChatBotScreen extends React.Component {
         // }
 
         return (
-            <View>
+            <KeyboardAvoidingView>
                 {this.state.showOptions && (
                     <TouchableWithoutFeedback
                         onPress={() => {
@@ -2020,11 +2020,8 @@ class ChatBotScreen extends React.Component {
                     botId={this.getBotId()}
                     onOptionSelected={this.onOptionSelected.bind(this)}
                     showMoreOption={this.state.showOptions}
-                    closeShowOptions={() => {
-                        this.setState({ showOptions: false });
-                    }}
                 />
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 
@@ -2111,7 +2108,7 @@ class ChatBotScreen extends React.Component {
                     <TouchableWithoutFeedback
                         onPress={() =>
                             this.setState({
-                                showOptions: !this.state.showOptions
+                                showOptions: false
                             })
                         }
                     >
@@ -2122,6 +2119,7 @@ class ChatBotScreen extends React.Component {
                                 Constants.DEFAULT_HEADER_HEIGHT +
                                 (Utils.isiPhoneX() ? 24 : 0)
                             }
+                            enabled
                         >
                             <FlatList
                                 style={chatStyles.messagesList}
