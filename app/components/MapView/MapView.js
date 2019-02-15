@@ -8,7 +8,8 @@ import {
     Image,
     SafeAreaView,
     Alert,
-    LayoutAnimation
+    LayoutAnimation,
+    UIManager
 } from 'react-native';
 import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
@@ -105,6 +106,8 @@ export default class MapView extends React.Component {
 
     constructor(props) {
         super(props);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.state = {
             userTrackingMode:
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
@@ -491,7 +494,7 @@ export default class MapView extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderButtons()}
                 <ContextSlideshow
@@ -501,6 +504,7 @@ export default class MapView extends React.Component {
                         this
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
+                    onCardSelected={this.props.onAction || null}
                 />
                 {this.renderChatModal()}
             </SafeAreaView>
