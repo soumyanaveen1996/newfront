@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, FlatList, ScrollView, Platform } from 'react-native';
 import styles from './styles';
 import BotInstallListItem from '../../BotInstallListItem';
 import Bot from '../../../lib/bot';
@@ -69,6 +69,14 @@ export default class FeaturedTab extends React.Component {
         );
     };
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <ScrollView style={{ flex: 1 }}>
@@ -80,7 +88,7 @@ export default class FeaturedTab extends React.Component {
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}
                     />
-                    <Toast ref="toast" position="bottom" positionValue={350} />
+                    {this.renderToast()}
                 </View>
             </ScrollView>
         );

@@ -13,7 +13,10 @@ import {
     TouchableOpacity,
     Text,
     SafeAreaView,
-    Platform
+    Platform,
+    PermissionsAndroid,
+    LayoutAnimation,
+    UIManager
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -84,6 +87,8 @@ import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
+import { setCurrentConversationId } from '../../redux/actions/UserActions';
+import RNFS from 'react-native-fs';
 
 const R = require('ramda');
 
@@ -157,6 +162,8 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -386,6 +393,9 @@ class ChatBotScreen extends React.Component {
             0,
             null
         );
+        Store.dispatch(
+            setCurrentConversationId(this.conversationContext.conversationId)
+        );
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -522,6 +532,7 @@ class ChatBotScreen extends React.Component {
 
     async componentWillUnmount() {
         this.mounted = false;
+        Store.dispatch(setCurrentConversationId(''));
         Store.dispatch(setLoadedBot(null));
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
@@ -797,7 +808,11 @@ class ChatBotScreen extends React.Component {
 
     openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: mapData, isSharedLocation: false });
+        Actions.mapView({
+            mapData: mapData,
+            isSharedLocation: false,
+            onAction: this.sendMapResponse.bind(this)
+        });
     }
 
     openMapForSharedLocation(mapData) {
@@ -932,6 +947,20 @@ class ChatBotScreen extends React.Component {
             });
         }
     };
+
+    sendMapResponse(cardId, markerId, center, zoom) {
+        content = {
+            mapId: this.props.mapData.options.mapId,
+            cardId: cardId,
+            markerId: markerId,
+            center: center,
+            zoom: zoom
+        };
+        message = new Message();
+        message.mapResponseMessage(content);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
 
     onFormDone(response) {
         let message = new Message({ addedByBot: false });
@@ -1311,14 +1340,14 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    // async pickFile() {
-    //     Keyboard.dismiss();
-    //     DocumentPicker.pick({
-    //         type: [DocumentPicker.types.allFiles]
-    //     }).then(res => {
-    //         this.sendFile(res.uri, res.type);
-    //     });
-    // }
+    async pickFile() {
+        Keyboard.dismiss();
+        DocumentPicker.pick({
+            type: [DocumentPicker.types.allFiles]
+        }).then(res => {
+            this.sendFile(res.uri, res.type, res.name);
+        });
+    }
 
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
@@ -1341,28 +1370,32 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    // async sendFile(fileUri, fileType) {
-    //     let message = new Message();
-    //     message.setCreatedBy(this.getUserId());
-    //     let rename = message.getMessageId() + '.' + fileType.split('/')[1];
-    //     const toUri = await Utils.copyFileAsync(
-    //         decodeURI(fileUri),
-    //         Constants.OTHER_FILE_DIRECTORY,
-    //         rename
-    //     );
+    async sendFile(fileUri, fileType, fileName) {
+        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        let rename = message.getMessageId() + '.' + fileType.split('/')[1];
+        const toUri = await Utils.copyFileAsync(
+            decodeURI(fileUri),
+            Constants.OTHER_FILE_DIRECTORY,
+            rename
+        );
 
-    //     // Send the file to the S3/backend and then let the user know
-    //     const uploadedUrl = await Resource.uploadFile(
-    //         null, //base64 will be created in Resource.uploadFile()
-    //         toUri,
-    //         this.conversationContext.conversationId,
-    //         message.getMessageId(),
-    //         fileType,
-    //         this.user
-    //     );
-    //     message.otherFileMessage(uploadedUrl, { type: fileType });
-    //     return this.sendMessage(message);
-    // }
+        // Send the file to the S3/backend and then let the user know
+        const uploadedUrl = await Resource.uploadFile(
+            null, //base64 will be created in Resource.uploadFile()
+            toUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            fileType,
+            this.user
+        );
+        message.otherFileMessage(uploadedUrl, {
+            type: fileType,
+            fileName: fileName
+        });
+        return this.sendMessage(message);
+    }
 
     onSendAudio = audioURI => {
         this.sendAudio(audioURI);
@@ -1665,8 +1698,26 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    onOptionSelected() {
-        this.setState({ showOptions: !this.state.showOptions });
+    onPlusButtonPressed() {
+        if (this.state.showOptions === false) {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            Keyboard.dismiss();
+            this.sliderPreviousState = this.state.showSlider;
+            this.setState({
+                showOptions: true,
+                showSlider: false
+            });
+        } else {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            this.setState({
+                showOptions: false,
+                showSlider: this.sliderPreviousState || false
+            });
+        }
     }
 
     selectOption = key => {
@@ -1688,8 +1739,6 @@ class ChatBotScreen extends React.Component {
             this.pickLocation();
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
-            // } else if (key === BotInputBarCapabilities.share_contact) {
-            //     this.pickContact();
         }
     };
 
@@ -1802,6 +1851,45 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderOptionsMenu(options) {
+        return (
+            <View style={chatStyles.moreOptionContainer}>
+                {options.map((elem, index) => {
+                    return (
+                        <TouchableOpacity
+                            key={index}
+                            disabled={
+                                elem.key ===
+                                BotInputBarCapabilities.share_contact
+                            }
+                            onPress={() => {
+                                this.selectOption(elem.key);
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View
+                                style={
+                                    elem.key ===
+                                    BotInputBarCapabilities.share_contact
+                                        ? chatStyles.moreOptionImageContainerHide
+                                        : chatStyles.moreOptionImageContainer
+                                }
+                            >
+                                <Image
+                                    style={elem.imageStyle}
+                                    source={elem.imageSource}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>
+                                {elem.label}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
@@ -1810,8 +1898,6 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_camera,
                 label: I18n.t('Camera_option')
             },
-            // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
-            // { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
             {
                 key: BotInputBarCapabilities.photo_library,
                 imageStyle: { width: 16, height: 14 },
@@ -1824,44 +1910,25 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_code,
                 label: I18n.t('Bar_code_option')
             },
-            // {
-            //     key: BotInputBarCapabilities.file,
-            //     imageStyle: { width: 14, height: 16 },
-            //     imageSource: images.share_file,
-            //     label: I18n.t('File_option')
-            // },
             {
-                key: BotInputBarCapabilities.share_contact,
-                imageStyle: { width: 16, height: 16 }
-                // imageSource: images.share_contact,
-                // label: I18n.t('Contact')
+                key: BotInputBarCapabilities.file,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_file,
+                label: I18n.t('File_option')
             },
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     imageStyle: { width: 16, height: 16 }
+            //     imageSource: images.share_contact,
+            //     label: I18n.t('Contact')
+            // },
             {
                 key: BotInputBarCapabilities.pick_location,
                 imageStyle: { width: 14, height: 16 },
                 imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
             }
-            // {
-            //     key: BotInputBarCapabilities.share_contact,
-            //     label: I18n.t('Share_Contact')
-            // }
         ];
-
-        // if (this.bot.allowResetConversation) {
-        //     moreOptions.push({
-        //         key: BotInputBarCapabilities.reset_conversation,
-        //         label: I18n.t('Reset_Conversation')
-        //     });
-        // }
-        // if (appConfig.app.hideAddContacts !== true) {
-        //     moreOptions.push({
-        //         key: BotInputBarCapabilities.add_contact,
-        //         imageStyle: { width: 16, height: 16 },
-        //         imageSource: images.share_contact,
-        //         label: I18n.t('Add_Contact')
-        //     });
-        // }
 
         return (
             <KeyboardAvoidingView>
@@ -2018,8 +2085,14 @@ class ChatBotScreen extends React.Component {
                     onSendAudio={this.onSendAudio.bind(this)}
                     options={moreOptions}
                     botId={this.getBotId()}
-                    onOptionSelected={this.onOptionSelected.bind(this)}
+                    onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
+                    closeShowOptions={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        this.setState({ showOptions: false });
+                    }}
                 />
             </KeyboardAvoidingView>
         );
@@ -2106,11 +2179,8 @@ class ChatBotScreen extends React.Component {
                     testID="messages-list"
                 >
                     <TouchableWithoutFeedback
-                        onPress={() =>
-                            this.setState({
-                                showOptions: false
-                            })
-                        }
+                        disabled={!this.state.showOptions}
+                        onPress={this.onPlusButtonPressed.bind(this)}
                     >
                         <KeyboardAvoidingView
                             style={chatStyles.container}
@@ -2149,7 +2219,6 @@ class ChatBotScreen extends React.Component {
                             <View style={{ alignItems: 'center' }}>
                                 {this.renderChatInputBar()}
                             </View>
-
                             {this.renderNetworkStatusBar()}
                             {/* {this.renderCallModal()} */}
                             {this.renderChatModal()}

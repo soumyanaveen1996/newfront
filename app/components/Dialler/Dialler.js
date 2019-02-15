@@ -123,18 +123,18 @@ export default class Dialler extends React.Component {
             this.setState({ dialledNumber: this.props.number });
         }
 
-        // Sound.setCategory('Playback');
-        // const filler = new Sound(
-        //     'https://api.twilio.com/cowbell.mp3',
-        //     undefined,
-        //     error => {
-        //         if (error) {
-        //             return console.log('Failed to load sound', error);
-        //         }
+        Sound.setCategory('Playback');
+        const filler = new Sound(
+            'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/media/Hold+Music.mp3',
+            undefined,
+            error => {
+                if (error) {
+                    return console.log('Failed to load sound', error);
+                }
 
-        //         this.setState({ filler });
-        //     }
-        // );
+                this.setState({ filler });
+            }
+        );
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -162,41 +162,42 @@ export default class Dialler extends React.Component {
     }
     async getSatelliteCallNumber(number, user) {
         try {
-            const options = {
-                method: 'GET',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    '/v2/satelliteDetails?botId=onboarding-bot',
-                headers: {
-                    sessionId: user.creds.sessionId
-                }
-            };
-            const response = await Network(options);
-            const { data } = response;
-            const { error, content } = data;
-            if (error === 0) {
-                const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
-                let callingNumber;
-                if (number.startsWith('00870') || number.startsWith('00816')) {
-                    callingNumber = number.substring(2);
-                }
-                if (number.startsWith('+870') || number.startsWith('+8816')) {
-                    callingNumber = number.substring(1);
-                }
-
-                return {
-                    error: null,
-                    sat_phone_number: SAT_PHONE_NUM,
-                    sat_phone_pin: SAT_PHONE_PIN,
-                    phone_number: callingNumber
-                };
-            } else {
-                return {
-                    error,
-                    phoneNumber: null
-                };
+            // const options = {
+            //     method: 'GET',
+            //     url:
+            //         config.proxy.protocol +
+            //         config.proxy.host +
+            //         '/v2/satelliteDetails?botId=onboarding-bot',
+            //     headers: {
+            //         sessionId: user.creds.sessionId
+            //     }
+            // };
+            // const response = await Network(options);
+            // const { data } = response;
+            // const { error, content } = data;
+            // const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
+            let callingNumber;
+            if (number.startsWith('00870') || number.startsWith('00816')) {
+                callingNumber = number.substring(2);
             }
+            if (number.startsWith('+870') || number.startsWith('+8816')) {
+                callingNumber = number.substring(1);
+            }
+
+            return {
+                error: null,
+                sat_phone_number: null,
+                sat_phone_pin: null,
+                phone_number: callingNumber
+            };
+
+            // if (error === 0) {
+            // } else {
+            //     return {
+            //         error,
+            //         phoneNumber: null
+            //     };
+            // }
         } catch (error) {
             return {
                 error,
@@ -247,8 +248,8 @@ export default class Dialler extends React.Component {
                     Alert.alert('Unable to Call number');
                     return;
                 }
-                // toNumber = sat_phone_number;
-                toNumber = `SAT:${sat_phone_number}:${sat_phone_pin}:${phone_number}`;
+                toNumber = sat_phone_number;
+                toNumber = `SAT:${phone_number}`;
                 this.setState({
                     satCall: true,
                     satCallPin: sat_phone_pin,
@@ -342,16 +343,22 @@ export default class Dialler extends React.Component {
                 this.setState({ callTime: this.state.callTime + 1 });
             }, 1000);
             this.setState({ diallerState: DiallerState.incall, intervalId });
-            // this.state.filler.play(success => {
-            //     if (success) {
-            //         console.log('Played Sound');
-            //     } else {
-            //         console.log('playback failed due to audio decoding errors');
-            //         // reset the player to its uninitialized state (android only)
-            //         // this is the only option to recover after an error occured and use the player again
-            //         filler.release();
-            //     }
-            // });
+            if (this.state.satCall) {
+                this.state.filler.setNumberOfLoops(-1);
+                this.state.filler.play(success => {
+                    if (success) {
+                        console.log('Played Sound');
+                    } else {
+                        console.log(
+                            'playback failed due to audio decoding errors'
+                        );
+                        // reset the player to its uninitialized state (android only)
+                        // this is the only option to recover after an error occured and use the player again
+                        filler.release();
+                    }
+                });
+                setTimeout(() => this.state.filler.stop(), 43000);
+            }
         }
     }
 

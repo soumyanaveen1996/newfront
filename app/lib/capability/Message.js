@@ -24,10 +24,12 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_IMAGE: 'image',
     MESSAGE_TYPE_VIDEO: 'video',
     MESSAGE_TYPE_MAP: 'map',
+    MESSAGE_TYPE_MAP_RESPONSE: 'map_response',
     MESSAGE_TYPE_SLIDER_RESPONSE: 'slider_response', //Legacy
     MESSAGE_TYPE_SLIDER_CANCEL: 'slider_cancel', //Legacy
     MESSAGE_TYPE_BUTTON_RESPONSE: 'button_response',
     MESSAGE_TYPE_FORM_RESPONSE: 'form_response',
+    MESSAGE_TYPE_CLOSE_FORM: 'close_form',
     MESSAGE_TYPE_AUDIO: 'audio',
     MESSAGE_TYPE_CHART: 'chart',
     MESSAGE_TYPE_WAIT: 'wait',
@@ -46,7 +48,9 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_MENU: 'menu',
     MESSAGE_TYPE_STD_NOTIFICATION: 'standard_notification',
     MESSAGE_TYPE_CRITICAL_NOTIFICATION: 'critical_notification',
-    MESSAGE_TYPE_LOCATION: 'location'
+    MESSAGE_TYPE_LOCATION: 'location',
+    MESSAGE_TYPE_STRIPE: 'stripe',
+    MESSAGE_TYPE_STRIPE_RESPONSE: 'stripe_response'
 };
 
 export const IntToMessageTypeConstants = {
@@ -75,7 +79,11 @@ export const IntToMessageTypeConstants = {
     420: MessageTypeConstants.MESSAGE_TYPE_TABLE,
     430: MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD,
     440: MessageTypeConstants.MESSAGE_TYPE_DATA_CARD,
-    450: MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+    450: MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE,
+    460: MessageTypeConstants.MESSAGE_TYPE_STRIPE,
+    470: MessageTypeConstants.MESSAGE_TYPE_STRIPE_RESPONSE,
+    480: MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
+    490: MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -314,6 +322,11 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_MAP;
     };
 
+    mapResponseMessage = response => {
+        this._msg = JSON.stringify(response || {});
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE;
+    };
+
     locationMessage = (mapData, options) => {
         this._msg = JSON.stringify(mapData || []);
         if (options) {
@@ -362,6 +375,8 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LIST ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE ||
@@ -395,6 +410,25 @@ export default class Message {
     getDisplayMessage = () => {
         // TODO(amal): Have to handle other message types.
         if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
+        ) {
+            return '';
+        } else if (
             this._messageType ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE
         ) {
@@ -412,11 +446,6 @@ export default class Message {
             let item = this.getMessage();
             return I18n.t('Slider_Response_Message', { lines: item.title });
         } else if (
-            this._messageType ===
-            MessageTypeConstants.MESSAGE_TYPE_FORM_RESPONSE
-        ) {
-            return '';
-        } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
             return this.getMessage().actionText;
@@ -428,15 +457,6 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
             return 'form';
-        } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WAIT
-        ) {
-            return '';
-        } else if (
-            this._messageType ===
-            MessageTypeConstants.MESSAGE_TYPE_SESSION_START
-        ) {
-            return '';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_AUDIO
         ) {
@@ -450,42 +470,11 @@ export default class Message {
         ) {
             return 'Video';
         } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_OPEN
-        ) {
-            return '';
-        } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL
-        ) {
-            return '';
-        } else if (
-            this._messageType ===
-            MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL
-        ) {
-            return '';
-        } else if (
-            this._messageType ===
-            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
-        ) {
-            return '';
-        } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
             let items = this.getMessage();
             let titles = _.map(items, item => item.title);
             return I18n.t('Button_Message', { lines: titles.join(' or ') });
-        } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
-        ) {
-            return '';
-        } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
-        ) {
-            return '';
-        } else if (
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
-        ) {
-            return '';
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
         ) {
@@ -540,7 +529,9 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
         ) {
             try {
                 return JSON.parse(this._options);
@@ -654,7 +645,11 @@ export default class Message {
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
-            messageDate: parseInt(json.createdOn, 10)
+            messageDate: parseInt(json.createdOn, 10),
+            options:
+                typeof json.options === 'string'
+                    ? json.options
+                    : JSON.stringify(json.options)
         };
         return new Message(options);
     }
@@ -668,7 +663,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_FORM_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
-            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+            MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
+            MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;

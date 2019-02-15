@@ -310,6 +310,18 @@ export const Icons = {
         15,
         GlobalColors.sideButtons
     ),
+    contextSlideshowButtonUp: icon(
+        'ios-arrow-up',
+        'ionicon',
+        20,
+        GlobalColors.headerBlack
+    ),
+    contextSlideshowButtonDown: icon(
+        'ios-arrow-down',
+        'ionicon',
+        20,
+        GlobalColors.headerBlack
+    ),
 
     //FORM
     formMessageArrow: icon(
@@ -343,13 +355,19 @@ export const Icons = {
     fileIcon: icon(
         'ios-document-outline',
         'ionicon',
-        50,
-        GlobalColors.headerBlack
+        70,
+        GlobalColors.disabledGray
+    ),
+    fileIconSmall: icon(
+        'ios-document-outline',
+        'ionicon',
+        30,
+        GlobalColors.darkGray
     ),
     downloadFile: icon(
         'arrow-collapse-down',
         'material-community',
-        30,
+        15,
         GlobalColors.white
     )
 };

@@ -170,6 +170,7 @@ class RemoteBotInstall {
                         }
                     });
                 })
+                .then(() => resolve())
                 .catch(error => console.log(error));
         });
 }
