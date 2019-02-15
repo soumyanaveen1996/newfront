@@ -1931,10 +1931,152 @@ class ChatBotScreen extends React.Component {
         ];
 
         return (
-            <View>
-                {this.state.showOptions
-                    ? this.renderOptionsMenu(moreOptions)
-                    : null}
+            <KeyboardAvoidingView>
+                {this.state.showOptions && (
+                    <TouchableWithoutFeedback
+                        onPress={() => {
+                            // console.log('more option');
+                            this.setState({ showOptions: true });
+                        }}
+                    >
+                        <View style={chatStyles.moreOptionContainer}>
+                            {moreOptions.map((elem, index) => {
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        disabled={
+                                            elem.key ===
+                                            BotInputBarCapabilities.share_contact
+                                        }
+                                        onPress={() => {
+                                            this.selectOption(elem.key);
+                                        }}
+                                        style={chatStyles.optionContainer}
+                                    >
+                                        <View
+                                            style={
+                                                elem.key ===
+                                                BotInputBarCapabilities.share_contact
+                                                    ? chatStyles.moreOptionImageContainerHide
+                                                    : chatStyles.moreOptionImageContainer
+                                            }
+                                        >
+                                            <Image
+                                                style={elem.imageStyle}
+                                                source={elem.imageSource}
+                                            />
+                                        </View>
+                                        <Text style={chatStyles.optionText}>
+                                            {elem.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+
+                            {/* <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.camera
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_camera}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Camera</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.photo_library
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_photo_library}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>
+                                Photo Library
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.bar_code_scanner
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 14 }}
+                                    source={images.share_code}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Code</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(BotInputBarCapabilities.file);
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 14, height: 16 }}
+                                    source={images.share_file}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>File</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.add_contact
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 16, height: 16 }}
+                                    source={images.share_contact}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Contact</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.selectOption(
+                                    BotInputBarCapabilities.pick_location
+                                );
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View style={chatStyles.moreOptionImageContainer}>
+                                <Image
+                                    style={{ width: 14, height: 16 }}
+                                    source={images.share_location}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>Location</Text>
+                        </TouchableOpacity> */}
+                        </View>
+                    </TouchableWithoutFeedback>
+                )}
+
                 <ChatInputBar
                     accessibilityLabel="Chat Input Bar"
                     testID="chat-input-bar"
@@ -1952,7 +2094,7 @@ class ChatBotScreen extends React.Component {
                         this.setState({ showOptions: false });
                     }}
                 />
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 
@@ -2047,6 +2189,7 @@ class ChatBotScreen extends React.Component {
                                 Constants.DEFAULT_HEADER_HEIGHT +
                                 (Utils.isiPhoneX() ? 24 : 0)
                             }
+                            enabled
                         >
                             <FlatList
                                 style={chatStyles.messagesList}
