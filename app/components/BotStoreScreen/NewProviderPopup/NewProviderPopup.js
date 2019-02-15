@@ -39,7 +39,7 @@ export default class NewProviderPopup extends Component {
     }
 
     cancelNewProvider = () => {
-        this.props.canelNewProvider(false);
+        this.props.cancelNewProvider(false);
     };
 
     async newProvider() {
@@ -73,12 +73,12 @@ export default class NewProviderPopup extends Component {
 
     readBarCode = async () => {
         Keyboard.dismiss();
-        this.props.canelNewProvider(false);
+        this.props.cancelNewProvider(false);
         let result = await Media.readBarcode();
         if (!result.cancelled) {
             this.props.onSubmittingCode(result.data);
         } else {
-            this.props.canelNewProvider(true);
+            this.props.cancelNewProvider(true);
         }
     };
 

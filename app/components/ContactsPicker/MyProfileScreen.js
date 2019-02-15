@@ -138,7 +138,7 @@ class MyProfileScreen extends React.Component {
     };
 
     saveProfile = async () => {
-        // this.setState({ loading: true });
+        this.setState({ loading: true });
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
             searchable: this.state.searchable,
@@ -202,6 +202,7 @@ class MyProfileScreen extends React.Component {
                     console.log('error ', err);
                 });
         }
+        Actions.pop();
     };
 
     selectNumberType = index => {

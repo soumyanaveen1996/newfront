@@ -14,7 +14,9 @@ import {
     Text,
     SafeAreaView,
     Platform,
-    PermissionsAndroid
+    PermissionsAndroid,
+    LayoutAnimation,
+    UIManager
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -160,6 +162,8 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -1676,8 +1680,26 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    onOptionSelected() {
-        this.setState({ showOptions: !this.state.showOptions });
+    onPlusButtonPressed() {
+        if (this.state.showOptions === false) {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            Keyboard.dismiss();
+            this.sliderPreviousState = this.state.showSlider;
+            this.setState({
+                showOptions: true,
+                showSlider: false
+            });
+        } else {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            this.setState({
+                showOptions: false,
+                showSlider: this.sliderPreviousState || false
+            });
+        }
     }
 
     selectOption = key => {
@@ -1811,6 +1833,45 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderOptionsMenu(options) {
+        return (
+            <View style={chatStyles.moreOptionContainer}>
+                {options.map((elem, index) => {
+                    return (
+                        <TouchableOpacity
+                            key={index}
+                            disabled={
+                                elem.key ===
+                                BotInputBarCapabilities.share_contact
+                            }
+                            onPress={() => {
+                                this.selectOption(elem.key);
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View
+                                style={
+                                    elem.key ===
+                                    BotInputBarCapabilities.share_contact
+                                        ? chatStyles.moreOptionImageContainerHide
+                                        : chatStyles.moreOptionImageContainer
+                                }
+                            >
+                                <Image
+                                    style={elem.imageStyle}
+                                    source={elem.imageSource}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>
+                                {elem.label}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
@@ -1819,8 +1880,6 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_camera,
                 label: I18n.t('Camera_option')
             },
-            // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
-            // { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
             {
                 key: BotInputBarCapabilities.photo_library,
                 imageStyle: { width: 16, height: 14 },
@@ -1839,186 +1898,25 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_file,
                 label: I18n.t('File_option')
             },
-            {
-                key: BotInputBarCapabilities.share_contact,
-                imageStyle: { width: 16, height: 16 }
-                // imageSource: images.share_contact,
-                // label: I18n.t('Contact')
-            },
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     imageStyle: { width: 16, height: 16 }
+            //     imageSource: images.share_contact,
+            //     label: I18n.t('Contact')
+            // },
             {
                 key: BotInputBarCapabilities.pick_location,
                 imageStyle: { width: 14, height: 16 },
                 imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
             }
-            // {
-            //     key: BotInputBarCapabilities.share_contact,
-            //     label: I18n.t('Share_Contact')
-            // }
         ];
-
-        // if (this.bot.allowResetConversation) {
-        //     moreOptions.push({
-        //         key: BotInputBarCapabilities.reset_conversation,
-        //         label: I18n.t('Reset_Conversation')
-        //     });
-        // }
-        // if (appConfig.app.hideAddContacts !== true) {
-        //     moreOptions.push({
-        //         key: BotInputBarCapabilities.add_contact,
-        //         imageStyle: { width: 16, height: 16 },
-        //         imageSource: images.share_contact,
-        //         label: I18n.t('Add_Contact')
-        //     });
-        // }
 
         return (
             <View>
-                {this.state.showOptions && (
-                    <TouchableWithoutFeedback
-                        onPress={() => {
-                            // console.log('more option');
-                            this.setState({ showOptions: true });
-                        }}
-                    >
-                        <View style={chatStyles.moreOptionContainer}>
-                            {moreOptions.map((elem, index) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={index}
-                                        disabled={
-                                            elem.key ===
-                                            BotInputBarCapabilities.share_contact
-                                        }
-                                        onPress={() => {
-                                            this.selectOption(elem.key);
-                                        }}
-                                        style={chatStyles.optionContainer}
-                                    >
-                                        <View
-                                            style={
-                                                elem.key ===
-                                                BotInputBarCapabilities.share_contact
-                                                    ? chatStyles.moreOptionImageContainerHide
-                                                    : chatStyles.moreOptionImageContainer
-                                            }
-                                        >
-                                            <Image
-                                                style={elem.imageStyle}
-                                                source={elem.imageSource}
-                                            />
-                                        </View>
-                                        <Text style={chatStyles.optionText}>
-                                            {elem.label}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-
-                            {/* <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(
-                                    BotInputBarCapabilities.camera
-                                );
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 16, height: 14 }}
-                                    source={images.share_camera}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>Camera</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(
-                                    BotInputBarCapabilities.photo_library
-                                );
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 16, height: 14 }}
-                                    source={images.share_photo_library}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>
-                                Photo Library
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(
-                                    BotInputBarCapabilities.bar_code_scanner
-                                );
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 16, height: 14 }}
-                                    source={images.share_code}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>Code</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(BotInputBarCapabilities.file);
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 14, height: 16 }}
-                                    source={images.share_file}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>File</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(
-                                    BotInputBarCapabilities.add_contact
-                                );
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 16, height: 16 }}
-                                    source={images.share_contact}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>Contact</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.selectOption(
-                                    BotInputBarCapabilities.pick_location
-                                );
-                            }}
-                            style={chatStyles.optionContainer}
-                        >
-                            <View style={chatStyles.moreOptionImageContainer}>
-                                <Image
-                                    style={{ width: 14, height: 16 }}
-                                    source={images.share_location}
-                                />
-                            </View>
-                            <Text style={chatStyles.optionText}>Location</Text>
-                        </TouchableOpacity> */}
-                        </View>
-                    </TouchableWithoutFeedback>
-                )}
-
+                {this.state.showOptions
+                    ? this.renderOptionsMenu(moreOptions)
+                    : null}
                 <ChatInputBar
                     accessibilityLabel="Chat Input Bar"
                     testID="chat-input-bar"
@@ -2027,9 +1925,12 @@ class ChatBotScreen extends React.Component {
                     onSendAudio={this.onSendAudio.bind(this)}
                     options={moreOptions}
                     botId={this.getBotId()}
-                    onOptionSelected={this.onOptionSelected.bind(this)}
+                    onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
                     closeShowOptions={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
                         this.setState({ showOptions: false });
                     }}
                 />
@@ -2118,11 +2019,8 @@ class ChatBotScreen extends React.Component {
                     testID="messages-list"
                 >
                     <TouchableWithoutFeedback
-                        onPress={() =>
-                            this.setState({
-                                showOptions: !this.state.showOptions
-                            })
-                        }
+                        disabled={!this.state.showOptions}
+                        onPress={this.onPlusButtonPressed.bind(this)}
                     >
                         <KeyboardAvoidingView
                             style={chatStyles.container}
@@ -2160,7 +2058,6 @@ class ChatBotScreen extends React.Component {
                             <View style={{ alignItems: 'center' }}>
                                 {this.renderChatInputBar()}
                             </View>
-
                             {this.renderNetworkStatusBar()}
                             {/* {this.renderCallModal()} */}
                             {this.renderChatModal()}
