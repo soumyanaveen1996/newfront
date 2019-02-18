@@ -1931,7 +1931,8 @@ class ChatBotScreen extends React.Component {
         ];
 
         return (
-            <KeyboardAvoidingView>
+            // <KeyboardAvoidingView></KeyboardAvoidingView>
+            <View>
                 {this.state.showOptions && (
                     <TouchableWithoutFeedback
                         onPress={() => {
@@ -2094,7 +2095,7 @@ class ChatBotScreen extends React.Component {
                         this.setState({ showOptions: false });
                     }}
                 />
-            </KeyboardAvoidingView>
+            </View>
         );
     }
 
