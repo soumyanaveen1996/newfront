@@ -276,6 +276,7 @@ export default class Message {
     };
 
     closeFormMessage = formId => {
+        console.log('>>>>>create message');
         this._msg = formId || '';
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM;
     };

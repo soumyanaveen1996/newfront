@@ -727,6 +727,7 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
+        console.log(message, '>>>>> tell ');
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
@@ -963,6 +964,7 @@ class ChatBotScreen extends React.Component {
     }
 
     closeForm(formId) {
+        console.log('>>>>>>> close form');
         MessageHandler.fetchDeviceMessagesOfType(
             this.getBotKey(),
             MessageTypeConstants.MESSAGE_TYPE_FORM2
