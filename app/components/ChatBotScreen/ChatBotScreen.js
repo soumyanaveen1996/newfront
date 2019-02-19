@@ -729,7 +729,6 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
-        console.log(message, '>>>>> tell ');
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
@@ -765,7 +764,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
         ) {
-            this.closeForm(message.getMessageOptions().formId);
+            this.closeForm(message.getMessage().formId);
         } else {
             this.updateChat(message);
         }
@@ -966,19 +965,37 @@ class ChatBotScreen extends React.Component {
     }
 
     closeForm(formId) {
-        console.log('>>>>>>> close form');
+        //on screen
+        const newScreenMessages = _.map(this.state.messages, screenMessage => {
+            let message = screenMessage.message;
+            if (
+                message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_FORM2 &&
+                message.getMessageOptions().formId === formId
+            ) {
+                let newOptions = message.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                message.form2Message(message.getMessage(), newOptions);
+                screenMessage.message = message;
+            }
+            return screenMessage;
+        });
+        this.setState({ messages: newScreenMessages });
+
+        //persistence
         MessageHandler.fetchDeviceMessagesOfType(
             this.getBotKey(),
             MessageTypeConstants.MESSAGE_TYPE_FORM2
         ).then(messages => {
-            console.log(messages, '>>>>>');
-            let form = _.find(messages, msg => {
+            let forms = _.filter(messages, msg => {
                 return msg.getMessageOptions().formId === formId;
             });
-            let newOptions = form.getMessageOptions();
-            newOptions.stage = formStatus.COMPLETED;
-            form.form2Message(form.getMessage(), newOptions);
-            this.persistMessage(form);
+            _.map(forms, form => {
+                let newOptions = form.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                form.form2Message(form.getMessage(), newOptions);
+                this.persistMessage(form);
+            });
         });
     }
 

@@ -275,9 +275,8 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM2;
     };
 
-    closeFormMessage = formId => {
-        console.log('>>>>>create message');
-        this._msg = formId || '';
+    closeFormMessage = form => {
+        this._msg = JSON.stringify(form || {});
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM;
     };
 
@@ -399,7 +398,8 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SLIDER_RESPONSE ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SESSION_START ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
         ) {
             try {
                 return JSON.parse(this._msg);

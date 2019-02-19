@@ -206,12 +206,20 @@ export default class Form2 extends React.Component {
             dropdownModalVisible: false,
             dropdownModalValue: null,
             dropdownModalOptions: [],
-            dropdownModalTitle: ''
+            dropdownModalTitle: '',
+            disabled: this.props.formStatus === formStatus.COMPLETED
         };
-        this.disabled = this.props.formStatus === formStatus.COMPLETED;
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.formStatus !== this.props.formStatus) {
+            this.setState({
+                disabled: this.props.formStatus === formStatus.COMPLETED
+            });
+        }
     }
 
     componentDidMount() {
@@ -277,7 +285,7 @@ export default class Form2 extends React.Component {
     renderTextField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!this.state.disabled}
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -291,7 +299,7 @@ export default class Form2 extends React.Component {
     renderNumberField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!this.state.disabled}
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -308,7 +316,7 @@ export default class Form2 extends React.Component {
         return (
             <TextInput
                 multiline={true}
-                editable={!this.disabled}
+                editable={!this.state.disabled}
                 style={styles.textArea}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -324,11 +332,11 @@ export default class Form2 extends React.Component {
         let options = _.map(content.options, (option, index) => {
             return (
                 <CheckBox
-                    disabled={this.disabled}
+                    disabled={this.state.disabled}
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        if (!this.disabled) {
+                        if (!this.state.disabled) {
                             this.answers[key].value[index] = !this.answers[key]
                                 .value[index];
                             this.setState({ answers: this.answers });
@@ -355,7 +363,7 @@ export default class Form2 extends React.Component {
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        if (!this.disabled) {
+                        if (!this.state.disabled) {
                             this.answers[key].value = index;
                             this.setState({ answers: this.answers });
                         }
@@ -377,7 +385,7 @@ export default class Form2 extends React.Component {
     renderDropdown(content, key) {
         return (
             <TouchableOpacity
-                disabled={this.disabled}
+                disabled={this.state.disabled}
                 onPress={() => {
                     this.currentDropdownModalKey = key;
                     this.setState({
@@ -459,7 +467,7 @@ export default class Form2 extends React.Component {
     renderSwitch(content, key) {
         return (
             <Switch
-                disabled={this.disabled}
+                disabled={this.state.disabled}
                 onValueChange={value => {
                     this.answers[key].value = value;
                     this.setState({ answers: this.answers });
@@ -472,7 +480,7 @@ export default class Form2 extends React.Component {
     renderSlider(content, key) {
         return (
             <Slider
-                disabled={this.disabled}
+                disabled={this.state.disabled}
                 maximumValue={100}
                 minimumValue={0}
                 onValueChange={value => {
@@ -490,7 +498,7 @@ export default class Form2 extends React.Component {
     renderDate(content, key) {
         return (
             <TouchableOpacity
-                disabled={this.disabled}
+                disabled={this.state.disabled}
                 onPress={async () => {
                     if (Platform.OS === 'android') {
                         DatePickerAndroid.open({
@@ -585,7 +593,7 @@ export default class Form2 extends React.Component {
                         options: content.options,
                         response: this.answers[key].value,
                         onDone: this.onMultiselectionDone.bind(this),
-                        disabled: this.disabled
+                        disabled: this.state.disabled
                     });
                 }}
                 style={styles.multiselectionContainer}
@@ -606,7 +614,7 @@ export default class Form2 extends React.Component {
     renderPasswordField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!this.state.disabled}
                 onChangeText={text => {
                     this.answers[key].value = text;
                     this.setState({ answers: this.answers });
@@ -686,7 +694,7 @@ export default class Form2 extends React.Component {
                         <TouchableOpacity
                             style={styles.f2CancelButton}
                             onPress={() => {
-                                if (!this.disabled) {
+                                if (!this.state.disabled) {
                                     this.props.saveMessage(this.saveFormData());
                                 }
                                 Actions.pop();
@@ -697,7 +705,7 @@ export default class Form2 extends React.Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            disabled={this.disabled}
+                            disabled={this.state.disabled}
                             style={styles.f2DoneButton}
                             onPress={() => {
                                 let response = this.getResponse();

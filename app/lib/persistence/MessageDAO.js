@@ -412,7 +412,7 @@ const selectMessagesOfType = (botkey, messageType) =>
                         : [];
                     let messages = dbMessages.map(msg => {
                         let message = messageFromDatabaseRow(msg);
-                        return message.toBotDisplay();
+                        return message;
                     });
                     return resolve(messages);
                 },
