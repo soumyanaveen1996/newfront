@@ -623,9 +623,10 @@ class ChatBotScreen extends React.Component {
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        if (Platform.OS === 'android' && this.state.sliderClosed) {
-            this.setState({ showSlider: true });
-        }
+        this.setState({ showSlider: true });
+        // if (Platform.OS === 'android' && this.state.sliderClosed) {
+        //     this.setState({ showSlider: true });
+        // }
     };
 
     handleMessageEvents(event) {
@@ -2081,6 +2082,7 @@ class ChatBotScreen extends React.Component {
                         enabled
                     >
                         <TouchableWithoutFeedback
+                            style={{ flex: 1 }}
                             disabled={!this.state.showOptions}
                             onPress={this.onPlusButtonPressed.bind(this)}
                         >
