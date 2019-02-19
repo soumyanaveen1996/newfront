@@ -77,7 +77,7 @@ export default class Datacard extends React.Component {
             } else {
                 return (
                     <Text
-                        style={styles.fieldText}
+                        style={[styles.fieldText, { textAlign: 'left' }]}
                         numberOfLines={1}
                         ellipsizeMode={'tail'}
                     >
