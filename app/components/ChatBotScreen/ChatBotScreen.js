@@ -958,14 +958,16 @@ class ChatBotScreen extends React.Component {
     }
 
     onFormDone(response) {
-        let message = new Message({ addedByBot: false });
+        let message = new Message();
+        message.messageByBot(false);
         message.formResponseMessage(response);
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
     }
 
     closeForm(formId) {
-        //on screen
+        let validFormMessages = [];
+        //ON SCREEN
         const newScreenMessages = _.map(this.state.messages, screenMessage => {
             let message = screenMessage.message;
             if (
@@ -973,6 +975,7 @@ class ChatBotScreen extends React.Component {
                     MessageTypeConstants.MESSAGE_TYPE_FORM2 &&
                 message.getMessageOptions().formId === formId
             ) {
+                validFormMessages.push(message);
                 let newOptions = message.getMessageOptions();
                 newOptions.stage = formStatus.COMPLETED;
                 message.form2Message(message.getMessage(), newOptions);
@@ -982,7 +985,21 @@ class ChatBotScreen extends React.Component {
         });
         this.setState({ messages: newScreenMessages });
 
-        //persistence
+        //RESPONSE
+        let lastForm = validFormMessages[validFormMessages.length - 1];
+        response = {
+            formId: formId,
+            fields: _.map(lastForm.getMessage(), field => {
+                res = {
+                    id: field.id,
+                    value: field.value
+                };
+                return res;
+            })
+        };
+        this.onFormDone(response);
+
+        //PERSISTENCE
         MessageHandler.fetchDeviceMessagesOfType(
             this.getBotKey(),
             MessageTypeConstants.MESSAGE_TYPE_FORM2

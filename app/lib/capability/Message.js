@@ -304,7 +304,7 @@ export default class Message {
     };
 
     formResponseMessage = (formData, options) => {
-        this._msg = JSON.stringify(formData || []);
+        this._msg = JSON.stringify(formData || {});
         if (options) {
             this._options = JSON.stringify(options);
         }
