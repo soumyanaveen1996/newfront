@@ -20,9 +20,10 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     messagesList: {
-        height: hp('100%'),
+        // height: hp('80%'),
         flexGrow: 0,
         overflow: 'visible'
+        // flexDirection: 'column-reverse'
     },
     row: {
         marginTop: 12,

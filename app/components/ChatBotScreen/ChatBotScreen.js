@@ -613,18 +613,20 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.sliderPreviousState = this.state.showSlider || false;
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
+            this.setState({ sliderClosed: true, showOptions: false });
         } else {
-            this.setState({ sliderClosed: false });
+            this.setState({ sliderClosed: false, showOptions: false });
         }
     };
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        this.setState({ showSlider: true });
+        this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
@@ -1698,7 +1700,7 @@ class ChatBotScreen extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
             Keyboard.dismiss();
-            this.sliderPreviousState = this.state.showSlider;
+            this.sliderPreviousState = this.state.showSlider || false;
             this.setState({
                 showOptions: true,
                 showSlider: false
@@ -2060,7 +2062,7 @@ class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={chatStyles.safeArea}>
                 <BackgroundImage
                     accessibilityLabel="Messages List"
                     testID="messages-list"
@@ -2079,7 +2081,12 @@ class ChatBotScreen extends React.Component {
                             disabled={!this.state.showOptions}
                             onPress={this.onPlusButtonPressed.bind(this)}
                         >
-                            <View style={{ flex: 1 }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end'
+                                }}
+                            >
                                 <FlatList
                                     style={chatStyles.messagesList}
                                     ListFooterComponent={this.renderSmartSuggestions()}
