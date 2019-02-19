@@ -20,6 +20,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     messagesList: {
+        height: hp('100%'),
         flexGrow: 0,
         overflow: 'visible'
     },
