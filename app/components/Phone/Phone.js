@@ -84,11 +84,11 @@ export default class Phone extends React.Component {
         }
     }
 
-    findCallerName({ username }) {
+    async findCallerName({ username }) {
         // const {username} = this.state
         if (username && _.startsWith(username, 'client:')) {
             const clientId = username.substr(7);
-            const clientDetails = ContactsCache.getUserDetails(clientId);
+            const clientDetails = await ContactsCache.getUserDetails(clientId);
             if (clientDetails) {
                 if (this.mounted) {
                     this.setState({
