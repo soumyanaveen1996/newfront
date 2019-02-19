@@ -275,6 +275,11 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_FORM2;
     };
 
+    closeFormMessage = formId => {
+        this._msg = formId || '';
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM;
+    };
+
     formMessage = (formData, options) => {
         this._msg = JSON.stringify(formData || []);
         if (options) {
@@ -664,7 +669,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL,
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
             MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
-            MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE
+            MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE,
+            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;

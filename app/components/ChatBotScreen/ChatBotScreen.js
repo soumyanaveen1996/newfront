@@ -85,6 +85,7 @@ import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
+import { formStatus } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import { setCurrentConversationId } from '../../redux/actions/UserActions';
@@ -739,20 +740,6 @@ class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_MAP ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_HTML ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
-        ) {
-            this.updateChat(message);
-        } else if (
-            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -771,6 +758,11 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
             this.openChart(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
+        ) {
+            this.closeForm(message.getMessageOptions().formId);
         } else {
             this.updateChat(message);
         }
@@ -970,19 +962,21 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    onFormOpen = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formOpenMessage();
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
-
-    onFormCancel = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formCancelMessage(formMessage);
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
+    closeForm(formId) {
+        MessageHandler.fetchDeviceMessagesOfType(
+            this.getBotKey(),
+            MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ).then(messages => {
+            console.log(messages, '>>>>>');
+            let form = _.find(messages, msg => {
+                return msg.getMessageOptions().formId === formId;
+            });
+            let newOptions = form.getMessageOptions();
+            newOptions.stage = formStatus.COMPLETED;
+            form.form2Message(form.getMessage(), newOptions);
+            this.persistMessage(form);
+        });
+    }
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
@@ -1181,9 +1175,6 @@ class ChatBotScreen extends React.Component {
                         user={this.user}
                         imageSource={{ uri: this.bot.logoUrl }}
                         onDoneBtnClick={this.onButtonDone.bind()}
-                        onFormCTAClick={this.onFormDone.bind(this)}
-                        onFormCancel={this.onFormCancel.bind(this)}
-                        onFormOpen={this.onFormOpen.bind(this)}
                         showTime={item.showTime}
                         openModalWithContent={this.openModalWithContent.bind(
                             this
