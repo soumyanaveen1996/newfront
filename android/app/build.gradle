@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 170
+        versionCode 172
         versionName "3.7"
         multiDexEnabled true
         ndk {
