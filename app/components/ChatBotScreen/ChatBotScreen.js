@@ -2067,7 +2067,7 @@ class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={chatStyles.safeArea}>
                 <BackgroundImage
                     accessibilityLabel="Messages List"
                     testID="messages-list"
@@ -2086,7 +2086,12 @@ class ChatBotScreen extends React.Component {
                             disabled={!this.state.showOptions}
                             onPress={this.onPlusButtonPressed.bind(this)}
                         >
-                            <View style={{ flex: 1 }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end'
+                                }}
+                            >
                                 <FlatList
                                     style={chatStyles.messagesList}
                                     ListFooterComponent={this.renderSmartSuggestions()}
