@@ -612,18 +612,20 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.sliderPreviousState = this.state.showSlider || false;
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
+            this.setState({ sliderClosed: true, showOptions: false });
         } else {
-            this.setState({ sliderClosed: false });
+            this.setState({ sliderClosed: false, showOptions: false });
         }
     };
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        this.setState({ showSlider: true });
+        this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
@@ -1705,7 +1707,7 @@ class ChatBotScreen extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
             Keyboard.dismiss();
-            this.sliderPreviousState = this.state.showSlider;
+            this.sliderPreviousState = this.state.showSlider || false;
             this.setState({
                 showOptions: true,
                 showSlider: false
