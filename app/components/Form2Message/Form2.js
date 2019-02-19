@@ -98,6 +98,7 @@ export default class Form2 extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(this.props.formData, '>>>>>>>');
         this.answers = []; //used to store data to render the UI. This is not what the form will send to the bot
         _.map(this.props.formData, (fieldData, index) => {
             let answer = {
@@ -261,17 +262,31 @@ export default class Form2 extends React.Component {
     /////////////////////////////
 
     getResponse() {
-        let response = {
-            formId: this.props.id,
-            fields: _.map(this.answers, answer => {
-                let field = {
-                    id: answer.id,
-                    value: answer.getResponse()
-                };
-                return field;
-            })
-        };
-        return response;
+        try {
+            let response = {
+                formId: this.props.id,
+                fields: _.map(this.answers, (answer, index) => {
+                    const responseValue = answer.getResponse();
+                    if (this.props.formData[index].mandatory) {
+                        if (
+                            !responseValue ||
+                            responseValue === '' ||
+                            responseValue === []
+                        ) {
+                            throw new Error('FORM: Mandatory answer not found');
+                        }
+                    }
+                    let field = {
+                        id: answer.id,
+                        value: responseValue
+                    };
+                    return field;
+                })
+            };
+            return response;
+        } catch (e) {
+            throw e;
+        }
     }
 
     saveFormData() {
@@ -599,6 +614,7 @@ export default class Form2 extends React.Component {
             >
                 <Text style={styles.optionText}>
                     {title || 'Multiple selection'}
+                    {this.renderMandatorySign(content)}
                 </Text>
                 {Icons.formMessageArrow()}
             </TouchableOpacity>
@@ -670,10 +686,19 @@ export default class Form2 extends React.Component {
         }
         return (
             <View style={styles.f2FieldContainer} key={key}>
-                <Text style={styles.f2LabelTitle}>{fieldData.title || ''}</Text>
+                <Text style={styles.f2LabelTitle}>
+                    {fieldData.title || ''}
+                    {this.renderMandatorySign(fieldData)}
+                </Text>
                 {field}
             </View>
         );
+    }
+
+    renderMandatorySign(fieldData) {
+        if (fieldData.mandatory) {
+            return <Text style={{ color: 'red' }}> *</Text>;
+        }
     }
 
     renderFields() {
@@ -707,12 +732,16 @@ export default class Form2 extends React.Component {
                             disabled={this.state.disabled}
                             style={styles.f2DoneButton}
                             onPress={() => {
-                                let response = this.getResponse();
-                                this.props.onDone(
-                                    this.saveFormData(),
-                                    response
-                                );
-                                Actions.pop();
+                                try {
+                                    let response = this.getResponse();
+                                    this.props.onDone(
+                                        this.saveFormData(),
+                                        response
+                                    );
+                                    Actions.pop();
+                                } catch (e) {
+                                    console.log(e);
+                                }
                             }}
                         >
                             <Text style={styles.f2DoneButtonText}>
