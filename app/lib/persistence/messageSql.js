@@ -102,6 +102,25 @@ const selectRecentMessages = `
     OFFSET ?;
 `;
 
+const selectMessagesOfType = `
+    SELECT
+        message_id,
+        bot_key,
+        msg,
+        message_type,
+        options,
+        added_by_bot,
+        message_date,
+        read,
+        is_favorite,
+        created_by,
+        completed,
+        status
+    FROM messages
+    WHERE bot_key = ?
+        AND message_type = ?
+`;
+
 const selectMessagesBeforeDate = `
     SELECT
         message_id,
@@ -201,6 +220,7 @@ export default {
     createV2MessageTable: createV2MessageTable,
     insertMessage: insertMessage,
     selectRecentMessages: selectRecentMessages,
+    selectMessagesOfType: selectMessagesOfType,
     selectMessagesBeforeDate: selectMessagesBeforeDate,
     deleteMessage: deleteMessage,
     markAsRead: markAsRead,

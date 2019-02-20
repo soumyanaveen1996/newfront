@@ -206,8 +206,10 @@ const styles = StyleSheet.create({
         color: GlobalColors.headerBlack
     },
     fieldText: {
+        flex: 1,
         fontSize: 17,
         fontWeight: '100',
+        textAlign: 'right',
         color: GlobalColors.headerBlack
     },
     dataTitle: {

@@ -196,7 +196,7 @@ export default class ContextSlideshow extends React.Component {
             return (
                 <View style={styles.fieldModal}>
                     <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
-                    {this.renderDataCardValue(cardData[key], true)}
+                    {this.renderDataCardValue(cardData[key])}
                 </View>
             );
         });
@@ -210,7 +210,7 @@ export default class ContextSlideshow extends React.Component {
         );
     }
 
-    renderDataCardValue(value, isModal) {
+    renderDataCardValue(value) {
         if (value === null || value === undefined) {
             return <Text style={styles.fieldText}>-</Text>;
         } else if (typeof value === 'boolean') {
@@ -220,19 +220,7 @@ export default class ContextSlideshow extends React.Component {
                 return Icons.cardsFalse();
             }
         } else {
-            if (isModal) {
-                return <Text style={styles.fieldText}>{value.toString()}</Text>;
-            } else {
-                return (
-                    <Text
-                        style={styles.fieldText}
-                        numberOfLines={1}
-                        ellipsizeMode={'tail'}
-                    >
-                        {value.toString()}
-                    </Text>
-                );
-            }
+            return <Text style={styles.fieldText}>{value.toString()}</Text>;
         }
     }
 

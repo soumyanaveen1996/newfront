@@ -98,6 +98,7 @@ export default class Form2 extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(this.props.formData, '>>>>>>>');
         this.answers = []; //used to store data to render the UI. This is not what the form will send to the bot
         _.map(this.props.formData, (fieldData, index) => {
             let answer = {
@@ -206,12 +207,20 @@ export default class Form2 extends React.Component {
             dropdownModalVisible: false,
             dropdownModalValue: null,
             dropdownModalOptions: [],
-            dropdownModalTitle: ''
+            dropdownModalTitle: '',
+            disabled: this.props.formStatus === formStatus.COMPLETED
         };
-        this.disabled = this.props.formStatus === formStatus.COMPLETED;
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage
         });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.formStatus !== this.props.formStatus) {
+            this.setState({
+                disabled: this.props.formStatus === formStatus.COMPLETED
+            });
+        }
     }
 
     componentDidMount() {
@@ -253,17 +262,31 @@ export default class Form2 extends React.Component {
     /////////////////////////////
 
     getResponse() {
-        let response = {
-            formId: this.props.id,
-            fields: _.map(this.answers, answer => {
-                let field = {
-                    id: answer.id,
-                    value: answer.getResponse()
-                };
-                return field;
-            })
-        };
-        return response;
+        try {
+            let response = {
+                formId: this.props.id,
+                fields: _.map(this.answers, (answer, index) => {
+                    const responseValue = answer.getResponse();
+                    if (this.props.formData[index].mandatory) {
+                        if (
+                            !responseValue ||
+                            responseValue === '' ||
+                            responseValue === []
+                        ) {
+                            throw new Error('FORM: Mandatory answer not found');
+                        }
+                    }
+                    let field = {
+                        id: answer.id,
+                        value: responseValue
+                    };
+                    return field;
+                })
+            };
+            return response;
+        } catch (e) {
+            throw e;
+        }
     }
 
     saveFormData() {
@@ -277,7 +300,7 @@ export default class Form2 extends React.Component {
     renderTextField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -291,7 +314,7 @@ export default class Form2 extends React.Component {
     renderNumberField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -308,7 +331,7 @@ export default class Form2 extends React.Component {
         return (
             <TextInput
                 multiline={true}
-                editable={!this.disabled}
+                editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textArea}
                 onChangeText={text => {
                     this.answers[key].value = text;
@@ -324,11 +347,10 @@ export default class Form2 extends React.Component {
         let options = _.map(content.options, (option, index) => {
             return (
                 <CheckBox
-                    disabled={this.disabled}
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        if (!this.disabled) {
+                        if (!(this.state.disabled || content.readOnly)) {
                             this.answers[key].value[index] = !this.answers[key]
                                 .value[index];
                             this.setState({ answers: this.answers });
@@ -355,7 +377,7 @@ export default class Form2 extends React.Component {
                     key={index}
                     title={option}
                     onIconPress={() => {
-                        if (!this.disabled) {
+                        if (!(this.state.disabled || content.readOnly)) {
                             this.answers[key].value = index;
                             this.setState({ answers: this.answers });
                         }
@@ -377,7 +399,7 @@ export default class Form2 extends React.Component {
     renderDropdown(content, key) {
         return (
             <TouchableOpacity
-                disabled={this.disabled}
+                disabled={this.state.disabled || content.readOnly}
                 onPress={() => {
                     this.currentDropdownModalKey = key;
                     this.setState({
@@ -459,7 +481,7 @@ export default class Form2 extends React.Component {
     renderSwitch(content, key) {
         return (
             <Switch
-                disabled={this.disabled}
+                disabled={this.state.disabled || content.readOnly}
                 onValueChange={value => {
                     this.answers[key].value = value;
                     this.setState({ answers: this.answers });
@@ -472,7 +494,7 @@ export default class Form2 extends React.Component {
     renderSlider(content, key) {
         return (
             <Slider
-                disabled={this.disabled}
+                disabled={this.state.disabled || content.readOnly}
                 maximumValue={100}
                 minimumValue={0}
                 onValueChange={value => {
@@ -490,7 +512,7 @@ export default class Form2 extends React.Component {
     renderDate(content, key) {
         return (
             <TouchableOpacity
-                disabled={this.disabled}
+                disabled={this.state.disabled || content.readOnly}
                 onPress={async () => {
                     if (Platform.OS === 'android') {
                         DatePickerAndroid.open({
@@ -585,13 +607,14 @@ export default class Form2 extends React.Component {
                         options: content.options,
                         response: this.answers[key].value,
                         onDone: this.onMultiselectionDone.bind(this),
-                        disabled: this.disabled
+                        disabled: this.state.disabled || content.readOnly
                     });
                 }}
                 style={styles.multiselectionContainer}
             >
                 <Text style={styles.optionText}>
                     {title || 'Multiple selection'}
+                    {this.renderMandatorySign(content)}
                 </Text>
                 {Icons.formMessageArrow()}
             </TouchableOpacity>
@@ -606,7 +629,7 @@ export default class Form2 extends React.Component {
     renderPasswordField(content, key) {
         return (
             <TextInput
-                editable={!this.disabled}
+                editable={!(this.state.disabled || content.readOnly)}
                 onChangeText={text => {
                     this.answers[key].value = text;
                     this.setState({ answers: this.answers });
@@ -663,10 +686,19 @@ export default class Form2 extends React.Component {
         }
         return (
             <View style={styles.f2FieldContainer} key={key}>
-                <Text style={styles.f2LabelTitle}>{fieldData.title || ''}</Text>
+                <Text style={styles.f2LabelTitle}>
+                    {fieldData.title || ''}
+                    {this.renderMandatorySign(fieldData)}
+                </Text>
                 {field}
             </View>
         );
+    }
+
+    renderMandatorySign(fieldData) {
+        if (fieldData.mandatory) {
+            return <Text style={{ color: 'red' }}> *</Text>;
+        }
     }
 
     renderFields() {
@@ -686,7 +718,7 @@ export default class Form2 extends React.Component {
                         <TouchableOpacity
                             style={styles.f2CancelButton}
                             onPress={() => {
-                                if (!this.disabled) {
+                                if (!this.state.disabled) {
                                     this.props.saveMessage(this.saveFormData());
                                 }
                                 Actions.pop();
@@ -697,15 +729,19 @@ export default class Form2 extends React.Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            disabled={this.disabled}
+                            disabled={this.state.disabled}
                             style={styles.f2DoneButton}
                             onPress={() => {
-                                let response = this.getResponse();
-                                this.props.onDone(
-                                    this.saveFormData(),
-                                    response
-                                );
-                                Actions.pop();
+                                try {
+                                    let response = this.getResponse();
+                                    this.props.onDone(
+                                        this.saveFormData(),
+                                        response
+                                    );
+                                    Actions.pop();
+                                } catch (e) {
+                                    console.log(e);
+                                }
                             }}
                         >
                             <Text style={styles.f2DoneButtonText}>
