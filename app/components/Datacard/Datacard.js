@@ -11,6 +11,7 @@ import styles from './styles';
 import _ from 'lodash';
 import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
+import { ModalCardSize } from './config';
 
 export default class Datacard extends React.Component {
     constructor(props) {
@@ -24,7 +25,7 @@ export default class Datacard extends React.Component {
         return (
             <TouchableOpacity
                 key={index}
-                onPress={() => this.onCardSelected(item)}
+                onPress={() => this.onCardSelected(index)}
                 style={styles.card}
             >
                 <View style={styles.topArea}>
@@ -89,8 +90,8 @@ export default class Datacard extends React.Component {
         }
     }
 
-    onCardSelected(cardData) {
-        this.props.onCardSelected(this.renderModalSlideshow());
+    onCardSelected(initialIndex) {
+        this.props.onCardSelected(this.renderModalSlideshow(initialIndex));
     }
 
     renderModalContent({ item }) {
@@ -116,7 +117,7 @@ export default class Datacard extends React.Component {
         );
     }
 
-    renderModalSlideshow() {
+    renderModalSlideshow(initialIndex) {
         return (
             <View style={styles.slideshowContainer}>
                 <FlatList
@@ -124,12 +125,22 @@ export default class Datacard extends React.Component {
                     data={this.props.datacardList}
                     renderItem={this.renderModalContent.bind(this)}
                     horizontal={true}
-                    snapToInterval={Dimensions.get('window').width * 0.8 + 20}
+                    snapToInterval={
+                        ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2
+                    }
                     snapToAlignment="center"
                     decelerationRate="fast"
                     ListFooterComponent={
                         <View style={styles.emptyFooterModal} />
                     }
+                    initialScrollIndex={initialIndex}
+                    getItemLayout={(data, index) => ({
+                        length: ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2,
+                        offset:
+                            (ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2) *
+                            index,
+                        index
+                    })}
                 />
             </View>
         );

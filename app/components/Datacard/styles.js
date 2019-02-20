@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { GlobalColors } from '../../config/styles';
+import { ModalCardSize } from './config';
 
 export default StyleSheet.create({
     dataCards: {
@@ -66,10 +67,10 @@ export default StyleSheet.create({
         paddingHorizontal: 10
     },
     modalCard: {
-        width: Dimensions.get('window').width * 0.8,
+        width: ModalCardSize.WIDTH,
         flexDirection: 'column',
         alignItems: 'stretch',
-        marginHorizontal: 10,
+        marginHorizontal: ModalCardSize.MARGIN,
         paddingHorizontal: 20,
         paddingVertical: 40,
         shadowOffset: { width: 0, height: 0 },
