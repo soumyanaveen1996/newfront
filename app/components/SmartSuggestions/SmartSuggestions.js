@@ -36,6 +36,7 @@ export default class SmartSuggestions extends React.Component {
                     extraData={this.state}
                     showsHorizontalScrollIndicator={false}
                     ListFooterComponent={<View style={styles.emptyFooter} />}
+                    decelerationRate="fast"
                 />
             </View>
         );

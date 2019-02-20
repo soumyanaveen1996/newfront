@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
 export default StyleSheet.create({
@@ -59,12 +59,17 @@ export default StyleSheet.create({
     },
 
     //MODAL
-
-    modal: {
-        width: '90%',
-        height: '65%',
+    slideshowContainer: {
+        height: '65%'
+    },
+    modalSlideshow: {
+        paddingHorizontal: 10
+    },
+    modalCard: {
+        width: Dimensions.get('window').width * 0.8,
         flexDirection: 'column',
         alignItems: 'stretch',
+        marginHorizontal: 10,
         paddingHorizontal: 20,
         paddingVertical: 40,
         shadowOffset: { width: 0, height: 0 },
@@ -73,6 +78,9 @@ export default StyleSheet.create({
         borderRadius: 10,
         borderWidth: 0.2,
         backgroundColor: GlobalColors.white
+    },
+    emptyFooterModal: {
+        width: 20
     },
     fieldModal: {
         width: '100%',

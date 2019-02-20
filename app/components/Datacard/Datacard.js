@@ -4,7 +4,8 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    Dimensions
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -89,28 +90,47 @@ export default class Datacard extends React.Component {
     }
 
     onCardSelected(cardData) {
-        this.props.onCardSelected(this.renderModalContent(cardData));
+        this.props.onCardSelected(this.renderModalSlideshow());
     }
 
-    renderModalContent(cardData) {
-        let keys = Object.keys(cardData);
+    renderModalContent({ item }) {
+        let keys = Object.keys(item);
         keys = keys.slice(1, keys.length);
         const fields = _.map(keys, key => {
             return (
                 <View style={styles.fieldModal}>
                     <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
-                    {this.renderValue(cardData[key], true)}
+                    {this.renderValue(item[key], true)}
                 </View>
             );
         });
         return (
-            <View style={styles.modal}>
+            <View style={styles.modalCard}>
                 <ScrollView>
                     <View style={styles.topArea}>
-                        <Text style={styles.cardTitle}>{cardData.title}</Text>
+                        <Text style={styles.cardTitle}>{item.title}</Text>
                         {fields}
                     </View>
                 </ScrollView>
+            </View>
+        );
+    }
+
+    renderModalSlideshow() {
+        return (
+            <View style={styles.slideshowContainer}>
+                <FlatList
+                    style={styles.modalSlideshow}
+                    data={this.props.datacardList}
+                    renderItem={this.renderModalContent.bind(this)}
+                    horizontal={true}
+                    snapToInterval={Dimensions.get('window').width * 0.8 + 20}
+                    snapToAlignment="center"
+                    decelerationRate="fast"
+                    ListFooterComponent={
+                        <View style={styles.emptyFooterModal} />
+                    }
+                />
             </View>
         );
     }
@@ -124,6 +144,7 @@ export default class Datacard extends React.Component {
                     horizontal={true}
                     style={styles.dataCards}
                     showsHorizontalScrollIndicator={false}
+                    decelerationRate="fast"
                     ListFooterComponent={<View style={styles.emptyFooter} />}
                 />
             </View>
