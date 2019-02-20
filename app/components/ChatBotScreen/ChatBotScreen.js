@@ -85,6 +85,7 @@ import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
+import { formStatus } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import { setCurrentConversationId } from '../../redux/actions/UserActions';
@@ -612,18 +613,20 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.sliderPreviousState = this.state.showSlider || false;
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
+            this.setState({ sliderClosed: true, showOptions: false });
         } else {
-            this.setState({ sliderClosed: false });
+            this.setState({ sliderClosed: false, showOptions: false });
         }
     };
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        this.setState({ showSlider: true });
+        this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
@@ -739,20 +742,6 @@ class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_MAP ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_HTML ||
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
-        ) {
-            this.updateChat(message);
-        } else if (
-            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -771,6 +760,11 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
             this.openChart(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
+        ) {
+            this.closeForm(message.getMessage().formId);
         } else {
             this.updateChat(message);
         }
@@ -964,25 +958,63 @@ class ChatBotScreen extends React.Component {
     }
 
     onFormDone(response) {
-        let message = new Message({ addedByBot: false });
+        let message = new Message();
+        message.messageByBot(false);
         message.formResponseMessage(response);
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
     }
 
-    onFormOpen = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formOpenMessage();
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
+    closeForm(formId) {
+        let validFormMessages = [];
+        //ON SCREEN
+        const newScreenMessages = _.map(this.state.messages, screenMessage => {
+            let message = screenMessage.message;
+            if (
+                message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_FORM2 &&
+                message.getMessageOptions().formId === formId
+            ) {
+                validFormMessages.push(message);
+                let newOptions = message.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                message.form2Message(message.getMessage(), newOptions);
+                screenMessage.message = message;
+            }
+            return screenMessage;
+        });
+        this.setState({ messages: newScreenMessages });
 
-    onFormCancel = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formCancelMessage(formMessage);
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
+        //RESPONSE
+        let lastForm = validFormMessages[validFormMessages.length - 1];
+        response = {
+            formId: formId,
+            fields: _.map(lastForm.getMessage(), field => {
+                res = {
+                    id: field.id,
+                    value: field.value
+                };
+                return res;
+            })
+        };
+        this.onFormDone(response);
+
+        //PERSISTENCE
+        MessageHandler.fetchDeviceMessagesOfType(
+            this.getBotKey(),
+            MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ).then(messages => {
+            let forms = _.filter(messages, msg => {
+                return msg.getMessageOptions().formId === formId;
+            });
+            _.map(forms, form => {
+                let newOptions = form.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                form.form2Message(form.getMessage(), newOptions);
+                this.persistMessage(form);
+            });
+        });
+    }
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
@@ -1181,9 +1213,6 @@ class ChatBotScreen extends React.Component {
                         user={this.user}
                         imageSource={{ uri: this.bot.logoUrl }}
                         onDoneBtnClick={this.onButtonDone.bind()}
-                        onFormCTAClick={this.onFormDone.bind(this)}
-                        onFormCancel={this.onFormCancel.bind(this)}
-                        onFormOpen={this.onFormOpen.bind(this)}
                         showTime={item.showTime}
                         openModalWithContent={this.openModalWithContent.bind(
                             this
@@ -1705,7 +1734,7 @@ class ChatBotScreen extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
             Keyboard.dismiss();
-            this.sliderPreviousState = this.state.showSlider;
+            this.sliderPreviousState = this.state.showSlider || false;
             this.setState({
                 showOptions: true,
                 showSlider: false
@@ -2071,7 +2100,7 @@ class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={chatStyles.safeArea}>
                 <BackgroundImage
                     accessibilityLabel="Messages List"
                     testID="messages-list"
@@ -2090,7 +2119,12 @@ class ChatBotScreen extends React.Component {
                             disabled={!this.state.showOptions}
                             onPress={this.onPlusButtonPressed.bind(this)}
                         >
-                            <View style={{ flex: 1 }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end'
+                                }}
+                            >
                                 <FlatList
                                     style={chatStyles.messagesList}
                                     ListFooterComponent={this.renderSmartSuggestions()}

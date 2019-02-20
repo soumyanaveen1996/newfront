@@ -107,6 +107,25 @@ export default class MessageHandler extends events.EventEmitter {
         });
 
     /**
+     * Returns all messages of type `messageType` from the local/device storage
+     * TODO: Enhance the method to do queries better (from, to, all messages, sort etc)
+     *
+     * @param botKey A string key to indicate the identifier of bot
+     * @param messageType Type of messages to fetch
+     *
+     * @return Promise that resolves to an array of messages
+     */
+    fetchDeviceMessagesOfType = (botKey, messageType) =>
+        new Promise((resolve, reject) => {
+            MessageDAO.selectMessagesOfType(botKey, messageType).then(
+                messages => {
+                    // we want in reverse order
+                    resolve(messages);
+                }
+            );
+        });
+
+    /**
      * Returns the top max (most recent) messages from the local/device storage
      * TODO: Enhance the method to do queries better (from, to, all messages, sort etc)
      *
