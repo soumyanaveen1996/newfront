@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList, TextInput } from 'react-native';
+import { Text, View, FlatList, TextInput, Platform } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import styles from './styles';
 import { headerConfig } from './config';

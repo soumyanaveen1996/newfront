@@ -396,6 +396,33 @@ const selectMessages = (botkey, limit, offset, ignoreMessagesOfType = []) =>
         });
     });
 
+const selectMessagesOfType = (botkey, messageType) =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                messageSql.selectMessagesOfType,
+                [botkey, messageType],
+                function success(tx, res) {
+                    res = res || {};
+                    res = Utils.addArrayToSqlResults(res);
+                    let dbMessages = res.rows
+                        ? res.rows._array
+                            ? res.rows._array
+                            : []
+                        : [];
+                    let messages = dbMessages.map(msg => {
+                        let message = messageFromDatabaseRow(msg);
+                        return message;
+                    });
+                    return resolve(messages);
+                },
+                function failure(tx, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
+
 const selectMessagesBeforeDate = (botkey, limit, date) =>
     new Promise((resolve, reject) => {
         let args = [botkey, date, limit];
@@ -607,6 +634,7 @@ export default {
     migrateToV2Messages: migrateToV2Messages,
     insertMessage: insertMessage,
     selectMessages: selectMessages,
+    selectMessagesOfType: selectMessagesOfType,
     unreadMessageCount: unreadMessageCount,
     selectUserMessageCountSince: selectUserMessageCountSince,
     markAllBotMessagesAsRead: markAllBotMessagesAsRead,

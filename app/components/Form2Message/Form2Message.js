@@ -14,6 +14,12 @@ export default class Form2Message extends React.Component {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.messageData.stage !== this.props.messageData.stage) {
+            this.setState({ status: this.props.messageData.stage });
+        }
+    }
+
     openForm() {
         if (this.state.status === formStatus.NEW) {
             this.setState({ status: formStatus.OPENED });
