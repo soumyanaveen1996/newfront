@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View, LayoutAnimation } from 'react-native';
 import Suggestion from './Suggestion';
 import styles from './styles';
 
@@ -20,6 +20,7 @@ export default class SmartSuggestions extends React.Component {
     );
 
     update = suggestions => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         this.setState({
             suggestions: suggestions
         });

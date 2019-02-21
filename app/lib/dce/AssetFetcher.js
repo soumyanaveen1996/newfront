@@ -156,13 +156,25 @@ class AssetFetcher {
         }
     }
 
+    /**
+     * UPLOAD file to backend
+     *
+     * @param base64Data File payload in base64 format
+     * @param fileUri Local file uri
+     * @param bucketName Remote directory in the backend of the file
+     * @param filename Remote file name with extension
+     * @param contentType MIME type of the file
+     * @param user Current user
+     *
+     * @return Remote url to the file
+     *
+     */
     static async uploadFileToFileGateway(
         base64Data,
         fileUri,
         bucketName,
-        filenameWithoutExtension,
+        filename,
         contentType,
-        extension,
         user
     ) {
         try {
@@ -173,7 +185,6 @@ class AssetFetcher {
             const uploadUrl = `${config.proxy.protocol}${config.proxy.host}${
                 config.proxy.uploadFilePath
             }`;
-            const filename = `${filenameWithoutExtension}.${extension}`;
             const res = await RNFetchBlob.fetch(
                 'POST',
                 uploadUrl,

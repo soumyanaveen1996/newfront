@@ -75,6 +75,15 @@ export function sessionStartFormattedDate(date) {
     }
 }
 
+/**
+ * Async method that copy a file in a local directory. Can Also rename it.
+ *
+ * @param uri uri of the file
+ * @param directory directory where to copy the file
+ * @param raname new file name with extension
+ *
+ * @return new uri to the copied file
+ */
 export async function copyFileAsync(uri, directory, rename) {
     console.log('In copyFileAsync : ', uri, directory);
     const exists = await RNFS.exists(directory);
