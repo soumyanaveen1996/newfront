@@ -44,6 +44,7 @@ export default class WebCards extends React.Component {
                     horizontal={true}
                     style={styles.webCards}
                     showsHorizontalScrollIndicator={false}
+                    decelerationRate="fast"
                 />
             </View>
         );

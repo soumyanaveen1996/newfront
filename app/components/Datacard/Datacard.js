@@ -4,12 +4,14 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    Dimensions
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
 import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
+import { ModalCardSize } from './config';
 
 export default class Datacard extends React.Component {
     constructor(props) {
@@ -23,7 +25,7 @@ export default class Datacard extends React.Component {
         return (
             <TouchableOpacity
                 key={index}
-                onPress={() => this.onCardSelected(item)}
+                onPress={() => this.onCardSelected(index)}
                 style={styles.card}
             >
                 <View style={styles.topArea}>
@@ -88,29 +90,58 @@ export default class Datacard extends React.Component {
         }
     }
 
-    onCardSelected(cardData) {
-        this.props.onCardSelected(this.renderModalContent(cardData));
+    onCardSelected(initialIndex) {
+        this.props.onCardSelected(this.renderModalSlideshow(initialIndex));
     }
 
-    renderModalContent(cardData) {
-        let keys = Object.keys(cardData);
+    renderModalContent({ item }) {
+        let keys = Object.keys(item);
         keys = keys.slice(1, keys.length);
         const fields = _.map(keys, key => {
             return (
                 <View style={styles.fieldModal}>
                     <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
-                    {this.renderValue(cardData[key], true)}
+                    {this.renderValue(item[key], true)}
                 </View>
             );
         });
         return (
-            <View style={styles.modal}>
+            <View style={styles.modalCard}>
                 <ScrollView>
                     <View style={styles.topArea}>
-                        <Text style={styles.cardTitle}>{cardData.title}</Text>
+                        <Text style={styles.cardTitle}>{item.title}</Text>
                         {fields}
                     </View>
                 </ScrollView>
+            </View>
+        );
+    }
+
+    renderModalSlideshow(initialIndex) {
+        return (
+            <View style={styles.slideshowContainer}>
+                <FlatList
+                    style={styles.modalSlideshow}
+                    data={this.props.datacardList}
+                    renderItem={this.renderModalContent.bind(this)}
+                    horizontal={true}
+                    snapToInterval={
+                        ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2
+                    }
+                    snapToAlignment="center"
+                    decelerationRate="fast"
+                    ListFooterComponent={
+                        <View style={styles.emptyFooterModal} />
+                    }
+                    initialScrollIndex={initialIndex}
+                    getItemLayout={(data, index) => ({
+                        length: ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2,
+                        offset:
+                            (ModalCardSize.WIDTH + ModalCardSize.MARGIN * 2) *
+                            index,
+                        index
+                    })}
+                />
             </View>
         );
     }
@@ -124,6 +155,7 @@ export default class Datacard extends React.Component {
                     horizontal={true}
                     style={styles.dataCards}
                     showsHorizontalScrollIndicator={false}
+                    decelerationRate="fast"
                     ListFooterComponent={<View style={styles.emptyFooter} />}
                 />
             </View>

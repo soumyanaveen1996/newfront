@@ -98,7 +98,6 @@ export default class Form2 extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.formData, '>>>>>>>');
         this.answers = []; //used to store data to render the UI. This is not what the form will send to the bot
         _.map(this.props.formData, (fieldData, index) => {
             let answer = {

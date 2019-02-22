@@ -90,6 +90,7 @@ import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import { setCurrentConversationId } from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
+import mime from 'react-native-mime-types';
 
 const R = require('ramda');
 
@@ -1060,6 +1061,9 @@ class ChatBotScreen extends React.Component {
         var message = this.messageQueue.shift();
         if (message) {
             this.processingMessageQueue = true;
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.appendMessageToChat(message)
                 .then(() => {
                     return this.sleep(
@@ -1221,6 +1225,7 @@ class ChatBotScreen extends React.Component {
                         onFormCTAClick={this.onFormDone.bind(this)}
                         onFormCancel={this.onFormCancel.bind(this)}
                         onFormOpen={this.onFormOpen.bind(this)}
+                        conversationContext={this.conversationContext}
                     />
                 );
             }
@@ -1260,6 +1265,7 @@ class ChatBotScreen extends React.Component {
                             this
                         )}
                         hideChatModal={this.hideChatModal.bind(this)}
+                        conversationContext={this.conversationContext}
                     />
                 );
             }
@@ -1396,35 +1402,48 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Image,
-            this.user
+            this.user,
+            ResourceTypes.Image
         );
-        message.imageMessage(uploadedUrl);
+        message.imageMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     }
 
-    async sendFile(fileUri, fileType, fileName) {
-        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
+    /**
+     * Async method that copy a file in a local directory. Can Also rename it.
+     *
+     * @param fileLocalUri uri of the local file
+     * @param fileMIMEType MIME type of the file
+     * @param fileName file name with extension
+     *
+     */
+    async sendFile(fileLocalUri, fileMIMEType, fileName) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
-        let rename = message.getMessageId() + '.' + fileType.split('/')[1];
-        const toUri = await Utils.copyFileAsync(
-            decodeURI(fileUri),
+        // COPY THE FILE
+        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
+        let rename =
+            message.getMessageId() + '.' + mime.extension(fileMIMEType);
+        const newFileUri = await Utils.copyFileAsync(
+            decodeURI(fileLocalUri),
             Constants.OTHER_FILE_DIRECTORY,
             rename
         );
 
-        // Send the file to the S3/backend and then let the user know
+        // UPLOAD THE FILE
         const uploadedUrl = await Resource.uploadFile(
             null, //base64 will be created in Resource.uploadFile()
-            toUri,
+            newFileUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            fileType,
-            this.user
+            this.user,
+            ResourceTypes.OtherFile,
+            fileMIMEType
         );
-        message.otherFileMessage(uploadedUrl, {
-            type: fileType,
+
+        //SEND MESSAGE
+        message.otherFileMessage(uploadedUrl.split('/').pop(), {
+            type: fileMIMEType,
             fileName: fileName
         });
         return this.sendMessage(message);
@@ -1450,10 +1469,10 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Audio,
-            this.user
+            this.user,
+            ResourceTypes.Audio
         );
-        message.audioMessage(uploadedUrl);
+        message.audioMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     };
 
@@ -1471,10 +1490,10 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Video,
-            this.user
+            this.user,
+            ResourceTypes.Video
         );
-        message.videoMessage(uploadedUrl);
+        message.videoMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     };
 
@@ -2063,7 +2082,11 @@ class ChatBotScreen extends React.Component {
                 backdropOpacity={0.1}
                 onBackButtonPress={this.hideChatModal.bind(this)}
                 onBackdropPress={() => this.setState({ isModalVisible: false })}
-                style={{ justifyContent: 'center', alignItems: 'center' }}
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 0
+                }}
             />
         );
     }
@@ -2166,7 +2189,6 @@ class ChatBotScreen extends React.Component {
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
-                                {/* {this.renderSmartSuggestions()} */}
                                 <View style={{ alignItems: 'center' }}>
                                     {this.renderChatInputBar()}
                                 </View>
