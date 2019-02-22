@@ -1218,6 +1218,9 @@ class ChatBotScreen extends React.Component {
                             this
                         )}
                         hideChatModal={this.hideChatModal.bind(this)}
+                        onFormCTAClick={this.onFormDone.bind(this)}
+                        onFormCancel={this.onFormCancel.bind(this)}
+                        onFormOpen={this.onFormOpen.bind(this)}
                     />
                 );
             }
@@ -2068,6 +2071,20 @@ class ChatBotScreen extends React.Component {
     hideChatModal() {
         this.setState({ isModalVisible: false });
     }
+
+    onFormOpen = formMessage => {
+        let message = new Message({ addedByBot: false });
+        message.formOpenMessage();
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    };
+
+    onFormCancel = formMessage => {
+        let message = new Message({ addedByBot: false });
+        message.formCancelMessage(formMessage);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    };
 
     render() {
         if (!this.botLoaded) {
