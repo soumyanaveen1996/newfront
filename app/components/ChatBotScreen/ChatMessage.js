@@ -84,6 +84,13 @@ export default class ChatMessage extends React.Component {
         this.mounted = true;
         let { message } = this.props;
 
+        if (
+            !message.isRead() &&
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
+        ) {
+            this.openForm(message);
+        }
+
         if (message.getCreatedBy()) {
             ContactsCache.getUserDetails(message.getCreatedBy()).then(user => {
                 const userName = user ? user.userName : I18n.t('Unknown');
@@ -435,6 +442,27 @@ export default class ChatMessage extends React.Component {
         ) {
             return component;
         } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
+        ) {
+            const component = (
+                <View
+                    style={styles.formButtonWrapper}
+                    key={message.getMessageId()}
+                >
+                    <TouchableOpacity
+                        onPress={this.openForm.bind(this, message)}
+                        style={styles.formButton}
+                    >
+                        <Text style={styles.formButtonText}>
+                            {message.isCompleted()
+                                ? I18n.t('View_form')
+                                : I18n.t('Fill_form')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            );
+            return this.wrapBetweenFavAndTalk(message, component);
+        } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
         ) {
             const component = (
@@ -482,6 +510,35 @@ export default class ChatMessage extends React.Component {
             component = this.contactMessage(message);
             return this.wrapBetweenFavAndTalk(message, component);
         }
+    }
+
+    openForm(message) {
+        const formMessage = message.getMessage();
+        this.onFormOpen(formMessage);
+        Actions.form({
+            formData: formMessage,
+            onFormSubmit: this.onFormSubmit.bind(this),
+            onFormCancel: this.onFormCancel.bind(this),
+            editable: !message.isCompleted()
+        });
+    }
+
+    onFormOpen(formMessage) {
+        if (this.props.onFormOpen) {
+            this.props.onFormOpen(formMessage);
+        }
+    }
+
+    onFormCancel(items) {
+        let { message } = this.props;
+        if (this.props.onFormCancel) {
+            this.props.onFormCancel(message.getMessage());
+        }
+    }
+
+    onFormSubmit(items) {
+        let { message } = this.props;
+        this.props.onFormCTAClick(items, message);
     }
 
     htmlResponseOnPress(htmlText) {
