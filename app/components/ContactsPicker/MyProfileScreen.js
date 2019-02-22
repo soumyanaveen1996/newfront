@@ -392,8 +392,9 @@ class MyProfileScreen extends React.Component {
                     toUri,
                     PROFILE_PIC_BUCKET,
                     user.userId,
-                    ResourceTypes.Image,
                     user,
+                    ResourceTypes.Image,
+                    null,
                     true,
                     true
                 );

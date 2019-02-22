@@ -17,6 +17,7 @@ import { AssetFetcher } from '../../lib/dce';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import GlobalColors from '../../config/styles';
+import mime from 'react-native-mime-types';
 
 const FileState = {
     REMOTE: 'remote',
@@ -27,10 +28,10 @@ const FileState = {
 export default class TapToOpenFile extends React.Component {
     constructor(props) {
         super(props);
-        this.uri = this.props.source.uri;
-        this.type = this.props.source.type;
+        this.url = this.props.source.url;
+        this.MIMEType = this.props.source.MIMEType;
         this.headers = this.props.source.headers;
-        this.fileName = this.uri.split('/').pop();
+        this.fileName = this.url.split('/').pop();
         this.localPath = decodeURI(
             Constants.OTHER_FILE_DIRECTORY + '/' + this.fileName
         );
@@ -54,7 +55,7 @@ export default class TapToOpenFile extends React.Component {
                 if (!exist) {
                     return AssetFetcher.downloadFile(
                         this.localPath,
-                        this.uri,
+                        this.url,
                         this.headers,
                         true,
                         false
@@ -79,7 +80,7 @@ export default class TapToOpenFile extends React.Component {
                 if (Platform.OS === 'android') {
                     RNFetchBlob.android.actionViewIntent(
                         this.localPath.slice(7),
-                        this.type
+                        this.MIMEType
                     );
                 } else if (Platform.OS === 'ios') {
                     RNFetchBlob.ios.openDocument(this.localPath);
@@ -106,7 +107,9 @@ export default class TapToOpenFile extends React.Component {
     }
 
     renderFileExtension() {
-        return <Text style={styles.fileType}>{this.type.split('/')[1]}</Text>;
+        return (
+            <Text style={styles.fileType}>{mime.extension(this.MIMEType)}</Text>
+        );
     }
 
     renderDownloadIcon() {
