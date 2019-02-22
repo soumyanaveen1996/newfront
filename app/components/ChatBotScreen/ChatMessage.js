@@ -150,7 +150,10 @@ export default class ChatMessage extends React.Component {
     }
 
     renderImageMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
         const imageComponent = (
@@ -165,9 +168,12 @@ export default class ChatMessage extends React.Component {
     }
 
     renderFileMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
         const type = message.getMessageOptions().type;
         const name = message.getMessageOptions().fileName;
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
         let imageComponent;
@@ -182,12 +188,11 @@ export default class ChatMessage extends React.Component {
                     <TapToOpenFile
                         alignRight
                         source={{
-                            uri: url,
+                            url: url,
                             headers: headers,
-                            type: type,
+                            MIMEType: type,
                             name: name
                         }}
-                        onImagePress={this.onImagePress.bind(this, headers)}
                     />
                     <Text
                         style={[
@@ -206,12 +211,11 @@ export default class ChatMessage extends React.Component {
             imageComponent = (
                 <TapToOpenFile
                     source={{
-                        uri: url,
+                        url: url,
                         headers: headers,
-                        type: type,
+                        MIMEType: type,
                         name: name
                     }}
-                    onImagePress={this.onImagePress.bind(this, headers)}
                 />
             );
         }
@@ -221,7 +225,10 @@ export default class ChatMessage extends React.Component {
     }
 
     renderVideoMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
@@ -262,7 +269,10 @@ export default class ChatMessage extends React.Component {
     }
 
     renderAudioMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 

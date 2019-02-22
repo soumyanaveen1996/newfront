@@ -5,6 +5,7 @@ import ImageResizer from 'react-native-image-resizer';
 import { lastDayOfISOWeek } from 'date-fns';
 import moment from 'moment';
 import Store from '../../redux/store/configureStore';
+import mime from 'react-native-mime-types';
 
 export const ResourceTypes = {
     Image: 'image',
@@ -15,14 +16,17 @@ export const ResourceTypes = {
 
 export default class Resource {
     /**
-     * Async method that returns a S3 URL of the file thats uploaded.
+     * Async method that returns a S3 URL of the file thats uploaded. You can rename the file in the backend swith `filenameWithoutExtension` parameter
      *
      * @param base64Data Base64 data of the resource
      * @param fileUri Local filesystem uri
-     * @param fileUri bucketname where you want to upload
-     * @param filenameWithoutExtension object name in the bucket without extension
-     * @param resourceType Either 'image', 'video', or 'audio'
+     * @param bucketName Directory of the backend where to save the file
+     * @param filenameWithoutExtension Remote name of the file without extension
      * @param user Authenticated user
+     * @param resourceType Either 'image', 'video', 'audio' or 'other_file'
+     * @param fileMIMEType MIME type of the file
+     * @param clearCache
+     * @param forceReload
      *
      * @return S3 URL of the file uploaded
      */
@@ -31,8 +35,9 @@ export default class Resource {
         fileUri,
         bucketName,
         filenameWithoutExtension,
-        resourceType,
         user = undefined,
+        resourceType,
+        fileMIMEType,
         clearCache = false,
         forceReload = false
     ) {
@@ -74,25 +79,25 @@ export default class Resource {
             contentType = 'video/mp4';
             extension = 'mp4';
         } else {
-            contentType = resourceType;
-            extension = resourceType.split('/')[1];
+            contentType = fileMIMEType || contentType;
+            extension = mime.extension(contentType);
         }
         if (!base64Data) {
             fileUri = decodeURI(fileUri);
             base64Data = await AssetFetcher.getFile(fileUri, 'base64');
         }
+        const filename = filenameWithoutExtension + '.' + extension;
 
         let res = await AssetFetcher.uploadFileToFileGateway(
             base64Data,
             fileUri,
             bucketName,
-            filenameWithoutExtension,
+            filename,
             contentType,
-            extension,
             user
         );
         const reduxState = Store.getState();
-        console.log('Upload Number>>>>>>>>>>>>>>>>', reduxState.user.upload);
+        console.log('Upload Number: ', reduxState.user.upload);
         const uploadNumber = reduxState.user.upload;
         if (res && resourceType === ResourceTypes.Image) {
             if (clearCache) {

@@ -295,6 +295,7 @@ export default class ContextSlideshow extends React.Component {
                     renderItem={this.renderItem.bind(this)}
                     extraData={this.props}
                     horizontal={true}
+                    decelerationRate="fast"
                     style={{ paddingHorizontal: 15 }}
                 />
             );
