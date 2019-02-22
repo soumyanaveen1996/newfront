@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 179
+        versionCode 180
         versionName "3.7.1"
         multiDexEnabled true
         ndk {
@@ -159,6 +159,7 @@ android {
 }
 
 dependencies {
+    compile project(':@mapbox_react-native-mapbox-gl')
     compile project(':react-native-blur')
     compile project(':rn-fetch-blob')
     compile (project(':mapbox-react-native-mapbox-gl')) {
