@@ -39,12 +39,16 @@ import { PhoneState } from '../../components/Phone';
 import { synchronizeUserData } from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
 import DefaultPreference from 'react-native-default-preference';
+import { Conversation } from '../../lib/conversation';
+import { IM_CHAT } from '../../lib/conversation/Conversation';
+import ReduxStore from '../../redux/store/configureStore';
+
 // const BusyIndicator = require('react-native-busy-indicator')
 
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 51; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 59; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -143,7 +147,7 @@ export default class Splash extends React.Component {
 
         if (forceUpdate) {
             console.log('Copying Bots');
-            await BotUtils.copyIntialBots(forceUpdate);
+            // await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
         }
 
@@ -180,7 +184,7 @@ export default class Splash extends React.Component {
                         AfterLogin.executeAfterLogin();
                         this.listenToEvents();
                         const gState = Store.getState();
-                        console.log(gState);
+                        console.log('gState ', gState);
                         const { call_state } = gState;
 
                         if (call_state && call_state === 'PENDING') {
@@ -247,8 +251,64 @@ export default class Splash extends React.Component {
     };
 
     handleNotification = notification => {
+        let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            Actions.replace(ROUTER_SCENE_KEYS.timeline);
+            Conversation.getConversation(notification.conversationId)
+                .then(conv => {
+                    conversation = conv;
+                    return SystemBot.get(SystemBot.imBotManifestName);
+                })
+                .then(imBot => {
+                    if (conversation.type === IM_CHAT) {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.peopleChat
+                        ) {
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
+                        } else {
+                            Actions.peopleChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    } else {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.channelChat
+                        ) {
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
+                        } else {
+                            Actions.channelChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    }
+                });
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {

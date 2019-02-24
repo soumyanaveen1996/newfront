@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, FlatList, ScrollView, Platform } from 'react-native';
 import styles from './styles';
 import BotInstallListItem from '../../BotInstallListItem';
 import Bot from '../../../lib/bot';
@@ -16,28 +16,25 @@ export default class FeaturedTab extends React.Component {
         };
     }
 
-    async componentWillMount() {
-        this.refresh();
-    }
-
     componentWillUnmount() {
         this.mounted = false;
     }
 
     componentDidMount() {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+        });
         this.mounted = true;
     }
 
-    async refresh() {
-        const bots = await Bot.getTimeLineBots();
-        if (this.mounted) {
-            this.setState({ installedBots: bots });
-        }
-    }
-
     onBotInstalled = async () => {
-        await this.refresh();
-        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.refs.toast.show(
+                I18n.t('Bot_installed'),
+                DURATION.LENGTH_SHORT
+            );
+        });
     };
 
     onBotInstallFailed = () => {
@@ -47,22 +44,15 @@ export default class FeaturedTab extends React.Component {
         );
     };
 
-    checkBotStatus = bot => {
-        return utils.checkBotStatus(this.state.installedBots, bot);
-    };
-
     renderBot = bot => {
-        const botStatus = this.checkBotStatus(bot);
-
         return (
             <BotInstallListItem
                 bot={bot}
                 key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
                 onBotInstallFailed={this.onBotInstallFailed}
-                installed={botStatus.installed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update}
+                installedBots={this.state.installedBots}
             />
         );
     };
@@ -79,6 +69,14 @@ export default class FeaturedTab extends React.Component {
         );
     };
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <ScrollView style={{ flex: 1 }}>
@@ -90,7 +88,7 @@ export default class FeaturedTab extends React.Component {
                         renderItem={this.renderGridItem.bind(this)}
                         extraData={this.state}
                     />
-                    <Toast ref="toast" positionValue={250} />
+                    {this.renderToast()}
                 </View>
             </ScrollView>
         );

@@ -5,12 +5,18 @@ import {
     FlatList,
     Keyboard,
     KeyboardAvoidingView,
+    TouchableWithoutFeedback,
     RefreshControl,
     View,
     Alert,
-    BackHandler,
+    Image,
+    TouchableOpacity,
+    Text,
     SafeAreaView,
-    Platform
+    Platform,
+    PermissionsAndroid,
+    LayoutAnimation,
+    UIManager
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -19,6 +25,7 @@ import ChatInputBar from './ChatInputBar';
 import ChatStatusBar from './ChatStatusBar';
 import ChatMessage from './ChatMessage';
 import CallModal from './CallModal';
+import ChatModal from './ChatModal';
 import Slider from '../Slider/Slider';
 import { BotContext } from '../../lib/botcontext';
 import {
@@ -65,19 +72,25 @@ import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
 import {
     GoogleAnalytics,
-    GoogleAnalyticsCategories
+    GoogleAnalyticsCategories,
+    GoogleAnalyticsEvents
 } from '../../lib/GoogleAnalytics';
-import {
-    DocumentPicker,
-    DocumentPickerUtil
-} from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
 import { WebCards } from '../WebCards';
+import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
+import { Form2Message } from '../Form2Message';
+import { formStatus } from '../Form2Message/config';
+import { Datacard } from '../Datacard';
+import PushNotification from 'react-native-push-notification';
+import { setCurrentConversationId } from '../../redux/actions/UserActions';
+import RNFS from 'react-native-fs';
+import mime from 'react-native-mime-types';
 
 const R = require('ramda');
 
@@ -151,7 +164,8 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -166,7 +180,10 @@ class ChatBotScreen extends React.Component {
             typing: '',
             showSlider: false,
             refreshing: false,
-            sliderClosed: false
+            sliderClosed: false,
+            chatModalContent: {},
+            isModalVisible: false,
+            showOptions: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.scrollToBottom = false;
@@ -281,14 +298,15 @@ class ChatBotScreen extends React.Component {
 
             let serverMessages = [];
             if (messages.length < 3) {
-                serverMessages = await this.loadOldMessagesFromServer();
+                serverMessages = await Promise.resolve(
+                    this.loadOldMessagesFromServer()
+                );
             }
 
             const allMessages = R.uniqWith(R.eqProps('key'), [
                 ...serverMessages,
                 ...messages
             ]);
-
             // 4. Update the state of the bot with the messages we have
             this.setState(
                 {
@@ -305,21 +323,17 @@ class ChatBotScreen extends React.Component {
                             this.state.messages,
                             this.botContext
                         );
-
                         // 6. If there are async results waiting - pass them on to the bot
                         self.flushPendingAsyncResults();
-
                         // 7. Now that bot is open - add a listener for async results coming in
                         self.eventSubscription = EventEmitter.addListener(
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
-
                         // 8. Mark new messages as read
                         MessageHandler.markUnreadMessagesAsRead(
                             this.getBotKey()
                         );
-
                         // 9. Stash the bot for nav back for on exit
                         this.props.navigation.setParams({
                             botDone: this.botDone.bind(this)
@@ -332,7 +346,6 @@ class ChatBotScreen extends React.Component {
                     }
                 }
             );
-
             console.log('Props from Contacts Call', this.props);
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
@@ -381,6 +394,9 @@ class ChatBotScreen extends React.Component {
             null,
             0,
             null
+        );
+        Store.dispatch(
+            setCurrentConversationId(this.conversationContext.conversationId)
         );
     }
 
@@ -518,6 +534,7 @@ class ChatBotScreen extends React.Component {
 
     async componentWillUnmount() {
         this.mounted = false;
+        Store.dispatch(setCurrentConversationId(''));
         Store.dispatch(setLoadedBot(null));
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
@@ -597,20 +614,23 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.sliderPreviousState = this.state.showSlider || false;
         this.scrollToBottomIfNeeded();
         if (Platform.OS === 'android' && this.slider) {
             this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
+            this.setState({ sliderClosed: true, showOptions: false });
         } else {
-            this.setState({ sliderClosed: false });
+            this.setState({ sliderClosed: false, showOptions: false });
         }
     };
 
     keyboardDidHide = () => {
         this.scrollToBottomIfNeeded();
-        if (Platform.OS === 'android' && this.state.sliderClosed) {
-            this.setState({ showSlider: true });
-        }
+        this.setState({ showSlider: this.sliderPreviousState || false });
+        // if (Platform.OS === 'android' && this.state.sliderClosed) {
+        //     this.setState({ showSlider: true });
+        // }
     };
 
     handleMessageEvents(event) {
@@ -711,7 +731,6 @@ class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
-
         this.stopWaiting();
         this.countMessage(message);
 
@@ -724,11 +743,6 @@ class ChatBotScreen extends React.Component {
             this.updateSmartSuggestions(message);
         } else if (
             message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
-        ) {
-            this.updateChat(message);
-        } else if (
-            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -739,22 +753,19 @@ class ChatBotScreen extends React.Component {
                 this.fireSlider(message);
             }
         } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
-        ) {
-            this.openMap(message);
-        } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
             this.queueMessage(message);
         } else if (
-            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_HTML
-        ) {
-            this.updateChat(message);
-        } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
             this.openChart(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
+        ) {
+            this.closeForm(message.getMessage().formId);
         } else {
             this.updateChat(message);
         }
@@ -791,9 +802,18 @@ class ChatBotScreen extends React.Component {
         this.setState({ showSlider: true, message: message });
     }
 
-    openMap(message) {
+    openMap(mapData) {
         Keyboard.dismiss();
-        Actions.mapView({ mapData: message.getMessage() });
+        Actions.mapView({
+            mapData: mapData,
+            isSharedLocation: false,
+            onAction: this.sendMapResponse.bind(this)
+        });
+    }
+
+    openMapForSharedLocation(mapData) {
+        Keyboard.dismiss();
+        Actions.mapView({ mapData: mapData, isSharedLocation: true });
     }
 
     openChart(message) {
@@ -896,6 +916,9 @@ class ChatBotScreen extends React.Component {
     }
 
     sendButtonResponseMessage(selectedItem) {
+        if (selectedItem.action === 'AcceptContact') {
+            setTimeout(() => Contact.refreshContacts(), 5000);
+        }
         let message = new Message({ addedByBot: false });
         message.buttonResponseMessage(selectedItem);
         message.setCreatedBy(this.getUserId());
@@ -921,32 +944,78 @@ class ChatBotScreen extends React.Component {
         }
     };
 
-    onFormDone = (formItems, formMessage) => {
-        formMessage.setCompleted(true);
-        formMessage.formMessage(formItems);
-        formMessage.setRead(true);
-        this.persistMessage(formMessage).then(() => {
-            this.replaceUpdatedMessage(formMessage);
-            let message = new Message({ addedByBot: false });
-            message.formResponseMessage(formItems);
-            message.setCreatedBy(this.getUserId());
-            return this.sendMessage(message);
+    sendMapResponse(cardId, markerId, center, zoom) {
+        content = {
+            mapId: this.props.mapData.options.mapId,
+            cardId: cardId,
+            markerId: markerId,
+            center: center,
+            zoom: zoom
+        };
+        message = new Message();
+        message.mapResponseMessage(content);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
+
+    onFormDone(response) {
+        let message = new Message();
+        message.messageByBot(false);
+        message.formResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    }
+
+    closeForm(formId) {
+        let validFormMessages = [];
+        //ON SCREEN
+        const newScreenMessages = _.map(this.state.messages, screenMessage => {
+            let message = screenMessage.message;
+            if (
+                message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_FORM2 &&
+                message.getMessageOptions().formId === formId
+            ) {
+                validFormMessages.push(message);
+                let newOptions = message.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                message.form2Message(message.getMessage(), newOptions);
+                screenMessage.message = message;
+            }
+            return screenMessage;
         });
-    };
+        this.setState({ messages: newScreenMessages });
 
-    onFormOpen = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formOpenMessage();
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
+        //RESPONSE
+        let lastForm = validFormMessages[validFormMessages.length - 1];
+        response = {
+            formId: formId,
+            fields: _.map(lastForm.getMessage(), field => {
+                res = {
+                    id: field.id,
+                    value: field.value
+                };
+                return res;
+            })
+        };
+        this.onFormDone(response);
 
-    onFormCancel = formMessage => {
-        let message = new Message({ addedByBot: false });
-        message.formCancelMessage(formMessage);
-        message.setCreatedBy(this.getUserId());
-        return this.sendMessage(message);
-    };
+        //PERSISTENCE
+        MessageHandler.fetchDeviceMessagesOfType(
+            this.getBotKey(),
+            MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ).then(messages => {
+            let forms = _.filter(messages, msg => {
+                return msg.getMessageOptions().formId === formId;
+            });
+            _.map(forms, form => {
+                let newOptions = form.getMessageOptions();
+                newOptions.stage = formStatus.COMPLETED;
+                form.form2Message(form.getMessage(), newOptions);
+                this.persistMessage(form);
+            });
+        });
+    }
 
     updateMessages = (messages, callback) => {
         if (this.mounted) {
@@ -992,6 +1061,9 @@ class ChatBotScreen extends React.Component {
         var message = this.messageQueue.shift();
         if (message) {
             this.processingMessageQueue = true;
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.appendMessageToChat(message)
                 .then(() => {
                     return this.sleep(
@@ -1069,12 +1141,46 @@ class ChatBotScreen extends React.Component {
         if (message.isMessageByBot()) {
             if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={true}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={false}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_WEB_CARD
             ) {
                 return (
                     <WebCards
                         webCardsList={message.getMessage()}
                         previews={message.getMessageOptions()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_DATA_CARD
+            ) {
+                return (
+                    <Datacard
+                        datacardList={message.getMessage()}
+                        onCardSelected={this.openModalWithContent.bind(this)}
                     />
                 );
             } else if (
@@ -1089,6 +1195,19 @@ class ChatBotScreen extends React.Component {
                         onButtonClick={this.onButtonDone.bind()}
                     />
                 );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM2
+            ) {
+                return (
+                    <Form2Message
+                        formData={message.getMessage()}
+                        messageData={message.getMessageOptions()}
+                        message={message}
+                        saveMessage={this.persistMessage.bind(this)}
+                        onSubmit={this.onFormDone.bind(this)}
+                    />
+                );
             } else {
                 return (
                     <ChatMessage
@@ -1098,23 +1217,66 @@ class ChatBotScreen extends React.Component {
                         user={this.user}
                         imageSource={{ uri: this.bot.logoUrl }}
                         onDoneBtnClick={this.onButtonDone.bind()}
+                        showTime={item.showTime}
+                        openModalWithContent={this.openModalWithContent.bind(
+                            this
+                        )}
+                        hideChatModal={this.hideChatModal.bind(this)}
                         onFormCTAClick={this.onFormDone.bind(this)}
                         onFormCancel={this.onFormCancel.bind(this)}
                         onFormOpen={this.onFormOpen.bind(this)}
-                        showTime={item.showTime}
+                        conversationContext={this.conversationContext}
                     />
                 );
             }
         } else {
-            return (
-                <ChatMessage
-                    showTime={item.showTime}
-                    message={message}
-                    alignRight
-                    user={this.user}
-                />
-            );
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMap.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            ) {
+                return (
+                    <MapMessage
+                        isFromUser={true}
+                        isFromBot={false}
+                        openMap={this.openMapForSharedLocation.bind(this)}
+                        mapData={message.getMessage()}
+                    />
+                );
+            } else {
+                return (
+                    <ChatMessage
+                        showTime={item.showTime}
+                        message={message}
+                        alignRight
+                        user={this.user}
+                        openModalWithContent={this.openModalWithContent.bind(
+                            this
+                        )}
+                        hideChatModal={this.hideChatModal.bind(this)}
+                        conversationContext={this.conversationContext}
+                    />
+                );
+            }
         }
+    }
+
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
     }
 
     waitForQueueProcessing() {
@@ -1137,8 +1299,18 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         this.countMessage(message);
+
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEvents.SEND_MESSAGE,
+            'Message',
+            this.props.bot.botName,
+            0,
+            null
+        );
+
         this.updateChat(message);
         this.scrollToBottom = true;
+
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1154,6 +1326,7 @@ class ChatBotScreen extends React.Component {
                 console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
+
                     this.updateChat(message);
                 }
             });
@@ -1197,6 +1370,24 @@ class ChatBotScreen extends React.Component {
         return this.user.userId;
     };
 
+    async pickImage() {
+        Keyboard.dismiss();
+        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
+        // Have to filter out videos ?
+        if (!result.cancelled) {
+            this.sendImage(result.uri, result.base64);
+        }
+    }
+
+    async pickFile() {
+        Keyboard.dismiss();
+        DocumentPicker.pick({
+            type: [DocumentPicker.types.allFiles]
+        }).then(res => {
+            this.sendFile(res.uri, res.type, res.name);
+        });
+    }
+
     async sendImage(imageUri, base64) {
         const toUri = await Utils.copyFileAsync(
             imageUri,
@@ -1211,11 +1402,50 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Image,
-            this.user
+            this.user,
+            ResourceTypes.Image
         );
-        message.imageMessage(uploadedUrl);
+        message.imageMessage(uploadedUrl.split('/').pop());
+        return this.sendMessage(message);
+    }
 
+    /**
+     * Async method that copy a file in a local directory. Can Also rename it.
+     *
+     * @param fileLocalUri uri of the local file
+     * @param fileMIMEType MIME type of the file
+     * @param fileName file name with extension
+     *
+     */
+    async sendFile(fileLocalUri, fileMIMEType, fileName) {
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        // COPY THE FILE
+        await RNFS.mkdir(Constants.OTHER_FILE_DIRECTORY);
+        let rename =
+            message.getMessageId() + '.' + mime.extension(fileMIMEType);
+        const newFileUri = await Utils.copyFileAsync(
+            decodeURI(fileLocalUri),
+            Constants.OTHER_FILE_DIRECTORY,
+            rename
+        );
+
+        // UPLOAD THE FILE
+        const uploadedUrl = await Resource.uploadFile(
+            null, //base64 will be created in Resource.uploadFile()
+            newFileUri,
+            this.conversationContext.conversationId,
+            message.getMessageId(),
+            this.user,
+            ResourceTypes.OtherFile,
+            fileMIMEType
+        );
+
+        //SEND MESSAGE
+        message.otherFileMessage(uploadedUrl.split('/').pop(), {
+            type: fileMIMEType,
+            fileName: fileName
+        });
         return this.sendMessage(message);
     }
 
@@ -1239,11 +1469,10 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Audio,
-            this.user
+            this.user,
+            ResourceTypes.Audio
         );
-
-        message.audioMessage(uploadedUrl);
+        message.audioMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     };
 
@@ -1261,10 +1490,10 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            ResourceTypes.Video,
-            this.user
+            this.user,
+            ResourceTypes.Video
         );
-        message.videoMessage(uploadedUrl);
+        message.videoMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     };
 
@@ -1387,41 +1616,6 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    async pickImage() {
-        Keyboard.dismiss();
-        let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
-        // Have to filter out videos ?
-        if (!result.cancelled) {
-            this.sendImage(result.uri, result.base64);
-        }
-    }
-    async uploadFile(uri) {
-        let message = new Message();
-        message.setCreatedBy(this.getUserId());
-
-        const uploadedUrl = await Resource.uploadFile(
-            null,
-            toUri,
-            this.conversationContext.conversationId,
-            message.getMessageId(),
-            ResourceTypes.Audio,
-            this.user
-        );
-    }
-
-    async pickFile() {
-        Keyboard.dismiss();
-        DocumentPicker.show(
-            {
-                filetype: [DocumentPickerUtil.allFiles()]
-            },
-            (error, res) => {
-                this.uploadFile();
-                console.log(res.uri, res.type, res.fileName, res.fileSize);
-            }
-        );
-    }
-
     onBarcodeRead(barCodeData) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
@@ -1517,10 +1711,69 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
-        console.log(locationData);
+        const mapData = {
+            region: {
+                longitude: locationData.coordinate[0],
+                latitude: locationData.coordinate[1]
+            },
+            markers: [
+                {
+                    title: 'position',
+                    description: 'shared position',
+                    draggable: false,
+                    coordinate: {
+                        longitude: locationData.coordinate[0],
+                        latitude: locationData.coordinate[1]
+                    }
+                }
+            ]
+        };
+        message = new Message();
+        message.locationMessage(mapData);
+        message.messageByBot(false);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
     }
 
-    onOptionSelected(key) {
+    pickContact() {
+        Keyboard.dismiss();
+        Actions.addParticipants({ onSelected: this.shareContacts.bind(this) });
+    }
+
+    shareContacts(selectedContacts) {
+        _.map(selectedContacts, contact => {
+            message = new Message();
+            message.contactCard(contact);
+            message.messageByBot(false);
+            message.setCreatedBy(this.getUserId());
+            this.sendMessage(message);
+        });
+    }
+
+    onPlusButtonPressed() {
+        if (this.state.showOptions === false) {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            Keyboard.dismiss();
+            this.sliderPreviousState = this.state.showSlider || false;
+            this.setState({
+                showOptions: true,
+                showSlider: false
+            });
+        } else {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+            this.setState({
+                showOptions: false,
+                showSlider: this.sliderPreviousState || false
+            });
+        }
+    }
+
+    selectOption = key => {
+        this.setState({ showOptions: false });
         if (key === BotInputBarCapabilities.camera) {
             this.takePicture();
         } else if (key === BotInputBarCapabilities.video) {
@@ -1529,8 +1782,9 @@ class ChatBotScreen extends React.Component {
             this.readBarCode();
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
-        } else if (key === BotInputBarCapabilities.add_contact) {
-            this.addContactsToBot();
+        } else if (key === BotInputBarCapabilities.share_contact) {
+            return;
+            this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
         } else if (key === BotInputBarCapabilities.pick_location) {
@@ -1538,7 +1792,7 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.file) {
             this.pickFile();
         }
-    }
+    };
 
     async loadMessages() {
         let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
@@ -1580,6 +1834,8 @@ class ChatBotScreen extends React.Component {
             this.getBotId(),
             this.oldestLoadedDate()
         );
+        console.log(messages);
+
         return messages;
     }
 
@@ -1647,52 +1903,143 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderOptionsMenu(options) {
+        return (
+            <View style={chatStyles.moreOptionContainer}>
+                {options.map((elem, index) => {
+                    return (
+                        <TouchableOpacity
+                            key={index}
+                            disabled={
+                                elem.key ===
+                                BotInputBarCapabilities.share_contact
+                            }
+                            onPress={() => {
+                                this.selectOption(elem.key);
+                            }}
+                            style={chatStyles.optionContainer}
+                        >
+                            <View
+                                style={
+                                    elem.key ===
+                                    BotInputBarCapabilities.share_contact
+                                        ? chatStyles.moreOptionImageContainerHide
+                                        : chatStyles.moreOptionImageContainer
+                                }
+                            >
+                                <Image
+                                    style={elem.imageStyle}
+                                    source={elem.imageSource}
+                                />
+                            </View>
+                            <Text style={chatStyles.optionText}>
+                                {elem.label}
+                            </Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
                 key: BotInputBarCapabilities.camera,
-                label: I18n.t('Chat_Input_Camera')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_camera,
+                label: I18n.t('Camera_option')
             },
-            // { key: BotInputBarCapabilities.video, label: I18n.t('Chat_Input_Video') },
-            // { key: BotInputBarCapabilities.file, label: I18n.t('Chat_Input_File') },
             {
                 key: BotInputBarCapabilities.photo_library,
-                label: I18n.t('Chat_Input_Photo_Library')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_photo_library,
+                label: I18n.t('Gallery_option')
             },
             {
                 key: BotInputBarCapabilities.bar_code_scanner,
-                label: I18n.t('Chat_Input_BarCode')
+                imageStyle: { width: 16, height: 14 },
+                imageSource: images.share_code,
+                label: I18n.t('Bar_code_option')
             },
             {
+                key: BotInputBarCapabilities.file,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_file,
+                label: I18n.t('File_option')
+            },
+            // {
+            //     key: BotInputBarCapabilities.share_contact,
+            //     imageStyle: { width: 16, height: 16 }
+            //     imageSource: images.share_contact,
+            //     label: I18n.t('Contact')
+            // },
+            {
                 key: BotInputBarCapabilities.pick_location,
+                imageStyle: { width: 14, height: 16 },
+                imageSource: images.share_location,
                 label: I18n.t('Pick_Location')
             }
         ];
 
-        if (this.bot.allowResetConversation) {
-            moreOptions.push({
-                key: BotInputBarCapabilities.reset_conversation,
-                label: I18n.t('Reset_Conversation')
-            });
-        }
-        if (appConfig.app.hideAddContacts !== true) {
-            moreOptions.push({
-                key: BotInputBarCapabilities.add_contact,
-                label: I18n.t('Add_Contact')
-            });
-        }
-
         return (
-            <ChatInputBar
-                accessibilityLabel="Chat Input Bar"
-                testID="chat-input-bar"
-                network={this.state.network}
-                onSend={this.onSendMessage.bind(this)}
-                onSendAudio={this.onSendAudio.bind(this)}
-                options={moreOptions}
-                botId={this.getBotId()}
-                onOptionSelected={this.onOptionSelected.bind(this)}
-            />
+            // <KeyboardAvoidingView></KeyboardAvoidingView>
+            <View>
+                {this.state.showOptions && (
+                    <View style={chatStyles.moreOptionContainer}>
+                        {moreOptions.map((elem, index) => {
+                            return (
+                                <TouchableOpacity
+                                    key={index}
+                                    disabled={
+                                        elem.key ===
+                                        BotInputBarCapabilities.share_contact
+                                    }
+                                    onPress={() => {
+                                        this.selectOption(elem.key);
+                                    }}
+                                    style={chatStyles.optionContainer}
+                                >
+                                    <View
+                                        style={
+                                            elem.key ===
+                                            BotInputBarCapabilities.share_contact
+                                                ? chatStyles.moreOptionImageContainerHide
+                                                : chatStyles.moreOptionImageContainer
+                                        }
+                                    >
+                                        <Image
+                                            style={elem.imageStyle}
+                                            source={elem.imageSource}
+                                        />
+                                    </View>
+                                    <Text style={chatStyles.optionText}>
+                                        {elem.label}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </View>
+                )}
+
+                <ChatInputBar
+                    accessibilityLabel="Chat Input Bar"
+                    testID="chat-input-bar"
+                    network={this.state.network}
+                    onSend={this.onSendMessage.bind(this)}
+                    onSendAudio={this.onSendAudio.bind(this)}
+                    options={moreOptions}
+                    botId={this.getBotId()}
+                    onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
+                    showMoreOption={this.state.showOptions}
+                    closeShowOptions={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        this.setState({ showOptions: false });
+                    }}
+                />
+            </View>
         );
     }
 
@@ -1727,6 +2074,41 @@ class ChatBotScreen extends React.Component {
         );
     };
 
+    renderChatModal() {
+        return (
+            <ChatModal
+                content={this.state.chatModalContent}
+                isVisible={this.state.isModalVisible}
+                backdropOpacity={0.1}
+                onBackButtonPress={this.hideChatModal.bind(this)}
+                onBackdropPress={() => this.setState({ isModalVisible: false })}
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 0
+                }}
+            />
+        );
+    }
+
+    hideChatModal() {
+        this.setState({ isModalVisible: false });
+    }
+
+    onFormOpen = formMessage => {
+        let message = new Message({ addedByBot: false });
+        message.formOpenMessage();
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    };
+
+    onFormCancel = formMessage => {
+        let message = new Message({ addedByBot: false });
+        message.formCancelMessage(formMessage);
+        message.setCreatedBy(this.getUserId());
+        return this.sendMessage(message);
+    };
+
     render() {
         if (!this.botLoaded) {
             return (
@@ -1754,50 +2136,67 @@ class ChatBotScreen extends React.Component {
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <SafeAreaView style={chatStyles.safeArea}>
                 <BackgroundImage
                     accessibilityLabel="Messages List"
                     testID="messages-list"
                 >
                     <KeyboardAvoidingView
-                        style={chatStyles.container}
+                        style={{ flex: 1 }}
                         behavior={Platform.OS === 'ios' ? 'padding' : null}
                         keyboardVerticalOffset={
                             Constants.DEFAULT_HEADER_HEIGHT +
                             (Utils.isiPhoneX() ? 24 : 0)
                         }
+                        enabled
                     >
-                        <FlatList
-                            style={chatStyles.messagesList}
-                            ListFooterComponent={this.renderSmartSuggestions()}
-                            accessibilityLabel="Messages List"
-                            testID="messages-list"
-                            ref={list => {
-                                this.chatList = list;
-                                this.checkForScrolling();
-                            }}
-                            data={AllMessages}
-                            renderItem={this.renderItem.bind(this)}
-                            onLayout={this.onChatListLayout.bind(this)}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={['#9Bd35A', '#689F38']}
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={this.onRefresh.bind(this)}
+                        <TouchableWithoutFeedback
+                            style={{ flex: 1 }}
+                            disabled={!this.state.showOptions}
+                            onPress={this.onPlusButtonPressed.bind(this)}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'flex-end'
+                                }}
+                            >
+                                <FlatList
+                                    style={chatStyles.messagesList}
+                                    ListFooterComponent={this.renderSmartSuggestions()}
+                                    accessibilityLabel="Messages List"
+                                    testID="messages-list"
+                                    ref={list => {
+                                        this.chatList = list;
+                                        this.checkForScrolling();
+                                    }}
+                                    data={AllMessages}
+                                    renderItem={this.renderItem.bind(this)}
+                                    onLayout={this.onChatListLayout.bind(this)}
+                                    refreshControl={
+                                        <RefreshControl
+                                            colors={['#9Bd35A', '#689F38']}
+                                            refreshing={this.state.refreshing}
+                                            onRefresh={this.onRefresh.bind(
+                                                this
+                                            )}
+                                        />
+                                    }
+                                    onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
+                                        this
+                                    )}
                                 />
-                            }
-                            onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
-                                this
-                            )}
-                        />
-                        {this.state.showSlider ? this.renderSlider() : null}
-                        {/* {this.renderSmartSuggestions()} */}
-                        <View style={{ alignItems: 'center' }}>
-                            {this.renderChatInputBar()}
-                        </View>
-
-                        {this.renderNetworkStatusBar()}
-                        {this.renderCallModal()}
+                                {this.state.showSlider
+                                    ? this.renderSlider()
+                                    : null}
+                                <View style={{ alignItems: 'center' }}>
+                                    {this.renderChatInputBar()}
+                                </View>
+                                {this.renderNetworkStatusBar()}
+                                {/* {this.renderCallModal()} */}
+                                {this.renderChatModal()}
+                            </View>
+                        </TouchableWithoutFeedback>
                     </KeyboardAvoidingView>
                 </BackgroundImage>
             </SafeAreaView>

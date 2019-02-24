@@ -4,16 +4,16 @@ import { Auth, Notification } from '../lib/capability';
 
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
+import { Platform } from 'react-native';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
-
         if (isUserLoggedIn) {
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();
-            // this.configureNotifications();
+            this.configureNotifications();
             TwilioVoIP.init();
         }
     };
@@ -31,8 +31,52 @@ export default class AfterLogin {
     };
 
     handleNotification = notification => {
+        let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            Actions.replace(ROUTER_SCENE_KEYS.timeline);
+            Conversation.getConversation(notification.conversationId)
+                .then(conv => {
+                    conversation = conv;
+                    return SystemBot.get(SystemBot.imBotManifestName);
+                })
+                .then(imBot => {
+                    if (conversation.type === IM_CHAT) {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.peopleChat
+                        ) {
+                            Actions.refresh({
+                                key: Math.random(),
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        } else {
+                            Actions.peopleChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    } else {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.channelChat
+                        ) {
+                            Actions.refresh({
+                                key: Math.random(),
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        } else {
+                            Actions.channelChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    }
+                });
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {

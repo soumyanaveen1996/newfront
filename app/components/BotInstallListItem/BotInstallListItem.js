@@ -14,6 +14,7 @@ import CachedImage from '../CachedImage';
 import utils from '../../lib/utils';
 import { Auth, Network } from '../../lib/capability';
 import config from '../../config/config';
+import { Actions } from 'react-native-router-flux';
 
 const subtitleNumberOfLines = 2;
 
@@ -27,23 +28,35 @@ const BotInstallListItemStates = {
 export default class BotInstallListItem extends React.Component {
     constructor(props) {
         super(props);
+        let botStatus = utils.checkBotStatus(
+            this.props.installedBots,
+            this.props.bot
+        );
         this.state = {
-            status: props.installed
-                ? props.update
+            status: botStatus.installed
+                ? botStatus.update
                     ? BotInstallListItemStates.UPDATE
                     : BotInstallListItemStates.INSTALLED
                 : BotInstallListItemStates.NOT_INSTALLED
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            status: nextProps.installed
-                ? nextProps.update
-                    ? BotInstallListItemStates.UPDATE
-                    : BotInstallListItemStates.INSTALLED
-                : BotInstallListItemStates.NOT_INSTALLED
-        });
+    componentDidUpdate(prevProps) {
+        if (prevProps.installedBots !== this.props.installedBots) {
+            let botStatus = utils.checkBotStatus(
+                this.props.installedBots,
+                this.props.bot
+            );
+            botStatus.installed
+                ? botStatus.update
+                    ? this.setState({ status: BotInstallListItemStates.UPDATE })
+                    : this.setState({
+                        status: BotInstallListItemStates.INSTALLED
+                    })
+                : this.setState({
+                    status: BotInstallListItemStates.NOT_INSTALLED
+                });
+        }
     }
 
     async performBotInstallation(bot, update) {
@@ -76,24 +89,30 @@ export default class BotInstallListItem extends React.Component {
                         sessionId: user.creds.sessionId
                     }
                 };
+                // console.log('data to install ', options);
+
                 await Promise.resolve(Network(options));
                 await Bot.install(dceBot);
             }
         } catch (e) {
+            console.error('bot not installed ', e);
+
             throw e;
         }
     }
 
     async installBot() {
-        if (this.props.installed && !this.props.update) {
+        let botStatus = utils.checkBotStatus(
+            this.props.installedBots,
+            this.props.bot
+        );
+        if (botStatus.installed && !botStatus.update) {
             return;
         }
-        const isUpdate = this.props.update;
-
         this.setState({ status: BotInstallListItemStates.INSTALLING });
         const bot = this.props.bot;
         try {
-            await this.performBotInstallation(bot, isUpdate);
+            await this.performBotInstallation(bot, botStatus.update);
             if (this.props.onBotInstalled) {
                 this.props.onBotInstalled();
             }
@@ -158,11 +177,31 @@ export default class BotInstallListItem extends React.Component {
             );
         }
     }
+    openBotInfo = botInfo => {
+        const botStatus = this.state.status;
+        // console.log(botStatus);
+
+        Actions.botInfoScreen({
+            botInfo: botInfo,
+            status: botStatus,
+            onBack: this.onBack
+        });
+    };
 
     render() {
         const bot = this.props.bot;
+
+        // console.log('bot name : ', bot);
+        // console.log('bot status :', this.state.status);
+        // console.log('installed bot :', this.props.installedBots);
+
         return (
-            <View style={styles.container}>
+            <TouchableOpacity
+                onPress={() => {
+                    this.openBotInfo(bot);
+                }}
+                style={styles.container}
+            >
                 <CachedImage
                     imageTag="botLogo"
                     source={{ uri: bot.logoUrl }}
@@ -211,7 +250,7 @@ export default class BotInstallListItem extends React.Component {
                     </Text>
                 </View>
                 {this.renderRightArea()}
-            </View>
+            </TouchableOpacity>
         );
     }
 }

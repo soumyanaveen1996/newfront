@@ -1,7 +1,12 @@
 import { ConversationDAO } from '../persistence';
 import sha1 from 'sha1';
 import _ from 'lodash';
-import { Network, Auth, ConversationContext } from '../capability';
+import {
+    Network,
+    Auth,
+    ConversationContext,
+    DeviceStorage
+} from '../capability';
 import config from '../../config/config';
 import Utils from '../../components/MainScreen/Utils';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
@@ -12,6 +17,7 @@ import Store from '../../redux/store/configureStore';
 import Message from '../capability/Message';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
+export const FAVOURITE_BOTS = 'favourite_bots';
 
 /**
  * Can be used for people chat - for person to person, peer to peer or channels
@@ -294,6 +300,42 @@ export default class Conversation {
     static deleteChannelConversation = conversationId =>
         Conversation.removeConversation(conversationId, CHANNEL_CHAT);
 
+    static deleteContacts = body => {
+        console.log('sending data for delete before', body);
+        let currentUserId;
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        currentUserId = user.userId;
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.proxy.deleteContacts}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                ...body
+                            }
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(async response => {
+                    console.log('response fav ', response);
+                    const otherUserId = body.users[0];
+                    return Promise.resolve({
+                        otherUserId,
+                        currentUserId
+                    });
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    };
+
     static updateConversation = (oldConversationId, newConversationId) =>
         new Promise((resolve, reject) => {
             ConversationDAO.updateConversationId(
@@ -339,17 +381,56 @@ export default class Conversation {
     static isChannelConversation = conversation =>
         conversation.type === CHANNEL_CHAT;
 
-    static setFavorite = (
-        conversationId,
-        favorite,
-        userDomain = 'frontmai'
-    ) => {
+    static setFavorite = data => {
         // Call API And set Favorite- TODO
+        let favorite = false;
+        if (data.action === 'add') {
+            favorite = true;
+        }
+        let jsonData;
+
+        switch (data.type) {
+        case 'conversation':
+            jsonData = {
+                conversationId: data.conversationId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        case 'channel':
+            jsonData = {
+                channelName: data.channelName,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        case 'contacts':
+            jsonData = {
+                userId: data.userId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        default:
+            jsonData = {
+                botId: data.botId,
+                action: data.action,
+                userDomain: data.userDomain
+            };
+            break;
+        }
+
+        let currentUserId;
+
+        console.log('data before sending ', jsonData);
 
         return new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
                     if (user) {
+                        // console.log('user details  ', user);
+
+                        currentUserId = user.userId;
                         let options = {
                             method: 'POST',
                             url: `${config.network.queueProtocol}${
@@ -359,15 +440,15 @@ export default class Conversation {
                                 sessionId: user.creds.sessionId
                             },
                             data: {
-                                action: favorite ? 'add' : 'remove',
-                                userDomain,
-                                conversationId
+                                ...jsonData
                             }
                         };
                         return Network(options);
                     }
                 })
-                .then(response => {
+                .then(async response => {
+                    // console.log('response fav ', response);
+
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
                         reject('Cannot Set Favorites');
@@ -376,10 +457,60 @@ export default class Conversation {
                         if (favorite) {
                             favoriteDb = 1;
                         }
-                        return ConversationDAO.updateConvFavorite(
-                            conversationId,
-                            favoriteDb
-                        );
+
+                        if (data.conversationId) {
+                            return ConversationDAO.updateConvFavorite(
+                                data.conversationId,
+                                favoriteDb
+                            );
+                        }
+
+                        if (data.channelName) {
+                            if (data.channelConvId) {
+                                console.log(
+                                    'channel conversation id',
+                                    data.channelConvId
+                                );
+
+                                return ConversationDAO.updateConvFavorite(
+                                    data.channelConvId,
+                                    favoriteDb
+                                );
+                            }
+                        }
+
+                        if (data.botId) {
+                            // console.log('favoriteDb ', favoriteDb);
+                            let favArry = await DeviceStorage.get(
+                                FAVOURITE_BOTS
+                            );
+
+                            if (favoriteDb === 1) {
+                                if (favArry.indexOf(data.botId) === -1) {
+                                    favArry.push(data.botId);
+                                }
+                            } else {
+                                if (favArry.indexOf(data.botId) !== -1) {
+                                    favArry.splice(
+                                        favArry.indexOf(data.botId),
+                                        1
+                                    );
+                                }
+                            }
+
+                            // console.log('new array to update ', favArry);
+                            DeviceStorage.update(FAVOURITE_BOTS, favArry);
+
+                            return resolve();
+                        }
+
+                        if (data.userId) {
+                            const otherUserId = data.userId;
+                            return Promise.resolve({
+                                otherUserId,
+                                currentUserId
+                            });
+                        }
                     }
                 })
                 .then(resolve)

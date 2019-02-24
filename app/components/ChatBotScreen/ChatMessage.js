@@ -19,7 +19,7 @@ import {
     buttonStyle,
     buttonTextStyle
 } from './styles';
-import { MessageTypeConstants } from '../../lib/capability';
+import { MessageTypeConstants, Auth, Network } from '../../lib/capability';
 import utils from '../../lib/utils';
 import AudioPlayer from '../AudioPlayer';
 import CachedImage from '../CachedImage';
@@ -36,6 +36,9 @@ import _ from 'lodash';
 import Hyperlink from 'react-native-hyperlink';
 import { Icons } from '../../config/icons';
 import { ButtonMessage } from '../ButtonMessage';
+import config from '../../config/config';
+import ContactCard from './ContactCard';
+import TapToOpenFile from './TapToOpenFile';
 
 export default class ChatMessage extends React.Component {
     constructor(props) {
@@ -43,7 +46,8 @@ export default class ChatMessage extends React.Component {
         let { message } = this.props;
         this.state = {
             read: message.isRead(),
-            isFavorite: message.isFavorite()
+            isFavorite: message.isFavorite(),
+            userName: null
         };
     }
 
@@ -86,6 +90,14 @@ export default class ChatMessage extends React.Component {
         ) {
             this.openForm(message);
         }
+
+        if (message.getCreatedBy()) {
+            ContactsCache.getUserDetails(message.getCreatedBy()).then(user => {
+                const userName = user ? user.userName : I18n.t('Unknown');
+                this.setState({ userName });
+            });
+        }
+
         MessageHandler.markBotMessageAsRead(
             message.getBotKey(),
             message.getMessageId()
@@ -145,7 +157,10 @@ export default class ChatMessage extends React.Component {
     }
 
     renderImageMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
         const imageComponent = (
@@ -159,8 +174,68 @@ export default class ChatMessage extends React.Component {
         return this.wrapBetweenFavAndTalk(message, component);
     }
 
+    renderFileMessage(message) {
+        const remoteFileName = message.getMessage();
+        const type = message.getMessageOptions().type;
+        const name = message.getMessageOptions().fileName;
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
+        let headers =
+            utils.s3DownloadHeaders(url, this.props.user) || undefined;
+        let imageComponent;
+        if (this.props.alignRight) {
+            imageComponent = (
+                <View
+                    style={chatMessageBubbleStyle(
+                        this.props.alignRight,
+                        this.props.imageSource
+                    )}
+                >
+                    <TapToOpenFile
+                        alignRight
+                        source={{
+                            url: url,
+                            headers: headers,
+                            MIMEType: type,
+                            name: name
+                        }}
+                    />
+                    <Text
+                        style={[
+                            chatMessageTextStyle(this.props.alignRight),
+                            { maxWidth: 125 }
+                        ]}
+                        overflow="hidden"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                    >
+                        {name}
+                    </Text>
+                </View>
+            );
+        } else {
+            imageComponent = (
+                <TapToOpenFile
+                    source={{
+                        url: url,
+                        headers: headers,
+                        MIMEType: type,
+                        name: name
+                    }}
+                />
+            );
+        }
+
+        const component = this.wrapWithTitle(imageComponent);
+        return this.wrapBetweenFavAndTalk(message, component);
+    }
+
     renderVideoMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
@@ -201,7 +276,10 @@ export default class ChatMessage extends React.Component {
     }
 
     renderAudioMessage(message) {
-        const url = message.getMessage();
+        const remoteFileName = message.getMessage();
+        let url = `${config.proxy.protocol}${config.proxy.host}${
+            config.proxy.downloadFilePath
+        }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
             utils.s3DownloadHeaders(url, this.props.user) || undefined;
 
@@ -220,6 +298,22 @@ export default class ChatMessage extends React.Component {
         );
 
         return this.wrapBetweenFavAndTalk(message, component);
+    }
+
+    contactMessage(message) {
+        let userId = message.getMessage();
+        return (
+            <ContactCard
+                id={userId}
+                alignRight={this.props.alignRight}
+                imageSource={this.props.imageSource}
+                openModalWithContent={this.props.openModalWithContent.bind(
+                    this
+                )}
+                hideChatModal={this.props.hideChatModal.bind(this)}
+                disabled={this.props.alignRight}
+            />
+        );
     }
 
     favoriteIconClicked() {
@@ -245,13 +339,18 @@ export default class ChatMessage extends React.Component {
         let { message, shouldShowUserName } = this.props;
         //console.log(shouldShowUserName, message.isMessageByBot())
         if (shouldShowUserName && message.getCreatedBy()) {
-            let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            // let user = ContactsCache.getUserDetails(message.getCreatedBy());
+            // const userName = user ? user.userName : I18n.t('Unknown');
+            // console.log(userName);
+
             return (
                 <View style={{ flexDirection: 'column' }}>
-                    <Text style={styles.userNameStyle}>
-                        {user ? user.userName : I18n.t('Unknown')}
-                    </Text>
-                    {component}
+                    {this.state.userName ? (
+                        <Text style={styles.userNameStyle}>
+                            {this.state.userName}
+                        </Text>
+                    ) : null}
+                    <View>{component}</View>
                 </View>
             );
         } else {
@@ -262,10 +361,11 @@ export default class ChatMessage extends React.Component {
     renderStdNotification(message) {
         return <Text>{message.getDisplayMessage()}</Text>;
     }
+
     renderCriticalNotification(message) {}
+
     renderMessage() {
         let { message } = this.props;
-
         if (
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_STRING ||
@@ -328,6 +428,11 @@ export default class ChatMessage extends React.Component {
         ) {
             return this.renderImageMessage(message);
         } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE
+        ) {
+            return this.renderFileMessage(message);
+        } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_VIDEO
         ) {
             return this.renderVideoMessage(message);
@@ -335,36 +440,6 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
-            // var buttons = [];
-            // for (var i = 0; i < message.getMessage().length; i++) {
-            //     buttons.push(
-            //         <View style={styles.buttonMsgParent} key={i}>
-            //             <TouchableOpacity
-            //                 underlayColor="white"
-            //                 onPress={this.buttonResponseOnPress.bind(
-            //                     this,
-            //                     i,
-            //                     message.getMessage()[i]
-            //                 )}
-            //                 style={buttonStyle(message.getMessage()[i].style)}
-            //             >
-            //                 <Text
-            //                     style={buttonTextStyle(
-            //                         message.getMessage()[i].style
-            //                     )}
-            //                 >
-            //                     {message.getMessage()[i].title}
-            //                 </Text>
-            //             </TouchableOpacity>
-            //         </View>
-            //     );
-            // }
-
-            // const component = (
-            //     <View style={{ flexDirection: 'column', width: '70%' }}>
-            //         {buttons}
-            //     </View>
-            // );
             return component;
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
@@ -428,6 +503,12 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_AUDIO
         ) {
             return this.renderAudioMessage(message);
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
+        ) {
+            component = this.contactMessage(message);
+            return this.wrapBetweenFavAndTalk(message, component);
         }
     }
 
@@ -491,7 +572,6 @@ export default class ChatMessage extends React.Component {
 
     render() {
         let { message, showTime } = this.props;
-
         if (message.isEmptyMessage()) {
             return null;
         }

@@ -61,26 +61,46 @@ export default class InviteModal extends React.Component {
 
     sendInvite() {
         Keyboard.dismiss();
-        this.props.setVisible(false);
+
         this.textInput.clear();
-        Auth.getUser().then(user => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    '/contactsActions',
-                headers: {
-                    sessionId: user.creds.sessionId
-                },
-                data: {
-                    capability: 'InviteUsers',
-                    botId: 'onboarding-bot',
-                    emailIds: this.state.email
+        Auth.getUser()
+            .then(user => {
+                const options = {
+                    method: 'post',
+                    url:
+                        config.proxy.protocol +
+                        config.proxy.host +
+                        '/contactsActions',
+                    headers: {
+                        sessionId: user.creds.sessionId
+                    },
+                    data: {
+                        capability: 'InviteUsers',
+                        botId: 'onboarding-bot',
+                        emailIds: this.state.email
+                    }
+                };
+                return Network(options);
+            })
+            .then(data => {
+                console.log('sent invite done', data);
+
+                if (data.error > 0) {
+                    console.log('error in sending invite');
                 }
-            };
-            return Network(options);
-        });
+                this.props.setVisible(false, 'done');
+
+                console.log('Invite sent successfully');
+            })
+            .catch(err => {
+                this.props.setVisible(false);
+                console.log('error in sending invite ', err);
+            });
+    }
+
+    addNewContactScreen() {
+        this.props.setVisible(false);
+        Actions.addressBookScreen({ title: 'Add new contacts' });
     }
 
     render() {
@@ -135,7 +155,8 @@ export default class InviteModal extends React.Component {
                                     }}
                                 >
                                     <Text style={styles.inviteText}>
-                                        Search with name or email
+                                        Search FrontM users with name, email or
+                                        phone number
                                     </Text>
                                     <TouchableOpacity
                                         style={
@@ -144,7 +165,10 @@ export default class InviteModal extends React.Component {
                                         onPress={() => {
                                             this.props.setVisible(false);
                                             Actions.searchUsers({
-                                                multiSelect: true
+                                                multiSelect: true,
+                                                onDone: this.props.addContacts.bind(
+                                                    this
+                                                )
                                             });
                                         }}
                                     >
@@ -207,6 +231,14 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
+                            <TouchableOpacity
+                                style={styles.addressBookContainerStyle}
+                                onPress={this.addNewContactScreen.bind(this)}
+                            >
+                                <Text style={styles.addressBookStyle}>
+                                    Or invite user from address book
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

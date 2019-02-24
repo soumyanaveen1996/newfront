@@ -12,7 +12,10 @@ const initialState = {
         refreshTimeline: true,
         refreshChannels: true,
         refreshContacts: true,
-        refreshUserEmail: true
+        refreshUserEmail: true,
+        network: 'full',
+        currentConversationId: '',
+        upload: 0
     },
     botState: {
         id: null

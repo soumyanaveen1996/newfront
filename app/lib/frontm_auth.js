@@ -4,12 +4,12 @@ import Config from '../config/config';
 import { Network } from './capability';
 import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-sign-in';
-import {
-    AccessToken,
-    LoginManager,
-    GraphRequest,
-    GraphRequestManager
-} from 'react-native-fbsdk';
+// import {
+//     AccessToken,
+//     LoginManager,
+//     GraphRequest,
+//     GraphRequestManager
+// } from 'react-native-fbsdk';
 import _ from 'lodash';
 import config from '../config/config';
 import queryString from 'querystring';
@@ -62,130 +62,127 @@ class FrontmAuth {
     }
 
     meRequestCallback(conversationId, botName, resolve, reject, error, result) {
-        var self = this;
-        if (error) {
-            console.log('Error fetching data: ' + error.toString());
-            reject(new Error('Error fetching facebook data'));
-        } else {
-            console.log('Success fetching data: ' + JSON.stringify(result));
-
-            // {"first_name":"amal","name":"amal r","last_name":"r","id":"101583750666079","email":"amal_trmtkhd_r@tfbnw.net"}
-            const fbDetails = result;
-            const data = {
-                user: {
-                    emailAddress: fbDetails.email,
-                    userName: fbDetails.name,
-                    userId: fbDetails.id
-                }
-            };
-            AccessToken.getCurrentAccessToken().then(token => {
-                console.log('Access Token ', token);
-                let options = {
-                    method: 'post',
-                    url:
-                        Config.proxy.protocol +
-                        Config.proxy.host +
-                        Config.proxy.authPath,
-                    headers: {
-                        token: token.accessToken,
-                        provider_name: 'facebook',
-                        platform: Platform.OS
-                    },
-                    data: data
-                };
-                Network(options)
-                    .then(res => {
-                        let resData =
-                            res && res.data ? res.data : { creds: {} };
-                        if (
-                            _.isEmpty(resData) ||
-                            _.isEmpty(resData.sessionId) ||
-                            _.isEmpty(resData.user)
-                        ) {
-                            reject(new Error('Empty response from the server'));
-                            return;
-                        }
-                        self.credentials.facebook = {
-                            sessionId: resData.sessionId,
-                            userId: resData.user.userId,
-                            info: resData.user || data.user,
-                            refreshToken: resData.longTermToken
-                        };
-                        console.log(
-                            'Facebook credentials : ',
-                            self.credentials.facebook
-                        );
-
-                        return resolve({
-                            type: 'success',
-                            credentials: self.credentials
-                        });
-                    })
-                    .catch(err => {
-                        return reject({ type: 'error', error: err });
-                    });
-            });
-        }
+        // var self = this;
+        // if (error) {
+        //     console.log('Error fetching data: ' + error.toString());
+        //     reject(new Error('Error fetching facebook data'));
+        // } else {
+        //     console.log('Success fetching data: ' + JSON.stringify(result));
+        //     // {"first_name":"amal","name":"amal r","last_name":"r","id":"101583750666079","email":"amal_trmtkhd_r@tfbnw.net"}
+        //     const fbDetails = result;
+        //     const data = {
+        //         user: {
+        //             emailAddress: fbDetails.email,
+        //             userName: fbDetails.name,
+        //             userId: fbDetails.id
+        //         }
+        //     };
+        //     AccessToken.getCurrentAccessToken().then(token => {
+        //         console.log('Access Token ', token);
+        //         let options = {
+        //             method: 'post',
+        //             url:
+        //                 Config.proxy.protocol +
+        //                 Config.proxy.host +
+        //                 Config.proxy.authPath,
+        //             headers: {
+        //                 token: token.accessToken,
+        //                 provider_name: 'facebook',
+        //                 platform: Platform.OS
+        //             },
+        //             data: data
+        //         };
+        //         Network(options)
+        //             .then(res => {
+        //                 let resData =
+        //                     res && res.data ? res.data : { creds: {} };
+        //                 if (
+        //                     _.isEmpty(resData) ||
+        //                     _.isEmpty(resData.sessionId) ||
+        //                     _.isEmpty(resData.user)
+        //                 ) {
+        //                     reject(new Error('Empty response from the server'));
+        //                     return;
+        //                 }
+        //                 self.credentials.facebook = {
+        //                     sessionId: resData.sessionId,
+        //                     userId: resData.user.userId,
+        //                     info: resData.user || data.user,
+        //                     refreshToken: resData.longTermToken
+        //                 };
+        //                 console.log(
+        //                     'Facebook credentials : ',
+        //                     self.credentials.facebook
+        //                 );
+        //                 return resolve({
+        //                     type: 'success',
+        //                     credentials: self.credentials
+        //                 });
+        //             })
+        //             .catch(err => {
+        //                 return reject({ type: 'error', error: err });
+        //             });
+        //     });
+        // }
     }
 
     loginWithFacebook(conversationId, botName) {
-        return new Promise((resolve, reject) => {
-            LoginManager.logInWithReadPermissions(
-                Config.auth.ios.facebook.permissions
-            ).then(
-                premissionsResult => {
-                    console.log(
-                        'Facebook permission result : ',
-                        premissionsResult
-                    );
-                    if (premissionsResult.isCancelled) {
-                        return resolve({
-                            type: 'cancel',
-                            msg: 'login canceled'
-                        });
-                    }
-                    if (
-                        !_.isEqual(
-                            premissionsResult.grantedPermissions,
-                            Config.auth.ios.facebook.permissions
-                        ) &&
-                        !_.isEqual(
-                            premissionsResult.grantedPermissions,
-                            Config.auth.android.facebook.permissions
-                        )
-                    ) {
-                        return reject(
-                            new Error('Not granted requested permissions')
-                        );
-                    }
-                    console.log('Facebook response : ', premissionsResult);
-
-                    const infoRequest = new GraphRequest(
-                        '/me',
-                        {
-                            parameters: {
-                                fields: {
-                                    string:
-                                        'email,name,first_name,middle_name,last_name'
-                                }
-                            }
-                        },
-                        this.meRequestCallback.bind(
-                            this,
-                            conversationId,
-                            botName,
-                            resolve,
-                            reject
-                        )
-                    );
-                    new GraphRequestManager().addRequest(infoRequest).start();
-                },
-                error => {
-                    console.log('Error with facebook : ', error);
-                    reject({ type: 'error', error: 'Facebook login failed' });
-                }
-            );
-        });
+        // return new Promise((resolve, reject) => {
+        //     LoginManager.logInWithReadPermissions(
+        //         Config.auth.ios.facebook.permissions
+        //     ).then(
+        //         premissionsResult => {
+        //             console.log(
+        //                 'Facebook permission result : ',
+        //                 premissionsResult
+        //             );
+        //             if (premissionsResult.isCancelled) {
+        //                 return resolve({
+        //                     type: 'cancel',
+        //                     msg: 'login canceled'
+        //                 });
+        //             }
+        //             if (
+        //                 !_.isEqual(
+        //                     premissionsResult.grantedPermissions,
+        //                     Config.auth.ios.facebook.permissions
+        //                 ) &&
+        //                 !_.isEqual(
+        //                     premissionsResult.grantedPermissions,
+        //                     Config.auth.android.facebook.permissions
+        //                 )
+        //             ) {
+        //                 return reject(
+        //                     new Error('Not granted requested permissions')
+        //                 );
+        //             }
+        //             console.log('Facebook response : ', premissionsResult);
+        //             const infoRequest = new GraphRequest(
+        //                 '/me',
+        //                 {
+        //                     parameters: {
+        //                         fields: {
+        //                             string:
+        //                                 'email,name,first_name,middle_name,last_name'
+        //                         }
+        //                     }
+        //                 },
+        //                 this.meRequestCallback.bind(
+        //                     this,
+        //                     conversationId,
+        //                     botName,
+        //                     resolve,
+        //                     reject
+        //                 )
+        //             );
+        //             new GraphRequestManager().addRequest(infoRequest).start();
+        //         },
+        //         error => {
+        //             console.log('Error with facebook : ', error);
+        //             reject({ type: 'error', error: 'Facebook login failed' });
+        //         }
+        //     );
+        // });
     }
 
     fetchRefreshToken(user) {
@@ -208,7 +205,7 @@ class FrontmAuth {
                     })
                 })
                     .then(res => {
-                        console.log('res : ', res);
+                        // console.log('res : ', res);
                         user.idToken = res.data.id_token;
                         user.refreshToken = res.data.refresh_token;
                         user.accessToken = res.data.access_token;

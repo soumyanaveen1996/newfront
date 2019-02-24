@@ -5,7 +5,8 @@ import {
     Image,
     TouchableHighlight,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 import styles from './styles';
 import images from '../../../config/images';
@@ -16,6 +17,7 @@ import _ from 'lodash';
 import { SYSTEM_BOT_MANIFEST } from '../../../lib/bot/SystemBot';
 import { scrollViewConfig } from './config';
 import BotContainer from '../../BotContainer';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 export default class DeveloperTab extends React.Component {
     constructor(props) {
@@ -72,7 +74,7 @@ export default class DeveloperTab extends React.Component {
     //     let selectedBots = this.props.botsData.filter(bot => {
     //         return botsId.indexOf(bot.botId) >= 0;
     //     });
-    //     Actions.botList({ data: selectedBots, title: title });
+    //     Actions.botListScreen({ data: selectedBots, title: title });
     // };
 
     // onDomainMgmtTileClicked() {
@@ -166,6 +168,7 @@ export default class DeveloperTab extends React.Component {
                         tabStatus="provider"
                         clickedIndex={this.state.collapseIndex}
                         handleCollapse={this.onCollapse}
+                        onBotInstallFailed={this.onBotInstallFailed}
                     />
                 );
             }
@@ -175,6 +178,21 @@ export default class DeveloperTab extends React.Component {
     newProvider = () => {
         this.props.onChange(true);
     };
+
+    onBotInstallFailed = () => {
+        this.refs.toast.show(
+            I18n.t('Bot_install_failed'),
+            DURATION.LENGTH_SHORT
+        );
+    };
+
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
 
     render() {
         return (
@@ -197,6 +215,7 @@ export default class DeveloperTab extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {this.renderCategoryBots()}
+                {this.renderToast()}
             </ScrollView>
         );
     }

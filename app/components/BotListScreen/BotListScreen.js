@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList, TextInput } from 'react-native';
+import { Text, View, FlatList, TextInput, Platform } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import styles from './styles';
 import { headerConfig } from './config';
@@ -25,25 +25,26 @@ export default class BotListScreen extends React.Component {
         this.state = {
             botsData: this.props.data,
             type: this.props.typeScreen,
-            countResults: 0,
-            searchString: ''
+            searchString: this.props.searchText || '',
+            countResults: this.props.count
         };
     }
 
-    async componentWillMount() {
-        this.refresh();
-    }
-
-    async refresh() {
-        const bots = await Bot.getTimeLineBots();
-        this.setState({
-            installedBots: bots
+    componentDidMount() {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
         });
+        this.mounted = true;
     }
 
     onBotInstalled = async () => {
-        await this.refresh();
-        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.refs.toast.show(
+                I18n.t('Bot_installed'),
+                DURATION.LENGTH_SHORT
+            );
+        });
     };
 
     onBotInstallFailed = () => {
@@ -53,19 +54,15 @@ export default class BotListScreen extends React.Component {
         );
     };
 
-    checkBotStatus = bot => {
-        return utils.checkBotStatus(this.state.installedBots, bot);
-    };
-
     renderRow = bot => {
-        const botStatus = this.checkBotStatus(bot);
         return (
             <BotInstallListItem
                 bot={bot}
+                key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
-                installed={botStatus.installed}
+                onBotInstallFailed={this.onBotInstallFailed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update}
+                installedBots={this.state.installedBots}
             />
         );
     };
@@ -76,9 +73,23 @@ export default class BotListScreen extends React.Component {
 
     async updateText() {
         const searchBot = await Bot.searchBots(this.state.searchString);
+        const filteredSearchBot = [];
+
+        for (var arr in this.props.allBotsData) {
+            for (var filter in searchBot) {
+                if (
+                    this.props.allBotsData[arr].botId ===
+                    searchBot[filter].botId
+                ) {
+                    filteredSearchBot.push(this.props.allBotsData[arr]);
+                }
+            }
+        }
+
+        let count = searchBot.length;
         this.setState({
-            botsData: [...searchBot],
-            countResults: searchBot.length
+            botsData: [...filteredSearchBot],
+            countResults: count
         });
     }
 
@@ -103,8 +114,9 @@ export default class BotListScreen extends React.Component {
                     <TextInput
                         style={styles.input}
                         placeholder="Search apps"
+                        value={this.state.searchString}
                         onChangeText={searchString => {
-                            this.setState({ searchString });
+                            this.setState({ searchString, countResults: 0 });
                         }}
                         underlineColorAndroid="transparent"
                         onSubmitEditing={() => this.updateText()}
@@ -115,6 +127,14 @@ export default class BotListScreen extends React.Component {
             return null;
         }
     };
+
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
 
     render() {
         return (
@@ -143,7 +163,7 @@ export default class BotListScreen extends React.Component {
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
                 />
-                <Toast ref="toast" positionValue={250} />
+                {this.renderToast()}
             </View>
         );
     }

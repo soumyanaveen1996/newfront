@@ -1,5 +1,6 @@
 const CountryCodes = () => {
     const codes = {
+        Inmarsat: '+870',
         'United Kingdom': '+44',
         'United States': '+1',
         India: '+91',
@@ -252,7 +253,26 @@ const CountryCodes = () => {
         Mozambique: '258'
     };
 
-    return codes;
+    let keys = Object.keys(codes);
+    const corrected = keys.reduce((acc, mykey) => {
+        if (codes[mykey].startsWith('+')) {
+            return {
+                ...acc,
+                ...{
+                    [mykey]: codes[mykey]
+                }
+            };
+        } else {
+            return {
+                ...acc,
+                ...{
+                    [mykey]: `+${codes[mykey]}`
+                }
+            };
+        }
+    }, {});
+
+    return corrected;
 };
 
 export default CountryCodes;

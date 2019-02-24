@@ -88,7 +88,7 @@ const getBotManifest = async botId => {
 };
 
 const processTask = async (task, user) => {
-    console.log('BackgroundProcessor::poll::called at ', task);
+    // console.log('BackgroundProcessor::poll::called at ', task);
     const timeNow = moment().valueOf();
     const botManifest = await getBotManifest(task.botId);
 

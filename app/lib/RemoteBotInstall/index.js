@@ -1,12 +1,14 @@
 import Bot from '../bot';
 import dce from '../dce';
 import utils from '../utils';
-import { Auth, Network } from '../capability';
+import { Auth, Network, DeviceStorage } from '../capability';
 import config from '../../config/config';
 import _ from 'lodash';
 import { NetworkHandler } from '../network';
 import Store from '../../redux/store/configureStore';
 import { completeBotInstall } from '../../redux/actions/UserActions';
+
+export const FAVOURITE_BOTS = 'favourite_bots';
 
 class RemoteBotInstall {
     /**
@@ -31,6 +33,11 @@ class RemoteBotInstall {
                     }
                 })
                 .then(subscribedBots => {
+                    // console.log(
+                    //     'list of bots installed ========== ',
+                    //     subscribedBots
+                    // );
+
                     resolve(subscribedBots.data.content);
                 })
                 .catch(reject);
@@ -104,13 +111,32 @@ class RemoteBotInstall {
                     return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
+                    // console.log(
+                    //     'all installed bot from api =========> ',
+                    //     subscribedBotsIds
+                    // );
+
+                    if (
+                        subscribedBotsIds.favourites === undefined ||
+                        subscribedBotsIds.favourites === null
+                    ) {
+                        subscribedBotsIds.favourites = [];
+                    }
+                    DeviceStorage.save(
+                        FAVOURITE_BOTS,
+                        subscribedBotsIds.favourites
+                    );
+
                     let catalog = await Bot.getCatalog();
-                    const manifests = _.map(subscribedBotsIds, botId => {
-                        return RemoteBotInstall.getBotManifestFromId(
-                            botId,
-                            catalog
-                        );
-                    });
+                    const manifests = _.map(
+                        subscribedBotsIds.subscribed,
+                        botId => {
+                            return RemoteBotInstall.getBotManifestFromId(
+                                botId,
+                                catalog
+                            );
+                        }
+                    );
                     return manifests;
                 })
                 .then(async subscribedBotsManifests => {
@@ -144,6 +170,7 @@ class RemoteBotInstall {
                         }
                     });
                 })
+                .then(() => resolve())
                 .catch(error => console.log(error));
         });
 }

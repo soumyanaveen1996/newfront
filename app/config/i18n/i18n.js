@@ -43,6 +43,7 @@ I18n.translations = {
         Search: 'Search',
         Installed_bots: 'Installed Bots',
         Done: 'Done',
+        Done_caps: 'DONE',
         Button: 'Button',
         Image_Save_Failed: 'Saving the image to the Photo Album failed.',
         Image_Save_Success: 'Saved the image to the Photos Album',
@@ -138,7 +139,26 @@ I18n.translations = {
         Delete: 'Delete',
         New_chat: 'New Chat',
         Contacts_call: 'Contacts_call',
-        Dial_call: 'Dial_call'
+        Dial_call: 'Dial_call',
+        Iridium_message:
+            'Our team is working hard to be able to initiate calls to Iridium phones. Stay in touch and we will inform you when it becomes available',
+        Thuraya_message:
+            'Our team is working hard to be able to initiate calls to Thuraya phones. Stay in touch and we will inform you when it becomes available',
+        Add_participants: 'Add participants',
+        Add_new_contacts: 'Add new contacts',
+        Select_team: 'Select Team',
+        Share_Contact: 'Share contact',
+        SAVE: 'Save',
+        Search_my_info_text: "I don't want to appear in searches",
+        Share_my_info_text: 'Share my information with my contacts',
+        Add_phone: 'Add phone',
+        Camera_option: 'Camera',
+        Gallery_option: 'Photo Library',
+        Bar_code_option: 'Code',
+        File_option: 'File',
+        Contact_option: 'Contact',
+        Location_option: 'Location',
+        Contact: 'Contact'
     }
 };
 

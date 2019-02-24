@@ -228,7 +228,6 @@ class NewCallContacts extends React.Component {
             section => section.title
         );
 
-        console.log('contact list ========', sectionTitles);
         if (sectionTitles && sectionTitles.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
@@ -282,7 +281,7 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    makePstnCall = () => {
+    makePstnCall = number => {
         console.log(this.state.contactSelected);
         const { contactSelected } = this.state;
         if (!contactSelected) {
@@ -292,7 +291,7 @@ class NewCallContacts extends React.Component {
         this.setContactVisible(false, null);
         Actions.dialler({
             call: true,
-            number: this.state.contactSelected.phoneNumbers.mobile,
+            number: number,
             contact: this.state.contactSelected,
             newCallScreen: true
         });
@@ -368,8 +367,8 @@ class NewCallContacts extends React.Component {
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
-                                                    {contactSelected.phoneNumbers
-                                                        ? contactSelected.phoneNumbers
+                                                    {phoneNumbers.mobile
+                                                        ? phoneNumbers.mobile
                                                         : 'Not Available'}
                                                 </Text>
                                             </View>
@@ -384,13 +383,84 @@ class NewCallContacts extends React.Component {
                                                             ? styles.callButton
                                                             : styles.callButtonDisabled
                                                     }
-                                                    onPress={this.makePstnCall}
+                                                    onPress={() =>
+                                                        this.makePstnCall(
+                                                            phoneNumbers.mobile
+                                                        )
+                                                    }
                                                     disabled={
                                                         !(
                                                             contactSelected.phoneNumbers &&
                                                             contactSelected
                                                                 .phoneNumbers
                                                                 .mobile
+                                                        )
+                                                    }
+                                                >
+                                                    {Icons.greenCallOutline()}
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    ) : null}
+                                    {/* LocalPhone */}
+                                    {phoneNumbers && phoneNumbers.local ? (
+                                        <View style={styles.phoneContainer}>
+                                            <View
+                                                style={
+                                                    styles.modalTextContainerImg
+                                                }
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: 16,
+                                                        height: 16
+                                                    }}
+                                                    source={require('../../images/tabbar-contacts/phone-good.png')}
+                                                    resizeMode="contain"
+                                                />
+                                                <Text style={styles.modalText}>
+                                                    Phone*
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.modalNumberContainer
+                                                }
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color:
+                                                            'rgba(155,155,155,1)',
+                                                        alignSelf: 'flex-start'
+                                                    }}
+                                                >
+                                                    {phoneNumbers.local
+                                                        ? phoneNumbers.local
+                                                        : 'Not Available'}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.modalCallButContainer
+                                                }
+                                            >
+                                                <TouchableOpacity
+                                                    style={
+                                                        contactSelected.phoneNumbers
+                                                            ? styles.callButton
+                                                            : styles.callButtonDisabled
+                                                    }
+                                                    onPress={() =>
+                                                        this.makePstnCall(
+                                                            phoneNumbers.local
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        !(
+                                                            contactSelected.phoneNumbers &&
+                                                            contactSelected
+                                                                .phoneNumbers
+                                                                .local
                                                         )
                                                     }
                                                 >
@@ -429,7 +499,9 @@ class NewCallContacts extends React.Component {
                                                     ellipsizeMode="tail"
                                                     numberOfLines={1}
                                                 >
-                                                    Not Available
+                                                    {phoneNumbers.satellite
+                                                        ? phoneNumbers.satellite
+                                                        : 'Not Available'}
                                                 </Text>
                                             </View>
                                             <View
@@ -438,13 +510,19 @@ class NewCallContacts extends React.Component {
                                                 }
                                             >
                                                 <TouchableOpacity
-                                                    disabled={true}
+                                                    disabled={
+                                                        phoneNumbers.satellite
+                                                            ? false
+                                                            : true
+                                                    }
                                                     style={
-                                                        styles.callButtonDisabled
+                                                        phoneNumbers.satellite
+                                                            ? styles.callButton
+                                                            : styles.callButtonDisabled
                                                     }
                                                     onPress={() =>
-                                                        console.log(
-                                                            'Call Phone'
+                                                        this.makePstnCall(
+                                                            phoneNumbers.satellite
                                                         )
                                                     }
                                                 >

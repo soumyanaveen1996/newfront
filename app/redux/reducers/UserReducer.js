@@ -26,6 +26,12 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ refreshContacts: action.payload } };
     case Actions.USER_EMAIL:
         return { ...state, ...{ refreshUserEmail: action.payload } };
+    case Actions.SET_NETWORK:
+        return { ...state, ...{ network: action.payload } };
+    case Actions.SET_CURRENT_CONVERSATION_ID:
+        return { ...state, ...{ currentConversationId: action.payload } };
+    case Actions.UPLOAD_IMAGE:
+        return { ...state, ...{ upload: state.upload + 1 } };
     default:
         return state;
     }

@@ -26,10 +26,17 @@ import Modal from 'react-native-modal';
 import GlobalColors from '../../config/styles';
 import CountryCodes from './code';
 import Bot from '../../lib/bot';
-import { Action } from 'rxjs/scheduler/Action';
 import ProfileImage from '../ProfileImage';
+import config from '../../config/config';
+import Sound from 'react-native-sound';
 
 const R = require('ramda');
+
+const PSTN_CALL = {
+    SAT_CALL: 'SAT_CALL',
+    NOT_SUPPORTED: 'NOT_SUPPORTED',
+    OTHER_CALL: 'OTHER_CALL'
+};
 
 let EventListeners = [];
 export const DiallerState = {
@@ -39,14 +46,26 @@ export const DiallerState = {
     incall_digits: 'incall_digits'
 };
 
+const kSort = src => {
+    const keys = Object.keys(src);
+    keys.sort();
+    return keys.reduce((target, key) => {
+        target[key] = src[key];
+        return target;
+    }, {});
+};
+
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 export default class Dialler extends React.Component {
     constructor(props) {
         super(props);
+        const { Inmarsat, ...rest } = CountryCodes();
+        const countries = kSort(rest);
+        const countryCodes = { Inmarsat, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '',
+            dialledNumber: '+',
             dialledDigits: '',
             micOn: true,
             speakerOn: false,
@@ -58,7 +77,7 @@ export default class Dialler extends React.Component {
             intervalId: null,
             noBalance: false,
             bgBotScreen: null,
-            codes: CountryCodes(),
+            codes: countryCodes,
             showCodes: false,
             countryElements: []
         };
@@ -103,6 +122,19 @@ export default class Dialler extends React.Component {
         if (this.props.call && this.props.number) {
             this.setState({ dialledNumber: this.props.number });
         }
+
+        Sound.setCategory('Playback');
+        const filler = new Sound(
+            'https://s3.amazonaws.com/frontm-contentdelivery-mobilehub-1030065648/media/Hold+Music.mp3',
+            undefined,
+            error => {
+                if (error) {
+                    return console.log('Failed to load sound', error);
+                }
+
+                this.setState({ filler });
+            }
+        );
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -116,6 +148,63 @@ export default class Dialler extends React.Component {
         }
     }
 
+    checkSatelliteCall(number) {
+        if (number.startsWith('00870') || number.startsWith('+870')) {
+            return [PSTN_CALL.SAT_CALL];
+        }
+        if (number.startsWith('008816') || number.startsWith('+8816')) {
+            return [PSTN_CALL.SAT_CALL];
+        }
+        if (number.startsWith('00882') || number.startsWith('+882')) {
+            return [PSTN_CALL.NOT_SUPPORTED, I18n.t('Thuraya_message')];
+        }
+        return [PSTN_CALL.OTHER_CALL];
+    }
+    async getSatelliteCallNumber(number, user) {
+        try {
+            const options = {
+                method: 'GET',
+                url:
+                    config.proxy.protocol +
+                    config.proxy.host +
+                    '/v2/satelliteDetails?botId=onboarding-bot',
+                headers: {
+                    sessionId: user.creds.sessionId
+                }
+            };
+            const response = await Network(options);
+            const { data } = response;
+            const { error, content } = data;
+            const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
+            let callingNumber;
+            if (number.startsWith('00870') || number.startsWith('00816')) {
+                callingNumber = number.substring(2);
+            }
+            if (number.startsWith('+870') || number.startsWith('+8816')) {
+                callingNumber = number.substring(1);
+            }
+
+            return {
+                error: null,
+                sat_phone_number: SAT_PHONE_NUM,
+                sat_phone_pin: SAT_PHONE_PIN,
+                phone_number: callingNumber
+            };
+
+            // if (error === 0) {
+            // } else {
+            //     return {
+            //         error,
+            //         phoneNumber: null
+            //     };
+            // }
+        } catch (error) {
+            return {
+                error,
+                phoneNumber: null
+            };
+        }
+    }
     async call() {
         this.setState({ noBalance: false });
         const connection = await Network.isConnected();
@@ -127,19 +216,58 @@ export default class Dialler extends React.Component {
             Alert.alert(I18n.t('Enter_valid_number'));
             return;
         }
-        if (this.state.callQuota === 0) {
+        if (this.state.callQuota <= 0) {
             this.setState({ noBalance: true });
             Alert.alert(I18n.t('No_balance'));
             return;
         }
         try {
+            let toNumber = this.state.dialledNumber;
+            const [call_type, pstnMessage] = this.checkSatelliteCall(
+                this.state.dialledNumber
+            );
+            console.log(call_type);
+
+            if (call_type === PSTN_CALL.NOT_SUPPORTED) {
+                this.setState({ diallerState: DiallerState.initial });
+                Alert.alert(pstnMessage);
+                return;
+            }
+            const user = await Auth.getUser();
+            if (call_type === PSTN_CALL.SAT_CALL) {
+                const {
+                    error,
+                    sat_phone_number,
+                    sat_phone_pin,
+                    phone_number
+                } = await this.getSatelliteCallNumber(
+                    this.state.dialledNumber,
+                    user
+                );
+                if (error) {
+                    Alert.alert('Unable to Call number');
+                    return;
+                }
+                toNumber = sat_phone_number;
+                toNumber = `SAT:${sat_phone_number}:${sat_phone_pin}:${phone_number}`;
+                this.setState({
+                    satCall: true,
+                    satCallPin: sat_phone_pin,
+                    call_to: phone_number
+                });
+            } else {
+                this.setState({
+                    satCall: false,
+                    satCallPin: null,
+                    call_to: null
+                });
+            }
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                const user = await Auth.getUser();
                 TwilioVoice.connect({
                     CallerId: `${user.info.emailAddress}`,
-                    To: `${this.state.dialledNumber}`
+                    To: `${toNumber}`
                 });
             }
         } catch (err) {
@@ -202,11 +330,35 @@ export default class Dialler extends React.Component {
     }
 
     connectionDidConnectHandler(data) {
+        if (data.call_state === 'CONNECTED' && this.state.satCall) {
+            // TwilioVoice.sendDigits(
+            //     `wwwwwwwwwwwww1wwwwwww${
+            //         this.state.satCallPin
+            //     }wwwwwwwwwwwwwwww9wwwwwwwwwwwwww${this.state.call_to}`
+            // );
+            // TwilioVoice.setMuted();
+        }
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             const intervalId = setInterval(() => {
                 this.setState({ callTime: this.state.callTime + 1 });
             }, 1000);
             this.setState({ diallerState: DiallerState.incall, intervalId });
+            if (this.state.satCall) {
+                this.state.filler.setNumberOfLoops(-1);
+                this.state.filler.play(success => {
+                    if (success) {
+                        console.log('Played Sound');
+                    } else {
+                        console.log(
+                            'playback failed due to audio decoding errors'
+                        );
+                        // reset the player to its uninitialized state (android only)
+                        // this is the only option to recover after an error occured and use the player again
+                        filler.release();
+                    }
+                });
+                setTimeout(() => this.state.filler.stop(), 43000);
+            }
         }
     }
 
@@ -220,8 +372,12 @@ export default class Dialler extends React.Component {
             diallerState: DiallerState.initial,
             dialledNumber: '',
             dialledDigits: '',
-            intervalId: null
+            intervalId: null,
+            satCall: false,
+            satCallPin: null,
+            call_to: null
         });
+        this.state.filler.stop();
         Actions.pop();
         setTimeout(
             () =>

@@ -29,7 +29,13 @@ import {
 import _ from 'lodash';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact, Settings, PollingStrategyTypes } from '../../lib/capability';
+import {
+    Contact,
+    Settings,
+    PollingStrategyTypes,
+    Auth,
+    Network
+} from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
 import EventEmitter, { AuthEvents } from '../../lib/events';
@@ -52,6 +58,9 @@ import {
 } from 'react-native-responsive-screen';
 import images from '../../config/images';
 import { EmptyContact } from '.';
+import ProfileImage from '../ProfileImage';
+import { MyProfileImage } from '../ProfileImage';
+import config from '../../config/config';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -130,8 +139,25 @@ class ContactsPicker extends React.Component {
         this.state = {
             contactsData: [],
             selectedContacts: [],
-            inviteModalVisible: false
+            inviteModalVisible: false,
+            userInfo: {},
+            userId: ''
         };
+    }
+
+    componentWillMount() {
+        this.gettingUserDetails();
+    }
+
+    gettingUserDetails() {
+        Auth.getUser()
+            .then(userDetails => {
+                const info = { ...userDetails.info };
+                this.setState({ userInfo: info, userId: info.userId });
+            })
+            .catch(err => {
+                console.log('Error Loading User details', err);
+            });
     }
 
     async componentDidMount() {
@@ -187,6 +213,7 @@ class ContactsPicker extends React.Component {
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
+            this.gettingUserDetails();
             this.refresh();
         }
     }
@@ -254,15 +281,17 @@ class ContactsPicker extends React.Component {
     };
 
     onBack = () => {
-        // this.refresh()
+        this.onDataUpdate();
     };
 
     refresh = () => {
+        // console.log('is it happening again ===============================');
         this.dataSource.loadData();
         this.checkPollingStrategy();
     };
 
     updateList = () => {
+        // console.log('clicked on fav');
         this.setState({ contactsData: this.dataSource.getData() });
     };
 
@@ -271,8 +300,6 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
-        console.log('contact list ', info);
-
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
@@ -322,7 +349,11 @@ class ContactsPicker extends React.Component {
             }
         } else {
             //OPEN contact details
-            Actions.contactDetailsScreen({ contact: contact });
+            Actions.contactDetailsScreen({
+                contact: contact,
+                updateList: this.onDataUpdate.bind(this),
+                updateContactScreen: this.updateList.bind(this)
+            });
             //OPEN a chat with the contact
             // let participants = [
             //     {
@@ -402,8 +433,37 @@ class ContactsPicker extends React.Component {
             viewOffset: SECTION_HEADER_HEIGHT
         });
     }
-    addContacts() {
-        Actions.searchUsers({ multiSelect: true });
+
+    addContacts(selectedContacts) {
+        return new Promise((resolve, reject) => {
+            Contact.addContacts(selectedContacts)
+                .then(() => {
+                    return Auth.getUser();
+                })
+                .then(user => {
+                    const options = {
+                        method: 'post',
+                        url:
+                            config.proxy.protocol +
+                            config.proxy.host +
+                            '/contactsActions',
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            capability: 'AddContact',
+                            botId: 'onboarding-bot',
+                            users: _.map(selectedContacts, contact => {
+                                return contact.userId;
+                            })
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(() => {
+                    resolve();
+                });
+        });
     }
 
     renderSearchBar() {
@@ -427,7 +487,44 @@ class ContactsPicker extends React.Component {
         );
     }
 
-    renderButtons = () => <View>{this.renderSearchBar()}</View>;
+    goToMyProfile = () => {
+        // console.log('go to profile page using ', this.state.userInfo);
+        Actions.myProfileScreen({
+            userId: this.state.userInfo.userId,
+            updateContactScreen: this.updateList.bind(this)
+        });
+    };
+
+    renderButtons = () => (
+        <View>
+            {this.renderSearchBar()}
+            <View style={styles.myProfileContainer}>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.goToMyProfile();
+                    }}
+                >
+                    <View style={styles.myProfileItemContainer}>
+                        <MyProfileImage
+                            uuid={this.state.userId}
+                            placeholder={images.user_image}
+                            style={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfilePlaceholderImage}
+                            resizeMode="center"
+                        />
+                        <View style={styles.contactItemDetailsContainer}>
+                            <Text style={styles.myProfileName}>
+                                {this.state.userInfo.userName}
+                            </Text>
+                            <Text style={styles.contactItemEmail}>
+                                My Profile
+                            </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 
     sectionHeader({ section }) {
         if (section.data.length === 0) {
@@ -438,11 +535,14 @@ class ContactsPicker extends React.Component {
     }
 
     renderContactsList() {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
-        );
-        if (this.state.contactsData && this.state.contactsData.length > 0) {
+        // const sectionTitles = _.map(
+        //     this.state.contactsData,
+        //     section => section.title
+        // );
+
+        // console.log('contact list ', this.state.contactsData);
+
+        if (this.state.contactsData) {
             return (
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -479,21 +579,49 @@ class ContactsPicker extends React.Component {
         this.setInviteVisible(true);
     }
 
-    setInviteVisible(value) {
-        this.setState({
-            inviteModalVisible: value
-        });
+    setInviteVisible(value, sent = null) {
+        this.setState(
+            {
+                inviteModalVisible: value
+            },
+            () => {
+                if (sent !== null) {
+                    setTimeout(() => {
+                        this.invitationSent();
+                    }, 500);
+                }
+            }
+        );
     }
 
+    invitationSent = () => {
+        return Alert.alert(
+            'Invitation sent successfully',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
     render() {
+        // console.log('all contact data', this.state.contactsData);
+
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
+
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}
                         setVisible={this.setInviteVisible.bind(this)}
+                        addContacts={this.addContacts.bind(this)}
                     />
                 </BackgroundImage>
             </SafeAreaView>

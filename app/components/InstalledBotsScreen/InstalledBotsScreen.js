@@ -306,70 +306,89 @@ export default class InstalledBotsScreen extends React.Component {
         return swipeBtns;
     };
 
+    openBotInfo = botInfo => {
+        const botStatus = 'installed';
+
+        Actions.botInfoScreen({
+            botInfo: botInfo,
+            status: botStatus,
+            onBack: this.onBack
+        });
+    };
+
     renderRow = botData => {
         return (
-            <View style={BotListItemStyles.container}>
-                <CachedImage
-                    imageTag="botLogo"
-                    source={{ uri: botData.logoUrl }}
-                    style={BotListItemStyles.image}
-                />
-                <View style={BotListItemStyles.textContainer}>
-                    <Text style={BotListItemStyles.title} numberOfLines={1}>
-                        {botData.botName}{' '}
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            height: 20,
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Text
-                            style={{ color: 'rgba(0,189,242,1)', fontSize: 14 }}
-                        >
-                            Free
+            <TouchableOpacity
+                onPress={() => {
+                    this.openBotInfo(botData);
+                }}
+            >
+                <View style={BotListItemStyles.container}>
+                    <CachedImage
+                        imageTag="botLogo"
+                        source={{ uri: botData.logoUrl }}
+                        style={BotListItemStyles.image}
+                    />
+                    <View style={BotListItemStyles.textContainer}>
+                        <Text style={BotListItemStyles.title} numberOfLines={1}>
+                            {botData.botName}{' '}
                         </Text>
-                        <Text
+                        <View
                             style={{
-                                color: 'rgba(216,216,216,1)',
-                                fontSize: 16,
-                                fontWeight: '100',
-                                marginHorizontal: 4
+                                flexDirection: 'row',
+                                height: 20,
+                                alignItems: 'center'
                             }}
                         >
-                            |
-                        </Text>
+                            <Text
+                                style={{
+                                    color: 'rgba(0,189,242,1)',
+                                    fontSize: 14
+                                }}
+                            >
+                                Free
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'rgba(216,216,216,1)',
+                                    fontSize: 16,
+                                    fontWeight: '100',
+                                    marginHorizontal: 4
+                                }}
+                            >
+                                |
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'rgba(102,102,102,1)',
+                                    fontSize: 14
+                                }}
+                            >
+                                {botData.developer}
+                            </Text>
+                        </View>
                         <Text
-                            style={{
-                                color: 'rgba(102,102,102,1)',
-                                fontSize: 14
-                            }}
+                            numberOfLines={subtitleNumberOfLines}
+                            style={BotListItemStyles.subTitle}
                         >
-                            {botData.developer}
+                            {botData.description}
                         </Text>
                     </View>
-                    <Text
-                        numberOfLines={subtitleNumberOfLines}
-                        style={BotListItemStyles.subTitle}
-                    >
-                        {botData.description}
-                    </Text>
-                </View>
-                <View style={BotListItemStyles.rightContainer}>
-                    <TouchableOpacity
-                        style={BotListItemStyles.openButton}
-                        onPress={this.onBotPress.bind(this, botData)}
-                    >
-                        <Text
-                            allowFontScaling={false}
-                            style={BotListItemStyles.openButtonText}
+                    <View style={BotListItemStyles.rightContainer}>
+                        <TouchableOpacity
+                            style={BotListItemStyles.openButton}
+                            onPress={this.onBotPress.bind(this, botData)}
                         >
-                            {I18n.t('OPEN')}
-                        </Text>
-                    </TouchableOpacity>
+                            <Text
+                                allowFontScaling={false}
+                                style={BotListItemStyles.openButtonText}
+                            >
+                                {I18n.t('OPEN')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     };
 

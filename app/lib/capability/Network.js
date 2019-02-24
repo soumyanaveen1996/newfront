@@ -9,6 +9,8 @@ import SHA1 from 'crypto-js/sha1';
 import moment from 'moment';
 import _ from 'lodash';
 import Auth from './Auth';
+import RStore from '../../redux/store/configureStore';
+import { setNetwork } from '../../redux/actions/UserActions';
 import Bugsnag from '../../config/ErrorMonitoring';
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
@@ -125,9 +127,12 @@ export class NetworkRequest {
 }
 
 function Network(options, queue = false) {
+    // console.log('option in network ', options);
+
     return new Promise((resolve, reject) => {
         Network.isConnected().then(connected => {
             if (connected) {
+                RStore.dispatch(setNetwork('full'));
                 const requestOptions = converOptionsToFetchRequest(options);
                 fetch(options.url, requestOptions)
                     .then(response => {
@@ -152,7 +157,10 @@ function Network(options, queue = false) {
                                     new Error(JSON.stringify(response))
                                 );
                             });
-                            if (response.status === 401) {
+                            if (
+                                response.status === 401 ||
+                                response.status === 400
+                            ) {
                                 console.log('need to logout');
                                 Auth.logout();
                                 return resolve();
@@ -188,6 +196,7 @@ function Network(options, queue = false) {
                         futureRequest(key, new NetworkRequest(options))
                     );
                 } else {
+                    RStore.dispatch(setNetwork('none'));
                     reject(new Error('No network connectivity'));
                 }
             }

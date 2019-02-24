@@ -8,6 +8,7 @@ const ROUTER_SCENE_KEYS = {
     channelChat: 'channelChat',
     channelsFilter: 'channelsFilter',
     newChannels: 'newChannels',
+    addressBookScreen: 'addressBookScreen',
     addParticipants: 'addParticipants',
     selectTeam: 'selectTeam',
     slider: 'slider',
@@ -18,10 +19,12 @@ const ROUTER_SCENE_KEYS = {
     form: 'form',
     botStore: 'botStore',
     botFilter: 'botFilter',
-    botList: 'botList',
+    botListScreen: 'botListScreen',
     barCodeScanner: 'barCodeScanner',
+    botInfoScreen: 'botInfoScreen',
     launch: 'launch',
     mapView: 'mapView',
+    form2: 'form2',
     imageViewer: 'imageViewer',
     SNRChart: 'SNRChart',
     conversations: 'conversations',
@@ -55,7 +58,9 @@ const ROUTER_SCENE_KEYS = {
     botsListChat: 'botsListChat',
     tabBarChat: 'tabBarChat',
     tabBarCall: 'tabBarCall',
-    callSummary: 'callSummary'
+    callSummary: 'callSummary',
+    multiselection: 'multiselection',
+    myProfileScreen: 'myProfileScreen'
 };
 
 export default ROUTER_SCENE_KEYS;

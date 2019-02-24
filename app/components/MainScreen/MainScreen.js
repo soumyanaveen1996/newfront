@@ -36,7 +36,12 @@ import EventEmitter, {
     TwilioEvents
 } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
-import { PollingStrategyTypes, Settings, Network } from '../../lib/capability';
+import {
+    PollingStrategyTypes,
+    Settings,
+    Network,
+    Contact
+} from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import Bot from '../../lib/bot';
@@ -61,6 +66,7 @@ import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
+import PushNotification from 'react-native-push-notification';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -290,6 +296,7 @@ class MainScreen extends React.Component {
         Store.dispatch(setCurrentScene('Home'));
         Store.dispatch(refreshTimeline(true));
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Home'));
+        console.log('coming back from other page');
     }
 
     static onExit() {
@@ -466,25 +473,104 @@ class MainScreen extends React.Component {
         });
     };
 
-    setConversationFavorite = (conversation, chatData = undefined) => {
-        console.log('Setting favorite..', conversation);
-        let userDomain;
-        if (chatData.channel) {
-            userDomain = chatData.channel.userDomain;
+    setConversationFavorite = (
+        conversation,
+        chatData = undefined,
+        type,
+        otherUserId
+    ) => {
+        console.log('Setting favorite..', conversation, type, chatData);
+
+        let data;
+
+        if (type === 'conversation') {
+            data = {
+                type: type,
+                conversationId: conversation,
+                action: 'add',
+                userDomain: 'frontmai'
+            };
+        } else if (type === 'channel') {
+            data = {
+                type: type,
+                channelConvId: conversation,
+                channelName: chatData.channel.channelName,
+                action: 'add',
+                userDomain: chatData.channel.userDomain
+            };
+        } else {
+            data = {
+                type: type,
+                botId: conversation,
+                action: 'add',
+                userDomain: 'frontmai'
+            };
         }
-        Conversation.setFavorite(conversation, true, userDomain)
+
+        Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as favorite');
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === otherUserId) {
+                            elem.isFavourite = true;
+                        }
+
+                        return elem;
+                    });
+                    Contact.saveContacts(updateContacts);
+                });
                 this.update();
             })
             .catch(err => console.log('Cannot set favorite', err));
     };
 
-    setConversationUnFavorite = conversation => {
-        console.log('Setting unfavorite..', conversation);
-        Conversation.setFavorite(conversation, false)
+    setConversationUnFavorite = (
+        conversation,
+        chatData = undefined,
+        type,
+        otherUserId
+    ) => {
+        console.log('Setting unfavorite..', conversation, type, chatData);
+
+        let data;
+
+        if (type === 'conversation') {
+            data = {
+                type: type,
+                conversationId: conversation,
+                action: 'remove',
+                userDomain: 'frontmai'
+            };
+        } else if (type === 'channel') {
+            data = {
+                type: type,
+                channelConvId: conversation,
+                channelName: chatData.channel.channelName,
+                action: 'remove',
+                userDomain: chatData.channel.userDomain
+            };
+        } else {
+            data = {
+                type: type,
+                botId: conversation,
+                action: 'remove',
+                userDomain: 'frontmai'
+            };
+        }
+        Conversation.setFavorite(data)
             .then(() => {
                 console.log('Conversation Set as unfavorite');
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.map(elem => {
+                        if (elem.userId === otherUserId) {
+                            elem.isFavourite = false;
+                        }
+
+                        return elem;
+                    });
+                    Contact.saveContacts(updateContacts);
+                });
                 this.update();
             })
             .catch(err => console.log('Cannot set favorite', err));
@@ -518,6 +604,8 @@ class MainScreen extends React.Component {
     onSearch = searchString => this.setState({ searchString });
 
     renderMain() {
+        // console.log('list of bots ', this.state.bots);
+
         const { network, showNetworkStatusBar } = this.state;
         if (this.state.screenState === MainScreenStates.notLoaded) {
             return (
@@ -529,29 +617,29 @@ class MainScreen extends React.Component {
             );
         } else {
             return (
-                <View
-                    style={
-                        showNetworkStatusBar &&
-                        (network === 'none' || network === 'satellite')
-                            ? MainScreenStyles.statusBar
-                            : MainScreenStyles.botListContainer
-                    }
-                >
-                    <BotList
-                        ref={connectedBot => {
-                            this.botList = connectedBot
-                                ? connectedBot.getWrappedInstance()
-                                : null;
-                        }}
-                        onBack={this.onBack.bind(this)}
-                        bots={this.state.bots}
-                        setFavorite={this.setConversationFavorite}
-                        unsetFavorite={this.setConversationUnFavorite}
-                        searchString={this.state.searchString}
-                        onSearch={this.onSearch}
-                        setNoChats={this.setNoChats}
-                    />
-                </View>
+                // <View
+                //     style={
+                //         showNetworkStatusBar &&
+                //         (network === 'none' || network === 'satellite')
+                //             ? MainScreenStyles.statusBar
+                //             : MainScreenStyles.botListContainer
+                //     }
+                // >
+                <BotList
+                    ref={connectedBot => {
+                        this.botList = connectedBot
+                            ? connectedBot.getWrappedInstance()
+                            : null;
+                    }}
+                    onBack={this.onBack.bind(this)}
+                    bots={this.state.bots}
+                    setFavorite={this.setConversationFavorite}
+                    unsetFavorite={this.setConversationUnFavorite}
+                    searchString={this.state.searchString}
+                    onSearch={this.onSearch}
+                    setNoChats={this.setNoChats}
+                />
+                // </View>
             );
         }
     }
@@ -564,13 +652,15 @@ class MainScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <BackgroundImage>
+                <BackgroundImage
+                    style={{ display: 'flex', flexDirection: 'column' }}
+                >
                     {this.state.noChats && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
                     )}
-                    <StatusBar
+                    {/* <StatusBar
                         hidden={false}
                         backgroundColor="grey"
                         barStyle={
@@ -578,9 +668,11 @@ class MainScreen extends React.Component {
                                 ? 'dark-content'
                                 : 'light-content'
                         }
-                    />
-                    <NetworkStatusNotchBar />
-                    {this.renderMain()}
+                    /> */}
+                    <View>
+                        <NetworkStatusNotchBar />
+                    </View>
+                    <View>{this.renderMain()}</View>
                 </BackgroundImage>
             </SafeAreaView>
         );

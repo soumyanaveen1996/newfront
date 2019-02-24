@@ -32,15 +32,14 @@ export default class BotContainer extends React.Component {
         };
     }
 
-    async componentWillMount() {
-        this.refresh();
-    }
-
     componentWillUnmount() {
         this.mounted = false;
     }
 
     componentDidMount() {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+        });
         this.mounted = true;
     }
 
@@ -66,41 +65,25 @@ export default class BotContainer extends React.Component {
     //     }
     // }
 
-    async refresh() {
-        const bots = await Bot.getTimeLineBots();
-        if (this.mounted) {
-            this.setState({ installedBots: bots });
-        }
-    }
-
     onBotInstalled = async () => {
-        await this.refresh();
-        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
-    };
-
-    onBotInstallFailed = () => {
-        this.refs.toast.show(
-            I18n.t('Bot_install_failed'),
-            DURATION.LENGTH_SHORT
-        );
-    };
-
-    checkBotStatus = bot => {
-        return utils.checkBotStatus(this.state.installedBots, bot);
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.refs.toast.show(
+                I18n.t('Bot_installed'),
+                DURATION.LENGTH_SHORT
+            );
+        });
     };
 
     renderBot = bot => {
-        const botStatus = this.checkBotStatus(bot);
-
         return (
             <BotInstallListItem
                 bot={bot}
                 key={bot.botId}
                 onBotInstalled={this.onBotInstalled}
-                onBotInstallFailed={this.onBotInstallFailed}
-                installed={botStatus.installed}
+                onBotInstallFailed={this.props.onBotInstallFailed}
                 onBotClick={this.onBotClick.bind(this)}
-                update={botStatus.update}
+                installedBots={this.state.installedBots}
             />
         );
     };
@@ -121,7 +104,13 @@ export default class BotContainer extends React.Component {
         let selectedBots = this.state.allBots.filter(bot => {
             return this.state.botIds.indexOf(bot.botId) >= 0;
         });
-        Actions.botList({ data: selectedBots, title: title });
+        let count = selectedBots.length;
+
+        Actions.botListScreen({
+            data: selectedBots,
+            count: count,
+            title: title
+        });
     };
 
     collapseCurrent = () => {
@@ -146,7 +135,7 @@ export default class BotContainer extends React.Component {
         //     limitedBotData.push(this.state.botsData[0]);
         // }
 
-        if (this.props.botsData.length > 0) {
+        if (this.props.botsData && this.props.botsData.length > 0) {
             return (
                 <View
                     style={{
@@ -242,8 +231,6 @@ export default class BotContainer extends React.Component {
                     //     showsVerticalScrollIndicator={false}
                     // />
                         null}
-
-                    <Toast ref="toast" positionValue={250} />
                     <View style={styles.exploreAllFooter}>
                         <TouchableOpacity
                             onPress={() => this.onTileCilcked(this.state.title)}

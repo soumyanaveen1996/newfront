@@ -18,6 +18,9 @@ import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
 import { Twilio } from '../twilio';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
+import { Message, MessageTypeConstants } from '../../lib/capability';
+import SystemBot from '../../lib/bot/SystemBot';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
 const USER_SESSION = 'userSession';
 
@@ -49,6 +52,28 @@ export const AuthErrorCodes = {
     2: 'Logout Error',
     98: 'Custom Error',
     99: 'Unknown error'
+};
+
+const sendMessageCount = async () => {
+    try {
+        const message = new Message({
+            options: JSON.stringify({
+                key: 'MessageUsageUpdate'
+            }),
+            messageType: MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT
+        });
+        message.setCreatedBy({ addedByBot: true });
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+        await bgBotScreen.initialize();
+        await bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        console.log('test');
+        return true;
+    } catch (error) {
+        console.log(error);
+        return true;
+    }
 };
 
 /**
@@ -429,8 +454,12 @@ export default class Auth {
      * Invalidate the session for now
      * @return {Promise}
      */
-    static logout = () =>
-        new Promise((resolve, reject) => {
+
+    static logout = async () => {
+        const res = await sendMessageCount();
+        console.log(res);
+
+        return new Promise((resolve, reject) => {
             DeviceStorage.delete(USER_SESSION)
                 .then(() => {
                     return Bot.unInstallBots();
@@ -466,6 +495,7 @@ export default class Auth {
                     reject(new AuthError(2, AuthErrorCodes[2]));
                 });
         });
+    };
 
     /**
      * A device level method for getting the user session
@@ -521,6 +551,8 @@ export default class Auth {
                 if (user) {
                     user.info.userName = details.userName || user.info.userName;
                     user.info.phoneNumbers = details.phoneNumbers || {};
+                    user.info.searchable = details.searchable || false;
+                    user.info.visible = details.visible || false;
 
                     // user.info.surname = details.surname || user.info.surname;
                     // user.info.givenName =
@@ -531,6 +563,38 @@ export default class Auth {
                     reject('No valid user session');
                 }
             });
+        });
+
+    static updatingUserProfile = userDetails =>
+        new Promise((resolve, reject) => {
+            return Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let options = {
+                            method: 'PUT',
+                            url: `${config.proxy.protocol}${config.proxy.host}${
+                                config.proxy.userInfo
+                            }`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: userDetails
+                        };
+                        return Network(options);
+                    }
+                })
+                .then(response => {
+                    if (
+                        response.data.content &&
+                        response.data.content.length > 0
+                    ) {
+                        return Promise.all(response.data.content);
+                    } else {
+                        reject(null);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
         });
 
     static setUserSetting = (key, value) =>

@@ -4,6 +4,7 @@ import ImageCache from '../../lib/image_cache';
 import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
 import styles from './styles';
+import moment from 'moment';
 
 export default class ProfileImage extends React.Component {
     constructor(props) {
@@ -31,7 +32,8 @@ export default class ProfileImage extends React.Component {
                 if (this.mounted) {
                     this.setState({
                         source: { uri: path },
-                        style: this.props.placeholderStyle
+                        style: this.props.placeholderStyle,
+                        loaded: true
                     });
                 }
                 ImageCache.imageCacheManager.checkAndUpdateIfModified(
@@ -97,6 +99,7 @@ export default class ProfileImage extends React.Component {
     }
 
     render() {
+        console.log(this.state.source ? this.state.source.uri : 'Empty');
         return (
             <View>
                 <Image
@@ -105,12 +108,11 @@ export default class ProfileImage extends React.Component {
                     style={this.state.style}
                     onLoad={this.onLoad}
                 />
-                {!this.state.loaded &&
-                    !this.state.source && (
-                        <View style={styles.loading}>
-                            <ActivityIndicator size="small" />
-                        </View>
-                    )}
+                {!this.state.loaded && !this.state.source && (
+                    <View style={styles.loading}>
+                        <ActivityIndicator size="small" />
+                    </View>
+                )}
             </View>
         );
     }

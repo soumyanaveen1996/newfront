@@ -75,17 +75,27 @@ export function sessionStartFormattedDate(date) {
     }
 }
 
-export async function copyFileAsync(uri, directory) {
+/**
+ * Async method that copy a file in a local directory. Can Also rename it.
+ *
+ * @param uri uri of the file
+ * @param directory directory where to copy the file
+ * @param raname new file name with extension
+ *
+ * @return new uri to the copied file
+ */
+export async function copyFileAsync(uri, directory, rename) {
     console.log('In copyFileAsync : ', uri, directory);
     const exists = await RNFS.exists(directory);
     if (!exists) {
         await RNFS.mkdir(directory);
     }
     const parsedPath = PathParse(uri);
+    const fileName = rename ? rename : parsedPath.base;
     const toUri =
         directory[directory.length - 1] === '/'
-            ? directory + parsedPath.base
-            : directory + '/' + parsedPath.base;
+            ? directory + fileName
+            : directory + '/' + fileName;
 
     const destExists = await RNFS.exists(toUri);
     if (destExists) {
@@ -116,10 +126,6 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     headers = _.merge(headers, {
         sessionId: user.creds.sessionId
     });
-
-    console.log(
-        `Utils::s3DownloadHeaders::headers created for s3 download for host :: ${host} path: ${path}.`
-    );
 
     return headers;
 }

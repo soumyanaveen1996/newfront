@@ -139,6 +139,7 @@ export default class ConversationListItem extends React.Component {
                         ? BotListItemStyles.containerLast
                         : BotListItemStyles.container
                 }
+                activeOpacity={1}
                 onPress={this.handleBotSelection.bind(this)}
             >
                 {this.renderProfileimage()}

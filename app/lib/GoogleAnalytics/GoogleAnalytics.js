@@ -11,7 +11,16 @@ export const GoogleAnalyticsCategories = {
 };
 
 export const GoogleAnalyticsEvents = {
-    APP_OPENED: 'App Opened'
+    APP_OPENED: 'App Opened',
+    VOIP_CALL: 'Voip Call',
+    PSTN_CALL: 'PSTN Call',
+    SATELLITE_CALL: 'Satellite Call',
+    ADDED_CONTACT: 'Added a Contact',
+    INVITE_CONTACT: 'Invited a Contact',
+    OPENED_MARKETPLACE: 'Opened Marketplace',
+    VISITED_BOT: 'Visited Bot Details Page',
+    INSTALLED_BOT: 'Installed BOT',
+    SEND_MESSAGE: 'Sent a Message'
 };
 
 export class GoogleAnalytics {

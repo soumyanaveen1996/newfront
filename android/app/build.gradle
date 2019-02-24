@@ -105,13 +105,14 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 125
-        versionName "3.3.1"
+        versionCode 179
+        versionName "3.7.1"
         multiDexEnabled true
-
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
     }
 
     signingConfigs {
@@ -169,6 +170,8 @@ sourceSets {
 
 
 dependencies {
+    compile project(':react-native-blur')
+    compile project(':rn-fetch-blob')
     compile (project(':mapbox-react-native-mapbox-gl')) {
         compile ('com.squareup.okhttp3:okhttp:3.6.0') {
             force = true
@@ -192,7 +195,6 @@ dependencies {
     compile project(':react-native-i18n')
     compile project(':react-native-google-sign-in')
     compile project(':react-native-fs')
-    compile project(':react-native-fetch-blob')
     compile project(':react-native-fbsdk')
     compile project(':react-native-document-picker')
     compile project(':react-native-device-info')

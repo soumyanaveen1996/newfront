@@ -38,6 +38,7 @@ import { BotStoreScreen } from '../components/BotStoreScreen';
 import { BotFilter } from '../components/BotFilter';
 import { BarcodeScanner } from '../components/BarcodeScanner';
 import { MapView } from '../components/MapView';
+import { Form2 } from '../components/Form2Message';
 import { ImageViewer } from '../components/ImageViewer';
 import { SNRChart } from '../components/SNRChart';
 import { LocationPicker } from '../components/LocationPicker';
@@ -63,6 +64,10 @@ import NavHandler from '../components/NavigationHandler/NavHandler';
 import CallSummary from '../components/CallSummary/CallSummary';
 import CustomTab from '../components/CustomTab/CustomTab';
 import GlobalColors from '../config/styles';
+import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScreen';
+import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
+import { Multiselection } from '../components/Multiselection';
+import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -359,8 +364,18 @@ class MainRouter extends React.Component {
                                         component={SearchUsers}
                                     />
                                     <Scene
+                                        key={ROUTER_SCENE_KEYS.myProfileScreen}
+                                        title="My Profile"
+                                        component={MyProfileScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}
                                         component={ChannelChat}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.botInfoScreen}
+                                        title={I18n.t('Bot_Store')}
+                                        component={BotInfoScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelsFilter}
@@ -373,13 +388,20 @@ class MainRouter extends React.Component {
                                         component={NewChannels}
                                     />
                                     <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.addressBookScreen
+                                        }
+                                        title={I18n.t('Add_new_contacts')}
+                                        component={AddressBookScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.addParticipants}
-                                        title="Add participants"
+                                        title={I18n.t('Add_participants')}
                                         component={AddContacts}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}
-                                        title="Select Team"
+                                        title={I18n.t('Select_team')}
                                         component={SelectTeam}
                                         type="push"
                                         duration={0}
@@ -394,12 +416,17 @@ class MainRouter extends React.Component {
                                         hideNavBar
                                     />
                                     <Scene
+                                        key={ROUTER_SCENE_KEYS.mapView}
+                                        component={MapView}
+                                        title="Map"
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.botStore}
                                         component={BotStoreScreen}
                                         title={I18n.t('Bot_Store')}
                                     />
                                     <Scene
-                                        key={ROUTER_SCENE_KEYS.botList}
+                                        key={ROUTER_SCENE_KEYS.botListScreen}
                                         component={BotListScreen}
                                         title={I18n.t('Bots')}
                                     />
@@ -440,10 +467,16 @@ class MainRouter extends React.Component {
                                     component={BotFilter}
                                     hideNavBar
                                 />
+
                                 <Scene
-                                    key={ROUTER_SCENE_KEYS.mapView}
-                                    component={MapView}
-                                    title="Map"
+                                    key={ROUTER_SCENE_KEYS.form2}
+                                    title="Form"
+                                    component={Form2}
+                                />
+                                <Scene
+                                    key={ROUTER_SCENE_KEYS.multiselection}
+                                    title="Multiple selection"
+                                    component={Multiselection}
                                 />
                                 <Scene
                                     key={ROUTER_SCENE_KEYS.locationPicker}

@@ -1,4 +1,4 @@
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import SHA1 from 'crypto-js/sha1';
 import URL from 'url';
 import PathParse from 'path-parse';
@@ -115,6 +115,7 @@ export default class ImageCacheManager {
 
     isLastCheckedWithinThreshold(uri) {
         // Not checking if previously checked in last 2 hours.
+        // return false;
         if (
             this.lastChecked[uri] &&
             moment().diff(this.lastChecked[uri]) < 2 * 60 * 60 * 1000
@@ -246,12 +247,8 @@ export default class ImageCacheManager {
         if (cache.path) {
             RNFetchBlob.fs.exists(cache.path).then(exists => {
                 if (exists) {
-                    console.log('Image Exists', uri);
-
                     this.notifyImageFromCache(uri);
                 } else {
-                    console.log('Download Image', cache.path);
-
                     this.download(cache);
                 }
             });

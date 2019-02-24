@@ -23,7 +23,7 @@ export default {
         navigationBarTintColor: GlobalColors.headerBlack,
         titleStyle: {
             fontFamily: 'SF Pro Text',
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: '400'
         }
     }

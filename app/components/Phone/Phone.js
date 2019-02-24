@@ -37,10 +37,16 @@ export default class Phone extends React.Component {
         if (Platform.OS === 'ios') {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
+            if (call_from && call_from.startsWith('client:')) {
+                call_from = '';
+            }
         }
         if (Platform.OS === 'android') {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
+            if (call_from && call_from.startsWith('client:')) {
+                call_from = '';
+            }
         }
         this.state = {
             phoneState: props.state,
@@ -78,11 +84,11 @@ export default class Phone extends React.Component {
         }
     }
 
-    findCallerName({ username }) {
+    async findCallerName({ username }) {
         // const {username} = this.state
         if (username && _.startsWith(username, 'client:')) {
             const clientId = username.substr(7);
-            const clientDetails = ContactsCache.getUserDetails(clientId);
+            const clientDetails = await ContactsCache.getUserDetails(clientId);
             if (clientDetails) {
                 if (this.mounted) {
                     this.setState({

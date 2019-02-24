@@ -4,7 +4,8 @@ import { Network } from '../../lib/capability';
 import EventEmitter from '../../lib/events';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
-
+import { connect } from 'react-redux';
+import { setNetwork } from '../../redux/actions/UserActions';
 class NetworkStatusNotchBar extends React.Component {
     constructor(props) {
         super(props);
@@ -27,53 +28,45 @@ class NetworkStatusNotchBar extends React.Component {
     }
 
     satelliteConnectionHandler = () => {
-        if (this.state.network !== 'satellite') {
-            this.setState({
-                showNetworkStatusBar: true,
-                network: 'satellite'
-            });
-        }
+        // if (this.state.network !== 'satellite') {
+        //     this.setState({
+        //         showNetworkStatusBar: true,
+        //         network: 'satellite'
+        //     });
+        // }
+        this.props.setNetwork('satellite');
     };
 
     satelliteDisconnectHandler = () => {
-        if (this.state.network === 'satellite') {
-            this.setState({
-                showNetworkStatusBar: false,
-                network: 'connected'
-            });
-        }
+        // if (this.state.network === 'satellite') {
+        //     this.setState({
+        //         showNetworkStatusBar: false,
+        //         network: 'connected'
+        //     });
+        // }
+        this.props.setNetwork('full');
     };
 
     handleConnectionChange = connection => {
         if (connection.type === 'none') {
-            this.setState({
-                showNetworkStatusBar: true,
-                network: 'none'
-            });
+            this.props.setNetwork('none');
         } else {
-            if (this.state.network === 'none') {
-                this.setState({
-                    showNetworkStatusBar: false,
-                    network: 'connected'
-                });
-            }
+            this.props.setNetwork('full');
         }
     };
 
     onChatStatusBarClose = () => {
-        this.setState({
-            showNetworkStatusBar: false
-        });
+        // this.setState({
+        //     showNetworkStatusBar: false
+        // });
+        this.props.setNetwork('full');
     };
     renderNetworkStatusBar = () => {
-        const { network, showNetworkStatusBar } = this.state;
-        if (
-            showNetworkStatusBar &&
-            (network === 'none' || network === 'satellite')
-        ) {
+        const { network } = this.props.appState;
+        if (network !== 'full') {
             return (
                 <ChatStatusBar
-                    network={this.state.network}
+                    network={network}
                     onChatStatusBarClose={this.onChatStatusBarClose}
                 />
             );
@@ -81,8 +74,25 @@ class NetworkStatusNotchBar extends React.Component {
     };
 
     render() {
+        if (!this.props.appState) {
+            return <View />;
+        }
+
         return <View>{this.renderNetworkStatusBar()}</View>;
     }
 }
 
-export default NetworkStatusNotchBar;
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setNetwork: network => dispatch(setNetwork(network))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(NetworkStatusNotchBar);

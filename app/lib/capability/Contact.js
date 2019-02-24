@@ -12,6 +12,10 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
 
+const R = require('ramda');
+
+const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
+
 /**
  * Expected format per contact:
  * {
@@ -63,7 +67,7 @@ export default class Contact {
             if (!Array.isArray(contacts)) {
                 contacts = [contacts];
             }
-            console.log('Added Contacts : ', contacts);
+
             Contact.getAddedContacts()
                 .then(function(cts) {
                     cts = cts || [];
@@ -73,7 +77,38 @@ export default class Contact {
                         contact => contact.userId
                     );
                     const newContacts = cts.concat(notPresentContacts);
-                    return Contact.saveContacts(newContacts);
+                    const newContacts_Unconfirmed = newContacts.map(
+                        contact => ({
+                            waitingForConfirmation: true,
+                            ...contact
+                        })
+                    );
+                    return Contact.saveContacts(newContacts_Unconfirmed);
+                })
+                .then(function(cts) {
+                    return resolve(cts);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    static confirmContact = contact =>
+        new Promise((resolve, reject) => {
+            Contact.getAddedContacts()
+                .then(data => {
+                    let contactArray = data.map(elem => {
+                        if (elem.userId === contact.userId) {
+                            elem.waitingForConfirmation =
+                                contact.waitingForConfirmation;
+                            elem.userName = contact.userName;
+                            elem.emailAddress = contact.emailAddress;
+                            elem.phoneNumbers = contact.phoneNumbers;
+                        }
+                        return elem;
+                    });
+
+                    return Contact.saveContacts(contactArray);
                 })
                 .then(function(cts) {
                     return resolve(cts);
@@ -137,10 +172,48 @@ export default class Contact {
         });
 
     static saveContacts = contacts =>
-        new Promise((resolve, reject) => {
-            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, contacts)
+        new Promise(async (resolve, reject) => {
+            const incomingContacts = contacts.map(contact => {
+                if (!contact.waitingForConfirmation) {
+                    contact.waitingForConfirmation = false;
+                }
+                return contact;
+            });
+            const localContacts = await Contact.getAddedContacts();
+            const localContactsAccepted = localContacts.filter(contact => {
+                if (contact.ignored === undefined) {
+                    return true;
+                }
+                if (contact.ignored === false) {
+                    return true;
+                }
+                return false;
+            });
+            const remoteContacts = incomingContacts.filter(contact => {
+                if (contact.ignored === undefined) {
+                    return true;
+                }
+                if (contact.ignored === false) {
+                    return true;
+                }
+                return false;
+            });
+            let AllContacts = [];
+            for (let contact of remoteContacts) {
+                const localContact = R.find(R.propEq('userId', contact.userId))(
+                    localContactsAccepted
+                );
+                const mergedContact = R.mergeDeepWithKey(
+                    mergeValues,
+                    localContact,
+                    contact
+                );
+                AllContacts.push(mergedContact);
+            }
+
+            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
-                    return resolve(contacts);
+                    return resolve(AllContacts);
                 })
                 .catch(err => {
                     return reject(err);
@@ -266,6 +339,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
+                        // console.log(
+                        //     'all conatcts ======================= >',
+                        //     response.data
+                        // );
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -278,6 +355,7 @@ export default class Contact {
                             return _.extend({}, contact, { ignored: true });
                         });
                         var allContacts = _.concat(contacts, ignored);
+
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
                         resolve();
@@ -308,13 +386,13 @@ export default class Contact {
                     }
                 })
                 .then(response => {
-                    console.log('Contact response data ', response.data);
                     if (response.data) {
                         let contact = response.data;
                         return ChannelContactDAO.insertChannelContact(
                             contact.userId,
                             contact.userName,
-                            contact.emailAddress,
+                            '',
+                            // contact.emailAddress,
                             contact.screenName,
                             contact.givenName,
                             contact.surname

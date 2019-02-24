@@ -61,6 +61,23 @@ export default class LocationPicker extends React.Component {
         Actions.pop();
     }
 
+    sendCurrentLocation() {
+        let userPosition;
+        navigator.geolocation.getCurrentPosition(position => {
+            userPosition = [
+                position.coords.longitude,
+                position.coords.latitude
+            ];
+            this.setState({ coordinate: userPosition });
+            if (this.props.onLocationPicked) {
+                this.props.onLocationPicked({
+                    coordinate: this.state.coordinate
+                });
+            }
+            Actions.pop();
+        });
+    }
+
     renderMarker(markers) {
         if (!this.state || !this.state.coordinate) {
             return;
@@ -98,23 +115,6 @@ export default class LocationPicker extends React.Component {
         }
     }
 
-    // renderMap() {
-    //     return (
-    //         <MapView
-    //             ref={ref => {
-    //                 this.map = ref;
-    //             }}
-    //             style={styles.mapView}
-    //             onMapReady={this.onMapReady.bind(this)}
-    //             onLongPress={this.onPress.bind(this)}
-    //             showsUserLocation={true}
-    //             zoomEnabled={true}
-    //         >
-    //             {this.renderMarker()}
-    //         </MapView>
-    //     );
-    // }
-
     onMapReady() {
         const { width, height } = Dimensions.get('window');
         const aspectRatio = width / height;
@@ -147,14 +147,14 @@ export default class LocationPicker extends React.Component {
     };
 
     renderBottomLayer() {
-        const message =
-            this.state && this.state.coordinate
-                ? I18n.t('Tap_on_Map_to_Change')
-                : I18n.t('Tap_on_Map');
         return (
-            <View style={styles.bottomLayer}>
-                <Text style={styles.bottomLayerText}>{message}</Text>
-            </View>
+            <TouchableOpacity
+                style={styles.bottomLayer}
+                onPress={this.sendCurrentLocation.bind(this)}
+            >
+                {Icons.userPositionActive()}
+                <Text style={styles.bottomLayerText}>Current Location</Text>
+            </TouchableOpacity>
         );
     }
 
@@ -217,7 +217,7 @@ export default class LocationPicker extends React.Component {
                 userTrackingMode: Mapbox.UserTrackingModes.Follow
             });
         }
-        this.setState({ locateUserButtonIcon: Icons.userPositionActive });
+        this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
     }
 
     onUserTrackingModeChange(e) {
@@ -243,20 +243,6 @@ export default class LocationPicker extends React.Component {
                 userPosition = null;
             }
         );
-        // DeviceLocation.getDeviceLocation()
-        //     .then(location => {
-        //         userPosition = [location.longitude, location.latitude];
-        //     })
-        //     .catch(error => {
-        //         if (error.code === 2) {
-        //             Alert.alert(
-        //                 I18n.t('Enable_GPS_title'),
-        //                 I18n.t('Enable_GPS_to_view_currentLocation'),
-        //                 [{ text: 'OK', onPress: this.goBack }],
-        //                 { cancelable: false }
-        //             );
-        //         }
-        //     });
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <Mapbox.MapView
@@ -275,12 +261,6 @@ export default class LocationPicker extends React.Component {
                     zoomEnabled={true}
                 >
                     {this.renderMarker()}
-                    {/* <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={this.close.bind(this)}
-                    >
-                        {Icons.mapViewClose()}
-                    </TouchableOpacity> */}
                 </Mapbox.MapView>
                 {this.renderDoneButton()}
                 {this.renderButtons()}
@@ -290,10 +270,10 @@ export default class LocationPicker extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderBottomLayer()}
-            </View>
+            </SafeAreaView>
         );
     }
 }

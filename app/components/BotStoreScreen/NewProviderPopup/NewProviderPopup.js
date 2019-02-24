@@ -2,16 +2,19 @@ import React, { Component } from 'react';
 import {
     View,
     Modal,
+    Keyboard,
     Text,
     TextInput,
     TouchableOpacity,
-    Alert
+    Image
 } from 'react-native';
 import styles from './styles';
 import Bot from '../../../lib/bot/index';
 
 import { SafeAreaView } from 'react-navigation';
 import Loader from '../../Loader/Loader';
+import images from '../../../images';
+import { Media, RemoteBotInstall } from '../../../lib/capability';
 
 export default class NewProviderPopup extends Component {
     constructor(props) {
@@ -25,12 +28,18 @@ export default class NewProviderPopup extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.qrCode !== this.props.qrCode) {
+            this.setState({ code: nextProps.qrCode });
+        }
+    }
+
     onChangeName(e) {
         this.setState({ code: e });
     }
 
     cancelNewProvider = () => {
-        this.props.canelNewProvider(false);
+        this.props.cancelNewProvider(false);
     };
 
     async newProvider() {
@@ -45,17 +54,33 @@ export default class NewProviderPopup extends Component {
                 this.setState({ loading: false });
                 this.setState({ wrongCode: true, apiError: false });
             } else {
-                this.setState({ loading: false, apiError: false });
-                this.cancelNewProvider();
-                this.props.onSubmit();
+                RemoteBotInstall.syncronizeBots()
+                    .then(data => {
+                        this.setState({ loading: false, apiError: false });
+                        // console.log('lets see the data ', data);
+                        this.cancelNewProvider();
+                        this.props.onSubmit();
+                    })
+                    .catch(err => {
+                        console.log('error occured ', err);
+                    });
             }
         } catch (e) {
             this.setState({ loading: false });
             this.setState({ wrongCode: false, apiError: true });
-            // this.cancelNewProvider()
-            // Alert.alert('Cannot add new provider')
         }
     }
+
+    readBarCode = async () => {
+        Keyboard.dismiss();
+        this.props.cancelNewProvider(false);
+        let result = await Media.readBarcode();
+        if (!result.cancelled) {
+            this.props.onSubmittingCode(result.data);
+        } else {
+            this.props.cancelNewProvider(true);
+        }
+    };
 
     displayErrorMessege = () => {
         if (this.state.wrongCode) {
@@ -100,25 +125,33 @@ export default class NewProviderPopup extends Component {
                             Sign in to a new provider
                         </Text>
                         <Text style={styles.descriptionText}>
-                            Please write an alphanumeric code.
+                            Please write an alphanumeric code or scan if it is a
+                            QR code.
                         </Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCorrect={false}
-                            onChangeText={this.onChangeName.bind(this)}
-                            placeholderTextColor="rgba(155,155,155,1)"
-                            autoCapitalize="none"
-                            clearButtonMode="always"
-                        />
-                        {this.displayErrorMessege()}
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                height: 40,
-                                justifyContent: 'center',
-                                marginTop: 35
-                            }}
-                        >
+                        <View style={styles.inputBoxContainer}>
+                            <TextInput
+                                style={styles.input}
+                                autoCorrect={false}
+                                value={this.state.code}
+                                onChangeText={this.onChangeName.bind(this)}
+                                placeholderTextColor="rgba(155,155,155,1)"
+                                autoCapitalize="none"
+                                clearButtonMode="always"
+                            />
+                            <TouchableOpacity
+                                style={styles.barCodeIcon}
+                                onPress={this.readBarCode}
+                            >
+                                <Image
+                                    style={{ height: 16, width: 16 }}
+                                    source={images.qr_code_icon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.containerError}>
+                            {this.displayErrorMessege()}
+                        </View>
+                        <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={styles.cancelBtn}
                                 onPress={this.cancelNewProvider}
