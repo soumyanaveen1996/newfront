@@ -186,6 +186,9 @@ class ChatBotScreen extends React.Component {
             showOptions: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
+        this.chatState = {
+            updatingChat: false
+        };
         this.scrollToBottom = false;
         this.firstUnreadIndex = -1;
 
@@ -740,7 +743,11 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
         ) {
-            this.updateSmartSuggestions(message);
+            if (this.chatState.updatingChat) {
+                this.chatState.nextSmartSuggestion = message;
+            } else {
+                this.updateSmartSuggestions(message);
+            }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
@@ -777,16 +784,29 @@ class ChatBotScreen extends React.Component {
         console.log('Done called from bot code');
     };
 
-    // Retrun when the message has been persisted
+    /** Retrun when the message has been persisted*/
     persistMessage = message => {
         return MessageHandler.persistOnDevice(this.getBotKey(), message);
     };
 
     // Promise based since setState is async
     updateChat(message) {
-        this.persistMessage(message).then(() => {
-            this.queueMessage(message);
-        });
+        this.chatState.updatingChat = true;
+        this.persistMessage(message)
+            .then(async () => {
+                return this.queueMessage(message);
+            })
+            .then(res => {
+                if (!res) {
+                    this.chatState.updatingChat = false;
+                    if (this.chatState.nextSmartSuggestion) {
+                        this.updateSmartSuggestions(
+                            this.chatState.nextSmartSuggestion
+                        );
+                        this.chatState.nextSmartSuggestion = undefined;
+                    }
+                }
+            });
         // Has to be Immutable for react
     }
 
@@ -1017,6 +1037,7 @@ class ChatBotScreen extends React.Component {
         });
     }
 
+    /**Render the new message on screen */
     updateMessages = (messages, callback) => {
         if (this.mounted) {
             this.setState(
@@ -1035,11 +1056,13 @@ class ChatBotScreen extends React.Component {
         }
     };
 
+    /** Update message list and screen */
     appendMessageToChat(message, immediate = false) {
         return new Promise(resolve => {
+            console.log(message.getMessageId(), '>>>>>>>>>D');
             if (this.addMessage && this.setState) {
-                let msgs = this.addMessage(message);
-                this.updateMessages(msgs, (err, res) => {
+                let updatedMessageList = this.addMessage(message);
+                this.updateMessages(updatedMessageList, (err, res) => {
                     if (!err) {
                         //this.scrollToBottomIfNeeded();
                     }
@@ -1058,33 +1081,52 @@ class ChatBotScreen extends React.Component {
     }
 
     processMessageQueue() {
-        var message = this.messageQueue.shift();
-        if (message) {
+        return new Promise(async resolve => {
             this.processingMessageQueue = true;
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-            this.appendMessageToChat(message)
-                .then(() => {
-                    return this.sleep(
-                        Config.ChatMessageOptions.messageTransitionTime
-                    );
-                })
-                .then(() => {
-                    this.processMessageQueue();
-                });
-        } else {
+            while (this.messageQueue.length > 0) {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+                await this.appendMessageToChat(this.messageQueue.shift());
+            }
             this.processingMessageQueue = false;
-        }
+            resolve(this.processingMessageQueue);
+        });
+
+        // var message = this.messageQueue.shift();
+        // if (message) {
+        //     this.processingMessageQueue = true;
+        //     LayoutAnimation.configureNext(
+        //         LayoutAnimation.Presets.easeInEaseOut
+        //     );
+        //     this.appendMessageToChat(message)
+        //         .then(() => {
+        //             return this.sleep(
+        //                 Config.ChatMessageOptions.messageTransitionTime
+        //             );
+        //         })
+        //         .then(() => {
+        //             this.processMessageQueue();
+        //         });
+        // } else {
+        //     this.processingMessageQueue = false;
+        // }
     }
 
+    /** Returns true if queue processing is running, false if it's ended */
     queueMessage(message) {
-        this.messageQueue.push(message);
-        if (this.processingMessageQueue === false) {
-            this.processMessageQueue();
-        }
+        return new Promise(async resolve => {
+            this.messageQueue.push(message);
+            if (this.processingMessageQueue === false) {
+                await this.processMessageQueue();
+                resolve(false);
+            } else {
+                resolve(true);
+            }
+        });
     }
 
+    /**Add the new message to message list and return the updated messagelist */
     addMessage(message) {
         const { messages } = this.state;
         const incomingMessage = message.toBotDisplay();
@@ -1092,12 +1134,12 @@ class ChatBotScreen extends React.Component {
             this.state.messages
         );
         if (messageIndex > 0) {
-            const updatedMessage = R.update(
+            const updatedMessages = R.update(
                 messageIndex,
                 incomingMessage,
                 this.state.messages
             );
-            return updatedMessage;
+            return updatedMessages;
         } else {
             return [...this.state.messages, incomingMessage];
         }
