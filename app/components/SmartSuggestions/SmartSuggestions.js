@@ -1,11 +1,13 @@
 import React from 'react';
-import { FlatList, Text, View, LayoutAnimation } from 'react-native';
+import { FlatList, Text, View, LayoutAnimation, UIManager } from 'react-native';
 import Suggestion from './Suggestion';
 import styles from './styles';
 
 export default class SmartSuggestions extends React.Component {
     constructor(props) {
         super(props);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.state = {
             suggestions: [] //array
         };
