@@ -201,6 +201,7 @@ class ChatBotScreen extends React.Component {
         this.dce_bot = dce.bot(this.bot, this.botContext);
         this.user = null;
         this.conversationContext = null;
+        this.sliderPreviousState = false;
     }
 
     loadBot = async () => {
@@ -363,6 +364,11 @@ class ChatBotScreen extends React.Component {
         this.keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
+        );
+
+        this.keyboardWillHideListener = Keyboard.addListener(
+            'keyboardWillHide',
+            this.keyboardWillHide.bind(this)
         );
 
         this.keyboardDidHideListener = Keyboard.addListener(
@@ -549,6 +555,9 @@ class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardWillHideListener) {
+            this.keyboardWillHideListener.remove();
+        }
         if (this.keyboardDidHideListener) {
             this.keyboardDidHideListener.remove();
         }
@@ -608,32 +617,55 @@ class ChatBotScreen extends React.Component {
     }
 
     keyboardWillShow = () => {
-        if (this.slider) {
-            this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
-        } else {
-            this.setState({ sliderClosed: false });
-        }
+        //     console.log('>>>>>WS')
+        //     console.log(this.sliderPreviousState, '>>>>>>WS')
+        //     if (this.slider) {
+        //         this.slider.close(undefined, true);
+        //         this.setState({ sliderClosed: true });
+        //     } else {
+        //         this.setState({ sliderClosed: false });
+        //     }
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        // this.sliderPreviousState = this.state.showSlider || false;
+        // this.setState({ showOptions: false, showSlider: false },this.scrollToBottomIfNeeded())
     };
 
     keyboardDidShow = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        this.sliderPreviousState = this.state.showSlider || false;
-        this.scrollToBottomIfNeeded();
-        if (Platform.OS === 'android' && this.slider) {
-            this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true, showOptions: false });
-        } else {
-            this.setState({ sliderClosed: false, showOptions: false });
-        }
+        // if (Platform.OS === 'android' && this.slider) {
+        //     this.slider.close(undefined, true);
+        //     this.setState({ sliderClosed: true, showOptions: false });
+        // } else {
+        //     this.setState({ sliderClosed: false, showOptions: false });
+        // }
+        this.setState(
+            { showOptions: false, showSlider: false },
+            this.scrollToBottomIfNeeded()
+        );
     };
 
-    keyboardDidHide = () => {
-        this.scrollToBottomIfNeeded();
-        this.setState({ showSlider: this.sliderPreviousState || false });
+    keyboardWillHide = () => {
+        //     console.log(this.sliderPreviousState, '>>>>>>WH')
+        // this.scrollToBottomIfNeeded();
+        // this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
+        // console.log(this.sliderPreviousState, '>>>>>>')
+        // if (!this.state.showOptions) {
+        //     this.setState({ showSlider: this.sliderPreviousState || false })
+        // }
+    };
+
+    keyboardDidHide = () => {
+        this.setState(
+            {
+                showSlider: this.state.showOptions
+                    ? false
+                    : this.sliderPreviousState
+            },
+            this.scrollToBottomIfNeeded()
+        );
     };
 
     handleMessageEvents(event) {
@@ -819,6 +851,7 @@ class ChatBotScreen extends React.Component {
     fireSlider(message) {
         // Slider
         Keyboard.dismiss();
+        this.sliderPreviousState = true;
         this.setState({ showSlider: true, message: message });
     }
 
@@ -861,6 +894,7 @@ class ChatBotScreen extends React.Component {
 
     // optionalCb is passed by slider if it needs to run some cleanup
     onSliderClose = (optionalCb, scroll = true) => {
+        this.sliderPreviousState = false;
         this.setState({ showSlider: false }, function(err, res) {
             if (!err && _.isFunction(optionalCb)) {
                 return optionalCb();
@@ -1059,7 +1093,6 @@ class ChatBotScreen extends React.Component {
     /** Update message list and screen */
     appendMessageToChat(message, immediate = false) {
         return new Promise(resolve => {
-            console.log(message.getMessageId(), '>>>>>>>>>D');
             if (this.addMessage && this.setState) {
                 let updatedMessageList = this.addMessage(message);
                 this.updateMessages(updatedMessageList, (err, res) => {
@@ -1797,21 +1830,42 @@ class ChatBotScreen extends React.Component {
             LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
             );
-            Keyboard.dismiss();
-            this.sliderPreviousState = this.state.showSlider || false;
-            this.setState({
-                showOptions: true,
-                showSlider: false
-            });
+            this.setState(
+                {
+                    showOptions: true,
+                    showSlider: false
+                },
+                () => Keyboard.dismiss()
+            );
         } else {
             LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
             );
             this.setState({
                 showOptions: false,
-                showSlider: this.sliderPreviousState || false
+                showSlider: this.sliderPreviousState
             });
         }
+    }
+
+    onRandomTap() {
+        // if (this.state.showOptions === false) {
+        //     LayoutAnimation.configureNext(
+        //         LayoutAnimation.Presets.easeInEaseOut
+        //     );
+        //     Keyboard.dismiss();
+        //     this.sliderPreviousState = this.state.showSlider || false;
+        //     this.setState({
+        //         showOptions: true,
+        //         showSlider: false
+        //     });
+        // } else {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState({
+            showOptions: false,
+            showSlider: this.sliderPreviousState
+        });
+        // }
     }
 
     selectOption = key => {
@@ -2195,7 +2249,7 @@ class ChatBotScreen extends React.Component {
                         <TouchableWithoutFeedback
                             style={{ flex: 1 }}
                             disabled={!this.state.showOptions}
-                            onPress={this.onPlusButtonPressed.bind(this)}
+                            onPress={this.onRandomTap.bind(this)}
                         >
                             <View
                                 style={{
