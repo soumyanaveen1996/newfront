@@ -121,6 +121,17 @@ export default class MapView extends React.Component {
             chatModalContent: {},
             isModalVisible: false
         };
+        const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
+            let start = turf_helpers.point([
+                route.start.longitude,
+                route.start.latitude
+            ]);
+            let end = turf_helpers.point([
+                route.end.longitude,
+                route.end.latitude
+            ]);
+            return turf_great_circle(start, end, { name: route.id });
+        });
         const vesselsPositions = _.map(this.props.mapData.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
@@ -192,7 +203,9 @@ export default class MapView extends React.Component {
                         coordinates: polylines
                     }
                 }
-            ].concat(movingVessels)
+            ]
+                .concat(movingVessels)
+                .concat(planeRoutes)
         };
     }
 
