@@ -29,6 +29,8 @@ import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import ContextSlideshow from './ContextSlideshow';
 import ChatModal from '../ChatBotScreen/ChatModal';
+import turf_great_circle from '@turf/great-circle';
+import turf_helpers from '@turf/helpers';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
