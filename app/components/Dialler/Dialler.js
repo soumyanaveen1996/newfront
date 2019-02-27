@@ -65,7 +65,7 @@ export default class Dialler extends React.Component {
         const countryCodes = { Inmarsat, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
-            dialledNumber: '+',
+            dialledNumber: '+870776225331',
             dialledDigits: '',
             micOn: true,
             speakerOn: false,
