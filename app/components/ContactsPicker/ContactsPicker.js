@@ -121,10 +121,14 @@ class ContactsPicker extends React.Component {
 
         navigationOptions.headerRight = (
             <TouchableOpacity
+                accessibilityLabel="Add Contact Button"
+                testID="add-contact-button"
                 style={styles.headerRight}
                 onPress={state.params.inviteUser}
             >
                 <Image
+                    accessibilityLabel="Add Contact Icon"
+                    testID="add-contact-icon"
                     source={require('../../images/channels/plus-white-good.png')}
                     style={{ width: 15, height: 15 }}
                 />
@@ -470,6 +474,8 @@ class ContactsPicker extends React.Component {
         return (
             <View style={styles.searchBar}>
                 <Icon
+                    accessibilityLabel="Search Icon"
+                    testID="searc-icon"
                     style={styles.searchIcon}
                     name="search"
                     size={18}
@@ -506,6 +512,8 @@ class ContactsPicker extends React.Component {
                 >
                     <View style={styles.myProfileItemContainer}>
                         <MyProfileImage
+                            accessibilityLabel="My Profile Image"
+                            testID="my-profile-image"
                             uuid={this.state.userId}
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}

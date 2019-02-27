@@ -75,6 +75,8 @@ export default class ContactsPickerRow extends React.Component {
                         )}
                         {this.renderCheckbox()}
                         <ProfileImage
+                            accessibilityLabel="Profile Picture"
+                            testID="profile-picture"
                             uuid={uuid}
                             placeholder={Images.user_image}
                             style={styles.contactItemImage}
