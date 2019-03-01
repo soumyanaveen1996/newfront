@@ -1,5 +1,12 @@
 import React from 'react';
-import { FlatList, Text, View, LayoutAnimation, UIManager } from 'react-native';
+import {
+    FlatList,
+    Text,
+    View,
+    LayoutAnimation,
+    UIManager,
+    Platform
+} from 'react-native';
 import Suggestion from './Suggestion';
 import styles from './styles';
 
@@ -27,15 +34,23 @@ export default class SmartSuggestions extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
         }
-        this.setState({
-            suggestions: suggestions
-        });
+        this.setState(
+            {
+                suggestions: suggestions
+            },
+            () => {
+                this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+            }
+        );
     };
 
     render() {
         return (
             <View>
                 <FlatList
+                    ref={flatListRef => {
+                        this.flatListRef = flatListRef;
+                    }}
                     data={this.state.suggestions}
                     renderItem={this.smartSuggestion.bind(this)}
                     horizontal={true}
