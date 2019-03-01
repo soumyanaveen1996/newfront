@@ -6,8 +6,8 @@ import styles from './styles';
 export default class SmartSuggestions extends React.Component {
     constructor(props) {
         super(props);
-        UIManager.setLayoutAnimationEnabledExperimental &&
-            UIManager.setLayoutAnimationEnabledExperimental(true);
+        // UIManager.setLayoutAnimationEnabledExperimental &&
+        // UIManager.setLayoutAnimationEnabledExperimental(true);
         this.state = {
             suggestions: [] //array
         };
@@ -22,7 +22,11 @@ export default class SmartSuggestions extends React.Component {
     );
 
     update = suggestions => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
         this.setState({
             suggestions: suggestions
         });
