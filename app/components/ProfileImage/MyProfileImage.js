@@ -20,7 +20,7 @@ class MyProfileImage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('In Profile Image>>>>>>>>>>>>>', this.props.user.upload);
+        console.log('In Profile Image: ', this.props.user.upload);
         const uploadNumber = this.props.user.upload;
         this.mounted = true;
         const user = await Auth.getUser();
