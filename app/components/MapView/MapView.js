@@ -106,8 +106,8 @@ export default class MapView extends React.Component {
 
     constructor(props) {
         super(props);
-        UIManager.setLayoutAnimationEnabledExperimental &&
-            UIManager.setLayoutAnimationEnabledExperimental(true);
+        // UIManager.setLayoutAnimationEnabledExperimental &&
+        //     UIManager.setLayoutAnimationEnabledExperimental(true);
         this.state = {
             userTrackingMode:
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
@@ -464,7 +464,11 @@ export default class MapView extends React.Component {
     }
 
     closeAndOpenSlideshow() {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
         this.setState({ slideshowOpen: !this.state.slideshowOpen });
     }
 
