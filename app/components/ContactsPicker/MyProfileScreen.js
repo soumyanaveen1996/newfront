@@ -142,7 +142,8 @@ class MyProfileScreen extends React.Component {
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
             searchable: this.state.searchable,
-            visible: this.state.visible
+            visible: this.state.visible,
+            userName: this.state.myName
         };
 
         let userDetails = {
