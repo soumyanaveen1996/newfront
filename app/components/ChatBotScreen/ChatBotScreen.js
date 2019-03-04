@@ -1893,7 +1893,6 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
         } else if (key === BotInputBarCapabilities.share_contact) {
-            return;
             this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
@@ -2078,12 +2077,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_file,
                 label: I18n.t('File_option')
             },
-            // {
-            //     key: BotInputBarCapabilities.share_contact,
-            //     imageStyle: { width: 16, height: 16 }
-            //     imageSource: images.share_contact,
-            //     label: I18n.t('Contact')
-            // },
+            {
+                key: BotInputBarCapabilities.share_contact,
+                imageStyle: { width: 16, height: 16 },
+                imageSource: images.share_contact,
+                label: I18n.t('Contact')
+            },
             {
                 key: BotInputBarCapabilities.pick_location,
                 imageStyle: { width: 14, height: 16 },
@@ -2101,10 +2100,6 @@ class ChatBotScreen extends React.Component {
                             return (
                                 <TouchableOpacity
                                     key={index}
-                                    disabled={
-                                        elem.key ===
-                                        BotInputBarCapabilities.share_contact
-                                    }
                                     onPress={() => {
                                         this.selectOption(elem.key);
                                     }}
@@ -2112,10 +2107,7 @@ class ChatBotScreen extends React.Component {
                                 >
                                     <View
                                         style={
-                                            elem.key ===
-                                            BotInputBarCapabilities.share_contact
-                                                ? chatStyles.moreOptionImageContainerHide
-                                                : chatStyles.moreOptionImageContainer
+                                            chatStyles.moreOptionImageContainer
                                         }
                                     >
                                         <Image
