@@ -382,7 +382,10 @@ class NetworkPoller {
 
     process = () => {
         setTimeout(() => NetworkHandler.poll(), 1000);
-        setTimeout(() => BackgroundTaskProcessor.process(), 5000);
+        InteractionManager.runAfterInteractions(() =>
+            BackgroundTaskProcessor.process()
+        );
+        // setTimeout(() => BackgroundTaskProcessor.process(), 5000);
     };
     clearQueue = () => {
         InteractionManager.runAfterInteractions(() => {

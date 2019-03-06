@@ -401,13 +401,14 @@ export function requestReadContactsPermission() {
 }
 
 export function newBotConversationId(userId, botId) {
-    if (SystemBot.isSystemBot(botId) || !userId) {
-        return UUID();
-    } else {
-        let ids = [userId, botId];
-        const text = _.join(_.sortBy(ids), '-');
-        return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
-    }
+    let ids = [userId, botId];
+    const text = _.join(_.sortBy(ids), '-');
+    return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+
+    // if (SystemBot.isSystemBot(botId) || !userId) {
+    //     return UUID();
+    // } else {
+    // }
 }
 
 export function objectToQueryString(obj) {
