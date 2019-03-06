@@ -9,7 +9,8 @@ import {
     SafeAreaView,
     Alert,
     LayoutAnimation,
-    UIManager
+    UIManager,
+    Slider
 } from 'react-native';
 import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
@@ -24,13 +25,16 @@ import {
 } from '../../lib/network';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import Icons from '../../config/icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../config/images';
 import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import ContextSlideshow from './ContextSlideshow';
 import ChatModal from '../ChatBotScreen/ChatModal';
 import turf_great_circle from '@turf/great-circle';
+import turf_distance from '@turf/distance';
 import turf_helpers from '@turf/helpers';
+import GlobalColors from '../../config/styles';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
@@ -119,7 +123,10 @@ export default class MapView extends React.Component {
                 ? this.props.mapData.options.cards
                 : [],
             chatModalContent: {},
-            isModalVisible: false
+            isModalVisible: false,
+            showRouteTracker: false,
+            routeTrackerClosed: false,
+            trackerData: {}
         };
         const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
@@ -210,6 +217,7 @@ export default class MapView extends React.Component {
     }
 
     async componentDidMount() {
+        this.checkForRouteTracker();
         this.props.navigation.setParams({
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
@@ -219,10 +227,6 @@ export default class MapView extends React.Component {
             PollingStrategyEvents.changed,
             this.checkPollingStrategy.bind(this)
         );
-    }
-
-    componentWillMount() {
-        this.checkPollingStrategy();
     }
 
     readLambdaQueue() {
@@ -396,6 +400,116 @@ export default class MapView extends React.Component {
         );
     }
 
+    checkForRouteTracker() {
+        let markerToTrack;
+        let routeToTrack = _.find(this.props.mapData.planeRoutes, route => {
+            return route.showTracker;
+        });
+        if (routeToTrack) {
+            markerToTrack = _.find(this.props.mapData.markers, marker => {
+                return routeToTrack.id === marker.id;
+            });
+            if (markerToTrack) {
+                const trackerData = {
+                    routeId: markerToTrack.id,
+                    startId: routeToTrack.start.id,
+                    endId: routeToTrack.end.id,
+                    startCoord: [
+                        routeToTrack.start.longitude,
+                        routeToTrack.start.latitude
+                    ],
+                    endCoord: [
+                        routeToTrack.end.longitude,
+                        routeToTrack.end.latitude
+                    ],
+                    currentCoord: [
+                        markerToTrack.coordinate.longitude,
+                        markerToTrack.coordinate.latitude
+                    ],
+                    arrivalTime: routeToTrack.end.time
+                };
+                this.setState({
+                    trackerData: trackerData,
+                    showRouteTracker: true
+                });
+                return;
+            }
+        }
+        this.setState({ showRouteTracker: false });
+    }
+
+    renderRouteTracker() {
+        const from = turf_helpers.point(this.state.trackerData.startCoord);
+        const to = turf_helpers.point(this.state.trackerData.endCoord);
+        const now = turf_helpers.point(this.state.trackerData.currentCoord);
+        const fullDistance = turf_distance(from, to);
+        const travelled = turf_distance(from, now);
+        const trackerValue =
+            JSON.stringify((travelled * 100) / fullDistance) + '%';
+
+        return (
+            <View
+                style={
+                    this.state.routeTrackerClosed
+                        ? styles.containerRSClosed
+                        : styles.containerRS
+                }
+            >
+                <View style={styles.leftContainerRS}>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.startId}
+                        </Text>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.endId}
+                        </Text>
+                    </View>
+                    {/* TRACKER */}
+                    <View style={styles.sliderTrackRS}>
+                        <View
+                            style={[
+                                styles.leftTrackRS,
+                                { width: trackerValue }
+                            ]}
+                        />
+                        <Image
+                            source={images.moving_maps_plane_blue_icon}
+                            style={styles.trackIconRS}
+                        />
+                    </View>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.bottomTextRS}>
+                            {this.state.trackerData.routeId}
+                        </Text>
+                        <Text style={styles.bottomTextRS}>
+                            Arriving at{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.arrivalTime}
+                            </Text>
+                        </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={styles.rightContainerRS}
+                    onPress={() => {
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
+                        this.setState({
+                            routeTrackerClosed: !this.state.routeTrackerClosed
+                        });
+                    }}
+                >
+                    {this.state.routeTrackerClosed
+                        ? Icons.planeRSWhite()
+                        : Icons.closeRouteSlider()}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     zoomIn() {
         this.map.getZoom().then(zoom => {
             this.map.getCenter().then(center => {
@@ -459,7 +573,7 @@ export default class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={11}
+                zoomLevel={this.props.mapData.region.zoom || 11}
                 centerCoordinate={[
                     this.props.mapData.region.longitude,
                     this.props.mapData.region.latitude
@@ -516,7 +630,8 @@ export default class MapView extends React.Component {
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderButtons()}
-                <ContextSlideshow
+                {this.state.showRouteTracker ? this.renderRouteTracker() : null}
+                {/* <ContextSlideshow
                     contentData={this.state.slideshowContext || []}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
@@ -524,7 +639,7 @@ export default class MapView extends React.Component {
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
                     onCardSelected={this.props.onAction || null}
-                />
+                /> */}
                 {this.renderChatModal()}
             </SafeAreaView>
         );

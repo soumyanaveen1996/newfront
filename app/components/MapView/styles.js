@@ -98,6 +98,75 @@ const styles = StyleSheet.create({
         shadowRadius: 4
     },
 
+    //ROUTE SLIDER
+    containerRS: {
+        position: 'absolute',
+        left: 0,
+        top: 13,
+        height: 70,
+        flexDirection: 'row',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        overflow: 'hidden'
+    },
+    containerRSClosed: {
+        position: 'absolute',
+        left: -270,
+        top: 13,
+        height: 70,
+        flexDirection: 'row',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        overflow: 'hidden'
+    },
+    leftContainerRS: {
+        width: 270,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        paddingHorizontal: 17,
+        paddingVertical: 7,
+        backgroundColor: GlobalColors.grey
+    },
+    rightContainerRS: {
+        width: 45,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.chatLeftTextColor
+    },
+    sliderTrackRS: {
+        width: '100%',
+        height: 3,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.chatLeftTextColor,
+        overflow: 'visible'
+    },
+    leftTrackRS: {
+        height: '100%',
+        backgroundColor: GlobalColors.sideButtons
+    },
+    trackIconRS: {
+        width: 16,
+        height: 16
+    },
+    dataContainerRS: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    topTextRS: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: GlobalColors.sideButtons
+    },
+    bottomTextRS: {
+        fontSize: 12,
+        fontWeight: '100',
+        color: GlobalColors.white
+    },
+
     //CONTEXT SLIDESHOW
     CSContainer: {
         position: 'absolute',
