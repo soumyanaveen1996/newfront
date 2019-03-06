@@ -631,7 +631,7 @@ export default class MapView extends React.Component {
                 {this.renderMap()}
                 {this.renderButtons()}
                 {this.state.showRouteTracker ? this.renderRouteTracker() : null}
-                {/* <ContextSlideshow
+                <ContextSlideshow
                     contentData={this.state.slideshowContext || []}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
@@ -639,7 +639,7 @@ export default class MapView extends React.Component {
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
                     onCardSelected={this.props.onAction || null}
-                /> */}
+                />
                 {this.renderChatModal()}
             </SafeAreaView>
         );
