@@ -7,3 +7,10 @@ export const MapCardDesign = {
     BIG: 'big',
     SMALL: 'small'
 };
+
+export const MarkerIconTypes = {
+    ARROW: 'arrow',
+    AIRCRAFT: 'aircraft',
+    POI: 'poi',
+    CIRCLE: 'circle'
+};

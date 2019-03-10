@@ -291,6 +291,7 @@ const styles = StyleSheet.create({
 });
 
 const layerStyles = Mapbox.StyleSheet.create({
+    //POLYLINES for routes and great circle routes
     route: {
         lineCap: 'round',
         lineWidth: 6,
@@ -298,6 +299,7 @@ const layerStyles = Mapbox.StyleSheet.create({
         lineColor: GlobalColors.sideButtons,
         lineBlur: 1
     },
+    //Auto-generated MARKERS
     startingPoint: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
@@ -314,16 +316,29 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconRotationAlignment: 'map',
         iconRotate: Mapbox.StyleSheet.identity('rotation')
     },
-    vesselPosition: {
+    //MARKERS
+    circleMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.current_location_inactive,
         iconSize: 1.5
     },
-    sharedLocation: {
+    poiMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.map_pin,
+        iconSize: 1.5
+    },
+    aircraftMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.moving_maps_plane,
+        iconSize: 1.5
+    },
+    arrowMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.maps_maritime_icon,
         iconSize: 1.5
     }
 });

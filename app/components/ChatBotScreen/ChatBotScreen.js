@@ -91,6 +91,7 @@ import PushNotification from 'react-native-push-notification';
 import { setCurrentConversationId } from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
+import { MarkerIconTypes } from '../MapView/config';
 
 const R = require('ramda');
 
@@ -1799,9 +1800,11 @@ class ChatBotScreen extends React.Component {
             },
             markers: [
                 {
+                    id: this.getUserId(),
                     title: 'position',
                     description: 'shared position',
                     draggable: false,
+                    iconType: MarkerIconTypes.POI,
                     coordinate: {
                         longitude: locationData.coordinate[0],
                         latitude: locationData.coordinate[1]

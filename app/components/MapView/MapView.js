@@ -12,7 +12,6 @@ import {
     UIManager,
     Slider
 } from 'react-native';
-import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
@@ -35,20 +34,11 @@ import turf_great_circle from '@turf/great-circle';
 import turf_distance from '@turf/distance';
 import turf_helpers from '@turf/helpers';
 import GlobalColors from '../../config/styles';
+import { MarkerIconTypes } from './config';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
 );
-
-class CallOut extends React.Component {
-    render() {
-        return (
-            <View style={styles.callOutContainer}>
-                <Text style={styles.callOutText}>{this.props.text}</Text>
-            </View>
-        );
-    }
-}
 
 export default class MapView extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -128,6 +118,7 @@ export default class MapView extends React.Component {
             routeTrackerClosed: false,
             trackerData: {}
         };
+        //GREAT CIRCLE
         const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
                 route.start.longitude,
@@ -139,13 +130,29 @@ export default class MapView extends React.Component {
             ]);
             return turf_great_circle(start, end, { name: route.id });
         });
-        const vesselsPositions = _.map(this.props.mapData.markers, marker => {
+        //MARKERS
+        const markers = _.map(this.props.mapData.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
                 marker.coordinate.latitude
             ];
-            return position;
+            const markerObject = {
+                type: 'Feature',
+                properties: {
+                    iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+                    id: marker.id,
+                    title: marker.title,
+                    description: marker.description,
+                    draggable: marker.draggable
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: position
+                }
+            };
+            return markerObject;
         });
+        //POLYLINES
         const polylines = _.map(this.props.mapData.polylines, polyLine => {
             return _.map(polyLine.coordinates, coords => {
                 const coordArray = [coords.longitude, coords.latitude];
@@ -181,17 +188,11 @@ export default class MapView extends React.Component {
                 };
             }
         });
+
+        //GENERATE GEOJSON
         this.GEOJson = {
             type: 'FeatureCollection',
             features: [
-                {
-                    type: 'Feature',
-                    properties: { type: 'vesselPosition' },
-                    geometry: {
-                        type: 'MultiPoint',
-                        coordinates: vesselsPositions
-                    }
-                },
                 {
                     type: 'Feature',
                     properties: { type: 'startingPoints' },
@@ -213,6 +214,7 @@ export default class MapView extends React.Component {
             ]
                 .concat(movingVessels)
                 .concat(planeRoutes)
+                .concat(markers)
         };
     }
 
@@ -266,83 +268,29 @@ export default class MapView extends React.Component {
         }
     }
 
-    _close() {
-        Actions.pop();
-    }
-
-    _renderCallOut(callOut) {
-        return (
-            <RNMapView.Callout>
-                <CallOut text={callOut.text} />
-            </RNMapView.Callout>
-        );
-    }
-
-    _renderMarkers(markers) {
-        return _.map(markers, (marker, index) => {
-            return (
-                <RNMapView.Marker {...marker} key={'marker' + index}>
-                    {this._renderCallOut(marker.callOut)}
-                </RNMapView.Marker>
-            );
-        });
-    }
-
-    _renderPolygons(polygons) {
-        return _.map(polygons, (polygon, index) => {
-            return <RNMapView.Polygon {...polygon} key={'polygon' + index} />;
-        });
-    }
-
-    _renderTrailArrows(polylines) {
-        return _.map(polylines, polyline => {
-            return polyline.coordinates.map((coo, index, coos) => {
-                if (index === coos.length - 1) {
-                    return;
-                }
-                let deltaLatitute = coos[index + 1].latitude - coo.latitude;
-                let deltaLongitude = coos[index + 1].longitude - coo.longitude;
-                let angle =
-                    -Math.atan2(deltaLatitute, deltaLongitude) *
-                    (180 / Math.PI);
-                let angleStringRad = angle + 'deg';
-                return (
-                    <RNMapView.Marker
-                        coordinate={coo}
-                        image={images.trail_arrow}
-                        anchor={{ x: 0.5, y: 0.5 }}
-                        style={{ transform: [{ rotateZ: angleStringRad }] }}
-                    />
-                );
-            });
-        });
-    }
-
-    _renderPolylines(polylines) {
-        return _.map(polylines, (polyline, index) => {
-            return (
-                <RNMapView.Polyline {...polyline} key={'polyline' + index} />
-            );
-        });
-    }
-
-    _renderCircles(circles) {
-        return _.map(circles, (circle, index) => {
-            return <RNMapView.Circle {...circle} key={'circle' + index} />;
-        });
-    }
-
-    __addDeltaValuesToMapData(mapData) {
-        const { width, height } = Dimensions.get('window');
-        const aspectRatio = width / height;
-        //Setting latitudeDelta to 0.0922 so that zoom radius is small
-        const latitudeDelta = 0.0922;
-        const longitudeDelta = latitudeDelta + aspectRatio;
-        //latitudeDelta and longitudeDelta determines the zoom level
-        mapData.region.latitudeDelta = latitudeDelta;
-        mapData.region.longitudeDelta = longitudeDelta;
-        return mapData;
-    }
+    // _renderTrailArrows(polylines) {
+    //     return _.map(polylines, polyline => {
+    //         return polyline.coordinates.map((coo, index, coos) => {
+    //             if (index === coos.length - 1) {
+    //                 return;
+    //             }
+    //             let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+    //             let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+    //             let angle =
+    //                 -Math.atan2(deltaLatitute, deltaLongitude) *
+    //                 (180 / Math.PI);
+    //             let angleStringRad = angle + 'deg';
+    //             return (
+    //                 <RNMapView.Marker
+    //                     coordinate={coo}
+    //                     image={images.trail_arrow}
+    //                     anchor={{ x: 0.5, y: 0.5 }}
+    //                     style={{ transform: [{ rotateZ: angleStringRad }] }}
+    //                 />
+    //             );
+    //         });
+    //     });
+    // }
 
     renderElements() {
         return (
@@ -361,15 +309,26 @@ export default class MapView extends React.Component {
                     filter={['==', 'type', 'movingVessel']}
                     style={layerStyles.movingVessel}
                 />
-                {/* STATIC POSITIONS OF VESSELS or SHARED LOCATIONS*/}
+                {/* MARKERS*/}
                 <Mapbox.SymbolLayer
-                    id="vesselsPositions"
-                    filter={['==', 'type', 'vesselPosition']}
-                    style={
-                        this.props.isSharedLocation
-                            ? layerStyles.sharedLocation
-                            : layerStyles.vesselPosition
-                    }
+                    id={MarkerIconTypes.ARROW}
+                    filter={['==', 'iconType', MarkerIconTypes.ARROW]}
+                    style={layerStyles.arrowMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.AIRCRAFT}
+                    filter={['==', 'iconType', MarkerIconTypes.AIRCRAFT]}
+                    style={layerStyles.aircraftMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.POI}
+                    filter={['==', 'iconType', MarkerIconTypes.POI]}
+                    style={layerStyles.poiMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.CIRCLE]}
+                    style={layerStyles.circleMarker}
                 />
             </Mapbox.ShapeSource>
         );
@@ -568,7 +527,6 @@ export default class MapView extends React.Component {
     }
 
     renderMap() {
-        // const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
             <Mapbox.MapView
                 ref={map => (this.map = map)}
