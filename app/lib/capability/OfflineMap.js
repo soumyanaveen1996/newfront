@@ -24,13 +24,13 @@ export default class OfflineMap {
     /**
      * Save locally a map pack of the specified area to use offline.
      * `northEastBound` and `southWestBound` are two objects, with `logitude` and `latitude` as properties, defining the rectangular area.
-     * @param {string} name used to manage and delete the saved map
+     * @param {string} name name assigned to the map pack in the database. Used to manage and delete the saved map
      * @param {Object} northEastBound coordinates of the north east limit
      * @param {Object} southWestBound coordinates of the south west limit
      * @param {number} [minZoom=0] from 0 to 19
      * @param {number} [maxZoom=16] from 0 to 19
      * @param {progressCallback} [progressListener] callback fired every 500ms that listens for status events while downloading the offline resource.
-     * @param {errorCallback} [errorListener] callback fired every 500ms that listens for status events while downloading the offline resource.
+     * @param {errorCallback} [errorListener] callback fired when the download terminates with an error.
      */
     static saveMap(
         name,
@@ -59,7 +59,7 @@ export default class OfflineMap {
     }
 
     /**
-     * Delete from local memory map pack named `name`.
+     * Delete from local database map pack named `name`.
      * @param {string} name name of the saved map pack
      */
     static deleteMap(name) {
@@ -78,7 +78,7 @@ export default class OfflineMap {
      * Subscribe to download status/error events for the requested offline map pack. Fired every 500ms.
      * @param {string} name name of the saved map pack
      * @param {progressCallback} [progressListener] callback fired every 500ms that listens for status events while downloading the offline resource.
-     * @param {errorCallback} [errorListener] callback fired every 500ms that listens for status events while downloading the offline resource.
+     * @param {errorCallback} [errorListener] callback fired when the download terminates with an error.
      */
     static subscribe(name, progressListener, errorListener) {
         Mapbox.offlineManager.subscribe(name, progressListener, errorListener);
