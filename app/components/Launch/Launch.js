@@ -69,9 +69,12 @@ export default class Splash extends React.Component {
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
 
-        var FirstServiceClient = NativeModules.FirstServiceClient;
-        FirstServiceClient.sayHello('FrontM GRPC', (err, response) => {
-            console.log('GRPC Error : ', err);
+        /*
+
+        var PingServiceClient = NativeModules.PingServiceClient;
+        console.log('hello : ', PingServiceClient);
+        PingServiceClient.pingWithCallback((error, response) => {
+            console.log('GRPC Error : ', error);
             console.log('GRPC Response : ', response);
         });
 
@@ -88,7 +91,7 @@ export default class Splash extends React.Component {
                 )
         );
 
-        QueueServiceClient.subscribeWithSessionId(null);
+        QueueServiceClient.subscribeWithSessionId(null); */
 
         if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode

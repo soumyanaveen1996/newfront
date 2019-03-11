@@ -174,6 +174,7 @@
 #ifdef __GLIBC__
 #define GPR_POSIX_CRASH_HANDLER 1
 #define GPR_LINUX_PTHREAD_NAME 1
+#include <linux/version.h>
 #else /* musl libc */
 #define GPR_MUSL_LIBC_COMPAT 1
 #endif
@@ -277,6 +278,47 @@
 #define GPR_POSIX_TIME 1
 #define GPR_GETPID_IN_UNISTD_H 1
 #define GPR_SUPPORT_CHANNELS_FROM_FD 1
+#ifdef _LP64
+#define GPR_ARCH_64 1
+#else /* _LP64 */
+#define GPR_ARCH_32 1
+#endif /* _LP64 */
+#elif defined(__sun) && defined(__SVR4)
+#define GPR_PLATFORM_STRING "solaris"
+#define GPR_SOLARIS 1
+#define GPR_CPU_POSIX 1
+#define GPR_GCC_ATOMIC 1
+#define GPR_GCC_TLS 1
+#define GPR_POSIX_LOG 1
+#define GPR_POSIX_ENV 1
+#define GPR_POSIX_TMPFILE 1
+#define GPR_POSIX_STRING 1
+#define GPR_POSIX_SUBPROCESS 1
+#define GPR_POSIX_SYNC 1
+#define GPR_POSIX_TIME 1
+#define GPR_GETPID_IN_UNISTD_H 1
+#ifdef _LP64
+#define GPR_ARCH_64 1
+#else /* _LP64 */
+#define GPR_ARCH_32 1
+#endif /* _LP64 */
+#elif defined(_AIX)
+#define GPR_PLATFORM_STRING "aix"
+#ifndef _ALL_SOURCE
+#define _ALL_SOURCE
+#endif
+#define GPR_AIX 1
+#define GPR_CPU_POSIX 1
+#define GPR_GCC_ATOMIC 1
+#define GPR_GCC_TLS 1
+#define GPR_POSIX_LOG 1
+#define GPR_POSIX_ENV 1
+#define GPR_POSIX_TMPFILE 1
+#define GPR_POSIX_STRING 1
+#define GPR_POSIX_SUBPROCESS 1
+#define GPR_POSIX_SYNC 1
+#define GPR_POSIX_TIME 1
+#define GPR_GETPID_IN_UNISTD_H 1
 #ifdef _LP64
 #define GPR_ARCH_64 1
 #else /* _LP64 */
@@ -420,11 +462,7 @@ typedef unsigned __int64 uint64_t;
 #define GPR_MAX_ALIGNMENT 16
 
 #ifndef GRPC_ARES
-#ifdef GPR_WINDOWS
-#define GRPC_ARES 0
-#else
 #define GRPC_ARES 1
-#endif
 #endif
 
 #ifndef GRPC_MUST_USE_RESULT
@@ -487,6 +525,15 @@ typedef unsigned __int64 uint64_t;
 #define GPR_ATTRIBUTE_NO_TSAN
 #endif /* GPR_ATTRIBUTE_NO_TSAN (2) */
 #endif /* GPR_ATTRIBUTE_NO_TSAN (1) */
+
+/* GRPC_TSAN_ENABLED will be defined, when compiled with thread sanitizer. */
+#if defined(__SANITIZE_THREAD__)
+#define GRPC_TSAN_ENABLED
+#elif defined(__has_feature)
+#if __has_feature(thread_sanitizer)
+#define GRPC_TSAN_ENABLED
+#endif
+#endif
 
 /* GRPC_ALLOW_EXCEPTIONS should be 0 or 1 if exceptions are allowed or not */
 #ifndef GRPC_ALLOW_EXCEPTIONS

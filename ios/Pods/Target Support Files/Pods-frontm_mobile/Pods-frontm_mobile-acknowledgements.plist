@@ -308,7 +308,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			<key>License</key>
 			<string>Mixed</string>
 			<key>Title</key>
-			<string>BoringSSL</string>
+			<string>BoringSSL-GRPC</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

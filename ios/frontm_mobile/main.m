@@ -10,15 +10,28 @@
 #import "AppDelegate.h"
 
 #import <GRPCClient/GRPCCall+ChannelArg.h>
+#import <GRPCClient/GRPCCall+ChannelCredentials.h>
 #import <GRPCClient/GRPCCall+Tests.h>
 
 
-static NSString * const kHostAddress = @"3.80.242.247:50051";
+
+
+static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 
 int main(int argc, char * argv[]) {
   @autoreleasepool {
-    [GRPCCall useInsecureConnectionsForHost:kHostAddress];
+
+    NSString *certsPath = [[NSBundle mainBundle] pathForResource:@"sectigoSHA2" ofType:@"ca-bundle"];
+    NSError *error;
+    NSString *contentInUTF8 = [NSString stringWithContentsOfFile:certsPath
+                                                        encoding:NSUTF8StringEncoding
+                                                           error:&error];
+
+    [GRPCCall setTLSPEMRootCerts:contentInUTF8
+                         forHost:kHostAddress
+                           error:nil];
+
     [GRPCCall setUserAgentPrefix:@"FrontM/1.0" forHost:kHostAddress];
     return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }

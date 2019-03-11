@@ -15,6 +15,6 @@ target 'frontm_mobile' do
 
   pod 'gRPC-ProtoRPC'
 
-  pod 'react-native-blur', :path => '../node_modules/react-native-blur'
+  #pod 'react-native-blur', :path => '../node_modules/react-native-blur'
 
 end

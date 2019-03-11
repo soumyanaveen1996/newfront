@@ -21,6 +21,9 @@ import TwilioVoice from 'react-native-twilio-programmable-voice';
 import { Message, MessageTypeConstants } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import { NativeModules, NativeEventEmitter } from 'react-native';
+
+const AuthServiceClient = NativeModules.AuthServiceClient;
 
 const USER_SESSION = 'userSession';
 
@@ -198,162 +201,107 @@ export default class Auth {
 
     static signupWithFrontm = userDetails =>
         new Promise((resolve, reject) => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.signupPath,
-                data: {
-                    user: userDetails
-                }
-            };
-            console.log('Signup options : ', options);
-            Network(options)
-                .then(result => {
-                    console.log('result : ', result.data);
-                    if (
-                        result.data.success === 'true' ||
-                        result.data.success === true
-                    ) {
+            AuthServiceClient.signup(userDetails, (err, result) => {
+                if (err) {
+                    reject(
+                        new AuthError(99, 'Error in Authenticating the user')
+                    );
+                } else {
+                    console.log('signup result : ', result);
+                    if (result.data.success === true) {
                         resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
-                })
-                .catch(error => {
-                    reject(
-                        new AuthError(99, 'Error in Authenticating the user')
-                    );
-                });
+                }
+            });
         });
 
     static confirmFrontmSignup = userDetails =>
         new Promise((resolve, reject) => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.signupconfirmPath,
-                data: {
-                    user: userDetails
-                }
-            };
-            console.log('confirmFrontmSignup options : ', options);
-            Network(options)
-                .then(result => {
-                    console.log('result : ', result.data);
-                    if (
-                        result.data.success === 'true' ||
-                        result.data.success === true
-                    ) {
+            AuthServiceClient.confirmSignup(userDetails, (err, result) => {
+                if (err) {
+                    reject(
+                        new AuthError(99, 'Error in Authenticating the user')
+                    );
+                } else {
+                    console.log('confirm signup result : ', result);
+                    if (result.data.success === true) {
                         resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
-                })
-                .catch(error => {
-                    reject(
-                        new AuthError(99, 'Error in Authenticating the user')
-                    );
-                });
+                }
+            });
         });
 
     static resendFrontmSignupCode = userDetails =>
         new Promise((resolve, reject) => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.resendSignupCodePath,
-                data: {
-                    user: userDetails
-                }
-            };
-            console.log('resendFrontmSignupCode options : ', options);
-            Network(options)
-                .then(result => {
-                    console.log('result : ', result.data);
-                    if (
-                        result.data.success === 'true' ||
-                        result.data.success === true
-                    ) {
+            AuthServiceClient.resendSignupCode(userDetails, (err, result) => {
+                if (err) {
+                    reject(
+                        new AuthError(99, 'Error in Authenticating the user')
+                    );
+                } else {
+                    console.log(
+                        'resendFrontmSignupCode signup result : ',
+                        result
+                    );
+                    if (result.data.success === true) {
                         resolve(result.data);
                     } else {
                         reject(new AuthError(98, result.data.message));
                     }
-                })
-                .catch(error => {
-                    reject(
-                        new AuthError(99, 'Error in Authenticating the user')
-                    );
-                });
+                }
+            });
         });
 
     static resetPassword = userDetails =>
         new Promise((resolve, reject) => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.resetSigninPath,
-                data: {
-                    user: userDetails
-                }
-            };
-            console.log('confirmFrontmSignup options : ', options);
-            Network(options)
-                .then(result => {
-                    console.log('result : ', result.data);
-                    if (
-                        result.data.success === 'true' ||
-                        result.data.success === true
-                    ) {
-                        resolve();
-                    } else {
-                        reject(new AuthError(98, result.data.message));
-                    }
-                })
-                .catch(error => {
+            AuthServiceClient.resetPassword(userDetails, (err, result) => {
+                if (err) {
                     reject(
                         new AuthError(99, 'Error in Authenticating the user')
                     );
-                });
+                } else {
+                    console.log(
+                        'resendFrontmSignupCode signup result : ',
+                        result
+                    );
+                    if (result.data.success === true) {
+                        resolve(result.data);
+                    } else {
+                        reject(new AuthError(98, result.data.message));
+                    }
+                }
+            });
         });
 
     static confirmReset = userDetails =>
         new Promise((resolve, reject) => {
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.resetConfirmPath,
-                data: {
-                    user: userDetails
-                }
-            };
-            console.log('resetConfirmPath options : ', options);
-            Network(options)
-                .then(result => {
-                    console.log('result : ', result.data);
-                    if (
-                        result.data.success === 'true' ||
-                        result.data.success === true
-                    ) {
-                        resolve();
+            AuthServiceClient.confirmPasswordReset(
+                userDetails,
+                (err, result) => {
+                    if (err) {
+                        reject(
+                            new AuthError(
+                                99,
+                                'Error in Authenticating the user'
+                            )
+                        );
                     } else {
-                        reject(new AuthError(98, result.data.message));
+                        console.log(
+                            'resendFrontmSignupCode signup result : ',
+                            result
+                        );
+                        if (result.data.success === true) {
+                            resolve(result.data);
+                        } else {
+                            reject(new AuthError(98, result.data.message));
+                        }
                     }
-                })
-                .catch(error => {
-                    reject(
-                        new AuthError(99, 'Error in Authenticating the user')
-                    );
-                });
+                }
+            );
         });
 
     static loginWithFrontm = (userDetails, conversationId, botName) =>
@@ -416,37 +364,35 @@ export default class Auth {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        const options = {
-                            method: 'post',
-                            url:
-                                config.proxy.protocol +
-                                config.proxy.host +
-                                config.proxy.deleteUserPath,
-                            headers: {
-                                sessionId: user.creds.sessionId,
-                                refresh_token: user.provider.refreshToken
-                            }
-                        };
-                        Network(options)
-                            .then(result => {
-                                if (
-                                    result.data.success === 'true' ||
-                                    result.data.success === true
-                                ) {
-                                    return Auth.logout();
-                                } else {
+                        AuthServiceClient.deleteUser(
+                            user.creds.sessionId,
+                            (err, result) => {
+                                if (err) {
                                     throw new AuthError(
-                                        98,
-                                        result.data.message
+                                        99,
+                                        'Error in Deleting the user'
                                     );
+                                } else {
+                                    console.log(
+                                        'delete user signup result : ',
+                                        result
+                                    );
+                                    if (result.data.success === true) {
+                                        return Auth.logout();
+                                    } else {
+                                        throw new AuthError(
+                                            98,
+                                            result.data.message
+                                        );
+                                    }
                                 }
-                            })
-                            .then(resolve)
-                            .catch(reject);
+                            }
+                        );
                     } else {
                         resolve();
                     }
                 })
+                .then(resolve)
                 .catch(reject);
         });
 
