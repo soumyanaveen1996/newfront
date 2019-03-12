@@ -42,6 +42,7 @@ import { Icons } from '../../config/icons';
 import { EmptyContact } from '../ContactsPicker';
 import { BackgroundImage } from '../BackgroundImage';
 const R = require('ramda');
+import Contacts from 'react-native-contacts';
 
 class NewCallContacts extends React.Component {
     constructor(props) {
@@ -54,22 +55,27 @@ class NewCallContacts extends React.Component {
         };
     }
 
-    async componentDidMount() {
-        Contact.getAddedContacts().then(contacts => {
-            // console.log('frotnm onctacts ===== ', contacts);
-
-            this.refresh(contacts);
-        });
-        if (
-            Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
-            this.props.summary
-        ) {
-            Actions.callSummary({
-                time: this.props.time,
-                contact: this.props.dialContact,
-                dialledNumber: this.props.dialledNumber
-            });
-            return;
+    componentDidMount() {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        this.gettingAllCOntactData();
+                    } else {
+                        Actions.pop();
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            this.gettingAllContactData();
         }
     }
 
@@ -78,23 +84,47 @@ class NewCallContacts extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            // this.refresh()
-            Contact.getAddedContacts().then(contacts => {
-                // console.log('frotnm onctacts ===== ', contacts);
-
-                this.refresh(contacts);
-            });
         }
 
         if (
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
-            Contact.getAddedContacts().then(contacts => {
-                this.refresh(contacts);
-            });
         }
     }
+
+    gettingAllContactData = () => {
+        let contactArray = [];
+
+        Contacts.getAll((err, contacts) => {
+            if (err) {
+                throw err;
+            }
+
+            contacts.forEach((data, index) => {
+                let contactName = '';
+                if (data.emailAddresses && data.emailAddresses.length > 0) {
+                    if (data.givenName && data.familyName) {
+                        contactName = data.givenName + ' ' + data.familyName;
+                    } else {
+                        contactName = data.givenName;
+                    }
+                    let contactObj = {
+                        userId: index,
+                        emails: [...data.emailAddresses],
+                        profileImage: data.thumbnailPath,
+                        userName: data.givenName,
+                        name: contactName,
+                        phoneNumbers: [...data.phoneNumbers],
+                        selected: false
+                    };
+                    contactArray.push(contactObj);
+                }
+            });
+
+            this.refresh(contactArray);
+        });
+    };
 
     static onEnter() {
         const user = Store.getState().user;
@@ -121,6 +151,7 @@ class NewCallContacts extends React.Component {
         const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
         const uniqId = R.eqProps('userId');
         const contactsUniq = R.uniqWith(uniqId)(contacts);
+
         const phoneContacts = contactsUniq.map(contact => ({
             ...contact,
             userName: contact.userName
@@ -175,6 +206,7 @@ class NewCallContacts extends React.Component {
             return;
         }
         const AddressBook = this.createAddressBook(contacts);
+
         let newAddressBook = AddressBook.filter(elem => {
             return elem.data.length > 0;
         });
@@ -227,10 +259,6 @@ class NewCallContacts extends React.Component {
         });
     }
 
-    onClickDialpad = () => {
-        Actions.dialCall();
-    };
-
     renderContactsList() {
         const sectionTitles = _.map(
             this.state.contactsData,
@@ -260,28 +288,6 @@ class NewCallContacts extends React.Component {
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
                     /> */}
-
-                    <TouchableOpacity
-                        style={{
-                            position: 'absolute',
-                            width: 160,
-                            height: 40,
-                            backgroundColor: 'rgba(47,199,111,1)',
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            bottom: '5%',
-                            alignSelf: 'center'
-                        }}
-                        onPress={() => this.onClickDialpad()}
-                    >
-                        <Image
-                            style={{ width: 11, height: 16, marginRight: 10 }}
-                            source={require('../../images/contact/tab-dialpad-icon-active.png')}
-                        />
-                        <Text style={{ color: '#fff' }}>DialPad</Text>
-                    </TouchableOpacity>
                 </View>
             );
         } else {
