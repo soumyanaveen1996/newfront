@@ -9,9 +9,9 @@ import {
     SafeAreaView,
     Alert,
     LayoutAnimation,
-    UIManager
+    UIManager,
+    Slider
 } from 'react-native';
-import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
@@ -24,25 +24,21 @@ import {
 } from '../../lib/network';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import Icons from '../../config/icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../config/images';
 import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import ContextSlideshow from './ContextSlideshow';
 import ChatModal from '../ChatBotScreen/ChatModal';
+import turf_great_circle from '@turf/great-circle';
+import turf_distance from '@turf/distance';
+import turf_helpers from '@turf/helpers';
+import GlobalColors from '../../config/styles';
+import { MarkerIconTypes } from './config';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
 );
-
-class CallOut extends React.Component {
-    render() {
-        return (
-            <View style={styles.callOutContainer}>
-                <Text style={styles.callOutText}>{this.props.text}</Text>
-            </View>
-        );
-    }
-}
 
 export default class MapView extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -117,15 +113,46 @@ export default class MapView extends React.Component {
                 ? this.props.mapData.options.cards
                 : [],
             chatModalContent: {},
-            isModalVisible: false
+            isModalVisible: false,
+            showRouteTracker: false,
+            routeTrackerClosed: false,
+            trackerData: {}
         };
-        const vesselsPositions = _.map(this.props.mapData.markers, marker => {
+        //GREAT CIRCLE
+        const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
+            let start = turf_helpers.point([
+                route.start.longitude,
+                route.start.latitude
+            ]);
+            let end = turf_helpers.point([
+                route.end.longitude,
+                route.end.latitude
+            ]);
+            return turf_great_circle(start, end, { name: route.id });
+        });
+        //MARKERS
+        const markers = _.map(this.props.mapData.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
                 marker.coordinate.latitude
             ];
-            return position;
+            const markerObject = {
+                type: 'Feature',
+                properties: {
+                    iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+                    id: marker.id,
+                    title: marker.title,
+                    description: marker.description,
+                    draggable: marker.draggable
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: position
+                }
+            };
+            return markerObject;
         });
+        //POLYLINES
         const polylines = _.map(this.props.mapData.polylines, polyLine => {
             return _.map(polyLine.coordinates, coords => {
                 const coordArray = [coords.longitude, coords.latitude];
@@ -161,17 +188,11 @@ export default class MapView extends React.Component {
                 };
             }
         });
+
+        //GENERATE GEOJSON
         this.GEOJson = {
             type: 'FeatureCollection',
             features: [
-                {
-                    type: 'Feature',
-                    properties: { type: 'vesselPosition' },
-                    geometry: {
-                        type: 'MultiPoint',
-                        coordinates: vesselsPositions
-                    }
-                },
                 {
                     type: 'Feature',
                     properties: { type: 'startingPoints' },
@@ -190,11 +211,15 @@ export default class MapView extends React.Component {
                         coordinates: polylines
                     }
                 }
-            ].concat(movingVessels)
+            ]
+                .concat(movingVessels)
+                .concat(planeRoutes)
+                .concat(markers)
         };
     }
 
     async componentDidMount() {
+        this.checkForRouteTracker();
         this.props.navigation.setParams({
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
@@ -204,10 +229,6 @@ export default class MapView extends React.Component {
             PollingStrategyEvents.changed,
             this.checkPollingStrategy.bind(this)
         );
-    }
-
-    componentWillMount() {
-        this.checkPollingStrategy();
     }
 
     readLambdaQueue() {
@@ -247,83 +268,29 @@ export default class MapView extends React.Component {
         }
     }
 
-    _close() {
-        Actions.pop();
-    }
-
-    _renderCallOut(callOut) {
-        return (
-            <RNMapView.Callout>
-                <CallOut text={callOut.text} />
-            </RNMapView.Callout>
-        );
-    }
-
-    _renderMarkers(markers) {
-        return _.map(markers, (marker, index) => {
-            return (
-                <RNMapView.Marker {...marker} key={'marker' + index}>
-                    {this._renderCallOut(marker.callOut)}
-                </RNMapView.Marker>
-            );
-        });
-    }
-
-    _renderPolygons(polygons) {
-        return _.map(polygons, (polygon, index) => {
-            return <RNMapView.Polygon {...polygon} key={'polygon' + index} />;
-        });
-    }
-
-    _renderTrailArrows(polylines) {
-        return _.map(polylines, polyline => {
-            return polyline.coordinates.map((coo, index, coos) => {
-                if (index === coos.length - 1) {
-                    return;
-                }
-                let deltaLatitute = coos[index + 1].latitude - coo.latitude;
-                let deltaLongitude = coos[index + 1].longitude - coo.longitude;
-                let angle =
-                    -Math.atan2(deltaLatitute, deltaLongitude) *
-                    (180 / Math.PI);
-                let angleStringRad = angle + 'deg';
-                return (
-                    <RNMapView.Marker
-                        coordinate={coo}
-                        image={images.trail_arrow}
-                        anchor={{ x: 0.5, y: 0.5 }}
-                        style={{ transform: [{ rotateZ: angleStringRad }] }}
-                    />
-                );
-            });
-        });
-    }
-
-    _renderPolylines(polylines) {
-        return _.map(polylines, (polyline, index) => {
-            return (
-                <RNMapView.Polyline {...polyline} key={'polyline' + index} />
-            );
-        });
-    }
-
-    _renderCircles(circles) {
-        return _.map(circles, (circle, index) => {
-            return <RNMapView.Circle {...circle} key={'circle' + index} />;
-        });
-    }
-
-    __addDeltaValuesToMapData(mapData) {
-        const { width, height } = Dimensions.get('window');
-        const aspectRatio = width / height;
-        //Setting latitudeDelta to 0.0922 so that zoom radius is small
-        const latitudeDelta = 0.0922;
-        const longitudeDelta = latitudeDelta + aspectRatio;
-        //latitudeDelta and longitudeDelta determines the zoom level
-        mapData.region.latitudeDelta = latitudeDelta;
-        mapData.region.longitudeDelta = longitudeDelta;
-        return mapData;
-    }
+    // _renderTrailArrows(polylines) {
+    //     return _.map(polylines, polyline => {
+    //         return polyline.coordinates.map((coo, index, coos) => {
+    //             if (index === coos.length - 1) {
+    //                 return;
+    //             }
+    //             let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+    //             let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+    //             let angle =
+    //                 -Math.atan2(deltaLatitute, deltaLongitude) *
+    //                 (180 / Math.PI);
+    //             let angleStringRad = angle + 'deg';
+    //             return (
+    //                 <RNMapView.Marker
+    //                     coordinate={coo}
+    //                     image={images.trail_arrow}
+    //                     anchor={{ x: 0.5, y: 0.5 }}
+    //                     style={{ transform: [{ rotateZ: angleStringRad }] }}
+    //                 />
+    //             );
+    //         });
+    //     });
+    // }
 
     renderElements() {
         return (
@@ -342,15 +309,26 @@ export default class MapView extends React.Component {
                     filter={['==', 'type', 'movingVessel']}
                     style={layerStyles.movingVessel}
                 />
-                {/* STATIC POSITIONS OF VESSELS or SHARED LOCATIONS*/}
+                {/* MARKERS*/}
                 <Mapbox.SymbolLayer
-                    id="vesselsPositions"
-                    filter={['==', 'type', 'vesselPosition']}
-                    style={
-                        this.props.isSharedLocation
-                            ? layerStyles.sharedLocation
-                            : layerStyles.vesselPosition
-                    }
+                    id={MarkerIconTypes.ARROW}
+                    filter={['==', 'iconType', MarkerIconTypes.ARROW]}
+                    style={layerStyles.arrowMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.AIRCRAFT}
+                    filter={['==', 'iconType', MarkerIconTypes.AIRCRAFT]}
+                    style={layerStyles.aircraftMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.POI}
+                    filter={['==', 'iconType', MarkerIconTypes.POI]}
+                    style={layerStyles.poiMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.CIRCLE]}
+                    style={layerStyles.circleMarker}
                 />
             </Mapbox.ShapeSource>
         );
@@ -376,6 +354,116 @@ export default class MapView extends React.Component {
                     onPress={this.locateUser.bind(this)}
                 >
                     {this.state.locateUserButtonIcon}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    checkForRouteTracker() {
+        let markerToTrack;
+        let routeToTrack = _.find(this.props.mapData.planeRoutes, route => {
+            return route.showTracker;
+        });
+        if (routeToTrack) {
+            markerToTrack = _.find(this.props.mapData.markers, marker => {
+                return routeToTrack.id === marker.id;
+            });
+            if (markerToTrack) {
+                const trackerData = {
+                    routeId: markerToTrack.id,
+                    startId: routeToTrack.start.id,
+                    endId: routeToTrack.end.id,
+                    startCoord: [
+                        routeToTrack.start.longitude,
+                        routeToTrack.start.latitude
+                    ],
+                    endCoord: [
+                        routeToTrack.end.longitude,
+                        routeToTrack.end.latitude
+                    ],
+                    currentCoord: [
+                        markerToTrack.coordinate.longitude,
+                        markerToTrack.coordinate.latitude
+                    ],
+                    arrivalTime: routeToTrack.end.time
+                };
+                this.setState({
+                    trackerData: trackerData,
+                    showRouteTracker: true
+                });
+                return;
+            }
+        }
+        this.setState({ showRouteTracker: false });
+    }
+
+    renderRouteTracker() {
+        const from = turf_helpers.point(this.state.trackerData.startCoord);
+        const to = turf_helpers.point(this.state.trackerData.endCoord);
+        const now = turf_helpers.point(this.state.trackerData.currentCoord);
+        const fullDistance = turf_distance(from, to);
+        const travelled = turf_distance(from, now);
+        const trackerValue =
+            JSON.stringify((travelled * 100) / fullDistance) + '%';
+
+        return (
+            <View
+                style={
+                    this.state.routeTrackerClosed
+                        ? styles.containerRSClosed
+                        : styles.containerRS
+                }
+            >
+                <View style={styles.leftContainerRS}>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.startId}
+                        </Text>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.endId}
+                        </Text>
+                    </View>
+                    {/* TRACKER */}
+                    <View style={styles.sliderTrackRS}>
+                        <View
+                            style={[
+                                styles.leftTrackRS,
+                                { width: trackerValue }
+                            ]}
+                        />
+                        <Image
+                            source={images.moving_maps_plane_blue_icon}
+                            style={styles.trackIconRS}
+                        />
+                    </View>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.bottomTextRS}>
+                            {this.state.trackerData.routeId}
+                        </Text>
+                        <Text style={styles.bottomTextRS}>
+                            Arriving at{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.arrivalTime}
+                            </Text>
+                        </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={styles.rightContainerRS}
+                    onPress={() => {
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
+                        this.setState({
+                            routeTrackerClosed: !this.state.routeTrackerClosed
+                        });
+                    }}
+                >
+                    {this.state.routeTrackerClosed
+                        ? Icons.planeRSWhite()
+                        : Icons.closeRouteSlider()}
                 </TouchableOpacity>
             </View>
         );
@@ -439,12 +527,11 @@ export default class MapView extends React.Component {
     }
 
     renderMap() {
-        // const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={11}
+                zoomLevel={this.props.mapData.region.zoom || 11}
                 centerCoordinate={[
                     this.props.mapData.region.longitude,
                     this.props.mapData.region.latitude
@@ -501,6 +588,7 @@ export default class MapView extends React.Component {
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderButtons()}
+                {this.state.showRouteTracker ? this.renderRouteTracker() : null}
                 <ContextSlideshow
                     contentData={this.state.slideshowContext || []}
                     isOpen={this.state.slideshowOpen}
