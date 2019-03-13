@@ -555,5 +555,44 @@ export default StyleSheet.create({
                 marginTop: 2
             }
         })
+    },
+
+    //CHANNEL ADMIN
+    adminContainer: {
+        backgroundColor: GlobalColors.white
+    },
+    adminTopArea: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        paddingVertical: 30
+    },
+    adminLogo: {
+        height: 90,
+        width: 90
+    },
+    adminTopRightArea: {
+        marginLeft: 5
+    },
+    adminH1: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: GlobalColors.grey
+    },
+    adminH2: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: GlobalColors.grey
+    },
+    adminH3: {
+        fontSize: 14,
+        fontWeight: '100',
+        color: GlobalColors.grey
+    },
+    adminRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 25,
+        paddingHorizontal: 20
     }
 });

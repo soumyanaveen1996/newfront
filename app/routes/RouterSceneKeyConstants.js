@@ -8,6 +8,7 @@ const ROUTER_SCENE_KEYS = {
     channelChat: 'channelChat',
     channelsFilter: 'channelsFilter',
     newChannels: 'newChannels',
+    channelAdminScreen: 'channelAdminScreen',
     addressBookScreen: 'addressBookScreen',
     addParticipants: 'addParticipants',
     selectTeam: 'selectTeam',

@@ -351,7 +351,7 @@ class ChannelsList extends React.Component {
                 onSubscribed={this.onChannelSubscribed}
                 onSubscribeFailed={this.onChannelsubscribeFailed}
                 onChannelTapped={this.onChannelTapped.bind(this)}
-                onChannelEdit={() => this.editChannel(channel)}
+                onChannelEdit={this.editChannel.bind(this, channel)}
             />
         );
     };
@@ -375,13 +375,12 @@ class ChannelsList extends React.Component {
         );
     }
 
-    editChannel = channel => {
-        Actions.newChannels({
+    editChannel(channel) {
+        Actions.channelAdminScreen({
             title: 'Edit Channel',
-            channel,
-            edit: true
+            channel: channel
         });
-    };
+    }
 
     onPressFilter() {
         Actions.channelsFilter({

@@ -18,6 +18,7 @@ import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
 import moment from 'moment';
 import ActionSheet from '@yfuks/react-native-action-sheet';
+import { Actions } from 'react-native-router-flux';
 
 const subtitleNumberOfLines = 2;
 
@@ -147,31 +148,29 @@ export default class ChannelsListItem extends React.Component {
                 <TouchableOpacity
                     style={styles.rightContainer}
                     onPress={() => {
-                        // this.ActionSheetOwner.show()
-                        ActionSheet.showActionSheetWithOptions(
-                            {
-                                options: ['Edit', 'Cancel'],
-                                cancelButtonIndex: 1,
-                                destructiveButtonIndex: 1,
-                                tintColor: 'blue'
-                            },
-                            buttonIndex => {
-                                if (
-                                    buttonIndex !== undefined &&
-                                    buttonIndex === 0
-                                ) {
-                                    this.editChannel(channel);
-                                }
-                            }
-                        );
+                        // ActionSheet.showActionSheetWithOptions(
+                        //     {
+                        //         options: ['Edit', 'Cancel'],
+                        //         cancelButtonIndex: 1,
+                        //         destructiveButtonIndex: 1,
+                        //         tintColor: 'blue'
+                        //     },
+                        //     buttonIndex => {
+                        //         if (
+                        //             buttonIndex !== undefined &&
+                        //             buttonIndex === 0
+                        //         ) {
+                        //             this.editChannel(channel);
+                        //         }
+                        //     }
+                        // );
+                        this.editChannel(channel);
                     }}
                 >
-                    {Icons.more()}
+                    {Icons.editChannel()}
                 </TouchableOpacity>
             );
-        }
-
-        if (channel.subcription === 'true') {
+        } else if (channel.subcription === 'true') {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}
@@ -198,8 +197,7 @@ export default class ChannelsListItem extends React.Component {
                     {Icons.more()}
                 </TouchableOpacity>
             );
-        }
-        if (channel.subcription === 'false') {
+        } else {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}

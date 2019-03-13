@@ -103,13 +103,16 @@ class AddContacts extends React.Component {
     }
 
     componentDidMount() {
+        console.log('>>>>>1');
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
         if (this.props.channels.participants.length > 0) {
+            console.log('>>>>>2');
             this.setState({ contacts: this.props.channels.participants });
             return;
         }
 
         if (this.props.appState.contactsLoaded) {
+            console.log('>>>>>3');
             Contact.getAddedContacts().then(contacts => {
                 const allContacts = contacts.map(contact => ({
                     ...contact,
@@ -121,6 +124,7 @@ class AddContacts extends React.Component {
                 this.setState({ contacts: contactsUniq });
             });
         } else {
+            console.log('>>>>>4');
             Contact.refreshContacts();
         }
     }

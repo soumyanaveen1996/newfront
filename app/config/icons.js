@@ -369,6 +369,13 @@ export const Icons = {
         'material-community',
         15,
         GlobalColors.white
+    ),
+    //CHANNELS
+    editChannel: icon(
+        'md-create-outline',
+        'ionicon',
+        20,
+        GlobalColors.sideButtons
     )
 };
 
