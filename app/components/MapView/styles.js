@@ -333,13 +333,17 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.moving_maps_plane,
-        iconSize: 1.5
+        iconSize: 1.5,
+        iconRotationAlignment: 'map',
+        iconRotate: Mapbox.StyleSheet.identity('rotation')
     },
     arrowMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.maps_maritime_icon,
-        iconSize: 1.5
+        iconSize: 1.5,
+        iconRotationAlignment: 'map',
+        iconRotate: Mapbox.StyleSheet.identity('rotation')
     }
 });
 
