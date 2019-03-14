@@ -260,28 +260,6 @@ class NewCallContacts extends React.Component {
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
                     /> */}
-
-                    <TouchableOpacity
-                        style={{
-                            position: 'absolute',
-                            width: 160,
-                            height: 40,
-                            backgroundColor: 'rgba(47,199,111,1)',
-                            borderRadius: 20,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            bottom: '5%',
-                            alignSelf: 'center'
-                        }}
-                        onPress={() => this.onClickDialpad()}
-                    >
-                        <Image
-                            style={{ width: 11, height: 16, marginRight: 10 }}
-                            source={require('../../images/contact/tab-dialpad-icon-active.png')}
-                        />
-                        <Text style={{ color: '#fff' }}>DialPad</Text>
-                    </TouchableOpacity>
                 </View>
             );
         } else {
@@ -336,6 +314,27 @@ class NewCallContacts extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     {this.renderContactsList()}
+                    <TouchableOpacity
+                        style={{
+                            position: 'absolute',
+                            width: 160,
+                            height: 40,
+                            backgroundColor: 'rgba(47,199,111,1)',
+                            borderRadius: 20,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            bottom: '5%',
+                            alignSelf: 'center'
+                        }}
+                        onPress={() => this.onClickDialpad()}
+                    >
+                        <Image
+                            style={{ width: 11, height: 16, marginRight: 10 }}
+                            source={require('../../images/contact/tab-dialpad-icon-active.png')}
+                        />
+                        <Text style={{ color: '#fff' }}>DialPad</Text>
+                    </TouchableOpacity>
                     <Modal
                         isVisible={this.state.contactVisible}
                         onBackdropPress={() => {

@@ -66,7 +66,7 @@ class NewCallContacts extends React.Component {
             )
                 .then(granted => {
                     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        this.gettingAllCOntactData();
+                        this.gettingAllContactData();
                     } else {
                         Actions.pop();
                     }
@@ -103,23 +103,22 @@ class NewCallContacts extends React.Component {
 
             contacts.forEach((data, index) => {
                 let contactName = '';
-                if (data.emailAddresses && data.emailAddresses.length > 0) {
-                    if (data.givenName && data.familyName) {
-                        contactName = data.givenName + ' ' + data.familyName;
-                    } else {
-                        contactName = data.givenName;
-                    }
-                    let contactObj = {
-                        userId: index,
-                        emails: [...data.emailAddresses],
-                        profileImage: data.thumbnailPath,
-                        userName: data.givenName,
-                        name: contactName,
-                        phoneNumbers: [...data.phoneNumbers],
-                        selected: false
-                    };
-                    contactArray.push(contactObj);
+
+                if (data.givenName && data.familyName) {
+                    contactName = data.givenName + ' ' + data.familyName;
+                } else {
+                    contactName = data.givenName;
                 }
+                let contactObj = {
+                    userId: index,
+                    emails: [...data.emailAddresses],
+                    profileImage: data.thumbnailPath,
+                    userName: data.givenName,
+                    name: contactName,
+                    phoneNumbers: [...data.phoneNumbers],
+                    selected: false
+                };
+                contactArray.push(contactObj);
             });
 
             this.refresh(contactArray);
