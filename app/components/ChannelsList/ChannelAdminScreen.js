@@ -8,13 +8,7 @@ import {
     Image,
     Alert
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
-import RadioForm, {
-    RadioButton,
-    RadioButtonInput,
-    RadioButtonLabel
-} from 'react-native-simple-radio-button';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import styles from './styles';
@@ -29,11 +23,6 @@ import {
 } from '../../redux/actions/ChannelActions';
 import { setCurrentScene } from '../../redux/actions/UserActions';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import Store from '../../redux/store/configureStore';
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp
-} from 'react-native-responsive-screen';
 import { Auth } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
@@ -187,6 +176,14 @@ class ChannelAdminScreen extends React.Component {
         });
     }
 
+    setOwner() {
+        Actions.setChannelOwner({
+            channel: this.channel,
+            participants: this.state.participants,
+            admins: this.state.admins
+        });
+    }
+
     renderTopArea() {
         return (
             <View style={styles.adminTopArea}>
@@ -215,7 +212,10 @@ class ChannelAdminScreen extends React.Component {
                     <Text style={styles.adminH2}>Add to favourite</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.setOwner.bind(this)}
+                >
                     <Text style={styles.adminH2}>Transfer ownership</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
@@ -279,6 +279,7 @@ class ChannelAdminScreen extends React.Component {
                     {Icons.formMessageArrow()}
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
+                <View style={styles.emptyComponent} />
             </View>
         );
     }

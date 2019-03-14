@@ -372,11 +372,12 @@ export const Icons = {
     ),
     //CHANNELS
     editChannel: icon(
-        'md-create-outline',
-        'ionicon',
+        'pencil',
+        'material-community',
         20,
         GlobalColors.sideButtons
-    )
+    ),
+    redWarning: icon('alert', 'material-community', 20, GlobalColors.red)
 };
 
 export default Icons;

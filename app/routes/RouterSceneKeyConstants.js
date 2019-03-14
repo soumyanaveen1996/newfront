@@ -9,6 +9,7 @@ const ROUTER_SCENE_KEYS = {
     channelsFilter: 'channelsFilter',
     newChannels: 'newChannels',
     channelAdminScreen: 'channelAdminScreen',
+    setChannelOwner: 'setChannelOwner',
     addressBookScreen: 'addressBookScreen',
     addParticipants: 'addParticipants',
     selectTeam: 'selectTeam',

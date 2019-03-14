@@ -430,7 +430,7 @@ export default class Channel {
                 .catch(reject);
         });
 
-    static setChannelOwner = (channelName, userDomain) =>
+    static setChannelOwner = (channelName, userDomain, newOwnerId) =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {

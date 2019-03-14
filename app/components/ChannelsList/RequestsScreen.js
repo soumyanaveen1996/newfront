@@ -1,10 +1,11 @@
-import react from 'react';
+import React from 'react';
 import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import ProfileImage from '../ProfileImage';
 import images from '../../images';
 import { Channel } from '../../lib/capability';
 import _ from 'lodash';
+import ContactStyles from '../ContactsPicker/styles';
 
 export default class RequestsScreen extends React.Component {
     constructor(props) {
@@ -57,11 +58,11 @@ export default class RequestsScreen extends React.Component {
                     <ProfileImage
                         uuid={item.userId}
                         placeholder={images.user_image}
-                        style={styles.propic}
-                        placeholderStyle={styles.propic}
+                        style={ContactStyles.contactItemImage}
+                        placeholderStyle={ContactStyles.contactItemImage}
                         resizeMode="contain"
                     />
-                    <Text style={styles.adminH1}>{item.userName}</Text>
+                    <Text style={styles.participantName}>{item.userName}</Text>
                 </View>
                 <View>
                     <TouchableOpacity

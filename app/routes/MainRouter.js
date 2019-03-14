@@ -70,6 +70,7 @@ import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScr
 import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
 import { Multiselection } from '../components/Multiselection';
 import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
+import SetChannelOwner from '../components/ChannelsList/SetChannelOwner';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -413,6 +414,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.requestsScreen}
                                         title={I18n.t('Awaiting authorization')}
                                         component={RequestsScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.setChannelOwner}
+                                        title={I18n.t('Transfer ownership')}
+                                        component={SetChannelOwner}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}

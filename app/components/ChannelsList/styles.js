@@ -564,12 +564,14 @@ export default StyleSheet.create({
 
     //CHANNEL ADMIN
     adminContainer: {
-        backgroundColor: GlobalColors.white
+        backgroundColor: GlobalColors.white,
+        paddingTop: 30,
+        flex: 1
     },
     adminTopArea: {
         flexDirection: 'row',
-        paddingHorizontal: 15,
-        paddingVertical: 30
+        paddingBottom: 30,
+        paddingHorizontal: 15
     },
     adminLogo: {
         height: 90,
@@ -628,5 +630,63 @@ export default StyleSheet.create({
     requestAcceptText: {
         fontSize: 16,
         color: GlobalColors.white
+    },
+    ownerRowLeft: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    ownerModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    ownerModalContainer: {
+        width: '90%',
+        aspectRatio: 1,
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+        paddingVertical: 35,
+        borderRadius: 10,
+        backgroundColor: GlobalColors.white
+    },
+    ownerModalButtonArea: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    ownerModalWarningArea: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    ownerModalButtonCancel: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '45%',
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.white
+    },
+    ownerModalButtonYes: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '45%',
+        height: 35,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.sideButtons
+    },
+    newOwnerTitle: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: GlobalColors.grey,
+        marginTop: 60,
+        marginBottom: 20
+    },
+    emptyComponent: {
+        height: 40
     }
 });
