@@ -511,67 +511,6 @@ class MapView extends React.Component {
     }
 
     zoomOut() {
-        this.MAPDATATEST = {
-            region: {
-                latitude: 15.5528,
-                longitude: 110.433,
-                zoom: 10
-            },
-            options: {
-                mapId: 1234,
-                cards: [
-                    {
-                        cardId: 1234,
-                        cardType: 'Type',
-                        design: 'small', //small or big
-                        title: 'Title',
-                        description: 'description',
-                        imageurl: '',
-                        seeMoreUrl: '',
-                        data: {
-                            title: 'field1 contact',
-                            field2: 12345,
-                            field3: true,
-                            field4: 'etc',
-                            field5: 'etc'
-                        }
-                    }
-                ]
-            },
-            markers: [
-                {
-                    id: 'AK137',
-                    title: 'AK137',
-                    description: 'AK137',
-                    draggable: false,
-                    coordinate: {
-                        latitude: 15.5528,
-                        longitude: 110.433,
-                        direction: 214.762
-                    },
-                    iconType: 'aircraft'
-                }
-            ],
-            planeRoutes: [
-                {
-                    id: 'AK137',
-                    start: {
-                        id: 'HKG',
-                        time: '18:15:00',
-                        latitude: 15.5528,
-                        longitude: 110.433
-                    },
-                    end: {
-                        id: 'KUL',
-                        time: '22:20:00',
-                        latitude: 2.755672,
-                        longitude: 101.70539
-                    },
-                    showTracker: true
-                }
-            ]
-        };
-        this.props.setOpenMap(this.MAPDATATEST);
         this.map.getZoom().then(zoom => {
             this.map.getCenter().then(center => {
                 this.map.setCamera({
