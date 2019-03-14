@@ -550,6 +550,25 @@ export default class MapView extends React.Component {
         );
     }
 
+    renderSlideShow() {
+        if (
+            this.state.slideshowContext &&
+            this.state.slideshowContext.length > 0
+        ) {
+            return (
+                <ContextSlideshow
+                    contentData={this.state.slideshowContext}
+                    isOpen={this.state.slideshowOpen}
+                    closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
+                        this
+                    )}
+                    onDataCardSelected={this.openModalWithContent.bind(this)}
+                    onCardSelected={this.props.onAction || null}
+                />
+            );
+        }
+    }
+
     closeAndOpenSlideshow() {
         if (Platform.OS === 'ios') {
             LayoutAnimation.configureNext(
@@ -589,15 +608,7 @@ export default class MapView extends React.Component {
                 {this.renderMap()}
                 {this.renderButtons()}
                 {this.state.showRouteTracker ? this.renderRouteTracker() : null}
-                <ContextSlideshow
-                    contentData={this.state.slideshowContext || []}
-                    isOpen={this.state.slideshowOpen}
-                    closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
-                        this
-                    )}
-                    onDataCardSelected={this.openModalWithContent.bind(this)}
-                    onCardSelected={this.props.onAction || null}
-                />
+                {this.renderSlideShow()}
                 {this.renderChatModal()}
             </SafeAreaView>
         );
