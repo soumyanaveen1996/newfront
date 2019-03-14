@@ -75,7 +75,6 @@ export default class SetChannelOwner extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log('>>>>>>OWN constr', this.props);
         this.state = {
             showModal: false
         };
@@ -89,13 +88,18 @@ export default class SetChannelOwner extends React.Component {
     }
 
     ownerSelected() {
-        this.setState({ showModal: false });
         Channel.setChannelOwner(
             this.props.channel.channelName,
             this.props.channel.userDomain,
             this.state.owner.userId
-        );
-        Actions.popTo(ROUTER_SCENE_KEYS.channelsList);
+        )
+            .then(() => {
+                this.setState({ showModal: false });
+                Actions.popTo(ROUTER_SCENE_KEYS.channelsList);
+            })
+            .catch(e => {
+                this.setState({ showModal: false });
+            });
     }
 
     renderItem({ item }) {

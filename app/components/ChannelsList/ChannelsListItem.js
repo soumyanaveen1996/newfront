@@ -40,7 +40,7 @@ export default class ChannelsListItem extends React.Component {
     unsubscribeChannel() {}
 
     editChannel = channel => {
-        this.props.onChannelEdit(channel);
+        this.props.onChannelEdit(channel, this.onUnsubscribeChannel);
     };
 
     onItemPressed() {
@@ -49,38 +49,41 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
-    onUnsubscribeChannel = () => {
-        console.log('unsubscribe', this.props.channel);
-        this.setState({
-            loading: true
-        });
-
-        this.props.wait(true);
-
-        const { channel } = this.props;
-
-        Channel.unsubscribeChannel(channel.channelName, channel.userDomain)
-            .then(() => {
-                return Conversation.deleteChannelConversation(
-                    channel.channelId
-                );
-            })
-            .then(() => {
-                return MessageDAO.deleteBotMessages(channel.channelId);
-            })
-            .then(() => {
-                this.props.onUnsubscribe(this.props.channel);
-                this.setState({
-                    loading: false
-                });
-                this.props.wait(false);
-            })
-            .catch(error => {
-                this.props.onUnsubscribeFailed(this.props.channel);
-                this.setState({ loading: false });
-                this.props.wait(false);
+    onUnsubscribeChannel = () =>
+        new Promise((resolve, reject) => {
+            console.log('unsubscribe', this.props.channel);
+            this.setState({
+                loading: true
             });
-    };
+
+            this.props.wait(true);
+
+            const { channel } = this.props;
+
+            Channel.unsubscribeChannel(channel.channelName, channel.userDomain)
+                .then(() => {
+                    return Conversation.deleteChannelConversation(
+                        channel.channelId
+                    );
+                })
+                .then(() => {
+                    return MessageDAO.deleteBotMessages(channel.channelId);
+                })
+                .then(() => {
+                    this.props.onUnsubscribe(this.props.channel);
+                    this.setState({
+                        loading: false
+                    });
+                    this.props.wait(false);
+                })
+                .then(resolve)
+                .catch(error => {
+                    this.props.onUnsubscribeFailed(this.props.channel);
+                    this.setState({ loading: false });
+                    this.props.wait(false);
+                    reject(error);
+                });
+        });
 
     onsubscribeChannel = (channel, open = false) => {
         console.log('subscribe', channel);

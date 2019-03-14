@@ -165,8 +165,8 @@ export default class Channel {
                             data: {
                                 action: 'Unsubscribe',
                                 botId: SystemBot.channelsBot.botId,
-                                userDomain,
-                                channelName
+                                userDomain: userDomain,
+                                channelName: channelName
                             }
                         };
                         return Network(options);
@@ -175,18 +175,17 @@ export default class Channel {
                 .then(response => {
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
-                        reject(new ChannelError(+err));
-                    } else {
-                        let err = _.get(response, 'data.error');
-                        if (err !== '0' && err !== 0) {
-                            reject(new ChannelError(+err));
+                        if (err === 98) {
+                            reject(98);
                         } else {
-                            return ChannelDAO.updateChannelSubscription(
-                                channelName,
-                                userDomain,
-                                'false'
-                            );
+                            reject(new ChannelError(+err));
                         }
+                    } else {
+                        return ChannelDAO.updateChannelSubscription(
+                            channelName,
+                            userDomain,
+                            'false'
+                        );
                     }
                 })
                 .then(resolve)
@@ -452,8 +451,13 @@ export default class Channel {
                     return Network(options);
                 })
                 .then(res => {
-                    resolve(res.data.content);
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    }
+                    return Channel.refreshChannels();
                 })
+                .then(resolve)
                 .catch(reject);
         });
 

@@ -4,9 +4,8 @@ import {
     ScrollView,
     Text,
     TouchableOpacity,
-    TextInput,
-    Image,
-    Alert
+    Alert,
+    Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
@@ -28,6 +27,7 @@ import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
 import config from '../../config/config';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 const SeparatorSize = {
     SMALL: 2,
@@ -184,6 +184,24 @@ class ChannelAdminScreen extends React.Component {
         });
     }
 
+    unsubscribe() {
+        this.props
+            .onUnsubscribeChannel(this.channel)
+            .then(() => {
+                Actions.pop();
+            })
+            .catch(e => {
+                if (e === 98) {
+                    this.refs.toast.show(
+                        'You are the only admin',
+                        DURATION.LENGTH_SHORT
+                    );
+                }
+            });
+    }
+
+    deleteChannel() {} //miss
+
     renderTopArea() {
         return (
             <View style={styles.adminTopArea}>
@@ -219,13 +237,19 @@ class ChannelAdminScreen extends React.Component {
                     <Text style={styles.adminH2}>Transfer ownership</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.unsubscribe.bind(this)}
+                >
                     <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
                         Leave channel
                     </Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.deleteChannel.bind(this)}
+                >
                     <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
                         Delete channel
                     </Text>
@@ -295,6 +319,14 @@ class ChannelAdminScreen extends React.Component {
         );
     }
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <ScrollView style={styles.adminContainer}>
@@ -303,6 +335,7 @@ class ChannelAdminScreen extends React.Component {
                 {this.renderAdminArea()}
                 {this.renderSeparator(SeparatorSize.BIG)}
                 {this.renderParticipantsArea()}
+                {this.renderToast()}
             </ScrollView>
         );
     }
