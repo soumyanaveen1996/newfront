@@ -24,8 +24,7 @@ export default {
         titleStyle: {
             fontFamily: 'SF Pro Text',
             fontSize: 16,
-            fontWeight: '400',
-            color: 'red'
+            fontWeight: '400'
         }
     }
 };

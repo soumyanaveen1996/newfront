@@ -143,7 +143,8 @@ export default class MapView extends React.Component {
                     id: marker.id,
                     title: marker.title,
                     description: marker.description,
-                    draggable: marker.draggable
+                    draggable: marker.draggable,
+                    rotation: marker.coordinate.direction - 90
                 },
                 geometry: {
                     type: 'Point',
