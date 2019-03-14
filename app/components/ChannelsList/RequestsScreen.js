@@ -46,6 +46,10 @@ export default class RequestsScreen extends React.Component {
         });
     }
 
+    updateParent() {
+        this.props.onDone(this.state.pendingUsers);
+    }
+
     renderItem({ item }) {
         return (
             <View style={styles.adminRow}>

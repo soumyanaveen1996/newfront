@@ -188,10 +188,10 @@ class AddContacts extends React.Component {
             const selectedContacts = _.filter(this.state.contacts, contact => {
                 return contact.selected;
             });
-            const users = _.map(selectedContacts, contact => {
-                return contact.userId;
-            });
-            this.props.onSelected(users);
+            // const users = _.map(selectedContacts, contact => {
+            //     return contact.userId;
+            // });
+            this.props.onSelected(selectedContacts);
         }
         this.props.setParticipants(this.state.contacts);
         Actions.pop();

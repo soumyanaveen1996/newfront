@@ -109,7 +109,8 @@ class ChannelAdminScreen extends React.Component {
         super(props);
         this.state = {
             participants: [],
-            admins: []
+            admins: [],
+            pendingRequests: []
         };
         this.channel = this.props.channel;
     }
@@ -150,15 +151,40 @@ class ChannelAdminScreen extends React.Component {
     manageParticipants() {
         this.props.setParticipants(this.state.participants);
         this.props.setTeam(this.channel.userDomain);
-        Actions.addParticipants();
+        Actions.addParticipants({
+            onSelected: this.setParticipants.bind(this)
+        });
     }
 
-    manageRequests() {}
+    setParticipants() {
+        //missing unsubscribe other users
+    }
+
+    manageRequests() {
+        Actions.requestsScreen({
+            pendingUsers: this.state.pendingRequests,
+            onDone: this.updateRequests.bind(this)
+        });
+    }
+
+    updateRequests(pendingRequests) {
+        this.setState({ pendingRequests: pendingRequests });
+    }
 
     manageAdmins() {
         this.props.setParticipants(this.state.admins);
         this.props.setTeam(this.channel.userDomain);
-        Actions.addParticipants();
+        Actions.addParticipants({ onSelected: this.setAdmins.bind(this) });
+    }
+
+    setAdmins(admins) {
+        Channel.updateAdmins(
+            this.channel.channelName,
+            this.channel.userDomain,
+            admins
+        ).then(() => {
+            this.setState({ admins: admins });
+        });
     }
 
     renderTopArea() {
@@ -224,7 +250,8 @@ class ChannelAdminScreen extends React.Component {
                             Participants awaiting authorization
                         </Text>
                         <Text style={styles.adminH3}>
-                            Pending authotization:
+                            Pending authotization:{' '}
+                            {this.state.pendingRequests.length}
                         </Text>
                     </View>
                     {Icons.formMessageArrow()}

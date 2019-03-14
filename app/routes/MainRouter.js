@@ -48,6 +48,7 @@ import { ChannelsList } from '../components/ChannelsList';
 import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
 import NewChannels from '../components/ChannelsList/NewChannels';
 import AddContacts from '../components/ChannelsList/AddContacts';
+import RequestsScreen from '../components/ChannelsList/RequestsScreen';
 import SelectTeam from '../components/ChannelsList/SelectTeam';
 import ChannelAdminScreen from '../components/ChannelsList/ChannelAdminScreen';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
@@ -407,6 +408,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.addParticipants}
                                         title={I18n.t('Add_participants')}
                                         component={AddContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.requestsScreen}
+                                        title={I18n.t('Awaiting authorization')}
+                                        component={RequestsScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}
