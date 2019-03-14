@@ -103,28 +103,36 @@ class AddContacts extends React.Component {
     }
 
     componentDidMount() {
-        console.log('>>>>>1');
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
-        if (this.props.channels.participants.length > 0) {
-            console.log('>>>>>2');
-            this.setState({ contacts: this.props.channels.participants });
-            return;
-        }
 
         if (this.props.appState.contactsLoaded) {
-            console.log('>>>>>3');
             Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
-                    ...contact,
-                    selected: false
-                }));
-
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
+                const localContacts = _.map(contacts, contact => {
+                    return {
+                        ...contact,
+                        selected: false
+                    };
+                });
+                const participants = _.map(
+                    this.props.channels.participants,
+                    part => {
+                        return {
+                            ...part,
+                            selected: true
+                        };
+                    }
+                );
+                let contactsUniq = _.unionBy(
+                    participants,
+                    localContacts,
+                    'userId'
+                );
+                contactsUniq = _.sortBy(contactsUniq, 'userName');
+                // const uniqId = R.eqProps('userId');
+                // const contactsUniq = R.uniqWith(uniqId)(allContacts);
                 this.setState({ contacts: contactsUniq });
             });
         } else {
-            console.log('>>>>>4');
             Contact.refreshContacts();
         }
     }
@@ -135,13 +143,29 @@ class AddContacts extends React.Component {
             this.props.appState.contactsLoaded
         ) {
             Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
-                    ...contact,
-                    selected: false
-                }));
-
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
+                const localContacts = _.map(contacts, contact => {
+                    return {
+                        ...contact,
+                        selected: false
+                    };
+                });
+                const participants = _.map(
+                    this.props.channels.participants,
+                    part => {
+                        return {
+                            ...part,
+                            selected: true
+                        };
+                    }
+                );
+                let contactsUniq = _.unionBy(
+                    participants,
+                    localContacts,
+                    'userId'
+                );
+                contactsUniq = _.sortBy(contactsUniq, 'userName');
+                // const uniqId = R.eqProps('userId');
+                // const contactsUniq = R.uniqWith(uniqId)(allContacts);
                 this.setState({ contacts: contactsUniq });
             });
         }
@@ -209,11 +233,6 @@ class AddContacts extends React.Component {
             ...styleButton
         } = styles.filterButtonContainer;
 
-        selectedAvatarStyle = {
-            height: 30,
-            width: 30,
-            borderRadius: 15
-        };
         const allContacts = this.state.contacts.filter(contact =>
             contact.userName
                 .toLowerCase()
@@ -253,9 +272,9 @@ class AddContacts extends React.Component {
                                                     placeholder={
                                                         images.user_image
                                                     }
-                                                    style={selectedAvatarStyle}
+                                                    style={styles.propic}
                                                     placeholderStyle={
-                                                        selectedAvatarStyle
+                                                        styles.propic
                                                     }
                                                     resizeMode="contain"
                                                 />

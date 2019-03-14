@@ -556,6 +556,11 @@ export default StyleSheet.create({
             }
         })
     },
+    propic: {
+        height: 30,
+        width: 30,
+        borderRadius: 15
+    },
 
     //CHANNEL ADMIN
     adminContainer: {
@@ -594,5 +599,34 @@ export default StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 25,
         paddingHorizontal: 20
+    },
+    requestIgnoreButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 75,
+        height: 35,
+        marginHorizontal: 15,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.white
+    },
+    requestIgnoreText: {
+        fontSize: 16,
+        color: GlobalColors.sideButtons
+    },
+    requestAcceptButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 75,
+        height: 35,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.sideButtons
+    },
+    requestAcceptText: {
+        fontSize: 16,
+        color: GlobalColors.white
     }
 });

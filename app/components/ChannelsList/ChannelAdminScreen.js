@@ -38,13 +38,14 @@ import { Auth } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
+import config from '../../config/config';
 
 const SeparatorSize = {
     SMALL: 2,
     BIG: 5
 };
 
-export default class ChannelAdminScreen extends React.Component {
+class ChannelAdminScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
 
@@ -106,16 +107,59 @@ export default class ChannelAdminScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log('>>>>>>>>', this.props.channel);
-        this.state = {};
+        this.state = {
+            participants: [],
+            admins: []
+        };
         this.channel = this.props.channel;
     }
 
     componentDidMount() {
+        let participants;
+        let admins;
         this.props.navigation.setParams({ onBack: this.onBack.bind(this) });
+        Channel.getParticipants(
+            this.channel.channelName,
+            this.channel.userDomain
+        )
+            .then(prt => {
+                participants = prt;
+                return Channel.getAdmins(
+                    this.channel.channelName,
+                    this.channel.userDomain
+                );
+            })
+            .then(adm => {
+                admins = adm;
+                this.setState({
+                    participants: participants,
+                    admins: admins
+                });
+            });
     }
 
-    onBack() {}
+    componentWillUnmount() {
+        this.props.setParticipants([]);
+        this.props.setTeam('');
+    }
+
+    onBack() {
+        Actions.pop();
+    }
+
+    manageParticipants() {
+        this.props.setParticipants(this.state.participants);
+        this.props.setTeam(this.channel.userDomain);
+        Actions.addParticipants();
+    }
+
+    manageRequests() {}
+
+    manageAdmins() {
+        this.props.setParticipants(this.state.admins);
+        this.props.setTeam(this.channel.userDomain);
+        Actions.addParticipants();
+    }
 
     renderTopArea() {
         return (
@@ -168,10 +212,13 @@ export default class ChannelAdminScreen extends React.Component {
         return (
             <View>
                 <TouchableOpacity style={styles.adminRow}>
-                    <Text>Partecipants</Text>
+                    <Text style={styles.adminH1}>Partecipants</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.manageRequests.bind(this)}
+                >
                     <View>
                         <Text style={styles.adminH2}>
                             Participants awaiting authorization
@@ -183,17 +230,24 @@ export default class ChannelAdminScreen extends React.Component {
                     {Icons.formMessageArrow()}
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.manageParticipants.bind(this)}
+                >
                     <View>
                         <Text style={styles.adminH2}>Manage participants</Text>
                         <Text style={styles.adminH3}>
-                            Participants in this channel:
+                            Participants in this channel:{' '}
+                            {this.state.participants.length}
                         </Text>
                     </View>
                     {Icons.formMessageArrow()}
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    onPress={this.manageAdmins.bind(this)}
+                >
                     <Text style={styles.adminH2}>Manage admins</Text>
                     {Icons.formMessageArrow()}
                 </TouchableOpacity>
@@ -225,3 +279,22 @@ export default class ChannelAdminScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user,
+    channels: state.channel
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setParticipants: participants =>
+            dispatch(setChannelParticipants(participants)),
+        setTeam: team => dispatch(setChannelTeam(team)),
+        setCurrentScene: scene => dispatch(setCurrentScene(scene))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChannelAdminScreen);
