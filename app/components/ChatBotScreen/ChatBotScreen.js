@@ -88,10 +88,14 @@ import { Form2Message } from '../Form2Message';
 import { formStatus } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
-import { setCurrentConversationId } from '../../redux/actions/UserActions';
+import {
+    setCurrentConversationId,
+    setOpenMap
+} from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
 import { MarkerIconTypes } from '../MapView/config';
+import ReduxStore from '../../redux/store/configureStore';
 
 const R = require('ramda');
 
@@ -810,6 +814,13 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
         ) {
             this.closeForm(message.getMessage().formId);
+        } else if (
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP &&
+            ReduxStore.getState().user.openMap.options.mapId ===
+                message.getMessage().options.mapId
+        ) {
+            Store.dispatch(setOpenMap(message.getMessage()));
         } else {
             this.updateChat(message);
         }
@@ -861,17 +872,11 @@ class ChatBotScreen extends React.Component {
     }
 
     openMap(mapData) {
+        Store.dispatch(setOpenMap(mapData));
         Keyboard.dismiss();
         Actions.mapView({
-            mapData: mapData,
-            isSharedLocation: false,
             onAction: this.sendMapResponse.bind(this)
         });
-    }
-
-    openMapForSharedLocation(mapData) {
-        Keyboard.dismiss();
-        Actions.mapView({ mapData: mapData, isSharedLocation: true });
     }
 
     openChart(message) {
@@ -1003,16 +1008,9 @@ class ChatBotScreen extends React.Component {
         }
     };
 
-    sendMapResponse(cardId, markerId, center, zoom) {
-        content = {
-            mapId: this.props.mapData.options.mapId,
-            cardId: cardId,
-            markerId: markerId,
-            center: center,
-            zoom: zoom
-        };
+    sendMapResponse(response) {
         message = new Message();
-        message.mapResponseMessage(content);
+        message.mapResponseMessage(response);
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
     }
@@ -1241,7 +1239,7 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={false}
                         isFromBot={false}
-                        openMap={this.openMapForSharedLocation.bind(this)}
+                        openMap={this.openMap.bind(this)}
                         mapData={message.getMessage()}
                     />
                 );
@@ -1332,7 +1330,7 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={true}
                         isFromBot={false}
-                        openMap={this.openMapForSharedLocation.bind(this)}
+                        openMap={this.openMap.bind(this)}
                         mapData={message.getMessage()}
                     />
                 );

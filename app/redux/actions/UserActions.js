@@ -68,6 +68,10 @@ export const setCurrentConversationId = payload => ({
     type: Actions.SET_CURRENT_CONVERSATION_ID,
     payload
 });
+export const setOpenMap = payload => ({
+    type: Actions.SET_OPEN_MAP,
+    payload
+});
 export const uploadImage = () => ({
     type: Actions.UPLOAD_IMAGE
 });
