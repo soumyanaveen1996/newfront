@@ -322,6 +322,20 @@ export const Icons = {
         20,
         GlobalColors.headerBlack
     ),
+    closeRouteSlider: icon('md-close', 'ionicon', 18, GlobalColors.white),
+    planeRSWhite: icon(
+        'airplane',
+        'material-community',
+        16,
+        GlobalColors.white
+    ),
+    planeRSBlu: icon(
+        'airplane',
+        'material-community',
+        14,
+        GlobalColors.sideButtons,
+        'normal'
+    ),
 
     //FORM
     formMessageArrow: icon(

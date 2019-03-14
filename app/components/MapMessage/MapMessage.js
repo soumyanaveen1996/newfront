@@ -25,7 +25,60 @@ export default class WebCards extends React.Component {
     }
 
     openMap() {
+        // this.MAPDATATEST = {
+        //     region: {
+        //         latitude: -75.343,
+        //         longitude: 39.984,
+        //         zoom: 7
+        //     },
+        //     markers: [
+        //         {
+        //             id: 'LH204',
+        //             title: 'marker 2',
+        //             description: 'marker 2 description',
+        //             draggable: false,
+        //             coordinate: { latitude: -75.438, longitude: 39.553 },
+        //             iconType: 'aircraft' //arrow, aircraft, poi, circle
+        //         }
+        //     ],
+        //     planeRoutes: [
+        //         {
+        //             id: 'LH204', //flight number
+        //             start: {
+        //                 id: 'LGW', //airport code, station
+        //                 time: '10:30', //departure time
+        //                 longitude: 39.123,
+        //                 latitude: -75.534
+        //             },
+        //             end: {
+        //                 id: 'JFK',
+        //                 time: '23:30', //rrival time
+        //                 longitude: 39.984,
+        //                 latitude: -75.343
+        //             },
+        //             showTracker: true //id must be the same of a marker
+        //         },
+        //         {
+        //             id: 'route2', //flight number
+        //             start: {
+        //                 id: 'MXP',
+        //                 time: '10:30',
+        //                 longitude: 38,
+        //                 latitude: -70
+        //             },
+        //             end: {
+        //                 id: 'LLT',
+        //                 time: '20:30',
+        //                 longitude: 40,
+        //                 latitude: -72
+        //             },
+        //             showTracker: false
+        //         }
+        //     ]
+        // };
+
         this.props.openMap(this.props.mapData);
+        // this.props.openMap(this.MAPDATATEST);
     }
 
     async componentDidMount() {
