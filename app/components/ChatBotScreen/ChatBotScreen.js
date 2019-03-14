@@ -774,6 +774,7 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
+        console.log('>>>>>>', message.getMessage());
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
@@ -817,6 +818,8 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP &&
+            ReduxStore.getState().user.openMap &&
+            ReduxStore.getState().user.openMap.options &&
             ReduxStore.getState().user.openMap.options.mapId ===
                 message.getMessage().options.mapId
         ) {
