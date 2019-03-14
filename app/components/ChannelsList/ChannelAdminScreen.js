@@ -200,7 +200,7 @@ class ChannelAdminScreen extends React.Component {
             });
     }
 
-    deleteChannel() {} //miss
+    deleteChannel() {} //missing
 
     renderTopArea() {
         return (
