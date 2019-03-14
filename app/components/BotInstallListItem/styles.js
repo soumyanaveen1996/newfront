@@ -28,7 +28,7 @@ export const BotListItemStyles = StyleSheet.create({
     },
     title: {
         color: BotListItemColors.titleColor,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: 'SF Pro Text',
         fontWeight: '300'
     },
