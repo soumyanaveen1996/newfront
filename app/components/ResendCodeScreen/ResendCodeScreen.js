@@ -79,7 +79,7 @@ export default class ResendCodeScreen extends Component {
             });
         }
 
-        console.log('send code again');
+        // console.log('send code again');
         const userDetails = {
             email: this.state.userEmail
         };

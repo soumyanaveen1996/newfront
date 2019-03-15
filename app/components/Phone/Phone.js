@@ -399,7 +399,7 @@ export default class Phone extends React.Component {
             state: phoneState,
             userName: this.username()
         });
-        console.log('Current Phone State', phoneState);
+        // console.log('Current Phone State', phoneState);
         return <View style={Styles.container}>{this.renderInCall()}</View>;
         // return (
         //     <View style={Styles.containerStyle}>

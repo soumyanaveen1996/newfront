@@ -4,6 +4,7 @@ const ROUTER_SCENE_KEYS = {
     timeline: 'timeline',
     chatScene: 'chatScene',
     botChat: 'botChat',
+    dialCallbutton: 'dialCallbutton',
     peopleChat: 'peopleChat',
     channelChat: 'channelChat',
     channelsFilter: 'channelsFilter',
