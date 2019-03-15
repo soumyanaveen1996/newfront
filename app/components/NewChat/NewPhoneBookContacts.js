@@ -99,7 +99,9 @@ class NewCallContacts extends React.Component {
 
         Contacts.getAll((err, contacts) => {
             if (err) {
-                throw err;
+                console.log('on denial ', err);
+                this.refresh([]);
+                return;
             }
 
             contacts.forEach((data, index) => {
@@ -123,6 +125,12 @@ class NewCallContacts extends React.Component {
             });
 
             this.refresh(contactArray);
+
+            if (err === 'denied') {
+                this.refresh([]);
+            } else {
+                this.refresh(contactArray);
+            }
         });
     };
 
