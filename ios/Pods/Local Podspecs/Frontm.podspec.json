@@ -1,0 +1,60 @@
+{
+  "name": "Frontm",
+  "version": "0.0.2",
+  "license": "Apache License, Version 2.0",
+  "authors": {
+    "amal": "amal@frontm.com"
+  },
+  "homepage": "https://frontm.ai/",
+  "summary": "RouteGuide example",
+  "source": {
+    "git": "https://github.com/grpc/grpc.git"
+  },
+  "platforms": {
+    "ios": "7.1",
+    "osx": "10.9"
+  },
+  "dependencies": {
+    "!ProtoCompiler-gRPCPlugin": [
+      "~> 1.0"
+    ]
+  },
+  "prepare_command": "mkdir -p Pods/Frontm\nPods/!ProtoCompiler/protoc         --plugin=protoc-gen-grpc=Pods/!ProtoCompiler-gRPCPlugin/grpc_objective_c_plugin         --objc_out=Pods/Frontm         --grpc_out=Pods/Frontm         -I ../android/app/src/main/proto/         -I Pods/!ProtoCompiler         ../android/app/src/main/proto//*.proto",
+  "pod_target_xcconfig": {
+    "GCC_PREPROCESSOR_DEFINITIONS": "$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1",
+    "CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES": "YES"
+  },
+  "subspecs": [
+    {
+      "name": "Messages",
+      "source_files": [
+        "Pods/Frontm/*.pbobjc.{h,m}",
+        "Pods/Frontm/**/*.pbobjc.{h,m}"
+      ],
+      "header_mappings_dir": "Pods/Frontm",
+      "requires_arc": false,
+      "dependencies": {
+        "Protobuf": [
+
+        ]
+      }
+    },
+    {
+      "name": "Services",
+      "source_files": [
+        "Pods/Frontm/*.pbrpc.{h,m}",
+        "Pods/Frontm/**/*.pbrpc.{h,m}"
+      ],
+      "header_mappings_dir": "Pods/Frontm",
+      "requires_arc": true,
+      "dependencies": {
+        "gRPC-ProtoRPC": [
+
+        ],
+        "Frontm/Messages": [
+
+        ]
+      }
+    }
+  ]
+}

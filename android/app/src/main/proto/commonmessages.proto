@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.commonmessages.proto";
+
+package commonmessages;
+
+
+message Empty {}
+
+message PhoneNumbers {
+    string satellite = 1;
+    string land = 2;
+    string mobile = 3;
+}
+
+message DomainRoles {
+    string domain = 1;
+    repeated string roles = 2;
+}
+

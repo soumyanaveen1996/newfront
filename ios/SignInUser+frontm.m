@@ -8,26 +8,30 @@
 
 #import "SignInUser+frontm.h"
 #import "PhoneNumbers+frontm.h"
+#import "DomainRoles+frontm.h"
 
 @implementation SignInUser (frontm)
 
-- (NSDictionary *) toDictionary {
-  // TODO(amal) : Change domainsArray
+- (NSDictionary *) toJSON {
+  NSMutableArray *domains = [NSMutableArray new];
+  for (int i = 0; i < self.domainsArray_Count; ++i) {
+    [domains addObject:[self.domainsArray[i] toJSON]];
+  }
   return @{
              @"searchable": @(self.searchable),
              @"visible": @(self.visible),
              @"emailAddress": self.emailAddress,
              @"userId": self.userId,
              @"userName": self.userName,
-             @"phoneNumbers": [self.phoneNumbers toDictionary],
+             @"phoneNumbers": [self.phoneNumbers toJSON],
              @"hasPhoneNumbers": @(self.hasPhoneNumbers),
-             @"domainsArray": @[],
+             @"domainsArray": domains,
              @"archiveMessages": @(self.archiveMessages)
              };
 }
 
 - (NSDictionary *) toResponse {
-  return @{ @"data": [self toDictionary] };
+  return @{@"data": [self toJSON] };
 }
 
 

@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SignupResponse (frontm)
 
-- (NSDictionary *) toDictionary;
+- (NSDictionary *) toJSON;
 - (NSDictionary *) toResponse;
 
 @end

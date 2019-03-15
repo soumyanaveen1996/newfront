@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.channels.proto";
+
+package channels;
+
+service ChannelsService {
+    rpc GetSubscribed (commonmessages.Empty) returns (ChannelListResponse) {}
+    rpc GetUnsubscribed (commonmessages.Empty) returns (ChannelListResponse) {}
+    rpc GetOwned (commonmessages.Empty) returns (ChannelListResponse) {}
+    rpc Subscribe (SubUnsubInput) returns (BooleanResponse) {}
+    rpc Unsubscribe (SubUnsubInput) returns (BooleanResponse) {}
+    rpc AddParticipants (AddParticipantsInput) returns (BooleanResponse) {}
+    rpc Create (CreateEditInput) returns (CreateChannelResponse) {}
+    rpc Edit (CreateEditInput) returns (BooleanResponse) {}
+}
+
+message SubUnsubInput {
+    repeated DomainChannels domainChannels = 1;
+}
+
+message DomainChannels {
+    string userDomain = 1;
+    repeated string channels = 2;
+}
+
+message AddParticipantsInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string newUserIds = 3;
+}
+
+message CreateEditInput {
+    InputChannel channel = 1;
+}
+
+message InputChannel {
+    string channelName = 1;
+    string userDomain = 2;
+    string description = 3;
+    string channelType = 4;
+    bool discoverable = 5;
+}
+
+message ChannelListResponse {
+    int32 error = 1;
+    repeated DBChannel content = 2;
+}
+
+message DBChannel {
+    string channelId = 1;
+    string channelType = 2;
+    int32 createdOn = 3;
+    string channelName = 4;
+    string userDomain = 5;
+    ChannelOwner channelOwner = 6;
+    string description = 7;
+    string discoverable = 8;
+    string logo = 9;
+    bool isPlatformChannel = 10;
+    repeated string participants = 11;
+}
+
+message ChannelOwner {
+    string emailAddress = 1;
+    string userName = 2;
+    string userId = 3;
+}
+
+message BooleanResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+    string errorMessage = 3;
+}
+
+message CreateChannelResponse {
+    int32 error = 1;
+    repeated string content = 2;
+    string errorMessage = 3;
+}

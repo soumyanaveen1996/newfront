@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.company.proto";
+
+package company;
+
+service CompanyService {
+    rpc Create (CreateCompanyInput) returns (CreateCompanyResponse) {}
+}
+
+message CreateCompanyInput {
+    string action = 1;
+    string companyId = 2;
+    string companyName = 3;
+    string companyDescription = 4;
+    string companyAddress = 5;
+    string companyCountry = 7;
+    repeated commonmessages.DomainRoles domains = 6;
+}
+
+message CreateCompanyResponse {
+    bool success = 1;
+}

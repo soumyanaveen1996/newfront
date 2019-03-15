@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.queue.proto";
+
+package queue;
+
+service QueueService {
+    rpc GetSampleMessages (commonmessages.Empty) returns (stream MessageList) {}
+    rpc GetSampleStreamingMessages (stream commonmessages.Empty) returns (stream Message) {}
+    rpc GetSampleBufferedMessage (stream commonmessages.Empty) returns (stream BufferMessage) {}
+
+    rpc GetAllQueueMessages (commonmessages.Empty) returns (stream QueueResponse) {}
+    rpc GetStreamingQueueMessage (stream commonmessages.Empty) returns (stream QueueMessage) {}
+    rpc GetStreamingBufferedQueueMessage (stream commonmessages.Empty) returns (stream BufferedQueueMessage) {}
+}
+
+message Message {
+    string id = 1;
+    string content = 2;
+}
+
+message BufferMessage {
+    bytes message = 1;
+}
+
+message MessageList {
+   repeated Message messages = 1;
+}
+
+message QueueResponse {
+    bool onSatellite = 1;
+    repeated QueueMessage queueMsgs = 2;
+    string errorMessage = 3;
+    string error = 4;
+}
+
+message QueueMessage {
+    string userId = 1;
+    string conversation = 2;
+    string bot = 3;
+    int32 createdOn = 4;
+    string createdBy = 5;
+    int32 contentType = 6;
+    string messageId = 7;
+    string requestUuid = 8;
+    repeated MessageDetails details = 9;
+    string error = 10;
+}
+
+message MessageDetails {
+  string message = 1;
+  string error = 2;
+  string info = 3;
+  string options = 4;
+}
+
+message BufferedQueueMessage {
+    string userId = 1;
+    string conversation = 2;
+    string bot = 3;
+    int32 createdOn = 4;
+    string createdBy = 5;
+    int32 contentType = 6;
+    string messageId = 7;
+    string requestUuid = 8;
+    bytes details = 9;
+    string error = 10;
+}

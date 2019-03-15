@@ -7,20 +7,26 @@
 //
 
 #import "PhoneNumbers+frontm.h"
+#import "NSArray+Map.h"
 
 @implementation PhoneNumbers (frontm)
 
-- (NSDictionary *) toDictionary {
-  // TODO(amal) : Change domainsArray
+- (NSDictionary *) toJSON {
   return @{
-           @"satellite": @(self.satellite),
-           @"land": @(self.land),
-           @"mobile": @(self.mobile),
+           @"satellite": self.satellite,
+           @"land": self.land,
+           @"mobile": self.mobile,
            };
 }
 
 - (NSDictionary *) toResponse {
-  return @{ @"data": [self toDictionary] };
+  return @{ @"data": [self toJSON] };
+}
+
++ (NSArray *) jsonArrayFromObjects:(NSMutableArray *)numbers {
+  return [numbers rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+    return [obj toJSON];
+  }];
 }
 
 

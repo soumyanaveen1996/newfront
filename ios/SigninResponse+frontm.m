@@ -11,19 +11,30 @@
 
 @implementation SigninResponse (frontm)
 
-- (NSDictionary *) toDictionary {
-  return @{
-               @"success": @(self.success),
-               @"message": self.message,
-               @"sessionId": self.sessionId,
-               @"user": [self.user toDictionary],
-               @"hasUser": @(self.hasUser),
-               @"newUser": @(self.newUser),
-           };
+- (NSDictionary *) toJSON {
+  if (self.hasUser) {
+    return @{
+             @"success": @(self.success),
+             @"message": self.message,
+             @"sessionId": self.sessionId,
+             @"user": [self.user toJSON],
+             @"hasUser": @(self.hasUser),
+             @"newUser": @(self.newUser),
+             };
+  } else {
+    return @{
+             @"success": @(NO),
+             @"message": @"Error loading user",
+             };
+  }
+
 }
 
 - (NSDictionary *) toResponse {
-  return @{ @"data": [self toDictionary] };
+  return @{
+           @"success": @(self.success),
+           @"message": self.message,
+           @"data": [self toJSON] };
 }
 
 

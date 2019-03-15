@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.auth.proto";
+
+package auth;
+
+service AuthService {
+    rpc Signup (SignupUser) returns (SignupResponse) {}
+    rpc ConfirmSignup (SignupUser) returns (SignupResponse) {}
+    rpc ResendSignupConfirmCode (SignupUser) returns (SignupResponse) {}
+    rpc ResetPassword (SignupUser) returns (SignupResponse) {}
+    rpc ConfirmPasswordReset (SignupUser) returns (SignupResponse) {}
+    rpc ChangePassword (SignupUser) returns (SignupResponse) {}
+    rpc DeleteUser (commonmessages.Empty) returns (SignupResponse) {}
+    rpc FrontmSignin (FrontmSigninInput) returns (SigninResponse) {}
+    rpc GoogleSignin (GoogleSigninInput) returns (SigninResponse) {}
+}
+
+message SignupUser {
+    string email = 1;
+    string userName = 2;
+    string password = 3;
+    string confirmCode = 4;
+    string oldPassword = 5;
+    string newPassword = 6;
+    string verificationCode = 7;
+}
+
+message SignupResponse {
+    bool success = 1;
+    string data = 2;
+    string message = 3;
+}
+
+message FrontmSigninInput {
+    string email = 1;
+    string password = 2;
+    string platform = 3;
+}
+
+message GoogleSigninInput {
+    string code = 1;
+    string platform = 2;
+}
+
+message SigninResponse {
+    bool success = 1;
+    string message = 2;
+    string sessionId = 3;
+    SignInUser user = 4;
+    bool newUser = 5;
+}
+
+message SignInUser {
+    bool searchable = 1;
+    bool visible = 2;
+    string emailAddress = 3;
+    string userId = 4;
+    commonmessages.PhoneNumbers phoneNumbers = 5;
+    string userName = 6;
+    repeated commonmessages.DomainRoles domains = 7;
+    bool archiveMessages = 8;
+}

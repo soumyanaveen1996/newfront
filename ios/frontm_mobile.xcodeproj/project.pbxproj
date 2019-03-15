@@ -26,35 +26,69 @@
 		0453E623212045DA0078059D /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453E5DB212045DA0078059D /* CallKit.framework */; };
 		04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0454180E210C987800A658A2 /* libRNDocumentPicker.a */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
+		0458FA5E2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FA5D2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m */; };
+		0458FAB12238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FAB02238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m */; };
+		0458FAB42238E647002D37A3 /* GetConversationDetailsChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FAB32238E647002D37A3 /* GetConversationDetailsChannels+frontm.m */; };
 		04704B2222366922003ABE94 /* SignupResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2122366922003ABE94 /* SignupResponse+frontm.m */; };
 		04704B2522368937003ABE94 /* SigninResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2422368937003ABE94 /* SigninResponse+frontm.m */; };
 		04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B272236899A003ABE94 /* SignInUser+frontm.m */; };
 		04704B2B22368C3B003ABE94 /* PhoneNumbers+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2A22368C3B003ABE94 /* PhoneNumbers+frontm.m */; };
+		04704B672236A39B003ABE94 /* DomainRoles+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B662236A39B003ABE94 /* DomainRoles+frontm.m */; };
+		04704B6A2236C50D003ABE94 /* UserServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B692236C50C003ABE94 /* UserServiceClient.m */; };
+		04704B6D2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B6C2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m */; };
+		04704B702236C686003ABE94 /* SubscribedBotsContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B6F2236C686003ABE94 /* SubscribedBotsContent+frontm.m */; };
+		04704B732236DA7F003ABE94 /* ChannelsServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B722236DA7F003ABE94 /* ChannelsServiceClient.m */; };
+		04704B762236E08C003ABE94 /* ContactsServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B752236E08C003ABE94 /* ContactsServiceClient.m */; };
+		04704B792236E244003ABE94 /* AgentGuardBoolResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B782236E244003ABE94 /* AgentGuardBoolResponse+frontm.m */; };
+		04704B7C2236E33F003ABE94 /* CompanyServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7B2236E33F003ABE94 /* CompanyServiceClient.m */; };
+		04704B7F2237C23D003ABE94 /* QueueServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7E2237C23D003ABE94 /* QueueServiceClient.m */; };
+		04704B822237C804003ABE94 /* QueueMessage+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B812237C804003ABE94 /* QueueMessage+frontm.m */; };
+		04704B852237C8A7003ABE94 /* MessageDetails+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */; };
+		04704B882237CB42003ABE94 /* Message+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B872237CB42003ABE94 /* Message+frontm.m */; };
 		0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
 		0486BED22008CC5F00DF553B /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
+		049055BA223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 049055B9223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m */; };
+		0490560D223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490560C223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m */; };
+		04905610223B61A4008FECC8 /* TimelineResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490560F223B61A4008FECC8 /* TimelineResponse+frontm.m */; };
+		04905613223B61BB008FECC8 /* TimelineContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905612223B61BB008FECC8 /* TimelineContent+frontm.m */; };
+		04905616223B61D8008FECC8 /* TimelineConversation+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905615223B61D8008FECC8 /* TimelineConversation+frontm.m */; };
+		04905619223B61FE008FECC8 /* TimelineChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905618223B61FE008FECC8 /* TimelineChannels+frontm.m */; };
+		0490561C223B6A13008FECC8 /* TimelineContact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */; };
+		0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */; };
+		04905622223B6A49008FECC8 /* TimelineLastMessage+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */; };
+		04905625223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */; };
+		04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905627223B7414008FECC8 /* FindResponse+frontm.m */; };
+		0490562B223B7447008FECC8 /* MatchedUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490562A223B7447008FECC8 /* MatchedUser+frontm.m */; };
+		0490562E223B7535008FECC8 /* TwilioTokenResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490562D223B7535008FECC8 /* TwilioTokenResponse+frontm.m */; };
+		04905631223B75C3008FECC8 /* VoipStatusResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905630223B75C3008FECC8 /* VoipStatusResponse+frontm.m */; };
+		04905634223B7770008FECC8 /* AgentGuardServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905633223B7770008FECC8 /* AgentGuardServiceClient.m */; };
+		04905637223B7C4F008FECC8 /* Conversation+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905636223B7C4F008FECC8 /* Conversation+frontm.m */; };
+		0490563A223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905639223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m */; };
+		0490563D223B7D8B008FECC8 /* Channel+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490563C223B7D8B008FECC8 /* Channel+frontm.m */; };
+		04905640223B8533008FECC8 /* ChannelListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490563F223B8533008FECC8 /* ChannelListResponse+frontm.m */; };
+		04905643223B855A008FECC8 /* DBChannel+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905642223B855A008FECC8 /* DBChannel+frontm.m */; };
+		04905646223B857C008FECC8 /* ChannelOwner+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905645223B857C008FECC8 /* ChannelOwner+frontm.m */; };
+		04905649223B879E008FECC8 /* BooleanResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905648223B879E008FECC8 /* BooleanResponse+frontm.m */; };
+		0490564C223B8C95008FECC8 /* CreateChannelResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490564B223B8C95008FECC8 /* CreateChannelResponse+frontm.m */; };
+		0490564F223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490564E223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m */; };
+		04905652223BB5A0008FECC8 /* User+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905651223BB5A0008FECC8 /* User+frontm.m */; };
+		04905655223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905654223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m */; };
+		04905658223BB809008FECC8 /* VoipToggleResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905657223BB809008FECC8 /* VoipToggleResponse+frontm.m */; };
+		0490565B223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490565A223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m */; };
+		0490565E223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490565D223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m */; };
+		04905661223BB9D9008FECC8 /* ContactsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905660223BB9D9008FECC8 /* ContactsResponse+frontm.m */; };
+		04905664223BBA01008FECC8 /* Contact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905663223BBA01008FECC8 /* Contact+frontm.m */; };
+		04905667223BBB24008FECC8 /* QueueResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905666223BBB24008FECC8 /* QueueResponse+frontm.m */; };
 		0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F4A9F2208A234300662D34 /* libRNCamera.a */; };
 		049BCDC420B343D60065E4F7 /* libRNVersionCheck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04143DA020B30D08001DDCE3 /* libRNVersionCheck.a */; };
 		04B52D3320C0AB6E00540193 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFE32520C0993A009319B5 /* libRNBackgroundFetch.a */; };
-		04C43EDF222D6A80007FA0EE /* Contactsservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED0222D6A6D007FA0EE /* Contactsservice.pbrpc.m */; };
-		04C43EE0222D6A80007FA0EE /* Channelsservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED1222D6A6E007FA0EE /* Channelsservice.pbrpc.m */; };
-		04C43EE1222D6A80007FA0EE /* Authservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED2222D6A6F007FA0EE /* Authservice.pbrpc.m */; };
-		04C43EE2222D6A80007FA0EE /* Userservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED3222D6A71007FA0EE /* Userservice.pbrpc.m */; };
-		04C43EE3222D6A80007FA0EE /* Agentguardservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED5222D6A74007FA0EE /* Agentguardservice.pbrpc.m */; };
-		04C43EE4222D6A80007FA0EE /* Queueservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43ED9222D6A79007FA0EE /* Queueservice.pbrpc.m */; };
-		04C43EE5222D6A80007FA0EE /* Conversationservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EDA222D6A7A007FA0EE /* Conversationservice.pbrpc.m */; };
-		04C43EE6222D6A80007FA0EE /* Pingservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EDC222D6A7D007FA0EE /* Pingservice.pbrpc.m */; };
-		04C43EE7222D6A80007FA0EE /* Companyservice.pbrpc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EDD222D6A7F007FA0EE /* Companyservice.pbrpc.m */; };
-		04C43EFC222D6A9C007FA0EE /* Contactsservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EE9222D6A83007FA0EE /* Contactsservice.pbobjc.m */; };
-		04C43EFD222D6A9C007FA0EE /* Commonmessages.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EEA222D6A84007FA0EE /* Commonmessages.pbobjc.m */; };
-		04C43EFE222D6A9C007FA0EE /* Companyservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EED222D6A88007FA0EE /* Companyservice.pbobjc.m */; };
-		04C43EFF222D6A9C007FA0EE /* Authservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EEF222D6A8B007FA0EE /* Authservice.pbobjc.m */; };
-		04C43F00222D6A9C007FA0EE /* Queueservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EF0222D6A8C007FA0EE /* Queueservice.pbobjc.m */; };
-		04C43F01222D6A9C007FA0EE /* Userservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EF1222D6A8E007FA0EE /* Userservice.pbobjc.m */; };
-		04C43F02222D6A9C007FA0EE /* Agentguardservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EF4222D6A92007FA0EE /* Agentguardservice.pbobjc.m */; };
-		04C43F03222D6A9C007FA0EE /* Channelsservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EF5222D6A93007FA0EE /* Channelsservice.pbobjc.m */; };
-		04C43F04222D6A9C007FA0EE /* Pingservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EF9222D6A99007FA0EE /* Pingservice.pbobjc.m */; };
-		04C43F05222D6A9C007FA0EE /* Conversationservice.pbobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C43EFB222D6A9C007FA0EE /* Conversationservice.pbobjc.m */; };
+		04E0FF7E22383F80004F19B1 /* ConversationServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */; };
+		04E0FF8122384232004F19B1 /* CatalogResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */; };
+		04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */; };
+		04E0FF88223843F3004F19B1 /* CatalogDependencies+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF87223843F3004F19B1 /* CatalogDependencies+frontm.m */; };
+		04E0FF8B22384414004F19B1 /* CatalogDependency+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8A22384414004F19B1 /* CatalogDependency+frontm.m */; };
+		04E0FF8E2238E063004F19B1 /* CatalogBotClients+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8D2238E063004F19B1 /* CatalogBotClients+frontm.m */; };
 		04E2D94122255F86004C1AC0 /* FrontM.crt in Resources */ = {isa = PBXBuildFile; fileRef = 04E2D8F022255F86004C1AC0 /* FrontM.crt */; };
 		04E2D94A22256231004C1AC0 /* PingServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2D94922256231004C1AC0 /* PingServiceClient.m */; };
 		04FC94F4222CF71E00532F42 /* sectigoSHA2.ca-bundle in Resources */ = {isa = PBXBuildFile; fileRef = 04FC94A3222CF71E00532F42 /* sectigoSHA2.ca-bundle */; };
@@ -771,6 +805,12 @@
 		0453E5DB212045DA0078059D /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
+		0458FA5C2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetConversationDetailsResponse+frontm.h"; sourceTree = "<group>"; };
+		0458FA5D2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetConversationDetailsResponse+frontm.m"; sourceTree = "<group>"; };
+		0458FAAF2238E5E2002D37A3 /* GetConversationDetailsUser+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetConversationDetailsUser+frontm.h"; sourceTree = "<group>"; };
+		0458FAB02238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetConversationDetailsUser+frontm.m"; sourceTree = "<group>"; };
+		0458FAB22238E647002D37A3 /* GetConversationDetailsChannels+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetConversationDetailsChannels+frontm.h"; sourceTree = "<group>"; };
+		0458FAB32238E647002D37A3 /* GetConversationDetailsChannels+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetConversationDetailsChannels+frontm.m"; sourceTree = "<group>"; };
 		045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = frontm_mobile_prod.entitlements; sourceTree = "<group>"; };
 		045F0B751FFFE137005C0ACE /* frontm_mobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = frontm_mobile.entitlements; path = frontm_mobile/frontm_mobile.entitlements; sourceTree = "<group>"; };
 		04704B2022366922003ABE94 /* SignupResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SignupResponse+frontm.h"; sourceTree = "<group>"; };
@@ -781,49 +821,111 @@
 		04704B272236899A003ABE94 /* SignInUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SignInUser+frontm.m"; sourceTree = "<group>"; };
 		04704B2922368C3B003ABE94 /* PhoneNumbers+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PhoneNumbers+frontm.h"; sourceTree = "<group>"; };
 		04704B2A22368C3B003ABE94 /* PhoneNumbers+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PhoneNumbers+frontm.m"; sourceTree = "<group>"; };
+		04704B652236A39B003ABE94 /* DomainRoles+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DomainRoles+frontm.h"; sourceTree = "<group>"; };
+		04704B662236A39B003ABE94 /* DomainRoles+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DomainRoles+frontm.m"; sourceTree = "<group>"; };
+		04704B682236C50C003ABE94 /* UserServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserServiceClient.h; sourceTree = "<group>"; };
+		04704B692236C50C003ABE94 /* UserServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserServiceClient.m; sourceTree = "<group>"; };
+		04704B6B2236C673003ABE94 /* BotSubscriptionsResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BotSubscriptionsResponse+frontm.h"; sourceTree = "<group>"; };
+		04704B6C2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "BotSubscriptionsResponse+frontm.m"; sourceTree = "<group>"; };
+		04704B6E2236C686003ABE94 /* SubscribedBotsContent+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SubscribedBotsContent+frontm.h"; sourceTree = "<group>"; };
+		04704B6F2236C686003ABE94 /* SubscribedBotsContent+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SubscribedBotsContent+frontm.m"; sourceTree = "<group>"; };
+		04704B712236DA7F003ABE94 /* ChannelsServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChannelsServiceClient.h; sourceTree = "<group>"; };
+		04704B722236DA7F003ABE94 /* ChannelsServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChannelsServiceClient.m; sourceTree = "<group>"; };
+		04704B742236E08C003ABE94 /* ContactsServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsServiceClient.h; sourceTree = "<group>"; };
+		04704B752236E08C003ABE94 /* ContactsServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsServiceClient.m; sourceTree = "<group>"; };
+		04704B772236E244003ABE94 /* AgentGuardBoolResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgentGuardBoolResponse+frontm.h"; sourceTree = "<group>"; };
+		04704B782236E244003ABE94 /* AgentGuardBoolResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AgentGuardBoolResponse+frontm.m"; sourceTree = "<group>"; };
+		04704B7A2236E33F003ABE94 /* CompanyServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompanyServiceClient.h; sourceTree = "<group>"; };
+		04704B7B2236E33F003ABE94 /* CompanyServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompanyServiceClient.m; sourceTree = "<group>"; };
+		04704B7D2237C23D003ABE94 /* QueueServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueServiceClient.h; sourceTree = "<group>"; };
+		04704B7E2237C23D003ABE94 /* QueueServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QueueServiceClient.m; sourceTree = "<group>"; };
+		04704B802237C804003ABE94 /* QueueMessage+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueMessage+frontm.h"; sourceTree = "<group>"; };
+		04704B812237C804003ABE94 /* QueueMessage+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueMessage+frontm.m"; sourceTree = "<group>"; };
+		04704B832237C8A7003ABE94 /* MessageDetails+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MessageDetails+frontm.h"; sourceTree = "<group>"; };
+		04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MessageDetails+frontm.m"; sourceTree = "<group>"; };
+		04704B862237CB42003ABE94 /* Message+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Message+frontm.h"; sourceTree = "<group>"; };
+		04704B872237CB42003ABE94 /* Message+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Message+frontm.m"; sourceTree = "<group>"; };
 		048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		0485F18920769A8500D5525E /* frontm_mobile-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "frontm_mobile-Bridging-Header.h"; sourceTree = "<group>"; };
 		0486BECF2008CC5F00DF553B /* bot_dependencies */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bot_dependencies; path = ../initial_bots/bot_dependencies; sourceTree = "<group>"; };
 		0486BED02008CC5F00DF553B /* bots */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bots; path = ../initial_bots/bots; sourceTree = "<group>"; };
-		04C43ECD222D6A69007FA0EE /* Contactsservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contactsservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ECE222D6A6A007FA0EE /* Userservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Userservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ECF222D6A6B007FA0EE /* Agentguardservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agentguardservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ED0222D6A6D007FA0EE /* Contactsservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contactsservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43ED1222D6A6E007FA0EE /* Channelsservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Channelsservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43ED2222D6A6F007FA0EE /* Authservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Authservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43ED3222D6A71007FA0EE /* Userservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Userservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43ED4222D6A72007FA0EE /* Companyservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Companyservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ED5222D6A74007FA0EE /* Agentguardservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Agentguardservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43ED6222D6A75007FA0EE /* Authservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Authservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ED7222D6A76007FA0EE /* Pingservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pingservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ED8222D6A78007FA0EE /* Channelsservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channelsservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43ED9222D6A79007FA0EE /* Queueservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queueservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43EDA222D6A7A007FA0EE /* Conversationservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conversationservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43EDB222D6A7C007FA0EE /* Conversationservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversationservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43EDC222D6A7D007FA0EE /* Pingservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pingservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43EDD222D6A7F007FA0EE /* Companyservice.pbrpc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Companyservice.pbrpc.m; sourceTree = "<group>"; };
-		04C43EDE222D6A80007FA0EE /* Queueservice.pbrpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queueservice.pbrpc.h; sourceTree = "<group>"; };
-		04C43EE8222D6A82007FA0EE /* Userservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Userservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EE9222D6A83007FA0EE /* Contactsservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contactsservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EEA222D6A84007FA0EE /* Commonmessages.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Commonmessages.pbobjc.m; sourceTree = "<group>"; };
-		04C43EEB222D6A86007FA0EE /* Commonmessages.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Commonmessages.pbobjc.h; sourceTree = "<group>"; };
-		04C43EEC222D6A87007FA0EE /* Channelsservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channelsservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EED222D6A88007FA0EE /* Companyservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Companyservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EEE222D6A8A007FA0EE /* Agentguardservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agentguardservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EEF222D6A8B007FA0EE /* Authservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Authservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EF0222D6A8C007FA0EE /* Queueservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queueservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EF1222D6A8E007FA0EE /* Userservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Userservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EF2222D6A8F007FA0EE /* Companyservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Companyservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EF3222D6A91007FA0EE /* Authservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Authservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EF4222D6A92007FA0EE /* Agentguardservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Agentguardservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EF5222D6A93007FA0EE /* Channelsservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Channelsservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EF6222D6A95007FA0EE /* Contactsservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contactsservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EF7222D6A97007FA0EE /* Conversationservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversationservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EF8222D6A98007FA0EE /* Pingservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pingservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EF9222D6A99007FA0EE /* Pingservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pingservice.pbobjc.m; sourceTree = "<group>"; };
-		04C43EFA222D6A9B007FA0EE /* Queueservice.pbobjc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queueservice.pbobjc.h; sourceTree = "<group>"; };
-		04C43EFB222D6A9C007FA0EE /* Conversationservice.pbobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conversationservice.pbobjc.m; sourceTree = "<group>"; };
+		049055B8223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetArchivedMessagesResponse+frontm.h"; sourceTree = "<group>"; };
+		049055B9223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetArchivedMessagesResponse+frontm.m"; sourceTree = "<group>"; };
+		0490560B223B6080008FECC8 /* GetArchivedMessagesContent+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetArchivedMessagesContent+frontm.h"; sourceTree = "<group>"; };
+		0490560C223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetArchivedMessagesContent+frontm.m"; sourceTree = "<group>"; };
+		0490560E223B61A4008FECC8 /* TimelineResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineResponse+frontm.h"; sourceTree = "<group>"; };
+		0490560F223B61A4008FECC8 /* TimelineResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineResponse+frontm.m"; sourceTree = "<group>"; };
+		04905611223B61BB008FECC8 /* TimelineContent+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineContent+frontm.h"; sourceTree = "<group>"; };
+		04905612223B61BB008FECC8 /* TimelineContent+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineContent+frontm.m"; sourceTree = "<group>"; };
+		04905614223B61D8008FECC8 /* TimelineConversation+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineConversation+frontm.h"; sourceTree = "<group>"; };
+		04905615223B61D8008FECC8 /* TimelineConversation+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineConversation+frontm.m"; sourceTree = "<group>"; };
+		04905617223B61FE008FECC8 /* TimelineChannels+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineChannels+frontm.h"; sourceTree = "<group>"; };
+		04905618223B61FE008FECC8 /* TimelineChannels+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineChannels+frontm.m"; sourceTree = "<group>"; };
+		0490561A223B6A13008FECC8 /* TimelineContact+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineContact+frontm.h"; sourceTree = "<group>"; };
+		0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineContact+frontm.m"; sourceTree = "<group>"; };
+		0490561D223B6A33008FECC8 /* TimelineBotInfo+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineBotInfo+frontm.h"; sourceTree = "<group>"; };
+		0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineBotInfo+frontm.m"; sourceTree = "<group>"; };
+		04905620223B6A49008FECC8 /* TimelineLastMessage+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineLastMessage+frontm.h"; sourceTree = "<group>"; };
+		04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineLastMessage+frontm.m"; sourceTree = "<group>"; };
+		04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UpdateFavouritesResponse+frontm.h"; sourceTree = "<group>"; };
+		04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UpdateFavouritesResponse+frontm.m"; sourceTree = "<group>"; };
+		04905626223B7414008FECC8 /* FindResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FindResponse+frontm.h"; sourceTree = "<group>"; };
+		04905627223B7414008FECC8 /* FindResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FindResponse+frontm.m"; sourceTree = "<group>"; };
+		04905629223B7447008FECC8 /* MatchedUser+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MatchedUser+frontm.h"; sourceTree = "<group>"; };
+		0490562A223B7447008FECC8 /* MatchedUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MatchedUser+frontm.m"; sourceTree = "<group>"; };
+		0490562C223B7535008FECC8 /* TwilioTokenResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TwilioTokenResponse+frontm.h"; sourceTree = "<group>"; };
+		0490562D223B7535008FECC8 /* TwilioTokenResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TwilioTokenResponse+frontm.m"; sourceTree = "<group>"; };
+		0490562F223B75C3008FECC8 /* VoipStatusResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VoipStatusResponse+frontm.h"; sourceTree = "<group>"; };
+		04905630223B75C3008FECC8 /* VoipStatusResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VoipStatusResponse+frontm.m"; sourceTree = "<group>"; };
+		04905632223B7770008FECC8 /* AgentGuardServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgentGuardServiceClient.h; sourceTree = "<group>"; };
+		04905633223B7770008FECC8 /* AgentGuardServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgentGuardServiceClient.m; sourceTree = "<group>"; };
+		04905635223B7C4F008FECC8 /* Conversation+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Conversation+frontm.h"; sourceTree = "<group>"; };
+		04905636223B7C4F008FECC8 /* Conversation+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Conversation+frontm.m"; sourceTree = "<group>"; };
+		04905638223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgentGuardStringResponse+frontm.h"; sourceTree = "<group>"; };
+		04905639223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AgentGuardStringResponse+frontm.m"; sourceTree = "<group>"; };
+		0490563B223B7D8B008FECC8 /* Channel+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Channel+frontm.h"; sourceTree = "<group>"; };
+		0490563C223B7D8B008FECC8 /* Channel+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Channel+frontm.m"; sourceTree = "<group>"; };
+		0490563E223B8533008FECC8 /* ChannelListResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelListResponse+frontm.h"; sourceTree = "<group>"; };
+		0490563F223B8533008FECC8 /* ChannelListResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelListResponse+frontm.m"; sourceTree = "<group>"; };
+		04905641223B855A008FECC8 /* DBChannel+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DBChannel+frontm.h"; sourceTree = "<group>"; };
+		04905642223B855A008FECC8 /* DBChannel+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DBChannel+frontm.m"; sourceTree = "<group>"; };
+		04905644223B857C008FECC8 /* ChannelOwner+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ChannelOwner+frontm.h"; sourceTree = "<group>"; };
+		04905645223B857C008FECC8 /* ChannelOwner+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ChannelOwner+frontm.m"; sourceTree = "<group>"; };
+		04905647223B879E008FECC8 /* BooleanResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BooleanResponse+frontm.h"; sourceTree = "<group>"; };
+		04905648223B879E008FECC8 /* BooleanResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "BooleanResponse+frontm.m"; sourceTree = "<group>"; };
+		0490564A223B8C95008FECC8 /* CreateChannelResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CreateChannelResponse+frontm.h"; sourceTree = "<group>"; };
+		0490564B223B8C95008FECC8 /* CreateChannelResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CreateChannelResponse+frontm.m"; sourceTree = "<group>"; };
+		0490564D223BB4EA008FECC8 /* CreateCompanyResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CreateCompanyResponse+frontm.h"; sourceTree = "<group>"; };
+		0490564E223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CreateCompanyResponse+frontm.m"; sourceTree = "<group>"; };
+		04905650223BB5A0008FECC8 /* User+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "User+frontm.h"; sourceTree = "<group>"; };
+		04905651223BB5A0008FECC8 /* User+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "User+frontm.m"; sourceTree = "<group>"; };
+		04905653223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UpdateUserProfileResponse+frontm.h"; sourceTree = "<group>"; };
+		04905654223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UpdateUserProfileResponse+frontm.m"; sourceTree = "<group>"; };
+		04905656223BB809008FECC8 /* VoipToggleResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VoipToggleResponse+frontm.h"; sourceTree = "<group>"; };
+		04905657223BB809008FECC8 /* VoipToggleResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VoipToggleResponse+frontm.m"; sourceTree = "<group>"; };
+		04905659223BB8F3008FECC8 /* SubscribeBotResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SubscribeBotResponse+frontm.h"; sourceTree = "<group>"; };
+		0490565A223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SubscribeBotResponse+frontm.m"; sourceTree = "<group>"; };
+		0490565C223BB94E008FECC8 /* SubscribeDomainResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SubscribeDomainResponse+frontm.h"; sourceTree = "<group>"; };
+		0490565D223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SubscribeDomainResponse+frontm.m"; sourceTree = "<group>"; };
+		0490565F223BB9D9008FECC8 /* ContactsResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ContactsResponse+frontm.h"; sourceTree = "<group>"; };
+		04905660223BB9D9008FECC8 /* ContactsResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ContactsResponse+frontm.m"; sourceTree = "<group>"; };
+		04905662223BBA01008FECC8 /* Contact+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Contact+frontm.h"; sourceTree = "<group>"; };
+		04905663223BBA01008FECC8 /* Contact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Contact+frontm.m"; sourceTree = "<group>"; };
+		04905665223BBB24008FECC8 /* QueueResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueResponse+frontm.h"; sourceTree = "<group>"; };
+		04905666223BBB24008FECC8 /* QueueResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueResponse+frontm.m"; sourceTree = "<group>"; };
 		04CFE2F220C0993A009319B5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
+		04E0FF7C22383F80004F19B1 /* ConversationServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationServiceClient.h; sourceTree = "<group>"; };
+		04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationServiceClient.m; sourceTree = "<group>"; };
+		04E0FF7F22384232004F19B1 /* CatalogResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogResponse+frontm.h"; sourceTree = "<group>"; };
+		04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CatalogResponse+frontm.m"; sourceTree = "<group>"; };
+		04E0FF832238426E004F19B1 /* CatalogBot+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogBot+frontm.h"; sourceTree = "<group>"; };
+		04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CatalogBot+frontm.m"; sourceTree = "<group>"; };
+		04E0FF86223843F3004F19B1 /* CatalogDependencies+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogDependencies+frontm.h"; sourceTree = "<group>"; };
+		04E0FF87223843F3004F19B1 /* CatalogDependencies+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CatalogDependencies+frontm.m"; sourceTree = "<group>"; };
+		04E0FF8922384414004F19B1 /* CatalogDependency+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogDependency+frontm.h"; sourceTree = "<group>"; };
+		04E0FF8A22384414004F19B1 /* CatalogDependency+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CatalogDependency+frontm.m"; sourceTree = "<group>"; };
+		04E0FF8C2238E063004F19B1 /* CatalogBotClients+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CatalogBotClients+frontm.h"; sourceTree = "<group>"; };
+		04E0FF8D2238E063004F19B1 /* CatalogBotClients+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CatalogBotClients+frontm.m"; sourceTree = "<group>"; };
 		04E2D8F022255F86004C1AC0 /* FrontM.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FrontM.crt; sourceTree = "<group>"; };
 		04E2D94822256231004C1AC0 /* PingServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PingServiceClient.h; sourceTree = "<group>"; };
 		04E2D94922256231004C1AC0 /* PingServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PingServiceClient.m; sourceTree = "<group>"; };
@@ -1107,11 +1209,24 @@
 		0409BEE221D7813400759135 /* proto */ = {
 			isa = PBXGroup;
 			children = (
-				04FC94F5222CFCDD00532F42 /* gen */,
 				04E2D94822256231004C1AC0 /* PingServiceClient.h */,
 				04E2D94922256231004C1AC0 /* PingServiceClient.m */,
 				04FC952C222D0A5100532F42 /* AuthServiceClient.h */,
 				04FC952D222D0A5100532F42 /* AuthServiceClient.m */,
+				04704B682236C50C003ABE94 /* UserServiceClient.h */,
+				04704B692236C50C003ABE94 /* UserServiceClient.m */,
+				04704B712236DA7F003ABE94 /* ChannelsServiceClient.h */,
+				04704B722236DA7F003ABE94 /* ChannelsServiceClient.m */,
+				04704B742236E08C003ABE94 /* ContactsServiceClient.h */,
+				04704B752236E08C003ABE94 /* ContactsServiceClient.m */,
+				04704B7A2236E33F003ABE94 /* CompanyServiceClient.h */,
+				04704B7B2236E33F003ABE94 /* CompanyServiceClient.m */,
+				04704B7D2237C23D003ABE94 /* QueueServiceClient.h */,
+				04704B7E2237C23D003ABE94 /* QueueServiceClient.m */,
+				04E0FF7C22383F80004F19B1 /* ConversationServiceClient.h */,
+				04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */,
+				04905632223B7770008FECC8 /* AgentGuardServiceClient.h */,
+				04905633223B7770008FECC8 /* AgentGuardServiceClient.m */,
 			);
 			name = proto;
 			sourceTree = "<group>";
@@ -1296,6 +1411,98 @@
 				04704B272236899A003ABE94 /* SignInUser+frontm.m */,
 				04704B2922368C3B003ABE94 /* PhoneNumbers+frontm.h */,
 				04704B2A22368C3B003ABE94 /* PhoneNumbers+frontm.m */,
+				04704B652236A39B003ABE94 /* DomainRoles+frontm.h */,
+				04704B662236A39B003ABE94 /* DomainRoles+frontm.m */,
+				04704B6B2236C673003ABE94 /* BotSubscriptionsResponse+frontm.h */,
+				04704B6C2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m */,
+				04704B6E2236C686003ABE94 /* SubscribedBotsContent+frontm.h */,
+				04704B6F2236C686003ABE94 /* SubscribedBotsContent+frontm.m */,
+				04704B772236E244003ABE94 /* AgentGuardBoolResponse+frontm.h */,
+				04704B782236E244003ABE94 /* AgentGuardBoolResponse+frontm.m */,
+				04704B802237C804003ABE94 /* QueueMessage+frontm.h */,
+				04704B812237C804003ABE94 /* QueueMessage+frontm.m */,
+				04704B832237C8A7003ABE94 /* MessageDetails+frontm.h */,
+				04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */,
+				04704B862237CB42003ABE94 /* Message+frontm.h */,
+				04704B872237CB42003ABE94 /* Message+frontm.m */,
+				04E0FF7F22384232004F19B1 /* CatalogResponse+frontm.h */,
+				04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */,
+				04E0FF832238426E004F19B1 /* CatalogBot+frontm.h */,
+				04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */,
+				04E0FF86223843F3004F19B1 /* CatalogDependencies+frontm.h */,
+				04E0FF87223843F3004F19B1 /* CatalogDependencies+frontm.m */,
+				04E0FF8922384414004F19B1 /* CatalogDependency+frontm.h */,
+				04E0FF8A22384414004F19B1 /* CatalogDependency+frontm.m */,
+				04E0FF8C2238E063004F19B1 /* CatalogBotClients+frontm.h */,
+				04E0FF8D2238E063004F19B1 /* CatalogBotClients+frontm.m */,
+				0458FA5C2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.h */,
+				0458FA5D2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m */,
+				0458FAAF2238E5E2002D37A3 /* GetConversationDetailsUser+frontm.h */,
+				0458FAB02238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m */,
+				0458FAB22238E647002D37A3 /* GetConversationDetailsChannels+frontm.h */,
+				0458FAB32238E647002D37A3 /* GetConversationDetailsChannels+frontm.m */,
+				049055B8223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.h */,
+				049055B9223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m */,
+				0490560B223B6080008FECC8 /* GetArchivedMessagesContent+frontm.h */,
+				0490560C223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m */,
+				0490560E223B61A4008FECC8 /* TimelineResponse+frontm.h */,
+				0490560F223B61A4008FECC8 /* TimelineResponse+frontm.m */,
+				04905611223B61BB008FECC8 /* TimelineContent+frontm.h */,
+				04905612223B61BB008FECC8 /* TimelineContent+frontm.m */,
+				04905614223B61D8008FECC8 /* TimelineConversation+frontm.h */,
+				04905615223B61D8008FECC8 /* TimelineConversation+frontm.m */,
+				04905617223B61FE008FECC8 /* TimelineChannels+frontm.h */,
+				04905618223B61FE008FECC8 /* TimelineChannels+frontm.m */,
+				0490561A223B6A13008FECC8 /* TimelineContact+frontm.h */,
+				0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */,
+				0490561D223B6A33008FECC8 /* TimelineBotInfo+frontm.h */,
+				0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */,
+				04905620223B6A49008FECC8 /* TimelineLastMessage+frontm.h */,
+				04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */,
+				04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */,
+				04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */,
+				04905626223B7414008FECC8 /* FindResponse+frontm.h */,
+				04905627223B7414008FECC8 /* FindResponse+frontm.m */,
+				04905629223B7447008FECC8 /* MatchedUser+frontm.h */,
+				0490562A223B7447008FECC8 /* MatchedUser+frontm.m */,
+				0490562C223B7535008FECC8 /* TwilioTokenResponse+frontm.h */,
+				0490562D223B7535008FECC8 /* TwilioTokenResponse+frontm.m */,
+				0490562F223B75C3008FECC8 /* VoipStatusResponse+frontm.h */,
+				04905630223B75C3008FECC8 /* VoipStatusResponse+frontm.m */,
+				04905635223B7C4F008FECC8 /* Conversation+frontm.h */,
+				04905636223B7C4F008FECC8 /* Conversation+frontm.m */,
+				04905638223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.h */,
+				04905639223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m */,
+				0490563B223B7D8B008FECC8 /* Channel+frontm.h */,
+				0490563C223B7D8B008FECC8 /* Channel+frontm.m */,
+				0490563E223B8533008FECC8 /* ChannelListResponse+frontm.h */,
+				0490563F223B8533008FECC8 /* ChannelListResponse+frontm.m */,
+				04905641223B855A008FECC8 /* DBChannel+frontm.h */,
+				04905642223B855A008FECC8 /* DBChannel+frontm.m */,
+				04905644223B857C008FECC8 /* ChannelOwner+frontm.h */,
+				04905645223B857C008FECC8 /* ChannelOwner+frontm.m */,
+				04905647223B879E008FECC8 /* BooleanResponse+frontm.h */,
+				04905648223B879E008FECC8 /* BooleanResponse+frontm.m */,
+				0490564A223B8C95008FECC8 /* CreateChannelResponse+frontm.h */,
+				0490564B223B8C95008FECC8 /* CreateChannelResponse+frontm.m */,
+				0490564D223BB4EA008FECC8 /* CreateCompanyResponse+frontm.h */,
+				0490564E223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m */,
+				04905650223BB5A0008FECC8 /* User+frontm.h */,
+				04905651223BB5A0008FECC8 /* User+frontm.m */,
+				04905653223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.h */,
+				04905654223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m */,
+				04905656223BB809008FECC8 /* VoipToggleResponse+frontm.h */,
+				04905657223BB809008FECC8 /* VoipToggleResponse+frontm.m */,
+				04905659223BB8F3008FECC8 /* SubscribeBotResponse+frontm.h */,
+				0490565A223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m */,
+				0490565C223BB94E008FECC8 /* SubscribeDomainResponse+frontm.h */,
+				0490565D223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m */,
+				0490565F223BB9D9008FECC8 /* ContactsResponse+frontm.h */,
+				04905660223BB9D9008FECC8 /* ContactsResponse+frontm.m */,
+				04905662223BBA01008FECC8 /* Contact+frontm.h */,
+				04905663223BBA01008FECC8 /* Contact+frontm.m */,
+				04905665223BBB24008FECC8 /* QueueResponse+frontm.h */,
+				04905666223BBB24008FECC8 /* QueueResponse+frontm.m */,
 			);
 			name = grpc_utils;
 			sourceTree = "<group>";
@@ -1322,51 +1529,6 @@
 				04F4A9F2208A234300662D34 /* libRNCamera.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		04FC94F5222CFCDD00532F42 /* gen */ = {
-			isa = PBXGroup;
-			children = (
-				04C43EEE222D6A8A007FA0EE /* Agentguardservice.pbobjc.h */,
-				04C43EF4222D6A92007FA0EE /* Agentguardservice.pbobjc.m */,
-				04C43EF3222D6A91007FA0EE /* Authservice.pbobjc.h */,
-				04C43EEF222D6A8B007FA0EE /* Authservice.pbobjc.m */,
-				04C43EEC222D6A87007FA0EE /* Channelsservice.pbobjc.h */,
-				04C43EF5222D6A93007FA0EE /* Channelsservice.pbobjc.m */,
-				04C43EEB222D6A86007FA0EE /* Commonmessages.pbobjc.h */,
-				04C43EEA222D6A84007FA0EE /* Commonmessages.pbobjc.m */,
-				04C43EF2222D6A8F007FA0EE /* Companyservice.pbobjc.h */,
-				04C43EED222D6A88007FA0EE /* Companyservice.pbobjc.m */,
-				04C43EF6222D6A95007FA0EE /* Contactsservice.pbobjc.h */,
-				04C43EE9222D6A83007FA0EE /* Contactsservice.pbobjc.m */,
-				04C43EF7222D6A97007FA0EE /* Conversationservice.pbobjc.h */,
-				04C43EFB222D6A9C007FA0EE /* Conversationservice.pbobjc.m */,
-				04C43EF8222D6A98007FA0EE /* Pingservice.pbobjc.h */,
-				04C43EF9222D6A99007FA0EE /* Pingservice.pbobjc.m */,
-				04C43EFA222D6A9B007FA0EE /* Queueservice.pbobjc.h */,
-				04C43EF0222D6A8C007FA0EE /* Queueservice.pbobjc.m */,
-				04C43EE8222D6A82007FA0EE /* Userservice.pbobjc.h */,
-				04C43EF1222D6A8E007FA0EE /* Userservice.pbobjc.m */,
-				04C43ECF222D6A6B007FA0EE /* Agentguardservice.pbrpc.h */,
-				04C43ED5222D6A74007FA0EE /* Agentguardservice.pbrpc.m */,
-				04C43ED6222D6A75007FA0EE /* Authservice.pbrpc.h */,
-				04C43ED2222D6A6F007FA0EE /* Authservice.pbrpc.m */,
-				04C43ED8222D6A78007FA0EE /* Channelsservice.pbrpc.h */,
-				04C43ED1222D6A6E007FA0EE /* Channelsservice.pbrpc.m */,
-				04C43ED4222D6A72007FA0EE /* Companyservice.pbrpc.h */,
-				04C43EDD222D6A7F007FA0EE /* Companyservice.pbrpc.m */,
-				04C43ECD222D6A69007FA0EE /* Contactsservice.pbrpc.h */,
-				04C43ED0222D6A6D007FA0EE /* Contactsservice.pbrpc.m */,
-				04C43EDB222D6A7C007FA0EE /* Conversationservice.pbrpc.h */,
-				04C43EDA222D6A7A007FA0EE /* Conversationservice.pbrpc.m */,
-				04C43ED7222D6A76007FA0EE /* Pingservice.pbrpc.h */,
-				04C43EDC222D6A7D007FA0EE /* Pingservice.pbrpc.m */,
-				04C43EDE222D6A80007FA0EE /* Queueservice.pbrpc.h */,
-				04C43ED9222D6A79007FA0EE /* Queueservice.pbrpc.m */,
-				04C43ECE222D6A6A007FA0EE /* Userservice.pbrpc.h */,
-				04C43ED3222D6A71007FA0EE /* Userservice.pbrpc.m */,
-			);
-			name = gen;
 			sourceTree = "<group>";
 		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
@@ -2721,38 +2883,72 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04905622223B6A49008FECC8 /* TimelineLastMessage+frontm.m in Sources */,
+				0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */,
 				04704B2522368937003ABE94 /* SigninResponse+frontm.m in Sources */,
+				04905661223BB9D9008FECC8 /* ContactsResponse+frontm.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				04C43EFD222D6A9C007FA0EE /* Commonmessages.pbobjc.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				04704B882237CB42003ABE94 /* Message+frontm.m in Sources */,
+				04905610223B61A4008FECC8 /* TimelineResponse+frontm.m in Sources */,
+				0490563A223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m in Sources */,
 				0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */,
-				04C43F03222D6A9C007FA0EE /* Channelsservice.pbobjc.m in Sources */,
+				0490565B223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m in Sources */,
+				04905613223B61BB008FECC8 /* TimelineContent+frontm.m in Sources */,
+				0490564F223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m in Sources */,
+				04704B732236DA7F003ABE94 /* ChannelsServiceClient.m in Sources */,
+				04905658223BB809008FECC8 /* VoipToggleResponse+frontm.m in Sources */,
+				04905664223BBA01008FECC8 /* Contact+frontm.m in Sources */,
+				04905667223BBB24008FECC8 /* QueueResponse+frontm.m in Sources */,
+				04704B6D2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m in Sources */,
+				0458FAB12238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m in Sources */,
 				7AB7A3C14ABF44A18ECEB47C /* RNBackgroundFetch+AppDelegate.m in Sources */,
+				04704B792236E244003ABE94 /* AgentGuardBoolResponse+frontm.m in Sources */,
+				04E0FF8122384232004F19B1 /* CatalogResponse+frontm.m in Sources */,
+				04905646223B857C008FECC8 /* ChannelOwner+frontm.m in Sources */,
 				04704B2B22368C3B003ABE94 /* PhoneNumbers+frontm.m in Sources */,
-				04C43EE7222D6A80007FA0EE /* Companyservice.pbrpc.m in Sources */,
+				0490560D223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m in Sources */,
+				04704B7C2236E33F003ABE94 /* CompanyServiceClient.m in Sources */,
+				0490565E223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m in Sources */,
+				04905619223B61FE008FECC8 /* TimelineChannels+frontm.m in Sources */,
+				04905616223B61D8008FECC8 /* TimelineConversation+frontm.m in Sources */,
+				04E0FF88223843F3004F19B1 /* CatalogDependencies+frontm.m in Sources */,
+				04905625223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m in Sources */,
 				0400FD7C20D4F73900AB3A78 /* RNGoogleSignIn.swift in Sources */,
 				0400FD7B20D4F73900AB3A78 /* RNGoogleSignInEvents.swift in Sources */,
-				04C43EFF222D6A9C007FA0EE /* Authservice.pbobjc.m in Sources */,
-				04C43EFC222D6A9C007FA0EE /* Contactsservice.pbobjc.m in Sources */,
-				04C43EE2222D6A80007FA0EE /* Userservice.pbrpc.m in Sources */,
+				04905631223B75C3008FECC8 /* VoipStatusResponse+frontm.m in Sources */,
+				04704B6A2236C50D003ABE94 /* UserServiceClient.m in Sources */,
+				04704B7F2237C23D003ABE94 /* QueueServiceClient.m in Sources */,
+				04905640223B8533008FECC8 /* ChannelListResponse+frontm.m in Sources */,
+				0490562E223B7535008FECC8 /* TwilioTokenResponse+frontm.m in Sources */,
 				04704B2222366922003ABE94 /* SignupResponse+frontm.m in Sources */,
-				04C43EE5222D6A80007FA0EE /* Conversationservice.pbrpc.m in Sources */,
-				04C43EE1222D6A80007FA0EE /* Authservice.pbrpc.m in Sources */,
-				04C43EE3222D6A80007FA0EE /* Agentguardservice.pbrpc.m in Sources */,
+				049055BA223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m in Sources */,
+				04E0FF8B22384414004F19B1 /* CatalogDependency+frontm.m in Sources */,
+				0490561C223B6A13008FECC8 /* TimelineContact+frontm.m in Sources */,
+				0458FA5E2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m in Sources */,
+				04704B672236A39B003ABE94 /* DomainRoles+frontm.m in Sources */,
+				04704B702236C686003ABE94 /* SubscribedBotsContent+frontm.m in Sources */,
+				04905652223BB5A0008FECC8 /* User+frontm.m in Sources */,
+				04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */,
+				04905634223B7770008FECC8 /* AgentGuardServiceClient.m in Sources */,
+				04704B852237C8A7003ABE94 /* MessageDetails+frontm.m in Sources */,
+				0490562B223B7447008FECC8 /* MatchedUser+frontm.m in Sources */,
 				04E2D94A22256231004C1AC0 /* PingServiceClient.m in Sources */,
 				04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */,
-				04C43EDF222D6A80007FA0EE /* Contactsservice.pbrpc.m in Sources */,
-				04C43EFE222D6A9C007FA0EE /* Companyservice.pbobjc.m in Sources */,
-				04C43EE6222D6A80007FA0EE /* Pingservice.pbrpc.m in Sources */,
-				04C43F02222D6A9C007FA0EE /* Agentguardservice.pbobjc.m in Sources */,
-				04C43EE0222D6A80007FA0EE /* Channelsservice.pbrpc.m in Sources */,
-				04C43F05222D6A9C007FA0EE /* Conversationservice.pbobjc.m in Sources */,
+				04905643223B855A008FECC8 /* DBChannel+frontm.m in Sources */,
+				04704B762236E08C003ABE94 /* ContactsServiceClient.m in Sources */,
+				0458FAB42238E647002D37A3 /* GetConversationDetailsChannels+frontm.m in Sources */,
+				04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */,
 				0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */,
-				04C43F04222D6A9C007FA0EE /* Pingservice.pbobjc.m in Sources */,
+				0490564C223B8C95008FECC8 /* CreateChannelResponse+frontm.m in Sources */,
+				04905655223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m in Sources */,
 				04FC952E222D0A5100532F42 /* AuthServiceClient.m in Sources */,
-				04C43F01222D6A9C007FA0EE /* Userservice.pbobjc.m in Sources */,
-				04C43F00222D6A9C007FA0EE /* Queueservice.pbobjc.m in Sources */,
-				04C43EE4222D6A80007FA0EE /* Queueservice.pbrpc.m in Sources */,
+				04905637223B7C4F008FECC8 /* Conversation+frontm.m in Sources */,
+				04905649223B879E008FECC8 /* BooleanResponse+frontm.m in Sources */,
+				04E0FF8E2238E063004F19B1 /* CatalogBotClients+frontm.m in Sources */,
+				0490563D223B7D8B008FECC8 /* Channel+frontm.m in Sources */,
+				04704B822237C804003ABE94 /* QueueMessage+frontm.m in Sources */,
+				04E0FF7E22383F80004F19B1 /* ConversationServiceClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

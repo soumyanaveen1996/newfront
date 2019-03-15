@@ -10,7 +10,7 @@
 
 @implementation SignupResponse (frontm)
 
-- (NSDictionary *) toDictionary {
+- (NSDictionary *) toJSON {
   return @{
            @"success": @(self.success),
            @"data": self.data_p,
@@ -20,7 +20,11 @@
 
 
 - (NSDictionary *) toResponse {
-  return @{ @"data": [self toDictionary] };
+  return @{
+           @"success": @(self.success),
+           @"message": self.message,
+           @"data": [self toJSON]
+           };
 }
 
 

@@ -121,22 +121,26 @@ RCT_REMAP_METHOD(confirmPasswordReset, confirmPasswordResetWithParams:(NSDiction
   }];
 }
 
-RCT_REMAP_METHOD(changePassword, changePasswordWithParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(changePassword, changePasswordWithSessionId:(NSString*)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:changePassword Params : %@", params);
   SignupUser *user = [SignupUser new];
-  user.email = params[@"email"];
   user.oldPassword = params[@"oldPassword"];
   user.newPassword = params[@"newPassword"];
 
-  [self.serviceClient changePasswordWithRequest:user handler:^(SignupResponse * _Nullable response, NSError * _Nullable error) {
-    RCTLog(@"method:changePassword Error and response : %@ %@ %@ %d", error, response.data_p, response.message, response.success);
-    if (error != nil) {
-      callback(@[@{}, [NSNull null]]);
-      return;
-    } else {
-      callback(@[[NSNull null], [response toResponse]]);
-    }
-  }];
+  GRPCProtoCall *call = [self.serviceClient RPCToChangePasswordWithRequest:user
+                                                               handler:^(SignupResponse * _Nullable response, NSError * _Nullable error) {
+                                                                 RCTLog(@"method:changePassword Error and response : %@ %@ %@ %d", error, response.data_p, response.message, response.success);
+                                                                 if (error != nil) {
+                                                                   callback(@[@{}, [NSNull null]]);
+                                                                   return;
+                                                                 } else {
+                                                                   callback(@[[NSNull null], [response toResponse]]);
+                                                                 }
+                                                               }];
+
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+
 }
 
 RCT_REMAP_METHOD(deleteUser, deleteUserWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
@@ -147,7 +151,7 @@ RCT_REMAP_METHOD(deleteUser, deleteUserWithSessionId:(NSString *)sessionId andCa
                                                                    callback(@[@{}, [NSNull null]]);
                                                                    return;
                                                                  } else {
-                                                                   callback(@[[NSNull null], [response toDictionary]]);
+                                                                   callback(@[[NSNull null], [response toJSON]]);
                                                                  }
                                                                }];
 
@@ -157,11 +161,11 @@ RCT_REMAP_METHOD(deleteUser, deleteUserWithSessionId:(NSString *)sessionId andCa
 
 
 RCT_REMAP_METHOD(frontmSignin, frontmSigninWithParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:signup Params : %@", params);
+  RCTLog(@"method:signin Params : %@", params);
   FrontmSigninInput *input = [FrontmSigninInput new];
   input.email = params[@"email"];
   input.password = params[@"password"];
-  input.platform = params[@"platform"];
+  input.platform = @"ios";
 
   [self.serviceClient frontmSigninWithRequest:input handler:^(SigninResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {
@@ -176,25 +180,21 @@ RCT_REMAP_METHOD(frontmSignin, frontmSigninWithParams:(NSDictionary *)params and
 
 RCT_REMAP_METHOD(googleSignin, googleSigninWithParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:signup Params : %@", params);
-  SignupUser *user = [SignupUser new];
-  user.email = params[@"email"];
-  user.userName = params[@"userName"];
-  user.password = params[@"password"];
+  GoogleSigninInput *input = [GoogleSigninInput new];
+  input.code = params[@"code"];
+  input.platform = params[@"platform"];
 
-  [self.serviceClient signupWithRequest:user handler:^(SignupResponse * _Nullable response, NSError * _Nullable error) {
-    RCTLog(@"method:signup Error and response : %@ %@ %@ %d", error, response.data_p, response.message, response.success);
-    if (error != nil) {
-      callback(@[@{}, [NSNull null]]);
-      return;
-    } else {
-      NSDictionary *frontmResponse = @{
-                                       @"success": [NSNumber numberWithBool:response.success],
-                                       @"data": response.data_p,
-                                       @"message": response.message
-                                       };
-      callback(@[[NSNull null], frontmResponse]);
-    }
-  }];
+  [self.serviceClient googleSigninWithRequest:input
+                                      handler:^(SigninResponse * _Nullable response, NSError * _Nullable error) {
+                                        if (error != nil) {
+                                          callback(@[@{}, [NSNull null]]);
+                                          return;
+                                        } else {
+                                          callback(@[[NSNull null], [response toResponse]]);
+                                        }
+                                      }];
+
+
 }
 
 

@@ -12,8 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PhoneNumbers (frontm)
 
-- (NSDictionary *) toDictionary;
+- (NSDictionary *) toJSON;
 - (NSDictionary *) toResponse;
++ (NSArray *) jsonArrayFromObjects:(NSMutableArray *)numbers;
 
 @end
 

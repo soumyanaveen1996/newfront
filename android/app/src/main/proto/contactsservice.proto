@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.contacts.proto";
+
+package contacts;
+
+service ContactsService {
+    rpc Find (SearchQuery) returns (FindResponse) {}
+    rpc Add (UserIdList) returns (AgentGuardBoolResponse) {}
+    rpc Accept (UserIdList) returns (AgentGuardBoolResponse) {}
+    rpc Remove (UserIdList) returns (AgentGuardBoolResponse) {}
+    rpc Invite (EmailIdList) returns (AgentGuardBoolResponse) {}
+}
+
+message SearchQuery {
+    string queryString = 1;
+}
+
+message UserIdList {
+    repeated string userIds = 1;
+}
+
+message EmailIdList {
+    repeated string emailIds = 1;
+}
+
+message AgentGuardBoolResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+}
+
+message FindResponse {
+    int32 error = 1;
+    repeated MatchedUser content = 2;
+    string errorMessage = 3;
+}
+
+message MatchedUser {
+    string userName = 1;
+    string userId = 2;
+}

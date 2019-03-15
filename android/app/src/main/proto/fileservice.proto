@@ -1,0 +1,25 @@
+syntax = "proto3";
+package file;
+
+service FileService {
+    rpc GetFile(GetFileInput) returns (stream GetFileResponse) {}
+    rpc GetInformation(GetFileInput) returns (GetInformationResponse) {}
+}
+
+message GetFileInput {
+    string folderName = 1;
+    string fileName = 2;
+    bool base64 = 3;
+}
+
+message GetFileResponse {
+    bytes data = 1;
+}
+
+message GetInformationResponse {
+    int32 lastModified = 1;
+    string eTag = 2;
+    int32 contentLength = 3;
+    string contentType = 4;
+    string acceptRanges = 5;
+}
