@@ -220,9 +220,7 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Chat"
-                                        navBarButtonColor={{
-                                            color: 'rgba(22,175,239,1)'
-                                        }}
+                                        navBarButtonColor="rgba(22, 175, 239, 1)"
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
                                     >

@@ -9,7 +9,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    Image
+    Image,
+    PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -55,11 +56,28 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
-        Contact.getAddedContacts().then(contacts => {
-            // console.log('frotnm onctacts ===== ', contacts);
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        this.gettingAllContactData();
+                    } else {
+                        Actions.pop();
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            this.gettingAllContactData();
+        }
 
-            this.refresh(contacts);
-        });
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
             this.props.summary
@@ -95,6 +113,12 @@ class NewCallContacts extends React.Component {
             });
         }
     }
+
+    gettingAllContactData = () => {
+        Contact.getAddedContacts().then(contacts => {
+            this.refresh(contacts);
+        });
+    };
 
     static onEnter() {
         const user = Store.getState().user;

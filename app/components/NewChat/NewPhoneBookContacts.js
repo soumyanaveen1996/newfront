@@ -9,7 +9,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    Image
+    Image,
+    PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';

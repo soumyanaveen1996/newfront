@@ -113,7 +113,7 @@ class ChannelsFilter extends React.Component {
     }
 
     render() {
-        console.log(this.state);
+        // console.log(this.state);
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <ScrollView style={styles.filterScrollView}>
