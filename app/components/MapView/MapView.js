@@ -143,9 +143,7 @@ class MapView extends React.Component {
         }
     }
 
-    componentWillUnmount() {
-        this.props.setOpenMap(null);
-    }
+    componentWillUnmount() {}
 
     readLambdaQueue() {
         NetworkHandler.readLambda();
@@ -480,11 +478,11 @@ class MapView extends React.Component {
                 <TouchableOpacity
                     style={styles.rightContainerRS}
                     onPress={() => {
-                        if (Platform.OS === 'ios') {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                        }
+                        // if (Platform.OS === 'ios') {
+                        //     LayoutAnimation.configureNext(
+                        //         LayoutAnimation.Presets.easeInEaseOut
+                        //     );
+                        // }
                         this.setState({
                             routeTrackerClosed: !this.state.routeTrackerClosed
                         });
@@ -622,11 +620,11 @@ class MapView extends React.Component {
     }
 
     closeAndOpenSlideshow() {
-        if (Platform.OS === 'ios') {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-        }
+        // if (Platform.OS === 'ios') {
+        //     LayoutAnimation.configureNext(
+        //         LayoutAnimation.Presets.easeInEaseOut
+        //     );
+        // }
         this.setState({ slideshowOpen: !this.state.slideshowOpen });
     }
 
@@ -667,10 +665,9 @@ class MapView extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log('>>>>>>>state', state);
+const mapStateToProps = (state, ownProps) => {
     return {
-        mapData: state.user.openMap
+        mapData: state.user.openMap[ownProps.storeIndex]
     };
 };
 
