@@ -68,7 +68,7 @@ class NewCallContacts extends React.Component {
                     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                         this.gettingAllContactData();
                     } else {
-                        Actions.pop();
+                        this.refresh([]);
                     }
                 })
                 .catch(err => {
@@ -96,10 +96,7 @@ class NewCallContacts extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            // this.refresh()
             Contact.getAddedContacts().then(contacts => {
-                // console.log('frotnm onctacts ===== ', contacts);
-
                 this.refresh(contacts);
             });
         }

@@ -43,7 +43,7 @@ class NewDialler extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('Mount', this.props);
+        // console.log('Mount', this.props);
 
         if (Actions.prevScene === ROUTER_SCENE_KEYS.dialler && this.props.bot) {
             Actions.botChat({ bot: this.props.bot });
@@ -76,7 +76,8 @@ class NewDialler extends React.Component {
         // console.log(Actions.prevScene);
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.contactsCall ||
-            Actions.prevScene === ROUTER_SCENE_KEYS.botChat
+            Actions.prevScene === ROUTER_SCENE_KEYS.botChat ||
+            Actions.prevScene === ROUTER_SCENE_KEYS.phoneContactsCall
         ) {
             Actions.push(ROUTER_SCENE_KEYS.dialler, {
                 newCallScreen: true
