@@ -35,12 +35,17 @@ import turf_distance from '@turf/distance';
 import turf_helpers from '@turf/helpers';
 import GlobalColors from '../../config/styles';
 import { MarkerIconTypes } from './config';
+import Store from '../../redux/store/configureStore';
+import { setOpenMap } from '../../redux/actions/UserActions';
+import { connect } from 'react-redux';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
 );
 
-export default class MapView extends React.Component {
+//Mapbox descibes coordinates with two positions arrays. The first element is always the longitude.
+
+class MapView extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
@@ -109,15 +114,102 @@ export default class MapView extends React.Component {
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
             locateUserButtonIcon: Icons.userPosition(),
             slideshowOpen: false,
-            slideshowContext: this.props.mapData.options
-                ? this.props.mapData.options.cards
-                : [],
+            slideshowContext: [],
             chatModalContent: {},
             isModalVisible: false,
             showRouteTracker: false,
             routeTrackerClosed: false,
-            trackerData: {}
+            trackerData: {},
+            GEOJson: {}
         };
+    }
+
+    async componentDidMount() {
+        this.refreshMap();
+        this.props.navigation.setParams({
+            refresh: this.readLambdaQueue.bind(this),
+            showConnectionMessage: this.showConnectionMessage.bind(this)
+        });
+        this.checkPollingStrategy();
+        EventEmitter.addListener(
+            PollingStrategyEvents.changed,
+            this.checkPollingStrategy.bind(this)
+        );
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.mapData, this.props.mapData)) {
+            this.refreshMap();
+        }
+    }
+
+    componentWillUnmount() {
+        this.props.setOpenMap(null);
+    }
+
+    readLambdaQueue() {
+        NetworkHandler.readLambda();
+    }
+
+    showConnectionMessage(connectionType) {
+        let message = I18n.t('Auto_Message');
+        if (connectionType === 'gsm') {
+            message = I18n.t('Gsm_Message');
+        } else if (connectionType === 'satellite') {
+            message = I18n.t('Satellite_Message');
+        }
+        Alert.alert(
+            I18n.t('Connection_Type'),
+            message,
+            [{ text: I18n.t('Ok'), style: 'cancel' }],
+            { cancelable: false }
+        );
+    }
+
+    async checkPollingStrategy() {
+        let pollingStrategy = await Settings.getPollingStrategy();
+        console.log('Polling strategy changed : ', pollingStrategy);
+        this.showButton(pollingStrategy);
+    }
+
+    showButton(pollingStrategy) {
+        if (pollingStrategy === PollingStrategyTypes.manual) {
+            this.props.navigation.setParams({ button: 'manual' });
+        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
+            this.props.navigation.setParams({ button: 'none' });
+        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
+            this.props.navigation.setParams({ button: 'gsm' });
+        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
+            this.props.navigation.setParams({ button: 'satellite' });
+        }
+    }
+
+    // _renderTrailArrows(polylines) {
+    //     return _.map(polylines, polyline => {
+    //         return polyline.coordinates.map((coo, index, coos) => {
+    //             if (index === coos.length - 1) {
+    //                 return;
+    //             }
+    //             let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+    //             let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+    //             let angle =
+    //                 -Math.atan2(deltaLatitute, deltaLongitude) *
+    //                 (180 / Math.PI);
+    //             let angleStringRad = angle + 'deg';
+    //             return (
+    //                 <RNMapView.Marker
+    //                     coordinate={coo}
+    //                     image={images.trail_arrow}
+    //                     anchor={{ x: 0.5, y: 0.5 }}
+    //                     style={{ transform: [{ rotateZ: angleStringRad }] }}
+    //                 />
+    //             );
+    //         });
+    //     });
+    // }
+
+    //Create a new GEOJson
+    refreshMap() {
         //GREAT CIRCLE
         const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
@@ -191,7 +283,7 @@ export default class MapView extends React.Component {
         });
 
         //GENERATE GEOJSON
-        this.GEOJson = {
+        let GEOJson = {
             type: 'FeatureCollection',
             features: [
                 {
@@ -217,85 +309,25 @@ export default class MapView extends React.Component {
                 .concat(planeRoutes)
                 .concat(markers)
         };
-    }
 
-    async componentDidMount() {
-        this.checkForRouteTracker();
-        this.props.navigation.setParams({
-            refresh: this.readLambdaQueue.bind(this),
-            showConnectionMessage: this.showConnectionMessage.bind(this)
-        });
-        this.checkPollingStrategy();
-        EventEmitter.addListener(
-            PollingStrategyEvents.changed,
-            this.checkPollingStrategy.bind(this)
-        );
-    }
-
-    readLambdaQueue() {
-        NetworkHandler.readLambda();
-    }
-
-    showConnectionMessage(connectionType) {
-        let message = I18n.t('Auto_Message');
-        if (connectionType === 'gsm') {
-            message = I18n.t('Gsm_Message');
-        } else if (connectionType === 'satellite') {
-            message = I18n.t('Satellite_Message');
-        }
-        Alert.alert(
-            I18n.t('Connection_Type'),
-            message,
-            [{ text: I18n.t('Ok'), style: 'cancel' }],
-            { cancelable: false }
-        );
-    }
-
-    async checkPollingStrategy() {
-        let pollingStrategy = await Settings.getPollingStrategy();
-        console.log('Polling strategy changed : ', pollingStrategy);
-        this.showButton(pollingStrategy);
-    }
-
-    showButton(pollingStrategy) {
-        if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.props.navigation.setParams({ button: 'manual' });
-        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
-            this.props.navigation.setParams({ button: 'none' });
-        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
-            this.props.navigation.setParams({ button: 'gsm' });
-        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
-            this.props.navigation.setParams({ button: 'satellite' });
+        //ROUTE TRACKER
+        let trackerData = this.getRouteTracker();
+        if (trackerData) {
+            this.setState({
+                GEOJson: GEOJson,
+                showRouteTracker: true,
+                trackerData: trackerData
+            });
+        } else {
+            this.setState({
+                GEOJson: GEOJson
+            });
         }
     }
-
-    // _renderTrailArrows(polylines) {
-    //     return _.map(polylines, polyline => {
-    //         return polyline.coordinates.map((coo, index, coos) => {
-    //             if (index === coos.length - 1) {
-    //                 return;
-    //             }
-    //             let deltaLatitute = coos[index + 1].latitude - coo.latitude;
-    //             let deltaLongitude = coos[index + 1].longitude - coo.longitude;
-    //             let angle =
-    //                 -Math.atan2(deltaLatitute, deltaLongitude) *
-    //                 (180 / Math.PI);
-    //             let angleStringRad = angle + 'deg';
-    //             return (
-    //                 <RNMapView.Marker
-    //                     coordinate={coo}
-    //                     image={images.trail_arrow}
-    //                     anchor={{ x: 0.5, y: 0.5 }}
-    //                     style={{ transform: [{ rotateZ: angleStringRad }] }}
-    //                 />
-    //             );
-    //         });
-    //     });
-    // }
 
     renderElements() {
         return (
-            <Mapbox.ShapeSource id="routeSource" shape={this.GEOJson}>
+            <Mapbox.ShapeSource id="routeSource" shape={this.state.GEOJson}>
                 {/* VESSELS ROUTES */}
                 <Mapbox.LineLayer id="routes" style={layerStyles.route} />
                 {/* ROUTES STARTING POINTS */}
@@ -360,7 +392,7 @@ export default class MapView extends React.Component {
         );
     }
 
-    checkForRouteTracker() {
+    getRouteTracker() {
         let markerToTrack;
         let routeToTrack = _.find(this.props.mapData.planeRoutes, route => {
             return route.showTracker;
@@ -388,14 +420,10 @@ export default class MapView extends React.Component {
                     ],
                     arrivalTime: routeToTrack.end.time
                 };
-                this.setState({
-                    trackerData: trackerData,
-                    showRouteTracker: true
-                });
-                return;
+                return trackerData;
             }
         }
-        this.setState({ showRouteTracker: false });
+        return null;
     }
 
     renderRouteTracker() {
@@ -553,21 +581,44 @@ export default class MapView extends React.Component {
 
     renderSlideShow() {
         if (
-            this.state.slideshowContext &&
-            this.state.slideshowContext.length > 0
+            this.props.mapData.options &&
+            this.props.mapData.options.cards &&
+            this.props.mapData.options.cards.length > 0
         ) {
             return (
                 <ContextSlideshow
-                    contentData={this.state.slideshowContext}
+                    contentData={this.props.mapData.options.cards}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
                         this
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
-                    onCardSelected={this.props.onAction || null}
+                    onCardSelected={this.onAction.bind(this)}
                 />
             );
         }
+    }
+
+    onAction(elementId) {
+        let response = {
+            type: 'map_response',
+            mapId: this.props.mapData.options.mapId,
+            cardId: elementId,
+            markerId: elementId
+        };
+        this.map
+            .getZoom()
+            .then(zoom => {
+                response.zoom = zoom;
+                return this.map.getCenter();
+            })
+            .then(center => {
+                response.center = {
+                    longitude: center[0],
+                    latitude: center[1]
+                };
+                this.props.onAction(response);
+            });
     }
 
     closeAndOpenSlideshow() {
@@ -615,3 +666,21 @@ export default class MapView extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    console.log('>>>>>>>state', state);
+    return {
+        mapData: state.user.openMap
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setOpenMap: mapData => dispatch(setOpenMap(mapData))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MapView);
