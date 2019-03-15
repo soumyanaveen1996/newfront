@@ -25,57 +25,46 @@ export default class WebCards extends React.Component {
     }
 
     openMap() {
+        //DATASET to test maps. Please don't remove ;)
         // this.MAPDATATEST = {
         //     region: {
-        //         latitude: -75.343,
-        //         longitude: 39.984,
-        //         zoom: 7
+        //         latitude: 15.5528,
+        //         longitude: 110.433,
+        //         zoom: 10
         //     },
         //     markers: [
         //         {
-        //             id: 'LH204',
-        //             title: 'marker 2',
-        //             description: 'marker 2 description',
+        //             id: "AK137",
+        //             title: "AK137",
+        //             description: "AK137",
         //             draggable: false,
-        //             coordinate: { latitude: -75.438, longitude: 39.553 },
-        //             iconType: 'aircraft' //arrow, aircraft, poi, circle
+        //             coordinate: {
+        //                 latitude: 15.5528,
+        //                 longitude: 110.433,
+        //                 direction: 214.762
+        //             },
+        //             iconType: "aircraft"
         //         }
         //     ],
         //     planeRoutes: [
         //         {
-        //             id: 'LH204', //flight number
+        //             id: "AK137",
         //             start: {
-        //                 id: 'LGW', //airport code, station
-        //                 time: '10:30', //departure time
-        //                 longitude: 39.123,
-        //                 latitude: -75.534
+        //                 id: "HKG",
+        //                 time: "18:15:00",
+        //                 latitude: 15.5528,
+        //                 longitude: 110.433
         //             },
         //             end: {
-        //                 id: 'JFK',
-        //                 time: '23:30', //rrival time
-        //                 longitude: 39.984,
-        //                 latitude: -75.343
+        //                 id: "KUL",
+        //                 time: "22:20:00",
+        //                 latitude: 2.755672,
+        //                 longitude: 101.70539
         //             },
-        //             showTracker: true //id must be the same of a marker
-        //         },
-        //         {
-        //             id: 'route2', //flight number
-        //             start: {
-        //                 id: 'MXP',
-        //                 time: '10:30',
-        //                 longitude: 38,
-        //                 latitude: -70
-        //             },
-        //             end: {
-        //                 id: 'LLT',
-        //                 time: '20:30',
-        //                 longitude: 40,
-        //                 latitude: -72
-        //             },
-        //             showTracker: false
+        //             showTracker: true
         //         }
         //     ]
-        // };
+        // }
 
         this.props.openMap(this.props.mapData);
         // this.props.openMap(this.MAPDATATEST);

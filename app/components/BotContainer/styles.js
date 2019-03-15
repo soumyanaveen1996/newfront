@@ -27,7 +27,7 @@ export default StyleSheet.create({
     },
     categoryTitleStyle: {
         paddingLeft: 10,
-        fontSize: 20,
+        fontSize: 18,
         color: 'rgba(74,74,74,1)'
     },
     rowContainer: {
