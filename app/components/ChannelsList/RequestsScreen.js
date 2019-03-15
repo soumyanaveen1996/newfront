@@ -6,8 +6,69 @@ import images from '../../images';
 import { Channel } from '../../lib/capability';
 import _ from 'lodash';
 import ContactStyles from '../ContactsPicker/styles';
+import { HeaderBack, HeaderRightIcon } from '../Header';
+import { Actions } from 'react-native-router-flux';
 
 export default class RequestsScreen extends React.Component {
+    static navigationOptions({ navigation, screenProps }) {
+        const { state } = navigation;
+
+        let navigationOptions = {
+            headerTitle: 'Pending requests'
+        };
+        if (state.params.noBack === true) {
+            navigationOptions.headerLeft = null;
+        } else {
+            navigationOptions.headerLeft = (
+                <HeaderBack
+                    onPress={() => {
+                        Actions.pop();
+                    }}
+                />
+            );
+        }
+        if (state.params.button) {
+            if (state.params.button === 'manual') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        onPress={() => {
+                            state.params.refresh();
+                        }}
+                        icon={Icons.refresh()}
+                    />
+                );
+            } else if (state.params.button === 'gsm') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.gsm}
+                        onPress={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                    />
+                );
+            } else if (state.params.button === 'satellite') {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        image={images.satellite}
+                        onPress={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                    />
+                );
+            } else {
+                navigationOptions.headerRight = (
+                    <HeaderRightIcon
+                        icon={Icons.automatic()}
+                        onPress={() => {
+                            state.params.showConnectionMessage('automatic');
+                        }}
+                    />
+                );
+            }
+        }
+        return navigationOptions;
+    }
+
     constructor(props) {
         super(props);
         this.state = {

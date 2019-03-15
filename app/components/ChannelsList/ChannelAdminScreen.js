@@ -28,6 +28,8 @@ import Utils from '../../lib/utils';
 import CachedImage from '../CachedImage';
 import config from '../../config/config';
 import Toast, { DURATION } from 'react-native-easy-toast';
+import { Conversation } from '../../lib/conversation';
+import { MessageDAO } from '../../lib/persistence';
 
 const SeparatorSize = {
     SMALL: 2,
@@ -99,7 +101,8 @@ class ChannelAdminScreen extends React.Component {
         this.state = {
             participants: [],
             admins: [],
-            pendingRequests: []
+            pendingRequests: [],
+            uiDisabled: false
         };
         this.channel = this.props.channel;
     }
@@ -107,6 +110,7 @@ class ChannelAdminScreen extends React.Component {
     componentDidMount() {
         let participants;
         let admins;
+        let pendingRequests;
         this.props.navigation.setParams({ onBack: this.onBack.bind(this) });
         Channel.getParticipants(
             this.channel.channelName,
@@ -114,6 +118,14 @@ class ChannelAdminScreen extends React.Component {
         )
             .then(prt => {
                 participants = prt;
+                return Channel.getRequests(
+                    this.channel.channelName,
+                    this.channel.userDomain
+                );
+            })
+            .then(pend => {
+                console.log('>>>>>>>PEND', pend);
+                pendingRequests = [];
                 return Channel.getAdmins(
                     this.channel.channelName,
                     this.channel.userDomain
@@ -123,7 +135,8 @@ class ChannelAdminScreen extends React.Component {
                 admins = adm;
                 this.setState({
                     participants: participants,
-                    admins: admins
+                    admins: admins,
+                    pendingRequests: pendingRequests
                 });
             });
     }
@@ -185,22 +198,45 @@ class ChannelAdminScreen extends React.Component {
     }
 
     unsubscribe() {
-        this.props
-            .onUnsubscribeChannel(this.channel)
-            .then(() => {
-                Actions.pop();
-            })
-            .catch(e => {
-                if (e === 98) {
-                    this.refs.toast.show(
-                        'You are the only admin',
-                        DURATION.LENGTH_SHORT
-                    );
-                }
-            });
+        this.setState({ uiDisabled: true }, () => {
+            this.props
+                .onUnsubscribeChannel(this.channel)
+                .then(() => {
+                    Actions.pop();
+                })
+                .catch(e => {
+                    if (e === 98) {
+                        this.refs.toast.show(
+                            'You are the only admin',
+                            DURATION.LENGTH_SHORT
+                        );
+                    }
+                });
+        });
     }
 
-    deleteChannel() {} //missing
+    deleteChannel() {
+        this.setState({ uiDisabled: true }, () => {
+            Channel.deleteChannel(this.channel)
+                .then(() => {
+                    return Conversation.deleteChannelConversation(
+                        this.channel.channelId
+                    );
+                })
+                .then(() => {
+                    return MessageDAO.deleteBotMessages(this.channel.channelId);
+                })
+                .then(() => {
+                    Actions.pop();
+                })
+                .catch(e => {
+                    this.refs.toast.show(
+                        'Unable to delete channel',
+                        DURATION.LENGTH_SHORT
+                    );
+                });
+        });
+    }
 
     renderTopArea() {
         return (
@@ -226,13 +262,17 @@ class ChannelAdminScreen extends React.Component {
     renderAdminArea() {
         return (
             <View>
-                <TouchableOpacity style={styles.adminRow}>
+                <TouchableOpacity
+                    style={styles.adminRow}
+                    disabled={this.state.uiDisabled}
+                >
                     <Text style={styles.adminH2}>Add to favourite</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.setOwner.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <Text style={styles.adminH2}>Transfer ownership</Text>
                 </TouchableOpacity>
@@ -240,6 +280,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.unsubscribe.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
                         Leave channel
@@ -249,6 +290,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.deleteChannel.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
                         Delete channel
@@ -268,6 +310,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.manageRequests.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <View>
                         <Text style={styles.adminH2}>
@@ -284,6 +327,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.manageParticipants.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <View>
                         <Text style={styles.adminH2}>Manage participants</Text>
@@ -298,6 +342,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     onPress={this.manageAdmins.bind(this)}
+                    disabled={this.state.uiDisabled}
                 >
                     <Text style={styles.adminH2}>Manage admins</Text>
                     {Icons.formMessageArrow()}

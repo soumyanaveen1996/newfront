@@ -258,6 +258,43 @@ export default class Channel {
                 .catch(reject);
         });
 
+    static deleteChannel = channel =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        console.log('deleting channel ', channel);
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'DeleteChannel',
+                                channelName: channel.channelName,
+                                userDomain: channel.userDomain
+                            }
+                        };
+                        return Network(options);
+                    } else {
+                        reject();
+                    }
+                })
+                .then(async response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        return ChannelDAO.deleteChannel(channel.id);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
     static addUsers = (channelName, userDomain, newUserIds) =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -393,7 +430,29 @@ export default class Channel {
 
     static getRequests = (channelName, userDomain) =>
         new Promise((resolve, reject) => {
-            //missing
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'GetPendingParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    //missing: please return empty array if no admins
+                    resolve(res.data.content);
+                })
+                .catch(reject);
         });
 
     static manageRequests = (
@@ -444,8 +503,8 @@ export default class Channel {
                         data: {
                             action: 'ChangeOwner',
                             channelName: channelName,
-                            userDomain: userDomain
-                            //missing field
+                            userDomain: userDomain,
+                            newOwnerId: newOwnerId
                         }
                     };
                     return Network(options);

@@ -337,6 +337,7 @@ export default class ChannelsListItem extends React.Component {
     };
 
     render() {
+        console.log('>>>>>>', this.props.channel);
         const channel = this.props.channel;
         const user = this.props.user;
 
