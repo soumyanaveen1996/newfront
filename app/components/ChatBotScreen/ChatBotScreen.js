@@ -412,6 +412,7 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+        // this.TESTMAP()
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -774,7 +775,8 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
-        console.log('>>>>>>', message.getMessage());
+        console.log('>>>>>>>', message.getMessage());
+
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
@@ -816,18 +818,127 @@ class ChatBotScreen extends React.Component {
         ) {
             this.closeForm(message.getMessage().formId);
         } else if (
-            message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_MAP &&
-            ReduxStore.getState().user.openMap &&
-            ReduxStore.getState().user.openMap.options &&
-            ReduxStore.getState().user.openMap.options.mapId ===
-                message.getMessage().options.mapId
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
         ) {
-            Store.dispatch(setOpenMap(message.getMessage()));
+            let messageMap = message.getMessage();
+            let mapStore = ReduxStore.getState().user.openMap;
+            // Store.dispatch(setOpenMap([message.getMessage(), {}]));
+            const storeIndex = _.findIndex(mapStore, map => {
+                return map.options.mapId === messageMap.options.mapId;
+            });
+            if (storeIndex !== -1) {
+                mapStore[storeIndex] = messageMap;
+                Store.dispatch(setOpenMap(mapStore));
+            } else {
+                mapStore.push(messageMap);
+                Store.dispatch(setOpenMap(mapStore));
+                this.updateChat(message);
+            }
+            console.log('>>>>>>>R', ReduxStore.getState().user.openMap);
         } else {
             this.updateChat(message);
         }
     };
+
+    TESTMAP() {
+        // DATASET to test maps. Please don't remove ;)
+        let MAPDATATEST = {
+            region: {
+                latitude: 15.5528,
+                longitude: 110.433,
+                zoom: 10
+            },
+            options: {
+                mapId: '1234'
+            },
+            markers: [
+                {
+                    id: 'AK137',
+                    title: 'AK137',
+                    description: 'AK137',
+                    draggable: false,
+                    coordinate: {
+                        latitude: 15.5528,
+                        longitude: 110.433,
+                        direction: 214.762
+                    },
+                    iconType: 'aircraft'
+                }
+            ],
+            planeRoutes: [
+                {
+                    id: 'AK137',
+                    start: {
+                        id: 'HKG',
+                        time: '18:15:00',
+                        latitude: 15.5528,
+                        longitude: 110.433
+                    },
+                    end: {
+                        id: 'KUL',
+                        time: '22:20:00',
+                        latitude: 2.755672,
+                        longitude: 101.70539
+                    },
+                    showTracker: true
+                }
+            ]
+        };
+        let msg = new Message();
+        msg.mapMessage(MAPDATATEST);
+        msg.messageByBot(true);
+        this.tell(msg);
+    }
+
+    TESTMAP2() {
+        // DATASET to test maps. Please don't remove ;)
+        let MAPDATATEST = {
+            region: {
+                latitude: 15.5528,
+                longitude: 110.433,
+                zoom: 10
+            },
+            options: {
+                mapId: '1234'
+            },
+            markers: [
+                {
+                    id: 'AK137',
+                    title: 'AK137',
+                    description: 'AK137',
+                    draggable: false,
+                    coordinate: {
+                        latitude: 15.5528,
+                        longitude: 110.433,
+                        direction: 214.762
+                    },
+                    iconType: 'poi'
+                }
+            ],
+            planeRoutes: [
+                {
+                    id: 'AK137',
+                    start: {
+                        id: 'HKG',
+                        time: '18:15:00',
+                        latitude: 15.5528,
+                        longitude: 110.433
+                    },
+                    end: {
+                        id: 'KUL',
+                        time: '22:20:00',
+                        latitude: 2.755672,
+                        longitude: 101.70539
+                    },
+                    showTracker: true
+                }
+            ]
+        };
+        let msg = new Message();
+        msg.mapMessage(MAPDATATEST);
+        msg.messageByBot(true);
+        this.tell(msg);
+    }
 
     done = () => {
         // Done with the bot - navigate away?
@@ -875,9 +986,17 @@ class ChatBotScreen extends React.Component {
     }
 
     openMap(mapData) {
-        Store.dispatch(setOpenMap(mapData));
+        let mapStore = ReduxStore.getState().user.openMap;
+        let storeIndex = _.findIndex(mapStore, map => {
+            return map.options.mapId === mapData.options.mapId;
+        });
+        if (storeIndex === -1) {
+            storeIndex = mapStore.push(mapData) - 1;
+            Store.dispatch(setOpenMap(mapStore));
+        }
         Keyboard.dismiss();
         Actions.mapView({
+            storeIndex: storeIndex,
             onAction: this.sendMapResponse.bind(this)
         });
     }
@@ -1798,6 +1917,9 @@ class ChatBotScreen extends React.Component {
             region: {
                 longitude: locationData.coordinate[0],
                 latitude: locationData.coordinate[1]
+            },
+            options: {
+                mapId: 'location_share'
             },
             markers: [
                 {
