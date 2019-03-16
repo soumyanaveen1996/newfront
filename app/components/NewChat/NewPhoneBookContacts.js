@@ -185,23 +185,35 @@ class NewCallContacts extends React.Component {
                             contact.userName.charAt(0).toUpperCase() ===
                             letter.toUpperCase()
                     )
-                    .map(contact => ({
-                        id: contact.userId,
-                        name: contact.userName,
-                        emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: [...contact.phoneNumbers] || undefined
-                    }));
+                    .map(contact => {
+                        const yeahMail =
+                            contact.emails.length > 0
+                                ? contact.emails[0].email
+                                : undefined;
+                        return {
+                            id: contact.userId,
+                            name: contact.userName,
+                            emails: [{ email: yeahMail }],
+                            phoneNumbers: [...contact.phoneNumbers] || undefined
+                        };
+                    });
             } else {
                 contactBook = phoneContacts
                     .filter(
                         contact => !contact.userName.charAt(0).match(/[a-z]/i)
                     )
-                    .map(contact => ({
-                        id: contact.userId,
-                        name: contact.userName,
-                        emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: [...contact.phoneNumber] || undefined
-                    }));
+                    .map(contact => {
+                        const yeahMail =
+                            contact.emails.length > 0
+                                ? contact.emails[0].email
+                                : undefined;
+                        return {
+                            id: contact.userId,
+                            name: contact.userName,
+                            emails: [{ email: yeahMail }],
+                            phoneNumbers: [...contact.phoneNumbers] || undefined
+                        };
+                    });
             }
             return {
                 title: letter,
