@@ -313,14 +313,23 @@ export default class ContextSlideshow extends React.Component {
     }
 
     render() {
+        let bottomForSlideshow;
+        if (this.props.isOpen) {
+            bottomForSlideshow = 0;
+        } else {
+            bottomForSlideshow = -210;
+        }
         return (
             <View
                 style={
                     Platform.OS === 'ios'
-                        ? styles.CSContainer
+                        ? [styles.CSContainer, { bottom: bottomForSlideshow }]
                         : [
                             styles.CSContainer,
-                            { backgroundColor: 'rgba(255, 255, 255, 0.7)' }
+                            {
+                                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                bottom: bottomForSlideshow
+                            }
                         ]
                 }
             >

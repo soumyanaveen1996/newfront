@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
     CSContainer: {
         position: 'absolute',
         left: 0,
-        bottom: 0,
         right: 0,
+        height: 280,
         paddingBottom: 10,
         flexDirection: 'column',
         justifyContent: 'flex-start',
