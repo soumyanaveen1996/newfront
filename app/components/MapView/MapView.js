@@ -310,6 +310,7 @@ class MapView extends React.Component {
 
         //ROUTE TRACKER
         let trackerData = this.getRouteTracker();
+
         if (trackerData) {
             this.setState({
                 GEOJson: GEOJson,
@@ -404,18 +405,20 @@ class MapView extends React.Component {
                     routeId: markerToTrack.id,
                     startId: routeToTrack.start.id,
                     endId: routeToTrack.end.id,
-                    startCoord: [
-                        routeToTrack.start.longitude,
-                        routeToTrack.start.latitude
-                    ],
-                    endCoord: [
-                        routeToTrack.end.longitude,
-                        routeToTrack.end.latitude
-                    ],
-                    currentCoord: [
-                        markerToTrack.coordinate.longitude,
-                        markerToTrack.coordinate.latitude
-                    ],
+                    // startCoord: [
+                    //     routeToTrack.start.longitude,
+                    //     routeToTrack.start.latitude
+                    // ],
+                    // endCoord: [
+                    //     routeToTrack.end.longitude,
+                    //     routeToTrack.end.latitude
+                    // ],
+                    // currentCoord: [
+                    //     markerToTrack.coordinate.longitude,
+                    //     markerToTrack.coordinate.latitude
+                    // ],
+                    startTime: routeToTrack.start.time,
+                    currentTime: new Date().getTime(),
                     arrivalTime: routeToTrack.end.time
                 };
                 return trackerData;
@@ -425,13 +428,31 @@ class MapView extends React.Component {
     }
 
     renderRouteTracker() {
-        const from = turf_helpers.point(this.state.trackerData.startCoord);
-        const to = turf_helpers.point(this.state.trackerData.endCoord);
-        const now = turf_helpers.point(this.state.trackerData.currentCoord);
-        const fullDistance = turf_distance(from, to);
-        const travelled = turf_distance(from, now);
+        // const from = turf_helpers.point(this.state.trackerData.startCoord);
+        // const to = turf_helpers.point(this.state.trackerData.endCoord);
+        // const now = turf_helpers.point(this.state.trackerData.currentCoord);
+        // const fullDistance = turf_distance(from, to);
+        // const travelled = turf_distance(from, now);
+        // const trackerValue =
+        //     JSON.stringify((travelled * 100) / fullDistance) + '%';
+
+        const travelledTime =
+            this.state.trackerData.currentTime -
+            this.state.trackerData.startTime;
+        const fullTime =
+            this.state.trackerData.arrivalTime -
+            this.state.trackerData.startTime;
+        const timeLeftMs =
+            this.state.trackerData.arrivalTime -
+            this.state.trackerData.currentTime;
+        let seconds = Math.floor(timeLeftMs / 1000);
+        let minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        let hour = Math.floor(minute / 60);
+        minute = minute % 60;
+        hour = hour % 24;
         const trackerValue =
-            JSON.stringify((travelled * 100) / fullDistance) + '%';
+            JSON.stringify((travelledTime * 100) / fullTime) + '%';
 
         return (
             <View
@@ -468,9 +489,9 @@ class MapView extends React.Component {
                             {this.state.trackerData.routeId}
                         </Text>
                         <Text style={styles.bottomTextRS}>
-                            Arriving at{' '}
+                            Arriving in{' '}
                             <Text style={{ fontWeight: 'bold' }}>
-                                {this.state.trackerData.arrivalTime}
+                                {hour} : {minute}
                             </Text>
                         </Text>
                     </View>
