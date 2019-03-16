@@ -478,11 +478,11 @@ class MapView extends React.Component {
                 <TouchableOpacity
                     style={styles.rightContainerRS}
                     onPress={() => {
-                        // if (Platform.OS === 'ios') {
-                        //     LayoutAnimation.configureNext(
-                        //         LayoutAnimation.Presets.easeInEaseOut
-                        //     );
-                        // }
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
                         this.setState({
                             routeTrackerClosed: !this.state.routeTrackerClosed
                         });
@@ -620,11 +620,11 @@ class MapView extends React.Component {
     }
 
     closeAndOpenSlideshow() {
-        // if (Platform.OS === 'ios') {
-        //     LayoutAnimation.configureNext(
-        //         LayoutAnimation.Presets.easeInEaseOut
-        //     );
-        // }
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
         this.setState({ slideshowOpen: !this.state.slideshowOpen });
     }
 
