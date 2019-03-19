@@ -22,21 +22,38 @@ export default StyleSheet.create({
     },
     container: {
         width: '75%',
-        aspectRatio: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'stretch',
         borderRadius: 20,
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 4,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: GlobalColors.white
+    },
+    title: {
+        color: GlobalColors.headerBlack,
+        fontFamily: 'SF Pro Text',
+        fontSize: 18,
+        fontWeight: '400',
+        textAlign: 'left',
+        marginTop: 17,
+        marginHorizontal: 20
+    },
+    description: {
+        color: GlobalColors.headerBlack,
+        fontFamily: 'SF Pro Text',
+        fontSize: 14,
+        fontWeight: '100',
+        textAlign: 'left',
+        marginBottom: 17,
+        marginHorizontal: 20
     },
     mapSnapShot: {
         width: '100%',
-        height: '100%',
-        borderRadius: 20,
+        aspectRatio: 1,
         justifyContent: 'flex-end',
         overflow: 'hidden'
     },
