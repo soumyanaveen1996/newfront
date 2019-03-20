@@ -412,7 +412,7 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-        this.TESTMAP();
+        // this.TESTMAP();
     }
 
     static onEnter({ navigation, screenProps }) {
