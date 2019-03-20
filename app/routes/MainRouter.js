@@ -69,6 +69,7 @@ import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
 import { Multiselection } from '../components/Multiselection';
 import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
 import NewPhoneBookContacts from '../components/NewChat/NewPhoneBookContacts';
+import DialPadButton from '../components/NewChat/DialPadButton';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -220,9 +221,7 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Chat"
-                                        navBarButtonColor={{
-                                            color: 'rgba(22,175,239,1)'
-                                        }}
+                                        navBarButtonColor="rgba(22, 175, 239, 1)"
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
                                     >
@@ -319,10 +318,8 @@ class MainRouter extends React.Component {
                                                     ROUTER_SCENE_KEYS.contactsCall
                                                 }
                                                 component={NewCallContacts}
-                                                // title={I18n.t('Contacts')}
                                                 hideNavBar={true}
                                                 type="push"
-                                                // back
                                             />
                                         </Scene>
                                         <Scene

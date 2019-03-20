@@ -15,7 +15,7 @@ const NewChatRow = ({
     onItemPressed,
     email = undefined
 }) => {
-    console.log(title);
+    // console.log(title);
 
     return (
         <TouchableOpacity onPress={() => onItemPressed(item)}>

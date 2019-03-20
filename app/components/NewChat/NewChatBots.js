@@ -128,7 +128,7 @@ class NewChatContacts extends React.Component {
                 data: botsBook
             };
         });
-        console.log(InstalledBots);
+        // console.log(InstalledBots);
         return InstalledBots;
     };
     refresh = bots => {
@@ -165,7 +165,7 @@ class NewChatContacts extends React.Component {
         );
     }
     onBotSelected = bot => {
-        console.log(bot);
+        // console.log(bot);
         Actions.botChat({
             bot: bot.bot,
             type: ActionConst.REPLACE
