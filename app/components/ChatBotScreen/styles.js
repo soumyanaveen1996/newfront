@@ -453,6 +453,7 @@ const stylesheet = StyleSheet.create({
     },
     chatBar: {
         width: '85%',
+        alignSelf: 'center',
         flexDirection: 'row',
         backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
@@ -588,6 +589,27 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 15,
         backgroundColor: GlobalColors.sideButtons
+    },
+    //SEARCH BOX
+    searchBoxContainer: {
+        alignItems: 'stretch',
+        backgroundColor: GlobalColors.white
+    },
+    searchBoxTopBar: {
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'stretch'
+    },
+    searchBoxTopBarLine: {
+        marginVertical: 20,
+        height: 4,
+        width: 110,
+        backgroundColor: GlobalColors.disabledGray
+    },
+    searchBoxText: {
+        fontSize: 16,
+        textAlign: 'right'
     }
 });
 

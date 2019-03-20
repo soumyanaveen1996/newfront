@@ -96,6 +96,7 @@ import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
 import { MarkerIconTypes } from '../MapView/config';
 import ReduxStore from '../../redux/store/configureStore';
+import SearchBox from './SearchBox';
 
 const R = require('ramda');
 
@@ -775,8 +776,6 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
-        console.log('>>>>>>>', message.getMessage());
-
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
@@ -792,6 +791,10 @@ class ChatBotScreen extends React.Component {
             } else {
                 this.updateSmartSuggestions(message);
             }
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
+        ) {
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
@@ -834,108 +837,76 @@ class ChatBotScreen extends React.Component {
                 Store.dispatch(setOpenMap(mapStore));
                 this.updateChat(message);
             }
-            console.log('>>>>>>>R', ReduxStore.getState().user.openMap);
         } else {
             this.updateChat(message);
         }
     };
 
-    TESTMAP() {
-        // DATASET to test maps. Please don't remove ;)
-        let MAPDATATEST = {
-            region: {
-                latitude: 15.5528,
-                longitude: 110.433,
-                zoom: 10
-            },
-            options: {
-                mapId: '1234'
-            },
-            markers: [
+    TEST() {
+        let TESTDATA = {
+            selectionType: 'single',
+            action: 'results',
+            results: [
                 {
-                    id: 'AK137',
-                    title: 'AK137',
-                    description: 'AK137',
-                    draggable: false,
-                    coordinate: {
-                        latitude: 15.5528,
-                        longitude: 110.433,
-                        direction: 214.762
-                    },
-                    iconType: 'aircraft'
-                }
-            ],
-            planeRoutes: [
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
                 {
-                    id: 'AK137',
-                    start: {
-                        id: 'HKG',
-                        time: '18:15:00',
-                        latitude: 15.5528,
-                        longitude: 110.433
-                    },
-                    end: {
-                        id: 'KUL',
-                        time: '22:20:00',
-                        latitude: 2.755672,
-                        longitude: 101.70539
-                    },
-                    showTracker: true
-                }
-            ]
-        };
-        let msg = new Message();
-        msg.mapMessage(MAPDATATEST);
-        msg.messageByBot(true);
-        this.tell(msg);
-    }
-
-    TESTMAP2() {
-        // DATASET to test maps. Please don't remove ;)
-        let MAPDATATEST = {
-            region: {
-                latitude: 15.5528,
-                longitude: 110.433,
-                zoom: 10
-            },
-            options: {
-                mapId: '1234'
-            },
-            markers: [
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
                 {
-                    id: 'AK137',
-                    title: 'AK137',
-                    description: 'AK137',
-                    draggable: false,
-                    coordinate: {
-                        latitude: 15.5528,
-                        longitude: 110.433,
-                        direction: 214.762
-                    },
-                    iconType: 'poi'
-                }
-            ],
-            planeRoutes: [
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
                 {
-                    id: 'AK137',
-                    start: {
-                        id: 'HKG',
-                        time: '18:15:00',
-                        latitude: 15.5528,
-                        longitude: 110.433
-                    },
-                    end: {
-                        id: 'KUL',
-                        time: '22:20:00',
-                        latitude: 2.755672,
-                        longitude: 101.70539
-                    },
-                    showTracker: true
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
+                {
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
+                {
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
+                {
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
+                },
+                {
+                    text: 'search Text',
+                    info: {
+                        field1: 'aaa',
+                        field2: 'bbb'
+                    }
                 }
             ]
         };
         let msg = new Message();
-        msg.mapMessage(MAPDATATEST);
+        msg.searchBoxMessage(TESTDATA);
         msg.messageByBot(true);
         this.tell(msg);
     }
@@ -2422,9 +2393,8 @@ class ChatBotScreen extends React.Component {
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
-                                <View style={{ alignItems: 'center' }}>
-                                    {this.renderChatInputBar()}
-                                </View>
+                                {/* {this.renderChatInputBar()} */}
+                                <SearchBox results={[]} />
                                 {this.renderNetworkStatusBar()}
                                 {/* {this.renderCallModal()} */}
                                 {this.renderChatModal()}
