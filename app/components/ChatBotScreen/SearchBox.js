@@ -219,6 +219,7 @@ export class SearchBox extends React.Component {
     }
 
     onSearch() {
+        this.setState({ lastSearch: this.state.text });
         query = {
             action: SearchBoxUserAction.SEARCH,
             queryString: this.state.text

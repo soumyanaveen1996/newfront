@@ -419,7 +419,6 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-        this.TEST();
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -853,75 +852,6 @@ class ChatBotScreen extends React.Component {
             this.updateChat(message);
         }
     };
-
-    TEST() {
-        let TESTDATA = {
-            selectionType: 'single',
-            action: 'results',
-            results: [
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                },
-                {
-                    text: 'search Text',
-                    info: {
-                        field1: 'aaa',
-                        field2: 'bbb'
-                    }
-                }
-            ]
-        };
-        let msg = new Message();
-        msg.searchBoxMessage(TESTDATA);
-        msg.messageByBot(true);
-        this.tell(msg);
-    }
 
     done = () => {
         // Done with the bot - navigate away?
