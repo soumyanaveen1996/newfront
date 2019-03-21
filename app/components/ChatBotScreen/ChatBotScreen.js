@@ -96,7 +96,11 @@ import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
 import { MarkerIconTypes } from '../MapView/config';
 import ReduxStore from '../../redux/store/configureStore';
-import SearchBox from './SearchBox';
+import {
+    SearchBox,
+    SearchBoxUserAction,
+    SearchBoxBotAction
+} from './SearchBox';
 
 const R = require('ramda');
 
@@ -189,7 +193,9 @@ class ChatBotScreen extends React.Component {
             sliderClosed: false,
             chatModalContent: {},
             isModalVisible: false,
-            showOptions: false
+            showOptions: false,
+            showSearchBox: false,
+            searchBoxData: null
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -413,7 +419,7 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-        // this.TESTMAP()
+        this.TEST();
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -796,6 +802,11 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
         ) {
             const data = message.getMessage();
+            if (data.action !== SearchBoxBotAction.CLOSE) {
+                this.setState({ showSearchBox: true, searchBoxData: data });
+            } else {
+                this.setState({ showSearchBox: false, searchBoxData: null });
+            }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
@@ -1101,6 +1112,21 @@ class ChatBotScreen extends React.Component {
             });
         }
     };
+
+    sendSearchBoxResponse(response) {
+        message = new Message();
+        message.searchBoxResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+        this.setState({ showSearchBox: false, searchBoxData: null });
+    }
+
+    sendSearchBoxQuery(query) {
+        message = new Message();
+        message.searchBoxResponseMessage(query);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+    }
 
     sendMapResponse(response) {
         message = new Message();
@@ -2152,6 +2178,16 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderSearchBox() {
+        return (
+            <SearchBox
+                data={this.state.searchBoxData}
+                sendResponse={this.sendSearchBoxResponse.bind(this)}
+                sendSearchQuery={this.sendSearchBoxQuery.bind(this)}
+            />
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
@@ -2394,8 +2430,9 @@ class ChatBotScreen extends React.Component {
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
-                                {/* {this.renderChatInputBar()} */}
-                                <SearchBox results={[]} />
+                                {this.state.showSearchBox
+                                    ? this.renderSearchBox()
+                                    : this.renderChatInputBar()}
                                 {this.renderNetworkStatusBar()}
                                 {/* {this.renderCallModal()} */}
                                 {this.renderChatModal()}

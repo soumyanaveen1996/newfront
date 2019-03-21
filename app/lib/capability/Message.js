@@ -700,7 +700,9 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
             MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
             MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE,
-            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
+            MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;

@@ -387,10 +387,12 @@ export const Icons = {
 
     //SEARCH BOX
     info: icon(
-        'information-circle-outline',
-        'ionicon',
-        20,
-        GlobalColors.sideButtons
+        'information-outline',
+        'material-community',
+        27,
+        GlobalColors.sideButtons,
+        Colors.transparent,
+        '200'
     )
 };
 

@@ -21,27 +21,57 @@ import { CheckBox } from 'react-native-elements';
 import GlobalColors from '../../config/styles';
 import _ from 'lodash';
 
-export default class SearchBox extends React.Component {
+export const SearchBoxBotAction = {
+    OPEN: 'open',
+    CLOSE: 'close',
+    RESULTS: 'results'
+};
+
+export const SearchBoxUserAction = {
+    DONE: 'done',
+    CANCEL: 'cancel',
+    SEARCH: 'search'
+};
+
+export class SearchBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             text: '',
-            lastSearch: '',
+            lastSearch: null,
             canDone: false,
             response: []
         };
     }
 
+    componentDidUpdate() {
+        if (this.props.data.action === SearchBoxBotAction.OPEN) {
+            this.setState({
+                response: [],
+                canDone: false,
+                lastSearch: null,
+                text: ''
+            });
+        }
+    }
+
     renderTopBar() {
         return (
             <View style={styles.searchBoxTopBar}>
-                <TouchableOpacity style={styles.searchBoxTopBarButton}>
+                <TouchableOpacity
+                    style={styles.searchBoxTopBarButton}
+                    onPress={this.onCancel.bind(this)}
+                >
                     <Text style={styles.searchBoxButtonText}>
                         {I18n.t('Cancel')}
                     </Text>
                 </TouchableOpacity>
                 <View style={styles.searchBoxTopBarLine} />
-                <TouchableOpacity style={styles.searchBoxTopBarButton}>
+                <TouchableOpacity
+                    style={styles.searchBoxTopBarButton}
+                    onPress={this.onDone.bind(this)}
+                    disabled={!this.state.canDone}
+                >
                     <Text
                         style={[
                             styles.searchBoxButtonText,
@@ -61,15 +91,16 @@ export default class SearchBox extends React.Component {
     }
 
     renderResults() {
-        if (this.props.results.length > 0) {
+        if (this.props.data.results && this.props.data.results.length > 0) {
             return (
                 <FlatList
-                    data={this.state.results}
+                    data={this.props.data.results}
                     renderItem={this.renderItem.bind(this)}
+                    extraData={this.state}
                     ItemSeparatorComponent={this.renderSeparator.bind(this)}
                 />
             );
-        } else {
+        } else if (this.state.lastSearch) {
             return (
                 <View>
                     <Text
@@ -87,12 +118,14 @@ export default class SearchBox extends React.Component {
                     </Text>
                 </View>
             );
+        } else {
+            return;
         }
     }
 
     renderItem({ item, index }) {
         return (
-            <View>
+            <View style={styles.searchBoxRow}>
                 {this.renderCheckbox(item.text, index)}
                 {item.info ? this.renderInfoIcon(item.info) : null}
             </View>
@@ -115,9 +148,10 @@ export default class SearchBox extends React.Component {
                     });
                     this.setState({ response: response, canDone: canDone });
                 }}
+                containerStyle={styles.searchBoxCheckbox}
                 checked={this.state.response[index]}
                 textStyle={styles.searchBoxText}
-                size={20}
+                size={28}
                 iconType="ionicon"
                 checkedIcon="ios-checkbox-outline"
                 uncheckedIcon="ios-square-outline"
@@ -127,17 +161,28 @@ export default class SearchBox extends React.Component {
     }
 
     renderInfoIcon(info) {
-        <TouchableOpacity>{Icons.info()}</TouchableOpacity>;
+        return <TouchableOpacity>{Icons.info()}</TouchableOpacity>;
     }
 
-    renderSeparator() {}
+    renderSeparator() {
+        return (
+            <View
+                style={{
+                    backgroundColor: GlobalColors.disabledGray,
+                    flex: 1,
+                    height: 1,
+                    marginHorizontal: '5%'
+                }}
+            />
+        );
+    }
 
     rightButton() {
         return (
             <TouchableOpacity
                 accessibilityLabel="Right Button Send"
                 testID="right-button-send"
-                onPress={null}
+                onPress={this.onSearch.bind(this)}
             >
                 <Image
                     source={Images.btn_send}
@@ -149,6 +194,36 @@ export default class SearchBox extends React.Component {
 
     onChangeText(text) {
         this.setState({ text: text });
+    }
+
+    onDone() {
+        let results = _.filter(this.props.data.results, (res, index) => {
+            return this.state.response[index];
+        });
+        results = _.map(results, res => {
+            return res.text;
+        });
+
+        response = {
+            action: SearchBoxUserAction.DONE,
+            results: results
+        };
+        this.props.sendResponse(response);
+    }
+
+    onCancel() {
+        response = {
+            action: SearchBoxUserAction.CANCEL
+        };
+        this.props.sendResponse(response);
+    }
+
+    onSearch() {
+        query = {
+            action: SearchBoxUserAction.SEARCH,
+            queryString: this.state.text
+        };
+        this.props.sendSearchQuery(query);
     }
 
     render() {

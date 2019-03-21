@@ -592,6 +592,7 @@ const stylesheet = StyleSheet.create({
     },
     //SEARCH BOX
     searchBoxContainer: {
+        maxHeight: '40%',
         alignItems: 'stretch',
         backgroundColor: GlobalColors.white
     },
@@ -619,6 +620,18 @@ const stylesheet = StyleSheet.create({
         fontSize: 16,
         fontWeight: '200',
         color: GlobalColors.headerBlack
+    },
+    searchBoxRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: '5%'
+    },
+    searchBoxCheckbox: {
+        paddingHorizontal: 0,
+        marginHorizontal: 0,
+        borderWidth: 0,
+        backgroundColor: GlobalColors.white
     }
 });
 
