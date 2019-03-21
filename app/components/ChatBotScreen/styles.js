@@ -596,20 +596,29 @@ const stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white
     },
     searchBoxTopBar: {
-        alignSelf: 'center',
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'stretch'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: '5%'
     },
     searchBoxTopBarLine: {
-        marginVertical: 20,
         height: 4,
         width: 110,
         backgroundColor: GlobalColors.disabledGray
     },
+    searchBoxTopBarButton: {
+        width: '20%',
+        overflow: 'visible'
+    },
+    searchBoxButtonText: {
+        fontSize: 16,
+        paddingVertical: 15,
+        color: GlobalColors.sideButtons
+    },
     searchBoxText: {
         fontSize: 16,
-        textAlign: 'right'
+        fontWeight: '200',
+        color: GlobalColors.headerBlack
     }
 });
 

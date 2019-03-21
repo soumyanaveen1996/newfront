@@ -17,26 +17,44 @@ import Permissions from 'react-native-permissions';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { MessageCounter } from '../../lib/MessageCounter';
 import I18n from '../../config/i18n/i18n';
+import { CheckBox } from 'react-native-elements';
+import GlobalColors from '../../config/styles';
+import _ from 'lodash';
 
 export default class SearchBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             text: '',
-            selected: false,
-            lastSearch: ''
+            lastSearch: '',
+            canDone: false,
+            response: []
         };
     }
 
     renderTopBar() {
         return (
             <View style={styles.searchBoxTopBar}>
-                <TouchableOpacity>
-                    <Text style={styles.searchBoxText}>{I18n.t('Cancel')}</Text>
+                <TouchableOpacity style={styles.searchBoxTopBarButton}>
+                    <Text style={styles.searchBoxButtonText}>
+                        {I18n.t('Cancel')}
+                    </Text>
                 </TouchableOpacity>
                 <View style={styles.searchBoxTopBarLine} />
-                <TouchableOpacity>
-                    <Text style={styles.searchBoxText}>{I18n.t('Done')}</Text>
+                <TouchableOpacity style={styles.searchBoxTopBarButton}>
+                    <Text
+                        style={[
+                            styles.searchBoxButtonText,
+                            {
+                                textAlign: 'right',
+                                color: this.state.canDone
+                                    ? GlobalColors.sideButtons
+                                    : GlobalColors.disabledGray
+                            }
+                        ]}
+                    >
+                        {I18n.t('Done')}
+                    </Text>
                 </TouchableOpacity>
             </View>
         );
@@ -54,16 +72,64 @@ export default class SearchBox extends React.Component {
         } else {
             return (
                 <View>
-                    <Text style={{ textAlign: 'center' }}>
+                    <Text
+                        style={[styles.searchBoxText, { textAlign: 'center' }]}
+                    >
                         No results found for
                     </Text>
-                    <Text>{this.state.lastSearch}</Text>
+                    <Text
+                        style={[
+                            styles.searchBoxText,
+                            { fontWeight: 'bold', textAlign: 'center' }
+                        ]}
+                    >
+                        {this.state.lastSearch}
+                    </Text>
                 </View>
             );
         }
     }
 
-    renderItem({ item }) {}
+    renderItem({ item, index }) {
+        return (
+            <View>
+                {this.renderCheckbox(item.text, index)}
+                {item.info ? this.renderInfoIcon(item.info) : null}
+            </View>
+        );
+    }
+
+    renderCheckbox(text, index) {
+        return (
+            <CheckBox
+                title={text}
+                onIconPress={() => {
+                    let response = this.state.response;
+                    if (response[index]) {
+                        response[index] = false;
+                    } else {
+                        response[index] = true;
+                    }
+                    canDone = _.find(response, res => {
+                        return res === true;
+                    });
+                    this.setState({ response: response, canDone: canDone });
+                }}
+                checked={this.state.response[index]}
+                textStyle={styles.searchBoxText}
+                size={20}
+                iconType="ionicon"
+                checkedIcon="ios-checkbox-outline"
+                uncheckedIcon="ios-square-outline"
+                checkedColor={GlobalColors.sideButtons}
+            />
+        );
+    }
+
+    renderInfoIcon(info) {
+        <TouchableOpacity>{Icons.info()}</TouchableOpacity>;
+    }
+
     renderSeparator() {}
 
     rightButton() {

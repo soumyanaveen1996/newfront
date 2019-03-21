@@ -795,6 +795,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
         ) {
+            const data = message.getMessage();
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
