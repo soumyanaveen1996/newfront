@@ -49,7 +49,7 @@ class MapView extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: 'Map'
+            headerTitle: state.params.title
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
@@ -138,7 +138,7 @@ class MapView extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.mapData, this.props.mapData)) {
+        if (!_.isEqual(prevProps.mapData.map, this.props.mapData.map)) {
             this.refreshMap();
         }
     }
@@ -209,7 +209,7 @@ class MapView extends React.Component {
     //Create a new GEOJson
     refreshMap() {
         //GREAT CIRCLE
-        const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
+        const planeRoutes = _.map(this.props.mapData.map.planeRoutes, route => {
             let start = turf_helpers.point([
                 route.start.longitude,
                 route.start.latitude
@@ -221,7 +221,7 @@ class MapView extends React.Component {
             return turf_great_circle(start, end, { name: route.id });
         });
         //MARKERS
-        const markers = _.map(this.props.mapData.markers, marker => {
+        const markers = _.map(this.props.mapData.map.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
                 marker.coordinate.latitude
@@ -244,7 +244,7 @@ class MapView extends React.Component {
             return markerObject;
         });
         //POLYLINES
-        const polylines = _.map(this.props.mapData.polylines, polyLine => {
+        const polylines = _.map(this.props.mapData.map.polylines, polyLine => {
             return _.map(polyLine.coordinates, coords => {
                 const coordArray = [coords.longitude, coords.latitude];
                 return coordArray;
@@ -393,11 +393,11 @@ class MapView extends React.Component {
 
     getRouteTracker() {
         let markerToTrack;
-        let routeToTrack = _.find(this.props.mapData.planeRoutes, route => {
+        let routeToTrack = _.find(this.props.mapData.map.planeRoutes, route => {
             return route.showTracker;
         });
         if (routeToTrack) {
-            markerToTrack = _.find(this.props.mapData.markers, marker => {
+            markerToTrack = _.find(this.props.mapData.map.markers, marker => {
                 return routeToTrack.id === marker.id;
             });
             if (markerToTrack) {
@@ -568,8 +568,8 @@ class MapView extends React.Component {
         if (Platform.OS === 'android') {
             this.setState({ userTrackingMode: 0 });
             this.map.moveTo([
-                this.props.mapData.region.longitude,
-                this.props.mapData.region.latitude
+                this.props.mapData.map.region.longitude,
+                this.props.mapData.map.region.latitude
             ]);
         }
     }
@@ -579,10 +579,10 @@ class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={this.props.mapData.region.zoom || 11}
+                zoomLevel={this.props.mapData.map.region.zoom || 11}
                 centerCoordinate={[
-                    this.props.mapData.region.longitude,
-                    this.props.mapData.region.latitude
+                    this.props.mapData.map.region.longitude,
+                    this.props.mapData.map.region.latitude
                 ]}
                 showsUserLocation={true}
                 userTrackingMode={this.state.userTrackingMode}
@@ -600,13 +600,12 @@ class MapView extends React.Component {
 
     renderSlideShow() {
         if (
-            this.props.mapData.options &&
-            this.props.mapData.options.cards &&
-            this.props.mapData.options.cards.length > 0
+            this.props.mapData.map.cards &&
+            this.props.mapData.map.cards.length > 0
         ) {
             return (
                 <ContextSlideshow
-                    contentData={this.props.mapData.options.cards}
+                    contentData={this.props.mapData.map.cards}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
                         this
@@ -694,7 +693,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setOpenMap: mapData => dispatch(setOpenMap(mapData))
+        setOpenMap: openMap => dispatch(setOpenMap(openMap))
     };
 };
 

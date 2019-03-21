@@ -835,23 +835,41 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
         ) {
             let messageMap = message.getMessage();
+            let mapOptions = message.getMessageOptions();
             let mapStore = ReduxStore.getState().user.openMap;
-            // Store.dispatch(setOpenMap([message.getMessage(), {}]));
             const storeIndex = _.findIndex(mapStore, map => {
-                return map.options.mapId === messageMap.options.mapId;
+                return map.options.mapId === mapOptions.mapId;
             });
             if (storeIndex !== -1) {
-                mapStore[storeIndex] = messageMap;
+                mapStore[storeIndex] = { map: messageMap, options: mapOptions };
                 Store.dispatch(setOpenMap(mapStore));
+                this.persistMapMessage(messageMap, mapOptions, message);
             } else {
-                mapStore.push(messageMap);
+                mapStore.push({ map: messageMap, options: mapOptions });
                 Store.dispatch(setOpenMap(mapStore));
-                this.updateChat(message);
+                this.persistMapMessage(messageMap, mapOptions, message);
             }
         } else {
             this.updateChat(message);
         }
     };
+
+    persistMapMessage(messageMap, mapOptions, newMessage) {
+        MessageHandler.fetchDeviceMessagesOfType(
+            this.getBotKey(),
+            MessageTypeConstants.MESSAGE_TYPE_MAP
+        ).then(messages => {
+            let mapMsg = _.find(messages, msg => {
+                return msg.getMessageOptions().mapId === mapOptions.mapId;
+            });
+            if (mapMsg) {
+                mapMsg.mapMessage(messageMap, mapOptions);
+                this.persistMessage(mapMsg);
+            } else {
+                this.updateChat(newMessage);
+            }
+        });
+    }
 
     done = () => {
         // Done with the bot - navigate away?
@@ -909,6 +927,7 @@ class ChatBotScreen extends React.Component {
         }
         Keyboard.dismiss();
         Actions.mapView({
+            title: mapData.options.title || 'Map',
             storeIndex: storeIndex,
             onAction: this.sendMapResponse.bind(this)
         });
@@ -1278,7 +1297,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={false}
                         isFromBot={true}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1290,7 +1312,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={false}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1369,7 +1394,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1381,7 +1409,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else {
@@ -1841,13 +1872,10 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
-        const mapData = {
+        const map = {
             region: {
                 longitude: locationData.coordinate[0],
                 latitude: locationData.coordinate[1]
-            },
-            options: {
-                mapId: 'location_share'
             },
             markers: [
                 {
@@ -1863,8 +1891,12 @@ class ChatBotScreen extends React.Component {
                 }
             ]
         };
+        const options = {
+            mapId: 'location_share',
+            title: this.user.userName || 'Map'
+        };
         message = new Message();
-        message.locationMessage(mapData);
+        message.locationMessage(map, options);
         message.messageByBot(false);
         message.setCreatedBy(this.getUserId());
         this.sendMessage(message);
