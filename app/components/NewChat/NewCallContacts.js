@@ -204,7 +204,7 @@ class NewCallContacts extends React.Component {
 
     renderItem(info) {
         const contact = info.item;
-        const Image = (
+        const image = (
             <ProfileImage
                 uuid={contact.id}
                 placeholder={Images.user_image}
@@ -218,7 +218,7 @@ class NewCallContacts extends React.Component {
                 key={contact.id}
                 item={contact}
                 title={contact.name}
-                image={Image}
+                image={image}
                 id={contact.id}
                 onItemPressed={this.onContactSelected}
                 email={contact.emails[0].email}
