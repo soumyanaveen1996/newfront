@@ -324,51 +324,55 @@ export default class ChatInputBar extends React.Component {
                 Utils.padStartForAndroid();
             }
             return (
-                <View style={chatBarStyle(this.props.network)}>
-                    <TouchableOpacity
-                        onPress={() => this._cancelRecording()}
-                        style={styles.cancelButton}
-                    >
-                        {Icons.cancelRecording({
-                            style: styles.cancelRecordingIcon
-                        })}
-                    </TouchableOpacity>
-                    <View style={styles.recordingTimeContainer}>
-                        <Text style={styles.recordingTime}>
-                            {minutes.padStart(2, 0) +
-                                ':' +
-                                seconds.padStart(2, 0)}
-                        </Text>
+                <View style={{ alignItems: 'center' }}>
+                    <View style={chatBarStyle(this.props.network)}>
+                        <TouchableOpacity
+                            onPress={() => this._cancelRecording()}
+                            style={styles.cancelButton}
+                        >
+                            {Icons.cancelRecording({
+                                style: styles.cancelRecordingIcon
+                            })}
+                        </TouchableOpacity>
+                        <View style={styles.recordingTimeContainer}>
+                            <Text style={styles.recordingTime}>
+                                {minutes.padStart(2, 0) +
+                                    ':' +
+                                    seconds.padStart(2, 0)}
+                            </Text>
+                        </View>
+                        {this.rightButton()}
                     </View>
-                    {this.rightButton()}
                 </View>
             );
         } else {
             return (
-                <View style={chatBarStyle(this.props.network)}>
-                    <TouchableOpacity
-                        accessibilityLabel="More Button"
-                        testID="more-button"
-                        onPress={this.showOptions.bind(this)}
-                    >
-                        <Image
-                            source={Images.btn_more}
-                            style={
-                                this.props.showMoreOption
-                                    ? styles.closeMoreButton
-                                    : styles.chatBarMoreButton
-                            }
+                <View style={{ alignItems: 'center' }}>
+                    <View style={chatBarStyle(this.props.network)}>
+                        <TouchableOpacity
+                            accessibilityLabel="More Button"
+                            testID="more-button"
+                            onPress={this.showOptions.bind(this)}
+                        >
+                            <Image
+                                source={Images.btn_more}
+                                style={
+                                    this.props.showMoreOption
+                                        ? styles.closeMoreButton
+                                        : styles.chatBarMoreButton
+                                }
+                            />
+                        </TouchableOpacity>
+                        <TextInput
+                            value={this.state.text}
+                            style={styles.chatTextInput}
+                            underlineColorAndroid="transparent"
+                            placeholder="Type something nice"
+                            multiline
+                            onChangeText={this.onChangeText.bind(this)}
                         />
-                    </TouchableOpacity>
-                    <TextInput
-                        value={this.state.text}
-                        style={styles.chatTextInput}
-                        underlineColorAndroid="transparent"
-                        placeholder="Type something nice"
-                        multiline
-                        onChangeText={this.onChangeText.bind(this)}
-                    />
-                    {this.rightButton()}
+                        {this.rightButton()}
+                    </View>
                 </View>
             );
         }

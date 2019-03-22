@@ -383,6 +383,16 @@ export const Icons = {
         'material-community',
         15,
         GlobalColors.white
+    ),
+
+    //SEARCH BOX
+    info: icon(
+        'information-outline',
+        'material-community',
+        27,
+        GlobalColors.sideButtons,
+        Colors.transparent,
+        '200'
     )
 };
 

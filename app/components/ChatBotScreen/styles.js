@@ -453,6 +453,7 @@ const stylesheet = StyleSheet.create({
     },
     chatBar: {
         width: '85%',
+        alignSelf: 'center',
         flexDirection: 'row',
         backgroundColor: 'rgb(255, 255, 255)',
         alignItems: 'center',
@@ -588,6 +589,49 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 15,
         backgroundColor: GlobalColors.sideButtons
+    },
+    //SEARCH BOX
+    searchBoxContainer: {
+        maxHeight: '40%',
+        alignItems: 'stretch',
+        backgroundColor: GlobalColors.white
+    },
+    searchBoxTopBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: '5%'
+    },
+    searchBoxTopBarLine: {
+        height: 4,
+        width: 110,
+        backgroundColor: GlobalColors.disabledGray
+    },
+    searchBoxTopBarButton: {
+        width: '20%',
+        overflow: 'visible'
+    },
+    searchBoxButtonText: {
+        fontSize: 16,
+        paddingVertical: 15,
+        color: GlobalColors.sideButtons
+    },
+    searchBoxText: {
+        fontSize: 16,
+        fontWeight: '200',
+        color: GlobalColors.headerBlack
+    },
+    searchBoxRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: '5%'
+    },
+    searchBoxCheckbox: {
+        paddingHorizontal: 0,
+        marginHorizontal: 0,
+        borderWidth: 0,
+        backgroundColor: GlobalColors.white
     }
 });
 
