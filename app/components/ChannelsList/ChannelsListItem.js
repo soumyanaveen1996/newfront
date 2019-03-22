@@ -19,6 +19,7 @@ import { Auth } from '../../lib/capability';
 import moment from 'moment';
 import ActionSheet from '@yfuks/react-native-action-sheet';
 import { Actions } from 'react-native-router-flux';
+import _ from 'lodash';
 
 const subtitleNumberOfLines = 2;
 
@@ -33,8 +34,24 @@ export default class ChannelsListItem extends React.Component {
         this.state = {
             status: ChannelsListItemStates.NONE,
             user: null,
-            loading: false
+            loading: false,
+            isAdmin: false
         };
+    }
+
+    async componentDidMount() {
+        const admins = await Channel.getAdmins(
+            this.props.channel.channelName,
+            this.props.channel.userDomain
+        );
+        const isAdmin = _.find(admins, adm => {
+            return adm.userId === this.props.user.userId;
+        });
+        if (isAdmin) {
+            this.setState({ isAdmin: true });
+        } else {
+            this.setState({ isAdmin: false });
+        }
     }
 
     unsubscribeChannel() {}
@@ -146,7 +163,7 @@ export default class ChannelsListItem extends React.Component {
     renderRightArea(channel, userId) {
         const isOwner = channel.ownerId === userId ? true : false;
 
-        if (isOwner) {
+        if (this.state.isAdmin) {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}
@@ -337,7 +354,6 @@ export default class ChannelsListItem extends React.Component {
     };
 
     render() {
-        console.log('>>>>>>', this.props.channel);
         const channel = this.props.channel;
         const user = this.props.user;
 

@@ -283,7 +283,7 @@ export default class Channel {
                         reject();
                     }
                 })
-                .then(async response => {
+                .then(response => {
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
                         reject(new ChannelError(+err));
@@ -348,6 +348,39 @@ export default class Channel {
                 .catch(reject);
         });
 
+    static updateParticipants = (channelName, userDomain, userIds) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    console.log('updating users to Channel ', channelName);
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'UpdateParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain,
+                            userIds: userIds
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        resolve();
+                    }
+                })
+                .catch(reject);
+        });
+
     static getParticipants = (channelName, userDomain) =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -395,7 +428,6 @@ export default class Channel {
                     return Network(options);
                 })
                 .then(res => {
-                    //missing: please return empty array if no admins
                     resolve(res.data.content);
                 })
                 .catch(reject);
@@ -422,9 +454,13 @@ export default class Channel {
                     };
                     return Network(options);
                 })
-                .then(res => {
-                    resolve(res.data.content);
+                .then(() => {
+                    return Channel.refreshUnsubscribedChannels();
                 })
+                .then(() => {
+                    return Channel.refreshChannels();
+                })
+                .then(resolve)
                 .catch(reject);
         });
 
@@ -449,7 +485,10 @@ export default class Channel {
                     return Network(options);
                 })
                 .then(res => {
-                    //missing: please return empty array if no admins
+                    let err = _.get(res, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        resolve([]);
+                    }
                     resolve(res.data.content);
                 })
                 .catch(reject);
@@ -483,6 +522,10 @@ export default class Channel {
                     return Network(options);
                 })
                 .then(res => {
+                    let err = _.get(res, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    }
                     resolve(res.data.content);
                 })
                 .catch(reject);
@@ -510,11 +553,14 @@ export default class Channel {
                     return Network(options);
                 })
                 .then(res => {
-                    let err = _.get(response, 'data.error');
+                    let err = _.get(res, 'data.error');
                     if (err !== '0' && err !== 0) {
                         reject(new ChannelError(+err));
                     }
                     return Channel.refreshChannels();
+                })
+                .then(() => {
+                    return Channel.refreshUnsubscribedChannels();
                 })
                 .then(resolve)
                 .catch(reject);
@@ -588,31 +634,20 @@ export default class Channel {
                     let err = _.get(response, 'data.error');
                     let code = _.get(response, 'data.statusCode');
                     if (err !== '0' && err !== 0) {
-                        if (code === 422) {
-                            reject(
-                                new ChannelError(
-                                    +err,
-                                    I18n.t('Channel_admin_unsubscribe')
-                                )
-                            );
-                        } else {
-                            reject(new ChannelError(+err));
-                        }
+                        reject(new ChannelError(+err));
                     } else {
                         return ChannelDAO.deleteChannel(channel.id);
                     }
                 })
                 .then(resolve)
-                .catch(() => {
-                    console.log('');
-                    throw new ChannelError(99);
-                });
+                .catch(reject);
         });
 
     static clearChannels = ChannelDAO.deleteAllChannels;
 
     static refreshChannels = () =>
         new Promise((resolve, reject) => {
+            let newChannels;
             Auth.getUser()
                 .then(user => {
                     if (user) {
@@ -635,8 +670,12 @@ export default class Channel {
                     }
                 })
                 .then(response => {
-                    if (response.data && response.data.content) {
-                        let channels = response.data.content;
+                    newChannels = response;
+                    return Channel.clearChannels();
+                })
+                .then(() => {
+                    if (newChannels.data && newChannels.data.content) {
+                        let channels = newChannels.data.content;
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);

@@ -81,31 +81,39 @@ export default class RequestsScreen extends React.Component {
             this.props.channel.channelName,
             this.props.channel.userDomain,
             [],
-            [item.userId]
-        ).then(() => {
-            let newPendingUsers = _.differenceBy(
-                this.state.pendingUsers,
-                user,
-                'userId'
-            );
-            this.setState({ pendingUsers: newPendingUsers });
-        });
+            [user.userId]
+        )
+            .then(() => {
+                let newPendingUsers = _.differenceBy(
+                    this.state.pendingUsers,
+                    user,
+                    'userId'
+                );
+                this.setState({ pendingUsers: newPendingUsers });
+            })
+            .catch(e => {
+                console.log('ignore request failer');
+            });
     }
 
     acceptRequest(user) {
         Channel.manageRequests(
             this.props.channel.channelName,
             this.props.channel.userDomain,
-            [item.userId],
+            [user.userId],
             []
-        ).then(() => {
-            let newPendingUsers = _.differenceBy(
-                this.state.pendingUsers,
-                user,
-                'userId'
-            );
-            this.setState({ pendingUsers: newPendingUsers });
-        });
+        )
+            .then(() => {
+                let newPendingUsers = _.differenceBy(
+                    this.state.pendingUsers,
+                    user,
+                    'userId'
+                );
+                this.setState({ pendingUsers: newPendingUsers });
+            })
+            .catch(e => {
+                console.log('accept request failed');
+            });
     }
 
     updateParent() {
@@ -115,7 +123,7 @@ export default class RequestsScreen extends React.Component {
     renderItem({ item }) {
         return (
             <View style={styles.adminRow}>
-                <View>
+                <View style={{ flexDirection: 'row' }}>
                     <ProfileImage
                         uuid={item.userId}
                         placeholder={images.user_image}
@@ -125,7 +133,7 @@ export default class RequestsScreen extends React.Component {
                     />
                     <Text style={styles.participantName}>{item.userName}</Text>
                 </View>
-                <View>
+                <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                         style={styles.requestIgnoreButton}
                         onPress={this.ignoreRequest.bind(this, item)}
@@ -145,7 +153,7 @@ export default class RequestsScreen extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={{ backgroundColor: 'white', flex: 1 }}>
                 <FlatList
                     data={this.state.pendingUsers}
                     renderItem={this.renderItem.bind(this)}

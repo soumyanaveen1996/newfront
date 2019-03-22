@@ -30,6 +30,7 @@ import config from '../../config/config';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import { Conversation } from '../../lib/conversation';
 import { MessageDAO } from '../../lib/persistence';
+import _ from 'lodash';
 
 const SeparatorSize = {
     SMALL: 2,
@@ -102,7 +103,7 @@ class ChannelAdminScreen extends React.Component {
             participants: [],
             admins: [],
             pendingRequests: [],
-            uiDisabled: false
+            uiDisabled: true
         };
         this.channel = this.props.channel;
     }
@@ -124,8 +125,7 @@ class ChannelAdminScreen extends React.Component {
                 );
             })
             .then(pend => {
-                console.log('>>>>>>>PEND', pend);
-                pendingRequests = [];
+                pendingRequests = pend;
                 return Channel.getAdmins(
                     this.channel.channelName,
                     this.channel.userDomain
@@ -136,7 +136,8 @@ class ChannelAdminScreen extends React.Component {
                 this.setState({
                     participants: participants,
                     admins: admins,
-                    pendingRequests: pendingRequests
+                    pendingRequests: pendingRequests,
+                    uiDisabled: false
                 });
             });
     }
@@ -150,22 +151,38 @@ class ChannelAdminScreen extends React.Component {
         Actions.pop();
     }
 
+    //PARTICIPANTS
     manageParticipants() {
-        this.props.setParticipants(this.state.participants);
-        this.props.setTeam(this.channel.userDomain);
         Actions.addParticipants({
-            onSelected: this.setParticipants.bind(this)
+            onSelected: this.updateParticipants.bind(this),
+            alreadySelected: this.state.participants,
+            disabledUserIds: [this.channel.ownerId]
         });
     }
 
-    setParticipants() {
-        //missing unsubscribe other users
+    updateParticipants(participants) {
+        const participantsIds = _.map(participants, part => {
+            return part.userId;
+        });
+        Channel.updateParticipants(
+            this.channel.channelName,
+            this.channel.userDomain,
+            participantsIds
+        )
+            .then(() => {
+                this.setState({ participants: participants });
+            })
+            .catch(e => {
+                console.log(e);
+            });
     }
 
+    //REQUESTS
     manageRequests() {
         Actions.requestsScreen({
-            pendingUsers: this.state.pendingRequests,
-            onDone: this.updateRequests.bind(this)
+            pendingUsers: [{ userName: 'aaaaaa', userId: '2222' }],
+            onDone: this.updateRequests.bind(this),
+            channel: this.channel
         });
     }
 
@@ -173,22 +190,30 @@ class ChannelAdminScreen extends React.Component {
         this.setState({ pendingRequests: pendingRequests });
     }
 
+    //ADMINS
     manageAdmins() {
-        this.props.setParticipants(this.state.admins);
-        this.props.setTeam(this.channel.userDomain);
-        Actions.addParticipants({ onSelected: this.setAdmins.bind(this) });
+        Actions.addParticipants({
+            onSelected: this.setAdmins.bind(this),
+            allContacts: this.state.participants,
+            alreadySelected: this.state.admins,
+            disabledUserIds: [this.channel.ownerId]
+        });
     }
 
     setAdmins(admins) {
+        const adminIds = _.map(admins, admin => {
+            return admin.userId;
+        });
         Channel.updateAdmins(
             this.channel.channelName,
             this.channel.userDomain,
-            admins
+            adminIds
         ).then(() => {
             this.setState({ admins: admins });
         });
     }
 
+    //OWNERSHIP
     setOwner() {
         Actions.setChannelOwner({
             channel: this.channel,
@@ -199,18 +224,24 @@ class ChannelAdminScreen extends React.Component {
 
     unsubscribe() {
         this.setState({ uiDisabled: true }, () => {
-            this.props
-                .onUnsubscribeChannel(this.channel)
+            Channel.unsubscribe(this.channel)
+                .then(() => {
+                    return Conversation.deleteChannelConversation(
+                        this.channel.channelId
+                    );
+                })
+                .then(() => {
+                    return MessageDAO.deleteBotMessages(this.channel.channelId);
+                })
                 .then(() => {
                     Actions.pop();
                 })
                 .catch(e => {
-                    if (e === 98) {
-                        this.refs.toast.show(
-                            'You are the only admin',
-                            DURATION.LENGTH_SHORT
-                        );
-                    }
+                    this.setState({ uiDisabled: false });
+                    this.refs.toast.show(
+                        'Fail to unsubscribe',
+                        DURATION.LENGTH_SHORT
+                    );
                 });
         });
     }
@@ -269,33 +300,49 @@ class ChannelAdminScreen extends React.Component {
                     <Text style={styles.adminH2}>Add to favourite</Text>
                 </TouchableOpacity>
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity
-                    style={styles.adminRow}
-                    onPress={this.setOwner.bind(this)}
-                    disabled={this.state.uiDisabled}
-                >
-                    <Text style={styles.adminH2}>Transfer ownership</Text>
-                </TouchableOpacity>
+                {this.props.isOwner ? (
+                    <TouchableOpacity
+                        style={styles.adminRow}
+                        onPress={this.setOwner.bind(this)}
+                        disabled={this.state.uiDisabled}
+                    >
+                        <Text style={styles.adminH2}>Transfer ownership</Text>
+                    </TouchableOpacity>
+                ) : null}
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity
-                    style={styles.adminRow}
-                    onPress={this.unsubscribe.bind(this)}
-                    disabled={this.state.uiDisabled}
-                >
-                    <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
-                        Leave channel
-                    </Text>
-                </TouchableOpacity>
+                {!this.props.isOwner ? (
+                    <TouchableOpacity
+                        style={styles.adminRow}
+                        onPress={this.unsubscribe.bind(this)}
+                        disabled={this.state.uiDisabled}
+                    >
+                        <Text
+                            style={[
+                                styles.adminH2,
+                                { color: GlobalColors.red }
+                            ]}
+                        >
+                            Leave channel
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
                 {this.renderSeparator(SeparatorSize.SMALL)}
-                <TouchableOpacity
-                    style={styles.adminRow}
-                    onPress={this.deleteChannel.bind(this)}
-                    disabled={this.state.uiDisabled}
-                >
-                    <Text style={[styles.adminH2, { color: GlobalColors.red }]}>
-                        Delete channel
-                    </Text>
-                </TouchableOpacity>
+                {this.props.isOwner ? (
+                    <TouchableOpacity
+                        style={styles.adminRow}
+                        onPress={this.deleteChannel.bind(this)}
+                        disabled={this.state.uiDisabled}
+                    >
+                        <Text
+                            style={[
+                                styles.adminH2,
+                                { color: GlobalColors.red }
+                            ]}
+                        >
+                            Delete channel
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
             </View>
         );
     }
@@ -303,9 +350,9 @@ class ChannelAdminScreen extends React.Component {
     renderParticipantsArea() {
         return (
             <View>
-                <TouchableOpacity style={styles.adminRow}>
+                <View style={styles.adminRow}>
                     <Text style={styles.adminH1}>Partecipants</Text>
-                </TouchableOpacity>
+                </View>
                 {this.renderSeparator(SeparatorSize.SMALL)}
                 <TouchableOpacity
                     style={styles.adminRow}

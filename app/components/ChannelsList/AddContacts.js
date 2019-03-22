@@ -104,24 +104,55 @@ class AddContacts extends React.Component {
 
     componentDidMount() {
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
+        if (this.props.allContacts) {
+            const allContacts = _.map(this.props.allContacts, contact => {
+                return {
+                    ...contact,
+                    selected: false,
+                    disabled: this.props.disabledUserIds.includes(
+                        contact.userId
+                    )
+                };
+            });
+            let participants;
+            if (this.props.alreadySelected) {
+                participants = _.map(this.props.alreadySelected, part => {
+                    return {
+                        ...part,
+                        selected: true,
+                        disabled: this.props.disabledUserIds.includes(
+                            part.userId
+                        )
+                    };
+                });
+            }
 
-        if (this.props.appState.contactsLoaded) {
+            let contactsUniq = _.unionBy(participants, allContacts, 'userId');
+            contactsUniq = _.sortBy(contactsUniq, 'userName');
+            this.setState({ contacts: contactsUniq });
+        } else if (this.props.appState.contactsLoaded) {
             Contact.getAddedContacts().then(contacts => {
                 const localContacts = _.map(contacts, contact => {
                     return {
                         ...contact,
-                        selected: false
+                        selected: false,
+                        disabled: this.props.disabledUserIds.includes(
+                            contact.userId
+                        )
                     };
                 });
-                const participants = _.map(
-                    this.props.channels.participants,
-                    part => {
+                let participants;
+                if (this.props.alreadySelected) {
+                    participants = _.map(this.props.alreadySelected, part => {
                         return {
                             ...part,
-                            selected: true
+                            selected: true,
+                            disabled: this.props.disabledUserIds.includes(
+                                part.userId
+                            )
                         };
-                    }
-                );
+                    });
+                }
                 let contactsUniq = _.unionBy(
                     participants,
                     localContacts,
@@ -139,25 +170,32 @@ class AddContacts extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (
+            !this.props.allContacts &&
             prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsLoaded
+                this.props.appState.contactsLoaded
         ) {
             Contact.getAddedContacts().then(contacts => {
                 const localContacts = _.map(contacts, contact => {
                     return {
                         ...contact,
-                        selected: false
+                        selected: false,
+                        disabled: this.props.disabledUserIds.includes(
+                            contact.userId
+                        )
                     };
                 });
-                const participants = _.map(
-                    this.props.channels.participants,
-                    part => {
+                let participants;
+                if (this.props.alreadySelected) {
+                    participants = _.map(this.props.alreadySelected, part => {
                         return {
                             ...part,
-                            selected: true
+                            selected: true,
+                            disabled: this.props.disabledUserIds.includes(
+                                part.userId
+                            )
                         };
-                    }
-                );
+                    });
+                }
                 let contactsUniq = _.unionBy(
                     participants,
                     localContacts,
@@ -198,12 +236,14 @@ class AddContacts extends React.Component {
     };
 
     toggleSelectContacts = elem => {
-        let array = [...this.state.contacts];
-        const index = R.findIndex(R.propEq('userId', elem.userId))(array);
-        array[index].selected = !array[index].selected;
-        this.setState({
-            contacts: array
-        });
+        if (!elem.disabled) {
+            let array = [...this.state.contacts];
+            const index = R.findIndex(R.propEq('userId', elem.userId))(array);
+            array[index].selected = !array[index].selected;
+            this.setState({
+                contacts: array
+            });
+        }
     };
     onSearchQueryChange(text) {
         if (text !== '') {
