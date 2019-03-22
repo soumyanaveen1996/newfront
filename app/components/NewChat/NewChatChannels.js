@@ -149,7 +149,7 @@ class NewChatContacts extends React.Component {
                 data: channelBook
             };
         });
-        console.log(PhoneChannels);
+        // console.log(PhoneChannels);
         return PhoneChannels;
     };
     refresh = channels => {

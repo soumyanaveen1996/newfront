@@ -98,12 +98,81 @@ const styles = StyleSheet.create({
         shadowRadius: 4
     },
 
+    //ROUTE SLIDER
+    containerRS: {
+        position: 'absolute',
+        left: 0,
+        top: 13,
+        height: 70,
+        flexDirection: 'row',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        overflow: 'hidden'
+    },
+    containerRSClosed: {
+        position: 'absolute',
+        left: -270,
+        top: 13,
+        height: 70,
+        flexDirection: 'row',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        overflow: 'hidden'
+    },
+    leftContainerRS: {
+        width: 270,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        paddingHorizontal: 17,
+        paddingVertical: 7,
+        backgroundColor: GlobalColors.grey
+    },
+    rightContainerRS: {
+        width: 45,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.chatLeftTextColor
+    },
+    sliderTrackRS: {
+        width: '100%',
+        height: 3,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.chatLeftTextColor,
+        overflow: 'visible'
+    },
+    leftTrackRS: {
+        height: '100%',
+        backgroundColor: GlobalColors.sideButtons
+    },
+    trackIconRS: {
+        width: 16,
+        height: 16
+    },
+    dataContainerRS: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    topTextRS: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: GlobalColors.sideButtons
+    },
+    bottomTextRS: {
+        fontSize: 12,
+        fontWeight: '100',
+        color: GlobalColors.white
+    },
+
     //CONTEXT SLIDESHOW
     CSContainer: {
         position: 'absolute',
         left: 0,
-        bottom: 0,
         right: 0,
+        height: 280,
         paddingBottom: 10,
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -222,6 +291,7 @@ const styles = StyleSheet.create({
 });
 
 const layerStyles = Mapbox.StyleSheet.create({
+    //POLYLINES for routes and great circle routes
     route: {
         lineCap: 'round',
         lineWidth: 6,
@@ -229,6 +299,7 @@ const layerStyles = Mapbox.StyleSheet.create({
         lineColor: GlobalColors.sideButtons,
         lineBlur: 1
     },
+    //Auto-generated MARKERS
     startingPoint: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
@@ -245,17 +316,34 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconRotationAlignment: 'map',
         iconRotate: Mapbox.StyleSheet.identity('rotation')
     },
-    vesselPosition: {
+    //MARKERS
+    circleMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.current_location_inactive,
         iconSize: 1.5
     },
-    sharedLocation: {
+    poiMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.map_pin,
         iconSize: 1.5
+    },
+    aircraftMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.moving_maps_plane,
+        iconSize: 1.5,
+        iconRotationAlignment: 'map',
+        iconRotate: Mapbox.StyleSheet.identity('rotation')
+    },
+    arrowMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.maps_maritime_icon,
+        iconSize: 1.5,
+        iconRotationAlignment: 'map',
+        iconRotate: Mapbox.StyleSheet.identity('rotation')
     }
 });
 

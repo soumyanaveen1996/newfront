@@ -5,11 +5,15 @@ import { Auth, Notification } from '../lib/capability';
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
 import { Platform } from 'react-native';
+import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (isUserLoggedIn) {
+            Mapbox.setAccessToken(
+                'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
+            );
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();

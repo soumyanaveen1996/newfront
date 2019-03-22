@@ -103,8 +103,8 @@ class ChannelsList extends React.Component {
             <Text
                 style={
                     Platform.OS === 'android'
-                        ? { marginLeft: wp('20%'), fontSize: 16 }
-                        : null
+                        ? { marginLeft: wp('20%'), fontSize: 18 }
+                        : { fontSize: 18 }
                 }
             >
                 {headerConfig.headerTitle}

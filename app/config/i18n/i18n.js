@@ -24,6 +24,7 @@ I18n.translations = {
         Add_Contact: 'Add Contact',
         My_Contacts: 'My Contacts',
         My_Channels: 'My Channels',
+        Phone_contacts: 'Phone Contacts',
         My_Bots: 'My Bots',
         Favorites: 'Favorites',
         Contacts: 'Contacts',

@@ -8,6 +8,7 @@ import {
 
 export const ChannelsListItemColors = {
     titleColor: 'rgba(102, 102, 102, 1)',
+    titleColor2: 'rgba(74,74,74,1)',
     subTitleColor: 'rgba(153,153,153,1);',
     dateColor: 'rgb(142, 142, 142)',
     backgroundColor: GlobalColors.white,
@@ -262,15 +263,15 @@ export default StyleSheet.create({
         width: '60%',
         borderLeftWidth: 1,
         paddingLeft: 10,
-        paddingTop: 15,
-        borderLeftColor: 'rgba(91, 91, 91, 0.2)'
+        borderLeftColor: 'rgba(91, 91, 91, 0.2)',
+        justifyContent: 'center'
     },
 
     title: {
-        color: ChannelsListItemColors.titleColor,
+        color: ChannelsListItemColors.titleColor2,
         fontFamily: 'SF Pro Text',
-        fontSize: wp('5%'),
-        fontWeight: '600'
+        fontSize: 16,
+        fontWeight: '300'
     },
     channelOwnerDetails: {
         color: ChannelsListItemColors.subTitleColor,

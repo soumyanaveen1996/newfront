@@ -9,9 +9,9 @@ import {
     SafeAreaView,
     Alert,
     LayoutAnimation,
-    UIManager
+    UIManager,
+    Slider
 } from 'react-native';
-import RNMapView from 'react-native-maps';
 import { styles, layerStyles } from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
@@ -24,31 +24,32 @@ import {
 } from '../../lib/network';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import Icons from '../../config/icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../config/images';
 import _ from 'lodash';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import ContextSlideshow from './ContextSlideshow';
 import ChatModal from '../ChatBotScreen/ChatModal';
+import turf_great_circle from '@turf/great-circle';
+import turf_distance from '@turf/distance';
+import turf_helpers from '@turf/helpers';
+import GlobalColors from '../../config/styles';
+import { MarkerIconTypes } from './config';
+import Store from '../../redux/store/configureStore';
+import { setOpenMap } from '../../redux/actions/UserActions';
+import { connect } from 'react-redux';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
 );
 
-class CallOut extends React.Component {
-    render() {
-        return (
-            <View style={styles.callOutContainer}>
-                <Text style={styles.callOutText}>{this.props.text}</Text>
-            </View>
-        );
-    }
-}
+//Mapbox descibes coordinates with two positions arrays. The first element is always the longitude.
 
-export default class MapView extends React.Component {
+class MapView extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
-            headerTitle: 'Map'
+            headerTitle: state.params.title
         };
         if (state.params.noBack === true) {
             navigationOptions.headerLeft = null;
@@ -113,88 +114,18 @@ export default class MapView extends React.Component {
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
             locateUserButtonIcon: Icons.userPosition(),
             slideshowOpen: false,
-            slideshowContext: this.props.mapData.options
-                ? this.props.mapData.options.cards
-                : [],
+            slideshowContext: [],
             chatModalContent: {},
-            isModalVisible: false
-        };
-        const vesselsPositions = _.map(this.props.mapData.markers, marker => {
-            const position = [
-                marker.coordinate.longitude,
-                marker.coordinate.latitude
-            ];
-            return position;
-        });
-        const polylines = _.map(this.props.mapData.polylines, polyLine => {
-            return _.map(polyLine.coordinates, coords => {
-                const coordArray = [coords.longitude, coords.latitude];
-                return coordArray;
-            });
-        });
-        const movingVessels = _.map(polylines, polyline => {
-            const lastIndex = polyline.length - 1;
-            //check if the polyline is made of more than one position
-            if (lastIndex > 0) {
-                const deltaLongitude =
-                    polyline[lastIndex][0] - polyline[lastIndex - 1][0];
-                const deltaLatitute =
-                    polyline[lastIndex][1] - polyline[lastIndex - 1][1];
-                const angle =
-                    Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
-                return {
-                    type: 'Feature',
-                    properties: { type: 'movingVessel', rotation: angle },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: polyline[lastIndex]
-                    }
-                };
-            } else {
-                return {
-                    type: 'Feature',
-                    properties: { type: 'vesselPosition' },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: polyline[0]
-                    }
-                };
-            }
-        });
-        this.GEOJson = {
-            type: 'FeatureCollection',
-            features: [
-                {
-                    type: 'Feature',
-                    properties: { type: 'vesselPosition' },
-                    geometry: {
-                        type: 'MultiPoint',
-                        coordinates: vesselsPositions
-                    }
-                },
-                {
-                    type: 'Feature',
-                    properties: { type: 'startingPoints' },
-                    geometry: {
-                        type: 'MultiPoint',
-                        coordinates: _.map(polylines, polyline => {
-                            return polyline[0];
-                        })
-                    }
-                },
-                {
-                    type: 'Feature',
-                    properties: { type: 'routes' },
-                    geometry: {
-                        type: 'MultiLineString',
-                        coordinates: polylines
-                    }
-                }
-            ].concat(movingVessels)
+            isModalVisible: false,
+            showRouteTracker: false,
+            routeTrackerClosed: false,
+            trackerData: {},
+            GEOJson: {}
         };
     }
 
     async componentDidMount() {
+        this.refreshMap();
         this.props.navigation.setParams({
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
@@ -206,9 +137,13 @@ export default class MapView extends React.Component {
         );
     }
 
-    componentWillMount() {
-        this.checkPollingStrategy();
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.mapData.map, this.props.mapData.map)) {
+            this.refreshMap();
+        }
     }
+
+    componentWillUnmount() {}
 
     readLambdaQueue() {
         NetworkHandler.readLambda();
@@ -247,87 +182,151 @@ export default class MapView extends React.Component {
         }
     }
 
-    _close() {
-        Actions.pop();
-    }
+    // _renderTrailArrows(polylines) {
+    //     return _.map(polylines, polyline => {
+    //         return polyline.coordinates.map((coo, index, coos) => {
+    //             if (index === coos.length - 1) {
+    //                 return;
+    //             }
+    //             let deltaLatitute = coos[index + 1].latitude - coo.latitude;
+    //             let deltaLongitude = coos[index + 1].longitude - coo.longitude;
+    //             let angle =
+    //                 -Math.atan2(deltaLatitute, deltaLongitude) *
+    //                 (180 / Math.PI);
+    //             let angleStringRad = angle + 'deg';
+    //             return (
+    //                 <RNMapView.Marker
+    //                     coordinate={coo}
+    //                     image={images.trail_arrow}
+    //                     anchor={{ x: 0.5, y: 0.5 }}
+    //                     style={{ transform: [{ rotateZ: angleStringRad }] }}
+    //                 />
+    //             );
+    //         });
+    //     });
+    // }
 
-    _renderCallOut(callOut) {
-        return (
-            <RNMapView.Callout>
-                <CallOut text={callOut.text} />
-            </RNMapView.Callout>
-        );
-    }
-
-    _renderMarkers(markers) {
-        return _.map(markers, (marker, index) => {
-            return (
-                <RNMapView.Marker {...marker} key={'marker' + index}>
-                    {this._renderCallOut(marker.callOut)}
-                </RNMapView.Marker>
-            );
+    //Create a new GEOJson
+    refreshMap() {
+        //GREAT CIRCLE
+        const planeRoutes = _.map(this.props.mapData.map.planeRoutes, route => {
+            let start = turf_helpers.point([
+                route.start.longitude,
+                route.start.latitude
+            ]);
+            let end = turf_helpers.point([
+                route.end.longitude,
+                route.end.latitude
+            ]);
+            return turf_great_circle(start, end, { name: route.id });
         });
-    }
-
-    _renderPolygons(polygons) {
-        return _.map(polygons, (polygon, index) => {
-            return <RNMapView.Polygon {...polygon} key={'polygon' + index} />;
-        });
-    }
-
-    _renderTrailArrows(polylines) {
-        return _.map(polylines, polyline => {
-            return polyline.coordinates.map((coo, index, coos) => {
-                if (index === coos.length - 1) {
-                    return;
+        //MARKERS
+        const markers = _.map(this.props.mapData.map.markers, marker => {
+            const position = [
+                marker.coordinate.longitude,
+                marker.coordinate.latitude
+            ];
+            const markerObject = {
+                type: 'Feature',
+                properties: {
+                    iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+                    id: marker.id,
+                    title: marker.title,
+                    description: marker.description,
+                    draggable: marker.draggable,
+                    rotation: marker.coordinate.direction - 90
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: position
                 }
-                let deltaLatitute = coos[index + 1].latitude - coo.latitude;
-                let deltaLongitude = coos[index + 1].longitude - coo.longitude;
-                let angle =
-                    -Math.atan2(deltaLatitute, deltaLongitude) *
-                    (180 / Math.PI);
-                let angleStringRad = angle + 'deg';
-                return (
-                    <RNMapView.Marker
-                        coordinate={coo}
-                        image={images.trail_arrow}
-                        anchor={{ x: 0.5, y: 0.5 }}
-                        style={{ transform: [{ rotateZ: angleStringRad }] }}
-                    />
-                );
+            };
+            return markerObject;
+        });
+        //POLYLINES
+        const polylines = _.map(this.props.mapData.map.polylines, polyLine => {
+            return _.map(polyLine.coordinates, coords => {
+                const coordArray = [coords.longitude, coords.latitude];
+                return coordArray;
             });
         });
-    }
-
-    _renderPolylines(polylines) {
-        return _.map(polylines, (polyline, index) => {
-            return (
-                <RNMapView.Polyline {...polyline} key={'polyline' + index} />
-            );
+        const movingVessels = _.map(polylines, polyline => {
+            const lastIndex = polyline.length - 1;
+            //check if the polyline is made of more than one position
+            if (lastIndex > 0) {
+                const deltaLongitude =
+                    polyline[lastIndex][0] - polyline[lastIndex - 1][0];
+                const deltaLatitute =
+                    polyline[lastIndex][1] - polyline[lastIndex - 1][1];
+                const angle =
+                    Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
+                return {
+                    type: 'Feature',
+                    properties: { type: 'movingVessel', rotation: angle },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polyline[lastIndex]
+                    }
+                };
+            } else {
+                return {
+                    type: 'Feature',
+                    properties: { type: 'vesselPosition' },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: polyline[0]
+                    }
+                };
+            }
         });
-    }
 
-    _renderCircles(circles) {
-        return _.map(circles, (circle, index) => {
-            return <RNMapView.Circle {...circle} key={'circle' + index} />;
-        });
-    }
+        //GENERATE GEOJSON
+        let GEOJson = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    properties: { type: 'startingPoints' },
+                    geometry: {
+                        type: 'MultiPoint',
+                        coordinates: _.map(polylines, polyline => {
+                            return polyline[0];
+                        })
+                    }
+                },
+                {
+                    type: 'Feature',
+                    properties: { type: 'routes' },
+                    geometry: {
+                        type: 'MultiLineString',
+                        coordinates: polylines
+                    }
+                }
+            ]
+                .concat(movingVessels)
+                .concat(planeRoutes)
+                .concat(markers)
+        };
 
-    __addDeltaValuesToMapData(mapData) {
-        const { width, height } = Dimensions.get('window');
-        const aspectRatio = width / height;
-        //Setting latitudeDelta to 0.0922 so that zoom radius is small
-        const latitudeDelta = 0.0922;
-        const longitudeDelta = latitudeDelta + aspectRatio;
-        //latitudeDelta and longitudeDelta determines the zoom level
-        mapData.region.latitudeDelta = latitudeDelta;
-        mapData.region.longitudeDelta = longitudeDelta;
-        return mapData;
+        //ROUTE TRACKER
+        let trackerData = this.getRouteTracker();
+
+        if (trackerData) {
+            this.setState({
+                GEOJson: GEOJson,
+                showRouteTracker: true,
+                trackerData: trackerData
+            });
+        } else {
+            this.setState({
+                GEOJson: GEOJson
+            });
+        }
     }
 
     renderElements() {
         return (
-            <Mapbox.ShapeSource id="routeSource" shape={this.GEOJson}>
+            <Mapbox.ShapeSource id="routeSource" shape={this.state.GEOJson}>
                 {/* VESSELS ROUTES */}
                 <Mapbox.LineLayer id="routes" style={layerStyles.route} />
                 {/* ROUTES STARTING POINTS */}
@@ -342,15 +341,26 @@ export default class MapView extends React.Component {
                     filter={['==', 'type', 'movingVessel']}
                     style={layerStyles.movingVessel}
                 />
-                {/* STATIC POSITIONS OF VESSELS or SHARED LOCATIONS*/}
+                {/* MARKERS*/}
                 <Mapbox.SymbolLayer
-                    id="vesselsPositions"
-                    filter={['==', 'type', 'vesselPosition']}
-                    style={
-                        this.props.isSharedLocation
-                            ? layerStyles.sharedLocation
-                            : layerStyles.vesselPosition
-                    }
+                    id={MarkerIconTypes.ARROW}
+                    filter={['==', 'iconType', MarkerIconTypes.ARROW]}
+                    style={layerStyles.arrowMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.AIRCRAFT}
+                    filter={['==', 'iconType', MarkerIconTypes.AIRCRAFT]}
+                    style={layerStyles.aircraftMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.POI}
+                    filter={['==', 'iconType', MarkerIconTypes.POI]}
+                    style={layerStyles.poiMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.CIRCLE]}
+                    style={layerStyles.circleMarker}
                 />
             </Mapbox.ShapeSource>
         );
@@ -376,6 +386,132 @@ export default class MapView extends React.Component {
                     onPress={this.locateUser.bind(this)}
                 >
                     {this.state.locateUserButtonIcon}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    getRouteTracker() {
+        let markerToTrack;
+        let routeToTrack = _.find(this.props.mapData.map.planeRoutes, route => {
+            return route.showTracker;
+        });
+        if (routeToTrack) {
+            markerToTrack = _.find(this.props.mapData.map.markers, marker => {
+                return routeToTrack.id === marker.id;
+            });
+            if (markerToTrack) {
+                const trackerData = {
+                    routeId: markerToTrack.id,
+                    startId: routeToTrack.start.id,
+                    endId: routeToTrack.end.id,
+                    // startCoord: [
+                    //     routeToTrack.start.longitude,
+                    //     routeToTrack.start.latitude
+                    // ],
+                    // endCoord: [
+                    //     routeToTrack.end.longitude,
+                    //     routeToTrack.end.latitude
+                    // ],
+                    // currentCoord: [
+                    //     markerToTrack.coordinate.longitude,
+                    //     markerToTrack.coordinate.latitude
+                    // ],
+                    startTime: routeToTrack.start.time,
+                    currentTime: new Date().getTime(),
+                    arrivalTime: routeToTrack.end.time
+                };
+                return trackerData;
+            }
+        }
+        return null;
+    }
+
+    renderRouteTracker() {
+        // const from = turf_helpers.point(this.state.trackerData.startCoord);
+        // const to = turf_helpers.point(this.state.trackerData.endCoord);
+        // const now = turf_helpers.point(this.state.trackerData.currentCoord);
+        // const fullDistance = turf_distance(from, to);
+        // const travelled = turf_distance(from, now);
+        // const trackerValue =
+        //     JSON.stringify((travelled * 100) / fullDistance) + '%';
+
+        const travelledTime =
+            this.state.trackerData.currentTime -
+            this.state.trackerData.startTime;
+        const fullTime =
+            this.state.trackerData.arrivalTime -
+            this.state.trackerData.startTime;
+        const timeLeftMs =
+            this.state.trackerData.arrivalTime -
+            this.state.trackerData.currentTime;
+        let seconds = Math.floor(timeLeftMs / 1000);
+        let minute = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+        let hour = Math.floor(minute / 60);
+        minute = minute % 60;
+        hour = hour % 24;
+        const trackerValue =
+            JSON.stringify((travelledTime * 100) / fullTime) + '%';
+
+        return (
+            <View
+                style={
+                    this.state.routeTrackerClosed
+                        ? styles.containerRSClosed
+                        : styles.containerRS
+                }
+            >
+                <View style={styles.leftContainerRS}>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.startId}
+                        </Text>
+                        <Text style={styles.topTextRS}>
+                            {this.state.trackerData.endId}
+                        </Text>
+                    </View>
+                    {/* TRACKER */}
+                    <View style={styles.sliderTrackRS}>
+                        <View
+                            style={[
+                                styles.leftTrackRS,
+                                { width: trackerValue }
+                            ]}
+                        />
+                        <Image
+                            source={images.moving_maps_plane_blue_icon}
+                            style={styles.trackIconRS}
+                        />
+                    </View>
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.bottomTextRS}>
+                            {this.state.trackerData.routeId}
+                        </Text>
+                        <Text style={styles.bottomTextRS}>
+                            Arriving in{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {hour} : {minute}
+                            </Text>
+                        </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={styles.rightContainerRS}
+                    onPress={() => {
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
+                        this.setState({
+                            routeTrackerClosed: !this.state.routeTrackerClosed
+                        });
+                    }}
+                >
+                    {this.state.routeTrackerClosed
+                        ? Icons.planeRSWhite()
+                        : Icons.closeRouteSlider()}
                 </TouchableOpacity>
             </View>
         );
@@ -432,22 +568,21 @@ export default class MapView extends React.Component {
         if (Platform.OS === 'android') {
             this.setState({ userTrackingMode: 0 });
             this.map.moveTo([
-                this.props.mapData.region.longitude,
-                this.props.mapData.region.latitude
+                this.props.mapData.map.region.longitude,
+                this.props.mapData.map.region.latitude
             ]);
         }
     }
 
     renderMap() {
-        // const mapData = this.__addDeltaValuesToMapData(this.props.mapData);
         return (
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={11}
+                zoomLevel={this.props.mapData.map.region.zoom || 11}
                 centerCoordinate={[
-                    this.props.mapData.region.longitude,
-                    this.props.mapData.region.latitude
+                    this.props.mapData.map.region.longitude,
+                    this.props.mapData.map.region.latitude
                 ]}
                 showsUserLocation={true}
                 userTrackingMode={this.state.userTrackingMode}
@@ -461,6 +596,47 @@ export default class MapView extends React.Component {
                 {this.renderElements()}
             </Mapbox.MapView>
         );
+    }
+
+    renderSlideShow() {
+        if (
+            this.props.mapData.map.cards &&
+            this.props.mapData.map.cards.length > 0
+        ) {
+            return (
+                <ContextSlideshow
+                    contentData={this.props.mapData.map.cards}
+                    isOpen={this.state.slideshowOpen}
+                    closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
+                        this
+                    )}
+                    onDataCardSelected={this.openModalWithContent.bind(this)}
+                    onCardSelected={this.onAction.bind(this)}
+                />
+            );
+        }
+    }
+
+    onAction(elementId) {
+        let response = {
+            type: 'map_response',
+            mapId: this.props.mapData.options.mapId,
+            cardId: elementId,
+            markerId: elementId
+        };
+        this.map
+            .getZoom()
+            .then(zoom => {
+                response.zoom = zoom;
+                return this.map.getCenter();
+            })
+            .then(center => {
+                response.center = {
+                    longitude: center[0],
+                    latitude: center[1]
+                };
+                this.props.onAction(response);
+            });
     }
 
     closeAndOpenSlideshow() {
@@ -501,17 +677,27 @@ export default class MapView extends React.Component {
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.renderMap()}
                 {this.renderButtons()}
-                <ContextSlideshow
-                    contentData={this.state.slideshowContext || []}
-                    isOpen={this.state.slideshowOpen}
-                    closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
-                        this
-                    )}
-                    onDataCardSelected={this.openModalWithContent.bind(this)}
-                    onCardSelected={this.props.onAction || null}
-                />
+                {this.state.showRouteTracker ? this.renderRouteTracker() : null}
+                {this.renderSlideShow()}
                 {this.renderChatModal()}
             </SafeAreaView>
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        mapData: state.user.openMap[ownProps.storeIndex]
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setOpenMap: openMap => dispatch(setOpenMap(openMap))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MapView);

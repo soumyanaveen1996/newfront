@@ -228,7 +228,7 @@ export default class Dialler extends React.Component {
             const [call_type, pstnMessage] = this.checkSatelliteCall(
                 this.state.dialledNumber
             );
-            console.log(call_type);
+            // console.log(call_type);
 
             if (call_type === PSTN_CALL.NOT_SUPPORTED) {
                 this.setState({ diallerState: DiallerState.initial });
@@ -666,7 +666,7 @@ export default class Dialler extends React.Component {
     getCredit() {
         Bot.getInstalledBots()
             .then(bots => {
-                console.log(bots);
+                // console.log(bots);
                 dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
                 if (dwIndex < 0) {
                     return Alert.alert(
@@ -961,7 +961,7 @@ export default class Dialler extends React.Component {
     };
 
     render() {
-        console.log('Dialled Number', this.state.diallerState);
+        // console.log('Dialled Number', this.state.diallerState);
 
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
