@@ -96,6 +96,11 @@ import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
 import { MarkerIconTypes } from '../MapView/config';
 import ReduxStore from '../../redux/store/configureStore';
+import {
+    SearchBox,
+    SearchBoxUserAction,
+    SearchBoxBotAction
+} from './SearchBox';
 
 const R = require('ramda');
 
@@ -188,7 +193,9 @@ class ChatBotScreen extends React.Component {
             sliderClosed: false,
             chatModalContent: {},
             isModalVisible: false,
-            showOptions: false
+            showOptions: false,
+            showSearchBox: false,
+            searchBoxData: null
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -412,7 +419,6 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-        // this.TESTMAP();
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -792,6 +798,16 @@ class ChatBotScreen extends React.Component {
             }
         } else if (
             message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
+        ) {
+            const data = message.getMessage();
+            if (data.action !== SearchBoxBotAction.CLOSE) {
+                this.setState({ showSearchBox: true, searchBoxData: data });
+            } else {
+                this.setState({ showSearchBox: false, searchBoxData: null });
+            }
+        } else if (
+            message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
         ) {
             if (this.slider) {
@@ -853,111 +869,6 @@ class ChatBotScreen extends React.Component {
                 this.updateChat(newMessage);
             }
         });
-    }
-
-    TESTMAP() {
-        // DATASET to test maps. Please don't remove ;)
-        let MAPDATATEST = {
-            region: {
-                latitude: 15.5528,
-                longitude: 110.433,
-                zoom: 10
-            },
-            markers: [
-                {
-                    id: 'AK137',
-                    title: 'AK137',
-                    description: 'AK137',
-                    draggable: false,
-                    coordinate: {
-                        latitude: 15.5528,
-                        longitude: 110.433,
-                        direction: 214.762
-                    },
-                    iconType: 'aircraft'
-                }
-            ],
-            planeRoutes: [
-                {
-                    id: 'AK137',
-                    start: {
-                        id: 'HKG',
-                        time: '18:15:00',
-                        latitude: 15.5528,
-                        longitude: 110.433
-                    },
-                    end: {
-                        id: 'KUL',
-                        time: '22:20:00',
-                        latitude: 2.755672,
-                        longitude: 101.70539
-                    },
-                    showTracker: true
-                }
-            ]
-        };
-        let msg = new Message();
-        msg.mapMessage(MAPDATATEST, {
-            mapId: 'lzlz',
-            title: 'Title',
-            description: 'description'
-        });
-        msg.messageByBot(true);
-        this.tell(msg);
-    }
-
-    TESTMAP2() {
-        // DATASET to test maps. Please don't remove ;)
-        let MAPDATATEST = {
-            region: {
-                latitude: 15.5528,
-                longitude: 110.433,
-                zoom: 10
-            },
-            options: {
-                mapId: '1234'
-            },
-            markers: [
-                {
-                    id: 'AK137',
-                    title: 'AK137',
-                    description: 'AK137',
-                    draggable: false,
-                    coordinate: {
-                        latitude: 15.5528,
-                        longitude: 110.433,
-                        direction: 214.762
-                    },
-                    iconType: 'poi'
-                }
-            ],
-            planeRoutes: [
-                {
-                    id: 'AK137',
-                    start: {
-                        id: 'HKG',
-                        time: '18:15:00',
-                        latitude: 15.5528,
-                        longitude: 110.433
-                    },
-                    end: {
-                        id: 'KUL',
-                        time: '22:20:00',
-                        latitude: 2.755672,
-                        longitude: 101.70539
-                    },
-                    showTracker: true
-                }
-            ]
-        };
-        let msg = new Message();
-        msg.mapMessage(MAPDATATEST, {
-            mapId: 'lzlz',
-            title: 'Title',
-            description: 'description'
-        });
-        msg.messageByBot(true);
-        this.tell(msg);
     }
 
     done = () => {
@@ -1150,6 +1061,21 @@ class ChatBotScreen extends React.Component {
             });
         }
     };
+
+    sendSearchBoxResponse(response) {
+        message = new Message();
+        message.searchBoxResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+        this.setState({ showSearchBox: false, searchBoxData: null });
+    }
+
+    sendSearchBoxQuery(query) {
+        message = new Message();
+        message.searchBoxResponseMessage(query);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+    }
 
     sendMapResponse(response) {
         message = new Message();
@@ -2214,6 +2140,16 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderSearchBox() {
+        return (
+            <SearchBox
+                data={this.state.searchBoxData}
+                sendResponse={this.sendSearchBoxResponse.bind(this)}
+                sendSearchQuery={this.sendSearchBoxQuery.bind(this)}
+            />
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
@@ -2456,9 +2392,9 @@ class ChatBotScreen extends React.Component {
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
-                                <View style={{ alignItems: 'center' }}>
-                                    {this.renderChatInputBar()}
-                                </View>
+                                {this.state.showSearchBox
+                                    ? this.renderSearchBox()
+                                    : this.renderChatInputBar()}
                                 {this.renderNetworkStatusBar()}
                                 {/* {this.renderCallModal()} */}
                                 {this.renderChatModal()}
