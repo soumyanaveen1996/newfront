@@ -384,6 +384,14 @@ export const Icons = {
         15,
         GlobalColors.white
     ),
+    //CHANNELS
+    editChannel: icon(
+        'pencil',
+        'material-community',
+        20,
+        GlobalColors.sideButtons
+    ),
+    redWarning: icon('alert', 'material-community', 20, GlobalColors.red),
 
     //SEARCH BOX
     info: icon(
