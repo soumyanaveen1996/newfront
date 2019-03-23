@@ -39,6 +39,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import _ from 'lodash';
 
 const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -151,7 +152,7 @@ class ChannelsList extends React.Component {
             showConnectionMessage: this.showConnectionMessage,
             newChannel: this.createChannel.bind(this)
         });
-        const user = await Auth.getUser();
+        user = await Auth.getUser();
         if (user) {
             this.setState({ user });
         }
@@ -289,7 +290,7 @@ class ChannelsList extends React.Component {
                 Actions.pop();
             }
         } else {
-            const filteredChannels = await this.applyFilter(channels);
+            let filteredChannels = await this.applyFilter(channels);
             this.setState({ channels: filteredChannels });
         }
         this.checkPollingStrategy();
@@ -351,7 +352,7 @@ class ChannelsList extends React.Component {
                 onSubscribed={this.onChannelSubscribed}
                 onSubscribeFailed={this.onChannelsubscribeFailed}
                 onChannelTapped={this.onChannelTapped.bind(this)}
-                onChannelEdit={() => this.editChannel(channel)}
+                onChannelEdit={this.editChannel.bind(this)}
             />
         );
     };
@@ -375,13 +376,16 @@ class ChannelsList extends React.Component {
         );
     }
 
-    editChannel = channel => {
-        Actions.newChannels({
+    editChannel(channel, onUnsubscribe) {
+        const isOwner =
+            channel.ownerId === this.state.user.userId ? true : false;
+        Actions.channelAdminScreen({
             title: 'Edit Channel',
-            channel,
-            edit: true
+            channel: channel,
+            onUnsubscribeChannel: onUnsubscribe,
+            isOwner: isOwner
         });
-    };
+    }
 
     onPressFilter() {
         Actions.channelsFilter({

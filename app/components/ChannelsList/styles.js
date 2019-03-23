@@ -556,5 +556,138 @@ export default StyleSheet.create({
                 marginTop: 2
             }
         })
+    },
+    propic: {
+        height: 30,
+        width: 30,
+        borderRadius: 15
+    },
+
+    //CHANNEL ADMIN
+    adminContainer: {
+        backgroundColor: GlobalColors.white,
+        paddingTop: 30,
+        flex: 1
+    },
+    adminTopArea: {
+        flexDirection: 'row',
+        paddingBottom: 30,
+        paddingHorizontal: 15
+    },
+    adminLogo: {
+        height: 90,
+        width: 90
+    },
+    adminTopRightArea: {
+        marginLeft: 5
+    },
+    adminH1: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: GlobalColors.grey
+    },
+    adminH2: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: GlobalColors.grey
+    },
+    adminH3: {
+        fontSize: 14,
+        fontWeight: '100',
+        color: GlobalColors.grey
+    },
+    adminRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 25,
+        paddingHorizontal: 20
+    },
+    requestIgnoreButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 75,
+        height: 35,
+        marginHorizontal: 15,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.white
+    },
+    requestIgnoreText: {
+        fontSize: 16,
+        color: GlobalColors.sideButtons
+    },
+    requestAcceptButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 75,
+        height: 35,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.sideButtons
+    },
+    requestAcceptText: {
+        fontSize: 16,
+        color: GlobalColors.white
+    },
+    ownerRowLeft: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
+    },
+    ownerModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    ownerModalContainer: {
+        width: '90%',
+        aspectRatio: 1,
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        justifyContent: 'space-between',
+        paddingHorizontal: 15,
+        paddingVertical: 35,
+        borderRadius: 10,
+        backgroundColor: GlobalColors.white
+    },
+    ownerModalButtonArea: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    ownerModalWarningArea: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    ownerModalButtonCancel: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '45%',
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.white
+    },
+    ownerModalButtonYes: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '45%',
+        height: 35,
+        borderWidth: 1,
+        borderColor: GlobalColors.sideButtons,
+        borderRadius: 5,
+        backgroundColor: GlobalColors.sideButtons
+    },
+    newOwnerTitle: {
+        fontSize: 18,
+        fontWeight: '500',
+        color: GlobalColors.grey,
+        marginTop: 60,
+        marginBottom: 20
+    },
+    emptyComponent: {
+        height: 40
     }
 });

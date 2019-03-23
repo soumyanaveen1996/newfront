@@ -48,7 +48,9 @@ import { ChannelsList } from '../components/ChannelsList';
 import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
 import NewChannels from '../components/ChannelsList/NewChannels';
 import AddContacts from '../components/ChannelsList/AddContacts';
+import RequestsScreen from '../components/ChannelsList/RequestsScreen';
 import SelectTeam from '../components/ChannelsList/SelectTeam';
+import ChannelAdminScreen from '../components/ChannelsList/ChannelAdminScreen';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
@@ -68,6 +70,7 @@ import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScr
 import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
 import { Multiselection } from '../components/Multiselection';
 import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
+import SetChannelOwner from '../components/ChannelsList/SetChannelOwner';
 import NewPhoneBookContacts from '../components/NewChat/NewPhoneBookContacts';
 import DialPadButton from '../components/NewChat/DialPadButton';
 
@@ -387,10 +390,18 @@ class MainRouter extends React.Component {
                                         component={ChannelsFilter}
                                     />
                                     <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.channelAdminScreen
+                                        }
+                                        title="Edit Channel"
+                                        component={ChannelAdminScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.newChannels}
-                                        title="Filter"
+                                        title="New Channel"
                                         component={NewChannels}
                                     />
+
                                     <Scene
                                         key={
                                             ROUTER_SCENE_KEYS.addressBookScreen
@@ -402,6 +413,16 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.addParticipants}
                                         title={I18n.t('Add_participants')}
                                         component={AddContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.requestsScreen}
+                                        title={I18n.t('Awaiting authorization')}
+                                        component={RequestsScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.setChannelOwner}
+                                        title={I18n.t('Transfer ownership')}
+                                        component={SetChannelOwner}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}
