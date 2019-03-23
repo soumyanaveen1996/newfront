@@ -10,7 +10,6 @@
 #endif
 
 @class BufferMessage;
-@class BufferedQueueMessage;
 @class Empty;
 @class Message;
 @class MessageList;
@@ -35,18 +34,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToGetSampleMessagesWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, MessageList *_Nullable response, NSError *_Nullable error))eventHandler;
 
 
-#pragma mark GetSampleStreamingMessages(stream Empty) returns (stream Message)
+#pragma mark GetSampleStreamingMessages(Empty) returns (stream Message)
 
-- (void)getSampleStreamingMessagesWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, Message *_Nullable response, NSError *_Nullable error))eventHandler;
+- (void)getSampleStreamingMessagesWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, Message *_Nullable response, NSError *_Nullable error))eventHandler;
 
-- (GRPCProtoCall *)RPCToGetSampleStreamingMessagesWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, Message *_Nullable response, NSError *_Nullable error))eventHandler;
+- (GRPCProtoCall *)RPCToGetSampleStreamingMessagesWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, Message *_Nullable response, NSError *_Nullable error))eventHandler;
 
 
-#pragma mark GetSampleBufferedMessage(stream Empty) returns (stream BufferMessage)
+#pragma mark GetSampleBufferedMessage(Empty) returns (stream BufferMessage)
 
-- (void)getSampleBufferedMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, BufferMessage *_Nullable response, NSError *_Nullable error))eventHandler;
+- (void)getSampleBufferedMessageWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, BufferMessage *_Nullable response, NSError *_Nullable error))eventHandler;
 
-- (GRPCProtoCall *)RPCToGetSampleBufferedMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, BufferMessage *_Nullable response, NSError *_Nullable error))eventHandler;
+- (GRPCProtoCall *)RPCToGetSampleBufferedMessageWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, BufferMessage *_Nullable response, NSError *_Nullable error))eventHandler;
 
 
 #pragma mark GetAllQueueMessages(Empty) returns (stream QueueResponse)
@@ -56,18 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToGetAllQueueMessagesWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, QueueResponse *_Nullable response, NSError *_Nullable error))eventHandler;
 
 
-#pragma mark GetStreamingQueueMessage(stream Empty) returns (stream QueueMessage)
+#pragma mark GetStreamingQueueMessage(Empty) returns (stream QueueMessage)
 
-- (void)getStreamingQueueMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, QueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
+- (void)getStreamingQueueMessageWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, QueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
 
-- (GRPCProtoCall *)RPCToGetStreamingQueueMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, QueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
-
-
-#pragma mark GetStreamingBufferedQueueMessage(stream Empty) returns (stream BufferedQueueMessage)
-
-- (void)getStreamingBufferedQueueMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, BufferedQueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
-
-- (GRPCProtoCall *)RPCToGetStreamingBufferedQueueMessageWithRequestsWriter:(GRXWriter *)requestWriter eventHandler:(void(^)(BOOL done, BufferedQueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
+- (GRPCProtoCall *)RPCToGetStreamingQueueMessageWithRequest:(Empty *)request eventHandler:(void(^)(BOOL done, QueueMessage *_Nullable response, NSError *_Nullable error))eventHandler;
 
 
 @end

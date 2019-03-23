@@ -275,7 +275,7 @@ typedef struct QueueResponse__storage_ {
 @dynamic contentType;
 @dynamic messageId;
 @dynamic requestUuid;
-@dynamic detailsArray, detailsArray_Count;
+@dynamic details;
 @dynamic error;
 
 typedef struct QueueMessage__storage_ {
@@ -288,7 +288,7 @@ typedef struct QueueMessage__storage_ {
   NSString *createdBy;
   NSString *messageId;
   NSString *requestUuid;
-  NSMutableArray *detailsArray;
+  NSData *details;
   NSString *error;
 } QueueMessage__storage_;
 
@@ -371,19 +371,19 @@ typedef struct QueueMessage__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "detailsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(MessageDetails),
-        .number = QueueMessage_FieldNumber_DetailsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(QueueMessage__storage_, detailsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
+        .name = "details",
+        .dataTypeSpecific.className = NULL,
+        .number = QueueMessage_FieldNumber_Details,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(QueueMessage__storage_, details),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
       },
       {
         .name = "error",
         .dataTypeSpecific.className = NULL,
         .number = QueueMessage_FieldNumber_Error,
-        .hasIndex = 8,
+        .hasIndex = 9,
         .offset = (uint32_t)offsetof(QueueMessage__storage_, error),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -396,229 +396,6 @@ typedef struct QueueMessage__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(QueueMessage__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\006\001\006\000\004\t\000\005\t\000\006\013\000\007\t\000\010\013\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    NSAssert(descriptor == nil, @"Startup recursed!");
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - MessageDetails
-
-@implementation MessageDetails
-
-@dynamic message;
-@dynamic error;
-@dynamic info;
-@dynamic options;
-
-typedef struct MessageDetails__storage_ {
-  uint32_t _has_storage_[1];
-  NSString *message;
-  NSString *error;
-  NSString *info;
-  NSString *options;
-} MessageDetails__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "message",
-        .dataTypeSpecific.className = NULL,
-        .number = MessageDetails_FieldNumber_Message,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(MessageDetails__storage_, message),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "error",
-        .dataTypeSpecific.className = NULL,
-        .number = MessageDetails_FieldNumber_Error,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(MessageDetails__storage_, error),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "info",
-        .dataTypeSpecific.className = NULL,
-        .number = MessageDetails_FieldNumber_Info,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(MessageDetails__storage_, info),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "options",
-        .dataTypeSpecific.className = NULL,
-        .number = MessageDetails_FieldNumber_Options,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(MessageDetails__storage_, options),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[MessageDetails class]
-                                     rootClass:[QueueserviceRoot class]
-                                          file:QueueserviceRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(MessageDetails__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - BufferedQueueMessage
-
-@implementation BufferedQueueMessage
-
-@dynamic userId;
-@dynamic conversation;
-@dynamic bot;
-@dynamic createdOn;
-@dynamic createdBy;
-@dynamic contentType;
-@dynamic messageId;
-@dynamic requestUuid;
-@dynamic details;
-@dynamic error;
-
-typedef struct BufferedQueueMessage__storage_ {
-  uint32_t _has_storage_[1];
-  int32_t createdOn;
-  int32_t contentType;
-  NSString *userId;
-  NSString *conversation;
-  NSString *bot;
-  NSString *createdBy;
-  NSString *messageId;
-  NSString *requestUuid;
-  NSData *details;
-  NSString *error;
-} BufferedQueueMessage__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "userId",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_UserId,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, userId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "conversation",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_Conversation,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, conversation),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "bot",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_Bot,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, bot),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "createdOn",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_CreatedOn,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, createdOn),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "createdBy",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_CreatedBy,
-        .hasIndex = 4,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, createdBy),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "contentType",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_ContentType,
-        .hasIndex = 5,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, contentType),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "messageId",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_MessageId,
-        .hasIndex = 6,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, messageId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "requestUuid",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_RequestUuid,
-        .hasIndex = 7,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, requestUuid),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "details",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_Details,
-        .hasIndex = 8,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, details),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBytes,
-      },
-      {
-        .name = "error",
-        .dataTypeSpecific.className = NULL,
-        .number = BufferedQueueMessage_FieldNumber_Error,
-        .hasIndex = 9,
-        .offset = (uint32_t)offsetof(BufferedQueueMessage__storage_, error),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[BufferedQueueMessage class]
-                                     rootClass:[QueueserviceRoot class]
-                                          file:QueueserviceRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(BufferedQueueMessage__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =

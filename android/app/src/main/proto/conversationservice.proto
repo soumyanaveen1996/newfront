@@ -47,7 +47,7 @@ message TimelineConversation {
     string createdBy = 7;
     repeated TimelineChannels onChannels = 8;
     TimelineBotInfo bot = 9;
-    TimelineLastMessage lastMessage = 10;
+    bytes lastMessage = 10;
     TimelineContact contact = 11;
 }
 
@@ -66,14 +66,6 @@ message TimelineBotInfo {
     string description = 7;
     string botId = 8;
     bool systemBot = 9;
-}
-
-message TimelineLastMessage {
-    string messageId = 1;
-    string contentType = 2;
-    int32 createdOn = 3;
-    string createdBy = 4;
-    repeated string content = 5;
 }
 
 message TimelineContact {
@@ -169,6 +161,6 @@ message GetArchivedMessagesContent {
     string contentType = 2;
     int32 createdOn = 3;
     string createdBy = 4;
-    repeated string content = 5;
-    string options = 6;
+    bytes content = 5;
+    bytes options = 6;
 }

@@ -28,7 +28,6 @@
 CF_EXTERN_C_BEGIN
 
 @class Message;
-@class MessageDetails;
 @class QueueMessage;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -123,73 +122,11 @@ typedef GPB_ENUM(QueueMessage_FieldNumber) {
   QueueMessage_FieldNumber_ContentType = 6,
   QueueMessage_FieldNumber_MessageId = 7,
   QueueMessage_FieldNumber_RequestUuid = 8,
-  QueueMessage_FieldNumber_DetailsArray = 9,
+  QueueMessage_FieldNumber_Details = 9,
   QueueMessage_FieldNumber_Error = 10,
 };
 
 @interface QueueMessage : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *conversation;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *bot;
-
-@property(nonatomic, readwrite) int32_t createdOn;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
-
-@property(nonatomic, readwrite) int32_t contentType;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *messageId;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *requestUuid;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<MessageDetails*> *detailsArray;
-/** The number of items in @c detailsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger detailsArray_Count;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *error;
-
-@end
-
-#pragma mark - MessageDetails
-
-typedef GPB_ENUM(MessageDetails_FieldNumber) {
-  MessageDetails_FieldNumber_Message = 1,
-  MessageDetails_FieldNumber_Error = 2,
-  MessageDetails_FieldNumber_Info = 3,
-  MessageDetails_FieldNumber_Options = 4,
-};
-
-@interface MessageDetails : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *message;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *error;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *info;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *options;
-
-@end
-
-#pragma mark - BufferedQueueMessage
-
-typedef GPB_ENUM(BufferedQueueMessage_FieldNumber) {
-  BufferedQueueMessage_FieldNumber_UserId = 1,
-  BufferedQueueMessage_FieldNumber_Conversation = 2,
-  BufferedQueueMessage_FieldNumber_Bot = 3,
-  BufferedQueueMessage_FieldNumber_CreatedOn = 4,
-  BufferedQueueMessage_FieldNumber_CreatedBy = 5,
-  BufferedQueueMessage_FieldNumber_ContentType = 6,
-  BufferedQueueMessage_FieldNumber_MessageId = 7,
-  BufferedQueueMessage_FieldNumber_RequestUuid = 8,
-  BufferedQueueMessage_FieldNumber_Details = 9,
-  BufferedQueueMessage_FieldNumber_Error = 10,
-};
-
-@interface BufferedQueueMessage : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
 

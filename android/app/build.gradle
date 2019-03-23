@@ -156,6 +156,18 @@ android {
             }
         }
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/io.netty.versions.properties'
+    }
 }
 
 
@@ -219,10 +231,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:15.0.0'
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:27.1.1" // added this
-    compile 'io.grpc:grpc-okhttp:1.17.1'
-    compile 'io.grpc:grpc-protobuf-lite:1.17.1'
-    compile 'io.grpc:grpc-stub:1.17.1'
+    compile 'io.grpc:grpc-okhttp:1.19.0'
+    compile 'io.grpc:grpc-netty:1.19.0'
+    compile 'io.grpc:grpc-protobuf-lite:1.19.0'
+    compile 'io.grpc:grpc-stub:1.19.0'
     compileOnly "javax.annotation:javax.annotation-api:1.2"
+    compile 'org.conscrypt:conscrypt-android:2.0.0'
 }
 
 
@@ -235,8 +249,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
 apply plugin: 'com.google.protobuf'
+
+
 
 buildscript {
     repositories {

@@ -9,12 +9,11 @@ package queue;
 
 service QueueService {
     rpc GetSampleMessages (commonmessages.Empty) returns (stream MessageList) {}
-    rpc GetSampleStreamingMessages (stream commonmessages.Empty) returns (stream Message) {}
-    rpc GetSampleBufferedMessage (stream commonmessages.Empty) returns (stream BufferMessage) {}
+    rpc GetSampleStreamingMessages (commonmessages.Empty) returns (stream Message) {}
+    rpc GetSampleBufferedMessage (commonmessages.Empty) returns (stream BufferMessage) {}
 
     rpc GetAllQueueMessages (commonmessages.Empty) returns (stream QueueResponse) {}
-    rpc GetStreamingQueueMessage (stream commonmessages.Empty) returns (stream QueueMessage) {}
-    rpc GetStreamingBufferedQueueMessage (stream commonmessages.Empty) returns (stream BufferedQueueMessage) {}
+    rpc GetStreamingQueueMessage (commonmessages.Empty) returns (stream QueueMessage) {}
 }
 
 message Message {
@@ -38,26 +37,6 @@ message QueueResponse {
 }
 
 message QueueMessage {
-    string userId = 1;
-    string conversation = 2;
-    string bot = 3;
-    int32 createdOn = 4;
-    string createdBy = 5;
-    int32 contentType = 6;
-    string messageId = 7;
-    string requestUuid = 8;
-    repeated MessageDetails details = 9;
-    string error = 10;
-}
-
-message MessageDetails {
-  string message = 1;
-  string error = 2;
-  string info = 3;
-  string options = 4;
-}
-
-message BufferedQueueMessage {
     string userId = 1;
     string conversation = 2;
     string bot = 3;

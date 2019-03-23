@@ -90,17 +90,17 @@ RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)s
 RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) {
 
   GRPCProtoCall *call = [self.serviceClient
-                         RPCToGetSampleBufferedMessageWithRequestsWriter:self.grxWriter eventHandler:^(BOOL done, BufferMessage * _Nullable response, NSError * _Nullable error) {
-
+                         RPCToGetSampleBufferedMessageWithRequest:[Empty new] eventHandler:^(BOOL done, BufferMessage * _Nullable response, NSError * _Nullable error) {
                            NSError *jsonError = nil;
                            NSString *myString = [[NSString alloc] initWithData:response.message encoding:NSUTF8StringEncoding];
 
-                           RCTLog(@"Done startChatSSE : %d %@ %@", done, response.message, jsonError);
+                           RCTLog(@"Done startChatSSE : %d %@ %@", done, myString, jsonError);
                            if (done) {
                              [self sendEventWithName:@"end" body:@{}];
                            } else {
                              [self sendEventWithName:@"message" body:response.message];
                            }
+
                          }];
 
   call.requestHeaders[@"sessionId"] = sessionId;

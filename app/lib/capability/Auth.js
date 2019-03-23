@@ -208,10 +208,10 @@ export default class Auth {
                     );
                 } else {
                     console.log('signup result : ', result);
-                    if (result.data.success === true) {
+                    if (result.success === true) {
                         resolve(result.data);
                     } else {
-                        reject(new AuthError(98, result.data.message));
+                        reject(new AuthError(98, result.message));
                     }
                 }
             });
@@ -226,10 +226,10 @@ export default class Auth {
                     );
                 } else {
                     console.log('confirm signup result : ', result);
-                    if (result.data.success === true) {
+                    if (result.success === true) {
                         resolve(result.data);
                     } else {
-                        reject(new AuthError(98, result.data.message));
+                        reject(new AuthError(98, result.message));
                     }
                 }
             });
@@ -247,10 +247,10 @@ export default class Auth {
                         'resendFrontmSignupCode signup result : ',
                         result
                     );
-                    if (result.data.success === true) {
+                    if (result.success === true) {
                         resolve(result.data);
                     } else {
-                        reject(new AuthError(98, result.data.message));
+                        reject(new AuthError(98, result.message));
                     }
                 }
             });
@@ -268,10 +268,10 @@ export default class Auth {
                         'resendFrontmSignupCode signup result : ',
                         result
                     );
-                    if (result.data.success === true) {
+                    if (result.success === true) {
                         resolve(result.data);
                     } else {
-                        reject(new AuthError(98, result.data.message));
+                        reject(new AuthError(98, result.message));
                     }
                 }
             });
@@ -294,10 +294,10 @@ export default class Auth {
                             'resendFrontmSignupCode signup result : ',
                             result
                         );
-                        if (result.data.success === true) {
+                        if (result.success === true) {
                             resolve(result.data);
                         } else {
-                            reject(new AuthError(98, result.data.message));
+                            reject(new AuthError(98, result.message));
                         }
                     }
                 }
@@ -328,7 +328,7 @@ export default class Auth {
                             lastRefreshTime: Date.now()
                         };
                         currentUser.info = creds.info;
-
+                        console.log('Saving current user : ', currentUser);
                         Auth.saveUser(currentUser)
                             .then(user => {
                                 EventEmitter.emit(
@@ -377,13 +377,10 @@ export default class Auth {
                                         'delete user signup result : ',
                                         result
                                     );
-                                    if (result.data.success === true) {
+                                    if (result.success === true) {
                                         return Auth.logout();
                                     } else {
-                                        throw new AuthError(
-                                            98,
-                                            result.data.message
-                                        );
+                                        throw new AuthError(98, result.message);
                                     }
                                 }
                             }
@@ -609,8 +606,12 @@ export default class Auth {
         new Promise((resolve, reject) => {
             return Auth.getUser()
                 .then(user => {
+                    console.log('update password User : ', user);
                     if (user) {
-                        return FrontmAuth.updatePassword(payload, user);
+                        return FrontmAuth.updatePassword(
+                            user.creds.sessionId,
+                            payload
+                        );
                     } else {
                         reject('No valid user session');
                     }

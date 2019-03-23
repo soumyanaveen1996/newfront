@@ -20,7 +20,7 @@ public class GRPCPackage implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new FirstServiceClient(reactContext));
+        modules.add(new PingServiceClient(reactContext));
 
         return modules;
     }

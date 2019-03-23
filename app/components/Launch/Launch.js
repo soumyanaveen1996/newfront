@@ -42,6 +42,7 @@ import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
 import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
+//import jsonEncoder from 'serialize-json';
 
 // const BusyIndicator = require('react-native-busy-indicator')
 
@@ -69,8 +70,6 @@ export default class Splash extends React.Component {
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
 
-        /*
-
         var PingServiceClient = NativeModules.PingServiceClient;
         console.log('hello : ', PingServiceClient);
         PingServiceClient.pingWithCallback((error, response) => {
@@ -78,20 +77,14 @@ export default class Splash extends React.Component {
             console.log('GRPC Response : ', response);
         });
 
-        const QueueServiceClient = NativeModules.QueueServiceClient;
-        eventEmitter = new NativeEventEmitter(QueueServiceClient);
-
-        const subscription = eventEmitter.addListener(
-            'NewQueueMessage',
-            message =>
-                console.log(
-                    'Event GRPC message : ',
-                    message.id,
-                    message.content
-                )
-        );
-
-        QueueServiceClient.subscribeWithSessionId(null); */
+        Auth.getUser().then(user => {
+            const QueueServiceClient = NativeModules.QueueServiceClient;
+            eventEmitter = new NativeEventEmitter(QueueServiceClient);
+            const subscription = eventEmitter.addListener('message', message =>
+                console.log('Event GRPC message : ', message, message)
+            );
+            QueueServiceClient.startChatSSE(user.creds.sessionId);
+        });
 
         if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode

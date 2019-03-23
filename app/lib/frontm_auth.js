@@ -14,6 +14,9 @@ import _ from 'lodash';
 import config from '../config/config';
 import queryString from 'querystring';
 
+import { NativeModules, NativeEventEmitter } from 'react-native';
+const AuthServiceClient = NativeModules.AuthServiceClient;
+
 if (Platform.OS === 'ios') {
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
@@ -229,65 +232,33 @@ class FrontmAuth {
                     return self.fetchRefreshToken(user);
                 })
                 .then(user => {
-                    const data = {
-                        user: {
-                            emailAddress: user.email,
-                            userName: user.name,
-                            userId: user.id
-                        },
-                        conversation: {
-                            uuid: conversationId || UUID(),
-                            bot: botName
-                        },
-                        creatorInstanceId: UUID()
-                    };
-                    let options = {
-                        method: 'post',
-                        url:
-                            Config.proxy.protocol +
-                            Config.proxy.host +
-                            Config.proxy.authPath,
-                        headers: {
-                            token: user.idToken,
-                            provider_name: 'google',
-                            platform: Platform.OS,
-                            refresh_token: user.refreshToken
-                        },
-                        data: data
-                    };
-
-                    Network(options)
-                        .then(res => {
-                            let resData =
-                                res && res.data ? res.data : { creds: {} };
-                            if (
-                                _.isEmpty(resData) ||
-                                _.isEmpty(resData.sessionId) ||
-                                _.isEmpty(resData.user)
-                            ) {
-                                reject(
-                                    new Error('Empty response from the server')
-                                );
-                                return;
+                    AuthServiceClient.googleSignin(
+                        { code: user.idToken },
+                        (error, result) => {
+                            if (error) {
+                                return reject({
+                                    type: 'error',
+                                    error: error.code
+                                });
                             }
-                            self.credentials.google = {
-                                sessionId: resData.sessionId,
-                                userId: resData.user.userId,
-                                refreshToken: user.refreshToken,
-                                info: resData.user || data.user
-                            };
-                            console.log(
-                                'Google credentials : ',
-                                self.credentials
-                            );
-                            return resolve({
-                                type: 'success',
-                                credentials: self.credentials
-                            });
-                        })
-                        .catch(err => {
-                            return reject({ type: 'error', error: err });
-                        });
+                            if (result.data.success !== true) {
+                                return reject({
+                                    type: 'error',
+                                    error: result.message,
+                                    errorMessage: result.message
+                                });
+                            } else {
+                                self.credentials.google = this.credentialsFromSigninResponse(
+                                    result
+                                );
+                                console.log('Credentials ', self.credentials);
+                                return resolve({
+                                    type: 'success',
+                                    credentials: self.credentials
+                                });
+                            }
+                        }
+                    );
                 })
                 .catch(err => {
                     console.log('Google signin error : ', err);
@@ -308,131 +279,163 @@ class FrontmAuth {
         });
     }
 
-    signinWithFrontm(details, conversationId, botName) {
+    credentialsFromSigninResponse(result) {
+        return {
+            sessionId: result.data.sessionId,
+            userId: result.data.user.userId,
+            info: {
+                searchable: result.data.user.searchable,
+                visible: result.data.user.visible,
+                emailAddress: result.data.user.emailAddress,
+                userId: result.data.user.userId,
+                userName: result.data.user.userName,
+                domains: result.data.user.domainsArray,
+                archiveMessages: result.data.user.archiveMessages,
+                phoneNumbers: result.data.user.phoneNumbers
+            }
+        };
+    }
+
+    signinWithFrontm(payload) {
         var self = this;
         return new Promise((resolve, reject) => {
-            const signinOptions = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.signinPath,
-                data: {
-                    user: details
+            AuthServiceClient.frontmSignin(payload, (error, result) => {
+                if (error) {
+                    return reject({ type: 'error', error: error.code });
                 }
-            };
-            console.log('Signin options : ', signinOptions);
-            Network(signinOptions)
-                .then(response => {
-                    console.log('signin response ', response);
-                    const result = response.data;
-                    if (
-                        !(result.success === 'true' || result.success === true)
-                    ) {
-                        return reject({
-                            type: 'error',
-                            error: result.message,
-                            errorMessage: result.message
-                        });
-                    }
-                    console.log('Signin result : ', result);
-                    const frontmUser = result.data.user;
-                    const defaultScreenName = frontmUser.userName
-                        ? frontmUser.userName.replace(/ /g, '')
-                        : '';
-                    const data = {
-                        user: {
-                            emailAddress: frontmUser.emailAddress,
-                            userName: frontmUser.userName,
-                            awsId: frontmUser.awsId
-                        }
-                    };
-                    let options = {
-                        method: 'post',
-                        url:
-                            Config.proxy.protocol +
-                            Config.proxy.host +
-                            Config.proxy.authPath,
-                        headers: {
-                            token: result.data.id_token,
-                            provider_name: 'frontm',
-                            platform: Platform.OS,
-                            refresh_token: result.data.refresh_token
-                        },
-                        data: data
-                    };
-                    // console.log(
-                    //     'network options : ' +
-                    //         JSON.stringify(options, undefined, 2)
-                    // );
-                    Network(options)
-                        .then(res => {
-                            let resData =
-                                res && res.data ? res.data : { creds: {} };
-                            console.log('resData : ', res);
-                            if (
-                                _.isEmpty(resData) ||
-                                _.isEmpty(resData.sessionId) ||
-                                _.isEmpty(resData.user)
-                            ) {
-                                reject(
-                                    new Error('Empty response from the server')
-                                );
-                                return;
-                            }
-                            self.credentials.frontm = {
-                                sessionId: resData.sessionId,
-                                userId: resData.user.userId,
-                                refreshToken: result.data.refresh_token,
-                                info: resData.user || data.user
-                            };
-                            console.log('Credentials ', self.credentials);
-                            return resolve({
-                                type: 'success',
-                                credentials: self.credentials
-                            });
-                        })
-                        .catch(err => {
-                            return reject({ type: 'error', error: err });
-                        });
-                })
-                .catch(error => {
-                    console.log('Error in Authing server : ', error);
-                    reject({ type: 'error', error: error.code });
-                });
+                if (result.data.success !== true) {
+                    return reject({
+                        type: 'error',
+                        error: result.message,
+                        errorMessage: result.message
+                    });
+                } else {
+                    self.credentials.frontm = this.credentialsFromSigninResponse(
+                        result
+                    );
+                    console.log('Credentials ', self.credentials);
+                    return resolve({
+                        type: 'success',
+                        credentials: self.credentials
+                    });
+                }
+            });
         });
     }
 
-    updatePassword(payload, user) {
-        let options = {
-            method: 'POST',
-            url:
-                Config.proxy.protocol +
-                Config.proxy.host +
-                Config.proxy.updateSigninPath,
-            headers: {
-                refresh_token: user.provider.refreshToken
-            },
-            data: {
-                user: payload
-            }
-        };
-        return new Promise(function(resolve, reject) {
-            Network(options)
-                .then(res => {
-                    let resData = res.data || {};
-                    if (
-                        resData.success === 'true' ||
-                        resData.success === true
-                    ) {
-                        resolve();
+    // signinWithFrontm(details, conversationId, botName) {
+    //     var self = this;
+    //     return new Promise((resolve, reject) => {
+    //         const signinOptions = {
+    //             method: 'post',
+    //             url:
+    //                 config.proxy.protocol +
+    //                 config.proxy.host +
+    //                 config.proxy.signinPath,
+    //             data: {
+    //                 user: details
+    //             }
+    //         };
+    //         console.log('Signin options : ', signinOptions);
+    //         Network(signinOptions)
+    //             .then(response => {
+    //                 console.log('signin response ', response);
+    //                 const result = response.data;
+    //                 if (
+    //                     !(result.success === 'true' || result.success === true)
+    //                 ) {
+    //                     return reject({
+    //                         type: 'error',
+    //                         error: result.message,
+    //                         errorMessage: result.message
+    //                     });
+    //                 }
+    //                 console.log('Signin result : ', result);
+    //                 const frontmUser = result.data.user;
+    //                 const defaultScreenName = frontmUser.userName
+    //                     ? frontmUser.userName.replace(/ /g, '')
+    //                     : '';
+    //                 const data = {
+    //                     user: {
+    //                         emailAddress: frontmUser.emailAddress,
+    //                         userName: frontmUser.userName,
+    //                         awsId: frontmUser.awsId
+    //                     }
+    //                 };
+    //                 let options = {
+    //                     method: 'post',
+    //                     url:
+    //                         Config.proxy.protocol +
+    //                         Config.proxy.host +
+    //                         Config.proxy.authPath,
+    //                     headers: {
+    //                         token: result.data.id_token,
+    //                         provider_name: 'frontm',
+    //                         platform: Platform.OS,
+    //                         refresh_token: result.data.refresh_token
+    //                     },
+    //                     data: data
+    //                 };
+    //                 // console.log(
+    //                 //     'network options : ' +
+    //                 //         JSON.stringify(options, undefined, 2)
+    //                 // );
+    //                 Network(options)
+    //                     .then(res => {
+    //                         let resData =
+    //                             res && res.data ? res.data : { creds: {} };
+    //                         console.log('resData : ', res);
+    //                         if (
+    //                             _.isEmpty(resData) ||
+    //                             _.isEmpty(resData.sessionId) ||
+    //                             _.isEmpty(resData.user)
+    //                         ) {
+    //                             reject(
+    //                                 new Error('Empty response from the server')
+    //                             );
+    //                             return;
+    //                         }
+    //                         self.credentials.frontm = {
+    //                             sessionId: resData.sessionId,
+    //                             userId: resData.user.userId,
+    //                             refreshToken: result.data.refresh_token,
+    //                             info: resData.user || data.user
+    //                         };
+    //                         console.log('Credentials ', self.credentials);
+    //                         return resolve({
+    //                             type: 'success',
+    //                             credentials: self.credentials
+    //                         });
+    //                     })
+    //                     .catch(err => {
+    //                         return reject({ type: 'error', error: err });
+    //                     });
+    //             })
+    //             .catch(error => {
+    //                 console.log('Error in Authing server : ', error);
+    //                 reject({ type: 'error', error: error.code });
+    //             });
+    //     });
+    // }
+
+    updatePassword(sessionId, payload, user) {
+        return new Promise((resolve, reject) => {
+            AuthServiceClient.changePassword(
+                sessionId,
+                payload,
+                (err, result) => {
+                    if (err) {
+                        reject();
                     } else {
-                        reject(new Error(resData.message));
+                        console.log('changepassword result : ', result);
+                        if (result.data.success === true) {
+                            resolve(result.data);
+                        } else {
+                            reject(new AuthError(98, result.data.message));
+                        }
                     }
-                })
-                .catch(() => {
-                    reject();
-                });
+                }
+            );
         });
     }
 

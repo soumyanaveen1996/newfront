@@ -310,7 +310,7 @@ typedef struct TimelineContent__storage_ {
 @dynamic createdBy;
 @dynamic onChannelsArray, onChannelsArray_Count;
 @dynamic hasBot, bot;
-@dynamic hasLastMessage, lastMessage;
+@dynamic lastMessage;
 @dynamic hasContact, contact;
 
 typedef struct TimelineConversation__storage_ {
@@ -323,7 +323,7 @@ typedef struct TimelineConversation__storage_ {
   NSString *createdBy;
   NSMutableArray *onChannelsArray;
   TimelineBotInfo *bot;
-  TimelineLastMessage *lastMessage;
+  NSData *lastMessage;
   TimelineContact *contact;
 } TimelineConversation__storage_;
 
@@ -416,12 +416,12 @@ typedef struct TimelineConversation__storage_ {
       },
       {
         .name = "lastMessage",
-        .dataTypeSpecific.className = GPBStringifySymbol(TimelineLastMessage),
+        .dataTypeSpecific.className = NULL,
         .number = TimelineConversation_FieldNumber_LastMessage,
         .hasIndex = 8,
         .offset = (uint32_t)offsetof(TimelineConversation__storage_, lastMessage),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeMessage,
+        .dataType = GPBDataTypeBytes,
       },
       {
         .name = "contact",
@@ -638,98 +638,6 @@ typedef struct TimelineBotInfo__storage_ {
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\007\001\026\000\002\007\000\003\005!!\000\005\n\000\006\004!!\000\010\005\000\t\t\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    NSAssert(descriptor == nil, @"Startup recursed!");
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - TimelineLastMessage
-
-@implementation TimelineLastMessage
-
-@dynamic messageId;
-@dynamic contentType;
-@dynamic createdOn;
-@dynamic createdBy;
-@dynamic contentArray, contentArray_Count;
-
-typedef struct TimelineLastMessage__storage_ {
-  uint32_t _has_storage_[1];
-  int32_t createdOn;
-  NSString *messageId;
-  NSString *contentType;
-  NSString *createdBy;
-  NSMutableArray *contentArray;
-} TimelineLastMessage__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    static GPBMessageFieldDescription fields[] = {
-      {
-        .name = "messageId",
-        .dataTypeSpecific.className = NULL,
-        .number = TimelineLastMessage_FieldNumber_MessageId,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(TimelineLastMessage__storage_, messageId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "contentType",
-        .dataTypeSpecific.className = NULL,
-        .number = TimelineLastMessage_FieldNumber_ContentType,
-        .hasIndex = 1,
-        .offset = (uint32_t)offsetof(TimelineLastMessage__storage_, contentType),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "createdOn",
-        .dataTypeSpecific.className = NULL,
-        .number = TimelineLastMessage_FieldNumber_CreatedOn,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(TimelineLastMessage__storage_, createdOn),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
-      },
-      {
-        .name = "createdBy",
-        .dataTypeSpecific.className = NULL,
-        .number = TimelineLastMessage_FieldNumber_CreatedBy,
-        .hasIndex = 3,
-        .offset = (uint32_t)offsetof(TimelineLastMessage__storage_, createdBy),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "contentArray",
-        .dataTypeSpecific.className = NULL,
-        .number = TimelineLastMessage_FieldNumber_ContentArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(TimelineLastMessage__storage_, contentArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[TimelineLastMessage class]
-                                     rootClass:[ConversationserviceRoot class]
-                                          file:ConversationserviceRoot_FileDescriptor()
-                                        fields:fields
-                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(TimelineLastMessage__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\004\001\t\000\002\013\000\003\t\000\004\t\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -1743,7 +1651,7 @@ typedef struct GetArchivedMessagesResponse__storage_ {
 @dynamic contentType;
 @dynamic createdOn;
 @dynamic createdBy;
-@dynamic contentArray, contentArray_Count;
+@dynamic content;
 @dynamic options;
 
 typedef struct GetArchivedMessagesContent__storage_ {
@@ -1752,8 +1660,8 @@ typedef struct GetArchivedMessagesContent__storage_ {
   NSString *messageId;
   NSString *contentType;
   NSString *createdBy;
-  NSMutableArray *contentArray;
-  NSString *options;
+  NSData *content;
+  NSData *options;
 } GetArchivedMessagesContent__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1799,22 +1707,22 @@ typedef struct GetArchivedMessagesContent__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "contentArray",
+        .name = "content",
         .dataTypeSpecific.className = NULL,
-        .number = GetArchivedMessagesContent_FieldNumber_ContentArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(GetArchivedMessagesContent__storage_, contentArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeString,
+        .number = GetArchivedMessagesContent_FieldNumber_Content,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(GetArchivedMessagesContent__storage_, content),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
       },
       {
         .name = "options",
         .dataTypeSpecific.className = NULL,
         .number = GetArchivedMessagesContent_FieldNumber_Options,
-        .hasIndex = 4,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(GetArchivedMessagesContent__storage_, options),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
+        .dataType = GPBDataTypeBytes,
       },
     };
     GPBDescriptor *localDescriptor =

@@ -346,7 +346,6 @@ class ChatBotScreen extends React.Component {
                     }
                 }
             );
-            console.log('Props from Contacts Call', this.props);
         } catch (e) {
             console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors
@@ -1322,8 +1321,6 @@ class ChatBotScreen extends React.Component {
         console.log('[FrontM] Is Promise?', isPromise);
         if (isPromise) {
             getNext.then(response => {
-                console.log('Acknowledgement from BOT is...', response);
-                console.log(this.state.messages);
                 if (response.status === 200) {
                     message.setStatus(1);
 
@@ -1800,7 +1797,6 @@ class ChatBotScreen extends React.Component {
             pageSize,
             this.oldestLoadedDate()
         );
-        console.log('[FrontM]-- Bot Messages', messages);
 
         return messages;
     }
@@ -1834,7 +1830,6 @@ class ChatBotScreen extends React.Component {
             this.getBotId(),
             this.oldestLoadedDate()
         );
-        console.log(messages);
 
         return messages;
     }

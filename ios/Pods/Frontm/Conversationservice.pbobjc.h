@@ -39,7 +39,6 @@ CF_EXTERN_C_BEGIN
 @class TimelineContact;
 @class TimelineContent;
 @class TimelineConversation;
-@class TimelineLastMessage;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -175,9 +174,7 @@ typedef GPB_ENUM(TimelineConversation_FieldNumber) {
 /** Test to see if @c bot has been set. */
 @property(nonatomic, readwrite) BOOL hasBot;
 
-@property(nonatomic, readwrite, strong, null_resettable) TimelineLastMessage *lastMessage;
-/** Test to see if @c lastMessage has been set. */
-@property(nonatomic, readwrite) BOOL hasLastMessage;
+@property(nonatomic, readwrite, copy, null_resettable) NSData *lastMessage;
 
 @property(nonatomic, readwrite, strong, null_resettable) TimelineContact *contact;
 /** Test to see if @c contact has been set. */
@@ -233,32 +230,6 @@ typedef GPB_ENUM(TimelineBotInfo_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *botId;
 
 @property(nonatomic, readwrite) BOOL systemBot;
-
-@end
-
-#pragma mark - TimelineLastMessage
-
-typedef GPB_ENUM(TimelineLastMessage_FieldNumber) {
-  TimelineLastMessage_FieldNumber_MessageId = 1,
-  TimelineLastMessage_FieldNumber_ContentType = 2,
-  TimelineLastMessage_FieldNumber_CreatedOn = 3,
-  TimelineLastMessage_FieldNumber_CreatedBy = 4,
-  TimelineLastMessage_FieldNumber_ContentArray = 5,
-};
-
-@interface TimelineLastMessage : GPBMessage
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *messageId;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *contentType;
-
-@property(nonatomic, readwrite) int32_t createdOn;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *contentArray;
-/** The number of items in @c contentArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @end
 
@@ -561,7 +532,7 @@ typedef GPB_ENUM(GetArchivedMessagesContent_FieldNumber) {
   GetArchivedMessagesContent_FieldNumber_ContentType = 2,
   GetArchivedMessagesContent_FieldNumber_CreatedOn = 3,
   GetArchivedMessagesContent_FieldNumber_CreatedBy = 4,
-  GetArchivedMessagesContent_FieldNumber_ContentArray = 5,
+  GetArchivedMessagesContent_FieldNumber_Content = 5,
   GetArchivedMessagesContent_FieldNumber_Options = 6,
 };
 
@@ -575,11 +546,9 @@ typedef GPB_ENUM(GetArchivedMessagesContent_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *contentArray;
-/** The number of items in @c contentArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger contentArray_Count;
+@property(nonatomic, readwrite, copy, null_resettable) NSData *content;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *options;
+@property(nonatomic, readwrite, copy, null_resettable) NSData *options;
 
 @end
 
