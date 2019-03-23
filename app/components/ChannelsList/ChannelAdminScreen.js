@@ -180,7 +180,7 @@ class ChannelAdminScreen extends React.Component {
     //REQUESTS
     manageRequests() {
         Actions.requestsScreen({
-            pendingUsers: [{ userName: 'aaaaaa', userId: '2222' }],
+            pendingUsers: this.state.pendingRequests,
             onDone: this.updateRequests.bind(this),
             channel: this.channel
         });
