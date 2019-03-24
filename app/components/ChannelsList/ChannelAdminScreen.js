@@ -153,7 +153,7 @@ class ChannelAdminScreen extends React.Component {
 
     //PARTICIPANTS
     manageParticipants() {
-        Actions.addParticipants({
+        Actions.manageContacts({
             onSelected: this.updateParticipants.bind(this),
             alreadySelected: this.state.participants,
             disabledUserIds: [this.channel.ownerId]
@@ -192,7 +192,7 @@ class ChannelAdminScreen extends React.Component {
 
     //ADMINS
     manageAdmins() {
-        Actions.addParticipants({
+        Actions.manageContacts({
             onSelected: this.setAdmins.bind(this),
             allContacts: this.state.participants,
             alreadySelected: this.state.admins,
