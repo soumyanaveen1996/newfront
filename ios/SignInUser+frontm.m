@@ -25,7 +25,7 @@
              @"userName": self.userName,
              @"phoneNumbers": [self.phoneNumbers toJSON],
              @"hasPhoneNumbers": @(self.hasPhoneNumbers),
-             @"domainsArray": domains,
+             @"domains": domains,
              @"archiveMessages": @(self.archiveMessages)
              };
 }

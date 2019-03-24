@@ -18,6 +18,7 @@
   for (int i = 0; i < self.contentArray.count; ++i) {
     [content addObject:[[self.contentArray objectAtIndex:i] toJSON]];
   }
+
   return @{
            @"error": @(self.error),
            @"content": content
@@ -26,6 +27,7 @@
 
 - (NSDictionary *) toResponse {
   return @{
+           @"error": @(self.error),
            @"data": [self toJSON]
            };
 }

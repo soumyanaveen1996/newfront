@@ -18,6 +18,8 @@ import dce from '../../../lib/dce';
 import Bot from '../../../lib/bot/index';
 import config from '../../../config/config';
 import { Auth, Network } from '../../../lib/capability';
+import { NativeModules, NativeEventEmitter } from 'react-native';
+const UserServiceClient = NativeModules.UserServiceClient;
 
 const BotInstallListItemStates = {
     INSTALLING: 'installing',
@@ -91,6 +93,25 @@ export default class BotInfoScreen extends React.Component {
         };
     }
 
+    subscribeToBot(botId, user) {
+        return new Promise((resolve, reject) => {
+            UserServiceClient.subscribBot(
+                user.creds.sessionId,
+                { botId: botId },
+                (error, result) => {
+                    console.log('GRPC:::subscribe bot : ', error, result);
+                    if (error) {
+                        return reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    }
+                    resolve(true);
+                }
+            );
+        });
+    }
+
     async performBotInstallation(bot, update) {
         // console.log('will check', bot, update);
 
@@ -110,22 +131,7 @@ export default class BotInfoScreen extends React.Component {
             } else {
                 //first subscribe to the bot
                 const user = await Promise.resolve(Auth.getUser());
-                const options = {
-                    method: 'post',
-                    url:
-                        config.proxy.protocol +
-                        config.proxy.host +
-                        config.proxy.subscribeToBot,
-                    data: {
-                        botId: dceBot.botId
-                    },
-                    headers: {
-                        sessionId: user.creds.sessionId
-                    }
-                };
-                // console.log('data to install ', options);
-
-                await Promise.resolve(Network(options));
+                await this.subscribeToBot(dceBot.botId, user);
                 await Bot.install(dceBot);
             }
         } catch (e) {

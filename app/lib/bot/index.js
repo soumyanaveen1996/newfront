@@ -8,6 +8,8 @@ import { NetworkError } from '../network';
 import SystemBot, { SYSTEM_BOT_MANIFEST } from './SystemBot';
 import { MessageHandler } from '../message';
 import FrontmUtils from '../../lib/utils';
+import { NativeModules, NativeEventEmitter } from 'react-native';
+const UserServiceClient = NativeModules.UserServiceClient;
 
 class Bot extends events.EventEmitter {
     constructor(options) {
@@ -146,12 +148,50 @@ class Bot extends events.EventEmitter {
     }
 
     static addNewProvider(key) {
-        const onboadringBot = SYSTEM_BOT_MANIFEST['onboarding-bot'].botId;
-        const postReq = {
-            verificationCode: key,
-            botId: onboadringBot
+        const params = {
+            verificationCode: key
         };
 
+        return new Promise(function(resolve, reject) {
+            Auth.getUser().then(user => {
+                if (user) {
+                    UserServiceClient.subscribeDomain(
+                        user.creds.sessionId,
+                        params,
+                        (error, result) => {
+                            console.log(
+                                'GRPC:::subscribe domain : ',
+                                error,
+                                result
+                            );
+                            if (error) {
+                                return reject({
+                                    type: 'error',
+                                    error: error.code
+                                });
+                            }
+                            if (
+                                result.data.content &&
+                                result.data.content.length > 0
+                            ) {
+                                console.log(
+                                    'GRPC:::subscribing domain ',
+                                    result.data
+                                );
+                                resolve(result.data.content);
+                            } else {
+                                reject(null);
+                            }
+                        }
+                    );
+                } else {
+                    reject(new Error('No logged in user'));
+                }
+            });
+        });
+
+        // TODO(amal) : remove the call
+        /*
         return new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
@@ -183,7 +223,7 @@ class Bot extends events.EventEmitter {
                 })
                 .then(resolve)
                 .catch(reject);
-        });
+        }); */
     }
 
     static async getCatalog() {

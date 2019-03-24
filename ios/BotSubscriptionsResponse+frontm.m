@@ -7,6 +7,7 @@
 //
 
 #import "BotSubscriptionsResponse+frontm.h"
+#import "SubscribedBotsContent+frontm.h"
 
 @implementation BotSubscriptionsResponse (frontm)
 
@@ -14,7 +15,7 @@
   if (self.hasContent) {
     return @{
              @"error": @(self.error),
-             @"content": self.content,
+             @"content": [self.content toJSON],
              };
   } else {
     return @{

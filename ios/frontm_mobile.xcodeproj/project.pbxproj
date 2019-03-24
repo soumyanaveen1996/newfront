@@ -43,7 +43,6 @@
 		04704B7C2236E33F003ABE94 /* CompanyServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7B2236E33F003ABE94 /* CompanyServiceClient.m */; };
 		04704B7F2237C23D003ABE94 /* QueueServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7E2237C23D003ABE94 /* QueueServiceClient.m */; };
 		04704B822237C804003ABE94 /* QueueMessage+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B812237C804003ABE94 /* QueueMessage+frontm.m */; };
-		04704B852237C8A7003ABE94 /* MessageDetails+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */; };
 		04704B882237CB42003ABE94 /* Message+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B872237CB42003ABE94 /* Message+frontm.m */; };
 		0484831220861CF40051995F /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
 		0486BED12008CC5F00DF553B /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
@@ -56,7 +55,6 @@
 		04905619223B61FE008FECC8 /* TimelineChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905618223B61FE008FECC8 /* TimelineChannels+frontm.m */; };
 		0490561C223B6A13008FECC8 /* TimelineContact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */; };
 		0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */; };
-		04905622223B6A49008FECC8 /* TimelineLastMessage+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */; };
 		04905625223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */; };
 		04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905627223B7414008FECC8 /* FindResponse+frontm.m */; };
 		0490562B223B7447008FECC8 /* MatchedUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490562A223B7447008FECC8 /* MatchedUser+frontm.m */; };
@@ -841,8 +839,6 @@
 		04704B7E2237C23D003ABE94 /* QueueServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QueueServiceClient.m; sourceTree = "<group>"; };
 		04704B802237C804003ABE94 /* QueueMessage+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueMessage+frontm.h"; sourceTree = "<group>"; };
 		04704B812237C804003ABE94 /* QueueMessage+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueMessage+frontm.m"; sourceTree = "<group>"; };
-		04704B832237C8A7003ABE94 /* MessageDetails+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MessageDetails+frontm.h"; sourceTree = "<group>"; };
-		04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MessageDetails+frontm.m"; sourceTree = "<group>"; };
 		04704B862237CB42003ABE94 /* Message+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Message+frontm.h"; sourceTree = "<group>"; };
 		04704B872237CB42003ABE94 /* Message+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Message+frontm.m"; sourceTree = "<group>"; };
 		048482D1208616E00051995F /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
@@ -865,8 +861,6 @@
 		0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineContact+frontm.m"; sourceTree = "<group>"; };
 		0490561D223B6A33008FECC8 /* TimelineBotInfo+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineBotInfo+frontm.h"; sourceTree = "<group>"; };
 		0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineBotInfo+frontm.m"; sourceTree = "<group>"; };
-		04905620223B6A49008FECC8 /* TimelineLastMessage+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimelineLastMessage+frontm.h"; sourceTree = "<group>"; };
-		04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TimelineLastMessage+frontm.m"; sourceTree = "<group>"; };
 		04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UpdateFavouritesResponse+frontm.h"; sourceTree = "<group>"; };
 		04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UpdateFavouritesResponse+frontm.m"; sourceTree = "<group>"; };
 		04905626223B7414008FECC8 /* FindResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FindResponse+frontm.h"; sourceTree = "<group>"; };
@@ -1421,8 +1415,6 @@
 				04704B782236E244003ABE94 /* AgentGuardBoolResponse+frontm.m */,
 				04704B802237C804003ABE94 /* QueueMessage+frontm.h */,
 				04704B812237C804003ABE94 /* QueueMessage+frontm.m */,
-				04704B832237C8A7003ABE94 /* MessageDetails+frontm.h */,
-				04704B842237C8A7003ABE94 /* MessageDetails+frontm.m */,
 				04704B862237CB42003ABE94 /* Message+frontm.h */,
 				04704B872237CB42003ABE94 /* Message+frontm.m */,
 				04E0FF7F22384232004F19B1 /* CatalogResponse+frontm.h */,
@@ -1457,8 +1449,6 @@
 				0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */,
 				0490561D223B6A33008FECC8 /* TimelineBotInfo+frontm.h */,
 				0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */,
-				04905620223B6A49008FECC8 /* TimelineLastMessage+frontm.h */,
-				04905621223B6A49008FECC8 /* TimelineLastMessage+frontm.m */,
 				04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */,
 				04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */,
 				04905626223B7414008FECC8 /* FindResponse+frontm.h */,
@@ -2883,7 +2873,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04905622223B6A49008FECC8 /* TimelineLastMessage+frontm.m in Sources */,
 				0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */,
 				04704B2522368937003ABE94 /* SigninResponse+frontm.m in Sources */,
 				04905661223BB9D9008FECC8 /* ContactsResponse+frontm.m in Sources */,
@@ -2931,7 +2920,6 @@
 				04905652223BB5A0008FECC8 /* User+frontm.m in Sources */,
 				04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */,
 				04905634223B7770008FECC8 /* AgentGuardServiceClient.m in Sources */,
-				04704B852237C8A7003ABE94 /* MessageDetails+frontm.m in Sources */,
 				0490562B223B7447008FECC8 /* MatchedUser+frontm.m in Sources */,
 				04E2D94A22256231004C1AC0 /* PingServiceClient.m in Sources */,
 				04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */,

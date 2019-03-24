@@ -20,7 +20,7 @@
            @"emailAddress": self.emailAddress,
            @"userId": self.userId,
            @"waitingForConfirmation": @(self.waitingForConfirmation),
-           @"phoneNumbers": [[PhoneNumbers jsonArrayFromObjects:self.phoneNumbers] mutableCopy]
+           @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
            };
 }
 

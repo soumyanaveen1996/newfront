@@ -17,7 +17,7 @@
            @"contentType": self.contentType,
            @"createdOn": @(self.createdOn),
            @"createdBy": self.createdBy,
-           @"content": self.contentArray,
+           @"content": self.content,
            @"options": self.options
            };
 }

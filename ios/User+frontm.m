@@ -16,7 +16,7 @@
   return @{
            @"userName": self.userName,
            @"emailAddress": self.emailAddress,
-           @"phoneNumbers": [[PhoneNumbers jsonArrayFromObjects:self.phoneNumbers] mutableCopy],
+           @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
            @"searchable": @(self.searchable),
            @"visible": @(self.visible),
            @"userId": self.userId,

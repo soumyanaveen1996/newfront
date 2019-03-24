@@ -38,6 +38,8 @@ import {
 import config from '../../config/config';
 import { Icons } from '../../config/icons';
 import { EmptyInstalledBot } from '../BotStoreScreen';
+import { NativeModules } from 'react-native';
+const UserServiceClient = NativeModules.UserServiceClient;
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
 const subtitleNumberOfLines = 2;
@@ -221,29 +223,31 @@ export default class InstalledBotsScreen extends React.Component {
         );
     };
 
+    unsubscribeFromBot(botId, user) {
+        return new Promise((resolve, reject) => {
+            UserServiceClient.unsubscribBot(
+                user.creds.sessionId,
+                { botId: botId },
+                (error, result) => {
+                    console.log('GRPC:::subscribe bot : ', error, result);
+                    if (error) {
+                        return reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    }
+                    resolve(true);
+                }
+            );
+        });
+    }
+
     deleteBot = async bot => {
         try {
             await MessageHandler.deleteBotMessages(bot.botId);
             const dceBot = dce.bot(bot);
             const user = await Promise.resolve(Auth.getUser());
-            const options = {
-                method: 'post',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.unsubscribeFromBot,
-                data: {
-                    botId: dceBot.botId
-                },
-                headers: {
-                    sessionId: user.creds.sessionId
-                }
-            };
-            if (__DEV__) {
-                console.tron('I AMMMMMMM');
-            }
-
-            await Promise.resolve(Network(options));
+            await this.unsubscribeFromBot(dceBot.botId, user);
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
             this.refs.toast.show(

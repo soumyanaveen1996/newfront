@@ -21,9 +21,10 @@ import TwilioVoice from 'react-native-twilio-programmable-voice';
 import { Message, MessageTypeConstants } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules } from 'react-native';
 
 const AuthServiceClient = NativeModules.AuthServiceClient;
+const UserServiceClient = NativeModules.UserServiceClient;
 
 const USER_SESSION = 'userSession';
 
@@ -227,8 +228,10 @@ export default class Auth {
                 } else {
                     console.log('confirm signup result : ', result);
                     if (result.success === true) {
+                        console.log('confirm signup result1 : ', result);
                         resolve(result.data);
                     } else {
+                        console.log('confirm signup result2 : ', result);
                         reject(new AuthError(98, result.message));
                     }
                 }
@@ -510,34 +513,31 @@ export default class Auth {
 
     static updatingUserProfile = userDetails =>
         new Promise((resolve, reject) => {
-            return Auth.getUser()
-                .then(user => {
-                    if (user) {
-                        let options = {
-                            method: 'PUT',
-                            url: `${config.proxy.protocol}${config.proxy.host}${
-                                config.proxy.userInfo
-                            }`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: userDetails
-                        };
-                        return Network(options);
-                    }
-                })
-                .then(response => {
-                    if (
-                        response.data.content &&
-                        response.data.content.length > 0
-                    ) {
-                        return Promise.all(response.data.content);
-                    } else {
-                        reject(null);
-                    }
-                })
-                .then(resolve)
-                .catch(reject);
+            return Auth.getUser().then(user => {
+                if (user) {
+                    UserServiceClient.updateUserProfile(
+                        user.creds.sessionId,
+                        userDetails,
+                        (err, result) => {
+                            if (err) {
+                                return reject(
+                                    new AuthError(99, 'Unknown Error')
+                                );
+                            }
+                            if (
+                                result.data.content &&
+                                result.data.content.length > 0
+                            ) {
+                                resolve(result.data.content);
+                            } else {
+                                reject(null);
+                            }
+                        }
+                    );
+                } else {
+                    reject(new AuthError(99, 'No Logged in user'));
+                }
+            });
         });
 
     static setUserSetting = (key, value) =>

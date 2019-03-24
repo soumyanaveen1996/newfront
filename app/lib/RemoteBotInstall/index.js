@@ -10,7 +10,27 @@ import { completeBotInstall } from '../../redux/actions/UserActions';
 
 export const FAVOURITE_BOTS = 'favourite_bots';
 
+import { NativeModules } from 'react-native';
+
+const UserServiceClient = NativeModules.UserServiceClient;
+
 class RemoteBotInstall {
+    static getGrpcSubscribedBots = user =>
+        new Promise((resolve, reject) => {
+            UserServiceClient.getBotSubscriptions(
+                user.creds.sessionId,
+                (err, result) => {
+                    if (err) {
+                        return reject(new Error('Unknown Error'));
+                    }
+                    if (result.data.content && result.data.content.length > 0) {
+                        resolve(result.data.content);
+                    } else {
+                        reject(null);
+                    }
+                }
+            );
+        });
     /**
      * Return all the bots the user is subscribed to.
      * @returns {Promise} Array of Bot IDs
@@ -20,16 +40,9 @@ class RemoteBotInstall {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'get',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.proxy.subscribedBotsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            }
-                        };
-                        return Network(options);
+                        return RemoteBotInstall.getGrpcSubscribedBots(user);
+                    } else {
+                        throw new Error('No Logged in user');
                     }
                 })
                 .then(subscribedBots => {

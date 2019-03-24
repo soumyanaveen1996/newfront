@@ -11,6 +11,9 @@ import SystemBot from '../bot/SystemBot';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
+import { NativeModules } from 'react-native';
+const UserServiceClient = NativeModules.UserServiceClient;
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 const R = require('ramda');
 
@@ -316,25 +319,34 @@ export default class Contact {
             });
         });
 
+    static fetchGrpcContacts = user => {
+        return new Promise((resolve, reject) => {
+            UserServiceClient.getContacts(
+                user.creds.sessionId,
+                (error, result) => {
+                    console.log('GRPC:::getContacts : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
+
     static refreshContacts = () =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
                     if (user) {
                         Store.dispatch(completeContactsLoad(false));
-                        let options = {
-                            method: 'get',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.contactsPath}?botId=${
-                                SystemBot.contactsBot.botId
-                            }`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            }
-                        };
-
-                        return Network(options);
+                        return Contact.fetchGrpcContacts(user);
+                    } else {
+                        throw new Error('No Logged in user');
                     }
                 })
                 .then(response => {
@@ -364,25 +376,32 @@ export default class Contact {
                 .catch(reject);
         });
 
+    static getUserDetails = userId => {
+        return new Promise((resolve, reject) => {
+            UserServiceClient.getUserDetails(
+                user.creds.sessionId,
+                { userId: userId },
+                (error, result) => {
+                    console.log('GRPC:::getUserDetails : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
+
     static fetchAndAddContactForUser = userId =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'get',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${
-                                config.network.userDetailsPath
-                            }?userId=${userId}&botId=${
-                                SystemBot.contactsBot.botId
-                            }`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            }
-                        };
-                        return Network(options);
+                        return Contact.getUserDetails(userId);
                     }
                 })
                 .then(response => {

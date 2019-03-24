@@ -7,11 +7,11 @@
 //
 
 #import "QueueMessage+frontm.h"
-#import "MessageDetails+frontm.h"
 #import "NSArray+Map.h"
 
 @implementation QueueMessage (frontm)
 
+/*
 - (NSArray *) details {
   if (self.detailsArray_Count > 0) {
     return [self.detailsArray rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
@@ -20,7 +20,7 @@
   } else {
     return @[];
   }
-}
+} */
 
 - (NSDictionary *) toJSON {
 
@@ -34,7 +34,7 @@
            @"messageId": self.messageId,
            @"requestUuid": self.requestUuid,
            @"error": self.error,
-           @"details": [self details],
+           @"details": self.details
            };
 }
 

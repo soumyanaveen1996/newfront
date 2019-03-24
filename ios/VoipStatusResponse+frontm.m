@@ -19,6 +19,7 @@
 
 - (NSDictionary *) toResponse {
   return @{
+           @"error": @(self.error),
            @"data": [self toJSON]
            };
 }

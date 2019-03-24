@@ -53,6 +53,7 @@ const VERSION = 59; // Corresponding to 2.17.0 build 2. Update this number every
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import twilio from '../../lib/twilio/twilio';
 
 export default class Splash extends React.Component {
     constructor(props) {
@@ -72,18 +73,34 @@ export default class Splash extends React.Component {
 
         var PingServiceClient = NativeModules.PingServiceClient;
         console.log('hello : ', PingServiceClient);
+
         PingServiceClient.pingWithCallback((error, response) => {
             console.log('GRPC Error : ', error);
             console.log('GRPC Response : ', response);
         });
 
         Auth.getUser().then(user => {
-            const QueueServiceClient = NativeModules.QueueServiceClient;
-            eventEmitter = new NativeEventEmitter(QueueServiceClient);
-            const subscription = eventEmitter.addListener('message', message =>
-                console.log('Event GRPC message : ', message, message)
-            );
-            QueueServiceClient.startChatSSE(user.creds.sessionId);
+            if (user) {
+                /*
+                twilio.isVoIPEnabled(user.userId, user)
+                    .then(at => {
+                        console.log('GRPC::: twilio isVoip ', at);
+                    });
+
+                twilio.isVoIPEnabledOld(user.userId, user)
+                    .then(at => {
+                        console.log('GRPC::: twilio isVoip old ', at);
+                    }); */
+
+                const QueueServiceClient = NativeModules.QueueServiceClient;
+                eventEmitter = new NativeEventEmitter(QueueServiceClient);
+                const subscription = eventEmitter.addListener(
+                    'message',
+                    message =>
+                        console.log('Event GRPC message : ', message, message)
+                );
+                QueueServiceClient.startChatSSE(user.creds.sessionId);
+            }
         });
 
         if (CODE_PUSH_ACTIVATE) {

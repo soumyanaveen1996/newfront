@@ -18,6 +18,7 @@
 #import "SubscribeBotResponse+frontm.h"
 #import "SubscribeDomainResponse+frontm.h"
 #import "ContactsResponse+frontm.h"
+#import "PhoneNumbers+frontm.h"
 #import <React/RCTLog.h>
 
 static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
@@ -62,7 +63,7 @@ RCT_REMAP_METHOD(getBotSubscriptions, getBotSubscriptionsWithSessionId:(NSString
 }
 
 RCT_REMAP_METHOD(getContacts, getContactsWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:getContacts Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetContactsWithRequest:[Empty new]
@@ -81,7 +82,7 @@ RCT_REMAP_METHOD(getContacts, getContactsWithSessionId:(NSString *)sessionId and
 }
 
 RCT_REMAP_METHOD(getUserDetails, getUserDetailsWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:getUserDetails Params : %@", sessionId);
 
   User *user = [User new];
   user.userId = params[@"userId"];
@@ -101,10 +102,19 @@ RCT_REMAP_METHOD(getUserDetails, getUserDetailsWithSessionId:(NSString *)session
 }
 
 RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:updateUserProfile Params : %@", sessionId);
 
   User *user = [User new];
-  user.userId = params[@"userId"];
+  user.userName = params[@"userName"];
+  user.emailAddress = params[@"emailAddress"];
+  user.searchable = params[@"searchable"];
+  user.visible = params[@"visible"];
+  if (params[@"phoneNumbers"] && ![NSNull isEqual:params[@"phoneNumbers"]]) {
+    user.phoneNumbers = [PhoneNumbers new];
+    user.phoneNumbers.satellite = params[@"phoneNumbers"][@"satellite"];
+    user.phoneNumbers.land = params[@"phoneNumbers"][@"land"];
+    user.phoneNumbers.mobile = params[@"phoneNumbers"][@"mobile"];
+  }
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToUpdateUserProfileWithRequest:user handler:^(UpdateUserProfileResponse * _Nullable response, NSError * _Nullable error) {
@@ -121,7 +131,7 @@ RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)s
 }
 
 RCT_REMAP_METHOD(subscribeBot, subscribeBotWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:subscribeBot Params : %@", sessionId);
 
   SubscribeBotInput *request = [SubscribeBotInput new];
   request.botId = params[@"botId"];
@@ -141,7 +151,7 @@ RCT_REMAP_METHOD(subscribeBot, subscribeBotWithSessionId:(NSString *)sessionId w
 }
 
 RCT_REMAP_METHOD(unsubscribeBot, unsubscribeBotWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:unsubscribeBot Params : %@", sessionId);
 
   SubscribeBotInput *request = [SubscribeBotInput new];
   request.botId = params[@"botId"];
@@ -161,7 +171,7 @@ RCT_REMAP_METHOD(unsubscribeBot, unsubscribeBotWithSessionId:(NSString *)session
 }
 
 RCT_REMAP_METHOD(subscribeDomain, subscribeDomainSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:subscribeDomain Params : %@", sessionId);
 
   SubscribeDomainInput *request = [SubscribeDomainInput new];
   request.verificationCode = params[@"verificationCode"];
@@ -181,7 +191,7 @@ RCT_REMAP_METHOD(subscribeDomain, subscribeDomainSessionId:(NSString *)sessionId
 }
 
 RCT_REMAP_METHOD(enableVOIP, enableVOIPWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:enableVOIP Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToEnableVoipWithRequest:[Empty new] handler:^(VoipToggleResponse * _Nullable response, NSError * _Nullable error) {
@@ -215,7 +225,7 @@ RCT_REMAP_METHOD(disableVOIP, disableVOIPWithSessionId:(NSString *)sessionId and
 }
 
 RCT_REMAP_METHOD(getVOIPStatus, getVOIPStatusWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:getBotSubscriptions Params : %@ %@", sessionId, params);
 
   VoipStatusInput *request = [VoipStatusInput new];
   request.userId = params[@"userId"];
@@ -232,11 +242,12 @@ RCT_REMAP_METHOD(getVOIPStatus, getVOIPStatusWithSessionId:(NSString *)sessionId
   [call start];
 }
 
-RCT_REMAP_METHOD(generateTwilioToken, generateTwilioTokenWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+RCT_REMAP_METHOD(generateTwilioToken, generateTwilioTokenWithSessionId:(NSString *)sessionId:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:generateTwilioToken Params : %@", sessionId);
 
   TwilioTokenInput *input = [TwilioTokenInput new];
   input.platform = @"ios";
+  input.env = params[@"env"];
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGenerateTwilioTokenWithRequest:input handler:^(TwilioTokenResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {

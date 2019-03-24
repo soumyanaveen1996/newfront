@@ -8,7 +8,6 @@
 
 #import "TimelineConversation+frontm.h"
 #import "TimelineBotInfo+frontm.h"
-#import "TimelineLastMessage+frontm.h"
 #import "TimelineContact+frontm.h"
 #import "TimelineChannels+frontm.h"
 #import "NSArray+Map.h"
@@ -59,7 +58,7 @@
            @"conversationId": self.conversationId,
            @"createdBy": self.createdBy,
            @"bot": [self.bot toJSON],
-           @"lastMessage": [self.lastMessage toJSON],
+           @"lastMessage": self.lastMessage,
            @"contact": [self.contact toJSON],
            @"onChannels": [TimelineChannels jsonArrayFromObjects:self.onChannelsArray]
            };
