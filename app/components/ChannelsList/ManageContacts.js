@@ -29,7 +29,7 @@ import _ from 'lodash';
 const R = require('ramda');
 const cancelImg = require('../../images/channels/cross-deselect-participant.png');
 
-class AddContacts extends React.Component {
+class ManageContacts extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
@@ -104,20 +104,63 @@ class AddContacts extends React.Component {
 
     componentDidMount() {
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
-        if (this.props.channels.participants.length > 0) {
-            this.setState({ contacts: this.props.channels.participants });
-            return;
-        }
-
-        if (this.props.appState.contactsLoaded) {
-            Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
+        if (this.props.allContacts) {
+            const allContacts = _.map(this.props.allContacts, contact => {
+                return {
                     ...contact,
-                    selected: false
-                }));
+                    selected: false,
+                    disabled: this.props.disabledUserIds.includes(
+                        contact.userId
+                    )
+                };
+            });
+            let participants;
+            if (this.props.alreadySelected) {
+                participants = _.map(this.props.alreadySelected, part => {
+                    return {
+                        ...part,
+                        selected: true,
+                        disabled: this.props.disabledUserIds.includes(
+                            part.userId
+                        )
+                    };
+                });
+            }
 
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
+            let contactsUniq = _.unionBy(participants, allContacts, 'userId');
+            contactsUniq = _.sortBy(contactsUniq, 'userName');
+            this.setState({ contacts: contactsUniq });
+        } else if (this.props.appState.contactsLoaded) {
+            Contact.getAddedContacts().then(contacts => {
+                const localContacts = _.map(contacts, contact => {
+                    return {
+                        ...contact,
+                        selected: false,
+                        disabled: this.props.disabledUserIds.includes(
+                            contact.userId
+                        )
+                    };
+                });
+                let participants;
+                if (this.props.alreadySelected) {
+                    participants = _.map(this.props.alreadySelected, part => {
+                        return {
+                            ...part,
+                            selected: true,
+                            disabled: this.props.disabledUserIds.includes(
+                                part.userId
+                            )
+                        };
+                    });
+                }
+                let contactsUniq = _.unionBy(
+                    participants,
+                    localContacts,
+                    'userId'
+                );
+                contactsUniq = _.sortBy(contactsUniq, 'userName');
+                // const uniqId = R.eqProps('userId');
+                // const contactsUniq = R.uniqWith(uniqId)(allContacts);
                 this.setState({ contacts: contactsUniq });
             });
         } else {
@@ -127,17 +170,40 @@ class AddContacts extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (
+            !this.props.allContacts &&
             prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsLoaded
+                this.props.appState.contactsLoaded
         ) {
             Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
-                    ...contact,
-                    selected: false
-                }));
-
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
+                const localContacts = _.map(contacts, contact => {
+                    return {
+                        ...contact,
+                        selected: false,
+                        disabled: this.props.disabledUserIds.includes(
+                            contact.userId
+                        )
+                    };
+                });
+                let participants;
+                if (this.props.alreadySelected) {
+                    participants = _.map(this.props.alreadySelected, part => {
+                        return {
+                            ...part,
+                            selected: true,
+                            disabled: this.props.disabledUserIds.includes(
+                                part.userId
+                            )
+                        };
+                    });
+                }
+                let contactsUniq = _.unionBy(
+                    participants,
+                    localContacts,
+                    'userId'
+                );
+                contactsUniq = _.sortBy(contactsUniq, 'userName');
+                // const uniqId = R.eqProps('userId');
+                // const contactsUniq = R.uniqWith(uniqId)(allContacts);
                 this.setState({ contacts: contactsUniq });
             });
         }
@@ -160,22 +226,24 @@ class AddContacts extends React.Component {
             const selectedContacts = _.filter(this.state.contacts, contact => {
                 return contact.selected;
             });
-            const users = _.map(selectedContacts, contact => {
-                return contact.userId;
-            });
-            this.props.onSelected(users);
+            // const users = _.map(selectedContacts, contact => {
+            //     return contact.userId;
+            // });
+            this.props.onSelected(selectedContacts);
         }
         this.props.setParticipants(this.state.contacts);
         Actions.pop();
     };
 
     toggleSelectContacts = elem => {
-        let array = [...this.state.contacts];
-        const index = R.findIndex(R.propEq('userId', elem.userId))(array);
-        array[index].selected = !array[index].selected;
-        this.setState({
-            contacts: array
-        });
+        if (!elem.disabled) {
+            let array = [...this.state.contacts];
+            const index = R.findIndex(R.propEq('userId', elem.userId))(array);
+            array[index].selected = !array[index].selected;
+            this.setState({
+                contacts: array
+            });
+        }
     };
     onSearchQueryChange(text) {
         if (text !== '') {
@@ -205,11 +273,6 @@ class AddContacts extends React.Component {
             ...styleButton
         } = styles.filterButtonContainer;
 
-        selectedAvatarStyle = {
-            height: 30,
-            width: 30,
-            borderRadius: 15
-        };
         const allContacts = this.state.contacts.filter(contact =>
             contact.userName
                 .toLowerCase()
@@ -249,9 +312,9 @@ class AddContacts extends React.Component {
                                                     placeholder={
                                                         images.user_image
                                                     }
-                                                    style={selectedAvatarStyle}
+                                                    style={styles.propic}
                                                     placeholderStyle={
-                                                        selectedAvatarStyle
+                                                        styles.propic
                                                     }
                                                     resizeMode="contain"
                                                 />
@@ -377,4 +440,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddContacts);
+)(ManageContacts);
