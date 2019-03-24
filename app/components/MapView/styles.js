@@ -317,10 +317,22 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconRotate: Mapbox.StyleSheet.identity('rotation')
     },
     //MARKERS
-    circleMarker: {
+    blackCircleMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.current_location_inactive,
+        iconSize: 1.5
+    },
+    whiteCircleMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_arrival_point,
+        iconSize: 1.5
+    },
+    grayCircleMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_starting_point,
         iconSize: 1.5
     },
     poiMarker: {
