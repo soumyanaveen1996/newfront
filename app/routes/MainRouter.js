@@ -48,6 +48,7 @@ import { ChannelsList } from '../components/ChannelsList';
 import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
 import NewChannels from '../components/ChannelsList/NewChannels';
 import AddContacts from '../components/ChannelsList/AddContacts';
+import ManageContacts from '../components/ChannelsList/ManageContacts';
 import RequestsScreen from '../components/ChannelsList/RequestsScreen';
 import SelectTeam from '../components/ChannelsList/SelectTeam';
 import ChannelAdminScreen from '../components/ChannelsList/ChannelAdminScreen';
@@ -413,6 +414,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.addParticipants}
                                         title={I18n.t('Add_participants')}
                                         component={AddContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.manageContacts}
+                                        title="Manage contacts"
+                                        component={ManageContacts}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.requestsScreen}

@@ -12,5 +12,7 @@ export const MarkerIconTypes = {
     ARROW: 'arrow',
     AIRCRAFT: 'aircraft',
     POI: 'poi',
-    CIRCLE: 'circle'
+    GRAY_CIRCLE: 'gray_circle',
+    BLACK_CIRCLE: 'black_circle',
+    WHITE_CIRCLE: 'white_circle'
 };

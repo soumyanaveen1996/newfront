@@ -243,69 +243,32 @@ class MapView extends React.Component {
             };
             return markerObject;
         });
+
         //POLYLINES
-        const polylines = _.map(this.props.mapData.map.polylines, polyLine => {
-            return _.map(polyLine.coordinates, coords => {
-                const coordArray = [coords.longitude, coords.latitude];
-                return coordArray;
+        const polylines = _.map(this.props.mapData.map.polylines, polyline => {
+            vertices = _.map(polyline.coordinates, coords => {
+                const vertex = [coords.longitude, coords.latitude];
+                return vertex;
             });
-        });
-        const movingVessels = _.map(polylines, polyline => {
-            const lastIndex = polyline.length - 1;
-            //check if the polyline is made of more than one position
-            if (lastIndex > 0) {
-                const deltaLongitude =
-                    polyline[lastIndex][0] - polyline[lastIndex - 1][0];
-                const deltaLatitute =
-                    polyline[lastIndex][1] - polyline[lastIndex - 1][1];
-                const angle =
-                    Math.atan2(deltaLongitude, deltaLatitute) * (180 / Math.PI);
-                return {
-                    type: 'Feature',
-                    properties: { type: 'movingVessel', rotation: angle },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: polyline[lastIndex]
-                    }
-                };
-            } else {
-                return {
-                    type: 'Feature',
-                    properties: { type: 'vesselPosition' },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: polyline[0]
-                    }
-                };
-            }
+            const lineString = {
+                type: 'Feature',
+                properties: {
+                    id: polyline.id,
+                    title: polyline.title,
+                    description: polyline.description
+                },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: vertices
+                }
+            };
+            return lineString;
         });
 
         //GENERATE GEOJSON
         let GEOJson = {
             type: 'FeatureCollection',
-            features: [
-                {
-                    type: 'Feature',
-                    properties: { type: 'startingPoints' },
-                    geometry: {
-                        type: 'MultiPoint',
-                        coordinates: _.map(polylines, polyline => {
-                            return polyline[0];
-                        })
-                    }
-                },
-                {
-                    type: 'Feature',
-                    properties: { type: 'routes' },
-                    geometry: {
-                        type: 'MultiLineString',
-                        coordinates: polylines
-                    }
-                }
-            ]
-                .concat(movingVessels)
-                .concat(planeRoutes)
-                .concat(markers)
+            features: polylines.concat(planeRoutes).concat(markers)
         };
 
         //ROUTE TRACKER
@@ -327,20 +290,8 @@ class MapView extends React.Component {
     renderElements() {
         return (
             <Mapbox.ShapeSource id="routeSource" shape={this.state.GEOJson}>
-                {/* VESSELS ROUTES */}
+                {/* POLYLINES */}
                 <Mapbox.LineLayer id="routes" style={layerStyles.route} />
-                {/* ROUTES STARTING POINTS */}
-                <Mapbox.SymbolLayer
-                    id="startPoints"
-                    filter={['==', 'type', 'startingPoints']}
-                    style={layerStyles.startingPoint}
-                />
-                {/* VESSELS MOVING ALONG ROUTES */}
-                <Mapbox.SymbolLayer
-                    id="movingVessels"
-                    filter={['==', 'type', 'movingVessel']}
-                    style={layerStyles.movingVessel}
-                />
                 {/* MARKERS*/}
                 <Mapbox.SymbolLayer
                     id={MarkerIconTypes.ARROW}
@@ -358,9 +309,19 @@ class MapView extends React.Component {
                     style={layerStyles.poiMarker}
                 />
                 <Mapbox.SymbolLayer
-                    id={MarkerIconTypes.CIRCLE}
-                    filter={['==', 'iconType', MarkerIconTypes.CIRCLE]}
-                    style={layerStyles.circleMarker}
+                    id={MarkerIconTypes.BLACK_CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.BLACK_CIRCLE]}
+                    style={layerStyles.blackCircleMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.WHITE_CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.WHITE_CIRCLE]}
+                    style={layerStyles.whiteCircleMarker}
+                />
+                <Mapbox.SymbolLayer
+                    id={MarkerIconTypes.GRAY_CIRCLE}
+                    filter={['==', 'iconType', MarkerIconTypes.GRAY_CIRCLE]}
+                    style={layerStyles.grayCircleMarker}
                 />
             </Mapbox.ShapeSource>
         );
