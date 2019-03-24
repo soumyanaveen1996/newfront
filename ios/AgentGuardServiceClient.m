@@ -28,7 +28,7 @@ static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 RCT_EXPORT_MODULE();
 
 RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:execute Params : %@", sessionId);
 
   AgentGuardInput *input = [AgentGuardInput new];
   input.parameters = params[@"parameters"];

@@ -6,6 +6,7 @@ import Utils from './Utils';
 import Channel from './Channel';
 import Message from './Message';
 import Messages from './Messages';
+import AgentGuard from './AgentGuard';
 import {
     MessageTypeConstants,
     ButtonStyle,
@@ -60,5 +61,6 @@ export {
     MessageQuota,
     UpdateCallQuota,
     RemoteBotInstall,
-    InAppPurchase
+    InAppPurchase,
+    AgentGuard
 };

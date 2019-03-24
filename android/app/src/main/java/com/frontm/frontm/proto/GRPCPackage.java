@@ -26,6 +26,9 @@ public class GRPCPackage implements ReactPackage {
         modules.add(new AgentGuardServiceClient(reactContext));
         modules.add(new ChannelsServiceClient(reactContext));
         modules.add(new CompanyServiceClient(reactContext));
+        modules.add(new ConversationServiceClient(reactContext));
+        modules.add(new ContactsServiceClient(reactContext));
+        modules.add(new QueueServiceClient(reactContext));
 
         return modules;
     }
