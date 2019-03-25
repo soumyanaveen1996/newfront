@@ -1,7 +1,7 @@
 import Promise from './Promise';
-import { NativeModules } from 'react-native';
 import Auth from './Auth';
 
+import { NativeModules } from 'react-native';
 const AgentGuardServiceClient = NativeModules.AgentGuardServiceClient;
 
 export class AgentGuardError extends Error {

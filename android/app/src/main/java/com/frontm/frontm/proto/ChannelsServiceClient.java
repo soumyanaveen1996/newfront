@@ -7,8 +7,21 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.frontm.channels.proto.AddParticipantsInput;
+import com.frontm.channels.proto.BooleanResponse;
+import com.frontm.channels.proto.ChannelListResponse;
+import com.frontm.channels.proto.ChannelsServiceGrpc;
+import com.frontm.channels.proto.CreateChannelResponse;
+import com.frontm.channels.proto.CreateEditInput;
+import com.frontm.channels.proto.DomainChannels;
+import com.frontm.channels.proto.InputChannel;
+import com.frontm.channels.proto.SubUnsubInput;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.frontm.proto.converters.BooleanResponseConverter;
+import com.frontm.frontm.proto.converters.ChannelListResponseConverter;
+import com.frontm.frontm.proto.converters.CreateChannelResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
 import com.frontm.frontm.proto.converters.TwilioTokenResponseConverter;
@@ -25,6 +38,8 @@ import com.frontm.user.proto.VoipStatusInput;
 import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
+
+import java.util.ArrayList;
 
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
@@ -58,13 +73,272 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void subscribeBot(String sessionId, ReadableMap params, final Callback callback)
+    public void getSubscribed(String sessionId, final Callback callback)
     {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
+        Log.d("GRPC:::getSubscribed", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
 
-        SubscribeBotInput input = SubscribeBotInput.newBuilder()
-                .setBotId(params.getString("botId"))
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+            @Override
+            public void onNext(ChannelListResponse value) {
+                callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+
+    @ReactMethod
+    public void getUnsubscribed(String sessionId, final Callback callback)
+    {
+        Log.d("GRPC:::getUnsubscribed", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+            @Override
+            public void onNext(ChannelListResponse value) {
+                callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+    @ReactMethod
+    public void getOwned(String sessionId, final Callback callback)
+    {
+        Log.d("GRPC:::getOwned", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.getOwned(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+            @Override
+            public void onNext(ChannelListResponse value) {
+                callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+
+    @ReactMethod
+    public void subscribe(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::subscribe", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+
+        SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
+        if (params.getArray("domainChannels") != null) {
+            ReadableArray channelsArray = params.getArray("domainChannels");
+            for (int i = 0; i < channelsArray.size(); ++i) {
+                ReadableMap channelDict = channelsArray.getMap(i);
+                DomainChannels.Builder dcBuilder = DomainChannels.newBuilder()
+                        .setUserDomain(channelDict.getString("userDomain"));
+
+                if (channelDict.getArray("channels") != null) {
+                    ReadableArray cArray = channelDict.getArray("channels");
+                    for (int j = 0; j < cArray.size(); ++j) {
+                        dcBuilder.setChannels(j, cArray.getString(j));
+                    }
+                } else {
+                    dcBuilder.addAllChannels(new ArrayList<String>());
+                }
+                input.setDomainChannels(i, dcBuilder.build());
+            }
+        }
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.subscribe(input.build(), new StreamObserver<BooleanResponse>() {
+            @Override
+            public void onNext(BooleanResponse value) {
+                callback.invoke(null, new BooleanResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+    @ReactMethod
+    public void unsubscribe(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::unsubscribe", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+
+        SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
+        if (params.getArray("domainChannels") != null) {
+            ReadableArray channelsArray = params.getArray("domainChannels");
+            for (int i = 0; i < channelsArray.size(); ++i) {
+                ReadableMap channelDict = channelsArray.getMap(i);
+                DomainChannels.Builder dcBuilder = DomainChannels.newBuilder()
+                        .setUserDomain(channelDict.getString("userDomain"));
+
+                if (channelDict.getArray("channels") != null) {
+                    ReadableArray cArray = channelDict.getArray("channels");
+                    for (int j = 0; j < cArray.size(); ++j) {
+                        dcBuilder.setChannels(j, cArray.getString(j));
+                    }
+                } else {
+                    dcBuilder.addAllChannels(new ArrayList<String>());
+                }
+                input.setDomainChannels(i, dcBuilder.build());
+            }
+        }
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.unsubscribe(input.build(), new StreamObserver<BooleanResponse>() {
+            @Override
+            public void onNext(BooleanResponse value) {
+                callback.invoke(null, new BooleanResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+
+    @ReactMethod
+    public void addParticipants(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::unsubscribe", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+
+        AddParticipantsInput.Builder input = AddParticipantsInput.newBuilder()
+                .setChannelName(params.getString("channelName"))
+                .setUserDomain(params.getString("userDomain"));
+
+        if (params.getArray("newUserIds") != null) {
+            ReadableArray userIds = params.getArray("newUserIds");
+            for (int i = 0; i < userIds.size(); ++i) {
+                input.setNewUserIds(i, userIds.getString(i));
+            }
+        }
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.addParticipants(input.build(), new StreamObserver<BooleanResponse>() {
+            @Override
+            public void onNext(BooleanResponse value) {
+                callback.invoke(null, new BooleanResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+
+
+    @ReactMethod
+    public void create(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::create", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+
+        InputChannel  channel = InputChannel.newBuilder()
+                .setChannelName(params.getString("channelName"))
+                .setUserDomain(params.getString("userDomain"))
+                .setDescription(params.getString("description"))
+                .setChannelType(params.getString("channelType"))
+                .setDiscoverable(params.getBoolean("discoverable"))
+                .build();
+
+        CreateEditInput input = CreateEditInput.newBuilder()
+                .setChannel(channel)
                 .build();
 
         Metadata header=new Metadata();
@@ -74,10 +348,10 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.subscribeBot(input, new StreamObserver<SubscribeBotResponse>() {
+        stub.create(input, new StreamObserver<CreateChannelResponse>() {
             @Override
-            public void onNext(SubscribeBotResponse value) {
-                callback.invoke(null, new SubscribeBotResponseConverter().toResponse(value));
+            public void onNext(CreateChannelResponse value) {
+                callback.invoke(null, new CreateChannelResponseConverter().toResponse(value));
             }
 
             @Override
@@ -94,13 +368,21 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void unsubscribeBot(String sessionId, ReadableMap params, final Callback callback)
+    public void edit(String sessionId, ReadableMap params, final Callback callback)
     {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
+        Log.d("GRPC:::edit", sessionId);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
 
-        SubscribeBotInput input = SubscribeBotInput.newBuilder()
-                .setBotId(params.getString("botId"))
+        InputChannel  channel = InputChannel.newBuilder()
+                .setChannelName(params.getString("channelName"))
+                .setUserDomain(params.getString("userDomain"))
+                .setDescription(params.getString("description"))
+                .setChannelType(params.getString("channelType"))
+                .setDiscoverable(params.getBoolean("discoverable"))
+                .build();
+
+        CreateEditInput input = CreateEditInput.newBuilder()
+                .setChannel(channel)
                 .build();
 
         Metadata header=new Metadata();
@@ -110,10 +392,10 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.unsubscribeBot(input, new StreamObserver<SubscribeBotResponse>() {
+        stub.edit(input, new StreamObserver<BooleanResponse>() {
             @Override
-            public void onNext(SubscribeBotResponse value) {
-                callback.invoke(null, new SubscribeBotResponseConverter().toResponse(value));
+            public void onNext(BooleanResponse value) {
+                callback.invoke(null, new BooleanResponseConverter().toResponse(value));
             }
 
             @Override
@@ -129,175 +411,12 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
     }
 
-    @ReactMethod
-    public void subscribeDomain(String sessionId, ReadableMap params, final Callback callback)
-    {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
 
-        SubscribeDomainInput input = SubscribeDomainInput.newBuilder()
-                .setVerificationCode(params.getString("verificationCode"))
-                .build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
-        header.put(key, sessionId);
 
-        stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.subscribeDomain(input, new StreamObserver<SubscribeDomainResponse>() {
-            @Override
-            public void onNext(SubscribeDomainResponse value) {
-                callback.invoke(null, new SubscribeDomainResponseConverter().toResponse(value));
-            }
 
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
 
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
-    }
-
-    @ReactMethod
-    public void getVOIPStatus(String sessionId, ReadableMap params, final Callback callback)
-    {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
-
-        VoipStatusInput input = VoipStatusInput.newBuilder().setUserId(params.getString("userId")).build();
-
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
-        header.put(key, sessionId);
-
-        stub = MetadataUtils.attachHeaders(stub, header);
-
-        stub.getVoipStatus(input, new StreamObserver<VoipStatusResponse>() {
-            @Override
-            public void onNext(VoipStatusResponse value) {
-                callback.invoke(null, new VoipStatusResponseConverter().toResponse(value));
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
-    }
-
-    @ReactMethod
-    public void enableVOIP(String sessionId, final Callback callback)
-    {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
-
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
-        header.put(key, sessionId);
-
-        stub = MetadataUtils.attachHeaders(stub, header);
-
-        stub.enableVoip(Empty.newBuilder().build(), new StreamObserver<VoipToggleResponse>() {
-            @Override
-            public void onNext(VoipToggleResponse value) {
-                callback.invoke(null, new VoipToggleResponseConverter().toResponse(value));
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
-    }
-
-    @ReactMethod
-    public void disableVOIP(String sessionId, final Callback callback)
-    {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
-
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
-        header.put(key, sessionId);
-
-        stub = MetadataUtils.attachHeaders(stub, header);
-
-        stub.disableVoip(Empty.newBuilder().build(), new StreamObserver<VoipToggleResponse>() {
-            @Override
-            public void onNext(VoipToggleResponse value) {
-                callback.invoke(null, new VoipToggleResponseConverter().toResponse(value));
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
-    }
-
-    @ReactMethod
-    public void generateTwilioToken(String sessionId, ReadableMap params, final Callback callback)
-    {
-        Log.d("GRPC:::generateTwilioTo", sessionId);
-        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
-        TwilioTokenInput input = TwilioTokenInput.newBuilder()
-                .setPlatform("android")
-                .setEnv(params.getString("env"))
-                .build();
-
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
-        header.put(key, sessionId);
-
-        stub = MetadataUtils.attachHeaders(stub, header);
-
-        stub.generateTwilioToken(input, new StreamObserver<TwilioTokenResponse>() {
-            @Override
-            public void onNext(TwilioTokenResponse value) {
-                callback.invoke(null, new TwilioTokenResponseConverter().toResponse(value));
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        });
-
-    }
 
 
 

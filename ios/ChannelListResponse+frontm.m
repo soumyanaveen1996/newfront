@@ -14,12 +14,14 @@
 
 - (NSDictionary *) toJSON {
   return @{
+           @"error": @(self.error),
            @"content": [DBChannel jsonArrayFromObjects:self.contentArray],
            };
 }
 
 - (NSDictionary *) toResponse {
   return @{
+           @"error": @(self.error),
            @"data": [self toJSON]
            };
 }

@@ -11,6 +11,7 @@
 #import "ChannelListResponse+frontm.h"
 #import "BooleanResponse+frontm.h"
 #import "CreateChannelResponse+frontm.h"
+#import "DomainChannels+frontm.h"
 #import <React/RCTLog.h>
 
 static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
@@ -91,7 +92,8 @@ RCT_REMAP_METHOD(subscribe, subscribeWithSessionId:(NSString *)sessionId andPara
   RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
 
   SubUnsubInput *input = [SubUnsubInput new];
-
+  input.domainChannelsArray = [DomainChannels arrayOfDomainChannelsfromArray:params[@"domainChannels"]];
+  
   GRPCProtoCall *call = [self.serviceClient
                          RPCToSubscribeWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
@@ -110,6 +112,7 @@ RCT_REMAP_METHOD(unsubscribe, unsubscribeWithSessionId:(NSString *)sessionId and
   RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
 
   SubUnsubInput *input = [SubUnsubInput new];
+  input.domainChannelsArray = [DomainChannels arrayOfDomainChannelsfromArray:params[@"domainChannels"]];
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToUnsubscribeWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
@@ -129,6 +132,9 @@ RCT_REMAP_METHOD(addParticipants, addParticipantsWithSessionId:(NSString *)sessi
   RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
 
   AddParticipantsInput *input = [AddParticipantsInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  input.newUserIdsArray = params[@"newUserIds"];
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToAddParticipantsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
@@ -145,9 +151,17 @@ RCT_REMAP_METHOD(addParticipants, addParticipantsWithSessionId:(NSString *)sessi
 }
 
 RCT_REMAP_METHOD(create, createWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:channels create Params : %@", sessionId);
+
+  InputChannel *channel = [InputChannel new];
+  channel.channelName = params[@"channelName"];
+  channel.userDomain = params[@"userDomain"];
+  channel.description_p = params[@"description"];
+  channel.channelType = params[@"channelType"];
+  channel.discoverable = [params[@"discoverable"] boolValue];
 
   CreateEditInput *input = [CreateEditInput new];
+  input.channel = channel;
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToCreateWithRequest:input handler:^(CreateChannelResponse * _Nullable response, NSError * _Nullable error) {
@@ -164,9 +178,18 @@ RCT_REMAP_METHOD(create, createWithSessionId:(NSString *)sessionId andParams:(NS
 }
 
 RCT_REMAP_METHOD(edit, editWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:channels create Params : %@", sessionId);
+
+  InputChannel *channel = [InputChannel new];
+  channel.channelName = params[@"channelName"];
+  channel.userDomain = params[@"userDomain"];
+  channel.description_p = params[@"description"];
+  channel.channelType = params[@"channelType"];
+  channel.discoverable = [params[@"discoverable"] boolValue];
 
   CreateEditInput *input = [CreateEditInput new];
+  input.channel = channel;
+
 
   GRPCProtoCall *call = [self.serviceClient RPCToEditWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {

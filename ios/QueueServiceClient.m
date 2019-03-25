@@ -52,7 +52,6 @@ RCT_EXPORT_MODULE();
 
 }
 
-
 - (GRXWriter *)grxWriter {
   if (_grxWriter == nil) {
     _grxWriter = [GRXWriter emptyWriter];
@@ -89,6 +88,7 @@ RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)s
 
 RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) {
 
+  /*
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetSampleBufferedMessageWithRequest:[Empty new] eventHandler:^(BOOL done, BufferMessage * _Nullable response, NSError * _Nullable error) {
                            NSError *jsonError = nil;
@@ -104,13 +104,10 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
                          }];
 
   call.requestHeaders[@"sessionId"] = sessionId;
-  [call start];
+  [call start]; */
 
-  /*
   GRPCProtoCall *call = [self.serviceClient
-                         RPCToGetStreamingQueueMessageWithRequestsWriter:self.grxWriter
-                         eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
-                           RCTLog(@"Done : %d %@", done, [response toJSON]);
+                         RPCToGetStreamingQueueMessageWithRequest:[Empty new] eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
                            if (done) {
                              [self sendEventWithName:@"end" body:@{}];
                            } else {
@@ -119,7 +116,7 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
                          }];
 
   call.requestHeaders[@"sessionId"] = sessionId;
-  [call start]; */
+  [call start];
 }
 
 /*

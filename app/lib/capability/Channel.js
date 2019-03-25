@@ -8,6 +8,9 @@ import Store from '../../redux/store/configureStore';
 import { completeChannelInstall } from '../../redux/actions/UserActions';
 const moment = require('moment');
 
+import { NativeModules } from 'react-native';
+const ChannelsServiceClient = NativeModules.ChannelsServiceClient;
+
 export class ChannelError extends Error {
     constructor(code, message) {
         super(message);
@@ -48,6 +51,155 @@ export default class Channel {
             ownerId
         );
 
+    static grpcSubscribeChannels = (user, channels) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.subscribe(
+                    user.creds.sessionId,
+                    channels,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcUnubscribeChannels = (user, channels) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.unsubscribe(
+                    user.creds.sessionId,
+                    channels,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcGetSubscribed = user =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.getSubscribed(
+                    user.creds.sessionId,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcGetUnubscribed = user =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.getUnsubscribed(
+                    user.creds.sessionId,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcGetOwned = user =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.getOwned(
+                    user.creds.sessionId,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcAddParticipants = (user, participants) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.addParticipants(
+                    user.creds.sessionId,
+                    participants,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcCreate = (user, params) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.create(
+                    user.creds.sessionId,
+                    participants,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
+    static grpcEdit = (user, params) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.edit(
+                    user.creds.sessionId,
+                    participants,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
     static subscribe = channels =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -63,21 +215,10 @@ export default class Channel {
                                 };
                             }
                         );
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Subscribe',
-                                botId: SystemBot.channelsBot.botId,
-                                domainChannels: domainChannels
-                            }
-                        };
-                        return Network(options);
+                        return Channel.grpcSubscribeChannels(
+                            user,
+                            domainChannels
+                        );
                     }
                 })
                 .then(response => {
@@ -109,21 +250,10 @@ export default class Channel {
                         let domainChannels = [
                             { userDomain: domain, channels: [channelName] }
                         ];
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Subscribe',
-                                botId: SystemBot.channelsBot.botId,
-                                domainChannels
-                            }
-                        };
-                        return Network(options);
+                        return Channel.grpcSubscribeChannels(
+                            user,
+                            domainChannels
+                        );
                     }
                 })
                 .then(response => {
@@ -147,22 +277,13 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Unsubscribe',
-                                botId: SystemBot.channelsBot.botId,
-                                userDomain,
-                                channelName
-                            }
-                        };
-                        return Network(options);
+                        let domainChannels = [
+                            { userDomain: domain, channels: [channelName] }
+                        ];
+                        return Channel.grpcUnubscribeChannels(
+                            user,
+                            domainChannels
+                        );
                     }
                 })
                 .then(response => {
@@ -192,21 +313,7 @@ export default class Channel {
                 .then(user => {
                     if (user) {
                         console.log('creating channels ', channel);
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Create',
-                                botId: SystemBot.channelsBot.botId,
-                                channel: channel
-                            }
-                        };
-                        return Network(options);
+                        return Channel.grpcCreate(user, channel);
                     }
                 })
                 .then(async response => {
@@ -258,23 +365,11 @@ export default class Channel {
                 .then(user => {
                     if (user) {
                         console.log('adding users to Channel ', channelName);
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'AddUsers',
-                                botId: SystemBot.channelsBot.botId,
-                                channelName,
-                                userDomain,
-                                newUserIds
-                            }
-                        };
-                        return Network(options);
+                        return Channel.grpcAddParticipants(user, {
+                            channelName,
+                            userDomain,
+                            newUserIds
+                        });
                     }
                 })
                 .then(response => {
@@ -310,23 +405,11 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Edit',
-                                botId: SystemBot.channelsBot.botId,
-                                channelName: name,
-                                description: description,
-                                userDomain: domain
-                            }
-                        };
-                        return Network(options);
+                        return Channel.grpcEdit(user, {
+                            channelName: name,
+                            description,
+                            userDomain
+                        });
                     }
                 })
                 .then(response => {
@@ -350,22 +433,16 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Unsubscribe',
-                                botId: SystemBot.channelsBot.botId,
+                        let domainChannels = [
+                            {
                                 userDomain: channel.userDomain,
-                                channelName: channel.channelName
+                                channels: [channel.channelName]
                             }
-                        };
-                        return Network(options);
+                        ];
+                        return Channel.grpcUnubscribeChannels(
+                            user,
+                            domainChannels
+                        );
                     }
                 })
                 .then(response => {
@@ -401,22 +478,8 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'Get',
-                                botId: SystemBot.channelsBot.botId,
-                                domains: user.info.domains
-                            }
-                        };
                         Store.dispatch(completeChannelInstall(false));
-                        return Network(options);
+                        return Channel.grpcGetSubscribed(user);
                     }
                 })
                 .then(response => {
@@ -462,22 +525,8 @@ export default class Channel {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'getUnsubscribed',
-                                botId: SystemBot.channelsBot.botId,
-                                domains: user.info.domains
-                            }
-                        };
                         Store.dispatch(completeChannelInstall(false));
-                        return Network(options);
+                        return Channel.grpcGetUnubscribed(user);
                     }
                 })
                 .then(response => {
@@ -516,6 +565,52 @@ export default class Channel {
                             'Cannot Load  unsubscribed Cahnnels',
                             error
                         );
+                    }
+                    return reject();
+                });
+        });
+
+    static getOwnedChannels = () =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        return Channel.grpcGetOwned(user);
+                    }
+                })
+                .then(response => {
+                    if (response.data && response.data.content) {
+                        let channels = response.data.content;
+                        let channelInsertPromises = _.map(channels, channel => {
+                            if (!channel.channelOwner) {
+                                return Promise.resolve(true);
+                            }
+                            return ChannelDAO.insertIfNotPresent(
+                                channel.channelName,
+                                channel.description,
+                                channel.logo,
+                                channel.userDomain,
+                                channel.channelId,
+                                channel.channelOwner.emailAddress,
+                                channel.channelOwner.userName,
+                                channel.channelOwner.userId,
+                                channel.createdOn,
+                                'true',
+                                channel.isPlatformChannel,
+                                channel.channelType,
+                                channel.discoverable
+                            );
+                        });
+                        return Promise.all(channelInsertPromises);
+                    }
+                })
+                .then(() => {
+                    Store.dispatch(completeChannelInstall(true));
+                    return resolve();
+                })
+                .catch(() => {
+                    if (__DEV__) {
+                        console.tron('Cannot Load Cahnnels');
                     }
                     return reject();
                 });

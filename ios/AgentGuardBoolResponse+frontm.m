@@ -12,12 +12,21 @@
 @implementation AgentGuardBoolResponse (frontm)
 
 - (NSDictionary *) toJSON {
+  NSMutableArray *content = [NSMutableArray new];
+  for (int i = 0; i < self.contentArray.count; ++i) {
+    [content addObject:@([self.contentArray valueAtIndex:i])];
+  }
   return @{
+           @"error": @(self.error),
+           @"content": content
            };
 }
 
 - (NSDictionary *) toResponse {
-  return @{ @"data": [self toJSON] };
+  return @{
+           @"error": @(self.error),
+           @"data": [self toJSON]
+           };
 }
 
 @end

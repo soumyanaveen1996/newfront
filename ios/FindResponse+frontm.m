@@ -11,13 +11,20 @@
 @implementation FindResponse (frontm)
 
 - (NSDictionary *) toJSON {
+  NSMutableArray *content = [NSMutableArray new];
+  for (int i = 0; i < self.contentArray.count; ++i) {
+    MatchedUser * user = [self.contentArray objectAtIndex:i];
+    [content addObject:@{ @"userName": user.userName, @"userId": user.userId }];
+  }
   return @{
            @"errorMessage": self.errorMessage,
+           @"error": @(self.error),
            };
 }
 
 - (NSDictionary *) toResponse {
   return @{
+           @"error": @(self.error),
            @"errorMessage": self.errorMessage,
            @"data": [self toJSON]
            };
