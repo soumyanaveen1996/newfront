@@ -315,8 +315,6 @@ typedef struct TimelineContent__storage_ {
 
 typedef struct TimelineConversation__storage_ {
   uint32_t _has_storage_[1];
-  int32_t createdOn;
-  int32_t modifiedOn;
   NSMutableArray *participantsArray;
   NSString *userDomain;
   NSString *conversationId;
@@ -325,6 +323,8 @@ typedef struct TimelineConversation__storage_ {
   TimelineBotInfo *bot;
   NSData *lastMessage;
   TimelineContact *contact;
+  double createdOn;
+  double modifiedOn;
 } TimelineConversation__storage_;
 
 // This method is threadsafe because it is initially called
@@ -358,7 +358,7 @@ typedef struct TimelineConversation__storage_ {
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(TimelineConversation__storage_, createdOn),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "modifiedOn",
@@ -367,7 +367,7 @@ typedef struct TimelineConversation__storage_ {
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(TimelineConversation__storage_, modifiedOn),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "userDomain",
@@ -1656,12 +1656,12 @@ typedef struct GetArchivedMessagesResponse__storage_ {
 
 typedef struct GetArchivedMessagesContent__storage_ {
   uint32_t _has_storage_[1];
-  int32_t createdOn;
   NSString *messageId;
   NSString *contentType;
   NSString *createdBy;
   NSData *content;
   NSData *options;
+  double createdOn;
 } GetArchivedMessagesContent__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1695,7 +1695,7 @@ typedef struct GetArchivedMessagesContent__storage_ {
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(GetArchivedMessagesContent__storage_, createdOn),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "createdBy",

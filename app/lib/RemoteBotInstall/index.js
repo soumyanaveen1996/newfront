@@ -23,8 +23,9 @@ class RemoteBotInstall {
                     if (err) {
                         return reject(new Error('Unknown Error'));
                     }
-                    if (result.data.content && result.data.content.length > 0) {
-                        resolve(result.data.content);
+                    console.log('GRPC:::Bots subscription', result.data);
+                    if (result.data) {
+                        resolve(result);
                     } else {
                         reject(null);
                     }

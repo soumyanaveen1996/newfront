@@ -156,9 +156,9 @@ typedef GPB_ENUM(TimelineConversation_FieldNumber) {
 /** The number of items in @c participantsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger participantsArray_Count;
 
-@property(nonatomic, readwrite) int32_t createdOn;
+@property(nonatomic, readwrite) double createdOn;
 
-@property(nonatomic, readwrite) int32_t modifiedOn;
+@property(nonatomic, readwrite) double modifiedOn;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
 
@@ -542,7 +542,7 @@ typedef GPB_ENUM(GetArchivedMessagesContent_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *contentType;
 
-@property(nonatomic, readwrite) int32_t createdOn;
+@property(nonatomic, readwrite) double createdOn;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
 

@@ -77,7 +77,7 @@ export default class Channel {
             }
         });
 
-    static grpcUnubscribeChannels = (user, channels) =>
+    static grpcUnsubscribeChannels = (user, channels) =>
         new Promise((resolve, reject) => {
             if (user) {
                 ChannelsServiceClient.unsubscribe(
@@ -174,7 +174,7 @@ export default class Channel {
             if (user) {
                 ChannelsServiceClient.create(
                     user.creds.sessionId,
-                    participants,
+                    params,
                     (err, result) => {
                         if (err) {
                             reject(new Error('Unknown error'));
@@ -193,7 +193,7 @@ export default class Channel {
             if (user) {
                 ChannelsServiceClient.edit(
                     user.creds.sessionId,
-                    participants,
+                    params,
                     (err, result) => {
                         if (err) {
                             reject(new Error('Unknown error'));
@@ -222,10 +222,9 @@ export default class Channel {
                                 };
                             }
                         );
-                        return Channel.grpcSubscribeChannels(
-                            user,
+                        return Channel.grpcSubscribeChannels(user, {
                             domainChannels
-                        );
+                        });
                     }
                 })
                 .then(response => {
@@ -257,10 +256,9 @@ export default class Channel {
                         let domainChannels = [
                             { userDomain: domain, channels: [channelName] }
                         ];
-                        return Channel.grpcSubscribeChannels(
-                            user,
+                        return Channel.grpcSubscribeChannels(user, {
                             domainChannels
-                        );
+                        });
                     }
                 })
                 .then(response => {
@@ -285,12 +283,11 @@ export default class Channel {
                 .then(user => {
                     if (user) {
                         let domainChannels = [
-                            { userDomain: domain, channels: [channelName] }
+                            { userDomain: userDomain, channels: [channelName] }
                         ];
-                        return Channel.grpcUnubscribeChannels(
-                            user,
+                        return Channel.grpcUnsubscribeChannels(user, {
                             domainChannels
-                        );
+                        });
                     }
                 })
                 .then(response => {
@@ -700,10 +697,9 @@ export default class Channel {
                                 channels: [channel.channelName]
                             }
                         ];
-                        return Channel.grpcUnubscribeChannels(
-                            user,
+                        return Channel.grpcUnsubscribeChannels(user, {
                             domainChannels
-                        );
+                        });
                     }
                 })
                 .then(response => {

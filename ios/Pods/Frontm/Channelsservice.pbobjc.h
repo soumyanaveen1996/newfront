@@ -134,7 +134,7 @@ typedef GPB_ENUM(InputChannel_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *channelType;
 
-@property(nonatomic, readwrite) BOOL discoverable;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *discoverable;
 
 @end
 
@@ -177,7 +177,7 @@ typedef GPB_ENUM(DBChannel_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *channelType;
 
-@property(nonatomic, readwrite) int32_t createdOn;
+@property(nonatomic, readwrite) double createdOn;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
 

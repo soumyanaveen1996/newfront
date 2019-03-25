@@ -134,7 +134,7 @@ typedef GPB_ENUM(QueueMessage_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *bot;
 
-@property(nonatomic, readwrite) int32_t createdOn;
+@property(nonatomic, readwrite) double createdOn;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
 

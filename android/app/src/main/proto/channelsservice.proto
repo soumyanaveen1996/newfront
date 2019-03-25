@@ -42,7 +42,7 @@ message InputChannel {
     string userDomain = 2;
     string description = 3;
     string channelType = 4;
-    bool discoverable = 5;
+    string discoverable = 5;
 }
 
 message ChannelListResponse {
@@ -53,7 +53,7 @@ message ChannelListResponse {
 message DBChannel {
     string channelId = 1;
     string channelType = 2;
-    int32 createdOn = 3;
+    double createdOn = 3;
     string channelName = 4;
     string userDomain = 5;
     ChannelOwner channelOwner = 6;

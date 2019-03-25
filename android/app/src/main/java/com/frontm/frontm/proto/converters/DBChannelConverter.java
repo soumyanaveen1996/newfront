@@ -18,7 +18,7 @@ public class DBChannelConverter {
         map.putString("discoverable", channel.getDiscoverable());
         map.putString("logo", channel.getLogo());
 
-        map.putInt("createdOn", channel.getCreatedOn());
+        map.putDouble("createdOn", channel.getCreatedOn());
         map.putBoolean("isPlatformChannel", channel.getIsPlatformChannel());
 
         if (channel.hasChannelOwner()) {

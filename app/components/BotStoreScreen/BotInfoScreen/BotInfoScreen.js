@@ -95,7 +95,7 @@ export default class BotInfoScreen extends React.Component {
 
     subscribeToBot(botId, user) {
         return new Promise((resolve, reject) => {
-            UserServiceClient.subscribBot(
+            UserServiceClient.subscribeBot(
                 user.creds.sessionId,
                 { botId: botId },
                 (error, result) => {

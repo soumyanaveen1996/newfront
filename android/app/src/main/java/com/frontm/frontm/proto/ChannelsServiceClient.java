@@ -22,21 +22,6 @@ import com.frontm.commonmessages.proto.Empty;
 import com.frontm.frontm.proto.converters.BooleanResponseConverter;
 import com.frontm.frontm.proto.converters.ChannelListResponseConverter;
 import com.frontm.frontm.proto.converters.CreateChannelResponseConverter;
-import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
-import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
-import com.frontm.frontm.proto.converters.TwilioTokenResponseConverter;
-import com.frontm.frontm.proto.converters.VoipStatusResponseConverter;
-import com.frontm.frontm.proto.converters.VoipToggleResponseConverter;
-import com.frontm.user.proto.SubscribeBotInput;
-import com.frontm.user.proto.SubscribeBotResponse;
-import com.frontm.user.proto.SubscribeDomainInput;
-import com.frontm.user.proto.SubscribeDomainResponse;
-import com.frontm.user.proto.TwilioTokenInput;
-import com.frontm.user.proto.TwilioTokenResponse;
-import com.frontm.user.proto.UserServiceGrpc;
-import com.frontm.user.proto.VoipStatusInput;
-import com.frontm.user.proto.VoipStatusResponse;
-import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
 import java.util.ArrayList;
@@ -173,7 +158,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void subscribe(String sessionId, ReadableMap params, final Callback callback)
     {
-        Log.d("GRPC:::subscribe", sessionId);
+        Log.d("GRPC:::subscribe", params.toString());
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
 
 
@@ -193,7 +178,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 } else {
                     dcBuilder.addAllChannels(new ArrayList<String>());
                 }
-                input.setDomainChannels(i, dcBuilder.build());
+                input.addDomainChannels(dcBuilder.build());
             }
         }
 
@@ -246,7 +231,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 } else {
                     dcBuilder.addAllChannels(new ArrayList<String>());
                 }
-                input.setDomainChannels(i, dcBuilder.build());
+                input.addDomainChannels(dcBuilder.build());
             }
         }
 
@@ -334,7 +319,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 .setUserDomain(params.getString("userDomain"))
                 .setDescription(params.getString("description"))
                 .setChannelType(params.getString("channelType"))
-                .setDiscoverable(params.getBoolean("discoverable"))
+                .setDiscoverable(params.getString("discoverable"))
                 .build();
 
         CreateEditInput input = CreateEditInput.newBuilder()
@@ -377,7 +362,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 .setUserDomain(params.getString("userDomain"))
                 .setDescription(params.getString("description"))
                 .setChannelType(params.getString("channelType"))
-                .setDiscoverable(params.getBoolean("discoverable"))
+                .setDiscoverable(params.getString("discoverable"))
                 .build();
 
         CreateEditInput input = CreateEditInput.newBuilder()

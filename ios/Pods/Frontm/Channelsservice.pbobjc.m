@@ -279,6 +279,7 @@ typedef struct InputChannel__storage_ {
   NSString *userDomain;
   NSString *description_p;
   NSString *channelType;
+  NSString *discoverable;
 } InputChannel__storage_;
 
 // This method is threadsafe because it is initially called
@@ -328,9 +329,9 @@ typedef struct InputChannel__storage_ {
         .dataTypeSpecific.className = NULL,
         .number = InputChannel_FieldNumber_Discoverable,
         .hasIndex = 4,
-        .offset = 5,  // Stored in _has_storage_ to save space.
+        .offset = (uint32_t)offsetof(InputChannel__storage_, discoverable),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeBool,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -426,7 +427,6 @@ typedef struct ChannelListResponse__storage_ {
 
 typedef struct DBChannel__storage_ {
   uint32_t _has_storage_[1];
-  int32_t createdOn;
   NSString *channelId;
   NSString *channelType;
   NSString *channelName;
@@ -436,6 +436,7 @@ typedef struct DBChannel__storage_ {
   NSString *discoverable;
   NSString *logo;
   NSMutableArray *participantsArray;
+  double createdOn;
 } DBChannel__storage_;
 
 // This method is threadsafe because it is initially called
@@ -469,7 +470,7 @@ typedef struct DBChannel__storage_ {
         .hasIndex = 2,
         .offset = (uint32_t)offsetof(DBChannel__storage_, createdOn),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "channelName",

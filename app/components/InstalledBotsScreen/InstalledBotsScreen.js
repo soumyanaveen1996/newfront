@@ -225,7 +225,7 @@ export default class InstalledBotsScreen extends React.Component {
 
     unsubscribeFromBot(botId, user) {
         return new Promise((resolve, reject) => {
-            UserServiceClient.unsubscribBot(
+            UserServiceClient.unsubscribeBot(
                 user.creds.sessionId,
                 { botId: botId },
                 (error, result) => {

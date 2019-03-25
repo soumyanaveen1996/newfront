@@ -189,41 +189,6 @@ class Bot extends events.EventEmitter {
                 }
             });
         });
-
-        // TODO(amal) : remove the call
-        /*
-        return new Promise((resolve, reject) => {
-            Auth.getUser()
-                .then(user => {
-                    if (user) {
-                        let options = {
-                            method: 'POST',
-                            url: `${config.proxy.protocol}${config.proxy.host}${
-                                config.proxy.newProvider
-                            }`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: postReq
-                        };
-                        return Network(options);
-                    }
-                })
-                .then(response => {
-                    if (
-                        response.data.content &&
-                        response.data.content.length > 0
-                    ) {
-                        console.log('installing bot ', response.data);
-
-                        return Promise.all(response.data.content);
-                    } else {
-                        reject(null);
-                    }
-                })
-                .then(resolve)
-                .catch(reject);
-        }); */
     }
 
     static async getCatalog() {

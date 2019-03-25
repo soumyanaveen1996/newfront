@@ -40,8 +40,8 @@ message TimelineContent {
 message TimelineConversation {
     bool closed = 1;
     repeated string participants = 2;
-    int32 createdOn = 3;
-    int32 modifiedOn = 4;
+    double createdOn = 3;
+    double modifiedOn = 4;
     string userDomain = 5;
     string conversationId = 6;
     string createdBy = 7;
@@ -159,7 +159,7 @@ message GetArchivedMessagesResponse {
 message GetArchivedMessagesContent {
     string messageId = 1;
     string contentType = 2;
-    int32 createdOn = 3;
+    double createdOn = 3;
     string createdBy = 4;
     bytes content = 5;
     bytes options = 6;

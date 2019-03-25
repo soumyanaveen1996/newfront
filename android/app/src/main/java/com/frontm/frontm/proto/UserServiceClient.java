@@ -143,11 +143,10 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void updateUserProfile(String sessionId, ReadableMap params, final Callback callback)
     {
-        Log.d("GRPC:::updateUser", sessionId);
+        Log.d("GRPC:::updateUser", params.toString());
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
 
         User.Builder builder = User.newBuilder()
-                .setUserId(params.getString("userId"))
                 .setSearchable(params.getBoolean("searchable"))
                 .setVisible(params.getBoolean("visible"))
                 .setUserName(params.getString("userName"))
@@ -155,12 +154,20 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
         if (params.getMap("phoneNumbers") != null) {
             ReadableMap ph = params.getMap("phoneNumbers");
-            PhoneNumbers numbers = PhoneNumbers.newBuilder()
-                    .setLand(ph.getString("land"))
-                    .setMobile(ph.getString("mobile"))
-                    .setSatellite(ph.getString("satellite"))
-                    .build();
-            builder.setPhoneNumbers(numbers);
+            PhoneNumbers.Builder numbersBuilder = PhoneNumbers.newBuilder();
+
+            if (ph.hasKey("land")) {
+                numbersBuilder.setLand(ph.getString("land"));
+            }
+
+            if (ph.hasKey("mobile")) {
+                numbersBuilder.setMobile(ph.getString("mobile"));
+            }
+
+            if (ph.hasKey("satellite")) {
+                numbersBuilder.setSatellite(ph.getString("satellite"));
+            }
+            builder.setPhoneNumbers(numbersBuilder.build());
         }
 
         User user = builder.build();

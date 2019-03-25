@@ -24,7 +24,7 @@ public class QueueMessageConverter {
         map.putString("userId", message.getUserId());
         map.putString("conversation",message.getConversation());
         map.putString("bot", message.getBot());
-        map.putInt("createdOn", message.getCreatedOn());
+        map.putDouble("createdOn", message.getCreatedOn());
         map.putInt("contentType", message.getContentType());
         map.putString("createdBy", message.getCreatedBy());
         map.putString("messageId", message.getMessageId());
@@ -36,7 +36,7 @@ public class QueueMessageConverter {
             JSONArray json = new JSONArray(message.getDetails().toStringUtf8());
             map.putArray("details", JsonConvert.jsonToReact(json));
         } catch (JSONException e) {
-            Log.d("GRPC:::", e.getStackTrace().toString());
+            Log.d("GRPC:::Error", e.getStackTrace().toString());
         }
 
         return map;

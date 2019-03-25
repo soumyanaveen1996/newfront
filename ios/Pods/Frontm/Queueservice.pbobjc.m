@@ -280,7 +280,6 @@ typedef struct QueueResponse__storage_ {
 
 typedef struct QueueMessage__storage_ {
   uint32_t _has_storage_[1];
-  int32_t createdOn;
   int32_t contentType;
   NSString *userId;
   NSString *conversation;
@@ -290,6 +289,7 @@ typedef struct QueueMessage__storage_ {
   NSString *requestUuid;
   NSData *details;
   NSString *error;
+  double createdOn;
 } QueueMessage__storage_;
 
 // This method is threadsafe because it is initially called
@@ -332,7 +332,7 @@ typedef struct QueueMessage__storage_ {
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(QueueMessage__storage_, createdOn),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "createdBy",

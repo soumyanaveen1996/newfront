@@ -40,7 +40,7 @@ message QueueMessage {
     string userId = 1;
     string conversation = 2;
     string bot = 3;
-    int32 createdOn = 4;
+    double createdOn = 4;
     string createdBy = 5;
     int32 contentType = 6;
     string messageId = 7;
