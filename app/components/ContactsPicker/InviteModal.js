@@ -17,6 +17,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
+import _ from 'lodash';
 
 import { NativeModules } from 'react-native';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
@@ -96,7 +97,11 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
         Auth.getUser()
             .then(user => {
-                return this.grpcInvite(user, this.state.email);
+                if (_.isArray(this.state.email)) {
+                    return this.grpcInvite(user, this.state.email);
+                } else {
+                    return this.grpcInvite(user, [this.state.email]);
+                }
             })
             .then(data => {
                 console.log('sent invite done', data);

@@ -442,6 +442,9 @@ class ContactsPicker extends React.Component {
     }
 
     grpcAddContacts(user, userIds) {
+        if (!userIds || userIds.length === 0) {
+            return;
+        }
         return new Promise((resolve, reject) => {
             ContactsServiceClient.add(
                 user.creds.sessionId,

@@ -61,7 +61,7 @@ const readRemoteLambdaQueue = user => {
     eventEmitter = new NativeEventEmitter(QueueServiceClient);
     const subscription = eventEmitter.addListener('message', message => {
         console.log('GRPC:::Event GRPC message : ', message, message);
-        handleLambdaResponse(res, user);
+        handleLambdaResponse(message, user);
     });
 
     const endSubscribtion = eventEmitter.addListener('end', message => {

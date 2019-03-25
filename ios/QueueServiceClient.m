@@ -47,7 +47,9 @@ RCT_EXPORT_MODULE();
 {
   return @[
            @"message",
-           @"end"
+           @"end",
+           @"sse_message",
+           @"sse_end",
            ];
 
 }
@@ -109,9 +111,9 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetStreamingQueueMessageWithRequest:[Empty new] eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
                            if (done) {
-                             [self sendEventWithName:@"end" body:@{}];
+                             [self sendEventWithName:@"sse_end" body:@{}];
                            } else {
-                             [self sendEventWithName:@"message" body:[response toJSON]];
+                             [self sendEventWithName:@"sse_message" body:[response toJSON]];
                            }
                          }];
 

@@ -14,11 +14,6 @@ import com.frontm.commonmessages.proto.Empty;
 import com.frontm.contacts.proto.EmailIdList;
 import com.frontm.frontm.proto.converters.QueueMessageConverter;
 import com.frontm.frontm.proto.converters.QueueResponseConverter;
-import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
-import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
-import com.frontm.frontm.proto.converters.TwilioTokenResponseConverter;
-import com.frontm.frontm.proto.converters.VoipStatusResponseConverter;
-import com.frontm.frontm.proto.converters.VoipToggleResponseConverter;
 import com.frontm.queue.proto.QueueMessage;
 import com.frontm.queue.proto.QueueResponse;
 import com.frontm.queue.proto.QueueServiceGrpc;
@@ -93,6 +88,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
             @Override
             public void onNext(QueueResponse value) {
                 //callback.invoke(null, new QueueResponseConverter().toResponse(value));
+                Log.d("GRPC:::read queue message", value.toString());
                 sendEvent("message", new QueueResponseConverter().toResponse(value));
             }
 
@@ -128,7 +124,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         stub.getStreamingQueueMessage(input, new StreamObserver<QueueMessage>() {
             @Override
             public void onNext(QueueMessage value) {
-                sendEvent("message", new QueueMessageConverter().toJson(value));
+                Log.d("GRPC:::SSE message", value.toString());
+                sendEvent("sse_message", new QueueMessageConverter().toJson(value));
             }
 
             @Override
@@ -138,7 +135,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onCompleted() {
-                sendEvent("end", null);
+                sendEvent("sse_end", null);
             }
         });
 

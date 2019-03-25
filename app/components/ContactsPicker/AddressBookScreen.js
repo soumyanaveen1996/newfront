@@ -25,6 +25,7 @@ import images from '../../images';
 import I18n from '../../config/i18n/i18n';
 import { Loader } from '../Loader';
 import { NativeModules } from 'react-native';
+import _ from 'lodash';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 export default class AddressBookScreen extends React.Component {
@@ -240,7 +241,11 @@ export default class AddressBookScreen extends React.Component {
         this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
-                return this.grpcInvite(user, this.state.email);
+                if (_.isArray(this.state.email)) {
+                    return this.grpcInvite(user, this.state.email);
+                } else {
+                    return this.grpcInvite(user, [this.state.email]);
+                }
             })
             .then(
                 data => {

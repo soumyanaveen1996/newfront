@@ -188,7 +188,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 if (channelDict.getArray("channels") != null) {
                     ReadableArray cArray = channelDict.getArray("channels");
                     for (int j = 0; j < cArray.size(); ++j) {
-                        dcBuilder.setChannels(j, cArray.getString(j));
+                        dcBuilder.addChannels(cArray.getString(j));
                     }
                 } else {
                     dcBuilder.addAllChannels(new ArrayList<String>());
@@ -241,7 +241,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 if (channelDict.getArray("channels") != null) {
                     ReadableArray cArray = channelDict.getArray("channels");
                     for (int j = 0; j < cArray.size(); ++j) {
-                        dcBuilder.setChannels(j, cArray.getString(j));
+                        dcBuilder.addChannels(cArray.getString(j));
                     }
                 } else {
                     dcBuilder.addAllChannels(new ArrayList<String>());
@@ -291,7 +291,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
         if (params.getArray("newUserIds") != null) {
             ReadableArray userIds = params.getArray("newUserIds");
             for (int i = 0; i < userIds.size(); ++i) {
-                input.setNewUserIds(i, userIds.getString(i));
+                input.addNewUserIds(userIds.getString(i));
             }
         }
 
@@ -368,12 +368,11 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void edit(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void edit(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::edit", sessionId);
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
 
-        InputChannel  channel = InputChannel.newBuilder()
+        InputChannel channel = InputChannel.newBuilder()
                 .setChannelName(params.getString("channelName"))
                 .setUserDomain(params.getString("userDomain"))
                 .setDescription(params.getString("description"))
@@ -385,7 +384,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 .setChannel(channel)
                 .build();
 
-        Metadata header=new Metadata();
+        Metadata header = new Metadata();
         Metadata.Key<String> key =
                 Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
@@ -410,15 +409,4 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
-
 }

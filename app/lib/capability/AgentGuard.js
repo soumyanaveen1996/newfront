@@ -30,7 +30,7 @@ export default class AgentGuard {
                 if (user) {
                     AgentGuardServiceClient.execute(
                         user.creds.sessionId,
-                        userDetails,
+                        params,
                         (err, result) => {
                             if (err) {
                                 reject(new Error('Unknown error'));

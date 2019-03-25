@@ -376,7 +376,7 @@ export default class Contact {
                 .catch(reject);
         });
 
-    static getUserDetails = userId => {
+    static getUserDetails = (user, userId) => {
         return new Promise((resolve, reject) => {
             UserServiceClient.getUserDetails(
                 user.creds.sessionId,
@@ -401,7 +401,7 @@ export default class Contact {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        return Contact.getUserDetails(userId);
+                        return Contact.getUserDetails(user, userId);
                     }
                 })
                 .then(response => {

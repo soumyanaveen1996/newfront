@@ -111,7 +111,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
-                input.setUserIds(i, userIds.getString(i));
+                input.addUserIds(userIds.getString(i));
             }
         }
 
@@ -153,7 +153,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
-                input.setUserIds(i, userIds.getString(i));
+                input.addUserIds(userIds.getString(i));
             }
         }
 
@@ -194,7 +194,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
-                input.setUserIds(i, userIds.getString(i));
+                input.addUserIds(userIds.getString(i));
             }
         }
 
@@ -236,10 +236,9 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         if (params.getArray("emailIds") != null) {
             ReadableArray emailIds = params.getArray("emailIds");
             for(int i = 0; i < emailIds.size(); ++i) {
-                input.setEmailIds(i, emailIds.getString(i));
+                input.addEmailIds(emailIds.getString(i));
             }
         }
-
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =

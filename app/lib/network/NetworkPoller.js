@@ -80,18 +80,25 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
+        let user = await Auth.getUser();
         const QueueServiceClient = NativeModules.QueueServiceClient;
         eventEmitter = new NativeEventEmitter(QueueServiceClient);
-        this.grpcSubscription = eventEmitter.addListener('message', message => {
-            console.log('GRPC:::SSE GRPC message : ', message, message);
-            MessageQueue.push(message);
-        });
+        this.grpcSubscription = eventEmitter.addListener(
+            'sse_message',
+            message => {
+                console.log('GRPC:::SSE GRPC message : ', message, message);
+                MessageQueue.push(message);
+            }
+        );
 
-        this.grpcEndSubscription = eventEmitter.addListener('end', message => {
-            console.log('GRPC:::SSE End GRPC message : ', message, message);
-            this.unsubscribeFromServerEvents();
-            this.subscribeToServerEvents();
-        });
+        this.grpcEndSubscription = eventEmitter.addListener(
+            'sse_end',
+            message => {
+                console.log('GRPC:::SSE End GRPC message : ', message, message);
+                this.unsubscribeFromServerEvents();
+                this.subscribeToServerEvents();
+            }
+        );
 
         QueueServiceClient.startChatSSE(user.creds.sessionId);
     };

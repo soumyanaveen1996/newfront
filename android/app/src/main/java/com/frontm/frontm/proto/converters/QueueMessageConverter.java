@@ -1,5 +1,7 @@
 package com.frontm.frontm.proto.converters;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -9,14 +11,15 @@ import com.frontm.frontm.proto.JsonConvert;
 import com.frontm.queue.proto.QueueMessage;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.nio.charset.Charset;
 
 public class QueueMessageConverter {
 
     public WritableMap toJson(QueueMessage message) {
-
-
         WritableMap map = Arguments.createMap();
         map.putString("userId", message.getUserId());
         map.putString("conversation",message.getConversation());
@@ -27,12 +30,13 @@ public class QueueMessageConverter {
         map.putString("messageId", message.getMessageId());
         map.putString("requestUuid", message.getRequestUuid());
         map.putString("error", message.getError());
+        map.putString("detailsString", message.getDetails().toStringUtf8());
 
         try {
-            JSONObject json = new JSONObject(message.getDetails().toString());
-            map.putMap("details", JsonConvert.jsonToReact(json));
+            JSONArray json = new JSONArray(message.getDetails().toStringUtf8());
+            map.putArray("details", JsonConvert.jsonToReact(json));
         } catch (JSONException e) {
-
+            Log.d("GRPC:::", e.getStackTrace().toString());
         }
 
         return map;

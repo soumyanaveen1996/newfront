@@ -20,7 +20,7 @@ public class FindResponseConverter {
                 MatchedUser user = response.getContent(i);
                 WritableMap m = Arguments.createMap();
                 m.putString("userId", user.getUserId());
-                m.putString("userName", user.getUserId());
+                m.putString("userName", user.getUserName());
 
                 array.pushMap(m);
             }
