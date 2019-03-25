@@ -24,6 +24,8 @@ import ProfileImage from '../ProfileImage';
 import images from '../../images';
 import I18n from '../../config/i18n/i18n';
 import { Loader } from '../Loader';
+import { NativeModules } from 'react-native';
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -209,31 +211,40 @@ export default class AddressBookScreen extends React.Component {
         }
     };
 
+    grpcInvite(user, emailIds) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.invite(
+                user.creds.sessionId,
+                { emailIds },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     sendInvite() {
         // console.log('send invitation');
         this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
-                const options = {
-                    method: 'post',
-                    url:
-                        config.proxy.protocol +
-                        config.proxy.host +
-                        '/contactsActions',
-                    headers: {
-                        sessionId: user.creds.sessionId
-                    },
-                    data: {
-                        capability: 'InviteUsers',
-                        botId: 'onboarding-bot',
-                        emailIds: this.state.email
-                    }
-                };
-                return Network(options);
+                return this.grpcInvite(user, this.state.email);
             })
             .then(
                 data => {
-                    if (data.status === 200 && data.data.error === 0) {
+                    if (ata.data.error === 0) {
                         console.log('invitation sent');
                         this.setState({ loading: false }, () => {
                             if (!this.state.loading) {

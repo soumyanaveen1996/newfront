@@ -12,8 +12,8 @@ import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
 import { NativeModules } from 'react-native';
-const UserServiceClient = NativeModules.UserServiceClient;
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
+const UserServiceClient = NativeModules.UserServiceClient;
 
 const R = require('ramda');
 

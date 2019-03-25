@@ -16,6 +16,9 @@ import { ProfileImage } from '../ProfileImage';
 import Images from '../../config/images';
 import _ from 'lodash';
 
+import { NativeModules } from 'react-native';
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
+
 export default class ContactCard extends React.Component {
     constructor(props) {
         super(props);
@@ -87,6 +90,30 @@ export default class ContactCard extends React.Component {
         this.props.openModalWithContent(modalContent);
     }
 
+    grpcAddContacts(user, userIds) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.add(
+                user.creds.sessionId,
+                { userIds },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     addContact() {
         this.props.hideChatModal();
         Contact.addContacts({
@@ -97,22 +124,7 @@ export default class ContactCard extends React.Component {
                 return Auth.getUser();
             })
             .then(user => {
-                const options = {
-                    method: 'post',
-                    url:
-                        config.proxy.protocol +
-                        config.proxy.host +
-                        '/contactsActions',
-                    headers: {
-                        sessionId: user.creds.sessionId
-                    },
-                    data: {
-                        capability: 'AddContact',
-                        botId: 'onboarding-bot',
-                        users: [this.props.id]
-                    }
-                };
-                return Network(options);
+                return this.grpcAddContacts(user, [this.props.id]);
             });
     }
 

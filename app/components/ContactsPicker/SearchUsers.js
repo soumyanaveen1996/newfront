@@ -33,6 +33,9 @@ import Icon from 'react-native-vector-icons/Feather';
 import { Auth, Network } from '../../lib/capability';
 import { Loader } from '../Loader';
 
+import { NativeModules } from 'react-native';
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
+
 export default class SearchUsers extends React.Component {
     constructor(props) {
         super(props);
@@ -67,26 +70,35 @@ export default class SearchUsers extends React.Component {
         );
     }
 
+    grpcSearch(user, queryString) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.find(
+                user.creds.sessionId,
+                { queryString },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     search() {
         this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
-                const options = {
-                    method: 'post',
-                    url:
-                        config.proxy.protocol +
-                        config.proxy.host +
-                        '/contactsActions',
-                    headers: {
-                        sessionId: user.creds.sessionId
-                    },
-                    data: {
-                        capability: 'FindContacts',
-                        botId: 'onboarding-bot',
-                        queryString: this.state.userFilter
-                    }
-                };
-                return Network(options);
+                return this.grpcSearch(user, this.state.userFilter);
             })
             .then(res => {
                 this.setState({

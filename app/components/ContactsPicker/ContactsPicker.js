@@ -62,6 +62,9 @@ import ProfileImage from '../ProfileImage';
 import { MyProfileImage } from '../ProfileImage';
 import config from '../../config/config';
 
+import { NativeModules } from 'react-native';
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
+
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -438,6 +441,30 @@ class ContactsPicker extends React.Component {
         });
     }
 
+    grpcAddContacts(user, userIds) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.add(
+                user.creds.sessionId,
+                { userIds },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     addContacts(selectedContacts) {
         return new Promise((resolve, reject) => {
             Contact.addContacts(selectedContacts)
@@ -445,24 +472,12 @@ class ContactsPicker extends React.Component {
                     return Auth.getUser();
                 })
                 .then(user => {
-                    const options = {
-                        method: 'post',
-                        url:
-                            config.proxy.protocol +
-                            config.proxy.host +
-                            '/contactsActions',
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            capability: 'AddContact',
-                            botId: 'onboarding-bot',
-                            users: _.map(selectedContacts, contact => {
-                                return contact.userId;
-                            })
-                        }
-                    };
-                    return Network(options);
+                    return this.grpcAddContacts(
+                        user,
+                        _.map(selectedContacts, contact => {
+                            return contact.userId;
+                        })
+                    );
                 })
                 .then(() => {
                     resolve();

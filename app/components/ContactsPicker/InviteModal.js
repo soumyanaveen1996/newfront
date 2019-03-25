@@ -18,6 +18,9 @@ import SystemBot from '../../lib/bot/SystemBot';
 import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 
+import { NativeModules } from 'react-native';
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
+
 export default class InviteModal extends React.Component {
     constructor(props) {
         super(props);
@@ -59,6 +62,30 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
     }
 
+    grpcInvite(user, emailIds) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.invite(
+                user.creds.sessionId,
+                { emailIds },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     sendInvite() {
         let reg = /\S+@\S+/;
         if (!reg.test(this.state.email)) {
@@ -69,22 +96,7 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
         Auth.getUser()
             .then(user => {
-                const options = {
-                    method: 'post',
-                    url:
-                        config.proxy.protocol +
-                        config.proxy.host +
-                        '/contactsActions',
-                    headers: {
-                        sessionId: user.creds.sessionId
-                    },
-                    data: {
-                        capability: 'InviteUsers',
-                        botId: 'onboarding-bot',
-                        emailIds: this.state.email
-                    }
-                };
-                return Network(options);
+                return this.grpcInvite(user, this.state.email);
             })
             .then(data => {
                 console.log('sent invite done', data);
