@@ -28,6 +28,7 @@ import MessageQuota from './MessageQuota';
 import UpdateCallQuota from './CallQuota';
 import RemoteBotInstall from '../RemoteBotInstall';
 import InAppPurchase from './InAppPurchase';
+import OfflineMap from './OfflineMap';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
@@ -62,5 +63,6 @@ export {
     UpdateCallQuota,
     RemoteBotInstall,
     InAppPurchase,
-    AgentGuard
+    AgentGuard,
+    OfflineMap
 };

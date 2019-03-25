@@ -9,7 +9,8 @@ import {
     Platform,
     Text,
     TouchableOpacity,
-    Image
+    Image,
+    PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -55,6 +56,28 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        this.gettingAllContactData();
+                    } else {
+                        this.refresh([]);
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            this.gettingAllContactData();
+        }
+
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
             this.props.summary
@@ -73,7 +96,6 @@ class NewCallContacts extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            // this.refresh()
             Contact.getAddedContacts().then(contacts => {
                 this.refresh(contacts);
             });
@@ -88,6 +110,12 @@ class NewCallContacts extends React.Component {
             });
         }
     }
+
+    gettingAllContactData = () => {
+        Contact.getAddedContacts().then(contacts => {
+            this.refresh(contacts);
+        });
+    };
 
     static onEnter() {
         const user = Store.getState().user;
@@ -176,7 +204,7 @@ class NewCallContacts extends React.Component {
 
     renderItem(info) {
         const contact = info.item;
-        const Image = (
+        const image = (
             <ProfileImage
                 uuid={contact.id}
                 placeholder={Images.user_image}
@@ -190,7 +218,7 @@ class NewCallContacts extends React.Component {
                 key={contact.id}
                 item={contact}
                 title={contact.name}
-                image={Image}
+                image={image}
                 id={contact.id}
                 onItemPressed={this.onContactSelected}
                 email={contact.emails[0].email}
@@ -198,8 +226,6 @@ class NewCallContacts extends React.Component {
         );
     }
     onContactSelected = contact => {
-        console.log('Call This Guy', contact);
-
         if (contact.phoneNumbers) {
             this.setContactVisible(true, contact);
             return;
@@ -221,6 +247,10 @@ class NewCallContacts extends React.Component {
             viewOffset: SECTION_HEADER_HEIGHT
         });
     }
+
+    onClickDialpad = () => {
+        Actions.dialCall();
+    };
 
     renderContactsList() {
         const sectionTitles = _.map(
@@ -259,7 +289,6 @@ class NewCallContacts extends React.Component {
     }
 
     makeVoipCall = () => {
-        console.log(this.state.contactSelected);
         const { contactSelected } = this.state;
         if (!contactSelected) {
             alert('Sorry, cannot make call!');
@@ -282,7 +311,6 @@ class NewCallContacts extends React.Component {
     };
 
     makePstnCall = number => {
-        console.log(this.state.contactSelected);
         const { contactSelected } = this.state;
         if (!contactSelected) {
             alert('Sorry, cannot make call!');
@@ -307,6 +335,27 @@ class NewCallContacts extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     {this.renderContactsList()}
+                    <TouchableOpacity
+                        style={{
+                            position: 'absolute',
+                            width: 160,
+                            height: 40,
+                            backgroundColor: 'rgba(47,199,111,1)',
+                            borderRadius: 20,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            bottom: '5%',
+                            alignSelf: 'center'
+                        }}
+                        onPress={() => this.onClickDialpad()}
+                    >
+                        <Image
+                            style={{ width: 11, height: 16, marginRight: 10 }}
+                            source={require('../../images/contact/tab-dialpad-icon-active.png')}
+                        />
+                        <Text style={{ color: '#fff' }}>DialPad</Text>
+                    </TouchableOpacity>
                     <Modal
                         isVisible={this.state.contactVisible}
                         onBackdropPress={() => {

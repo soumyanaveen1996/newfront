@@ -60,6 +60,10 @@ export default class InviteModal extends React.Component {
     }
 
     sendInvite() {
+        let reg = /\S+@\S+/;
+        if (!reg.test(this.state.email)) {
+            return;
+        }
         Keyboard.dismiss();
 
         this.textInput.clear();

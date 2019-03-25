@@ -142,7 +142,8 @@ class MyProfileScreen extends React.Component {
         let detailObj = {
             emailAddress: this.state.emailAddress[0],
             searchable: this.state.searchable,
-            visible: this.state.visible
+            visible: this.state.visible,
+            userName: this.state.myName
         };
 
         let userDetails = {
@@ -405,7 +406,7 @@ class MyProfileScreen extends React.Component {
                         'You have disabled access to media library. Please enable access to upload a profile picture'
                     );
                 } else {
-                    console.log('file url upload image ', fileUrl);
+                    // console.log('file url upload image ', fileUrl);
                     this.setState(
                         {
                             loading: false,
@@ -430,7 +431,7 @@ class MyProfileScreen extends React.Component {
                 {
                     text: 'OK',
                     onPress: () => {
-                        console.log('image changed');
+                        // console.log('image changed');
                     }
                 }
             ],

@@ -48,7 +48,10 @@ import { ChannelsList } from '../components/ChannelsList';
 import ChannelsFilter from '../components/ChannelsList/ChannelsFilter';
 import NewChannels from '../components/ChannelsList/NewChannels';
 import AddContacts from '../components/ChannelsList/AddContacts';
+import ManageContacts from '../components/ChannelsList/ManageContacts';
+import RequestsScreen from '../components/ChannelsList/RequestsScreen';
 import SelectTeam from '../components/ChannelsList/SelectTeam';
+import ChannelAdminScreen from '../components/ChannelsList/ChannelAdminScreen';
 import ROUTER_SCENE_KEYS from './RouterSceneKeyConstants';
 import { Phone } from '../components/Phone';
 import { Dialler } from '../components/Dialler';
@@ -68,6 +71,9 @@ import BotInfoScreen from '../components/BotStoreScreen/BotInfoScreen/BotInfoScr
 import AddressBookScreen from '../components/ContactsPicker/AddressBookScreen';
 import { Multiselection } from '../components/Multiselection';
 import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
+import SetChannelOwner from '../components/ChannelsList/SetChannelOwner';
+import NewPhoneBookContacts from '../components/NewChat/NewPhoneBookContacts';
+import DialPadButton from '../components/NewChat/DialPadButton';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -219,9 +225,7 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Chat"
-                                        navBarButtonColor={{
-                                            color: 'rgba(22,175,239,1)'
-                                        }}
+                                        navBarButtonColor="rgba(22, 175, 239, 1)"
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
                                     >
@@ -299,9 +303,7 @@ class MainRouter extends React.Component {
                                         tabBarPosition="top"
                                         showIcon={true}
                                         title="New Call"
-                                        navBarButtonColor={{
-                                            color: 'rgb(22,175,239)'
-                                        }}
+                                        navBarButtonColor="rgb(22,175,239)"
                                         titleStyle={{ color: 'black' }}
 
                                         // hideNavBar
@@ -320,32 +322,38 @@ class MainRouter extends React.Component {
                                                     ROUTER_SCENE_KEYS.contactsCall
                                                 }
                                                 component={NewCallContacts}
-                                                // title={I18n.t('Contacts')}
                                                 hideNavBar={true}
                                                 type="push"
-                                                // back
                                             />
                                         </Scene>
                                         <Scene
-                                            key={ROUTER_SCENE_KEYS.dialCallMenu}
-                                            titleScreen={I18n.t('Dial')}
+                                            key={
+                                                ROUTER_SCENE_KEYS.phoneContactsCallMenu
+                                            }
+                                            titleScreen={I18n.t(
+                                                'Phone_contacts'
+                                            )}
                                             imageSource={require('../images/contact/tab-dialpad-icon-small.png')}
                                             imageSelected={require('../images/contact/tab-dialpad-icon-active-small.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene
-                                                key={ROUTER_SCENE_KEYS.dialCall}
-                                                component={NewCallDialler}
-                                                // title={I18n.t('Channels')}
+                                                key={
+                                                    ROUTER_SCENE_KEYS.phoneContactsCall
+                                                }
+                                                component={NewPhoneBookContacts}
                                                 type="push"
                                                 hideNavBar={true}
-                                                // back
                                             />
                                         </Scene>
                                     </Tabs>
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.botChat}
                                         component={BotChat}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.dialCall}
+                                        component={NewCallDialler}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.peopleChat}
@@ -383,10 +391,18 @@ class MainRouter extends React.Component {
                                         component={ChannelsFilter}
                                     />
                                     <Scene
+                                        key={
+                                            ROUTER_SCENE_KEYS.channelAdminScreen
+                                        }
+                                        title="Edit Channel"
+                                        component={ChannelAdminScreen}
+                                    />
+                                    <Scene
                                         key={ROUTER_SCENE_KEYS.newChannels}
-                                        title="Filter"
+                                        title="New Channel"
                                         component={NewChannels}
                                     />
+
                                     <Scene
                                         key={
                                             ROUTER_SCENE_KEYS.addressBookScreen
@@ -398,6 +414,21 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.addParticipants}
                                         title={I18n.t('Add_participants')}
                                         component={AddContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.manageContacts}
+                                        title="Manage contacts"
+                                        component={ManageContacts}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.requestsScreen}
+                                        title={I18n.t('Awaiting authorization')}
+                                        component={RequestsScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.setChannelOwner}
+                                        title={I18n.t('Transfer ownership')}
+                                        component={SetChannelOwner}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.selectTeam}

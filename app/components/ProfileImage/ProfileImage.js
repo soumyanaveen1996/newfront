@@ -99,7 +99,7 @@ export default class ProfileImage extends React.Component {
     }
 
     render() {
-        console.log(this.state.source ? this.state.source.uri : 'Empty');
+        // console.log(this.state.source ? this.state.source.uri : 'Empty');
         return (
             <View>
                 <Image

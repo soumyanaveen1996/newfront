@@ -143,6 +143,8 @@ class MainScreen extends React.Component {
                 ]}
             >
                 <TouchableOpacity
+                    accessibilityLabel="Chat Button"
+                    testID="chat-button"
                     style={MainScreenStyles.headerRightChat}
                     onPress={() =>
                         Actions.tabBarChat({
@@ -151,11 +153,15 @@ class MainScreen extends React.Component {
                     }
                 >
                     <Image
+                        accessibilityLabel="Chat Icon"
+                        testID="chat-icon"
                         style={{ width: 25, height: 25 }}
                         source={require('../../images/tabbar-contacts/chat-good.png')}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
+                    accessibilityLabel="Call Button"
+                    testID="call-button"
                     style={{ width: 35, height: 35, marginRight: 10 }}
                     onPress={() =>
                         Actions.tabBarCall({
@@ -163,7 +169,11 @@ class MainScreen extends React.Component {
                         })
                     }
                 >
-                    <View style={MainScreenStyles.headerRightCall}>
+                    <View
+                        style={MainScreenStyles.headerRightCall}
+                        accessibilityLabel="Call Icon"
+                        testID="call-icon"
+                    >
                         {Icons.callW()}
                     </View>
                 </TouchableOpacity>

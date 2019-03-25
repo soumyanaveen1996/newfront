@@ -85,7 +85,7 @@ export function sessionStartFormattedDate(date) {
  * @return new uri to the copied file
  */
 export async function copyFileAsync(uri, directory, rename) {
-    console.log('In copyFileAsync : ', uri, directory);
+    // console.log('In copyFileAsync : ', uri, directory);
     const exists = await RNFS.exists(directory);
     if (!exists) {
         await RNFS.mkdir(directory);
@@ -102,7 +102,7 @@ export async function copyFileAsync(uri, directory, rename) {
         await RNFS.unlink(toUri);
     }
     await RNFS.copyFile(uri, toUri);
-    console.log('In copyFileAsync : ', toUri);
+    // console.log('In copyFileAsync : ', toUri);
     return toUri;
 }
 
@@ -305,8 +305,8 @@ export async function copyInitialBotsFromAssetsDirectory(overwrite) {
 }
 
 export async function copyIntialBots(overwrite) {
-    console.log('Main Bundle Path : ', RNFS.MainBundlePath);
-    console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
+    // console.log('Main Bundle Path : ', RNFS.MainBundlePath);
+    // console.log('Documents Directory Path : ', RNFS.DocumentDirectoryPath);
 
     if (Platform.OS === 'android') {
         copyInitialBotsFromAssetsDirectory(overwrite);
@@ -401,13 +401,14 @@ export function requestReadContactsPermission() {
 }
 
 export function newBotConversationId(userId, botId) {
-    if (SystemBot.isSystemBot(botId) || !userId) {
-        return UUID();
-    } else {
-        let ids = [userId, botId];
-        const text = _.join(_.sortBy(ids), '-');
-        return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
-    }
+    let ids = [userId, botId];
+    const text = _.join(_.sortBy(ids), '-');
+    return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+
+    // if (SystemBot.isSystemBot(botId) || !userId) {
+    //     return UUID();
+    // } else {
+    // }
 }
 
 export function objectToQueryString(obj) {

@@ -20,7 +20,7 @@ class MyProfileImage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log('In Profile Image>>>>>>>>>>>>>', this.props.user.upload);
+        console.log('In Profile Image: ', this.props.user.upload);
         const uploadNumber = this.props.user.upload;
         this.mounted = true;
         const user = await Auth.getUser();
@@ -104,7 +104,7 @@ class MyProfileImage extends React.Component {
     }
 
     render() {
-        console.log(this.state.source ? this.state.source.uri : 'Empty');
+        // console.log(this.state.source ? this.state.source.uri : 'Empty');
         return (
             <View>
                 <Image

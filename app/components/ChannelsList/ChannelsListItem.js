@@ -18,6 +18,8 @@ import { MessageDAO } from '../../lib/persistence';
 import { Auth } from '../../lib/capability';
 import moment from 'moment';
 import ActionSheet from '@yfuks/react-native-action-sheet';
+import { Actions } from 'react-native-router-flux';
+import _ from 'lodash';
 
 const subtitleNumberOfLines = 2;
 
@@ -32,14 +34,30 @@ export default class ChannelsListItem extends React.Component {
         this.state = {
             status: ChannelsListItemStates.NONE,
             user: null,
-            loading: false
+            loading: false,
+            isAdmin: false
         };
+    }
+
+    async componentDidMount() {
+        const admins = await Channel.getAdmins(
+            this.props.channel.channelName,
+            this.props.channel.userDomain
+        );
+        const isAdmin = _.find(admins, adm => {
+            return adm.userId === this.props.user.userId;
+        });
+        if (isAdmin) {
+            this.setState({ isAdmin: true });
+        } else {
+            this.setState({ isAdmin: false });
+        }
     }
 
     unsubscribeChannel() {}
 
     editChannel = channel => {
-        this.props.onChannelEdit(channel);
+        this.props.onChannelEdit(channel, this.onUnsubscribeChannel);
     };
 
     onItemPressed() {
@@ -48,38 +66,41 @@ export default class ChannelsListItem extends React.Component {
         }
     }
 
-    onUnsubscribeChannel = () => {
-        console.log('unsubscribe', this.props.channel);
-        this.setState({
-            loading: true
-        });
-
-        this.props.wait(true);
-
-        const { channel } = this.props;
-
-        Channel.unsubscribeChannel(channel.channelName, channel.userDomain)
-            .then(() => {
-                return Conversation.deleteChannelConversation(
-                    channel.channelId
-                );
-            })
-            .then(() => {
-                return MessageDAO.deleteBotMessages(channel.channelId);
-            })
-            .then(() => {
-                this.props.onUnsubscribe(this.props.channel);
-                this.setState({
-                    loading: false
-                });
-                this.props.wait(false);
-            })
-            .catch(error => {
-                this.props.onUnsubscribeFailed(this.props.channel);
-                this.setState({ loading: false });
-                this.props.wait(false);
+    onUnsubscribeChannel = () =>
+        new Promise((resolve, reject) => {
+            console.log('unsubscribe', this.props.channel);
+            this.setState({
+                loading: true
             });
-    };
+
+            this.props.wait(true);
+
+            const { channel } = this.props;
+
+            Channel.unsubscribeChannel(channel.channelName, channel.userDomain)
+                .then(() => {
+                    return Conversation.deleteChannelConversation(
+                        channel.channelId
+                    );
+                })
+                .then(() => {
+                    return MessageDAO.deleteBotMessages(channel.channelId);
+                })
+                .then(() => {
+                    this.props.onUnsubscribe(this.props.channel);
+                    this.setState({
+                        loading: false
+                    });
+                    this.props.wait(false);
+                })
+                .then(resolve)
+                .catch(error => {
+                    this.props.onUnsubscribeFailed(this.props.channel);
+                    this.setState({ loading: false });
+                    this.props.wait(false);
+                    reject(error);
+                });
+        });
 
     onsubscribeChannel = (channel, open = false) => {
         console.log('subscribe', channel);
@@ -142,36 +163,34 @@ export default class ChannelsListItem extends React.Component {
     renderRightArea(channel, userId) {
         const isOwner = channel.ownerId === userId ? true : false;
 
-        if (isOwner) {
+        if (this.state.isAdmin) {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}
                     onPress={() => {
-                        // this.ActionSheetOwner.show()
-                        ActionSheet.showActionSheetWithOptions(
-                            {
-                                options: ['Edit', 'Cancel'],
-                                cancelButtonIndex: 1,
-                                destructiveButtonIndex: 1,
-                                tintColor: 'blue'
-                            },
-                            buttonIndex => {
-                                if (
-                                    buttonIndex !== undefined &&
-                                    buttonIndex === 0
-                                ) {
-                                    this.editChannel(channel);
-                                }
-                            }
-                        );
+                        // ActionSheet.showActionSheetWithOptions(
+                        //     {
+                        //         options: ['Edit', 'Cancel'],
+                        //         cancelButtonIndex: 1,
+                        //         destructiveButtonIndex: 1,
+                        //         tintColor: 'blue'
+                        //     },
+                        //     buttonIndex => {
+                        //         if (
+                        //             buttonIndex !== undefined &&
+                        //             buttonIndex === 0
+                        //         ) {
+                        //             this.editChannel(channel);
+                        //         }
+                        //     }
+                        // );
+                        this.editChannel(channel);
                     }}
                 >
-                    {Icons.more()}
+                    {Icons.editChannel()}
                 </TouchableOpacity>
             );
-        }
-
-        if (channel.subcription === 'true') {
+        } else if (channel.subcription === 'true') {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}
@@ -198,8 +217,7 @@ export default class ChannelsListItem extends React.Component {
                     {Icons.more()}
                 </TouchableOpacity>
             );
-        }
-        if (channel.subcription === 'false') {
+        } else {
             return (
                 <TouchableOpacity
                     style={styles.rightContainer}

@@ -88,9 +88,19 @@ import { Form2Message } from '../Form2Message';
 import { formStatus } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
-import { setCurrentConversationId } from '../../redux/actions/UserActions';
+import {
+    setCurrentConversationId,
+    setOpenMap
+} from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
+import { MarkerIconTypes } from '../MapView/config';
+import ReduxStore from '../../redux/store/configureStore';
+import {
+    SearchBox,
+    SearchBoxUserAction,
+    SearchBoxBotAction
+} from './SearchBox';
 
 const R = require('ramda');
 
@@ -164,8 +174,8 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        UIManager.setLayoutAnimationEnabledExperimental &&
-            UIManager.setLayoutAnimationEnabledExperimental(true);
+        // UIManager.setLayoutAnimationEnabledExperimental &&
+        //     UIManager.setLayoutAnimationEnabledExperimental(true);
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -183,9 +193,14 @@ class ChatBotScreen extends React.Component {
             sliderClosed: false,
             chatModalContent: {},
             isModalVisible: false,
-            showOptions: false
+            showOptions: false,
+            showSearchBox: false,
+            searchBoxData: null
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
+        this.chatState = {
+            updatingChat: false
+        };
         this.scrollToBottom = false;
         this.firstUnreadIndex = -1;
 
@@ -198,6 +213,7 @@ class ChatBotScreen extends React.Component {
         this.dce_bot = dce.bot(this.bot, this.botContext);
         this.user = null;
         this.conversationContext = null;
+        this.sliderPreviousState = false;
     }
 
     loadBot = async () => {
@@ -359,6 +375,11 @@ class ChatBotScreen extends React.Component {
         this.keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             this.keyboardDidShow.bind(this)
+        );
+
+        this.keyboardWillHideListener = Keyboard.addListener(
+            'keyboardWillHide',
+            this.keyboardWillHide.bind(this)
         );
 
         this.keyboardDidHideListener = Keyboard.addListener(
@@ -545,6 +566,9 @@ class ChatBotScreen extends React.Component {
         if (this.keyboardDidShowListener) {
             this.keyboardDidShowListener.remove();
         }
+        if (this.keyboardWillHideListener) {
+            this.keyboardWillHideListener.remove();
+        }
         if (this.keyboardDidHideListener) {
             this.keyboardDidHideListener.remove();
         }
@@ -604,32 +628,59 @@ class ChatBotScreen extends React.Component {
     }
 
     keyboardWillShow = () => {
-        if (this.slider) {
-            this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true });
-        } else {
-            this.setState({ sliderClosed: false });
-        }
+        //     console.log('>>>>>WS')
+        //     console.log(this.sliderPreviousState, '>>>>>>WS')
+        //     if (this.slider) {
+        //         this.slider.close(undefined, true);
+        //         this.setState({ sliderClosed: true });
+        //     } else {
+        //         this.setState({ sliderClosed: false });
+        //     }
+        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        // this.sliderPreviousState = this.state.showSlider || false;
+        // this.setState({ showOptions: false, showSlider: false },this.scrollToBottomIfNeeded())
     };
 
     keyboardDidShow = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        this.sliderPreviousState = this.state.showSlider || false;
-        this.scrollToBottomIfNeeded();
-        if (Platform.OS === 'android' && this.slider) {
-            this.slider.close(undefined, true);
-            this.setState({ sliderClosed: true, showOptions: false });
-        } else {
-            this.setState({ sliderClosed: false, showOptions: false });
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
         }
+        // if (Platform.OS === 'android' && this.slider) {
+        //     this.slider.close(undefined, true);
+        //     this.setState({ sliderClosed: true, showOptions: false });
+        // } else {
+        //     this.setState({ sliderClosed: false, showOptions: false });
+        // }
+        this.setState(
+            { showOptions: false, showSlider: false },
+            this.scrollToBottomIfNeeded()
+        );
     };
 
-    keyboardDidHide = () => {
-        this.scrollToBottomIfNeeded();
-        this.setState({ showSlider: this.sliderPreviousState || false });
+    keyboardWillHide = () => {
+        //     console.log(this.sliderPreviousState, '>>>>>>WH')
+        // this.scrollToBottomIfNeeded();
+        // this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
+        // console.log(this.sliderPreviousState, '>>>>>>')
+        // if (!this.state.showOptions) {
+        //     this.setState({ showSlider: this.sliderPreviousState || false })
+        // }
+    };
+
+    keyboardDidHide = () => {
+        this.setState(
+            {
+                showSlider: this.state.showOptions
+                    ? false
+                    : this.sliderPreviousState
+            },
+            this.scrollToBottomIfNeeded()
+        );
     };
 
     handleMessageEvents(event) {
@@ -739,7 +790,21 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS
         ) {
-            this.updateSmartSuggestions(message);
+            if (this.chatState.updatingChat) {
+                this.chatState.nextSmartSuggestion = message;
+            } else {
+                this.updateSmartSuggestions(message);
+            }
+        } else if (
+            message.getMessageType() ===
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
+        ) {
+            const data = message.getMessage();
+            if (data.action !== SearchBoxBotAction.CLOSE) {
+                this.setState({ showSearchBox: true, searchBoxData: data });
+            } else {
+                this.setState({ showSearchBox: false, searchBoxData: null });
+            }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
@@ -765,10 +830,45 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
         ) {
             this.closeForm(message.getMessage().formId);
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
+        ) {
+            let messageMap = message.getMessage();
+            let mapOptions = message.getMessageOptions();
+            let mapStore = ReduxStore.getState().user.openMap;
+            const storeIndex = _.findIndex(mapStore, map => {
+                return map.options.mapId === mapOptions.mapId;
+            });
+            if (storeIndex !== -1) {
+                mapStore[storeIndex] = { map: messageMap, options: mapOptions };
+                Store.dispatch(setOpenMap(mapStore));
+                this.persistMapMessage(messageMap, mapOptions, message);
+            } else {
+                mapStore.push({ map: messageMap, options: mapOptions });
+                Store.dispatch(setOpenMap(mapStore));
+                this.persistMapMessage(messageMap, mapOptions, message);
+            }
         } else {
             this.updateChat(message);
         }
     };
+
+    persistMapMessage(messageMap, mapOptions, newMessage) {
+        MessageHandler.fetchDeviceMessagesOfType(
+            this.getBotKey(),
+            MessageTypeConstants.MESSAGE_TYPE_MAP
+        ).then(messages => {
+            let mapMsg = _.find(messages, msg => {
+                return msg.getMessageOptions().mapId === mapOptions.mapId;
+            });
+            if (mapMsg) {
+                mapMsg.mapMessage(messageMap, mapOptions);
+                this.persistMessage(mapMsg);
+            } else {
+                this.updateChat(newMessage);
+            }
+        });
+    }
 
     done = () => {
         // Done with the bot - navigate away?
@@ -776,16 +876,29 @@ class ChatBotScreen extends React.Component {
         console.log('Done called from bot code');
     };
 
-    // Retrun when the message has been persisted
+    /** Retrun when the message has been persisted*/
     persistMessage = message => {
         return MessageHandler.persistOnDevice(this.getBotKey(), message);
     };
 
     // Promise based since setState is async
     updateChat(message) {
-        this.persistMessage(message).then(() => {
-            this.queueMessage(message);
-        });
+        this.chatState.updatingChat = true;
+        this.persistMessage(message)
+            .then(async () => {
+                return this.queueMessage(message);
+            })
+            .then(res => {
+                if (!res) {
+                    this.chatState.updatingChat = false;
+                    if (this.chatState.nextSmartSuggestion) {
+                        this.updateSmartSuggestions(
+                            this.chatState.nextSmartSuggestion
+                        );
+                        this.chatState.nextSmartSuggestion = undefined;
+                    }
+                }
+            });
         // Has to be Immutable for react
     }
 
@@ -798,21 +911,25 @@ class ChatBotScreen extends React.Component {
     fireSlider(message) {
         // Slider
         Keyboard.dismiss();
+        this.sliderPreviousState = true;
         this.setState({ showSlider: true, message: message });
     }
 
     openMap(mapData) {
+        let mapStore = ReduxStore.getState().user.openMap;
+        let storeIndex = _.findIndex(mapStore, map => {
+            return map.options.mapId === mapData.options.mapId;
+        });
+        if (storeIndex === -1) {
+            storeIndex = mapStore.push(mapData) - 1;
+            Store.dispatch(setOpenMap(mapStore));
+        }
         Keyboard.dismiss();
         Actions.mapView({
-            mapData: mapData,
-            isSharedLocation: false,
+            title: mapData.options.title || 'Map',
+            storeIndex: storeIndex,
             onAction: this.sendMapResponse.bind(this)
         });
-    }
-
-    openMapForSharedLocation(mapData) {
-        Keyboard.dismiss();
-        Actions.mapView({ mapData: mapData, isSharedLocation: true });
     }
 
     openChart(message) {
@@ -840,6 +957,7 @@ class ChatBotScreen extends React.Component {
 
     // optionalCb is passed by slider if it needs to run some cleanup
     onSliderClose = (optionalCb, scroll = true) => {
+        this.sliderPreviousState = false;
         this.setState({ showSlider: false }, function(err, res) {
             if (!err && _.isFunction(optionalCb)) {
                 return optionalCb();
@@ -943,16 +1061,24 @@ class ChatBotScreen extends React.Component {
         }
     };
 
-    sendMapResponse(cardId, markerId, center, zoom) {
-        content = {
-            mapId: this.props.mapData.options.mapId,
-            cardId: cardId,
-            markerId: markerId,
-            center: center,
-            zoom: zoom
-        };
+    sendSearchBoxResponse(response) {
         message = new Message();
-        message.mapResponseMessage(content);
+        message.searchBoxResponseMessage(response);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+        this.setState({ showSearchBox: false, searchBoxData: null });
+    }
+
+    sendSearchBoxQuery(query) {
+        message = new Message();
+        message.searchBoxResponseMessage(query);
+        message.setCreatedBy(this.getUserId());
+        this.sendMessage(message);
+    }
+
+    sendMapResponse(response) {
+        message = new Message();
+        message.mapResponseMessage(response);
         message.setCreatedBy(this.getUserId());
         return this.sendMessage(message);
     }
@@ -1016,6 +1142,7 @@ class ChatBotScreen extends React.Component {
         });
     }
 
+    /**Render the new message on screen */
     updateMessages = (messages, callback) => {
         if (this.mounted) {
             this.setState(
@@ -1034,11 +1161,12 @@ class ChatBotScreen extends React.Component {
         }
     };
 
+    /** Update message list and screen */
     appendMessageToChat(message, immediate = false) {
         return new Promise(resolve => {
             if (this.addMessage && this.setState) {
-                let msgs = this.addMessage(message);
-                this.updateMessages(msgs, (err, res) => {
+                let updatedMessageList = this.addMessage(message);
+                this.updateMessages(updatedMessageList, (err, res) => {
                     if (!err) {
                         //this.scrollToBottomIfNeeded();
                     }
@@ -1057,33 +1185,54 @@ class ChatBotScreen extends React.Component {
     }
 
     processMessageQueue() {
-        var message = this.messageQueue.shift();
-        if (message) {
+        return new Promise(async resolve => {
             this.processingMessageQueue = true;
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-            this.appendMessageToChat(message)
-                .then(() => {
-                    return this.sleep(
-                        Config.ChatMessageOptions.messageTransitionTime
+            while (this.messageQueue.length > 0) {
+                if (Platform.OS === 'ios') {
+                    LayoutAnimation.configureNext(
+                        LayoutAnimation.Presets.easeInEaseOut
                     );
-                })
-                .then(() => {
-                    this.processMessageQueue();
-                });
-        } else {
+                }
+                await this.appendMessageToChat(this.messageQueue.shift());
+            }
             this.processingMessageQueue = false;
-        }
+            resolve(this.processingMessageQueue);
+        });
+
+        // var message = this.messageQueue.shift();
+        // if (message) {
+        //     this.processingMessageQueue = true;
+        //     LayoutAnimation.configureNext(
+        //         LayoutAnimation.Presets.easeInEaseOut
+        //     );
+        //     this.appendMessageToChat(message)
+        //         .then(() => {
+        //             return this.sleep(
+        //                 Config.ChatMessageOptions.messageTransitionTime
+        //             );
+        //         })
+        //         .then(() => {
+        //             this.processMessageQueue();
+        //         });
+        // } else {
+        //     this.processingMessageQueue = false;
+        // }
     }
 
+    /** Returns true if queue processing is running, false if it's ended */
     queueMessage(message) {
-        this.messageQueue.push(message);
-        if (this.processingMessageQueue === false) {
-            this.processMessageQueue();
-        }
+        return new Promise(async resolve => {
+            this.messageQueue.push(message);
+            if (this.processingMessageQueue === false) {
+                await this.processMessageQueue();
+                resolve(false);
+            } else {
+                resolve(true);
+            }
+        });
     }
 
+    /**Add the new message to message list and return the updated messagelist */
     addMessage(message) {
         const { messages } = this.state;
         const incomingMessage = message.toBotDisplay();
@@ -1091,12 +1240,12 @@ class ChatBotScreen extends React.Component {
             this.state.messages
         );
         if (messageIndex > 0) {
-            const updatedMessage = R.update(
+            const updatedMessages = R.update(
                 messageIndex,
                 incomingMessage,
                 this.state.messages
             );
-            return updatedMessage;
+            return updatedMessages;
         } else {
             return [...this.state.messages, incomingMessage];
         }
@@ -1147,7 +1296,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={false}
                         isFromBot={true}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1158,8 +1310,11 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={false}
                         isFromBot={false}
-                        openMap={this.openMapForSharedLocation.bind(this)}
-                        mapData={message.getMessage()}
+                        openMap={this.openMap.bind(this)}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1238,7 +1393,10 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={message.getMessage()}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else if (
@@ -1249,8 +1407,11 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={true}
                         isFromBot={false}
-                        openMap={this.openMapForSharedLocation.bind(this)}
-                        mapData={message.getMessage()}
+                        openMap={this.openMap.bind(this)}
+                        mapData={{
+                            map: message.getMessage(),
+                            options: message.getMessageOptions()
+                        }}
                     />
                 );
             } else {
@@ -1708,16 +1869,18 @@ class ChatBotScreen extends React.Component {
     }
 
     onLocationPicked(locationData) {
-        const mapData = {
+        const map = {
             region: {
                 longitude: locationData.coordinate[0],
                 latitude: locationData.coordinate[1]
             },
             markers: [
                 {
+                    id: this.getUserId(),
                     title: 'position',
                     description: 'shared position',
                     draggable: false,
+                    iconType: MarkerIconTypes.POI,
                     coordinate: {
                         longitude: locationData.coordinate[0],
                         latitude: locationData.coordinate[1]
@@ -1725,8 +1888,12 @@ class ChatBotScreen extends React.Component {
                 }
             ]
         };
+        const options = {
+            mapId: 'location_share',
+            title: this.user.userName || 'Map'
+        };
         message = new Message();
-        message.locationMessage(mapData);
+        message.locationMessage(map, options);
         message.messageByBot(false);
         message.setCreatedBy(this.getUserId());
         this.sendMessage(message);
@@ -1734,7 +1901,10 @@ class ChatBotScreen extends React.Component {
 
     pickContact() {
         Keyboard.dismiss();
-        Actions.addParticipants({ onSelected: this.shareContacts.bind(this) });
+        Actions.addParticipants({
+            onSelected: this.shareContacts.bind(this),
+            title: 'Share contacts'
+        });
     }
 
     shareContacts(selectedContacts) {
@@ -1749,24 +1919,53 @@ class ChatBotScreen extends React.Component {
 
     onPlusButtonPressed() {
         if (this.state.showOptions === false) {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
+            if (Platform.OS === 'ios') {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+            }
+            this.setState(
+                {
+                    showOptions: true,
+                    showSlider: false
+                },
+                () => Keyboard.dismiss()
             );
-            Keyboard.dismiss();
-            this.sliderPreviousState = this.state.showSlider || false;
-            this.setState({
-                showOptions: true,
-                showSlider: false
-            });
         } else {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
+            if (Platform.OS === 'ios') {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+            }
             this.setState({
                 showOptions: false,
-                showSlider: this.sliderPreviousState || false
+                showSlider: this.sliderPreviousState
             });
         }
+    }
+
+    onRandomTap() {
+        // if (this.state.showOptions === false) {
+        //     LayoutAnimation.configureNext(
+        //         LayoutAnimation.Presets.easeInEaseOut
+        //     );
+        //     Keyboard.dismiss();
+        //     this.sliderPreviousState = this.state.showSlider || false;
+        //     this.setState({
+        //         showOptions: true,
+        //         showSlider: false
+        //     });
+        // } else {
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
+        this.setState({
+            showOptions: false,
+            showSlider: this.sliderPreviousState
+        });
+        // }
     }
 
     selectOption = key => {
@@ -1780,7 +1979,6 @@ class ChatBotScreen extends React.Component {
         } else if (key === BotInputBarCapabilities.photo_library) {
             this.pickImage();
         } else if (key === BotInputBarCapabilities.share_contact) {
-            return;
             this.pickContact();
         } else if (key === BotInputBarCapabilities.reset_conversation) {
             this.resetConversation();
@@ -1937,6 +2135,16 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    renderSearchBox() {
+        return (
+            <SearchBox
+                data={this.state.searchBoxData}
+                sendResponse={this.sendSearchBoxResponse.bind(this)}
+                sendSearchQuery={this.sendSearchBoxQuery.bind(this)}
+            />
+        );
+    }
+
     renderChatInputBar() {
         const moreOptions = [
             {
@@ -1963,12 +2171,12 @@ class ChatBotScreen extends React.Component {
                 imageSource: images.share_file,
                 label: I18n.t('File_option')
             },
-            // {
-            //     key: BotInputBarCapabilities.share_contact,
-            //     imageStyle: { width: 16, height: 16 }
-            //     imageSource: images.share_contact,
-            //     label: I18n.t('Contact')
-            // },
+            {
+                key: BotInputBarCapabilities.share_contact,
+                imageStyle: { width: 16, height: 16 },
+                imageSource: images.share_contact,
+                label: I18n.t('Contact')
+            },
             {
                 key: BotInputBarCapabilities.pick_location,
                 imageStyle: { width: 14, height: 16 },
@@ -1986,10 +2194,6 @@ class ChatBotScreen extends React.Component {
                             return (
                                 <TouchableOpacity
                                     key={index}
-                                    disabled={
-                                        elem.key ===
-                                        BotInputBarCapabilities.share_contact
-                                    }
                                     onPress={() => {
                                         this.selectOption(elem.key);
                                     }}
@@ -1997,10 +2201,7 @@ class ChatBotScreen extends React.Component {
                                 >
                                     <View
                                         style={
-                                            elem.key ===
-                                            BotInputBarCapabilities.share_contact
-                                                ? chatStyles.moreOptionImageContainerHide
-                                                : chatStyles.moreOptionImageContainer
+                                            chatStyles.moreOptionImageContainer
                                         }
                                     >
                                         <Image
@@ -2028,9 +2229,11 @@ class ChatBotScreen extends React.Component {
                     onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
                     closeShowOptions={() => {
-                        LayoutAnimation.configureNext(
-                            LayoutAnimation.Presets.easeInEaseOut
-                        );
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
                         this.setState({ showOptions: false });
                     }}
                 />
@@ -2148,7 +2351,7 @@ class ChatBotScreen extends React.Component {
                         <TouchableWithoutFeedback
                             style={{ flex: 1 }}
                             disabled={!this.state.showOptions}
-                            onPress={this.onPlusButtonPressed.bind(this)}
+                            onPress={this.onRandomTap.bind(this)}
                         >
                             <View
                                 style={{
@@ -2184,9 +2387,9 @@ class ChatBotScreen extends React.Component {
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
-                                <View style={{ alignItems: 'center' }}>
-                                    {this.renderChatInputBar()}
-                                </View>
+                                {this.state.showSearchBox
+                                    ? this.renderSearchBox()
+                                    : this.renderChatInputBar()}
                                 {this.renderNetworkStatusBar()}
                                 {/* {this.renderCallModal()} */}
                                 {this.renderChatModal()}

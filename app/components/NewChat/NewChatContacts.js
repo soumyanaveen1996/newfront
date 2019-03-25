@@ -143,7 +143,7 @@ class NewChatContacts extends React.Component {
                 data: contactBook
             };
         });
-        console.log(PhoneContacts);
+        // console.log(PhoneContacts);
         return PhoneContacts;
     };
     refresh = contacts => {
@@ -183,7 +183,7 @@ class NewChatContacts extends React.Component {
         );
     }
     onContactSelected = contact => {
-        console.log(contact);
+        // console.log(contact);
         let participants = [
             {
                 userId: contact.id,

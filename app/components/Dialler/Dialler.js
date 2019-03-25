@@ -162,20 +162,20 @@ export default class Dialler extends React.Component {
     }
     async getSatelliteCallNumber(number, user) {
         try {
-            const options = {
-                method: 'GET',
-                url:
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    '/v2/satelliteDetails?botId=onboarding-bot',
-                headers: {
-                    sessionId: user.creds.sessionId
-                }
-            };
-            const response = await Network(options);
-            const { data } = response;
-            const { error, content } = data;
-            const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
+            // const options = {
+            //     method: 'GET',
+            //     url:
+            //         config.proxy.protocol +
+            //         config.proxy.host +
+            //         '/v2/satelliteDetails?botId=onboarding-bot',
+            //     headers: {
+            //         sessionId: user.creds.sessionId
+            //     }
+            // };
+            // const response = await Network(options);
+            // const { data } = response;
+            // const { error, content } = data;
+            // const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
             let callingNumber;
             if (number.startsWith('00870') || number.startsWith('00816')) {
                 callingNumber = number.substring(2);
@@ -186,8 +186,10 @@ export default class Dialler extends React.Component {
 
             return {
                 error: null,
-                sat_phone_number: SAT_PHONE_NUM,
-                sat_phone_pin: SAT_PHONE_PIN,
+                sat_phone_number: null,
+                sat_phone_pin: null,
+                // sat_phone_number: SAT_PHONE_NUM,
+                // sat_phone_pin: SAT_PHONE_PIN,
                 phone_number: callingNumber
             };
 
@@ -226,7 +228,7 @@ export default class Dialler extends React.Component {
             const [call_type, pstnMessage] = this.checkSatelliteCall(
                 this.state.dialledNumber
             );
-            console.log(call_type);
+            // console.log(call_type);
 
             if (call_type === PSTN_CALL.NOT_SUPPORTED) {
                 this.setState({ diallerState: DiallerState.initial });
@@ -249,7 +251,8 @@ export default class Dialler extends React.Component {
                     return;
                 }
                 toNumber = sat_phone_number;
-                toNumber = `SAT:${sat_phone_number}:${sat_phone_pin}:${phone_number}`;
+                // toNumber = `SAT:${sat_phone_number}:${sat_phone_pin}:${phone_number}`;
+                toNumber = `SAT:${phone_number}`;
                 this.setState({
                     satCall: true,
                     satCallPin: sat_phone_pin,
@@ -663,7 +666,7 @@ export default class Dialler extends React.Component {
     getCredit() {
         Bot.getInstalledBots()
             .then(bots => {
-                console.log(bots);
+                // console.log(bots);
                 dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
                 if (dwIndex < 0) {
                     return Alert.alert(
@@ -958,7 +961,7 @@ export default class Dialler extends React.Component {
     };
 
     render() {
-        console.log('Dialled Number', this.state.diallerState);
+        // console.log('Dialled Number', this.state.diallerState);
 
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);

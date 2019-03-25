@@ -15,7 +15,8 @@ const initialState = {
         refreshUserEmail: true,
         network: 'full',
         currentConversationId: '',
-        upload: 0
+        upload: 0,
+        openMap: []
     },
     botState: {
         id: null

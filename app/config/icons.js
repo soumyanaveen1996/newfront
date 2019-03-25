@@ -322,6 +322,20 @@ export const Icons = {
         20,
         GlobalColors.headerBlack
     ),
+    closeRouteSlider: icon('md-close', 'ionicon', 18, GlobalColors.white),
+    planeRSWhite: icon(
+        'airplane',
+        'material-community',
+        16,
+        GlobalColors.white
+    ),
+    planeRSBlu: icon(
+        'airplane',
+        'material-community',
+        14,
+        GlobalColors.sideButtons,
+        'normal'
+    ),
 
     //FORM
     formMessageArrow: icon(
@@ -369,6 +383,24 @@ export const Icons = {
         'material-community',
         15,
         GlobalColors.white
+    ),
+    //CHANNELS
+    editChannel: icon(
+        'pencil',
+        'material-community',
+        20,
+        GlobalColors.sideButtons
+    ),
+    redWarning: icon('alert', 'material-community', 20, GlobalColors.red),
+
+    //SEARCH BOX
+    info: icon(
+        'information-outline',
+        'material-community',
+        27,
+        GlobalColors.sideButtons,
+        Colors.transparent,
+        '200'
     )
 };
 

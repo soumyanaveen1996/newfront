@@ -193,6 +193,8 @@ export default class BotInfoScreen extends React.Component {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
+                        accessibilityLabel="Install Button"
+                        testID="install-button"
                         style={styles.installButton}
                         onPress={this.installBot.bind(this)}
                     >
@@ -215,6 +217,8 @@ export default class BotInfoScreen extends React.Component {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
+                        accessibilityLabel="Open Button"
+                        testID="open-button"
                         style={styles.openButton}
                         onPress={this.onBotClick.bind(this, this.props.botInfo)}
                     >

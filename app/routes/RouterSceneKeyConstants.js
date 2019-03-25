@@ -4,10 +4,13 @@ const ROUTER_SCENE_KEYS = {
     timeline: 'timeline',
     chatScene: 'chatScene',
     botChat: 'botChat',
+    dialCallbutton: 'dialCallbutton',
     peopleChat: 'peopleChat',
     channelChat: 'channelChat',
     channelsFilter: 'channelsFilter',
     newChannels: 'newChannels',
+    channelAdminScreen: 'channelAdminScreen',
+    setChannelOwner: 'setChannelOwner',
     addressBookScreen: 'addressBookScreen',
     addParticipants: 'addParticipants',
     selectTeam: 'selectTeam',
@@ -15,6 +18,7 @@ const ROUTER_SCENE_KEYS = {
     webview: 'webview',
     addContacts: 'addContacts',
     addContactsChat: 'addContactsChat',
+    requestsScreen: 'requestsScreen',
     info: 'info',
     form: 'form',
     botStore: 'botStore',
@@ -45,7 +49,9 @@ const ROUTER_SCENE_KEYS = {
     homeMain: 'homeMain',
     contactsMain: 'contactsMain',
     contactsCallMenu: 'contactsCallMenu',
+    phoneContactsCallMenu: 'phoneContactsCallMenu',
     contactsCall: 'contactsCall',
+    phoneContactsCall: 'phoneContactsCall',
     dialCallMenu: 'dialCallMenu',
     dialCall: 'dialCall',
     contactsMainChat: 'contactsMainChat',
@@ -60,7 +66,8 @@ const ROUTER_SCENE_KEYS = {
     tabBarCall: 'tabBarCall',
     callSummary: 'callSummary',
     multiselection: 'multiselection',
-    myProfileScreen: 'myProfileScreen'
+    myProfileScreen: 'myProfileScreen',
+    manageContacts: 'manageContacts'
 };
 
 export default ROUTER_SCENE_KEYS;

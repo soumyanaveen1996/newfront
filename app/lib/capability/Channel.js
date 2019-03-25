@@ -27,6 +27,13 @@ export class ChannelError extends Error {
     }
 }
 
+// User/admin/participant object
+//{
+//   emailAddress:
+//   userName:
+//   userId:
+// }
+
 export default class Channel {
     static getSubscribedChannels = ChannelDAO.selectChannels;
 
@@ -289,18 +296,17 @@ export default class Channel {
                 .then(response => {
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {
-                        reject(new ChannelError(+err));
-                    } else {
-                        let err = _.get(response, 'data.error');
-                        if (err !== '0' && err !== 0) {
-                            reject(new ChannelError(+err));
+                        if (err === 98) {
+                            reject(98);
                         } else {
-                            return ChannelDAO.updateChannelSubscription(
-                                channelName,
-                                userDomain,
-                                'false'
-                            );
+                            reject(new ChannelError(+err));
                         }
+                    } else {
+                        return ChannelDAO.updateChannelSubscription(
+                            channelName,
+                            userDomain,
+                            'false'
+                        );
                     }
                 })
                 .then(resolve)
@@ -359,6 +365,43 @@ export default class Channel {
                 .catch(reject);
         });
 
+    static deleteChannel = channel =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        console.log('deleting channel ', channel);
+                        let options = {
+                            method: 'POST',
+                            url: `${config.network.queueProtocol}${
+                                config.proxy.host
+                            }${config.network.channelsPath}`,
+                            headers: {
+                                sessionId: user.creds.sessionId
+                            },
+                            data: {
+                                action: 'DeleteChannel',
+                                channelName: channel.channelName,
+                                userDomain: channel.userDomain
+                            }
+                        };
+                        return Network(options);
+                    } else {
+                        reject();
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        return ChannelDAO.deleteChannel(channel.id);
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
     static addUsers = (channelName, userDomain, newUserIds) =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -395,6 +438,224 @@ export default class Channel {
                             reject(new ChannelError(99));
                         }
                     }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
+    static updateParticipants = (channelName, userDomain, userIds) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    console.log('updating users to Channel ', channelName);
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'UpdateParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain,
+                            userIds: userIds
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        resolve();
+                    }
+                })
+                .catch(reject);
+        });
+
+    static getParticipants = (channelName, userDomain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'GetParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    resolve(res.data.content);
+                })
+                .catch(reject);
+        });
+
+    static getAdmins = (channelName, userDomain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'GetChannelAdmins',
+                            channelName: channelName,
+                            userDomain: userDomain
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    resolve(res.data.content);
+                })
+                .catch(reject);
+        });
+
+    static updateAdmins = (channelName, userDomain, adminsIds) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'UpdateChannelAdmins',
+                            channelName: channelName,
+                            userDomain: userDomain,
+                            admins: adminsIds
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(() => {
+                    return Channel.refreshUnsubscribedChannels();
+                })
+                .then(() => {
+                    return Channel.refreshChannels();
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+
+    static getRequests = (channelName, userDomain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'GetPendingParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    let err = _.get(res, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        resolve([]);
+                    }
+                    resolve(res.data.content);
+                })
+                .catch(reject);
+        });
+
+    static manageRequests = (
+        channelName,
+        userDomain,
+        acceptedUserIds,
+        ignoredUserIds
+    ) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'AuthorizeParticipants',
+                            channelName: channelName,
+                            userDomain: userDomain,
+                            accepted: acceptedUserIds,
+                            ignored: ignoredUserIds
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    let err = _.get(res, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    }
+                    resolve(res.data.content);
+                })
+                .catch(reject);
+        });
+
+    static setChannelOwner = (channelName, userDomain, newOwnerId) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    let options = {
+                        method: 'POST',
+                        url: `${config.network.queueProtocol}${
+                            config.proxy.host
+                        }${config.network.channelsPath}`,
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            action: 'ChangeOwner',
+                            channelName: channelName,
+                            userDomain: userDomain,
+                            newOwnerId: newOwnerId
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(res => {
+                    let err = _.get(res, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    }
+                    return Channel.refreshChannels();
+                })
+                .then(() => {
+                    return Channel.refreshUnsubscribedChannels();
                 })
                 .then(resolve)
                 .catch(reject);
@@ -450,31 +711,20 @@ export default class Channel {
                     let err = _.get(response, 'data.error');
                     let code = _.get(response, 'data.statusCode');
                     if (err !== '0' && err !== 0) {
-                        if (code === 422) {
-                            reject(
-                                new ChannelError(
-                                    +err,
-                                    I18n.t('Channel_admin_unsubscribe')
-                                )
-                            );
-                        } else {
-                            reject(new ChannelError(+err));
-                        }
+                        reject(new ChannelError(+err));
                     } else {
                         return ChannelDAO.deleteChannel(channel.id);
                     }
                 })
                 .then(resolve)
-                .catch(() => {
-                    console.log('');
-                    throw new ChannelError(99);
-                });
+                .catch(reject);
         });
 
     static clearChannels = ChannelDAO.deleteAllChannels;
 
     static refreshChannels = () =>
         new Promise((resolve, reject) => {
+            let newChannels;
             Auth.getUser()
                 .then(user => {
                     if (user) {
@@ -483,8 +733,12 @@ export default class Channel {
                     }
                 })
                 .then(response => {
-                    if (response.data && response.data.content) {
-                        let channels = response.data.content;
+                    newChannels = response;
+                    return Channel.clearChannels();
+                })
+                .then(() => {
+                    if (newChannels.data && newChannels.data.content) {
+                        let channels = newChannels.data.content;
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
                                 return Promise.resolve(true);
