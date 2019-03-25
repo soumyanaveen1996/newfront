@@ -65,7 +65,7 @@ RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString
     if (done) {
       [self sendEventWithName:@"end" body:@{}];
     } else {
-      [self sendEventWithName:@"message" body:[response toJSON]];
+      [self sendEventWithName:@"message" body:[response toResponse]];
     }
   }];
 

@@ -15,6 +15,7 @@ import {} from '../../redux/actions/UserActions';
 
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
+import { NativeModules, NativeEventEmitter } from 'react-native';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 /**
@@ -48,7 +49,31 @@ const handleLambdaResponse = (res, user) => {
     }
 };
 
+let currentlyReading = false;
+
 const readRemoteLambdaQueue = user => {
+    if (currentlyReading === true) {
+        return;
+    }
+    currentlyReading = true;
+
+    const QueueServiceClient = NativeModules.QueueServiceClient;
+    eventEmitter = new NativeEventEmitter(QueueServiceClient);
+    const subscription = eventEmitter.addListener('message', message => {
+        console.log('GRPC:::Event GRPC message : ', message, message);
+        handleLambdaResponse(res, user);
+    });
+
+    const endSubscribtion = eventEmitter.addListener('end', message => {
+        console.log('GRPC:::End GRPC message : ', message, message);
+        subscription.remove();
+        endSubscribtion.remove();
+        currentlyReading = false;
+    });
+
+    QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
+
+    /*
     readQueue(user)
         .then(res => {
             PushNotification.setApplicationIconBadgeNumber(0);
@@ -56,7 +81,7 @@ const readRemoteLambdaQueue = user => {
         })
         .catch(error => {
             console.log('Error in Reading Lambda queue', error);
-        });
+        }); */
 };
 
 const processNetworkQueueRequest = () => {
@@ -110,6 +135,7 @@ const processNetworkQueue = () => {
     });
 };
 
+/*
 const readQueue = user =>
     new Promise((resolve, reject) => {
         const host = config.network.queueHost;
@@ -158,7 +184,7 @@ const readQueue = user =>
                 resolve(res);
             })
             .catch(reject);
-    });
+    }); */
 
 const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
@@ -267,7 +293,6 @@ const keepAlive = () => {
 export default {
     poll: poll,
     readLambda: readLambda,
-    readQueue: readQueue,
     keepAlive: keepAlive,
     fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
 };

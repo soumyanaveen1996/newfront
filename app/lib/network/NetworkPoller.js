@@ -18,7 +18,7 @@ import { BackgroundBotChat } from '../BackgroundTask';
 import SystemBot from '../bot/SystemBot';
 import RemoteBotInstall from '../RemoteBotInstall';
 import { NetworkDAO } from '../../lib/persistence';
-
+import { NativeModules, NativeEventEmitter } from 'react-native';
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
@@ -80,6 +80,34 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
+        const QueueServiceClient = NativeModules.QueueServiceClient;
+        eventEmitter = new NativeEventEmitter(QueueServiceClient);
+        this.grpcSubscription = eventEmitter.addListener('message', message => {
+            console.log('GRPC:::SSE GRPC message : ', message, message);
+            MessageQueue.push(message);
+        });
+
+        this.grpcEndSubscription = eventEmitter.addListener('end', message => {
+            console.log('GRPC:::SSE End GRPC message : ', message, message);
+            this.unsubscribeFromServerEvents();
+            this.subscribeToServerEvents();
+        });
+
+        QueueServiceClient.startChatSSE(user.creds.sessionId);
+    };
+
+    unsubscribeFromServerEvents = () => {
+        if (this.grpcSubscription) {
+            this.grpcSubscription.remove();
+            this.grpcSubscription = null;
+        }
+        if (this.grpcEndSubscription) {
+            this.grpcEndSubscription.remove();
+            this.grpcEndSubscription = null;
+        }
+    };
+    /*
+    subscribeToServerEvents = async () => {
         if (Platform.OS === 'android') {
             return;
         }
@@ -103,12 +131,13 @@ class NetworkPoller {
             }
         });
     };
+
     unsubscribeFromServerEvents = () => {
         if (this.eventSource) {
             this.eventSource.removeAllListeners();
         }
         this.eventSource = null;
-    };
+    }; */
 
     satelliteConnectionHandler = async () => {
         if (!this.connectedToSatellite) {

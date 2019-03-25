@@ -75,14 +75,6 @@ class RemoteBotInstall {
     static isSatellite = () =>
         new Promise((resolve, reject) => {
             return resolve(false);
-
-            // Auth.getUser()
-            //     .then(user => {
-            //         return NetworkHandler.readQueue(user)
-            //     })
-            //     .then(res => {
-            //         resolve(res.data.onSatellite)
-            //     })
         });
 
     /**

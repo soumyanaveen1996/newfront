@@ -24,6 +24,16 @@
 
 - (NSDictionary *) toJSON {
 
+  NSString *detailsString = [[NSString alloc] initWithData:self.details encoding:NSUTF8StringEncoding];
+
+  NSError *jsonError;
+  id object = nil;
+  id json = [NSJSONSerialization JSONObjectWithData:self.details options:kNilOptions error:&jsonError];
+  if (jsonError == nil) {
+    object = json;
+  } else {
+    object = [NSNull null];
+  }
   return @{
            @"userId": self.userId,
            @"conversation": self.conversation,
@@ -34,7 +44,7 @@
            @"messageId": self.messageId,
            @"requestUuid": self.requestUuid,
            @"error": self.error,
-           @"details": self.details
+           @"details": object
            };
 }
 
