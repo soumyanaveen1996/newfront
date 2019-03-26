@@ -258,6 +258,7 @@ class Bot {
 
             let user = await Promise.resolve(Auth.getUser());
 
+            console.log('GRPC:::manifest', this.manifest, this.manifest.botUrl);
             if (!bot_data) {
                 console.log(
                     'Bot::Did not find bot on the device. Downloading from the server: ',

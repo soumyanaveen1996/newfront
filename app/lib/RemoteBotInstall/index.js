@@ -51,7 +51,10 @@ class RemoteBotInstall {
                     //     'list of bots installed ========== ',
                     //     subscribedBots
                     // );
-
+                    console.log(
+                        'GRPC:::list of bots installed',
+                        subscribedBots
+                    );
                     resolve(subscribedBots.data.content);
                 })
                 .catch(reject);
@@ -187,6 +190,9 @@ class RemoteBotInstall {
  * @returns {Promise} True if installed or updated, False if not.
  */
 function performInstallation(botManifest) {
+    if (!botManifest) {
+        return true;
+    }
     return new Promise(async (resolve, reject) => {
         const installedBotsManifests = await Bot.getInstalledBots();
         const botStatus = utils.checkBotStatus(

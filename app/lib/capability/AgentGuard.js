@@ -24,8 +24,9 @@ export class AgentGuardError extends Error {
  * A simple AgentGuard wrapper
  */
 export default class AgentGuard {
-    static execute = params =>
-        new Promise((resolve, reject) => {
+    static execute = params => {
+        console.log('GRPC::::Agent Guard params : ', params);
+        return new Promise((resolve, reject) => {
             Auth.getUser().then(user => {
                 if (user) {
                     AgentGuardServiceClient.execute(
@@ -35,16 +36,11 @@ export default class AgentGuard {
                             if (err) {
                                 reject(new Error('Unknown error'));
                             } else {
-                                if (result.error === 0) {
-                                    resolve(result.data);
-                                } else {
-                                    reject(
-                                        new AgentGuardError(
-                                            result.error,
-                                            'Agent Guard Error'
-                                        )
-                                    );
-                                }
+                                console.log(
+                                    'GRPC::::Agent guard response : ',
+                                    result
+                                );
+                                resolve(result);
                             }
                         }
                     );
@@ -53,4 +49,5 @@ export default class AgentGuard {
                 }
             });
         });
+    };
 }

@@ -56,7 +56,7 @@ export function developerLogoUrl(developerName) {
 }
 
 export function userProfileUrl(userId) {
-    return `${config.proxy.protocol}${config.proxy.host}${
+    return `${config.proxy.protocol}${config.proxy.resource_host}${
         config.proxy.downloadFilePath
     }/profile-pics/${userId}.png`;
 }

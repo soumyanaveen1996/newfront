@@ -41,7 +41,7 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      callback(@[[NSNull null], [response toJSON]]);
+      callback(@[[NSNull null], [response toResponse]]);
     }
   }];
 

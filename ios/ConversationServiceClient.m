@@ -38,14 +38,14 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_REMAP_METHOD(getCatalog, getCatalogWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"method:getCatalog Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient RPCToGetCatalogWithRequest:[Empty new] handler:^(CatalogResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      callback(@[[NSNull null], [response toJSON]]);
+      callback(@[[NSNull null], [response toResponse]]);
     }
   }];
 
@@ -69,7 +69,7 @@ RCT_REMAP_METHOD(getConversationDetails, getConversationDetailsWithSessionId:(NS
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
-                             callback(@[[NSNull null], [response toJSON]]);
+                             callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];
 
@@ -95,7 +95,7 @@ RCT_REMAP_METHOD(updateFavorites, updateFavoritesWithSessionId:(NSString *)sessi
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      callback(@[[NSNull null], [response toJSON]]);
+      callback(@[[NSNull null], [response toResponse]]);
     }
   }];
 
@@ -112,7 +112,7 @@ RCT_REMAP_METHOD(getTimeline, getTimelineWithSessionId:(NSString *)sessionId and
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      callback(@[[NSNull null], [response toJSON]]);
+      callback(@[[NSNull null], [response toResponse]]);
     }
   }];
 
@@ -120,7 +120,7 @@ RCT_REMAP_METHOD(getTimeline, getTimelineWithSessionId:(NSString *)sessionId and
   [call start];
 }
 
-RCT_REMAP_METHOD(getArchivedMessages, getTimelineWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(getArchivedMessages, getArchivedMessagesWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
 
   GetArchivedMessagesInput *input = [GetArchivedMessagesInput new];
@@ -133,7 +133,7 @@ RCT_REMAP_METHOD(getArchivedMessages, getTimelineWithSessionId:(NSString *)sessi
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      callback(@[[NSNull null], [response toJSON]]);
+      callback(@[[NSNull null], [response toResponse]]);
     }
   }];
 

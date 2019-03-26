@@ -158,7 +158,7 @@ export default class ChatMessage extends React.Component {
 
     renderImageMessage(message) {
         const remoteFileName = message.getMessage();
-        let url = `${config.proxy.protocol}${config.proxy.host}${
+        let url = `${config.proxy.protocol}${config.proxy.resource_host}${
             config.proxy.downloadFilePath
         }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
@@ -178,7 +178,7 @@ export default class ChatMessage extends React.Component {
         const remoteFileName = message.getMessage();
         const type = message.getMessageOptions().type;
         const name = message.getMessageOptions().fileName;
-        let url = `${config.proxy.protocol}${config.proxy.host}${
+        let url = `${config.proxy.protocol}${config.proxy.resource_host}${
             config.proxy.downloadFilePath
         }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
@@ -233,7 +233,7 @@ export default class ChatMessage extends React.Component {
 
     renderVideoMessage(message) {
         const remoteFileName = message.getMessage();
-        let url = `${config.proxy.protocol}${config.proxy.host}${
+        let url = `${config.proxy.protocol}${config.proxy.resource_host}${
             config.proxy.downloadFilePath
         }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =
@@ -277,7 +277,7 @@ export default class ChatMessage extends React.Component {
 
     renderAudioMessage(message) {
         const remoteFileName = message.getMessage();
-        let url = `${config.proxy.protocol}${config.proxy.host}${
+        let url = `${config.proxy.protocol}${config.proxy.resource_host}${
             config.proxy.downloadFilePath
         }/${this.props.conversationContext.conversationId}/${remoteFileName}`;
         let headers =

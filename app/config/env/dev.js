@@ -4,7 +4,7 @@ import _ from 'lodash';
 const S3_HOST = 's3.amazonaws.com';
 const CATALOG_HOST = 'mq2bsx6jae.execute-api.us-east-1.amazonaws.com';
 const QUEUE_HOST = 'oc8208kdrk.execute-api.us-east-1.amazonaws.com';
-const PROXY_HOST = 'elbdev.frontm.ai';
+const PROXY_HOST = 'elbdev.frontms.ai';
 
 // Overwrite any properties for dev.
 const devConfig = {
@@ -31,6 +31,8 @@ const devConfig = {
     proxy: {
         enabled: true,
         host: PROXY_HOST,
+        resource_host: 'elbdev.frontm.ai',
+        resource_host_new: '3nf11ibj25.execute-api.us-east-1.amazonaws.com/dev',
         protocol: 'https://',
         queuePath: '/queueLambda',
         pingPath: '/ping',

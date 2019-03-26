@@ -8,16 +8,16 @@ import {
     DeviceStorage
 } from '../capability';
 import config from '../../config/config';
-import Utils from '../../components/MainScreen/Utils';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
 import BotContext from '../botcontext/BotContext';
 import SystemBot from '../bot/SystemBot';
 import { completeConversationsLoad } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
-import Message from '../capability/Message';
 export const IM_CHAT = 'imchat';
 export const CHANNEL_CHAT = 'channels';
 export const FAVOURITE_BOTS = 'favourite_bots';
+import { NativeModules } from 'react-native';
+const ConversationServiceClient = NativeModules.ConversationServiceClient;
 
 /**
  * Can be used for people chat - for person to person, peer to peer or channels
@@ -41,6 +41,24 @@ export default class Conversation {
             );
         });
 
+    static grpcGetTimeline = user => {
+        return new Promise((resolve, reject) => {
+            ConversationServiceClient.getTimeline(
+                user.creds.sessionId,
+                (error, result) => {
+                    console.log('GRPC:::grpcUpdateFavorites : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
     /**
      * Get remote conversations from the backend
      */
@@ -51,20 +69,11 @@ export default class Conversation {
             Auth.getUser()
                 .then(usr => {
                     user = usr;
-                    const options = {
-                        method: 'GET',
-                        url:
-                            config.proxy.protocol +
-                            config.proxy.host +
-                            '/users/timeline',
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        }
-                    };
                     Store.dispatch(completeConversationsLoad(false));
-                    return Network(options);
+                    return Conversation.grpcGetTimeline(user);
                 })
                 .then(async res => {
+                    console.log('GRPC:::Timeline : ', res);
                     let manifestChan = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
@@ -381,6 +390,26 @@ export default class Conversation {
     static isChannelConversation = conversation =>
         conversation.type === CHANNEL_CHAT;
 
+    static grpcUpdateFavorites = (user, params) => {
+        return new Promise((resolve, reject) => {
+            ConversationServiceClient.updateFavorites(
+                user.creds.sessionId,
+                params,
+                (error, result) => {
+                    console.log('GRPC:::grpcUpdateFavorites : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
+
     static setFavorite = data => {
         // Call API And set Favorite- TODO
         let favorite = false;
@@ -428,22 +457,9 @@ export default class Conversation {
             Auth.getUser()
                 .then(user => {
                     if (user) {
-                        // console.log('user details  ', user);
-
+                        console.log('GRPC::::update   ', jsonData);
                         currentUserId = user.userId;
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }/users/favourites`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                ...jsonData
-                            }
-                        };
-                        return Network(options);
+                        return Conversation.grpcUpdateFavorites(user, jsonData);
                     }
                 })
                 .then(async response => {

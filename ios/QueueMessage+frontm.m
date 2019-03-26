@@ -44,7 +44,7 @@
            @"messageId": self.messageId,
            @"requestUuid": self.requestUuid,
            @"error": self.error,
-           @"details": object
+           @"details": self.details ? object : [NSNull null]
            };
 }
 

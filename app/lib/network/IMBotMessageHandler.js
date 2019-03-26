@@ -8,6 +8,8 @@ import ChannelDAO from '../persistence/ChannelDAO';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import { ContactsCache } from '../ContactsCache';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
+import { NativeModules } from 'react-native';
+const ConversationServiceClient = NativeModules.ConversationServiceClient;
 
 /**
  * Guarantees ordering - first in first out
@@ -276,34 +278,28 @@ const handleNewConversation = (message, user) =>
             });
     });
 
-const getConversationData = (conversationId, createdBy, user) => {
-    let options = {
-        method: 'get',
-        url:
-            getUrl() +
-            '?conversationId=' +
-            conversationId +
-            '&botId=' +
-            SystemBot.imBot.botId +
-            '&createdBy=' +
-            createdBy,
-        headers: getHeaders(user)
-    };
-
-    function getUrl() {
-        return (
-            config.proxy.protocol +
-            config.proxy.host +
-            config.proxy.conversationPath
+const grpcGetConversation = (conversationId, createdBy, user) => {
+    return new Promise((resolve, reject) => {
+        ConversationServiceClient.getConversationDetails(
+            user.creds.sessionId,
+            { conversationId, createdBy, botId: SystemBot.imBot.botId },
+            (error, result) => {
+                console.log('GRPC:::grpcGetConversation : ', error, result);
+                if (error) {
+                    reject({
+                        type: 'error',
+                        error: error.code
+                    });
+                } else {
+                    resolve(result);
+                }
+            }
         );
-    }
+    });
+};
 
-    function getHeaders() {
-        return {
-            sessionId: user.creds.sessionId
-        };
-    }
-    return Network(options);
+const getConversationData = (conversationId, createdBy, user) => {
+    return grpcGetConversation(conversationId, createdBy, user);
 };
 
 const getFakeBotKey = (botId, botKey) => {

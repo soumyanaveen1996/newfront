@@ -158,7 +158,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (forceUpdate) {
+        if (false && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);

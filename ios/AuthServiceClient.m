@@ -151,7 +151,7 @@ RCT_REMAP_METHOD(deleteUser, deleteUserWithSessionId:(NSString *)sessionId andCa
                                                                    callback(@[@{}, [NSNull null]]);
                                                                    return;
                                                                  } else {
-                                                                   callback(@[[NSNull null], [response toJSON]]);
+                                                                   callback(@[[NSNull null], [response toResponse]]);
                                                                  }
                                                                }];
 

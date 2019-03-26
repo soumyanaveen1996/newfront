@@ -10,6 +10,7 @@ import { MessageHandler } from '../message';
 import FrontmUtils from '../../lib/utils';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 const UserServiceClient = NativeModules.UserServiceClient;
+const ConversationServiceClient = NativeModules.ConversationServiceClient;
 
 class Bot extends events.EventEmitter {
     constructor(options) {
@@ -191,26 +192,35 @@ class Bot extends events.EventEmitter {
         });
     }
 
+    static grpcGetCatalog = user => {
+        return new Promise((resolve, reject) => {
+            ConversationServiceClient.getCatalog(
+                user.creds.sessionId,
+                (error, result) => {
+                    console.log('GRPC:::getCatalog : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
+
     static async getCatalog() {
         try {
             let user = await Auth.getUser();
             if (!user) {
                 return {};
             }
-            // For now since we do not have a search
-            let postReq = {
-                domains: user.info.domains
-            };
-
-            let options = {
-                method: 'post',
-                url: getUrl(),
-                headers: getHeaders(user, postReq),
-                data: postReq
-            };
-            let results = await Network(options);
+            let results = await Bot.grpcGetCatalog(user);
 
             let catalog = _.get(results, 'data');
+            catalog = catalog.bots;
 
             if (!catalog) {
                 throw new NetworkError('Error getting catalog');
@@ -218,8 +228,6 @@ class Bot extends events.EventEmitter {
             if (!_.isArray(catalog)) {
                 throw new NetworkError('Error getting catalog');
             }
-
-            // console.log('data of catalog ', catalog);
 
             catalog = _.map(catalog, bot =>
                 _.merge(bot, { logoUrl: FrontmUtils.botLogoUrl(bot.logoUrl) })
@@ -291,39 +299,6 @@ class Bot extends events.EventEmitter {
             // TODO: handle errors
             console.log('Error occurred getting the catalog!:', e);
             throw new NetworkError('Error getting catalog', e);
-        }
-
-        function getUrl() {
-            if (config.proxy.enabled) {
-                return (
-                    config.proxy.protocol +
-                    config.proxy.host +
-                    config.proxy.catalogPath
-                );
-            } else {
-                return (
-                    config.bot.baseProtocol +
-                    config.bot.catalogHost +
-                    config.bot.catalogPath
-                );
-            }
-        }
-
-        function getHeaders(user, postReq) {
-            if (config.proxy.enabled) {
-                return {
-                    sessionId: user.creds.sessionId
-                };
-            } else {
-                return Utils.createAuthHeader(
-                    config.bot.catalogHost,
-                    'post',
-                    config.bot.catalogPath,
-                    config.bot.catalogServiceApi,
-                    postReq,
-                    user
-                );
-            }
         }
     }
 

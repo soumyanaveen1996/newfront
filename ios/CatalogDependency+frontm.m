@@ -15,7 +15,7 @@
   return @{
            @"remote": @(self.remote),
            @"version": self.version,
-           @"URL": self.URL,
+           @"url": self.URL,
            };
 }
 

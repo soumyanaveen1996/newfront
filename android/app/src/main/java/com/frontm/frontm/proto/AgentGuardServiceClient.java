@@ -63,12 +63,16 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
             ReadableMap convDict = params.getMap("conversation");
             Conversation.Builder convBuilder = Conversation.newBuilder()
                     .setConversationId(convDict.getString("conversationId"))
-                    .setBot(convDict.getString("bot"))
-                    .setClosed(convDict.getBoolean("closed"));
+                    .setBot(convDict.getString("bot"));
+
+            if (convDict.hasKey("closed")) {
+                convBuilder.setClosed(convDict.getBoolean("closed"));
+            }
+
 
             ReadableArray participants = convDict.getArray("participants");
             for (int i = 0; i < participants.size(); ++i) {
-                convBuilder.setParticipants(i, participants.getString(i));
+                convBuilder.addParticipants(participants.getString(i));
             }
 
 
@@ -79,7 +83,7 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
                         .setChannelName(channelDict.getString("channelName"))
                         .setUserDomain(channelDict.getString("userDomain"))
                         .build();
-                convBuilder.setOnChannels(i, channel);
+                convBuilder.addOnChannels(channel);
             }
 
             builder.setConversation(convBuilder.build());
@@ -87,6 +91,7 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
         AgentGuardInput input = builder.build();
 
+        Log.d("GRPC::::Agent Guard input", input.toString());
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =

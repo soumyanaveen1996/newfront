@@ -49,6 +49,9 @@
 @implementation TimelineConversation (frontm)
 
 - (NSDictionary *) toJSON {
+  NSDictionary *lastMessage = [NSJSONSerialization JSONObjectWithData:self.lastMessage
+                                                              options:NSJSONReadingAllowFragments
+                                                                error:nil];
   return @{
            @"closed": @(self.closed),
            @"participants": self.participantsArray,
@@ -58,7 +61,7 @@
            @"conversationId": self.conversationId,
            @"createdBy": self.createdBy,
            @"bot": [self.bot toJSON],
-           @"lastMessage": self.lastMessage,
+           @"lastMessage": self.lastMessage ? lastMessage : [NSNull null],
            @"contact": [self.contact toJSON],
            @"onChannels": [TimelineChannels jsonArrayFromObjects:self.onChannelsArray]
            };

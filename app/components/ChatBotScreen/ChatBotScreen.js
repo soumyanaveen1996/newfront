@@ -205,6 +205,7 @@ class ChatBotScreen extends React.Component {
         this.firstUnreadIndex = -1;
 
         // Create a new botcontext with this as the bot
+        console.log('GRPC:::bot context', this.bot);
         this.botContext = new BotContext(this, this.bot);
 
         // Susbscribe to async result handler
@@ -313,7 +314,7 @@ class ChatBotScreen extends React.Component {
             }
 
             let serverMessages = [];
-            if (messages.length < 3) {
+            if (false && messages.length < 3) {
                 serverMessages = await Promise.resolve(
                     this.loadOldMessagesFromServer()
                 );
@@ -2023,6 +2024,7 @@ class ChatBotScreen extends React.Component {
     }
 
     async loadOldMessagesFromServer() {
+        return;
         let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
             this.conversationContext.conversationId,
             this.getBotId(),

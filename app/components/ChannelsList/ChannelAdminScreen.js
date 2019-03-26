@@ -351,7 +351,7 @@ class ChannelAdminScreen extends React.Component {
         return (
             <View>
                 <View style={styles.adminRow}>
-                    <Text style={styles.adminH1}>Partecipants</Text>
+                    <Text style={styles.adminH1}>Participants</Text>
                 </View>
                 {this.renderSeparator(SeparatorSize.SMALL)}
                 <TouchableOpacity
