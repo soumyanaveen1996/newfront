@@ -10,8 +10,10 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    PermissionsAndroid
+    PermissionsAndroid,
+    Alert
 } from 'react-native';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -20,6 +22,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
+import { CallQuotaEvents } from '../../lib/events';
 import Store from '../../redux/store/configureStore';
 import {
     setCurrentScene,
@@ -28,6 +31,7 @@ import {
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import NewChatItemSeparator from './NewChatItemSeparator';
 import NewChatSectionHeader from './NewChatSectionHeader';
+import { Message, MessageTypeConstants } from '../../lib/capability';
 import NewChatIndexView from './NewChatIndexView';
 import NewChatRow from './NewChatRow';
 import {
@@ -49,7 +53,11 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
+import DStyles from '../Dialler/styles';
+import Bot from '../../lib/bot';
+
 var EventListeners = [];
+const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 class NewCallContacts extends React.Component {
     constructor(props) {
@@ -64,6 +72,20 @@ class NewCallContacts extends React.Component {
     }
 
     componentDidMount() {
+        this.initBackGroundBot();
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPDATED_QUOTA,
+                this.handleCallQuotaUpdateSuccess
+            )
+        );
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPD_QUOTA_ERROR,
+                this.handleCallQuotaUpdateFailure
+            )
+        );
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
@@ -85,21 +107,6 @@ class NewCallContacts extends React.Component {
         } else {
             this.gettingAllContactData();
         }
-
-        this.initBackGroundBot();
-        EventListeners.push(
-            EventEmitter.addListener(
-                CallQuotaEvents.UPDATED_QUOTA,
-                this.handleCallQuotaUpdateSuccess
-            )
-        );
-
-        EventListeners.push(
-            EventEmitter.addListener(
-                CallQuotaEvents.UPD_QUOTA_ERROR,
-                this.handleCallQuotaUpdateFailure
-            )
-        );
     }
 
     componentDidUpdate(prevProps) {
@@ -122,6 +129,10 @@ class NewCallContacts extends React.Component {
     }
 
     initBackGroundBot = async () => {
+        if (__DEV__) {
+            console.tron('Init Bot');
+        }
+
         const message = new Message({
             msg: {
                 callQuotaUsed: 0
@@ -135,10 +146,38 @@ class NewCallContacts extends React.Component {
 
         await bgBotScreen.initialize();
 
+        if (__DEV__) {
+            console.tron('Send MEssage BG Bot');
+        }
+
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
     };
 
+    getCredit() {
+        console.log('In Get Credit');
+
+        this.setContactVisible(false, null);
+
+        Bot.getInstalledBots()
+            .then(bots => {
+                // console.log(bots);
+                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+                if (dwIndex < 0) {
+                    return Alert.alert(
+                        'You have to download DigitalWallet Bot to buy Credits'
+                    );
+                }
+                const DWBot = bots[dwIndex];
+                // Actions.botChat({bot: DWBot})
+                // Actions.pop();
+                setTimeout(() => Actions.botChat({ bot: DWBot }), 0);
+            })
+            .catch(err => {
+                console.log(err);
+                Alert.alert('An error occured');
+            });
+    }
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         this.setState({
             callQuota,
@@ -637,19 +676,25 @@ class NewCallContacts extends React.Component {
                                     }}
                                 >
                                     <Text style={{ marginLeft: 10 }}>
-                                        Current Balance: $10
+                                        {' Current Balance: '}
+                                        <Text>
+                                            {this.state.updatingCallQuota
+                                                ? '...'
+                                                : this.state.callQuota}
+                                        </Text>
                                     </Text>
                                     <TouchableOpacity
-                                        style={{
-                                            height: 30,
-                                            width: wp('30%'),
-                                            backgroundColor:
-                                                'rgba(255,255,255,1)',
-                                            borderRadius: 5,
-                                            marginLeft: 20
-                                        }}
+                                        style={DStyles.callQuotaBuy}
+                                        onPress={this.getCredit.bind(this)}
+                                        disabled={this.state.updatingCallQuota}
                                     >
-                                        <Text>Get Credit</Text>
+                                        <Text
+                                            style={{
+                                                color: 'rgba(0,167,214,1)'
+                                            }}
+                                        >
+                                            Get Credit
+                                        </Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
