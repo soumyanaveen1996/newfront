@@ -138,16 +138,20 @@ const stylesheet = StyleSheet.create({
     contactModal: {
         height: hp('70%'),
         width: wp('90%'),
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(244, 244, 244, 1)',
         borderRadius: 10
     },
     modalContainer: {
-        margin: 5,
+        // margin: 5,
+        backgroundColor: 'rgba(255,255,255,1)',
         display: 'flex',
-        flex: 1,
+        // flex: 1,
+        height: hp('60%'),
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10
     },
     modalContactName: {
         fontSize: hp('4%'),
@@ -166,14 +170,23 @@ const stylesheet = StyleSheet.create({
         borderBottomColor: 'rgba(91, 91, 91, 0.2)'
     },
     phoneContainer: {
-        height: hp('10%'),
+        height: hp('8%'),
         width: '100%',
         borderBottomWidth: 0.5,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'center',
         alignItems: 'center',
-        borderBottomColor: 'rgba(91, 91, 91, 0.2)'
+        borderBottomColor: 'rgba(91, 91, 91, 0.2)',
+        paddingBottom: 2
+    },
+    phoneContainerNoBorder: {
+        height: hp('7%'),
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     callButton: {
         height: hp('4%'),
