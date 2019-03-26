@@ -28,6 +28,8 @@ I18n.translations = {
         My_Bots: 'My Bots',
         Favorites: 'Favorites',
         Contacts: 'Contacts',
+        FrontM_Contacts: 'FrontM Users',
+        Addr_Contacts: 'Phone Contacts',
         Channels: 'Channels',
         ChatBots: 'Chatbots',
         Configure: 'Configure',

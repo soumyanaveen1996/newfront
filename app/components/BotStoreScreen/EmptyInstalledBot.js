@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import images from '../../config/images';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
@@ -41,10 +41,33 @@ export default class EmptyInstalledBot extends React.Component {
                             style={{ textAlign: 'center', alignSelf: 'center' }}
                             numberOfLines={3}
                         >
-                            You don’t have any app installed. Search or sign in
-                            to a new provider.
+                            You don’t have any Chatbot installed
                         </Text>
                     </View>
+                    <TouchableOpacity
+                        style={{
+                            marginTop: 20,
+                            height: 35,
+                            backgroundColor: 'rgba(0,189,242,1)',
+                            width: '80%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 8,
+                            borderWidth: 1,
+                            borderColor: 'white'
+                        }}
+                        onPress={this.props.goHome}
+                    >
+                        <Text
+                            style={{
+                                display: 'flex',
+                                color: 'white',
+                                fontSize: 16
+                            }}
+                        >
+                            Install First Bot
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
