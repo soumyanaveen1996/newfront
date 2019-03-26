@@ -23,9 +23,9 @@ export default class LogoImage extends Component {
                     source={this.props.source}
                     resizeMode={'contain'}
                     style={this.props.imageStyle}
-                    onLoad={this.onLoad}
+                    onLoadEnd={this.onLoad}
                 />
-                {!this.state.loaded && (
+                {false && !this.state.loaded && (
                     <View
                         style={
                             this.props.loadingStyle === undefined
@@ -41,6 +41,8 @@ export default class LogoImage extends Component {
     }
 
     onLoad = () => {
-        this.setState(() => ({ loaded: true }));
+        if (!this.state.loaded) {
+            this.setState(() => ({ loaded: true }));
+        }
     };
 }
