@@ -2016,10 +2016,11 @@ class ChatBotScreen extends React.Component {
 
     oldestLoadedDate() {
         let date = moment().valueOf();
+        /*
         if (this.state.messages.length > 0) {
             const message = this.state.messages[0];
             date = moment(message.message.getMessageDate()).valueOf();
-        }
+        }*/
         return date;
     }
 

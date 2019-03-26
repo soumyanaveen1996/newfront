@@ -28,7 +28,9 @@ class BackgroundTaskBotScreen {
     updateConversationContextId = () => {};
 
     persistMessage = async message => {
+        console.log('GRPC:::processAsyncMessage - persistMessage', message);
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
+        console.log('GRPC:::processAsyncMessage - persistedMessage', message);
         // Just a check
         if (this.receivedMessage && !this.receivedMessageProcessed) {
             EventEmitter.emit(MessageEvents.messageProcessed, {
@@ -256,6 +258,7 @@ const processAsyncMessage = async (
     botContext,
     createContext = false
 ) => {
+    console.log('GRPC:::processAsyncMessage', message);
     const dceBot = dce.bot(botManifest, botContext);
     const bot = await dceBot.Load(botContext);
     bot.asyncResult(message, {}, [], botContext);

@@ -70,20 +70,24 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
             }
 
 
-            ReadableArray participants = convDict.getArray("participants");
-            for (int i = 0; i < participants.size(); ++i) {
-                convBuilder.addParticipants(participants.getString(i));
+            if (convDict.hasKey("participants")) {
+                ReadableArray participants = convDict.getArray("participants");
+                for (int i = 0; i < participants.size(); ++i) {
+                    convBuilder.addParticipants(participants.getString(i));
+                }
             }
 
 
-            ReadableArray onChannels = convDict.getArray("onChannels");
-            for (int i = 0; i < onChannels.size(); ++i) {
-                ReadableMap channelDict = onChannels.getMap(i);
-                Channel channel = Channel.newBuilder()
-                        .setChannelName(channelDict.getString("channelName"))
-                        .setUserDomain(channelDict.getString("userDomain"))
-                        .build();
-                convBuilder.addOnChannels(channel);
+            if (convDict.hasKey("onChannels")) {
+                ReadableArray onChannels = convDict.getArray("onChannels");
+                for (int i = 0; i < onChannels.size(); ++i) {
+                    ReadableMap channelDict = onChannels.getMap(i);
+                    Channel channel = Channel.newBuilder()
+                            .setChannelName(channelDict.getString("channelName"))
+                            .setUserDomain(channelDict.getString("userDomain"))
+                            .build();
+                    convBuilder.addOnChannels(channel);
+                }
             }
 
             builder.setConversation(convBuilder.build());
