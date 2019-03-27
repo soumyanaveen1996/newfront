@@ -74,7 +74,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)conversations {
-  if (!conversations || [conversations isEqual:[NSNull null]]) {
+  if (!conversations || [conversations isEqual:[NSNull null]] || [conversations count] == 0) {
     return @[];
   }
   return [conversations rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

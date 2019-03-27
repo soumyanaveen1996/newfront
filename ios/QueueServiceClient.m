@@ -95,6 +95,7 @@ RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)s
 - (void) handleError {
   self.alreadyListening = NO;
   [self.sseCall cancel];
+  self.sseCall = nil;
   [self startChatSSEWithSessionId:self.sessionId];
 }
 
@@ -131,12 +132,17 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
 
   self.sseCall = [self.serviceClient
                          RPCToGetStreamingQueueMessageWithRequest:[Empty new] eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
-                           if (error) {
+
+                           RCTLog(@"GRPC:::SSE Done : %@ %@", error, [response toJSON]);
+                           if (error != nil) {
                              [self handleError];
+                             RCTLog(@"GRPC:::SSE error %@ %@", error, [response toJSON]);
                              [self sendEventWithName:@"sse_error" body:@{}];
                            } else if (done) {
+                             RCTLog(@"GRPC:::SSE done %@ %@", error, [response toJSON]);
                              [self sendEventWithName:@"sse_end" body:@{}];
                            } else {
+                             RCTLog(@"GRPC:::SSE message %@ %@", error, [response toJSON]);
                              [self sendEventWithName:@"sse_message" body:[response toJSON]];
                            }
                          }];

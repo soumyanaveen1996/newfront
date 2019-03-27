@@ -25,10 +25,20 @@ static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 @synthesize serviceClient = _serviceClient;
 
+
+- (id) init {
+  self = [super init];
+  if (self) {
+    _serviceClient = [[AgentGuardService alloc] initWithHost:kHostAddress];
+  }
+  return self;
+}
+
+
 RCT_EXPORT_MODULE();
 
 RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"GRPC::::method:execute Params : %@", sessionId);
+  RCTLog(@"GRPC::::method:execute Params : %@", params);
 
   AgentGuardInput *input = [AgentGuardInput new];
   input.parameters = params[@"parameters"];
@@ -37,11 +47,12 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
   input.sync = params[@"sync"];
 
   GRPCProtoCall *call = [self.serviceClient RPCToExecuteWithRequest:input handler:^(AgentGuardStringResponse * _Nullable response, NSError * _Nullable error) {
+    RCTLog(@"GRPC::::method:execute Response : %@", error);
     if (error != nil) {
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      RCTLog(@"GRPC::::method:execute Response : %@", sessionId);
+      RCTLog(@"GRPC::::method:execute Response : %@", [response toResponse]);
       callback(@[[NSNull null], [response toResponse]]);
     }
   }];

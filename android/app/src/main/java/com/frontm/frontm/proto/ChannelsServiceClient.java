@@ -163,14 +163,14 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
 
         SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
-        if (params.getArray("domainChannels") != null) {
+        if (params.hasKey("domainChannels") && params.getArray("domainChannels") != null) {
             ReadableArray channelsArray = params.getArray("domainChannels");
             for (int i = 0; i < channelsArray.size(); ++i) {
                 ReadableMap channelDict = channelsArray.getMap(i);
                 DomainChannels.Builder dcBuilder = DomainChannels.newBuilder()
                         .setUserDomain(channelDict.getString("userDomain"));
 
-                if (channelDict.getArray("channels") != null) {
+                if (channelDict.hasKey("channels") && channelDict.getArray("channels") != null) {
                     ReadableArray cArray = channelDict.getArray("channels");
                     for (int j = 0; j < cArray.size(); ++j) {
                         dcBuilder.addChannels(cArray.getString(j));
@@ -216,14 +216,14 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
 
         SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
-        if (params.getArray("domainChannels") != null) {
+        if (params.hasKey("domainChannels") && params.getArray("domainChannels") != null) {
             ReadableArray channelsArray = params.getArray("domainChannels");
             for (int i = 0; i < channelsArray.size(); ++i) {
                 ReadableMap channelDict = channelsArray.getMap(i);
                 DomainChannels.Builder dcBuilder = DomainChannels.newBuilder()
                         .setUserDomain(channelDict.getString("userDomain"));
 
-                if (channelDict.getArray("channels") != null) {
+                if (channelDict.hasKey("domainChannels") && channelDict.getArray("channels") != null) {
                     ReadableArray cArray = channelDict.getArray("channels");
                     for (int j = 0; j < cArray.size(); ++j) {
                         dcBuilder.addChannels(cArray.getString(j));
@@ -273,7 +273,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 .setChannelName(params.getString("channelName"))
                 .setUserDomain(params.getString("userDomain"));
 
-        if (params.getArray("newUserIds") != null) {
+        if (params.hasKey("newUserIds") && params.getArray("newUserIds") != null) {
             ReadableArray userIds = params.getArray("newUserIds");
             for (int i = 0; i < userIds.size(); ++i) {
                 input.addNewUserIds(userIds.getString(i));

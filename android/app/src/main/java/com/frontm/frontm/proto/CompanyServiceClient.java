@@ -82,7 +82,7 @@ public class CompanyServiceClient extends ReactContextBaseJavaModule {
                 .setCompanyCountry(params.getString("companyCountry"));
 
 
-        if (params.getMap("domains") != null) {
+        if (params.hasKey("domains") && params.getMap("domains") != null) {
             ReadableArray domainsArray = params.getArray("domains");
             for (int i = 0; i < domainsArray.size(); ++i) {
                 ReadableMap domainDict = domainsArray.getMap(i);

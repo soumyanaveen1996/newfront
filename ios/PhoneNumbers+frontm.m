@@ -24,7 +24,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSMutableArray *)numbers {
-  if (!numbers || [numbers isEqual:[NSNull null]]) {
+  if (!numbers || [numbers isEqual:[NSNull null]] || [numbers count] == 0) {
     return @[];
   }
   return [numbers rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

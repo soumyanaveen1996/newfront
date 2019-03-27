@@ -123,6 +123,7 @@ RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)s
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
+                             RCTLog(@"method:updateUserProfile Response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];

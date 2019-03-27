@@ -156,10 +156,11 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     }
 
     public void handleError() {
-        setmIsAlreadyListening(false);
-        startChatSSE(getmSessionId());
         mChannel.shutdown();
         mChannel = null;
+        setmIsAlreadyListening(false);
+        startChatSSE(getmSessionId());
+
     }
 
     @ReactMethod
@@ -179,7 +180,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         setmIsAlreadyListening(true);
         setmSessionId(sessionId);
 
-        Log.d("GRPC:::startChatSSE", sessionId);
+        Log.d("GRPC:::SSE", "startChatSSE" + sessionId);
         QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
         Empty input = Empty.newBuilder().build();
@@ -200,6 +201,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(Throwable t) {
+                Log.d("GRPC:::SSE error", t.getStackTrace().toString());
                 handleError();
                 sendEvent("sse_error", null);
                 //callback.invoke(Arguments.createMap());
@@ -207,6 +209,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onCompleted() {
+                Log.d("GRPC:::SSE completed", "completed");
                 sendEvent("sse_end", null);
             }
         });

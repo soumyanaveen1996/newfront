@@ -59,7 +59,7 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
                 .setCapability(params.getString("capability"))
                 .setSync(params.getBoolean("sync"));
 
-        if (params.getMap("conversation") != null) {
+        if (params.hasKey("conversation")) {
             ReadableMap convDict = params.getMap("conversation");
             Conversation.Builder convBuilder = Conversation.newBuilder()
                     .setConversationId(convDict.getString("conversationId"))

@@ -43,7 +43,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)catalogBots {
-  if (!catalogBots || [catalogBots isEqual:[NSNull null]]) {
+  if (!catalogBots || [catalogBots isEqual:[NSNull null]]|| [catalogBots count] == 0) {
     return @[];
   }
   return [catalogBots rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

@@ -25,12 +25,13 @@
 
 - (NSDictionary *) toResponse {
   return @{
+           @"error": @(self.error),
            @"data": [self toJSON]
            };
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)responses {
-  if (!responses || [responses isEqual:[NSNull null]]) {
+  if (!responses || [responses isEqual:[NSNull null]] || [responses count] == 0) {
     return @[];
   }
   return [responses rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

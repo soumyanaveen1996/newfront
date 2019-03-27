@@ -152,7 +152,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
                 .setUserName(params.getString("userName"))
                 .setEmailAddress(params.getString("emailAddress"));
 
-        if (params.getMap("phoneNumbers") != null) {
+        if (params.hasKey("phoneNumbers")) {
             ReadableMap ph = params.getMap("phoneNumbers");
             PhoneNumbers.Builder numbersBuilder = PhoneNumbers.newBuilder();
 

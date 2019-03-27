@@ -25,7 +25,7 @@
            };
 }
 + (NSArray *) jsonArrayFromObjects:(NSArray *)messages {
-  if (!messages || [messages isEqual:[NSNull null]]) {
+  if (!messages || [messages isEqual:[NSNull null]] || [messages count] == 0) {
     return @[];
   }
   return [messages rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

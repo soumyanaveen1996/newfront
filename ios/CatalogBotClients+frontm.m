@@ -25,7 +25,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)catalogBotClients {
-  if (!catalogBotClients || [catalogBotClients isEqual:[NSNull null]]) {
+  if (!catalogBotClients || [catalogBotClients isEqual:[NSNull null]] || [catalogBotClients count] == 0) {
     return @[];
   }
   return [catalogBotClients rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

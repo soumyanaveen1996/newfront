@@ -25,7 +25,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)channels {
-  if (!channels || [channels isEqual:[NSNull null]]) {
+  if (!channels || [channels isEqual:[NSNull null]] || [channels count] == 0) {
     return @[];
   }
   return [channels rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
@@ -44,7 +44,7 @@
 
 
 + (NSArray *) channelsArrayfromJSON:(NSArray *)channels {
-  if (!channels || [channels isEqual:[NSNull null]]) {
+  if (!channels || [channels isEqual:[NSNull null]] || [channels count] == 0) {
     return @[];
   }
   return [channels rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

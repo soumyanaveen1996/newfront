@@ -26,7 +26,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)owners {
-  if (!owners || [owners isEqual:[NSNull null]]) {
+  if (!owners || [owners isEqual:[NSNull null]] || [owners count] == 0) {
     return @[];
   }
   return [owners rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

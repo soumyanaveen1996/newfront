@@ -29,7 +29,7 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)catalogDeps {
-  if (!catalogDeps || [catalogDeps isEqual:[NSNull null]]) {
+  if (!catalogDeps || [catalogDeps isEqual:[NSNull null]] || [catalogDeps count] == 0) {
     return @[];
   }
   return [catalogDeps rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
