@@ -61,6 +61,7 @@ import { EmptyContact } from '.';
 import ProfileImage from '../ProfileImage';
 import { MyProfileImage } from '../ProfileImage';
 import config from '../../config/config';
+import { blue } from 'ansi-colors';
 
 class ContactsPicker extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -501,38 +502,88 @@ class ContactsPicker extends React.Component {
         });
     };
 
-    renderButtons = () => (
-        <View>
-            {this.renderSearchBar()}
-            <View style={styles.myProfileContainer}>
-                <TouchableOpacity
-                    onPress={() => {
-                        this.goToMyProfile();
-                    }}
-                >
-                    <View style={styles.myProfileItemContainer}>
-                        <MyProfileImage
-                            accessibilityLabel="My Profile Image"
-                            testID="my-profile-image"
-                            uuid={this.state.userId}
-                            placeholder={images.user_image}
-                            style={styles.myProfileItemImage}
-                            placeholderStyle={styles.myProfilePlaceholderImage}
-                            resizeMode="center"
-                        />
-                        <View style={styles.contactItemDetailsContainer}>
-                            <Text style={styles.myProfileName}>
-                                {this.state.userInfo.userName}
-                            </Text>
-                            <Text style={styles.contactItemEmail}>
-                                My Profile
-                            </Text>
+    renderButtons = () => {
+        let length = this.state.contactsData.length;
+        return (
+            <View>
+                {this.renderSearchBar()}
+                <View style={styles.myProfileContainer}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.goToMyProfile();
+                        }}
+                    >
+                        <View style={styles.myProfileItemContainer}>
+                            <MyProfileImage
+                                accessibilityLabel="My Profile Image"
+                                testID="my-profile-image"
+                                uuid={this.state.userId}
+                                placeholder={images.user_image}
+                                style={styles.myProfileItemImage}
+                                placeholderStyle={
+                                    styles.myProfilePlaceholderImage
+                                }
+                                resizeMode="center"
+                            />
+                            <View style={styles.contactItemDetailsContainer}>
+                                <Text style={styles.myProfileName}>
+                                    {this.state.userInfo.userName}
+                                </Text>
+                                <Text style={styles.contactItemEmail}>
+                                    My Profile
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    {length > 0 ? null : (
+                        <View
+                            style={{
+                                height: hp('50%'),
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <EmptyContact />
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: 'rgba(47,199,111,1)',
+                                    borderRadius: 5,
+                                    height: 40,
+                                    width: wp('40%'),
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                onPress={this.inviteUser.bind(this)}
+                            >
+                                <Image
+                                    source={require('../../images/contact/new-contact-icon.png')}
+                                    style={{
+                                        height: 20,
+                                        width: 20,
+                                        resizeMode: 'contain'
+                                    }}
+                                />
+                                <Text
+                                    style={{
+                                        color: GlobalColors.white,
+                                        marginLeft: 5
+                                    }}
+                                >
+                                    Add Contacts
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </View>
             </View>
-        </View>
-    );
+        );
+    };
 
     sectionHeader({ section }) {
         if (section.data.length === 0) {

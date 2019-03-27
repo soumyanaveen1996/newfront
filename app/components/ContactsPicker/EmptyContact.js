@@ -36,8 +36,7 @@ export default class EmptyContact extends React.Component {
                             style={{ textAlign: 'center', alignSelf: 'center' }}
                             numberOfLines={2}
                         >
-                            You have no contacts yet. Invite or create a new
-                            contact.
+                            You have no contacts yet.
                         </Text>
                     </View>
                 </View>
