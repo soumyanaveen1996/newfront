@@ -31,6 +31,9 @@
 
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)channels {
+  if (!channels || [channels isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [channels rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];
@@ -50,6 +53,9 @@
 
 
 + (NSArray *) conversationsArrayfromJSON:(NSArray *)conversations {
+  if (!conversations || [conversations isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [conversations rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [Conversation conversationfromDictionary:obj];
   }];

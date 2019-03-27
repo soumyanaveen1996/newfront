@@ -26,6 +26,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)owners {
+  if (!owners || [owners isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [owners rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];
@@ -43,6 +46,9 @@
 
 
 + (NSArray *) channelOwnersArrayfromJSON:(NSArray *)channels {
+  if (!channels || [channels isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [channels rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [ChannelOwner channelOwnerfromDictionary:obj];
   }];

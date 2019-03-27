@@ -38,7 +38,7 @@ RCT_EXPORT_MODULE();
 
 
 RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:getSubscribed Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetSubscribedWithRequest:[Empty new] handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
@@ -46,6 +46,7 @@ RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
+                             RCTLog(@"GRPC:::Channels Service Client method:getSubscribed response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];
@@ -55,7 +56,7 @@ RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId
 }
 
 RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:getUnsubscribed Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetUnsubscribedWithRequest:[Empty new] handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
@@ -63,6 +64,7 @@ RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessi
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
+                             RCTLog(@"GRPC:::Channels Service Client method:unsubscribed response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];
@@ -72,7 +74,7 @@ RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessi
 }
 
 RCT_REMAP_METHOD(getOwned, getOwnedWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:getOwned Params : %@", sessionId);
 
   GRPCProtoCall *call = [self.serviceClient
                          RPCToGetOwnedWithRequest:[Empty new] handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
@@ -89,7 +91,7 @@ RCT_REMAP_METHOD(getOwned, getOwnedWithSessionId:(NSString *)sessionId andCallba
 }
 
 RCT_REMAP_METHOD(subscribe, subscribeWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:getBotSubscriptions Params : %@", sessionId);
 
   SubUnsubInput *input = [SubUnsubInput new];
   input.domainChannelsArray = [DomainChannels arrayOfDomainChannelsfromArray:params[@"domainChannels"]];
@@ -109,7 +111,7 @@ RCT_REMAP_METHOD(subscribe, subscribeWithSessionId:(NSString *)sessionId andPara
 }
 
 RCT_REMAP_METHOD(unsubscribe, unsubscribeWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client  method:unsubscribe Params : %@", sessionId);
 
   SubUnsubInput *input = [SubUnsubInput new];
   input.domainChannelsArray = [DomainChannels arrayOfDomainChannelsfromArray:params[@"domainChannels"]];
@@ -129,7 +131,7 @@ RCT_REMAP_METHOD(unsubscribe, unsubscribeWithSessionId:(NSString *)sessionId and
 }
 
 RCT_REMAP_METHOD(addParticipants, addParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:addParticipants Params : %@", sessionId);
 
   AddParticipantsInput *input = [AddParticipantsInput new];
   input.channelName = params[@"channelName"];
@@ -151,14 +153,17 @@ RCT_REMAP_METHOD(addParticipants, addParticipantsWithSessionId:(NSString *)sessi
 }
 
 RCT_REMAP_METHOD(create, createWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:channels create Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:channels create Params : %@", sessionId);
 
   InputChannel *channel = [InputChannel new];
   channel.channelName = params[@"channelName"];
   channel.userDomain = params[@"userDomain"];
   channel.description_p = params[@"description"];
   channel.channelType = params[@"channelType"];
-  channel.discoverable = [params[@"discoverable"] boolValue];
+
+  if (params[@"discoverable"]) {
+    channel.discoverable = params[@"discoverable"];
+  }
 
   CreateEditInput *input = [CreateEditInput new];
   input.channel = channel;
@@ -178,14 +183,14 @@ RCT_REMAP_METHOD(create, createWithSessionId:(NSString *)sessionId andParams:(NS
 }
 
 RCT_REMAP_METHOD(edit, editWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:channels create Params : %@", sessionId);
+  RCTLog(@"GRPC:::Channels Service Client method:channels create Params : %@", sessionId);
 
   InputChannel *channel = [InputChannel new];
   channel.channelName = params[@"channelName"];
   channel.userDomain = params[@"userDomain"];
   channel.description_p = params[@"description"];
   channel.channelType = params[@"channelType"];
-  channel.discoverable = [params[@"discoverable"] boolValue];
+  channel.discoverable = params[@"discoverable"];
 
   CreateEditInput *input = [CreateEditInput new];
   input.channel = channel;

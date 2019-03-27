@@ -24,6 +24,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSMutableArray *)numbers {
+  if (!numbers || [numbers isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [numbers rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

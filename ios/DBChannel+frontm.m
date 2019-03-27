@@ -36,6 +36,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)channels {
+  if (!channels || [channels isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [channels rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

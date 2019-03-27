@@ -31,6 +31,9 @@
 }
 
 + (NSArray<DomainChannels *> *) arrayOfDomainChannelsfromArray:(NSArray *)from {
+  if (!from || [from isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [from rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [DomainChannels domainChannelsfromDictionary:obj];
   }];

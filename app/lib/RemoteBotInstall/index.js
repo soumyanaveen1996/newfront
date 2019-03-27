@@ -191,7 +191,7 @@ class RemoteBotInstall {
  */
 function performInstallation(botManifest) {
     if (!botManifest) {
-        return true;
+        return Promise.resolve(true);
     }
     return new Promise(async (resolve, reject) => {
         const installedBotsManifests = await Bot.getInstalledBots();
@@ -209,7 +209,7 @@ function performInstallation(botManifest) {
                 }
                 resolve(true);
             } else {
-                // console.log(botManifest.botName + ': already installed');
+                console.log(botManifest.botName + ': already installed');
                 resolve(false);
             }
         } catch (e) {

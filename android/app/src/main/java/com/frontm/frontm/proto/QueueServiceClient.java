@@ -31,6 +31,7 @@ import com.squareup.okhttp.ConnectionSpec;
 
 import javax.annotation.Nullable;
 
+import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.okhttp.OkHttpChannelBuilder;
@@ -41,6 +42,28 @@ import io.grpc.stub.StreamObserver;
 public class QueueServiceClient extends ReactContextBaseJavaModule {
 
     private ManagedChannel mChannel;
+    private Boolean mIsAlreadyListening = false;
+    private String mSessionId;
+
+    public Boolean getmIsAlreadyListening() {
+        return mIsAlreadyListening;
+    }
+
+    public void setmIsAlreadyListening(Boolean mIsAlreadyListening) {
+        this.mIsAlreadyListening = mIsAlreadyListening;
+    }
+
+
+
+    public String getmSessionId() {
+        return mSessionId;
+    }
+
+    public void setmSessionId(String mSessionId) {
+        this.mSessionId = mSessionId;
+    }
+
+
 
     public QueueServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -105,10 +128,21 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
     }
 
+    public void handleError() {
+        setmIsAlreadyListening(false);
+        startChatSSE(getmSessionId());
+    }
 
     @ReactMethod
     public void startChatSSE(String sessionId)
     {
+        if (getmIsAlreadyListening() && getmSessionId().equals(sessionId)) {
+            return;
+        }
+
+        setmIsAlreadyListening(true);
+        setmSessionId(sessionId);
+
         Log.d("GRPC:::startChatSSE", sessionId);
         QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(mChannel);
 
@@ -130,6 +164,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(Throwable t) {
+                handleError();
+                sendEvent("sse_error", null);
                 //callback.invoke(Arguments.createMap());
             }
 

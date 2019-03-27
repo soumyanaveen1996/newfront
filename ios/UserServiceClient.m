@@ -54,6 +54,7 @@ RCT_REMAP_METHOD(getBotSubscriptions, getBotSubscriptionsWithSessionId:(NSString
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
+                             RCTLog(@"method:getBotSubscriptions response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];

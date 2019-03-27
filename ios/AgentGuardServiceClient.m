@@ -28,7 +28,7 @@ static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 RCT_EXPORT_MODULE();
 
 RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:execute Params : %@", sessionId);
+  RCTLog(@"GRPC::::method:execute Params : %@", sessionId);
 
   AgentGuardInput *input = [AgentGuardInput new];
   input.parameters = params[@"parameters"];
@@ -41,6 +41,7 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
+      RCTLog(@"GRPC::::method:execute Response : %@", sessionId);
       callback(@[[NSNull null], [response toResponse]]);
     }
   }];

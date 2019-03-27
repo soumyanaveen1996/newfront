@@ -44,7 +44,7 @@
            @"messageId": self.messageId,
            @"requestUuid": self.requestUuid,
            @"error": self.error,
-           @"details": self.details ? object : [NSNull null]
+           @"details": self.details && self.details.length > 0 ? object : [NSNull null]
            };
 }
 
@@ -53,6 +53,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)responses {
+  if (!responses || [responses isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [responses rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

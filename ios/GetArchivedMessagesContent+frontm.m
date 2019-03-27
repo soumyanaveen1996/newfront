@@ -27,8 +27,8 @@
            @"contentType": self.contentType,
            @"createdOn": @(self.createdOn),
            @"createdBy": self.createdBy,
-           @"content": self.content ? content : [NSNull null],
-           @"options": self.options ? options : [NSNull null]
+           @"content": self.content && self.content.length > 0 ? content : [NSNull null],
+           @"options": self.options && self.options.length > 0 ? options : [NSNull null]
            };
 }
 
@@ -39,6 +39,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)messages {
+  if (!messages || [messages isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [messages rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

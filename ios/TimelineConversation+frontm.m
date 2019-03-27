@@ -61,7 +61,7 @@
            @"conversationId": self.conversationId,
            @"createdBy": self.createdBy,
            @"bot": [self.bot toJSON],
-           @"lastMessage": self.lastMessage ? lastMessage : [NSNull null],
+           @"lastMessage": self.lastMessage && self.lastMessage.length > 0 ? lastMessage : [NSNull null],
            @"contact": [self.contact toJSON],
            @"onChannels": [TimelineChannels jsonArrayFromObjects:self.onChannelsArray]
            };
@@ -74,6 +74,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)conversations {
+  if (!conversations || [conversations isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [conversations rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

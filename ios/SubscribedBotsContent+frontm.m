@@ -12,8 +12,8 @@
 
 - (NSDictionary *) toJSON {
   return @{
-           @"subscribedArray": self.subscribedArray,
-           @"favouritesArray": self.favouritesArray,
+           @"subscribed": self.subscribedArray,
+           @"favourites": self.favouritesArray,
            };
 }
 

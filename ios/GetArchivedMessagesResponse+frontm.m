@@ -25,6 +25,9 @@
            };
 }
 + (NSArray *) jsonArrayFromObjects:(NSArray *)messages {
+  if (!messages || [messages isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [messages rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

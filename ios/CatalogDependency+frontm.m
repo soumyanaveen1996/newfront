@@ -26,6 +26,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)catalogDeps {
+  if (!catalogDeps || [catalogDeps isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [catalogDeps rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

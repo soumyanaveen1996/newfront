@@ -43,6 +43,9 @@
 }
 
 + (NSArray *) jsonArrayFromObjects:(NSArray *)catalogBots {
+  if (!catalogBots || [catalogBots isEqual:[NSNull null]]) {
+    return @[];
+  }
   return [catalogBots rnfs_mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
     return [obj toJSON];
   }];

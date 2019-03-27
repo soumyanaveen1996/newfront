@@ -36,7 +36,7 @@ RCT_EXPORT_MODULE();
 
 
 RCT_REMAP_METHOD(find, findWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::ContactService method:find Params : %@", sessionId);
 
   SearchQuery *query = [SearchQuery new];
   query.queryString = params[@"queryString"];
@@ -46,6 +46,7 @@ RCT_REMAP_METHOD(find, findWithSessionId:(NSString *)sessionId andParams:(NSDict
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
+                             RCTLog(@"GRPC:::ContactService method:find Response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];
@@ -55,7 +56,7 @@ RCT_REMAP_METHOD(find, findWithSessionId:(NSString *)sessionId andParams:(NSDict
 }
 
 RCT_REMAP_METHOD(add, addWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::ContactService  method:add Params : %@", sessionId);
 
   UserIdList *idList = [UserIdList new];
   idList.userIdsArray = params[@"userIds"];
@@ -75,7 +76,7 @@ RCT_REMAP_METHOD(add, addWithSessionId:(NSString *)sessionId andParams:(NSDictio
 
 
 RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::ContactService method:accept Params : %@", sessionId);
 
   UserIdList *idList = [UserIdList new];
   idList.userIdsArray = params[@"userIds"];
@@ -94,7 +95,7 @@ RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NS
 }
 
 RCT_REMAP_METHOD(remove, removeWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::ContactService method:remove Params : %@", sessionId);
 
   UserIdList *idList = [UserIdList new];
   idList.userIdsArray = params[@"userIds"];
@@ -113,7 +114,7 @@ RCT_REMAP_METHOD(remove, removeWithSessionId:(NSString *)sessionId andParams:(NS
 }
 
 RCT_REMAP_METHOD(invite, inviteWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
-  RCTLog(@"method:getBotSubscriptions Params : %@", sessionId);
+  RCTLog(@"GRPC:::ContactService method:invite Params : %@", sessionId);
 
   EmailIdList *emailIdsList = [EmailIdList new];
   emailIdsList.emailIdsArray = params[@"emailIds"];

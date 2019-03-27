@@ -18,6 +18,7 @@ export const CHANNEL_CHAT = 'channels';
 export const FAVOURITE_BOTS = 'favourite_bots';
 import { NativeModules } from 'react-native';
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 /**
  * Can be used for people chat - for person to person, peer to peer or channels
@@ -309,6 +310,25 @@ export default class Conversation {
     static deleteChannelConversation = conversationId =>
         Conversation.removeConversation(conversationId, CHANNEL_CHAT);
 
+    static grpcDeleteContacts = (user, userIds) => {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.remove(
+                user.creds.sessionId,
+                { userIds },
+                (error, result) => {
+                    console.log('GRPC:::delete contacts : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
     static deleteContacts = body => {
         console.log('sending data for delete before', body);
         let currentUserId;
@@ -317,19 +337,10 @@ export default class Conversation {
                 .then(user => {
                     if (user) {
                         currentUserId = user.userId;
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.proxy.deleteContacts}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                ...body
-                            }
-                        };
-                        return Network(options);
+                        return Conversation.grpcDeleteContacts(
+                            user,
+                            body.users
+                        );
                     }
                 })
                 .then(async response => {

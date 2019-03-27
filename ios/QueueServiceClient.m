@@ -23,6 +23,9 @@ static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 @property (strong, nonatomic) QueueService *serviceClient;
 @property (strong, nonatomic) GRXWriter *grxWriter;
+@property  BOOL alreadyListening;
+@property (strong, nonatomic) GRPCProtoCall *sseCall;
+@property (strong, nonatomic) NSString *sessionId;
 
 @end
 
@@ -50,6 +53,7 @@ RCT_EXPORT_MODULE();
            @"end",
            @"sse_message",
            @"sse_end",
+           @"sse_error"
            ];
 
 }
@@ -88,6 +92,12 @@ RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)s
   [call start];
 } */
 
+- (void) handleError {
+  self.alreadyListening = NO;
+  [self.sseCall cancel];
+  [self startChatSSEWithSessionId:self.sessionId];
+}
+
 RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) {
 
   /*
@@ -108,17 +118,31 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start]; */
 
-  GRPCProtoCall *call = [self.serviceClient
+  if (self.alreadyListening && [sessionId isEqualToString:self.sessionId]) {
+    return;
+  }
+  if (![sessionId isEqualToString:self.sessionId]) {
+    if (self.sseCall) {
+      [self.sseCall cancel];
+    }
+  }
+  self.alreadyListening = YES;
+  self.sessionId = sessionId;
+
+  self.sseCall = [self.serviceClient
                          RPCToGetStreamingQueueMessageWithRequest:[Empty new] eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
-                           if (done) {
+                           if (error) {
+                             [self handleError];
+                             [self sendEventWithName:@"sse_error" body:@{}];
+                           } else if (done) {
                              [self sendEventWithName:@"sse_end" body:@{}];
                            } else {
                              [self sendEventWithName:@"sse_message" body:[response toJSON]];
                            }
                          }];
 
-  call.requestHeaders[@"sessionId"] = sessionId;
-  [call start];
+  self.sseCall.requestHeaders[@"sessionId"] = sessionId;
+  [self.sseCall start];
 }
 
 /*

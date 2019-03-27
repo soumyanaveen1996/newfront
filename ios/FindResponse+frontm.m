@@ -19,6 +19,7 @@
   return @{
            @"errorMessage": self.errorMessage,
            @"error": @(self.error),
+           @"content": content,
            };
 }
 
