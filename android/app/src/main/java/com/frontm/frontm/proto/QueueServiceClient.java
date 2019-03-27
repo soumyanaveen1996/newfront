@@ -165,13 +165,15 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void startChatSSE(String sessionId)
     {
-        if (getmIsAlreadyListening() && getmSessionId().equals(sessionId)) {
+        if (getmIsAlreadyListening() && getmSessionId() != null && getmSessionId().equals(sessionId)) {
             return;
         }
 
-        if (!getmSessionId().equals(sessionId)) {
-            mChannel.shutdown();
-            mChannel = null;
+        if (getmSessionId() != null && !getmSessionId().equals(sessionId)) {
+            if (mChannel != null) {
+                mChannel.shutdown();
+                mChannel = null;
+            }
         }
 
         setmIsAlreadyListening(true);
