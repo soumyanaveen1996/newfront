@@ -40,6 +40,8 @@ import config from '../../config/config';
 import ContactCard from './ContactCard';
 import TapToOpenFile from './TapToOpenFile';
 
+const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
+
 export default class ChatMessage extends React.Component {
     constructor(props) {
         super(props);
@@ -92,10 +94,18 @@ export default class ChatMessage extends React.Component {
         }
 
         if (message.getCreatedBy()) {
-            ContactsCache.getUserDetails(message.getCreatedBy()).then(user => {
-                const userName = user ? user.userName : I18n.t('Unknown');
-                this.setState({ userName });
-            });
+            // Throttle this call as too many chat messages trigger multiple API calls before the Ccache can return
+            let wait = getRandomInt(5000);
+            setTimeout(() => {
+                ContactsCache.getUserDetails(message.getCreatedBy()).then(
+                    user => {
+                        const userName = user
+                            ? user.userName
+                            : I18n.t('Unknown');
+                        this.setState({ userName });
+                    }
+                );
+            }, wait);
         }
 
         MessageHandler.markBotMessageAsRead(
