@@ -34,6 +34,8 @@ const R = require('ramda');
 const isEqual = require('react-fast-compare');
 import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
+import CustomPlaceholder from './CustomPlaceholder';
+
 export const FAVOURITE_BOTS = 'favourite_bots';
 class BotList extends React.Component {
     constructor(props) {
@@ -177,11 +179,13 @@ class BotList extends React.Component {
                     },
                     ...recentData
                 ];
+        setTimeout(() => {
+            this.setState({
+                loaded: true,
+                data: AllTimelineData
+            });
+        }, 2000);
 
-        this.setState({
-            loaded: true,
-            data: AllTimelineData
-        });
         // const prevTimeline = this.props.timeline.allChats
         // if (true) {
         //     this.props.setAllChatsData(AllTimelineData)
@@ -324,125 +328,120 @@ class BotList extends React.Component {
         const allData = data.filter(chats => this.applyFilter(chats));
         // console.log('data on main page list ', allData);
 
-        if (!loaded) {
-            return (
-                <View style={BotListStyles.loading}>
-                    <ActivityIndicator size="small" />
-                </View>
-            );
-        } else {
-            return (
-                <View style={BotListStyles.listViewStyle}>
-                    {
-                        <SwipeListView
-                            useFlatList
-                            data={allData}
-                            closeOnScroll={true}
-                            closeOnRowPress={true}
-                            closeOnRowBeginSwipe={true}
-                            recalculateHiddenLayout={true}
-                            renderItem={(chat, rowMap) => {
-                                const { item = null, index, separators } = chat;
-                                let rowItem = <View />;
-                                // return <View />
-                                if (item.elemType === 'search') {
-                                    rowItem = this.renderSearchBar({
-                                        onSearch: this.props.onSearch
-                                    });
-                                }
-                                if (item.elemType === 'buttons') {
-                                    rowItem = this.renderButtonBar();
-                                }
-                                if (item.elemType === 'header') {
-                                    rowItem = this.renderHeader({
-                                        headerText: item.headerText
-                                    });
-                                }
+        return (
+            <View style={BotListStyles.listViewStyle}>
+                <CustomPlaceholder
+                    onReady={loaded}
+                    animate="fade"
+                    header={this.renderSearchBar}
+                >
+                    <SwipeListView
+                        useFlatList
+                        data={allData}
+                        closeOnScroll={true}
+                        closeOnRowPress={true}
+                        closeOnRowBeginSwipe={true}
+                        recalculateHiddenLayout={true}
+                        renderItem={(chat, rowMap) => {
+                            const { item = null, index, separators } = chat;
+                            let rowItem = <View />;
+                            // return <View />
+                            if (item.elemType === 'search') {
+                                rowItem = this.renderSearchBar({
+                                    onSearch: this.props.onSearch
+                                });
+                            }
+                            if (item.elemType === 'buttons') {
+                                rowItem = this.renderButtonBar();
+                            }
+                            if (item.elemType === 'header') {
+                                rowItem = this.renderHeader({
+                                    headerText: item.headerText
+                                });
+                            }
 
-                                if (
-                                    item.elemType === 'favorite' ||
-                                    item.elemType === 'recents'
-                                ) {
-                                    rowItem =
-                                        item.type === 'bot' ? (
-                                            <BotListItem
-                                                bot={item.bot}
-                                                chatData={item.chatData}
-                                                onBack={this.props.onBack}
-                                            />
-                                        ) : (
-                                            <ConversationListItem
-                                                conversation={item.bot}
-                                                chatData={item.chatData}
-                                                onBack={this.props.onBack}
-                                            />
-                                        );
+                            if (
+                                item.elemType === 'favorite' ||
+                                item.elemType === 'recents'
+                            ) {
+                                rowItem =
+                                    item.type === 'bot' ? (
+                                        <BotListItem
+                                            bot={item.bot}
+                                            chatData={item.chatData}
+                                            onBack={this.props.onBack}
+                                        />
+                                    ) : (
+                                        <ConversationListItem
+                                            conversation={item.bot}
+                                            chatData={item.chatData}
+                                            onBack={this.props.onBack}
+                                        />
+                                    );
+                            }
+                            return rowItem;
+                        }}
+                        renderHiddenItem={(hdata, rowMap) => {
+                            const {
+                                item: {
+                                    type = null,
+                                    elemType,
+                                    bot = null,
+                                    chatData = null,
+                                    key
                                 }
-                                return rowItem;
-                            }}
-                            renderHiddenItem={(hdata, rowMap) => {
-                                const {
-                                    item: {
-                                        type = null,
-                                        elemType,
-                                        bot = null,
-                                        chatData = null,
-                                        key
-                                    }
-                                } = hdata;
+                            } = hdata;
 
-                                const Favorite =
-                                    type &&
-                                    (type === 'conversation' ||
-                                        type === 'bot') ? (
-                                            <FavoriteView
-                                                conversationId={bot.conversationId}
-                                                botId={bot.botId}
-                                                onClick={
-                                                    elemType === 'favorite'
-                                                        ? (
+                            const Favorite =
+                                type &&
+                                (type === 'conversation' || type === 'bot') ? (
+                                        <FavoriteView
+                                            conversationId={bot.conversationId}
+                                            botId={bot.botId}
+                                            onClick={
+                                                elemType === 'favorite'
+                                                    ? (
+                                                        conversationId,
+                                                        botId,
+                                                        chatData
+                                                    ) =>
+                                                        this.unsetFavorite(
+                                                            key,
+                                                            rowMap,
                                                             conversationId,
                                                             botId,
-                                                            chatData
-                                                        ) =>
-                                                            this.unsetFavorite(
-                                                                key,
-                                                                rowMap,
-                                                                conversationId,
-                                                                botId,
-                                                                chatData,
-                                                                type
-                                                            )
-                                                        : (
+                                                            chatData,
+                                                            type
+                                                        )
+                                                    : (
+                                                        conversationId,
+                                                        botId,
+                                                        chatData
+                                                    ) =>
+                                                        this.setFavorite(
+                                                            key,
+                                                            rowMap,
                                                             conversationId,
                                                             botId,
-                                                            chatData
-                                                        ) =>
-                                                            this.setFavorite(
-                                                                key,
-                                                                rowMap,
-                                                                conversationId,
-                                                                botId,
-                                                                chatData,
-                                                                type
-                                                            )
-                                                }
-                                                chatData={chatData}
-                                                chatType={type}
-                                                unfavorite={elemType === 'favorite'}
-                                            />
-                                        ) : null;
-                                return Favorite;
-                            }}
-                            leftOpenValue={hiddenItemWidth}
-                            previewRowKey={'0'}
-                            previewOpenValue={-40}
-                            previewOpenDelay={3000}
-                        />
-                    }
-                </View>
-            );
-        }
+                                                            chatData,
+                                                            type
+                                                        )
+                                            }
+                                            chatData={chatData}
+                                            chatType={type}
+                                            unfavorite={elemType === 'favorite'}
+                                        />
+                                    ) : null;
+                            return Favorite;
+                        }}
+                        leftOpenValue={hiddenItemWidth}
+                        previewRowKey={'0'}
+                        previewOpenValue={-40}
+                        previewOpenDelay={3000}
+                    />
+                </CustomPlaceholder>
+            </View>
+        );
     }
 }
 
