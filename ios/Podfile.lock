@@ -22,14 +22,14 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.40.0):
     - FBSDKCoreKit
-  - Frontm (0.0.6):
+  - Frontm (0.0.7):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
-    - Frontm/Messages (= 0.0.6)
-    - Frontm/Services (= 0.0.6)
-  - Frontm/Messages (0.0.6):
+    - Frontm/Messages (= 0.0.7)
+    - Frontm/Services (= 0.0.7)
+  - Frontm/Messages (0.0.7):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Protobuf
-  - Frontm/Services (0.0.6):
+  - Frontm/Services (0.0.7):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Frontm/Messages
     - gRPC-ProtoRPC
@@ -99,7 +99,7 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: ae214474b25033399c131dc81d258e412582a2ba
   FBSDKLoginKit: 7a1e411d46acc8834588eca437daf34de42e1d52
   FBSDKShareKit: 0e45916f4150da485928ae2a17ca021950b194f5
-  Frontm: 632bb337663d98c4fbd762176d9e37a087775e50
+  Frontm: 912ade2d42b0b93bf0c65cc6b74e25dd4c8d4d21
   gRPC: f0d45d7bfd5f220e405df5a9f672315ab963440c
   gRPC-Core: 901572a0099a453a79eb58bdb29e381ede0787bd
   gRPC-ProtoRPC: 8e49c501c166d221cf9e44076b20580171f8ecd0

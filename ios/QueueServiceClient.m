@@ -133,7 +133,7 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
   self.sseCall = [self.serviceClient
                          RPCToGetStreamingQueueMessageWithRequest:[Empty new] eventHandler:^(BOOL done, QueueMessage * _Nullable response, NSError * _Nullable error) {
 
-                           RCTLog(@"GRPC:::SSE Done : %@ %@", error, [response toJSON]);
+                           RCTLog(@"GRPC:::SSE Done : %d %@ %@", done, error, [response toJSON]);
                            if (error != nil) {
                              [self handleError];
                              RCTLog(@"GRPC:::SSE error %@ %@", error, [response toJSON]);
