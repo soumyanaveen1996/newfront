@@ -29,6 +29,8 @@ import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Nullable;
 
 import io.grpc.Context;
@@ -40,6 +42,8 @@ import io.grpc.stub.StreamObserver;
 
 
 public class QueueServiceClient extends ReactContextBaseJavaModule {
+
+
 
     private ManagedChannel mChannel;
     private Boolean mIsAlreadyListening = false;
@@ -64,6 +68,27 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     }
 
 
+    public ManagedChannel getmChannel() {
+        if (mChannel == null) {
+            String host = "grpcdev.frontm.ai";
+            int port = 50051;
+            try {
+                mChannel = OkHttpChannelBuilder.forAddress(host, port)
+                        .connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
+                        .build();
+            } catch (Exception e) {
+                mChannel = null;
+            }
+        }
+        return mChannel;
+    }
+
+    public void setmChannel(ManagedChannel mChannel) {
+        this.mChannel = mChannel;
+    }
+
+
 
     public QueueServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -78,6 +103,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
             mChannel = null;
         }
     }
+
+
 
     @Override
     public String getName() {
@@ -96,7 +123,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     public void getAllQueueMessages(String sessionId)
     {
         Log.d("GRPC:::getAllQMess", sessionId);
-        QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(mChannel);
+        QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
         Empty input = Empty.newBuilder().build();
 
@@ -131,6 +158,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     public void handleError() {
         setmIsAlreadyListening(false);
         startChatSSE(getmSessionId());
+        mChannel.shutdown();
+        mChannel = null;
     }
 
     @ReactMethod
@@ -140,11 +169,16 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
             return;
         }
 
+        if (!getmSessionId().equals(sessionId)) {
+            mChannel.shutdown();
+            mChannel = null;
+        }
+
         setmIsAlreadyListening(true);
         setmSessionId(sessionId);
 
         Log.d("GRPC:::startChatSSE", sessionId);
-        QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(mChannel);
+        QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
         Empty input = Empty.newBuilder().build();
 
