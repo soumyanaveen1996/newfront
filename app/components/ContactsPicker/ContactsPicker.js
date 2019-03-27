@@ -540,44 +540,16 @@ class ContactsPicker extends React.Component {
                     {length > 0 ? null : (
                         <View
                             style={{
-                                height: hp('50%'),
+                                height: hp('60%'),
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}
                         >
-                            <EmptyContact />
-                            <TouchableOpacity
-                                style={{
-                                    backgroundColor: 'rgba(47,199,111,1)',
-                                    borderRadius: 5,
-                                    height: 40,
-                                    width: wp('40%'),
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                                onPress={this.inviteUser.bind(this)}
-                            >
-                                <Image
-                                    source={require('../../images/contact/new-contact-icon.png')}
-                                    style={{
-                                        height: 20,
-                                        width: 20,
-                                        resizeMode: 'contain'
-                                    }}
-                                />
-                                <Text
-                                    style={{
-                                        color: GlobalColors.white,
-                                        marginLeft: 5
-                                    }}
-                                >
-                                    Add Contacts
-                                </Text>
-                            </TouchableOpacity>
+                            <EmptyContact
+                                inviteUser={this.inviteUser.bind(this)}
+                            />
                         </View>
                     )}
                 </View>

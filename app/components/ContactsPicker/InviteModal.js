@@ -70,7 +70,7 @@ export default class InviteModal extends React.Component {
     };
 
     cancelInvite() {
-        this.hideModal();
+        this.hideModal({});
         this.textInput.clear();
     }
 
@@ -116,13 +116,13 @@ export default class InviteModal extends React.Component {
             })
             .catch(err => {
                 this.setState({ sending: false });
-                this.hideModal();
+                this.hideModal({});
                 console.log('error in sending invite ', err);
             });
     };
 
     addNewContactScreen = () => {
-        this.hideModal();
+        this.hideModal({});
         Actions.addressBookScreen({ title: 'Add new contacts' });
     };
 
@@ -136,12 +136,12 @@ export default class InviteModal extends React.Component {
                 <Modal
                     isVisible={this.props.isVisible}
                     onBackdropPress={() => {
-                        this.hideModal();
+                        this.hideModal({});
                     }}
                     onBackButtonPress={() => {
-                        this.hideModal();
+                        this.hideModal({});
                     }}
-                    onSwipe={() => this.hideModal()}
+                    onSwipe={() => this.hideModal({})}
                     swipeDirection="right"
                     avoidKeyboard={true}
                 >
@@ -157,7 +157,9 @@ export default class InviteModal extends React.Component {
                                         margin: 10
                                     }}
                                 >
-                                    <TouchableOpacity onPress={this.hideModal}>
+                                    <TouchableOpacity
+                                        onPress={() => this.hideModal({})}
+                                    >
                                         <Image
                                             style={{
                                                 width: 15,
@@ -186,7 +188,7 @@ export default class InviteModal extends React.Component {
                                         ...styles.searchContactButtonContainer
                                     }}
                                     onPress={() => {
-                                        this.hideModal();
+                                        this.hideModal({});
                                         Actions.searchUsers({
                                             multiSelect: true,
                                             onDone: this.props.addContacts.bind(
@@ -292,7 +294,7 @@ export default class InviteModal extends React.Component {
                             addNewContactScreen={this.addNewContactScreen}
                             onChangeText={this.onChangeText}
                             getInputRef={this.getInputRef}
-                            onClose={this.hideModal}
+                            onClose={() => this.hideModal({})}
                             inviting={this.state.sending}
                         />
                     )}
