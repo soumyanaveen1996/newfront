@@ -19,6 +19,7 @@ service UserService {
     rpc DisableVoip(commonmessages.Empty) returns (VoipToggleResponse) {}
     rpc GetVoipStatus(VoipStatusInput) returns (VoipStatusResponse) {}
     rpc GenerateTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
+    rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
 }
 
 
@@ -98,4 +99,17 @@ message TwilioTokenInput {
 
 message TwilioTokenResponse {
     string accessToken = 1;
+}
+
+message ManageTncInput {
+    string action = 1;
+}
+
+message ManageTncResponse {
+    int32 error = 1;
+    repeated ManageTncObject content = 2;
+}
+
+message ManageTncObject {
+    bool tncAccept = 1;
 }
