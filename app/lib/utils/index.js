@@ -114,15 +114,7 @@ export function s3DownloadHeaders(s3Url, user, method = 'GET') {
     //if (s3Url.indexOf(host) < 0) {
     //    return null;
     //}
-    const path = s3Url.substring(s3Url.indexOf(host) + host.length);
-    var headers = Utils.createAuthHeader(
-        host,
-        method,
-        path,
-        config.bot.s3ServiceApi,
-        '',
-        user
-    );
+    var headers = {};
     headers = _.merge(headers, {
         sessionId: user.creds.sessionId
     });

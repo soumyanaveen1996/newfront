@@ -186,38 +186,28 @@ class AssetFetcher {
                 `AssetFetcher::Uploading file ${fileUri} data to bucketName: ${bucketName}`
             );
             // return;
-            const uploadUrl = `${config.proxy.protocol}${
+            const s3UrlToFile = `${config.proxy.protocol}${
                 config.proxy.resource_host
-            }${config.proxy.uploadFilePath}`;
+            }${config.proxy.uploadFilePath}/${bucketName}/${filename}`;
+
             const res = await RNFetchBlob.fetch(
                 'POST',
-                uploadUrl,
+                s3UrlToFile,
                 {
                     sessionId: user.creds.sessionId,
-                    'Content-Type': 'multipart/form-data'
+                    sessionid: user.creds.sessionId,
+                    'Content-Type': contentType
                 },
-                [
-                    { name: 'folderName', data: bucketName },
-                    { name: 'fileName', data: filename },
-                    {
-                        name: 'file',
-                        filename: filename,
-                        data: base64Data,
-                        type: contentType
-                    }
-                ]
+                base64Data
             );
 
             console.log({
                 sessionId: user.creds.sessionId,
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': contentType
             });
             console.log('AssetFetcher::');
             console.log(res);
 
-            const s3UrlToFile = `${config.proxy.protocol}${
-                config.proxy.resource_host
-            }${config.proxy.downloadFilePath}/${bucketName}/${filename}`;
             console.log(
                 `AssetFetcher::Done uploading file ${fileUri} to S3 URL: ${s3UrlToFile}`
             );

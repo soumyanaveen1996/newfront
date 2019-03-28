@@ -30,9 +30,9 @@ const devConfig = {
     },
     proxy: {
         enabled: true,
-        host: PROXY_HOST,
-        resource_host: 'elbdev.frontm.ai',
-        resource_host_new: '3nf11ibj25.execute-api.us-east-1.amazonaws.com/dev',
+        host: 'deprecated',
+        resource_host_old: 'elbdev.frontm.ai',
+        resource_host: '3nf11ibj25.execute-api.us-east-1.amazonaws.com/dev',
         protocol: 'https://',
         queuePath: '/queueLambda',
         pingPath: '/ping',

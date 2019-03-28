@@ -26,8 +26,11 @@ export default class ProfileImage extends React.Component {
         }
         let uri = this.getUri();
         let headers = utils.s3DownloadHeaders(uri, user) || undefined;
+
+        console.log('Profile Image : ', uri, headers);
         if (uri && this.isRemoteUri(uri)) {
             let path = await this.getImagePathFromCache(uri);
+            console.log('Profile Image cache: ', uri, headers, path);
             if (path) {
                 if (this.mounted) {
                     this.setState({
