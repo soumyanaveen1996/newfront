@@ -422,44 +422,6 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-
-        let message = new Message();
-        message.mapMessage(
-            {
-                region: {
-                    latitude: 40,
-                    longitude: 15,
-                    zoom: 11
-                }
-            },
-            {
-                mapId: 1235,
-                title: 'Title',
-                description: 'Description'
-            }
-        );
-        message.messageByBot(true);
-        this.tell(message);
-    }
-
-    TEST() {
-        let message = new Message();
-        message.mapMessage(
-            {
-                region: {
-                    latitude: 16,
-                    longitude: 16,
-                    zoom: 11
-                }
-            },
-            {
-                mapId: 1235,
-                title: 'Title',
-                description: 'Description'
-            }
-        );
-        message.messageByBot(true);
-        this.tell(message);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -943,7 +905,6 @@ class ChatBotScreen extends React.Component {
             Store.dispatch(setCurrentMap(content));
             Actions.mapView({
                 title: title || 'Map',
-                test: this.TEST.bind(this),
                 mapId: mapId,
                 onAction: this.sendMapResponse.bind(this),
                 onClosing: () => {
