@@ -163,5 +163,17 @@
              responseClass:[TwilioTokenResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark ManageTnc(ManageTncInput) returns (ManageTncResponse)
+
+- (void)manageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToManageTncWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToManageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"ManageTnc"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[ManageTncResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

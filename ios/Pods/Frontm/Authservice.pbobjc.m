@@ -292,11 +292,15 @@ typedef struct FrontmSigninInput__storage_ {
 
 @dynamic code;
 @dynamic platform;
+@dynamic idToken;
+@dynamic refreshToken;
 
 typedef struct GoogleSigninInput__storage_ {
   uint32_t _has_storage_[1];
   NSString *code;
   NSString *platform;
+  NSString *idToken;
+  NSString *refreshToken;
 } GoogleSigninInput__storage_;
 
 // This method is threadsafe because it is initially called
@@ -323,6 +327,24 @@ typedef struct GoogleSigninInput__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "idToken",
+        .dataTypeSpecific.className = NULL,
+        .number = GoogleSigninInput_FieldNumber_IdToken,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(GoogleSigninInput__storage_, idToken),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "refreshToken",
+        .dataTypeSpecific.className = NULL,
+        .number = GoogleSigninInput_FieldNumber_RefreshToken,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(GoogleSigninInput__storage_, refreshToken),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[GoogleSigninInput class]
@@ -332,6 +354,11 @@ typedef struct GoogleSigninInput__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(GoogleSigninInput__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\003\007\000\004\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -442,6 +469,7 @@ typedef struct SigninResponse__storage_ {
 @dynamic userName;
 @dynamic domainsArray, domainsArray_Count;
 @dynamic archiveMessages;
+@dynamic tncAccept;
 
 typedef struct SignInUser__storage_ {
   uint32_t _has_storage_[1];
@@ -530,6 +558,15 @@ typedef struct SignInUser__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "tncAccept",
+        .dataTypeSpecific.className = NULL,
+        .number = SignInUser_FieldNumber_TncAccept,
+        .hasIndex = 10,
+        .offset = 11,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[SignInUser class]
@@ -541,7 +578,7 @@ typedef struct SignInUser__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\005\003\014\000\004\006\000\005\014\000\006\010\000\010\017\000";
+        "\006\003\014\000\004\006\000\005\014\000\006\010\000\010\017\000\t\t\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

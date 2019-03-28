@@ -233,7 +233,10 @@ class FrontmAuth {
                 })
                 .then(user => {
                     AuthServiceClient.googleSignin(
-                        { code: user.idToken },
+                        {
+                            idToken: user.idToken,
+                            refreshToken: user.refreshToken
+                        },
                         (error, result) => {
                             if (error) {
                                 return reject({
@@ -248,7 +251,7 @@ class FrontmAuth {
                                     errorMessage: result.message
                                 });
                             } else {
-                                self.credentials.google = this.credentialsFromSigninResponse(
+                                self.credentials.google = self.credentialsFromSigninResponse(
                                     result
                                 );
                                 console.log('Credentials ', self.credentials);
@@ -310,7 +313,7 @@ class FrontmAuth {
                         errorMessage: result.message
                     });
                 } else {
-                    self.credentials.frontm = this.credentialsFromSigninResponse(
+                    self.credentials.frontm = self.credentialsFromSigninResponse(
                         result
                     );
                     console.log('Credentials ', self.credentials);

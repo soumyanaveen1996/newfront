@@ -127,5 +127,113 @@
              responseClass:[BooleanResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark GetParticipants(ChannelDomainInput) returns (ParticipantsListResponse)
+
+- (void)getParticipantsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetParticipantsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetParticipantsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetParticipants"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[ParticipantsListResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark GetPendingParticipants(ChannelDomainInput) returns (ParticipantsListResponse)
+
+- (void)getPendingParticipantsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetPendingParticipantsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetPendingParticipantsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetPendingParticipants"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[ParticipantsListResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark UpdateParticipants(UpdateUsersInput) returns (BooleanResponse)
+
+- (void)updateParticipantsWithRequest:(UpdateUsersInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToUpdateParticipantsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToUpdateParticipantsWithRequest:(UpdateUsersInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"UpdateParticipants"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark RequestPrivateChannelAccess(ChannelDomainInput) returns (BooleanResponse)
+
+- (void)requestPrivateChannelAccessWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToRequestPrivateChannelAccessWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToRequestPrivateChannelAccessWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"RequestPrivateChannelAccess"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark AuthorizeParticipants(AuthorizeParticipantInput) returns (BooleanResponse)
+
+- (void)authorizeParticipantsWithRequest:(AuthorizeParticipantInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToAuthorizeParticipantsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToAuthorizeParticipantsWithRequest:(AuthorizeParticipantInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"AuthorizeParticipants"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark ChangeOwner(ChangeOwnerInput) returns (BooleanResponse)
+
+- (void)changeOwnerWithRequest:(ChangeOwnerInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToChangeOwnerWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToChangeOwnerWithRequest:(ChangeOwnerInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"ChangeOwner"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark GetChannelAdmins(ChannelDomainInput) returns (ParticipantsListResponse)
+
+- (void)getChannelAdminsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetChannelAdminsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetChannelAdminsWithRequest:(ChannelDomainInput *)request handler:(void(^)(ParticipantsListResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetChannelAdmins"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[ParticipantsListResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark UpdateChannelAdmins(UpdateUsersInput) returns (BooleanResponse)
+
+- (void)updateChannelAdminsWithRequest:(UpdateUsersInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToUpdateChannelAdminsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToUpdateChannelAdminsWithRequest:(UpdateUsersInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"UpdateChannelAdmins"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark DeleteChannel(ChannelDomainInput) returns (BooleanResponse)
+
+- (void)deleteChannelWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToDeleteChannelWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToDeleteChannelWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"DeleteChannel"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

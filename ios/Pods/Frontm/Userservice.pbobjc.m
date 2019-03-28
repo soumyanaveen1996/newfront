@@ -916,6 +916,150 @@ typedef struct TwilioTokenResponse__storage_ {
 
 @end
 
+#pragma mark - ManageTncInput
+
+@implementation ManageTncInput
+
+@dynamic action;
+
+typedef struct ManageTncInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *action;
+} ManageTncInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "action",
+        .dataTypeSpecific.className = NULL,
+        .number = ManageTncInput_FieldNumber_Action,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ManageTncInput__storage_, action),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ManageTncInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ManageTncInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ManageTncResponse
+
+@implementation ManageTncResponse
+
+@dynamic error;
+@dynamic contentArray, contentArray_Count;
+
+typedef struct ManageTncResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t error;
+  NSMutableArray *contentArray;
+} ManageTncResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = ManageTncResponse_FieldNumber_Error,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ManageTncResponse__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "contentArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(ManageTncObject),
+        .number = ManageTncResponse_FieldNumber_ContentArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(ManageTncResponse__storage_, contentArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ManageTncResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ManageTncResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ManageTncObject
+
+@implementation ManageTncObject
+
+@dynamic tncAccept;
+
+typedef struct ManageTncObject__storage_ {
+  uint32_t _has_storage_[1];
+} ManageTncObject__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "tncAccept",
+        .dataTypeSpecific.className = NULL,
+        .number = ManageTncObject_FieldNumber_TncAccept,
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ManageTncObject class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ManageTncObject__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

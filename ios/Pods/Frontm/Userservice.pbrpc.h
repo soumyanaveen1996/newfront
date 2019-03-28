@@ -12,6 +12,8 @@
 @class BotSubscriptionsResponse;
 @class ContactsResponse;
 @class Empty;
+@class ManageTncInput;
+@class ManageTncResponse;
 @class SubscribeBotInput;
 @class SubscribeBotResponse;
 @class SubscribeDomainInput;
@@ -110,6 +112,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)generateTwilioTokenWithRequest:(TwilioTokenInput *)request handler:(void(^)(TwilioTokenResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToGenerateTwilioTokenWithRequest:(TwilioTokenInput *)request handler:(void(^)(TwilioTokenResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark ManageTnc(ManageTncInput) returns (ManageTncResponse)
+
+- (void)manageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToManageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

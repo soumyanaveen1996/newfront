@@ -181,7 +181,18 @@ RCT_REMAP_METHOD(frontmSignin, frontmSigninWithParams:(NSDictionary *)params and
 RCT_REMAP_METHOD(googleSignin, googleSigninWithParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:signup Params : %@", params);
   GoogleSigninInput *input = [GoogleSigninInput new];
-  input.code = params[@"code"];
+  if (params[@"idToken"]) {
+    input.idToken = params[@"idToken"];
+  }
+
+  if (params[@"code"]) {
+    input.code = params[@"code"];
+  }
+
+  if (params[@"refreshToken"]) {
+    input.refreshToken = params[@"refreshToken"];
+  }
+
   input.platform = @"ios";
 
   [self.serviceClient googleSigninWithRequest:input
