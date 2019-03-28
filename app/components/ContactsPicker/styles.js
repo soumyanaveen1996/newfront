@@ -318,7 +318,7 @@ const stylesheet = StyleSheet.create({
     },
     modal: {
         width: wp('90%'),
-        height: hp('50%'),
+        height: hp('60%'),
         borderRadius: 10,
         flexDirection: 'column',
         backgroundColor: 'white',
