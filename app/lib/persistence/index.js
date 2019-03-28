@@ -7,6 +7,8 @@ import ArrayStorageDAO from './ArrayStorageDAO';
 import DbVersionDAO from './DbVersionDAO';
 import BackgroundTaskDAO from './BackgroundTaskDAO';
 import ChannelDAO from './ChannelDAO';
+import ControlDAO from './ControlDAO';
+import ChannelContactDAO from './ChannelContactDAO';
 
 export {
     MessageDAO,
@@ -16,5 +18,7 @@ export {
     ArrayStorageDAO,
     DbVersionDAO,
     BackgroundTaskDAO,
-    ChannelDAO
+    ChannelDAO,
+    ControlDAO,
+    ChannelContactDAO
 };

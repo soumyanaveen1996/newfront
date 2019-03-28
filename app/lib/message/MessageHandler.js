@@ -1,7 +1,8 @@
 import events from 'events';
 import Promise from '../Promise';
-import { MessageDAO } from '../persistence';
+import { MessageDAO, ControlDAO } from '../persistence';
 import moment from 'moment';
+import { MessageTypeConstants } from '../capability/Message';
 
 /**
  * Only one instance of this is expected to run - this is handled via the import in index.js module
@@ -32,11 +33,67 @@ export default class MessageHandler extends events.EventEmitter {
             if (!message.getMessage()) {
                 resolve(message);
             }
-            message.setBotKey(botKey);
-
-            MessageDAO.insertOrUpdateMessage(message)
-                .then(resolve)
-                .catch(reject);
+            if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP
+            ) {
+                let controlId;
+                if (
+                    message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_MAP
+                ) {
+                    controlId = message.getMessageOptions().mapId;
+                } else if (
+                    message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_FORM2
+                ) {
+                    controlId = message.getMessageOptions().formId;
+                } else if (
+                    message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_CHART
+                ) {
+                    controlId = message.getMessageOptions().chartId;
+                }
+                ControlDAO.controlExist(controlId)
+                    .then(res => {
+                        if (res) {
+                            ControlDAO.updateControl(
+                                controlId,
+                                message.getMessage(),
+                                message.getMessageType(),
+                                message.getMessageDate()
+                            );
+                            resolve(false);
+                        } else {
+                            let promises = [];
+                            promises.push(
+                                ControlDAO.insertControl(
+                                    controlId,
+                                    message.getMessage(),
+                                    message.getMessageType(),
+                                    message.getMessageDate(),
+                                    message.getMessageId()
+                                )
+                            );
+                            message.setBotKey(botKey);
+                            promises.push(
+                                MessageDAO.insertOrUpdateMessage(message)
+                            );
+                            return Promise.all(promises);
+                        }
+                    })
+                    .then(() => {
+                        resolve(true);
+                    })
+                    .catch(reject);
+            } else {
+                message.setBotKey(botKey);
+                MessageDAO.insertOrUpdateMessage(message)
+                    .then(() => {
+                        resolve(true);
+                    })
+                    .catch(reject);
+            }
         });
 
     /**
