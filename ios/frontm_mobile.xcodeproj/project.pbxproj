@@ -113,6 +113,8 @@
 		21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21149E0121930D9200F429AC /* libRNDefaultPreference.a */; };
 		2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2123A5C3216DFA9C00CDC29A /* libCodePush.a */; };
 		212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E0FB6621C3740A00C9B1E4 /* libBugsnagReactNative.a */; };
+		219B34FC224D559300DE5BD9 /* ParticpantUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */; };
+		219B34FF224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */; };
 		21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37EDD216CB089009C8922 /* StoreKit.framework */; };
 		21D37F5F216CB937009C8922 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37F54216CB925009C8922 /* libRNIap.a */; };
 		21EE4F7122147AEB0079B8C3 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EE4F7022147A830079B8C3 /* libRNFetchBlob.a */; };
@@ -951,6 +953,10 @@
 		1F07CF9DB86348CB860AFB38 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Semibold.otf"; path = "../assets/fonts/SFPro/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
 		21149DC521930D9200F429AC /* RNDefaultPreference.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDefaultPreference.xcodeproj; path = "../node_modules/react-native-default-preference/ios/RNDefaultPreference.xcodeproj"; sourceTree = "<group>"; };
 		2123A5BA216DFA9C00CDC29A /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		219B34FA224D546C00DE5BD9 /* ParticpantUser+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ParticpantUser+frontm.h"; sourceTree = "<group>"; };
+		219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ParticpantUser+frontm.m"; sourceTree = "<group>"; };
+		219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ParticipantsListResponse+frontm.h"; sourceTree = "<group>"; };
+		219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ParticipantsListResponse+frontm.m"; sourceTree = "<group>"; };
 		21D37EDD216CB089009C8922 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21D37F12216CB924009C8922 /* RNIap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNIap.xcodeproj; path = "../node_modules/react-native-iap/ios/RNIap.xcodeproj"; sourceTree = "<group>"; };
 		21E0FB6121C3740A00C9B1E4 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
@@ -1498,6 +1504,10 @@
 				04905666223BBB24008FECC8 /* QueueResponse+frontm.m */,
 				0445655D2248C5DE00996110 /* DomainChannels+frontm.h */,
 				0445655E2248C5DE00996110 /* DomainChannels+frontm.m */,
+				219B34FA224D546C00DE5BD9 /* ParticpantUser+frontm.h */,
+				219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */,
+				219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */,
+				219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */,
 			);
 			name = grpc_utils;
 			sourceTree = "<group>";
@@ -2822,7 +2832,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
 			);
@@ -2833,7 +2843,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6B37D42F21C2AF1200E7A7FE /* ShellScript */ = {
@@ -2859,7 +2869,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
 				"${PODS_ROOT}/TwilioVoice/TwilioVoice.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2868,7 +2878,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2892,6 +2902,7 @@
 				0490564F223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m in Sources */,
 				04704B732236DA7F003ABE94 /* ChannelsServiceClient.m in Sources */,
 				04905658223BB809008FECC8 /* VoipToggleResponse+frontm.m in Sources */,
+				219B34FC224D559300DE5BD9 /* ParticpantUser+frontm.m in Sources */,
 				04905664223BBA01008FECC8 /* Contact+frontm.m in Sources */,
 				04905667223BBB24008FECC8 /* QueueResponse+frontm.m in Sources */,
 				04704B6D2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m in Sources */,
@@ -2903,6 +2914,7 @@
 				04704B2B22368C3B003ABE94 /* PhoneNumbers+frontm.m in Sources */,
 				0490560D223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m in Sources */,
 				04704B7C2236E33F003ABE94 /* CompanyServiceClient.m in Sources */,
+				219B34FF224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m in Sources */,
 				0490565E223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m in Sources */,
 				04905619223B61FE008FECC8 /* TimelineChannels+frontm.m in Sources */,
 				04905616223B61D8008FECC8 /* TimelineConversation+frontm.m in Sources */,

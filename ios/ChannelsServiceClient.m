@@ -9,6 +9,7 @@
 #import "ChannelsServiceClient.h"
 #import "Channelsservice.pbrpc.h"
 #import "ChannelListResponse+frontm.h"
+#import "ParticipantsListResponse+frontm.h"
 #import "BooleanResponse+frontm.h"
 #import "CreateChannelResponse+frontm.h"
 #import "DomainChannels+frontm.h"
@@ -205,6 +206,32 @@ RCT_REMAP_METHOD(edit, editWithSessionId:(NSString *)sessionId andParams:(NSDict
     }
   }];
 
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+
+RCT_REMAP_METHOD(getParticipants, getParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:getParticipants Params : %@", sessionId);
+  
+  ChannelDomainInput *input = [ChannelDomainInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToGetParticipantsWithRequest:input handler:^(ParticipantsListResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  
+  
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start];
 }
