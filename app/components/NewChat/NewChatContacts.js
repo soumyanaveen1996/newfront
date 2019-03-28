@@ -6,13 +6,15 @@ import {
     TextInput,
     KeyboardAvoidingView,
     ActivityIndicator,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact } from '../../lib/capability';
+
+import { Contact, Auth, Network } from '../../lib/capability';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
@@ -35,6 +37,9 @@ import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
 import { BackgroundImage } from '../BackgroundImage';
 import { EmptyContact } from '../ContactsPicker';
+import config from '../../config/config';
+
+import InviteModal from '../ContactsPicker/InviteModal';
 const R = require('ramda');
 
 class NewChatContacts extends React.Component {
@@ -42,7 +47,8 @@ class NewChatContacts extends React.Component {
         super(props);
         // this.dataSource = new FrontMAddedContactsPickerDataSource(this)
         this.state = {
-            contactsData: []
+            contactsData: [],
+            inviteModalVisible: false
         };
     }
 
@@ -244,14 +250,86 @@ class NewChatContacts extends React.Component {
                 </View>
             );
         } else {
-            return <EmptyContact />;
+            return <EmptyContact inviteUser={this.inviteUser.bind(this)} />;
         }
     }
+
+    inviteUser() {
+        this.setInviteVisible(true);
+    }
+
+    setInviteVisible(value, sent = null) {
+        this.setState(
+            {
+                inviteModalVisible: value
+            },
+            () => {
+                if (sent !== null) {
+                    setTimeout(() => {
+                        this.invitationSent();
+                    }, 500);
+                }
+            }
+        );
+    }
+
+    addContacts(selectedContacts) {
+        return new Promise((resolve, reject) => {
+            Contact.addContacts(selectedContacts)
+                .then(() => {
+                    return Auth.getUser();
+                })
+                .then(user => {
+                    const options = {
+                        method: 'post',
+                        url:
+                            config.proxy.protocol +
+                            config.proxy.host +
+                            '/contactsActions',
+                        headers: {
+                            sessionId: user.creds.sessionId
+                        },
+                        data: {
+                            capability: 'AddContact',
+                            botId: 'onboarding-bot',
+                            users: _.map(selectedContacts, contact => {
+                                return contact.userId;
+                            })
+                        }
+                    };
+                    return Network(options);
+                })
+                .then(() => {
+                    resolve();
+                });
+        });
+    }
+
+    invitationSent = () => {
+        return Alert.alert(
+            'Invitation sent successfully',
+            '',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        console.log('OK Pressed');
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 {this.renderContactsList()}
+                <InviteModal
+                    isVisible={this.state.inviteModalVisible}
+                    setVisible={this.setInviteVisible.bind(this)}
+                    addContacts={this.addContacts.bind(this)}
+                />
             </SafeAreaView>
         );
     }

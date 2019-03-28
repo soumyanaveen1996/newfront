@@ -9,6 +9,10 @@ const CachedImageStates = {
     IMAGE_LOADED: 'IMAGE_LOADED'
 };
 
+const jsonEqual = (a, b) => {
+    return JSON.stringify(a) === JSON.stringify(b);
+};
+
 export default class CachedImage extends React.Component {
     constructor(props) {
         super(props);
@@ -46,6 +50,12 @@ export default class CachedImage extends React.Component {
         if (uri) {
             ImageCache.imageCacheManager.unsubscribe(uri, this);
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // let isEqual = jsonEqual(nextState.source, this.state.source);
+        // return !isEqual;
+        return !(nextState.source === this.state.source);
     }
 
     imageDownloaded(path) {

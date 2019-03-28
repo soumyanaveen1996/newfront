@@ -15,7 +15,7 @@ export default StyleSheet.create({
     },
     text: {
         textAlign: 'center',
-        fontSize: hp('1.5%'),
+        fontSize: 12,
         marginHorizontal: wp('2.5%'),
         color: 'aliceblue'
     }

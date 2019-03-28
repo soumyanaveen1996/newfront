@@ -108,7 +108,7 @@ export default class ConversationListItem extends React.Component {
                     placeholder={images.user_image}
                     style={BotListItemStyles.conversationImage}
                     placeholderStyle={BotListItemStyles.conversationImage}
-                    resizeMode="cover"
+                    resizeMode="contain"
                 />
             );
         } else {
