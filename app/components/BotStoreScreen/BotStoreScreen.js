@@ -368,7 +368,13 @@ class BotStoreScreen extends React.Component {
             );
         }
         if (this.state.selectedIndex === 3) {
-            return <InstalledBotsScreen />;
+            return (
+                <InstalledBotsScreen
+                    goHome={() => {
+                        this.onIndexChange(0);
+                    }}
+                />
+            );
         }
     }
 

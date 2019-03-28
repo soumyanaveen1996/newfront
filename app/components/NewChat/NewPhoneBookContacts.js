@@ -10,8 +10,10 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    PermissionsAndroid
+    PermissionsAndroid,
+    Alert
 } from 'react-native';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -20,6 +22,7 @@ import SystemBot from '../../lib/bot/SystemBot';
 import EventEmitter, { AuthEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
+import { CallQuotaEvents } from '../../lib/events';
 import Store from '../../redux/store/configureStore';
 import {
     setCurrentScene,
@@ -28,6 +31,7 @@ import {
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import NewChatItemSeparator from './NewChatItemSeparator';
 import NewChatSectionHeader from './NewChatSectionHeader';
+import { Message, MessageTypeConstants } from '../../lib/capability';
 import NewChatIndexView from './NewChatIndexView';
 import NewChatRow from './NewChatRow';
 import {
@@ -44,6 +48,16 @@ import { EmptyContact } from '../ContactsPicker';
 import { BackgroundImage } from '../BackgroundImage';
 const R = require('ramda');
 import Contacts from 'react-native-contacts';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+
+import DStyles from '../Dialler/styles';
+import Bot from '../../lib/bot';
+
+var EventListeners = [];
+const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
 class NewCallContacts extends React.Component {
     constructor(props) {
@@ -52,11 +66,26 @@ class NewCallContacts extends React.Component {
         this.state = {
             contactsData: [],
             contactVisible: false,
-            contactSelected: null
+            contactSelected: null,
+            updatingCallQuota: false
         };
     }
 
     componentDidMount() {
+        this.initBackGroundBot();
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPDATED_QUOTA,
+                this.handleCallQuotaUpdateSuccess
+            )
+        );
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPD_QUOTA_ERROR,
+                this.handleCallQuotaUpdateFailure
+            )
+        );
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
@@ -93,6 +122,76 @@ class NewCallContacts extends React.Component {
         ) {
         }
     }
+
+    componentWillUnmount() {
+        EventListeners.forEach(listener => listener.remove());
+        EventListeners = [];
+    }
+
+    initBackGroundBot = async () => {
+        if (__DEV__) {
+            console.tron('Init Bot');
+        }
+
+        const message = new Message({
+            msg: {
+                callQuotaUsed: 0
+            },
+            messageType: MESSAGE_TYPE
+        });
+        message.setCreatedBy({ addedByBot: true });
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+
+        await bgBotScreen.initialize();
+
+        if (__DEV__) {
+            console.tron('Send MEssage BG Bot');
+        }
+
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        this.setState({ updatingCallQuota: true, bgBotScreen });
+    };
+
+    getCredit() {
+        console.log('In Get Credit');
+
+        this.setContactVisible(false, null);
+
+        Bot.getInstalledBots()
+            .then(bots => {
+                // console.log(bots);
+                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+                if (dwIndex < 0) {
+                    return Alert.alert(
+                        'You have to download DigitalWallet Bot to buy Credits'
+                    );
+                }
+                const DWBot = bots[dwIndex];
+                // Actions.botChat({bot: DWBot})
+                // Actions.pop();
+                setTimeout(() => Actions.botChat({ bot: DWBot }), 0);
+            })
+            .catch(err => {
+                console.log(err);
+                Alert.alert('An error occured');
+            });
+    }
+    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+        this.setState({
+            callQuota,
+            updatingCallQuota: false,
+            callQuotaUpdateError: false
+        });
+    };
+
+    handleCallQuotaUpdateFailure = ({ error }) => {
+        this.setState({
+            updatingCallQuota: false,
+            callQuotaUpdateError: true
+        });
+    };
 
     gettingAllContactData = () => {
         let contactArray = [];
@@ -479,315 +578,128 @@ class NewCallContacts extends React.Component {
                                             {contactSelected.name}
                                         </Text>
                                     </View>
-                                    {/* PSTN Phone */}
-                                    {phoneNumbers.map(phoneNum => {
-                                        return (
-                                            <View style={styles.phoneContainer}>
+                                    {phoneNumbers.map(
+                                        (phoneNum, index, pNumbers) => {
+                                            return (
                                                 <View
                                                     style={
-                                                        styles.modalTextContainerImg
+                                                        pNumbers.length - 1 ===
+                                                        index
+                                                            ? styles.phoneContainerNoBorder
+                                                            : styles.phoneContainer
                                                     }
                                                 >
-                                                    <Image
-                                                        style={{
-                                                            width: 16,
-                                                            height: 16
-                                                        }}
-                                                        source={require('../../images/tabbar-contacts/phone-good.png')}
-                                                        resizeMode="contain"
-                                                    />
-                                                    <Text
-                                                        style={styles.modalText}
-                                                    >
-                                                        {phoneNum.label}
-                                                    </Text>
-                                                </View>
-                                                <View
-                                                    style={
-                                                        styles.modalNumberContainer
-                                                    }
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color:
-                                                                'rgba(155,155,155,1)',
-                                                            alignSelf:
-                                                                'flex-start'
-                                                        }}
-                                                    >
-                                                        {phoneNum.number &&
-                                                        phoneNum.number !== ''
-                                                            ? phoneNum.number
-                                                            : 'Not Available'}
-                                                    </Text>
-                                                </View>
-                                                <View
-                                                    style={
-                                                        styles.modalCallButContainer
-                                                    }
-                                                >
-                                                    <TouchableOpacity
+                                                    <View
                                                         style={
-                                                            contactSelected
-                                                                .phoneNumbers
-                                                                .length > 0
-                                                                ? styles.callButton
-                                                                : styles.callButtonDisabled
+                                                            styles.modalTextContainerImg
                                                         }
-                                                        onPress={() =>
-                                                            this.makePstnCall(
-                                                                phoneNum.number
-                                                            )
+                                                    >
+                                                        <Image
+                                                            style={{
+                                                                width: 16,
+                                                                height: 16
+                                                            }}
+                                                            source={require('../../images/tabbar-contacts/phone-good.png')}
+                                                            resizeMode="contain"
+                                                        />
+                                                        <Text
+                                                            style={
+                                                                styles.modalText
+                                                            }
+                                                        >
+                                                            {phoneNum.label}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        style={
+                                                            styles.modalNumberContainer
                                                         }
-                                                        disabled={
-                                                            !(
-                                                                contactSelected.phoneNumbers &&
+                                                    >
+                                                        <Text
+                                                            style={{
+                                                                color:
+                                                                    'rgba(155,155,155,1)',
+                                                                alignSelf:
+                                                                    'flex-start'
+                                                            }}
+                                                        >
+                                                            {phoneNum.number &&
+                                                            phoneNum.number !==
+                                                                ''
+                                                                ? phoneNum.number
+                                                                : 'Not Available'}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        style={
+                                                            styles.modalCallButContainer
+                                                        }
+                                                    >
+                                                        <TouchableOpacity
+                                                            style={
                                                                 contactSelected
                                                                     .phoneNumbers
                                                                     .length > 0
-                                                            )
-                                                        }
-                                                    >
-                                                        {Icons.greenCallOutline()}
-                                                    </TouchableOpacity>
+                                                                    ? styles.callButton
+                                                                    : styles.callButtonDisabled
+                                                            }
+                                                            onPress={() =>
+                                                                this.makePstnCall(
+                                                                    phoneNum.number
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                !(
+                                                                    contactSelected.phoneNumbers &&
+                                                                    contactSelected
+                                                                        .phoneNumbers
+                                                                        .length >
+                                                                        0
+                                                                )
+                                                            }
+                                                        >
+                                                            {Icons.greenCallOutline()}
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                        );
-                                    })}
-                                    {/* {phoneNumbers && phoneNumbers.length > 0 ? (
-                                        <View style={styles.phoneContainer}>
-                                            <View
-                                                style={
-                                                    styles.modalTextContainerImg
-                                                }
-                                            >
-                                                <Image
-                                                    style={{
-                                                        width: 16,
-                                                        height: 16
-                                                    }}
-                                                    source={require('../../images/tabbar-contacts/phone-good.png')}
-                                                    resizeMode="contain"
-                                                />
-                                                <Text style={styles.modalText}>
-                                                    Mobile
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalNumberContainer
-                                                }
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color:
-                                                            'rgba(155,155,155,1)',
-                                                        alignSelf: 'flex-start'
-                                                    }}
-                                                >
-                                                    {
-                                                        (phoneNumbers[0].label = 'mobile'
-                                                            ? phoneNumbers[0]
-                                                                .number
-                                                            : 'Not Available')
-                                                    }
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalCallButContainer
-                                                }
-                                            >
-                                                <TouchableOpacity
-                                                    style={
-                                                        contactSelected.phoneNumbers
-                                                            ? styles.callButton
-                                                            : styles.callButtonDisabled
-                                                    }
-                                                    onPress={() =>
-                                                        this.makePstnCall(
-                                                            phoneNumbers.mobile
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        !(
-                                                            contactSelected.phoneNumbers &&
-                                                            contactSelected
-                                                                .phoneNumbers
-                                                                .mobile
-                                                        )
-                                                    }
-                                                >
-                                                    {Icons.greenCallOutline()}
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    ) : null} */}
-                                    {/* LocalPhone */}
-                                    {/* {phoneNumbers && phoneNumbers.local ? (
-                                        <View style={styles.phoneContainer}>
-                                            <View
-                                                style={
-                                                    styles.modalTextContainerImg
-                                                }
-                                            >
-                                                <Image
-                                                    style={{
-                                                        width: 16,
-                                                        height: 16
-                                                    }}
-                                                    source={require('../../images/tabbar-contacts/phone-good.png')}
-                                                    resizeMode="contain"
-                                                />
-                                                <Text style={styles.modalText}>
-                                                    Phone*
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalNumberContainer
-                                                }
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color:
-                                                            'rgba(155,155,155,1)',
-                                                        alignSelf: 'flex-start'
-                                                    }}
-                                                >
-                                                    {phoneNumbers.local
-                                                        ? phoneNumbers.local
-                                                        : 'Not Available'}
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalCallButContainer
-                                                }
-                                            >
-                                                <TouchableOpacity
-                                                    style={
-                                                        contactSelected.phoneNumbers
-                                                            ? styles.callButton
-                                                            : styles.callButtonDisabled
-                                                    }
-                                                    onPress={() =>
-                                                        this.makePstnCall(
-                                                            phoneNumbers.local
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        !(
-                                                            contactSelected.phoneNumbers &&
-                                                            contactSelected
-                                                                .phoneNumbers
-                                                                .local
-                                                        )
-                                                    }
-                                                >
-                                                    {Icons.greenCallOutline()}
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    ) : null} */}
-                                    {/* Satellite Call */}
-                                    {/* {phoneNumbers && phoneNumbers.satellite ? (
-                                        <View style={styles.phoneContainer}>
-                                            <View
-                                                style={
-                                                    styles.modalTextContainerImg
-                                                }
-                                            >
-                                                <Image
-                                                    style={styles.modalImage}
-                                                    source={require('../../images/tabbar-contacts/sat-phone-3.png')}
-                                                    resizeMode="contain"
-                                                />
-                                                <Text style={styles.modalText}>
-                                                    Satellite
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalNumberContainer
-                                                }
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color:
-                                                            'rgba(155,155,155,1)'
-                                                    }}
-                                                    ellipsizeMode="tail"
-                                                    numberOfLines={1}
-                                                >
-                                                    {phoneNumbers.satellite
-                                                        ? phoneNumbers.satellite
-                                                        : 'Not Available'}
-                                                </Text>
-                                            </View>
-                                            <View
-                                                style={
-                                                    styles.modalCallButContainer
-                                                }
-                                            >
-                                                <TouchableOpacity
-                                                    disabled={
-                                                        phoneNumbers.satellite
-                                                            ? false
-                                                            : true
-                                                    }
-                                                    style={
-                                                        phoneNumbers.satellite
-                                                            ? styles.callButton
-                                                            : styles.callButtonDisabled
-                                                    }
-                                                    onPress={() =>
-                                                        this.makePstnCall(
-                                                            phoneNumbers.satellite
-                                                        )
-                                                    }
-                                                >
-                                                    {Icons.greenCallOutline()}
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    ) : null} */}
-
-                                    {/* VOIP Call */}
-                                    {/* <View style={styles.phoneContainer}>
-                                        <View
-                                            style={styles.modalTextContainerImg}
+                                            );
+                                        }
+                                    )}
+                                    <View />
+                                </View>
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        height: hp('9%')
+                                    }}
+                                >
+                                    <Text style={{ marginLeft: 10 }}>
+                                        {' Current Balance: '}
+                                        <Text>
+                                            {this.state.updatingCallQuota
+                                                ? '...'
+                                                : this.state.callQuota}
+                                        </Text>
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={{
+                                            ...DStyles.callQuotaBuy,
+                                            backgroundColor:
+                                                'rgba(255,255,255,1)'
+                                        }}
+                                        onPress={this.getCredit.bind(this)}
+                                        disabled={this.state.updatingCallQuota}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: 'rgba(0,167,214,1)'
+                                            }}
                                         >
-                                            <Image
-                                                style={styles.modalImage}
-                                                source={require('../../images/tabbar-marketplace/tabbar-marketplace.png')}
-                                            />
-                                            <Text style={styles.modalText}>
-                                                FrontM
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={styles.modalNumberContainer}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: 'rgba(47,199,111,1)'
-                                                }}
-                                            >
-                                                *Free
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={styles.modalCallButContainer}
-                                        >
-                                            <TouchableOpacity
-                                                style={styles.callButton}
-                                                onPress={this.makeVoipCall}
-                                            >
-                                                {Icons.greenCallOutline()}
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View> */}
+                                            Get Credit
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         ) : (

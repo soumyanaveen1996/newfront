@@ -7,6 +7,7 @@ import {
     ImageBackground,
     Dimensions
 } from 'react-native';
+import { ControlDAO } from '../../lib/persistence';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
@@ -18,72 +19,38 @@ Mapbox.setAccessToken(
 export default class MapMessage extends React.Component {
     constructor(props) {
         super(props);
-        this.mapData = this.props.mapData;
+        this.mapOptions = this.props.mapOptions;
         this.state = {
             mapSnapshotUri: ''
         };
     }
 
     openMap() {
-        //DATASET to test maps. Please don't remove ;)
-        // this.MAPDATATEST = {
-        //     region: {
-        //         latitude: 15.5528,
-        //         longitude: 110.433,
-        //         zoom: 10
-        //     },
-        //     markers: [
-        //         {
-        //             id: "AK137",
-        //             title: "AK137",
-        //             description: "AK137",
-        //             draggable: false,
-        //             coordinate: {
-        //                 latitude: 15.5528,
-        //                 longitude: 110.433,
-        //                 direction: 214.762
-        //             },
-        //             iconType: "aircraft"
-        //         }
-        //     ],
-        //     planeRoutes: [
-        //         {
-        //             id: "AK137",
-        //             start: {
-        //                 id: "HKG",
-        //                 time: "18:15:00",
-        //                 latitude: 15.5528,
-        //                 longitude: 110.433
-        //             },
-        //             end: {
-        //                 id: "KUL",
-        //                 time: "22:20:00",
-        //                 latitude: 2.755672,
-        //                 longitude: 101.70539
-        //             },
-        //             showTracker: true
-        //         }
-        //     ]
-        // }
-
-        this.props.openMap(this.props.mapData);
-        // this.props.openMap(this.MAPDATATEST);
+        this.props.openMap(
+            this.props.mapOptions.mapId,
+            this.props.mapOptions.title
+        );
     }
 
     async componentDidMount() {
         const { width, height } = Dimensions.get('window');
-        const uri = await Mapbox.snapshotManager.takeSnap({
-            centerCoordinate: [
-                this.mapData.map.region.longitude,
-                this.mapData.map.region.latitude
-            ],
-            width: width,
-            height: width,
-            zoomLevel: 11,
-            styleURL: Mapbox.StyleURL.Street,
-            writeToDisk: true // creates a temp file
-        });
-        this.setState({ mapSnapshotUri: uri });
+        ControlDAO.getContentById(this.props.mapOptions.mapId)
+            .then(content => {
+                return Mapbox.snapshotManager.takeSnap({
+                    centerCoordinate: [
+                        content.region.longitude,
+                        content.region.latitude
+                    ],
+                    width: width,
+                    height: width,
+                    zoomLevel: 11,
+                    styleURL: Mapbox.StyleURL.Street,
+                    writeToDisk: true // creates a temp file
+                });
+            })
+            .then(uri => {
+                this.setState({ mapSnapshotUri: uri });
+            });
     }
 
     render() {
@@ -112,9 +79,9 @@ export default class MapMessage extends React.Component {
             areaStyle = styles.rightMapMessage;
             text = 'View Location';
         }
-        if (this.mapData.options) {
-            title = this.mapData.options.title;
-            description = this.mapData.options.description;
+        if (this.mapOptions) {
+            title = this.mapOptions.title;
+            description = this.mapOptions.description;
         }
         return (
             <View style={areaStyle}>

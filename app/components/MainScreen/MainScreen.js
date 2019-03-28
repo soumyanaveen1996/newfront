@@ -67,6 +67,7 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import PushNotification from 'react-native-push-notification';
+import Placeholder from 'rn-placeholder';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -318,10 +319,10 @@ class MainScreen extends React.Component {
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.allConversationsLoaded) {
-            Conversation.downloadRemoteConversations();
+            // Conversation.downloadRemoteConversations();
         }
         if (!Store.getState().user.remoteBotsInstalled) {
-            RemoteBotInstall.syncronizeBots();
+            // RemoteBotInstall.syncronizeBots();
         }
     }
 
@@ -617,24 +618,8 @@ class MainScreen extends React.Component {
         // console.log('list of bots ', this.state.bots);
 
         const { network, showNetworkStatusBar } = this.state;
-        if (this.state.screenState === MainScreenStates.notLoaded) {
-            return (
-                // <ActivityIndicator
-                //     size="small"
-                //     style={MainScreenStyles.activityIndicator}
-                // />
-                <View />
-            );
-        } else {
-            return (
-                // <View
-                //     style={
-                //         showNetworkStatusBar &&
-                //         (network === 'none' || network === 'satellite')
-                //             ? MainScreenStyles.statusBar
-                //             : MainScreenStyles.botListContainer
-                //     }
-                // >
+        return (
+            <View style={{ height: '100%' }}>
                 <BotList
                     ref={connectedBot => {
                         this.botList = connectedBot
@@ -649,9 +634,8 @@ class MainScreen extends React.Component {
                     onSearch={this.onSearch}
                     setNoChats={this.setNoChats}
                 />
-                // </View>
-            );
-        }
+            </View>
+        );
     }
 
     displayButton() {

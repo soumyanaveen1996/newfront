@@ -40,6 +40,7 @@ export default class TabIcon extends React.Component {
         return (
             <View style={styles.container}>
                 <Image
+                    style={{ width: 20, height: 20 }}
                     source={
                         this.props.titleScreen === this.state.title
                             ? imageSelected

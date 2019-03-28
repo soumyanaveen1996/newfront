@@ -122,7 +122,7 @@ export default class ConversationListItem extends React.Component {
                             )
                         }}
                         style={BotListItemStyles.conversationImage}
-                        resizeMode="contain"
+                        resizeMode="cover"
                     />
                 );
             } else {

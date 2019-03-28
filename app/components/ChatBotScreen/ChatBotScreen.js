@@ -90,7 +90,7 @@ import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import {
     setCurrentConversationId,
-    setOpenMap
+    setCurrentMap
 } from '../../redux/actions/UserActions';
 import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
@@ -101,6 +101,7 @@ import {
     SearchBoxUserAction,
     SearchBoxBotAction
 } from './SearchBox';
+import { ControlDAO } from '../../lib/persistence';
 
 const R = require('ramda');
 
@@ -195,7 +196,8 @@ class ChatBotScreen extends React.Component {
             isModalVisible: false,
             showOptions: false,
             showSearchBox: false,
-            searchBoxData: null
+            searchBoxData: null,
+            currentMap: null
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -215,6 +217,7 @@ class ChatBotScreen extends React.Component {
         this.user = null;
         this.conversationContext = null;
         this.sliderPreviousState = false;
+        this.currentMapId = null;
     }
 
     loadBot = async () => {
@@ -834,42 +837,17 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_MAP
         ) {
-            let messageMap = message.getMessage();
-            let mapOptions = message.getMessageOptions();
-            let mapStore = ReduxStore.getState().user.openMap;
-            const storeIndex = _.findIndex(mapStore, map => {
-                return map.options.mapId === mapOptions.mapId;
-            });
-            if (storeIndex !== -1) {
-                mapStore[storeIndex] = { map: messageMap, options: mapOptions };
-                Store.dispatch(setOpenMap(mapStore));
-                this.persistMapMessage(messageMap, mapOptions, message);
-            } else {
-                mapStore.push({ map: messageMap, options: mapOptions });
-                Store.dispatch(setOpenMap(mapStore));
-                this.persistMapMessage(messageMap, mapOptions, message);
+            if (
+                this.currentMapId &&
+                message.getMessageOptions().mapId === this.currentMapId
+            ) {
+                Store.dispatch(setCurrentMap(message.getMessage()));
             }
+            this.updateChat(message);
         } else {
             this.updateChat(message);
         }
     };
-
-    persistMapMessage(messageMap, mapOptions, newMessage) {
-        MessageHandler.fetchDeviceMessagesOfType(
-            this.getBotKey(),
-            MessageTypeConstants.MESSAGE_TYPE_MAP
-        ).then(messages => {
-            let mapMsg = _.find(messages, msg => {
-                return msg.getMessageOptions().mapId === mapOptions.mapId;
-            });
-            if (mapMsg) {
-                mapMsg.mapMessage(messageMap, mapOptions);
-                this.persistMessage(mapMsg);
-            } else {
-                this.updateChat(newMessage);
-            }
-        });
-    }
 
     done = () => {
         // Done with the bot - navigate away?
@@ -886,8 +864,12 @@ class ChatBotScreen extends React.Component {
     updateChat(message) {
         this.chatState.updatingChat = true;
         this.persistMessage(message)
-            .then(async () => {
-                return this.queueMessage(message);
+            .then(queue => {
+                if (queue) {
+                    return this.queueMessage(message);
+                } else {
+                    return;
+                }
             })
             .then(res => {
                 if (!res) {
@@ -916,20 +898,20 @@ class ChatBotScreen extends React.Component {
         this.setState({ showSlider: true, message: message });
     }
 
-    openMap(mapData) {
-        let mapStore = ReduxStore.getState().user.openMap;
-        let storeIndex = _.findIndex(mapStore, map => {
-            return map.options.mapId === mapData.options.mapId;
-        });
-        if (storeIndex === -1) {
-            storeIndex = mapStore.push(mapData) - 1;
-            Store.dispatch(setOpenMap(mapStore));
-        }
-        Keyboard.dismiss();
-        Actions.mapView({
-            title: mapData.options.title || 'Map',
-            storeIndex: storeIndex,
-            onAction: this.sendMapResponse.bind(this)
+    openMap(mapId, title) {
+        ControlDAO.getContentById(mapId).then(content => {
+            Keyboard.dismiss();
+            this.currentMapId = mapId;
+            Store.dispatch(setCurrentMap(content));
+            Actions.mapView({
+                title: title || 'Map',
+                mapId: mapId,
+                onAction: this.sendMapResponse.bind(this),
+                onClosing: () => {
+                    Store.dispatch(setCurrentMap(null));
+                    this.currentMap = null;
+                }
+            });
         });
     }
 
@@ -1297,10 +1279,7 @@ class ChatBotScreen extends React.Component {
                         isFromUser={false}
                         isFromBot={true}
                         openMap={this.openMap.bind(this)}
-                        mapData={{
-                            map: message.getMessage(),
-                            options: message.getMessageOptions()
-                        }}
+                        mapOptions={message.getMessageOptions()}
                     />
                 );
             } else if (
@@ -1312,10 +1291,7 @@ class ChatBotScreen extends React.Component {
                         isFromUser={false}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={{
-                            map: message.getMessage(),
-                            options: message.getMessageOptions()
-                        }}
+                        mapOptions={message.getMessageOptions()}
                     />
                 );
             } else if (
@@ -1394,10 +1370,7 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={{
-                            map: message.getMessage(),
-                            options: message.getMessageOptions()
-                        }}
+                        mapOptions={message.getMessageOptions()}
                     />
                 );
             } else if (
@@ -1409,10 +1382,7 @@ class ChatBotScreen extends React.Component {
                         isFromUser={true}
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
-                        mapData={{
-                            map: message.getMessage(),
-                            options: message.getMessageOptions()
-                        }}
+                        mapOptions={message.getMessageOptions()}
                     />
                 );
             } else {
