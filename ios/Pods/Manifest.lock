@@ -22,14 +22,14 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.40.0):
     - FBSDKCoreKit
-  - Frontm (0.0.8):
+  - Frontm (0.0.9):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
-    - Frontm/Messages (= 0.0.8)
-    - Frontm/Services (= 0.0.8)
-  - Frontm/Messages (0.0.8):
+    - Frontm/Messages (= 0.0.9)
+    - Frontm/Services (= 0.0.9)
+  - Frontm/Messages (0.0.9):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Protobuf
-  - Frontm/Services (0.0.8):
+  - Frontm/Services (0.0.9):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Frontm/Messages
     - gRPC-ProtoRPC
@@ -99,7 +99,7 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: ae214474b25033399c131dc81d258e412582a2ba
   FBSDKLoginKit: 7a1e411d46acc8834588eca437daf34de42e1d52
   FBSDKShareKit: 0e45916f4150da485928ae2a17ca021950b194f5
-  Frontm: 8ac121536716cffb2a0ff99e351e06a8769fa60a
+  Frontm: d4b3f2c06a484abd7b9d441e50fc47abcef70bad
   gRPC: f0d45d7bfd5f220e405df5a9f672315ab963440c
   gRPC-Core: 901572a0099a453a79eb58bdb29e381ede0787bd
   gRPC-ProtoRPC: 8e49c501c166d221cf9e44076b20580171f8ecd0
@@ -110,4 +110,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 122e570f5d94ab04bdfcee827a6c67396384ea04
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0
