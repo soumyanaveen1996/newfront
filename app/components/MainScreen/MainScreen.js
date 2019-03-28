@@ -318,10 +318,10 @@ class MainScreen extends React.Component {
         Store.dispatch(refreshTimeline(false));
         Store.dispatch(setCurrentScene('none'));
         if (!Store.getState().user.allConversationsLoaded) {
-            Conversation.downloadRemoteConversations();
+            // Conversation.downloadRemoteConversations();
         }
         if (!Store.getState().user.remoteBotsInstalled) {
-            RemoteBotInstall.syncronizeBots();
+            // RemoteBotInstall.syncronizeBots();
         }
     }
 

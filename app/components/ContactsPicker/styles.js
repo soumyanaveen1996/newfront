@@ -318,9 +318,11 @@ const stylesheet = StyleSheet.create({
     },
     modal: {
         width: wp('90%'),
+        height: hp('60%'),
         borderRadius: 10,
         flexDirection: 'column',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        alignItems: 'center'
     },
     phoneContainer: {
         height: hp('10%'),
@@ -406,10 +408,13 @@ const stylesheet = StyleSheet.create({
         fontSize: 16,
         color: 'rgba(102,102,102,1)',
         textAlign: 'center',
-        marginVertical: 15
+        marginVertical: 15,
+        marginLeft: 15
     },
     inviteInput: {
         backgroundColor: 'rgba(255,255,255,1)',
+        borderColor: 'rgba(221,222,227,1)',
+        borderWidth: 0.8,
         borderRadius: 5,
         marginTop: 5,
         height: 36,
@@ -458,12 +463,13 @@ const stylesheet = StyleSheet.create({
         })
     },
     searchContactButtonContainer: {
-        height: 30,
+        height: 50,
         width: wp('80%'),
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 6,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginVertical: 20
     },
     searchText: {
         fontSize: 16,

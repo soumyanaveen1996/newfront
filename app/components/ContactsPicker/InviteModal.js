@@ -21,6 +21,11 @@ import _ from 'lodash';
 
 import { NativeModules } from 'react-native';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
+import { relativeTimeRounding } from 'moment';
 
 export default class InviteModal extends React.Component {
     constructor(props) {
@@ -30,7 +35,9 @@ export default class InviteModal extends React.Component {
             contactsData: [],
             isVisible: this.props.isVisible,
             contactSelected: this.props.contact,
-            keyboard: false
+            keyboard: false,
+            isInviteVisible: false,
+            sending: false
         };
     }
 
@@ -58,8 +65,16 @@ export default class InviteModal extends React.Component {
         this.setState({ keyboard: false });
     }
 
+    getInputRef = input => (this.textInput = input);
+    hideModal = ({ message }) => {
+        message
+            ? this.props.setVisible(false, message)
+            : this.props.setVisible(false);
+        this.setState({ isInviteVisible: false });
+    };
+
     cancelInvite() {
-        this.props.setVisible(false);
+        this.hideModal({});
         this.textInput.clear();
     }
 
@@ -87,7 +102,8 @@ export default class InviteModal extends React.Component {
         });
     }
 
-    sendInvite() {
+    onChangeText = text => this.setState({ email: text });
+    sendInvite = () => {
         let reg = /\S+@\S+/;
         if (!reg.test(this.state.email)) {
             return;
@@ -95,6 +111,7 @@ export default class InviteModal extends React.Component {
         Keyboard.dismiss();
 
         this.textInput.clear();
+        this.setState({ sending: true });
         Auth.getUser()
             .then(user => {
                 if (_.isArray(this.state.email)) {
@@ -109,161 +126,345 @@ export default class InviteModal extends React.Component {
                 if (data.error > 0) {
                     console.log('error in sending invite');
                 }
-                this.props.setVisible(false, 'done');
+                this.setState({ sending: false });
+                this.hideModal({ message: 'done' });
 
                 console.log('Invite sent successfully');
             })
             .catch(err => {
-                this.props.setVisible(false);
+                this.setState({ sending: false });
+                this.hideModal({});
                 console.log('error in sending invite ', err);
             });
-    }
+    };
 
-    addNewContactScreen() {
-        this.props.setVisible(false);
+    addNewContactScreen = () => {
+        this.hideModal({});
         Actions.addressBookScreen({ title: 'Add new contacts' });
-    }
+    };
+
+    setInviteVisible = () => this.setState({ isInviteVisible: true });
+    setInviteHide = () => this.setState({ isInviteVisible: false });
 
     render() {
         const contactSelected = this.state.contactSelected;
         return (
-            <Modal
-                isVisible={this.props.isVisible}
-                onBackdropPress={() => {
-                    this.props.setVisible(false);
-                }}
-                onBackButtonPress={() => {
-                    this.props.setVisible(false);
-                }}
-                onSwipe={() => this.props.setVisible(false)}
-                swipeDirection="right"
-                avoidKeyboard={true}
-            >
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={styles.modal}>
-                        <View
-                            style={{
-                                // backgroundColor: 'white',
-                                flexDirection: 'column',
-                                paddingHorizontal: 20,
-                                paddingVertical: 10,
-                                marginBottom: 25
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => this.props.setVisible(false)}
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                    margin: 10
-                                }}
-                            >
-                                <Image
-                                    style={{ width: 14, height: 14 }}
-                                    source={require('../../images/contact/popup-close.png')}
-                                />
-                            </TouchableOpacity>
-                            <Text style={styles.inviteTitle}>
-                                Add New Contact
-                            </Text>
-                            {this.state.keyboard ? null : (
+            <View>
+                <Modal
+                    isVisible={this.props.isVisible}
+                    onBackdropPress={() => {
+                        this.hideModal({});
+                    }}
+                    onBackButtonPress={() => {
+                        this.hideModal({});
+                    }}
+                    onSwipe={() => this.hideModal({})}
+                    swipeDirection="right"
+                    avoidKeyboard={true}
+                >
+                    {!this.state.isInviteVisible ? (
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <View style={styles.modal}>
                                 <View
                                     style={{
-                                        alignItems: 'center',
-                                        textAlign: 'center'
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        width: wp('85%'),
+                                        justifyContent: 'flex-end',
+                                        margin: 10
                                     }}
                                 >
-                                    <Text style={styles.inviteText}>
-                                        Search FrontM users with name, email or
-                                        phone number
-                                    </Text>
                                     <TouchableOpacity
-                                        style={
-                                            styles.searchContactButtonContainer
-                                        }
-                                        onPress={() => {
-                                            this.props.setVisible(false);
-                                            Actions.searchUsers({
-                                                multiSelect: true,
-                                                onDone: this.props.addContacts.bind(
-                                                    this
-                                                )
-                                            });
-                                        }}
+                                        onPress={() => this.hideModal({})}
                                     >
-                                        <Text style={styles.searchText}>
-                                            Search
-                                        </Text>
+                                        <Image
+                                            style={{
+                                                width: 15,
+                                                height: 15,
+                                                resizeMode: 'center',
+                                                padding: 5
+                                            }}
+                                            source={require('../../images/remove-icon/popup-close.png')}
+                                        />
                                     </TouchableOpacity>
                                 </View>
-                            )}
-                        </View>
-                        <View
-                            style={{
-                                backgroundColor: 'rgba(244,244,244,1)',
-                                width: '100%',
-                                flexDirection: 'column',
-                                borderBottomLeftRadius: 10,
-                                borderBottomRightRadius: 10,
-                                paddingHorizontal: 20,
-                                paddingVertical: 10,
-                                alignItems: 'center'
-                            }}
-                        >
-                            <Text style={styles.inviteEmail}>
-                                Or invite a friend with an email
-                            </Text>
-                            {/* <Text
-                                style={{
-                                    alignSelf: 'flex-start',
-                                    color: 'rgba(74,74,74,1)',
-                                    fontSize: 14
-                                }}
-                            >
-                                Email
-                            </Text> */}
-                            <TextInput
-                                ref={input => {
-                                    this.textInput = input;
-                                }}
-                                onSubmitEditing={this.sendInvite.bind(this)}
-                                onChangeText={text =>
-                                    this.setState({ email: text })
-                                }
-                                style={styles.inviteInput}
-                                keyboardType={'email-address'}
-                                textContentType={'emailAddress'}
-                                placeholder="email@example.com"
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                            />
-                            <View style={styles.inviteButtonArea}>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.inviteButton,
-                                        { backgroundColor: GlobalColors.white }
-                                    ]}
-                                    onPress={this.sendInvite.bind(this)}
+                                <Text
+                                    style={{
+                                        display: 'flex',
+                                        width: wp('80%'),
+                                        justifyContent: 'flex-start',
+                                        margin: 10,
+                                        padding: 5,
+                                        fontSize: 20
+                                    }}
                                 >
-                                    <Text style={styles.inviteButtonText}>
-                                        Send Invite
+                                    Add New Contact
+                                </Text>
+                                <TouchableOpacity
+                                    style={{
+                                        ...styles.searchContactButtonContainer
+                                    }}
+                                    onPress={() => {
+                                        this.hideModal({});
+                                        Actions.searchUsers({
+                                            multiSelect: true,
+                                            onDone: this.props.addContacts.bind(
+                                                this
+                                            )
+                                        });
+                                    }}
+                                >
+                                    <Text style={styles.searchText}>
+                                        Search FrontM
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <View
+                                    style={{
+                                        width: wp('90%'),
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            width: wp('40%'),
+                                            height: 1.5,
+                                            borderBottomWidth: 0.5,
+                                            borderBottomColor: '#D8D8D8'
+                                        }}
+                                    />
+                                    <Text
+                                        style={{ color: 'rgba(155,155,155,1)' }}
+                                    >
+                                        or
+                                    </Text>
+                                    <View
+                                        style={{
+                                            width: wp('40%'),
+                                            height: 5,
+                                            borderBottomWidth: 0.5,
+                                            borderBottomColor: '#D8D8D8'
+                                        }}
+                                    />
+                                </View>
+                                <TouchableOpacity
+                                    style={{
+                                        width: wp('80%'),
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginTop: 10,
+                                        marginBottom: 5
+                                    }}
+                                    onPress={() => {
+                                        this.setInviteVisible();
+                                    }}
+                                >
+                                    <Image
+                                        style={{
+                                            width: 25,
+                                            height: 25,
+                                            resizeMode: 'contain',
+                                            marginLeft: 10
+                                        }}
+                                        source={require('../../images/email-icon/create-new-contact-icon3x.png')}
+                                    />
+
+                                    <Text style={styles.inviteEmail}>
+                                        Create New Contact
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{
+                                        width: wp('80%'),
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginVertical: 10
+                                    }}
+                                    onPress={() => {
+                                        this.setInviteVisible();
+                                    }}
+                                >
+                                    <Image
+                                        style={{
+                                            width: 25,
+                                            height: 25,
+                                            resizeMode: 'contain',
+                                            marginLeft: 10
+                                        }}
+                                        source={require('../../images/email-icon/send-invitation-icon3x.png')}
+                                    />
+
+                                    <Text style={styles.inviteEmail}>
+                                        Invite Friends to FrontM
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <TouchableOpacity
-                                style={styles.addressBookContainerStyle}
-                                onPress={this.addNewContactScreen.bind(this)}
-                            >
-                                <Text style={styles.addressBookStyle}>
-                                    Or invite user from address book
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
+                        </TouchableWithoutFeedback>
+                    ) : (
+                        <InviteByEmail
+                            sendInvite={this.sendInvite}
+                            addNewContactScreen={this.addNewContactScreen}
+                            onChangeText={this.onChangeText}
+                            getInputRef={this.getInputRef}
+                            onClose={() => this.hideModal({})}
+                            inviting={this.state.sending}
+                        />
+                    )}
+                </Modal>
+            </View>
         );
     }
 }
+
+const InviteByEmail = ({
+    sendInvite,
+    addNewContactScreen,
+    onChangeText,
+    getInputRef,
+    onClose,
+    inviting
+}) => {
+    const modalStyle = {
+        ...styles.modal
+    };
+    return (
+        <View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={modalStyle}>
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            width: wp('85%'),
+                            justifyContent: 'flex-end',
+                            margin: 10
+                        }}
+                    >
+                        <TouchableOpacity onPress={onClose}>
+                            <Image
+                                style={{
+                                    width: 15,
+                                    height: 15,
+                                    resizeMode: 'center',
+                                    padding: 5
+                                }}
+                                source={require('../../images/remove-icon/popup-close.png')}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <Text
+                        style={{
+                            display: 'flex',
+                            width: wp('80%'),
+                            justifyContent: 'flex-start',
+                            margin: 10,
+                            padding: 5,
+                            fontSize: 20
+                        }}
+                    >
+                        Send an email invitation
+                    </Text>
+                    <TextInput
+                        ref={input => {
+                            getInputRef(input);
+                        }}
+                        onSubmitEditing={sendInvite}
+                        onChangeText={onChangeText}
+                        style={{ ...styles.inviteInput, marginTop: 20 }}
+                        keyboardType={'email-address'}
+                        textContentType={'emailAddress'}
+                        placeholder="email@example.com"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    <View style={styles.inviteButtonArea}>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.inviteButton,
+                                backgroundColor: '#00BDF2'
+                            }}
+                            onPress={sendInvite}
+                            disabled={inviting}
+                        >
+                            {inviting ? (
+                                <Text
+                                    style={{
+                                        ...styles.inviteButtonText,
+                                        color: '#FFFFFF'
+                                    }}
+                                >
+                                    Sending...
+                                </Text>
+                            ) : (
+                                <Text
+                                    style={{
+                                        ...styles.inviteButtonText,
+                                        color: '#FFFFFF'
+                                    }}
+                                >
+                                    Send Invite
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={{
+                            width: wp('90%'),
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: wp('40%'),
+                                height: 1.5,
+                                borderBottomWidth: 0.5,
+                                borderBottomColor: '#D8D8D8'
+                            }}
+                        />
+                        <Text style={{ color: 'rgba(155,155,155,1)' }}>or</Text>
+                        <View
+                            style={{
+                                width: wp('40%'),
+                                height: 5,
+                                borderBottomWidth: 0.5,
+                                borderBottomColor: '#D8D8D8'
+                            }}
+                        />
+                    </View>
+                    <TouchableOpacity
+                        style={{
+                            width: wp('80%'),
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginVertical: 10
+                        }}
+                        onPress={addNewContactScreen}
+                    >
+                        <Image
+                            style={{
+                                width: 25,
+                                height: 25,
+                                resizeMode: 'contain',
+                                marginLeft: 10
+                            }}
+                            source={require('../../images/email-icon/send-invitation-icon3x.png')}
+                        />
+
+                        <Text style={styles.inviteEmail}>
+                            Select Contact from Address Book
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </TouchableWithoutFeedback>
+        </View>
+    );
+};

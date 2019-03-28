@@ -4,13 +4,20 @@ import ImageCache from '../../lib/image_cache';
 import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
 import styles from './styles';
+import ImageLoad from 'react-native-image-placeholder';
 import moment from 'moment';
 
 export default class ProfileImage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loaded: false
+            loaded: false,
+            style: {
+                height: 30,
+                width: 30,
+                marginTop: 5,
+                borderRadius: 15
+            }
         };
     }
 
@@ -61,6 +68,9 @@ export default class ProfileImage extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState.source !== this.state.source;
+    }
     componentWillUnmount() {
         this.mounted = false;
         const uri = this.getUri();
@@ -102,24 +112,32 @@ export default class ProfileImage extends React.Component {
         // console.log(this.state.source ? this.state.source.uri : 'Empty');
         return (
             <View>
-                <Image
+                <ImageLoad
+                    style={this.state.style}
+                    resizeMode={this.props.resizeMode}
+                    source={this.state.source}
+                    isShowActivity={false}
+                    placeholderStyle={this.state.style}
+                    placeholderSource={require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png')}
+                />
+                {/* <Image
                     source={this.state.source}
                     resizeMode={this.props.resizeMode}
                     style={this.state.style}
                     onLoad={this.onLoad}
-                />
-                {!this.state.loaded && !this.state.source && (
+                /> */}
+                {/* {!this.state.loaded && !this.state.source && (
                     <View style={styles.loading}>
                         <ActivityIndicator size="small" />
                     </View>
-                )}
+                )} */}
             </View>
         );
     }
 
-    onLoad = () => {
-        if (this.mounted) {
-            this.setState(() => ({ loaded: true }));
-        }
-    };
+    // onLoad = () => {
+    //     if (this.mounted) {
+    //         this.setState(() => ({ loaded: true }));
+    //     }
+    // };
 }

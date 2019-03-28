@@ -304,7 +304,9 @@ class MainRouter extends React.Component {
                                         showIcon={true}
                                         title="New Call"
                                         navBarButtonColor="rgb(22,175,239)"
-                                        titleStyle={{ color: 'black' }}
+                                        titleStyle={{
+                                            color: 'black'
+                                        }}
 
                                         // hideNavBar
                                     >
@@ -312,9 +314,11 @@ class MainRouter extends React.Component {
                                             key={
                                                 ROUTER_SCENE_KEYS.contactsCallMenu
                                             }
-                                            titleScreen={I18n.t('Contacts')}
-                                            imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
-                                            imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
+                                            titleScreen={I18n.t(
+                                                'FrontM_Contacts'
+                                            )}
+                                            imageSource={require('../images/fm/fm-iso.png')}
+                                            imageSelected={require('../images/fm/fm-iso.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene
@@ -331,10 +335,10 @@ class MainRouter extends React.Component {
                                                 ROUTER_SCENE_KEYS.phoneContactsCallMenu
                                             }
                                             titleScreen={I18n.t(
-                                                'Phone_contacts'
+                                                'Addr_Contacts'
                                             )}
-                                            imageSource={require('../images/contact/tab-dialpad-icon-small.png')}
-                                            imageSelected={require('../images/contact/tab-dialpad-icon-active-small.png')}
+                                            imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                            imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene

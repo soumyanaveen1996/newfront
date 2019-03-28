@@ -510,7 +510,7 @@ export default class InstalledBotsScreen extends React.Component {
                     </ScrollView>
                 );
             } else {
-                return <EmptyInstalledBot />;
+                return <EmptyInstalledBot goHome={this.props.goHome} />;
             }
         }
     }
