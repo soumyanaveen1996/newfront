@@ -16,6 +16,16 @@ service ChannelsService {
     rpc AddParticipants (AddParticipantsInput) returns (BooleanResponse) {}
     rpc Create (CreateEditInput) returns (CreateChannelResponse) {}
     rpc Edit (CreateEditInput) returns (BooleanResponse) {}
+
+    rpc GetParticipants (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc GetPendingParticipants (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc UpdateParticipants (UpdateUsersInput) returns (BooleanResponse) {}
+    rpc RequestPrivateChannelAccess (ChannelDomainInput) returns (BooleanResponse) {}
+    rpc AuthorizeParticipants (AuthorizeParticipantInput) returns (BooleanResponse) {}
+    rpc ChangeOwner (ChangeOwnerInput) returns (BooleanResponse) {}
+    rpc GetChannelAdmins (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc UpdateChannelAdmins (UpdateUsersInput) returns (BooleanResponse) {}
+    rpc DeleteChannel (ChannelDomainInput) returns (BooleanResponse) {}
 }
 
 message SubUnsubInput {
@@ -80,4 +90,39 @@ message CreateChannelResponse {
     int32 error = 1;
     repeated string content = 2;
     string errorMessage = 3;
+}
+
+message ChannelDomainInput {
+    string channelName = 1;
+    string userDomain = 2;
+}
+
+message ParticipantsListResponse {
+    int32 error = 1;
+    repeated ParticpantUser content = 2;
+}
+
+message ParticpantUser {
+    string userName = 1;
+    string userId = 2;
+    string role = 3;
+}
+
+message UpdateUsersInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string userIds = 3;
+}
+
+message AuthorizeParticipantInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string accepted = 3;
+    repeated string ignored = 4;
+}
+
+message ChangeOwnerInput {
+    string channelName = 1;
+    string userDomain = 2;
+    string newOwnerId = 3;
 }

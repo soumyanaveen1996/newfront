@@ -182,7 +182,7 @@ RCT_REMAP_METHOD(googleSignin, googleSigninWithParams:(NSDictionary *)params and
   RCTLog(@"method:signup Params : %@", params);
   GoogleSigninInput *input = [GoogleSigninInput new];
   input.code = params[@"code"];
-  input.platform = params[@"platform"];
+  input.platform = @"ios";
 
   [self.serviceClient googleSigninWithRequest:input
                                       handler:^(SigninResponse * _Nullable response, NSError * _Nullable error) {
