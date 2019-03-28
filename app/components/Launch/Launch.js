@@ -71,38 +71,6 @@ export default class Splash extends React.Component {
 
         console.log('[FRONTM] Code Push Active', CODE_PUSH_ACTIVATE);
 
-        var PingServiceClient = NativeModules.PingServiceClient;
-        console.log('hello : ', PingServiceClient);
-
-        PingServiceClient.pingWithCallback((error, response) => {
-            console.log('GRPC Error : ', error);
-            console.log('GRPC Response : ', response);
-        });
-
-        Auth.getUser().then(user => {
-            if (user) {
-                /*
-                twilio.isVoIPEnabled(user.userId, user)
-                    .then(at => {
-                        console.log('GRPC::: twilio isVoip ', at);
-                    });
-
-                twilio.isVoIPEnabledOld(user.userId, user)
-                    .then(at => {
-                        console.log('GRPC::: twilio isVoip old ', at);
-                    }); */
-
-                const QueueServiceClient = NativeModules.QueueServiceClient;
-                eventEmitter = new NativeEventEmitter(QueueServiceClient);
-                const subscription = eventEmitter.addListener(
-                    'message',
-                    message =>
-                        console.log('Event GRPC message : ', message, message)
-                );
-                QueueServiceClient.startChatSSE(user.creds.sessionId);
-            }
-        });
-
         if (CODE_PUSH_ACTIVATE) {
             //  We will check for CodePush Updates --Only in Dev Mode
             console.log('[FRONTM] Checking for Code Changes in Server');

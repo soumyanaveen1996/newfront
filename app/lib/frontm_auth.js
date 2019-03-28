@@ -233,7 +233,10 @@ class FrontmAuth {
                 })
                 .then(user => {
                     AuthServiceClient.googleSignin(
-                        { code: user.idToken },
+                        {
+                            idToken: user.idToken,
+                            refreshToken: user.refreshToken
+                        },
                         (error, result) => {
                             if (error) {
                                 return reject({
@@ -248,7 +251,7 @@ class FrontmAuth {
                                     errorMessage: result.message
                                 });
                             } else {
-                                self.credentials.google = this.credentialsFromSigninResponse(
+                                self.credentials.google = self.credentialsFromSigninResponse(
                                     result
                                 );
                                 console.log('Credentials ', self.credentials);
@@ -310,7 +313,7 @@ class FrontmAuth {
                         errorMessage: result.message
                     });
                 } else {
-                    self.credentials.frontm = this.credentialsFromSigninResponse(
+                    self.credentials.frontm = self.credentialsFromSigninResponse(
                         result
                     );
                     console.log('Credentials ', self.credentials);
@@ -322,101 +325,6 @@ class FrontmAuth {
             });
         });
     }
-
-    // signinWithFrontm(details, conversationId, botName) {
-    //     var self = this;
-    //     return new Promise((resolve, reject) => {
-    //         const signinOptions = {
-    //             method: 'post',
-    //             url:
-    //                 config.proxy.protocol +
-    //                 config.proxy.host +
-    //                 config.proxy.signinPath,
-    //             data: {
-    //                 user: details
-    //             }
-    //         };
-    //         console.log('Signin options : ', signinOptions);
-    //         Network(signinOptions)
-    //             .then(response => {
-    //                 console.log('signin response ', response);
-    //                 const result = response.data;
-    //                 if (
-    //                     !(result.success === 'true' || result.success === true)
-    //                 ) {
-    //                     return reject({
-    //                         type: 'error',
-    //                         error: result.message,
-    //                         errorMessage: result.message
-    //                     });
-    //                 }
-    //                 console.log('Signin result : ', result);
-    //                 const frontmUser = result.data.user;
-    //                 const defaultScreenName = frontmUser.userName
-    //                     ? frontmUser.userName.replace(/ /g, '')
-    //                     : '';
-    //                 const data = {
-    //                     user: {
-    //                         emailAddress: frontmUser.emailAddress,
-    //                         userName: frontmUser.userName,
-    //                         awsId: frontmUser.awsId
-    //                     }
-    //                 };
-    //                 let options = {
-    //                     method: 'post',
-    //                     url:
-    //                         Config.proxy.protocol +
-    //                         Config.proxy.host +
-    //                         Config.proxy.authPath,
-    //                     headers: {
-    //                         token: result.data.id_token,
-    //                         provider_name: 'frontm',
-    //                         platform: Platform.OS,
-    //                         refresh_token: result.data.refresh_token
-    //                     },
-    //                     data: data
-    //                 };
-    //                 // console.log(
-    //                 //     'network options : ' +
-    //                 //         JSON.stringify(options, undefined, 2)
-    //                 // );
-    //                 Network(options)
-    //                     .then(res => {
-    //                         let resData =
-    //                             res && res.data ? res.data : { creds: {} };
-    //                         console.log('resData : ', res);
-    //                         if (
-    //                             _.isEmpty(resData) ||
-    //                             _.isEmpty(resData.sessionId) ||
-    //                             _.isEmpty(resData.user)
-    //                         ) {
-    //                             reject(
-    //                                 new Error('Empty response from the server')
-    //                             );
-    //                             return;
-    //                         }
-    //                         self.credentials.frontm = {
-    //                             sessionId: resData.sessionId,
-    //                             userId: resData.user.userId,
-    //                             refreshToken: result.data.refresh_token,
-    //                             info: resData.user || data.user
-    //                         };
-    //                         console.log('Credentials ', self.credentials);
-    //                         return resolve({
-    //                             type: 'success',
-    //                             credentials: self.credentials
-    //                         });
-    //                     })
-    //                     .catch(err => {
-    //                         return reject({ type: 'error', error: err });
-    //                     });
-    //             })
-    //             .catch(error => {
-    //                 console.log('Error in Authing server : ', error);
-    //                 reject({ type: 'error', error: error.code });
-    //             });
-    //     });
-    // }
 
     updatePassword(sessionId, payload, user) {
         return new Promise((resolve, reject) => {

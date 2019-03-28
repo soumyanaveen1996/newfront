@@ -119,6 +119,8 @@ typedef GPB_ENUM(FrontmSigninInput_FieldNumber) {
 typedef GPB_ENUM(GoogleSigninInput_FieldNumber) {
   GoogleSigninInput_FieldNumber_Code = 1,
   GoogleSigninInput_FieldNumber_Platform = 2,
+  GoogleSigninInput_FieldNumber_IdToken = 3,
+  GoogleSigninInput_FieldNumber_RefreshToken = 4,
 };
 
 @interface GoogleSigninInput : GPBMessage
@@ -126,6 +128,10 @@ typedef GPB_ENUM(GoogleSigninInput_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *code;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *platform;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *idToken;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *refreshToken;
 
 @end
 
@@ -166,6 +172,7 @@ typedef GPB_ENUM(SignInUser_FieldNumber) {
   SignInUser_FieldNumber_UserName = 6,
   SignInUser_FieldNumber_DomainsArray = 7,
   SignInUser_FieldNumber_ArchiveMessages = 8,
+  SignInUser_FieldNumber_TncAccept = 9,
 };
 
 @interface SignInUser : GPBMessage
@@ -189,6 +196,8 @@ typedef GPB_ENUM(SignInUser_FieldNumber) {
 @property(nonatomic, readonly) NSUInteger domainsArray_Count;
 
 @property(nonatomic, readwrite) BOOL archiveMessages;
+
+@property(nonatomic, readwrite) BOOL tncAccept;
 
 @end
 

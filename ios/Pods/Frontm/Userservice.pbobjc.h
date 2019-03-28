@@ -29,6 +29,7 @@ CF_EXTERN_C_BEGIN
 
 @class Contact;
 @class DomainRoles;
+@class ManageTncObject;
 @class PhoneNumbers;
 @class SubscribedBotsContent;
 
@@ -300,6 +301,47 @@ typedef GPB_ENUM(TwilioTokenResponse_FieldNumber) {
 @interface TwilioTokenResponse : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *accessToken;
+
+@end
+
+#pragma mark - ManageTncInput
+
+typedef GPB_ENUM(ManageTncInput_FieldNumber) {
+  ManageTncInput_FieldNumber_Action = 1,
+};
+
+@interface ManageTncInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *action;
+
+@end
+
+#pragma mark - ManageTncResponse
+
+typedef GPB_ENUM(ManageTncResponse_FieldNumber) {
+  ManageTncResponse_FieldNumber_Error = 1,
+  ManageTncResponse_FieldNumber_ContentArray = 2,
+};
+
+@interface ManageTncResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<ManageTncObject*> *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
+
+@end
+
+#pragma mark - ManageTncObject
+
+typedef GPB_ENUM(ManageTncObject_FieldNumber) {
+  ManageTncObject_FieldNumber_TncAccept = 1,
+};
+
+@interface ManageTncObject : GPBMessage
+
+@property(nonatomic, readwrite) BOOL tncAccept;
 
 @end
 

@@ -22,7 +22,7 @@
            @"botName": self.botName,
            @"botNameSearch": self.botNameSearch,
            @"botUrl": self.botURL,
-           @"categories": self.categoryArray,
+           @"category": self.categoryArray,
            @"description": self.description_p,
            @"descriptionSearch": self.descriptionSearch,
            @"logoUrl": self.logoURL,

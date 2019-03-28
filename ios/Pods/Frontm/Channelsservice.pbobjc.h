@@ -31,6 +31,7 @@ CF_EXTERN_C_BEGIN
 @class DBChannel;
 @class DomainChannels;
 @class InputChannel;
+@class ParticpantUser;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -256,6 +257,119 @@ typedef GPB_ENUM(CreateChannelResponse_FieldNumber) {
 @property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *errorMessage;
+
+@end
+
+#pragma mark - ChannelDomainInput
+
+typedef GPB_ENUM(ChannelDomainInput_FieldNumber) {
+  ChannelDomainInput_FieldNumber_ChannelName = 1,
+  ChannelDomainInput_FieldNumber_UserDomain = 2,
+};
+
+@interface ChannelDomainInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@end
+
+#pragma mark - ParticipantsListResponse
+
+typedef GPB_ENUM(ParticipantsListResponse_FieldNumber) {
+  ParticipantsListResponse_FieldNumber_Error = 1,
+  ParticipantsListResponse_FieldNumber_ContentArray = 2,
+};
+
+@interface ParticipantsListResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<ParticpantUser*> *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
+
+@end
+
+#pragma mark - ParticpantUser
+
+typedef GPB_ENUM(ParticpantUser_FieldNumber) {
+  ParticpantUser_FieldNumber_UserName = 1,
+  ParticpantUser_FieldNumber_UserId = 2,
+  ParticpantUser_FieldNumber_Role = 3,
+};
+
+@interface ParticpantUser : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *role;
+
+@end
+
+#pragma mark - UpdateUsersInput
+
+typedef GPB_ENUM(UpdateUsersInput_FieldNumber) {
+  UpdateUsersInput_FieldNumber_ChannelName = 1,
+  UpdateUsersInput_FieldNumber_UserDomain = 2,
+  UpdateUsersInput_FieldNumber_UserIdsArray = 3,
+};
+
+@interface UpdateUsersInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *userIdsArray;
+/** The number of items in @c userIdsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger userIdsArray_Count;
+
+@end
+
+#pragma mark - AuthorizeParticipantInput
+
+typedef GPB_ENUM(AuthorizeParticipantInput_FieldNumber) {
+  AuthorizeParticipantInput_FieldNumber_ChannelName = 1,
+  AuthorizeParticipantInput_FieldNumber_UserDomain = 2,
+  AuthorizeParticipantInput_FieldNumber_AcceptedArray = 3,
+  AuthorizeParticipantInput_FieldNumber_IgnoredArray = 4,
+};
+
+@interface AuthorizeParticipantInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *acceptedArray;
+/** The number of items in @c acceptedArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger acceptedArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *ignoredArray;
+/** The number of items in @c ignoredArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger ignoredArray_Count;
+
+@end
+
+#pragma mark - ChangeOwnerInput
+
+typedef GPB_ENUM(ChangeOwnerInput_FieldNumber) {
+  ChangeOwnerInput_FieldNumber_ChannelName = 1,
+  ChangeOwnerInput_FieldNumber_UserDomain = 2,
+  ChangeOwnerInput_FieldNumber_NewOwnerId = 3,
+};
+
+@interface ChangeOwnerInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *newOwnerId NS_RETURNS_NOT_RETAINED;
 
 @end
 

@@ -776,6 +776,410 @@ typedef struct CreateChannelResponse__storage_ {
 
 @end
 
+#pragma mark - ChannelDomainInput
+
+@implementation ChannelDomainInput
+
+@dynamic channelName;
+@dynamic userDomain;
+
+typedef struct ChannelDomainInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *channelName;
+  NSString *userDomain;
+} ChannelDomainInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "channelName",
+        .dataTypeSpecific.className = NULL,
+        .number = ChannelDomainInput_FieldNumber_ChannelName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ChannelDomainInput__storage_, channelName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = ChannelDomainInput_FieldNumber_UserDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ChannelDomainInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ChannelDomainInput class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ChannelDomainInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\001\013\000\002\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ParticipantsListResponse
+
+@implementation ParticipantsListResponse
+
+@dynamic error;
+@dynamic contentArray, contentArray_Count;
+
+typedef struct ParticipantsListResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t error;
+  NSMutableArray *contentArray;
+} ParticipantsListResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = ParticipantsListResponse_FieldNumber_Error,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ParticipantsListResponse__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "contentArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(ParticpantUser),
+        .number = ParticipantsListResponse_FieldNumber_ContentArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(ParticipantsListResponse__storage_, contentArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ParticipantsListResponse class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ParticipantsListResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ParticpantUser
+
+@implementation ParticpantUser
+
+@dynamic userName;
+@dynamic userId;
+@dynamic role;
+
+typedef struct ParticpantUser__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *userName;
+  NSString *userId;
+  NSString *role;
+} ParticpantUser__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userName",
+        .dataTypeSpecific.className = NULL,
+        .number = ParticpantUser_FieldNumber_UserName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ParticpantUser__storage_, userName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userId",
+        .dataTypeSpecific.className = NULL,
+        .number = ParticpantUser_FieldNumber_UserId,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ParticpantUser__storage_, userId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "role",
+        .dataTypeSpecific.className = NULL,
+        .number = ParticpantUser_FieldNumber_Role,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(ParticpantUser__storage_, role),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ParticpantUser class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ParticpantUser__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\001\010\000\002\006\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UpdateUsersInput
+
+@implementation UpdateUsersInput
+
+@dynamic channelName;
+@dynamic userDomain;
+@dynamic userIdsArray, userIdsArray_Count;
+
+typedef struct UpdateUsersInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *channelName;
+  NSString *userDomain;
+  NSMutableArray *userIdsArray;
+} UpdateUsersInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "channelName",
+        .dataTypeSpecific.className = NULL,
+        .number = UpdateUsersInput_FieldNumber_ChannelName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(UpdateUsersInput__storage_, channelName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = UpdateUsersInput_FieldNumber_UserDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(UpdateUsersInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userIdsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = UpdateUsersInput_FieldNumber_UserIdsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(UpdateUsersInput__storage_, userIdsArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UpdateUsersInput class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UpdateUsersInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\003\001\013\000\002\n\000\003\000userIds\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - AuthorizeParticipantInput
+
+@implementation AuthorizeParticipantInput
+
+@dynamic channelName;
+@dynamic userDomain;
+@dynamic acceptedArray, acceptedArray_Count;
+@dynamic ignoredArray, ignoredArray_Count;
+
+typedef struct AuthorizeParticipantInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *channelName;
+  NSString *userDomain;
+  NSMutableArray *acceptedArray;
+  NSMutableArray *ignoredArray;
+} AuthorizeParticipantInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "channelName",
+        .dataTypeSpecific.className = NULL,
+        .number = AuthorizeParticipantInput_FieldNumber_ChannelName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(AuthorizeParticipantInput__storage_, channelName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = AuthorizeParticipantInput_FieldNumber_UserDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(AuthorizeParticipantInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "acceptedArray",
+        .dataTypeSpecific.className = NULL,
+        .number = AuthorizeParticipantInput_FieldNumber_AcceptedArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(AuthorizeParticipantInput__storage_, acceptedArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "ignoredArray",
+        .dataTypeSpecific.className = NULL,
+        .number = AuthorizeParticipantInput_FieldNumber_IgnoredArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(AuthorizeParticipantInput__storage_, ignoredArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[AuthorizeParticipantInput class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(AuthorizeParticipantInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\001\013\000\002\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - ChangeOwnerInput
+
+@implementation ChangeOwnerInput
+
+@dynamic channelName;
+@dynamic userDomain;
+@dynamic newOwnerId;
+
+typedef struct ChangeOwnerInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *channelName;
+  NSString *userDomain;
+  NSString *newOwnerId;
+} ChangeOwnerInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "channelName",
+        .dataTypeSpecific.className = NULL,
+        .number = ChangeOwnerInput_FieldNumber_ChannelName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ChangeOwnerInput__storage_, channelName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = ChangeOwnerInput_FieldNumber_UserDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(ChangeOwnerInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "newOwnerId",
+        .dataTypeSpecific.className = NULL,
+        .number = ChangeOwnerInput_FieldNumber_NewOwnerId,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(ChangeOwnerInput__storage_, newOwnerId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ChangeOwnerInput class]
+                                     rootClass:[ChannelsserviceRoot class]
+                                          file:ChannelsserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ChangeOwnerInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\003\001\013\000\002\n\000\003\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 
