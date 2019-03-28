@@ -81,6 +81,7 @@ export default class CachedImage extends React.Component {
                 testID={'cached-image-' + this.props.imageTag}
                 source={this.state.source}
                 imageStyle={this.props.style}
+                resizeMode={this.props.resizeMode || 'cover'}
                 loadingStyle={Platform.OS === 'android' ? null : undefined}
             />
         );

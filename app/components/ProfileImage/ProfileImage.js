@@ -13,10 +13,12 @@ export default class ProfileImage extends React.Component {
         this.state = {
             loaded: false,
             style: {
-                height: 30,
                 width: 30,
-                marginTop: 5,
-                borderRadius: 15
+                height: 30,
+                borderRadius: 30 / 2,
+                overflow: 'hidden',
+                borderWidth: 0.5,
+                borderColor: 'grey'
             }
         };
     }
@@ -118,6 +120,7 @@ export default class ProfileImage extends React.Component {
                     source={this.state.source}
                     isShowActivity={false}
                     placeholderStyle={this.state.style}
+                    borderRadius={this.state.style.width / 2 || 15}
                     placeholderSource={require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png')}
                 />
                 {/* <Image
