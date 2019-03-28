@@ -3,11 +3,12 @@ import {
     NetworkDAO,
     ConversationDAO,
     ArrayStorageDAO,
-    DbVersionDAO
+    DbVersionDAO,
+    ControlDAO,
+    ChannelDAO,
+    ChannelContactDAO,
+    BackgroundTaskDAO
 } from '../../lib/persistence';
-import ChannelDAO from '../../lib/persistence/ChannelDAO';
-import ChannelContactDAO from '../../lib/persistence/ChannelContactDAO';
-import BackgroundTaskDAO from '../../lib/persistence/BackgroundTaskDAO';
 
 const createMessageTable = MessageDAO.createMessageTable;
 const createNetworkRequestQueueTable =
@@ -133,6 +134,11 @@ function EighteentoNineteen() {
 function NineteentoTwenty() {
     return ChannelDAO.addDiscoverable().then(() => {
         return DbVersionDAO.updateVersion(20);
+    });
+}
+function TwentytoTwentyOne() {
+    return ControlDAO.createControlTable().then(() => {
+        return DbVersionDAO.updateVersion(21);
     });
 }
 
@@ -283,6 +289,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 19) {
                     return NineteentoTwenty();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 20) {
+                    return TwentytoTwentyOne();
                 } else {
                     return version;
                 }

@@ -22,6 +22,12 @@ import {
     NETWORK_EVENTS_CONSTANTS,
     Queue
 } from '../../lib/network';
+import {
+    EventEmitter,
+    SatelliteConnectionEvents,
+    PollingStrategyEvents,
+    MessageEvents
+} from '../../lib/events';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import Icons from '../../config/icons';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -138,12 +144,14 @@ class MapView extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.mapData.map, this.props.mapData.map)) {
+        if (!_.isEqual(prevProps.mapData, this.props.mapData)) {
             this.refreshMap();
         }
     }
 
-    componentWillUnmount() {}
+    componentWillUnmount() {
+        this.props.onClosing();
+    }
 
     readLambdaQueue() {
         NetworkHandler.readLambda();
@@ -209,7 +217,7 @@ class MapView extends React.Component {
     //Create a new GEOJson
     refreshMap() {
         //GREAT CIRCLE
-        const planeRoutes = _.map(this.props.mapData.map.planeRoutes, route => {
+        const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
                 route.start.longitude,
                 route.start.latitude
@@ -221,7 +229,7 @@ class MapView extends React.Component {
             return turf_great_circle(start, end, { name: route.id });
         });
         //MARKERS
-        const markers = _.map(this.props.mapData.map.markers, marker => {
+        const markers = _.map(this.props.mapData.markers, marker => {
             const position = [
                 marker.coordinate.longitude,
                 marker.coordinate.latitude
@@ -245,7 +253,7 @@ class MapView extends React.Component {
         });
 
         //POLYLINES
-        const polylines = _.map(this.props.mapData.map.polylines, polyline => {
+        const polylines = _.map(this.props.mapData.polylines, polyline => {
             vertices = _.map(polyline.coordinates, coords => {
                 const vertex = [coords.longitude, coords.latitude];
                 return vertex;
@@ -354,11 +362,11 @@ class MapView extends React.Component {
 
     getRouteTracker() {
         let markerToTrack;
-        let routeToTrack = _.find(this.props.mapData.map.planeRoutes, route => {
+        let routeToTrack = _.find(this.props.mapData.planeRoutes, route => {
             return route.showTracker;
         });
         if (routeToTrack) {
-            markerToTrack = _.find(this.props.mapData.map.markers, marker => {
+            markerToTrack = _.find(this.props.mapData.markers, marker => {
                 return routeToTrack.id === marker.id;
             });
             if (markerToTrack) {
@@ -479,6 +487,7 @@ class MapView extends React.Component {
     }
 
     zoomIn() {
+        this.props.test();
         this.map.getZoom().then(zoom => {
             this.map.getCenter().then(center => {
                 this.map.setCamera({
@@ -529,8 +538,8 @@ class MapView extends React.Component {
         if (Platform.OS === 'android') {
             this.setState({ userTrackingMode: 0 });
             this.map.moveTo([
-                this.props.mapData.map.region.longitude,
-                this.props.mapData.map.region.latitude
+                this.props.mapData.region.longitude,
+                this.props.mapData.region.latitude
             ]);
         }
     }
@@ -540,10 +549,10 @@ class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={this.props.mapData.map.region.zoom || 11}
+                zoomLevel={this.props.mapData.region.zoom || 11}
                 centerCoordinate={[
-                    this.props.mapData.map.region.longitude,
-                    this.props.mapData.map.region.latitude
+                    this.props.mapData.region.longitude,
+                    this.props.mapData.region.latitude
                 ]}
                 showsUserLocation={true}
                 userTrackingMode={this.state.userTrackingMode}
@@ -560,13 +569,10 @@ class MapView extends React.Component {
     }
 
     renderSlideShow() {
-        if (
-            this.props.mapData.map.cards &&
-            this.props.mapData.map.cards.length > 0
-        ) {
+        if (this.props.mapData.cards && this.props.mapData.cards.length > 0) {
             return (
                 <ContextSlideshow
-                    contentData={this.props.mapData.map.cards}
+                    contentData={this.props.mapData.cards}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
                         this
@@ -581,7 +587,7 @@ class MapView extends React.Component {
     onAction(elementId) {
         let response = {
             type: 'map_response',
-            mapId: this.props.mapData.options.mapId,
+            mapId: this.props.mapId,
             cardId: elementId,
             markerId: elementId
         };
@@ -646,15 +652,15 @@ class MapView extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
-        mapData: state.user.openMap[ownProps.storeIndex]
+        mapData: state.user.currentMap
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        setOpenMap: openMap => dispatch(setOpenMap(openMap))
+        setCurrentMap: currentMap => dispatch(setCurrentMap(currentMap))
     };
 };
 
