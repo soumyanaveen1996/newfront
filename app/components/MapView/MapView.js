@@ -487,7 +487,6 @@ class MapView extends React.Component {
     }
 
     zoomIn() {
-        this.props.test();
         this.map.getZoom().then(zoom => {
             this.map.getCenter().then(center => {
                 this.map.setCamera({
