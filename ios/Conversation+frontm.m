@@ -50,7 +50,7 @@
   conversation.bot = dictionary[@"bot"];
   conversation.participantsArray = dictionary[@"participants"];
   conversation.onChannelsArray = [[Channel channelsArrayfromJSON:dictionary[@"onChannels"]] mutableCopy];
-  conversation.closed = dictionary[@"closed"];
+  conversation.closed = [dictionary[@"closed"] boolValue];
   return conversation;
 }
 
