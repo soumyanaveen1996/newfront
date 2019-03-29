@@ -236,5 +236,193 @@ RCT_REMAP_METHOD(getParticipants, getParticipantsWithSessionId:(NSString *)sessi
   [call start];
 }
 
+RCT_REMAP_METHOD(getPendingParticipants, getPendingParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:getPendingParticipants Params : %@", sessionId);
+  
+  ChannelDomainInput *input = [ChannelDomainInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToGetPendingParticipantsWithRequest:input handler:^(ParticipantsListResponse * _Nullable response, NSError * _Nullable error) {
+                           
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(updateParticipants, updateParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:UpdateParticipants Params : %@", sessionId);
+  
+
+  UpdateUsersInput *input = [UpdateUsersInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  input.userIdsArray = params[@"newUserIds"];
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToUpdateParticipantsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+
+RCT_REMAP_METHOD(requestPrivateChannelAccess, requestPrivateChannelAccessWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:RequestPrivateChannelAccess Params : %@", sessionId);
+  
+  ChannelDomainInput *input = [ChannelDomainInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToRequestPrivateChannelAccessWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(authorizeParticipants, authorizeParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:authorizeParticipants Params : %@", sessionId);
+  
+  AuthorizeParticipantInput *input = [AuthorizeParticipantInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  input.acceptedArray = params[@"accepted"];
+  input.ignoredArray = params[@"ignored"];
+
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToAuthorizeParticipantsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(changeOwner, changeOwnerWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:ChangeOwner Params : %@", sessionId);
+  
+  ChangeOwnerInput *input = [ChangeOwnerInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  input.newOwnerId = params[@"newOwnerId"];
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToChangeOwnerWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(getChannelAdmins, getChannelAdminsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:GetChannelAdmins Params : %@", sessionId);
+  
+  ChannelDomainInput *input = [ChannelDomainInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToGetChannelAdminsWithRequest:input handler:^(ParticipantsListResponse * _Nullable response, NSError * _Nullable error) {
+                           
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(updateChannelAdmins, updateChannelAdminsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:UpdateChannelAdmins Params : %@", sessionId);
+  
+  
+  UpdateUsersInput *input = [UpdateUsersInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  input.userIdsArray = params[@"newUserIds"];
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToUpdateChannelAdminsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(deleteChannel, deleteChannelWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:DeleteChannel Params : %@", sessionId);
+  
+  ChannelDomainInput *input = [ChannelDomainInput new];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToDeleteChannelWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
 
 @end

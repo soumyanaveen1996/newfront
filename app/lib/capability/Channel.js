@@ -7,6 +7,7 @@ import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import Store from '../../redux/store/configureStore';
 import { completeChannelInstall } from '../../redux/actions/UserActions';
 const moment = require('moment');
+const R = require('ramda');
 
 import { NativeModules } from 'react-native';
 const ChannelsServiceClient = NativeModules.ChannelsServiceClient;
@@ -33,6 +34,35 @@ export class ChannelError extends Error {
 //   userName:
 //   userId:
 // }
+
+const callGRPCFunction = (methodName, user, params) => {
+    console.log('Calling GRPC Function:::', methodName);
+
+    return new Promise((resolve, reject) => {
+        if (R.isNil(methodName) || methodName === '') {
+            return reject(new Error('GRPC MethodName cannot be Empty'));
+        }
+        if (!user) {
+            return reject(new Error('No Logged in User'));
+        }
+        // Call Function
+        ChannelsServiceClient[methodName](
+            user.creds.sessionId,
+            params,
+            (err, result) => {
+                if (err) {
+                    return reject(
+                        new Error(
+                            `GRPC Call to ChannelsServiceClient.${methodName} has Failed`
+                        )
+                    );
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+    });
+};
 
 export default class Channel {
     static getSubscribedChannels = ChannelDAO.selectChannels;
@@ -366,26 +396,30 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    if (user) {
-                        console.log('deleting channel ', channel);
-                        let options = {
-                            method: 'POST',
-                            url: `${config.network.queueProtocol}${
-                                config.proxy.host
-                            }${config.network.channelsPath}`,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            },
-                            data: {
-                                action: 'DeleteChannel',
-                                channelName: channel.channelName,
-                                userDomain: channel.userDomain
-                            }
-                        };
-                        return Network(options);
-                    } else {
-                        reject();
-                    }
+                    return callGRPCFunction('deleteChannel', user, {
+                        channelName: channel.channelName,
+                        userDomain: channel.userDomain
+                    });
+                    // if (user) {
+                    //     console.log('deleting channel ', channel);
+                    //     let options = {
+                    //         method: 'POST',
+                    //         url: `${config.network.queueProtocol}${
+                    //             config.proxy.host
+                    //         }${config.network.channelsPath}`,
+                    //         headers: {
+                    //             sessionId: user.creds.sessionId
+                    //         },
+                    //         data: {
+                    //             action: 'DeleteChannel',
+                    //             channelName: channel.channelName,
+                    //             userDomain: channel.userDomain
+                    //         }
+                    //     };
+                    //     return Network(options);
+                    // } else {
+                    //     reject();
+                    // }
                 })
                 .then(response => {
                     let err = _.get(response, 'data.error');
@@ -444,23 +478,28 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    console.log('updating users to Channel ', channelName);
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'UpdateParticipants',
-                            channelName: channelName,
-                            userDomain: userDomain,
-                            userIds: userIds
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('updateParticipants', user, {
+                        channelName: channelName,
+                        userDomain: userDomain,
+                        userIds: userIds
+                    });
+                    // console.log('updating users to Channel ', channelName);
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'UpdateParticipants',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain,
+                    //         userIds: userIds
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(response => {
                     let err = _.get(response, 'data.error');
@@ -477,21 +516,10 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'GetParticipants',
-                            channelName: channelName,
-                            userDomain: userDomain
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('getParticipants', user, {
+                        channelName: channelName,
+                        userDomain: userDomain
+                    });
                 })
                 .then(res => {
                     resolve(res.data.content);
@@ -499,25 +527,55 @@ export default class Channel {
                 .catch(reject);
         });
 
+    // static getParticipants = (channelName, userDomain) =>
+    //     new Promise((resolve, reject) => {
+    //         Auth.getUser()
+    //             .then(user => {
+    //                 let options = {
+    //                     method: 'POST',
+    //                     url: `${config.network.queueProtocol}${
+    //                         config.proxy.host
+    //                     }${config.network.channelsPath}`,
+    //                     headers: {
+    //                         sessionId: user.creds.sessionId
+    //                     },
+    //                     data: {
+    //                         action: 'GetParticipants',
+    //                         channelName: channelName,
+    //                         userDomain: userDomain
+    //                     }
+    //                 };
+    //                 return Network(options);
+    //             })
+    //             .then(res => {
+    //                 resolve(res.data.content);
+    //             })
+    //             .catch(reject);
+    //     });
+
     static getAdmins = (channelName, userDomain) =>
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'GetChannelAdmins',
-                            channelName: channelName,
-                            userDomain: userDomain
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('getChannelAdmins', user, {
+                        channelName: channelName,
+                        userDomain: userDomain
+                    });
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'GetChannelAdmins',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(res => {
                     resolve(res.data.content);
@@ -529,22 +587,27 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'UpdateChannelAdmins',
-                            channelName: channelName,
-                            userDomain: userDomain,
-                            admins: adminsIds
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('updateChannelAdmins', user, {
+                        channelName: channelName,
+                        userDomain: userDomain,
+                        admins: adminsIds
+                    });
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'UpdateChannelAdmins',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain,
+                    //         admins: adminsIds
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(() => {
                     return Channel.refreshUnsubscribedChannels();
@@ -560,21 +623,25 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'GetPendingParticipants',
-                            channelName: channelName,
-                            userDomain: userDomain
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('getPendingParticipants', user, {
+                        channelName: channelName,
+                        userDomain: userDomain
+                    });
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'GetPendingParticipants',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(res => {
                     let err = _.get(res, 'data.error');
@@ -595,23 +662,29 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'AuthorizeParticipants',
-                            channelName: channelName,
-                            userDomain: userDomain,
-                            accepted: acceptedUserIds,
-                            ignored: ignoredUserIds
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('authorizeParticipants', user, {
+                        channelName: channelName,
+                        userDomain: userDomain,
+                        accepted: acceptedUserIds,
+                        ignored: ignoredUserIds
+                    });
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'AuthorizeParticipants',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain,
+                    //         accepted: acceptedUserIds,
+                    //         ignored: ignoredUserIds
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(res => {
                     let err = _.get(res, 'data.error');
@@ -627,22 +700,27 @@ export default class Channel {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    let options = {
-                        method: 'POST',
-                        url: `${config.network.queueProtocol}${
-                            config.proxy.host
-                        }${config.network.channelsPath}`,
-                        headers: {
-                            sessionId: user.creds.sessionId
-                        },
-                        data: {
-                            action: 'ChangeOwner',
-                            channelName: channelName,
-                            userDomain: userDomain,
-                            newOwnerId: newOwnerId
-                        }
-                    };
-                    return Network(options);
+                    return callGRPCFunction('changeOwner', user, {
+                        channelName: channelName,
+                        userDomain: userDomain,
+                        newOwnerId: newOwnerId
+                    });
+                    // let options = {
+                    //     method: 'POST',
+                    //     url: `${config.network.queueProtocol}${
+                    //         config.proxy.host
+                    //     }${config.network.channelsPath}`,
+                    //     headers: {
+                    //         sessionId: user.creds.sessionId
+                    //     },
+                    //     data: {
+                    //         action: 'ChangeOwner',
+                    //         channelName: channelName,
+                    //         userDomain: userDomain,
+                    //         newOwnerId: newOwnerId
+                    //     }
+                    // };
+                    // return Network(options);
                 })
                 .then(res => {
                     let err = _.get(res, 'data.error');
