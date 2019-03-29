@@ -154,6 +154,7 @@ class ChannelAdminScreen extends React.Component {
     //PARTICIPANTS
     manageParticipants() {
         Actions.manageContacts({
+            title: 'Manage participants',
             onSelected: this.updateParticipants.bind(this),
             alreadySelected: this.state.participants,
             disabledUserIds: [this.channel.ownerId]
@@ -193,6 +194,7 @@ class ChannelAdminScreen extends React.Component {
     //ADMINS
     manageAdmins() {
         Actions.manageContacts({
+            title: 'Manage admins',
             onSelected: this.setAdmins.bind(this),
             allContacts: this.state.participants,
             alreadySelected: this.state.admins,
@@ -351,7 +353,7 @@ class ChannelAdminScreen extends React.Component {
         return (
             <View>
                 <View style={styles.adminRow}>
-                    <Text style={styles.adminH1}>Partecipants</Text>
+                    <Text style={styles.adminH1}>Participants</Text>
                 </View>
                 {this.renderSeparator(SeparatorSize.SMALL)}
                 <TouchableOpacity

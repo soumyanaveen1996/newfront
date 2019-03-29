@@ -130,7 +130,8 @@ const config = {
         subscribeToBot: '/bots/subscribe',
         unsubscribeFromBot: '/bots/unsubscribe',
         newProvider: '/v2/subscribeDomain',
-        searchCatalog: '/catalog'
+        searchCatalog: '/catalog',
+        archivedMessages: '/messages/archived'
     },
     googleAnalytics: {
         trackingId: 'UA-37782731-2'
