@@ -92,7 +92,7 @@ export default class BotListItem extends React.Component {
                     imageTag="botLogo"
                     source={{ uri: bot.logoUrl }}
                     style={BotListItemStyles.image}
-                    resizeMode="cover"
+                    resizeMode="contain"
                 />
                 <View style={BotListItemStyles.textContainer}>
                     <Text style={BotListItemStyles.title}>{bot.botName}</Text>
