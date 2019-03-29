@@ -138,9 +138,15 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            buildConfigField 'int', 'GRPC_PORT', '50051'
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+        debug {
+            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'int', 'GRPC_PORT', '50051'
         }
     }
     // applicationVariants are e.g. debug, release

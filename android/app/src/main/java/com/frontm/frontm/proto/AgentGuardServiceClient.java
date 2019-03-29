@@ -14,6 +14,7 @@ import com.frontm.agentguard.proto.AgentGuardServiceGrpc;
 import com.frontm.agentguard.proto.AgentGuardStringResponse;
 import com.frontm.agentguard.proto.Channel;
 import com.frontm.agentguard.proto.Conversation;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.AgentGuardStringResponseConverter;
 import com.squareup.okhttp.ConnectionSpec;
 
@@ -30,8 +31,8 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
     public AgentGuardServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

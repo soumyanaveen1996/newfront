@@ -15,6 +15,7 @@ import com.frontm.auth.proto.SigninResponse;
 import com.frontm.auth.proto.SignupResponse;
 import com.frontm.auth.proto.SignupUser;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.SigninResponseConverter;
 import com.frontm.frontm.proto.converters.SignupResponseConverter;
 import com.squareup.okhttp.ConnectionSpec;
@@ -32,8 +33,8 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
 
     public AuthServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

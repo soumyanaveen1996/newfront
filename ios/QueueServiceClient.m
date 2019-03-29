@@ -16,8 +16,8 @@
 #import <RxLibrary/GRXWriter+Transformations.h>
 
 #import <React/RCTLog.h>
+#import "GRPCMetadata.h"
 
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 @interface QueueServiceClient()
 
@@ -41,7 +41,7 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[QueueService alloc] initWithHost:kHostAddress];
+    _serviceClient = [[QueueService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }

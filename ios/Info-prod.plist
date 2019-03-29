@@ -190,7 +190,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>GRPC_HOST</key>
-	<string>grpcdev.frontm.ai</string>
+	<string>prod.frontm.ai</string>
 	<key>GRPC_PORT</key>
 	<string>50051</string>
 </dict>

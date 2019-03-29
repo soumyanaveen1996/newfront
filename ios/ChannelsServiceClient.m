@@ -14,8 +14,8 @@
 #import "CreateChannelResponse+frontm.h"
 #import "DomainChannels+frontm.h"
 #import <React/RCTLog.h>
+#import "GRPCMetadata.h"
 
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 @interface ChannelsServiceClient()
 
@@ -32,7 +32,7 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[ChannelsService alloc] initWithHost:kHostAddress];
+    _serviceClient = [[ChannelsService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }

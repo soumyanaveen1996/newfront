@@ -19,6 +19,7 @@ import com.frontm.conversation.proto.GetConversationDetailsResponse;
 import com.frontm.conversation.proto.TimelineResponse;
 import com.frontm.conversation.proto.UpdateFavouritesInput;
 import com.frontm.conversation.proto.UpdateFavouritesResponse;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.CatalogResponseConverter;
 import com.frontm.frontm.proto.converters.GetArchivedMessagesResponseConverter;
 import com.frontm.frontm.proto.converters.GetConversationDetailsResponseConverter;
@@ -54,8 +55,8 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
     public ConversationServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

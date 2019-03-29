@@ -16,6 +16,7 @@ import com.frontm.auth.proto.SignupResponse;
 import com.frontm.auth.proto.SignupUser;
 import com.frontm.commonmessages.proto.Empty;
 import com.frontm.commonmessages.proto.PhoneNumbers;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BotSubscriptionsResponseConverter;
 import com.frontm.frontm.proto.converters.ContactsResponseConverter;
 import com.frontm.frontm.proto.converters.SigninResponseConverter;
@@ -57,8 +58,8 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
     public UserServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

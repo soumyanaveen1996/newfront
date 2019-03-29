@@ -82,6 +82,8 @@
 		0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F4A9F2208A234300662D34 /* libRNCamera.a */; };
 		049BCDC420B343D60065E4F7 /* libRNVersionCheck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04143DA020B30D08001DDCE3 /* libRNVersionCheck.a */; };
 		04B52D3320C0AB6E00540193 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFE32520C0993A009319B5 /* libRNBackgroundFetch.a */; };
+		04CAED6E224E3E2100DD0CE0 /* Info-prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */; };
+		04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */; };
 		04E0FF7E22383F80004F19B1 /* ConversationServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */; };
 		04E0FF8122384232004F19B1 /* CatalogResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */; };
 		04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */; };
@@ -912,6 +914,9 @@
 		04905663223BBA01008FECC8 /* Contact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Contact+frontm.m"; sourceTree = "<group>"; };
 		04905665223BBB24008FECC8 /* QueueResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueResponse+frontm.h"; sourceTree = "<group>"; };
 		04905666223BBB24008FECC8 /* QueueResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueResponse+frontm.m"; sourceTree = "<group>"; };
+		04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
+		04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRPCMetadata.h; sourceTree = "<group>"; };
+		04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GRPCMetadata.m; sourceTree = "<group>"; };
 		04CFE2F220C0993A009319B5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		04E0FF7C22383F80004F19B1 /* ConversationServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationServiceClient.h; sourceTree = "<group>"; };
 		04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationServiceClient.m; sourceTree = "<group>"; };
@@ -1508,6 +1513,8 @@
 				219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */,
 				219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */,
 				219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */,
+				04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */,
+				04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */,
 			);
 			name = grpc_utils;
 			sourceTree = "<group>";
@@ -1569,6 +1576,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				6129E30450BD4EA1A9E28D48 /* RNBackgroundFetch+AppDelegate.m */,
@@ -2745,6 +2753,7 @@
 				E477AD9AB06B49D68C085521 /* SimpleLineIcons.ttf in Resources */,
 				040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */,
 				D18C2379935446B6A457F93B /* Zocial.ttf in Resources */,
+				04CAED6E224E3E2100DD0CE0 /* Info-prod.plist in Resources */,
 				D3A06324C3C94398979C5641 /* SF-Pro-Display-Black.otf in Resources */,
 				A782D4400596458C8D506EA6 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				37E21ADEC5A946EB8AFC1899 /* SF-Pro-Display-Bold.otf in Resources */,
@@ -2942,6 +2951,7 @@
 				04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */,
 				04905643223B855A008FECC8 /* DBChannel+frontm.m in Sources */,
 				04704B762236E08C003ABE94 /* ContactsServiceClient.m in Sources */,
+				04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */,
 				0458FAB42238E647002D37A3 /* GetConversationDetailsChannels+frontm.m in Sources */,
 				04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */,
 				0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */,
@@ -3077,7 +3087,7 @@
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-transformable-image/Demo/ios/Demo",
 				);
-				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				INFOPLIST_FILE = "frontm_mobile/Info-prod.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

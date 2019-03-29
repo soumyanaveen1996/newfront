@@ -12,8 +12,7 @@
 #import "AgentGuardStringResponse+frontm.h"
 
 #import <React/RCTLog.h>
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 @interface AgentGuardServiceClient()
 
@@ -29,7 +28,7 @@ static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[AgentGuardService alloc] initWithHost:kHostAddress];
+    _serviceClient = [[AgentGuardService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }

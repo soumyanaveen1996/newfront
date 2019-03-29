@@ -14,8 +14,7 @@
 #import "GetArchivedMessagesResponse+frontm.h"
 #import "UpdateFavouritesResponse+frontm.h"
 #import <React/RCTLog.h>
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 @interface ConversationServiceClient()
 
@@ -32,7 +31,7 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[ConversationService alloc] initWithHost:kHostAddress];
+    _serviceClient = [[ConversationService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }

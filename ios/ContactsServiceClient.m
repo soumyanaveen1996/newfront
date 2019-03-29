@@ -11,8 +11,8 @@
 #import "AgentGuardBoolResponse+frontm.h"
 #import "FindResponse+frontm.h"
 #import <React/RCTLog.h>
+#import "GRPCMetadata.h"
 
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
 
 @interface ContactsServiceClient()
 
@@ -29,7 +29,7 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[ContactsService alloc] initWithHost:kHostAddress];
+    _serviceClient = [[ContactsService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }
