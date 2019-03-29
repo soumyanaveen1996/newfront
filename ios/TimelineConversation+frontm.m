@@ -12,39 +12,6 @@
 #import "TimelineChannels+frontm.h"
 #import "NSArray+Map.h"
 
-/*
- @property(nonatomic, readwrite) BOOL closed;
-
- @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *participantsArray;
-
- @property(nonatomic, readonly) NSUInteger participantsArray_Count;
-
- @property(nonatomic, readwrite) int32_t createdOn;
-
- @property(nonatomic, readwrite) int32_t modifiedOn;
-
- @property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
-
- @property(nonatomic, readwrite, copy, null_resettable) NSString *conversationId;
-
- @property(nonatomic, readwrite, copy, null_resettable) NSString *createdBy;
-
- @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TimelineChannels*> *onChannelsArray;
-
- @property(nonatomic, readonly) NSUInteger onChannelsArray_Count;
-
- @property(nonatomic, readwrite, strong, null_resettable) TimelineBotInfo *bot;
-
- @property(nonatomic, readwrite) BOOL hasBot;
-
- @property(nonatomic, readwrite, strong, null_resettable) TimelineLastMessage *lastMessage;
-
- @property(nonatomic, readwrite) BOOL hasLastMessage;
-
- @property(nonatomic, readwrite, strong, null_resettable) TimelineContact *contact;
-
- @property(nonatomic, readwrite) BOOL hasContact;
- */
 
 @implementation TimelineConversation (frontm)
 

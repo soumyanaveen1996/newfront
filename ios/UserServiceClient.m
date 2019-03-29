@@ -108,8 +108,8 @@ RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)s
   User *user = [User new];
   user.userName = params[@"userName"];
   user.emailAddress = params[@"emailAddress"];
-  user.searchable = params[@"searchable"];
-  user.visible = params[@"visible"];
+  user.searchable = [params[@"searchable"] boolValue];
+  user.visible = [params[@"visible"] boolValue];
   if (params[@"phoneNumbers"] && ![NSNull isEqual:params[@"phoneNumbers"]]) {
     user.phoneNumbers = [PhoneNumbers new];
     user.phoneNumbers.satellite = params[@"phoneNumbers"][@"satellite"];

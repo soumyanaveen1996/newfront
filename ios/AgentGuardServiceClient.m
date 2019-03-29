@@ -44,7 +44,7 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
   input.parameters = params[@"parameters"];
   input.conversation = [Conversation conversationfromDictionary:params[@"conversation"]];
   input.capability = params[@"capability"];
-  input.sync = params[@"sync"];
+  input.sync = [params[@"sync"] boolValue];
 
   GRPCProtoCall *call = [self.serviceClient RPCToExecuteWithRequest:input handler:^(AgentGuardStringResponse * _Nullable response, NSError * _Nullable error) {
     RCTLog(@"GRPC::::method:execute Response : %@", error);

@@ -312,12 +312,21 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
     {
         Log.d("GRPC:::googleSignin", params.toString());
         AuthServiceGrpc.AuthServiceStub stub = AuthServiceGrpc.newStub(mChannel);
-        GoogleSigninInput input = GoogleSigninInput.newBuilder()
-                .setCode(params.getString("code"))
-                .setPlatform("android")
-                .build();
+        GoogleSigninInput.Builder inputBuilder = GoogleSigninInput.newBuilder()
+                .setPlatform("android");
+        if (params.hasKey("code")) {
+            inputBuilder.setCode(params.getString("code"));
+        }
 
-        stub.googleSignin(input, new StreamObserver<SigninResponse>() {
+        if (params.hasKey("idToken")) {
+            inputBuilder.setIdToken(params.getString("idToken"));
+        }
+
+        if (params.hasKey("refreshToken")) {
+            inputBuilder.setRefreshToken(params.getString("refreshToken"));
+        }
+
+        stub.googleSignin(inputBuilder.build(), new StreamObserver<SigninResponse>() {
             @Override
             public void onNext(SigninResponse value) {
                 Log.d("GRPC:::googleSignin", new SigninResponseConverter().toResponse(value).toString());
