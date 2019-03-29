@@ -28,6 +28,7 @@ export default class LogoImage extends Component {
                 isShowActivity={false}
                 placeholderStyle={this.props.imageStyle}
                 placeholderSource={require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png')}
+                resizeMode={this.props.resizeMode || 'contain'}
             />
         );
     }
