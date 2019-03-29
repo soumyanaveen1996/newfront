@@ -50,12 +50,14 @@ static GPBFileDescriptor *AgentguardserviceRoot_FileDescriptor(void) {
 @dynamic capability;
 @dynamic parameters;
 @dynamic sync;
+@dynamic requestUuid;
 
 typedef struct AgentGuardInput__storage_ {
   uint32_t _has_storage_[1];
   Conversation *conversation;
   NSString *capability;
   NSString *parameters;
+  NSString *requestUuid;
 } AgentGuardInput__storage_;
 
 // This method is threadsafe because it is initially called
@@ -100,6 +102,15 @@ typedef struct AgentGuardInput__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "requestUuid",
+        .dataTypeSpecific.className = NULL,
+        .number = AgentGuardInput_FieldNumber_RequestUuid,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(AgentGuardInput__storage_, requestUuid),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[AgentGuardInput class]
@@ -109,6 +120,11 @@ typedef struct AgentGuardInput__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(AgentGuardInput__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\005\013\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

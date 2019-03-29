@@ -14,6 +14,7 @@ message AgentGuardInput {
     string capability = 2;
     string parameters = 3;
     bool sync = 4;
+    string requestUuid = 5;
 }
 
 message Conversation {
