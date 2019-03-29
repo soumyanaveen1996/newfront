@@ -180,18 +180,21 @@ const requestMessagesBeforeDateFromLambda = (
 ) =>
     new Promise((resolve, reject) => {
         let options = {
-            method: 'post',
+            method: 'GET',
             url:
                 config.proxy.protocol +
                 config.proxy.host +
-                config.proxy.queuePath,
+                config.proxy.archivedMessages +
+                '?conversationId=' +
+                conversationId +
+                '&botId=' +
+                botId,
             headers: {
                 sessionId: user.creds.sessionId
             },
             data: {
-                conversation: conversationId,
-                botId: botId,
-                timestamp: date
+                conversationId: conversationId,
+                botId: botId
             }
         };
         console.log('Options : ', options);
@@ -200,7 +203,7 @@ const requestMessagesBeforeDateFromLambda = (
     });
 
 const handlePreviousMessages = (res, conversationId, botId, date, user) => {
-    const prevMessagesData = res.data.previousMsgs;
+    const prevMessagesData = res.data.content;
     let messages = [];
     _.each(prevMessagesData, mData => {
         if (mData.contentType !== '470' && mData.contentType !== '460') {
