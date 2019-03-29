@@ -54,6 +54,7 @@ typedef GPB_ENUM(AgentGuardInput_FieldNumber) {
   AgentGuardInput_FieldNumber_Capability = 2,
   AgentGuardInput_FieldNumber_Parameters = 3,
   AgentGuardInput_FieldNumber_Sync = 4,
+  AgentGuardInput_FieldNumber_RequestUuid = 5,
 };
 
 @interface AgentGuardInput : GPBMessage
@@ -67,6 +68,8 @@ typedef GPB_ENUM(AgentGuardInput_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *parameters;
 
 @property(nonatomic, readwrite) BOOL sync;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *requestUuid;
 
 @end
 

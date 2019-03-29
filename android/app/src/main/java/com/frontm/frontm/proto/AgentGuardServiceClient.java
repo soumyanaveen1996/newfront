@@ -59,6 +59,10 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
                 .setCapability(params.getString("capability"))
                 .setSync(params.getBoolean("sync"));
 
+        if (params.hasKey("requestUuid")) {
+            builder.setRequestUuid(params.getString("requestUuid"));
+        }
+
         if (params.hasKey("conversation")) {
             ReadableMap convDict = params.getMap("conversation");
             Conversation.Builder convBuilder = Conversation.newBuilder()
