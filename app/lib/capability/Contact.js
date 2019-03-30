@@ -324,7 +324,6 @@ export default class Contact {
             UserServiceClient.getContacts(
                 user.creds.sessionId,
                 (error, result) => {
-                    console.log('GRPC:::getContacts : ', error, result);
                     if (error) {
                         reject({
                             type: 'error',
@@ -382,7 +381,6 @@ export default class Contact {
                 user.creds.sessionId,
                 { userId: userId },
                 (error, result) => {
-                    console.log('GRPC:::getUserDetails : ', error, result);
                     if (error) {
                         reject({
                             type: 'error',
