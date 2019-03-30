@@ -166,7 +166,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
         }
 
         if (params.hasKey("channelName")) {
-            inputBuilder.setChannelName(params.getString("chanelName"));
+            inputBuilder.setChannelName(params.getString("channelName"));
 
         }
 

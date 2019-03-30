@@ -707,7 +707,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 .setUserDomain(params.getString("userDomain"));
 
         if (params.hasKey("userIds") && params.getArray("userIds") != null) {
-            ReadableArray userIds = params.getArray("userIds");
+            ReadableArray userIds = params.getArray("admins");
             for (int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
             }

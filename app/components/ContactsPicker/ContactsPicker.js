@@ -308,6 +308,8 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
+        console.log('I am now rendering::::', info.item);
+
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
@@ -613,7 +615,10 @@ class ContactsPicker extends React.Component {
                         ListHeaderComponent={this.renderButtons}
                         stickySectionHeadersEnabled={false}
                         // Performance settings
-                        removeClippedSubviews={true} // Unmount components when outside of window
+
+                        removeClippedSubviews={
+                            Platform.OS === 'ios' ? false : true
+                        } // Unmount components when outside of window
                         initialNumToRender={2} // Reduce initial render amount
                         maxToRenderPerBatch={1} // Reduce number in each render batch
                         maxToRenderPerBatch={100} // Increase time between renders

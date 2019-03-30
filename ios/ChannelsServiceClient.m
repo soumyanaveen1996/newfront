@@ -268,7 +268,7 @@ RCT_REMAP_METHOD(updateParticipants, updateParticipantsWithSessionId:(NSString *
   UpdateUsersInput *input = [UpdateUsersInput new];
   input.channelName = params[@"channelName"];
   input.userDomain = params[@"userDomain"];
-  input.userIdsArray = params[@"newUserIds"];
+  input.userIdsArray = params[@"userIds"];
   
   GRPCProtoCall *call = [self.serviceClient
                          RPCToUpdateParticipantsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
@@ -385,7 +385,7 @@ RCT_REMAP_METHOD(updateChannelAdmins, updateChannelAdminsWithSessionId:(NSString
   UpdateUsersInput *input = [UpdateUsersInput new];
   input.channelName = params[@"channelName"];
   input.userDomain = params[@"userDomain"];
-  input.userIdsArray = params[@"newUserIds"];
+  input.userIdsArray = params[@"admins"];
   
   GRPCProtoCall *call = [self.serviceClient
                          RPCToUpdateChannelAdminsWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {

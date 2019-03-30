@@ -35,6 +35,7 @@ const isEqual = require('react-fast-compare');
 import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
 import CustomPlaceholder from './CustomPlaceholder';
+import { platform } from 'os';
 
 export const FAVOURITE_BOTS = 'favourite_bots';
 class BotList extends React.Component {
@@ -333,7 +334,7 @@ class BotList extends React.Component {
                 <CustomPlaceholder
                     onReady={loaded}
                     animate="fade"
-                    header={this.renderSearchBar}
+                    // header={this.renderSearchBar}
                 >
                     <SwipeListView
                         useFlatList
@@ -439,7 +440,7 @@ class BotList extends React.Component {
                         previewOpenValue={-40}
                         previewOpenDelay={3000}
                         // Performance settings
-                        removeClippedSubviews={true} // Unmount components when outside of window
+                        removeClippedSubviews={false} // Unmount components when outside of window
                         initialNumToRender={2} // Reduce initial render amount
                         maxToRenderPerBatch={1} // Reduce number in each render batch
                         maxToRenderPerBatch={100} // Increase time between renders
