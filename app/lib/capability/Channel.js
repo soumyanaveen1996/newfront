@@ -45,6 +45,7 @@ const callGRPCFunction = (methodName, user, params) => {
         if (!user) {
             return reject(new Error('No Logged in User'));
         }
+
         // Call Function
         ChannelsServiceClient[methodName](
             user.creds.sessionId,

@@ -219,7 +219,7 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
 
-                                <View
+                                {/* <View
                                     style={{
                                         width: wp('90%'),
                                         display: 'flex',
@@ -276,7 +276,7 @@ export default class InviteModal extends React.Component {
                                     <Text style={styles.inviteEmail}>
                                         Create New Contact
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
