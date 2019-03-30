@@ -84,194 +84,6 @@
 		04B52D3320C0AB6E00540193 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFE32520C0993A009319B5 /* libRNBackgroundFetch.a */; };
 		04CAED6E224E3E2100DD0CE0 /* Info-prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */; };
 		04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */; };
-		04CAEF3E224E4DF800DD0CE0 /* TimelineBotInfo+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */; };
-		04CAEF3F224E4DF800DD0CE0 /* SigninResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2422368937003ABE94 /* SigninResponse+frontm.m */; };
-		04CAEF40224E4DF800DD0CE0 /* ContactsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905660223BB9D9008FECC8 /* ContactsResponse+frontm.m */; };
-		04CAEF41224E4DF800DD0CE0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		04CAEF42224E4DF800DD0CE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		04CAEF43224E4DF800DD0CE0 /* Message+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B872237CB42003ABE94 /* Message+frontm.m */; };
-		04CAEF44224E4DF800DD0CE0 /* TimelineResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490560F223B61A4008FECC8 /* TimelineResponse+frontm.m */; };
-		04CAEF45224E4DF800DD0CE0 /* AgentGuardStringResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905639223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m */; };
-		04CAEF46224E4DF800DD0CE0 /* RNGoogleSignInEventsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */; };
-		04CAEF47224E4DF800DD0CE0 /* SubscribeBotResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490565A223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m */; };
-		04CAEF48224E4DF800DD0CE0 /* TimelineContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905612223B61BB008FECC8 /* TimelineContent+frontm.m */; };
-		04CAEF49224E4DF800DD0CE0 /* CreateCompanyResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490564E223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m */; };
-		04CAEF4A224E4DF800DD0CE0 /* ChannelsServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B722236DA7F003ABE94 /* ChannelsServiceClient.m */; };
-		04CAEF4B224E4DF800DD0CE0 /* VoipToggleResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905657223BB809008FECC8 /* VoipToggleResponse+frontm.m */; };
-		04CAEF4C224E4DF800DD0CE0 /* ParticpantUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */; };
-		04CAEF4D224E4DF800DD0CE0 /* Contact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905663223BBA01008FECC8 /* Contact+frontm.m */; };
-		04CAEF4E224E4DF800DD0CE0 /* QueueResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905666223BBB24008FECC8 /* QueueResponse+frontm.m */; };
-		04CAEF4F224E4DF800DD0CE0 /* BotSubscriptionsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B6C2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m */; };
-		04CAEF50224E4DF800DD0CE0 /* GetConversationDetailsUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FAB02238E5E2002D37A3 /* GetConversationDetailsUser+frontm.m */; };
-		04CAEF51224E4DF800DD0CE0 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6129E30450BD4EA1A9E28D48 /* RNBackgroundFetch+AppDelegate.m */; };
-		04CAEF52224E4DF800DD0CE0 /* AgentGuardBoolResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B782236E244003ABE94 /* AgentGuardBoolResponse+frontm.m */; };
-		04CAEF53224E4DF800DD0CE0 /* CatalogResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */; };
-		04CAEF54224E4DF800DD0CE0 /* ChannelOwner+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905645223B857C008FECC8 /* ChannelOwner+frontm.m */; };
-		04CAEF55224E4DF800DD0CE0 /* PhoneNumbers+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2A22368C3B003ABE94 /* PhoneNumbers+frontm.m */; };
-		04CAEF56224E4DF800DD0CE0 /* GetArchivedMessagesContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490560C223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m */; };
-		04CAEF57224E4DF800DD0CE0 /* CompanyServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7B2236E33F003ABE94 /* CompanyServiceClient.m */; };
-		04CAEF58224E4DF800DD0CE0 /* ParticipantsListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */; };
-		04CAEF59224E4DF800DD0CE0 /* SubscribeDomainResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490565D223BB94E008FECC8 /* SubscribeDomainResponse+frontm.m */; };
-		04CAEF5A224E4DF800DD0CE0 /* TimelineChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905618223B61FE008FECC8 /* TimelineChannels+frontm.m */; };
-		04CAEF5B224E4DF800DD0CE0 /* TimelineConversation+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905615223B61D8008FECC8 /* TimelineConversation+frontm.m */; };
-		04CAEF5C224E4DF800DD0CE0 /* CatalogDependencies+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF87223843F3004F19B1 /* CatalogDependencies+frontm.m */; };
-		04CAEF5D224E4DF800DD0CE0 /* UpdateFavouritesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */; };
-		04CAEF5E224E4DF800DD0CE0 /* RNGoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7720D4F73800AB3A78 /* RNGoogleSignIn.swift */; };
-		04CAEF5F224E4DF800DD0CE0 /* RNGoogleSignInEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7620D4F73800AB3A78 /* RNGoogleSignInEvents.swift */; };
-		04CAEF60224E4DF800DD0CE0 /* VoipStatusResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905630223B75C3008FECC8 /* VoipStatusResponse+frontm.m */; };
-		04CAEF61224E4DF800DD0CE0 /* UserServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B692236C50C003ABE94 /* UserServiceClient.m */; };
-		04CAEF62224E4DF800DD0CE0 /* QueueServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B7E2237C23D003ABE94 /* QueueServiceClient.m */; };
-		04CAEF63224E4DF800DD0CE0 /* ChannelListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490563F223B8533008FECC8 /* ChannelListResponse+frontm.m */; };
-		04CAEF64224E4DF800DD0CE0 /* TwilioTokenResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490562D223B7535008FECC8 /* TwilioTokenResponse+frontm.m */; };
-		04CAEF65224E4DF800DD0CE0 /* SignupResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B2122366922003ABE94 /* SignupResponse+frontm.m */; };
-		04CAEF66224E4DF800DD0CE0 /* GetArchivedMessagesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 049055B9223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m */; };
-		04CAEF67224E4DF800DD0CE0 /* CatalogDependency+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8A22384414004F19B1 /* CatalogDependency+frontm.m */; };
-		04CAEF68224E4DF800DD0CE0 /* TimelineContact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */; };
-		04CAEF69224E4DF800DD0CE0 /* GetConversationDetailsResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FA5D2238E5A5002D37A3 /* GetConversationDetailsResponse+frontm.m */; };
-		04CAEF6A224E4DF800DD0CE0 /* DomainRoles+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B662236A39B003ABE94 /* DomainRoles+frontm.m */; };
-		04CAEF6B224E4DF800DD0CE0 /* SubscribedBotsContent+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B6F2236C686003ABE94 /* SubscribedBotsContent+frontm.m */; };
-		04CAEF6C224E4DF800DD0CE0 /* User+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905651223BB5A0008FECC8 /* User+frontm.m */; };
-		04CAEF6D224E4DF800DD0CE0 /* CatalogBot+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */; };
-		04CAEF6E224E4DF800DD0CE0 /* AgentGuardServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905633223B7770008FECC8 /* AgentGuardServiceClient.m */; };
-		04CAEF6F224E4DF800DD0CE0 /* MatchedUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490562A223B7447008FECC8 /* MatchedUser+frontm.m */; };
-		04CAEF70224E4DF800DD0CE0 /* PingServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E2D94922256231004C1AC0 /* PingServiceClient.m */; };
-		04CAEF71224E4DF800DD0CE0 /* SignInUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B272236899A003ABE94 /* SignInUser+frontm.m */; };
-		04CAEF72224E4DF800DD0CE0 /* DBChannel+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905642223B855A008FECC8 /* DBChannel+frontm.m */; };
-		04CAEF73224E4DF800DD0CE0 /* ContactsServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B752236E08C003ABE94 /* ContactsServiceClient.m */; };
-		04CAEF74224E4DF800DD0CE0 /* GRPCMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */; };
-		04CAEF75224E4DF800DD0CE0 /* GetConversationDetailsChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0458FAB32238E647002D37A3 /* GetConversationDetailsChannels+frontm.m */; };
-		04CAEF76224E4DF800DD0CE0 /* FindResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905627223B7414008FECC8 /* FindResponse+frontm.m */; };
-		04CAEF77224E4DF800DD0CE0 /* RNGoogleSignInBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */; };
-		04CAEF78224E4DF800DD0CE0 /* CreateChannelResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490564B223B8C95008FECC8 /* CreateChannelResponse+frontm.m */; };
-		04CAEF79224E4DF800DD0CE0 /* UpdateUserProfileResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905654223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m */; };
-		04CAEF7A224E4DF800DD0CE0 /* AuthServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FC952D222D0A5100532F42 /* AuthServiceClient.m */; };
-		04CAEF7B224E4DF800DD0CE0 /* Conversation+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905636223B7C4F008FECC8 /* Conversation+frontm.m */; };
-		04CAEF7C224E4DF800DD0CE0 /* DomainChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445655E2248C5DE00996110 /* DomainChannels+frontm.m */; };
-		04CAEF7D224E4DF800DD0CE0 /* BooleanResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04905648223B879E008FECC8 /* BooleanResponse+frontm.m */; };
-		04CAEF7E224E4DF800DD0CE0 /* CatalogBotClients+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8D2238E063004F19B1 /* CatalogBotClients+frontm.m */; };
-		04CAEF7F224E4DF800DD0CE0 /* Channel+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0490563C223B7D8B008FECC8 /* Channel+frontm.m */; };
-		04CAEF80224E4DF800DD0CE0 /* QueueMessage+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04704B812237C804003ABE94 /* QueueMessage+frontm.m */; };
-		04CAEF81224E4DF800DD0CE0 /* ConversationServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */; };
-		04CAEF83224E4DF800DD0CE0 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BD220C709B00659F09 /* libRNBlur.a */; };
-		04CAEF84224E4DF800DD0CE0 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BF220C709B00659F09 /* libRNBlur.a */; };
-		04CAEF85224E4DF800DD0CE0 /* libRCTMGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D42D21C2AD4900E7A7FE /* libRCTMGL.a */; };
-		04CAEF86224E4DF800DD0CE0 /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453E5DB212045DA0078059D /* CallKit.framework */; };
-		04CAEF87224E4DF800DD0CE0 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2123A5C3216DFA9C00CDC29A /* libCodePush.a */; };
-		04CAEF88224E4DF800DD0CE0 /* libRNDefaultPreference.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21149E0121930D9200F429AC /* libRNDefaultPreference.a */; };
-		04CAEF89224E4DF800DD0CE0 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37F54216CB925009C8922 /* libRNIap.a */; };
-		04CAEF8A224E4DF800DD0CE0 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E0FB6621C3740A00C9B1E4 /* libBugsnagReactNative.a */; };
-		04CAEF8B224E4DF800DD0CE0 /* libRNTwilioVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040848DA21201EAC006C45E4 /* libRNTwilioVoice.a */; };
-		04CAEF8C224E4DF800DD0CE0 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0454180E210C987800A658A2 /* libRNDocumentPicker.a */; };
-		04CAEF8D224E4DF800DD0CE0 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D42C4020BD77CC00C8BE47 /* libRNDeviceInfo.a */; };
-		04CAEF8E224E4DF800DD0CE0 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B08A207020D8A6290059EA6C /* libRCTCameraRoll.a */; };
-		04CAEF8F224E4DF800DD0CE0 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFE32520C0993A009319B5 /* libRNBackgroundFetch.a */; };
-		04CAEF90224E4DF800DD0CE0 /* libRNVersionCheck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04143DA020B30D08001DDCE3 /* libRNVersionCheck.a */; };
-		04CAEF91224E4DF800DD0CE0 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F4A9F2208A234300662D34 /* libRNCamera.a */; };
-		04CAEF92224E4DF800DD0CE0 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04848302208616E00051995F /* libReactNativePermissions.a */; };
-		04CAEF93224E4DF800DD0CE0 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
-		04CAEF94224E4DF800DD0CE0 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040AA75D20034A630057C959 /* libRCTPushNotification.a */; };
-		04CAEF95224E4DF800DD0CE0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7982D89132F446980344C24 /* SystemConfiguration.framework */; };
-		04CAEF96224E4DF800DD0CE0 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		04CAEF97224E4DF800DD0CE0 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		04CAEF98224E4DF800DD0CE0 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
-		04CAEF99224E4DF800DD0CE0 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
-		04CAEF9A224E4DF800DD0CE0 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
-		04CAEF9B224E4DF800DD0CE0 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
-		04CAEF9C224E4DF800DD0CE0 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
-		04CAEF9D224E4DF800DD0CE0 /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
-		04CAEF9E224E4DF800DD0CE0 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
-		04CAEF9F224E4DF800DD0CE0 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
-		04CAEFA0224E4DF800DD0CE0 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		04CAEFA1224E4DF800DD0CE0 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		04CAEFA2224E4DF800DD0CE0 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
-		04CAEFA3224E4DF800DD0CE0 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EE4F7022147A830079B8C3 /* libRNFetchBlob.a */; };
-		04CAEFA4224E4DF800DD0CE0 /* libRNAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B21CA0355F48AD875194AF /* libRNAudio.a */; };
-		04CAEFA5224E4DF800DD0CE0 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */; };
-		04CAEFA6224E4DF800DD0CE0 /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7697C3983D264D1F814461AA /* libRCTContacts.a */; };
-		04CAEFA7224E4DF800DD0CE0 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 556C25EA73DE44548EE2DB82 /* libRNFetchBlob.a */; };
-		04CAEFA8224E4DF800DD0CE0 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEDFE3AADCFB40338C03BF19 /* libRNFS.a */; };
-		04CAEFA9224E4DF800DD0CE0 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 527FA991FBE9494095F65A4B /* libRNI18n.a */; };
-		04CAEFAA224E4DF800DD0CE0 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB199F28C20C48F482B9FACD /* libRNImagePicker.a */; };
-		04CAEFAB224E4DF800DD0CE0 /* libRNKeychain.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 256F5B9952B44327858F89C0 /* libRNKeychain.a */; };
-		04CAEFAC224E4DF800DD0CE0 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 619956975FE040FE82D453AE /* libAirMaps.a */; };
-		04CAEFAD224E4DF800DD0CE0 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADB3CA7D1A6496C8CECFD75 /* libRNSound.a */; };
-		04CAEFAE224E4DF800DD0CE0 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC14FC24D5EA47619B56D82E /* libSQLite.a */; };
-		04CAEFAF224E4DF800DD0CE0 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 75812EF58C4D4BCAB0FF4872 /* libsqlite3.0.tbd */; };
-		04CAEFB0224E4DF800DD0CE0 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE75215682854A6787976CA1 /* libRNVectorIcons.a */; };
-		04CAEFB1224E4DF800DD0CE0 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7EC8AEAA21A47649B6ED17A /* libRCTVideo.a */; };
-		04CAEFB2224E4DF800DD0CE0 /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 429900950192486080C1A87E /* libRNSVG.a */; };
-		04CAEFB3224E4DF800DD0CE0 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF211C1B79C4421DA60C8697 /* libz.tbd */; };
-		04CAEFB4224E4DF800DD0CE0 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D5BD8DC874603BB4800FB /* SafariServices.framework */; };
-		04CAEFB5224E4DF800DD0CE0 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6455D14207044E8F88F76EC3 /* AddressBook.framework */; };
-		04CAEFB6224E4DF800DD0CE0 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4BF23652804675A540A09D /* libRCTFBSDK.a */; };
-		04CAEFB7224E4DF800DD0CE0 /* libPods-frontm_mobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8581FA883AB55B0F9EF842 /* libPods-frontm_mobile.a */; };
-		04CAEFB8224E4DF800DD0CE0 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB2AA5CE80CE4827B89B873A /* TSBackgroundFetch.framework */; };
-		04CAEFB9224E4DF800DD0CE0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37EDD216CB089009C8922 /* StoreKit.framework */; };
-		04CAEFBA224E4DF800DD0CE0 /* libTcpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1893FFDAF4A7436F8CD31788 /* libTcpSockets.a */; };
-		04CAEFBB224E4DF800DD0CE0 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4C2996B0F3F44C2A5F93E73 /* libRCTActionSheet.a */; };
-		04CAEFBC224E4DF800DD0CE0 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */; };
-		04CAEFBE224E4DF800DD0CE0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		04CAEFBF224E4DF800DD0CE0 /* bot_dependencies in Resources */ = {isa = PBXBuildFile; fileRef = 0486BECF2008CC5F00DF553B /* bot_dependencies */; };
-		04CAEFC0224E4DF800DD0CE0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		04CAEFC1224E4DF800DD0CE0 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 398A80F2BB13450A8A3B3811 /* Entypo.ttf */; };
-		04CAEFC2224E4DF800DD0CE0 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67F880D57C534C14AF2FD790 /* EvilIcons.ttf */; };
-		04CAEFC3224E4DF800DD0CE0 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F6339121E18646EEA793795C /* Feather.ttf */; };
-		04CAEFC4224E4DF800DD0CE0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F18DD2DF5A44CEDB7FDC185 /* FontAwesome.ttf */; };
-		04CAEFC5224E4DF800DD0CE0 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8379B8CA80E44F82A07D327F /* Foundation.ttf */; };
-		04CAEFC6224E4DF800DD0CE0 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEDE13D034C54C3D96894D83 /* Ionicons.ttf */; };
-		04CAEFC7224E4DF800DD0CE0 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C31618F90BC452FB8592C30 /* MaterialCommunityIcons.ttf */; };
-		04CAEFC8224E4DF800DD0CE0 /* FrontM.crt in Resources */ = {isa = PBXBuildFile; fileRef = 04E2D8F022255F86004C1AC0 /* FrontM.crt */; };
-		04CAEFC9224E4DF800DD0CE0 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F830A0727B8D4495B1F293A7 /* MaterialIcons.ttf */; };
-		04CAEFCA224E4DF800DD0CE0 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0314A9C62FD4348BFE8F156 /* Octicons.ttf */; };
-		04CAEFCB224E4DF800DD0CE0 /* bots in Resources */ = {isa = PBXBuildFile; fileRef = 0486BED02008CC5F00DF553B /* bots */; };
-		04CAEFCC224E4DF800DD0CE0 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 275A0AA2A043404A927CA969 /* SimpleLineIcons.ttf */; };
-		04CAEFCD224E4DF800DD0CE0 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
-		04CAEFCE224E4DF800DD0CE0 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64EA99883FE74F80B6804DC8 /* Zocial.ttf */; };
-		04CAEFCF224E4DF800DD0CE0 /* Info-prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */; };
-		04CAEFD0224E4DF800DD0CE0 /* SF-Pro-Display-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 17C5008DAABC4CA78941B8A8 /* SF-Pro-Display-Black.otf */; };
-		04CAEFD1224E4DF800DD0CE0 /* SF-Pro-Display-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C804C0E57F384A22B9A3278B /* SF-Pro-Display-BlackItalic.otf */; };
-		04CAEFD2224E4DF800DD0CE0 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5037286415C043B4BFCB5835 /* SF-Pro-Display-Bold.otf */; };
-		04CAEFD3224E4DF800DD0CE0 /* SF-Pro-Display-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4DA98B2304014E498889A0E5 /* SF-Pro-Display-BoldItalic.otf */; };
-		04CAEFD4224E4DF800DD0CE0 /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = EACD555DAA4B4C7AA742202A /* SF-Pro-Display-Heavy.otf */; };
-		04CAEFD5224E4DF800DD0CE0 /* SF-Pro-Display-HeavyItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 74CD2B55BD4F4C88920F118D /* SF-Pro-Display-HeavyItalic.otf */; };
-		04CAEFD6224E4DF800DD0CE0 /* SF-Pro-Display-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED3A3AF4E6646B4903EAE29 /* SF-Pro-Display-Light.otf */; };
-		04CAEFD7224E4DF800DD0CE0 /* SF-Pro-Display-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6185CF82E0464C06B06D90B6 /* SF-Pro-Display-LightItalic.otf */; };
-		04CAEFD8224E4DF800DD0CE0 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D89190A115294486936FA097 /* SF-Pro-Display-Medium.otf */; };
-		04CAEFD9224E4DF800DD0CE0 /* SF-Pro-Display-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1ED99E19206D40CD8D21E13C /* SF-Pro-Display-MediumItalic.otf */; };
-		04CAEFDA224E4DF800DD0CE0 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 69CED6623FCC4B8EAA8F68D8 /* SF-Pro-Display-Regular.otf */; };
-		04CAEFDB224E4DF800DD0CE0 /* SF-Pro-Display-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C26A26FD9BB407C98388312 /* SF-Pro-Display-RegularItalic.otf */; };
-		04CAEFDC224E4DF800DD0CE0 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F07CF9DB86348CB860AFB38 /* SF-Pro-Display-Semibold.otf */; };
-		04CAEFDD224E4DF800DD0CE0 /* SF-Pro-Display-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 01D03719586D4D568C187485 /* SF-Pro-Display-SemiboldItalic.otf */; };
-		04CAEFDE224E4DF800DD0CE0 /* SF-Pro-Display-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C94A3E3421AD46F9987876BA /* SF-Pro-Display-Thin.otf */; };
-		04CAEFDF224E4DF800DD0CE0 /* SF-Pro-Display-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA8D401667BE4388A4AA9FEB /* SF-Pro-Display-ThinItalic.otf */; };
-		04CAEFE0224E4DF800DD0CE0 /* SF-Pro-Display-Ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = E2A72AE097E3409AA76CC4FB /* SF-Pro-Display-Ultralight.otf */; };
-		04CAEFE1224E4DF800DD0CE0 /* SF-Pro-Display-UltralightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 56B52124DEB548519EF955D1 /* SF-Pro-Display-UltralightItalic.otf */; };
-		04CAEFE2224E4DF800DD0CE0 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E9A07C22478D41E2B7907A62 /* SF-Pro-Text-Bold.otf */; };
-		04CAEFE3224E4DF800DD0CE0 /* SF-Pro-Text-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7F20BA462F44421F9D61FCF8 /* SF-Pro-Text-BoldItalic.otf */; };
-		04CAEFE4224E4DF800DD0CE0 /* SF-Pro-Text-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = A4907E3963E6471089A754C6 /* SF-Pro-Text-Heavy.otf */; };
-		04CAEFE5224E4DF800DD0CE0 /* SF-Pro-Text-HeavyItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3607203FCF20436BBE5ED7A0 /* SF-Pro-Text-HeavyItalic.otf */; };
-		04CAEFE6224E4DF800DD0CE0 /* SF-Pro-Text-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 396AA5092B2A44518B070A5B /* SF-Pro-Text-Light.otf */; };
-		04CAEFE7224E4DF800DD0CE0 /* SF-Pro-Text-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 02929EB314B1449DB6265DB1 /* SF-Pro-Text-LightItalic.otf */; };
-		04CAEFE8224E4DF800DD0CE0 /* SF-Pro-Text-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 157AC0DAB8814B86AFE05F35 /* SF-Pro-Text-Medium.otf */; };
-		04CAEFE9224E4DF800DD0CE0 /* sectigoSHA2.ca-bundle in Resources */ = {isa = PBXBuildFile; fileRef = 04FC94A3222CF71E00532F42 /* sectigoSHA2.ca-bundle */; };
-		04CAEFEA224E4DF800DD0CE0 /* SF-Pro-Text-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 126075C521F94005B5517158 /* SF-Pro-Text-MediumItalic.otf */; };
-		04CAEFEB224E4DF800DD0CE0 /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = EFECE5FCD38C4ECD83DE347C /* SF-Pro-Text-Regular.otf */; };
-		04CAEFEC224E4DF800DD0CE0 /* SF-Pro-Text-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3FEFB1C6C4704FD8B66D30B4 /* SF-Pro-Text-RegularItalic.otf */; };
-		04CAEFED224E4DF800DD0CE0 /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 515AD2D5FDDC4884A04D87B3 /* SF-Pro-Text-Semibold.otf */; };
-		04CAEFEE224E4DF800DD0CE0 /* SF-Pro-Text-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = C29A44CD6F9D45F3AF2AF810 /* SF-Pro-Text-SemiboldItalic.otf */; };
-		04CAEFEF224E4DF800DD0CE0 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9330A8221C64F3DB76017CE /* Roboto-Black.ttf */; };
-		04CAEFF0224E4DF800DD0CE0 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF34B1ED75FC4F7291706EFD /* Roboto-BlackItalic.ttf */; };
-		04CAEFF1224E4DF800DD0CE0 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59CEA7F27E84B5AA7DAB315 /* Roboto-Bold.ttf */; };
-		04CAEFF2224E4DF800DD0CE0 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94E823C8560D4D12994D59C2 /* Roboto-BoldItalic.ttf */; };
-		04CAEFF3224E4DF800DD0CE0 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F60ACBCC09164446B456B2B5 /* Roboto-Italic.ttf */; };
-		04CAEFF4224E4DF800DD0CE0 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5B53366C23949A3920442FE /* Roboto-Light.ttf */; };
-		04CAEFF5224E4DF800DD0CE0 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF7F68775CB48BBAE78A4FC /* Roboto-LightItalic.ttf */; };
-		04CAEFF6224E4DF800DD0CE0 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D41C5325837949578794C74C /* Roboto-Medium.ttf */; };
-		04CAEFF7224E4DF800DD0CE0 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5239C21E13A4B7DB35116C9 /* Roboto-MediumItalic.ttf */; };
-		04CAEFF8224E4DF800DD0CE0 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EACB1DCCE1334AFA8E969BB6 /* Roboto-Regular.ttf */; };
-		04CAEFF9224E4DF800DD0CE0 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7513936D478D492197BE5529 /* Roboto-Thin.ttf */; };
-		04CAEFFA224E4DF800DD0CE0 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C941F20D78F444194CAAEB0 /* Roboto-ThinItalic.ttf */; };
-		04CAEFFF224E4DF800DD0CE0 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04E0FF7E22383F80004F19B1 /* ConversationServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */; };
 		04E0FF8122384232004F19B1 /* CatalogResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */; };
 		04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */; };
@@ -956,17 +768,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		04CAEFFE224E4DF800DD0CE0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				04CAEFFF224E4DF800DD0CE0 /* Mapbox.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		6B37D42721C2AB9B00E7A7FE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1117,7 +918,6 @@
 		04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRPCMetadata.h; sourceTree = "<group>"; };
 		04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GRPCMetadata.m; sourceTree = "<group>"; };
 		04CAEF3A224E4D5900DD0CE0 /* frontm_mobile copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "frontm_mobile copy-Info.plist"; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile copy-Info.plist"; sourceTree = "<absolute>"; };
-		04CAF004224E4DF800DD0CE0 /* frontm_mobile_develop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = frontm_mobile_develop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04CAF005224E4DF800DD0CE0 /* frontm_mobile copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "frontm_mobile copy2-Info.plist"; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile copy2-Info.plist"; sourceTree = "<absolute>"; };
 		04CFE2F220C0993A009319B5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		04E0FF7C22383F80004F19B1 /* ConversationServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationServiceClient.h; sourceTree = "<group>"; };
@@ -1265,71 +1065,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		04CAEF82224E4DF800DD0CE0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04CAEF83224E4DF800DD0CE0 /* libRNBlur.a in Frameworks */,
-				04CAEF84224E4DF800DD0CE0 /* libRNBlur.a in Frameworks */,
-				04CAEF85224E4DF800DD0CE0 /* libRCTMGL.a in Frameworks */,
-				04CAEF86224E4DF800DD0CE0 /* CallKit.framework in Frameworks */,
-				04CAEF87224E4DF800DD0CE0 /* libCodePush.a in Frameworks */,
-				04CAEF88224E4DF800DD0CE0 /* libRNDefaultPreference.a in Frameworks */,
-				04CAEF89224E4DF800DD0CE0 /* libRNIap.a in Frameworks */,
-				04CAEF8A224E4DF800DD0CE0 /* libBugsnagReactNative.a in Frameworks */,
-				04CAEF8B224E4DF800DD0CE0 /* libRNTwilioVoice.a in Frameworks */,
-				04CAEF8C224E4DF800DD0CE0 /* libRNDocumentPicker.a in Frameworks */,
-				04CAEF8D224E4DF800DD0CE0 /* libRNDeviceInfo.a in Frameworks */,
-				04CAEF8E224E4DF800DD0CE0 /* libRCTCameraRoll.a in Frameworks */,
-				04CAEF8F224E4DF800DD0CE0 /* libRNBackgroundFetch.a in Frameworks */,
-				04CAEF90224E4DF800DD0CE0 /* libRNVersionCheck.a in Frameworks */,
-				04CAEF91224E4DF800DD0CE0 /* libRNCamera.a in Frameworks */,
-				04CAEF92224E4DF800DD0CE0 /* libReactNativePermissions.a in Frameworks */,
-				04CAEF93224E4DF800DD0CE0 /* libRCTImageResizer.a in Frameworks */,
-				04CAEF94224E4DF800DD0CE0 /* libRCTPushNotification.a in Frameworks */,
-				04CAEF95224E4DF800DD0CE0 /* SystemConfiguration.framework in Frameworks */,
-				04CAEF96224E4DF800DD0CE0 /* libRCTAnimation.a in Frameworks */,
-				04CAEF97224E4DF800DD0CE0 /* libReact.a in Frameworks */,
-				04CAEF98224E4DF800DD0CE0 /* libRCTActionSheet.a in Frameworks */,
-				04CAEF99224E4DF800DD0CE0 /* libRCTGeolocation.a in Frameworks */,
-				04CAEF9A224E4DF800DD0CE0 /* libRCTImage.a in Frameworks */,
-				04CAEF9B224E4DF800DD0CE0 /* GoogleSignIn.framework in Frameworks */,
-				04CAEF9C224E4DF800DD0CE0 /* libRCTLinking.a in Frameworks */,
-				04CAEF9D224E4DF800DD0CE0 /* GoogleSignInDependencies.framework in Frameworks */,
-				04CAEF9E224E4DF800DD0CE0 /* libRCTNetwork.a in Frameworks */,
-				04CAEF9F224E4DF800DD0CE0 /* libRCTSettings.a in Frameworks */,
-				04CAEFA0224E4DF800DD0CE0 /* libRCTText.a in Frameworks */,
-				04CAEFA1224E4DF800DD0CE0 /* libRCTVibration.a in Frameworks */,
-				04CAEFA2224E4DF800DD0CE0 /* libRCTWebSocket.a in Frameworks */,
-				04CAEFA3224E4DF800DD0CE0 /* libRNFetchBlob.a in Frameworks */,
-				04CAEFA4224E4DF800DD0CE0 /* libRNAudio.a in Frameworks */,
-				04CAEFA5224E4DF800DD0CE0 /* libRNBackgroundTimer.a in Frameworks */,
-				04CAEFA6224E4DF800DD0CE0 /* libRCTContacts.a in Frameworks */,
-				04CAEFA7224E4DF800DD0CE0 /* libRNFetchBlob.a in Frameworks */,
-				04CAEFA8224E4DF800DD0CE0 /* libRNFS.a in Frameworks */,
-				04CAEFA9224E4DF800DD0CE0 /* libRNI18n.a in Frameworks */,
-				04CAEFAA224E4DF800DD0CE0 /* libRNImagePicker.a in Frameworks */,
-				04CAEFAB224E4DF800DD0CE0 /* libRNKeychain.a in Frameworks */,
-				04CAEFAC224E4DF800DD0CE0 /* libAirMaps.a in Frameworks */,
-				04CAEFAD224E4DF800DD0CE0 /* libRNSound.a in Frameworks */,
-				04CAEFAE224E4DF800DD0CE0 /* libSQLite.a in Frameworks */,
-				04CAEFAF224E4DF800DD0CE0 /* libsqlite3.0.tbd in Frameworks */,
-				04CAEFB0224E4DF800DD0CE0 /* libRNVectorIcons.a in Frameworks */,
-				04CAEFB1224E4DF800DD0CE0 /* libRCTVideo.a in Frameworks */,
-				04CAEFB2224E4DF800DD0CE0 /* libRNSVG.a in Frameworks */,
-				04CAEFB3224E4DF800DD0CE0 /* libz.tbd in Frameworks */,
-				04CAEFB4224E4DF800DD0CE0 /* SafariServices.framework in Frameworks */,
-				04CAEFB5224E4DF800DD0CE0 /* AddressBook.framework in Frameworks */,
-				04CAEFB6224E4DF800DD0CE0 /* libRCTFBSDK.a in Frameworks */,
-				04CAEFB7224E4DF800DD0CE0 /* libPods-frontm_mobile.a in Frameworks */,
-				04CAEFB8224E4DF800DD0CE0 /* TSBackgroundFetch.framework in Frameworks */,
-				04CAEFB9224E4DF800DD0CE0 /* StoreKit.framework in Frameworks */,
-				04CAEFBA224E4DF800DD0CE0 /* libTcpSockets.a in Frameworks */,
-				04CAEFBB224E4DF800DD0CE0 /* libRCTActionSheet.a in Frameworks */,
-				04CAEFBC224E4DF800DD0CE0 /* Mapbox.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2044,7 +1779,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* frontm_mobile.app */,
-				04CAF004224E4DF800DD0CE0 /* frontm_mobile_develop.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2175,29 +1909,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04CAEF3B224E4DF800DD0CE0 /* frontm_mobile_develop */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 04CAF001224E4DF800DD0CE0 /* Build configuration list for PBXNativeTarget "frontm_mobile_develop" */;
-			buildPhases = (
-				04CAEF3C224E4DF800DD0CE0 /* [CP] Check Pods Manifest.lock */,
-				04CAEF3D224E4DF800DD0CE0 /* Sources */,
-				04CAEF82224E4DF800DD0CE0 /* Frameworks */,
-				04CAEFBD224E4DF800DD0CE0 /* Resources */,
-				04CAEFFB224E4DF800DD0CE0 /* Bundle React Native code and images */,
-				04CAEFFC224E4DF800DD0CE0 /* [CP] Embed Pods Frameworks */,
-				04CAEFFD224E4DF800DD0CE0 /* [CP] Copy Pods Resources */,
-				04CAEFFE224E4DF800DD0CE0 /* Embed Frameworks */,
-				04CAF000224E4DF800DD0CE0 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = frontm_mobile_develop;
-			productName = "Hello World";
-			productReference = 04CAF004224E4DF800DD0CE0 /* frontm_mobile_develop.app */;
-			productType = "com.apple.product-type.application";
-		};
 		13B07F861A680F5B00A75B9A /* frontm_mobile */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "frontm_mobile" */;
@@ -2230,10 +1941,6 @@
 				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					04CAEF3B224E4DF800DD0CE0 = {
-						DevelopmentTeam = 6EZTYQSN4H;
-						ProvisioningStyle = Manual;
-					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
 						LastSwiftMigration = "";
@@ -2454,7 +2161,6 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* frontm_mobile */,
-				04CAEF3B224E4DF800DD0CE0 /* frontm_mobile_develop */,
 			);
 		};
 /* End PBXProject section */
@@ -3030,74 +2736,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		04CAEFBD224E4DF800DD0CE0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04CAEFBE224E4DF800DD0CE0 /* Images.xcassets in Resources */,
-				04CAEFBF224E4DF800DD0CE0 /* bot_dependencies in Resources */,
-				04CAEFC0224E4DF800DD0CE0 /* LaunchScreen.xib in Resources */,
-				04CAEFC1224E4DF800DD0CE0 /* Entypo.ttf in Resources */,
-				04CAEFC2224E4DF800DD0CE0 /* EvilIcons.ttf in Resources */,
-				04CAEFC3224E4DF800DD0CE0 /* Feather.ttf in Resources */,
-				04CAEFC4224E4DF800DD0CE0 /* FontAwesome.ttf in Resources */,
-				04CAEFC5224E4DF800DD0CE0 /* Foundation.ttf in Resources */,
-				04CAEFC6224E4DF800DD0CE0 /* Ionicons.ttf in Resources */,
-				04CAEFC7224E4DF800DD0CE0 /* MaterialCommunityIcons.ttf in Resources */,
-				04CAEFC8224E4DF800DD0CE0 /* FrontM.crt in Resources */,
-				04CAEFC9224E4DF800DD0CE0 /* MaterialIcons.ttf in Resources */,
-				04CAEFCA224E4DF800DD0CE0 /* Octicons.ttf in Resources */,
-				04CAEFCB224E4DF800DD0CE0 /* bots in Resources */,
-				04CAEFCC224E4DF800DD0CE0 /* SimpleLineIcons.ttf in Resources */,
-				04CAEFCD224E4DF800DD0CE0 /* GoogleSignIn.bundle in Resources */,
-				04CAEFCE224E4DF800DD0CE0 /* Zocial.ttf in Resources */,
-				04CAEFCF224E4DF800DD0CE0 /* Info-prod.plist in Resources */,
-				04CAEFD0224E4DF800DD0CE0 /* SF-Pro-Display-Black.otf in Resources */,
-				04CAEFD1224E4DF800DD0CE0 /* SF-Pro-Display-BlackItalic.otf in Resources */,
-				04CAEFD2224E4DF800DD0CE0 /* SF-Pro-Display-Bold.otf in Resources */,
-				04CAEFD3224E4DF800DD0CE0 /* SF-Pro-Display-BoldItalic.otf in Resources */,
-				04CAEFD4224E4DF800DD0CE0 /* SF-Pro-Display-Heavy.otf in Resources */,
-				04CAEFD5224E4DF800DD0CE0 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
-				04CAEFD6224E4DF800DD0CE0 /* SF-Pro-Display-Light.otf in Resources */,
-				04CAEFD7224E4DF800DD0CE0 /* SF-Pro-Display-LightItalic.otf in Resources */,
-				04CAEFD8224E4DF800DD0CE0 /* SF-Pro-Display-Medium.otf in Resources */,
-				04CAEFD9224E4DF800DD0CE0 /* SF-Pro-Display-MediumItalic.otf in Resources */,
-				04CAEFDA224E4DF800DD0CE0 /* SF-Pro-Display-Regular.otf in Resources */,
-				04CAEFDB224E4DF800DD0CE0 /* SF-Pro-Display-RegularItalic.otf in Resources */,
-				04CAEFDC224E4DF800DD0CE0 /* SF-Pro-Display-Semibold.otf in Resources */,
-				04CAEFDD224E4DF800DD0CE0 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
-				04CAEFDE224E4DF800DD0CE0 /* SF-Pro-Display-Thin.otf in Resources */,
-				04CAEFDF224E4DF800DD0CE0 /* SF-Pro-Display-ThinItalic.otf in Resources */,
-				04CAEFE0224E4DF800DD0CE0 /* SF-Pro-Display-Ultralight.otf in Resources */,
-				04CAEFE1224E4DF800DD0CE0 /* SF-Pro-Display-UltralightItalic.otf in Resources */,
-				04CAEFE2224E4DF800DD0CE0 /* SF-Pro-Text-Bold.otf in Resources */,
-				04CAEFE3224E4DF800DD0CE0 /* SF-Pro-Text-BoldItalic.otf in Resources */,
-				04CAEFE4224E4DF800DD0CE0 /* SF-Pro-Text-Heavy.otf in Resources */,
-				04CAEFE5224E4DF800DD0CE0 /* SF-Pro-Text-HeavyItalic.otf in Resources */,
-				04CAEFE6224E4DF800DD0CE0 /* SF-Pro-Text-Light.otf in Resources */,
-				04CAEFE7224E4DF800DD0CE0 /* SF-Pro-Text-LightItalic.otf in Resources */,
-				04CAEFE8224E4DF800DD0CE0 /* SF-Pro-Text-Medium.otf in Resources */,
-				04CAEFE9224E4DF800DD0CE0 /* sectigoSHA2.ca-bundle in Resources */,
-				04CAEFEA224E4DF800DD0CE0 /* SF-Pro-Text-MediumItalic.otf in Resources */,
-				04CAEFEB224E4DF800DD0CE0 /* SF-Pro-Text-Regular.otf in Resources */,
-				04CAEFEC224E4DF800DD0CE0 /* SF-Pro-Text-RegularItalic.otf in Resources */,
-				04CAEFED224E4DF800DD0CE0 /* SF-Pro-Text-Semibold.otf in Resources */,
-				04CAEFEE224E4DF800DD0CE0 /* SF-Pro-Text-SemiboldItalic.otf in Resources */,
-				04CAEFEF224E4DF800DD0CE0 /* Roboto-Black.ttf in Resources */,
-				04CAEFF0224E4DF800DD0CE0 /* Roboto-BlackItalic.ttf in Resources */,
-				04CAEFF1224E4DF800DD0CE0 /* Roboto-Bold.ttf in Resources */,
-				04CAEFF2224E4DF800DD0CE0 /* Roboto-BoldItalic.ttf in Resources */,
-				04CAEFF3224E4DF800DD0CE0 /* Roboto-Italic.ttf in Resources */,
-				04CAEFF4224E4DF800DD0CE0 /* Roboto-Light.ttf in Resources */,
-				04CAEFF5224E4DF800DD0CE0 /* Roboto-LightItalic.ttf in Resources */,
-				04CAEFF6224E4DF800DD0CE0 /* Roboto-Medium.ttf in Resources */,
-				04CAEFF7224E4DF800DD0CE0 /* Roboto-MediumItalic.ttf in Resources */,
-				04CAEFF8224E4DF800DD0CE0 /* Roboto-Regular.ttf in Resources */,
-				04CAEFF9224E4DF800DD0CE0 /* Roboto-Thin.ttf in Resources */,
-				04CAEFFA224E4DF800DD0CE0 /* Roboto-ThinItalic.ttf in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3183,93 +2821,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY='node --max_old_space_size=8192'\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		04CAEF3C224E4DF800DD0CE0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-frontm_mobile-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		04CAEFFB224E4DF800DD0CE0 /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY='node --max_old_space_size=8192'\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
-		};
-		04CAEFFC224E4DF800DD0CE0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
-				"${PODS_ROOT}/TwilioVoice/TwilioVoice.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwilioVoice.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		04CAEFFD224E4DF800DD0CE0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
-				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		04CAF000224E4DF800DD0CE0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework/strip-frameworks.sh\n";
-		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3346,81 +2897,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		04CAEF3D224E4DF800DD0CE0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				04CAEF3E224E4DF800DD0CE0 /* TimelineBotInfo+frontm.m in Sources */,
-				04CAEF3F224E4DF800DD0CE0 /* SigninResponse+frontm.m in Sources */,
-				04CAEF40224E4DF800DD0CE0 /* ContactsResponse+frontm.m in Sources */,
-				04CAEF41224E4DF800DD0CE0 /* AppDelegate.m in Sources */,
-				04CAEF42224E4DF800DD0CE0 /* main.m in Sources */,
-				04CAEF43224E4DF800DD0CE0 /* Message+frontm.m in Sources */,
-				04CAEF44224E4DF800DD0CE0 /* TimelineResponse+frontm.m in Sources */,
-				04CAEF45224E4DF800DD0CE0 /* AgentGuardStringResponse+frontm.m in Sources */,
-				04CAEF46224E4DF800DD0CE0 /* RNGoogleSignInEventsBridge.m in Sources */,
-				04CAEF47224E4DF800DD0CE0 /* SubscribeBotResponse+frontm.m in Sources */,
-				04CAEF48224E4DF800DD0CE0 /* TimelineContent+frontm.m in Sources */,
-				04CAEF49224E4DF800DD0CE0 /* CreateCompanyResponse+frontm.m in Sources */,
-				04CAEF4A224E4DF800DD0CE0 /* ChannelsServiceClient.m in Sources */,
-				04CAEF4B224E4DF800DD0CE0 /* VoipToggleResponse+frontm.m in Sources */,
-				04CAEF4C224E4DF800DD0CE0 /* ParticpantUser+frontm.m in Sources */,
-				04CAEF4D224E4DF800DD0CE0 /* Contact+frontm.m in Sources */,
-				04CAEF4E224E4DF800DD0CE0 /* QueueResponse+frontm.m in Sources */,
-				04CAEF4F224E4DF800DD0CE0 /* BotSubscriptionsResponse+frontm.m in Sources */,
-				04CAEF50224E4DF800DD0CE0 /* GetConversationDetailsUser+frontm.m in Sources */,
-				04CAEF51224E4DF800DD0CE0 /* RNBackgroundFetch+AppDelegate.m in Sources */,
-				04CAEF52224E4DF800DD0CE0 /* AgentGuardBoolResponse+frontm.m in Sources */,
-				04CAEF53224E4DF800DD0CE0 /* CatalogResponse+frontm.m in Sources */,
-				04CAEF54224E4DF800DD0CE0 /* ChannelOwner+frontm.m in Sources */,
-				04CAEF55224E4DF800DD0CE0 /* PhoneNumbers+frontm.m in Sources */,
-				04CAEF56224E4DF800DD0CE0 /* GetArchivedMessagesContent+frontm.m in Sources */,
-				04CAEF57224E4DF800DD0CE0 /* CompanyServiceClient.m in Sources */,
-				04CAEF58224E4DF800DD0CE0 /* ParticipantsListResponse+frontm.m in Sources */,
-				04CAEF59224E4DF800DD0CE0 /* SubscribeDomainResponse+frontm.m in Sources */,
-				04CAEF5A224E4DF800DD0CE0 /* TimelineChannels+frontm.m in Sources */,
-				04CAEF5B224E4DF800DD0CE0 /* TimelineConversation+frontm.m in Sources */,
-				04CAEF5C224E4DF800DD0CE0 /* CatalogDependencies+frontm.m in Sources */,
-				04CAEF5D224E4DF800DD0CE0 /* UpdateFavouritesResponse+frontm.m in Sources */,
-				04CAEF5E224E4DF800DD0CE0 /* RNGoogleSignIn.swift in Sources */,
-				04CAEF5F224E4DF800DD0CE0 /* RNGoogleSignInEvents.swift in Sources */,
-				04CAEF60224E4DF800DD0CE0 /* VoipStatusResponse+frontm.m in Sources */,
-				04CAEF61224E4DF800DD0CE0 /* UserServiceClient.m in Sources */,
-				04CAEF62224E4DF800DD0CE0 /* QueueServiceClient.m in Sources */,
-				04CAEF63224E4DF800DD0CE0 /* ChannelListResponse+frontm.m in Sources */,
-				04CAEF64224E4DF800DD0CE0 /* TwilioTokenResponse+frontm.m in Sources */,
-				04CAEF65224E4DF800DD0CE0 /* SignupResponse+frontm.m in Sources */,
-				04CAEF66224E4DF800DD0CE0 /* GetArchivedMessagesResponse+frontm.m in Sources */,
-				04CAEF67224E4DF800DD0CE0 /* CatalogDependency+frontm.m in Sources */,
-				04CAEF68224E4DF800DD0CE0 /* TimelineContact+frontm.m in Sources */,
-				04CAEF69224E4DF800DD0CE0 /* GetConversationDetailsResponse+frontm.m in Sources */,
-				04CAEF6A224E4DF800DD0CE0 /* DomainRoles+frontm.m in Sources */,
-				04CAEF6B224E4DF800DD0CE0 /* SubscribedBotsContent+frontm.m in Sources */,
-				04CAEF6C224E4DF800DD0CE0 /* User+frontm.m in Sources */,
-				04CAEF6D224E4DF800DD0CE0 /* CatalogBot+frontm.m in Sources */,
-				04CAEF6E224E4DF800DD0CE0 /* AgentGuardServiceClient.m in Sources */,
-				04CAEF6F224E4DF800DD0CE0 /* MatchedUser+frontm.m in Sources */,
-				04CAEF70224E4DF800DD0CE0 /* PingServiceClient.m in Sources */,
-				04CAEF71224E4DF800DD0CE0 /* SignInUser+frontm.m in Sources */,
-				04CAEF72224E4DF800DD0CE0 /* DBChannel+frontm.m in Sources */,
-				04CAEF73224E4DF800DD0CE0 /* ContactsServiceClient.m in Sources */,
-				04CAEF74224E4DF800DD0CE0 /* GRPCMetadata.m in Sources */,
-				04CAEF75224E4DF800DD0CE0 /* GetConversationDetailsChannels+frontm.m in Sources */,
-				04CAEF76224E4DF800DD0CE0 /* FindResponse+frontm.m in Sources */,
-				04CAEF77224E4DF800DD0CE0 /* RNGoogleSignInBridge.m in Sources */,
-				04CAEF78224E4DF800DD0CE0 /* CreateChannelResponse+frontm.m in Sources */,
-				04CAEF79224E4DF800DD0CE0 /* UpdateUserProfileResponse+frontm.m in Sources */,
-				04CAEF7A224E4DF800DD0CE0 /* AuthServiceClient.m in Sources */,
-				04CAEF7B224E4DF800DD0CE0 /* Conversation+frontm.m in Sources */,
-				04CAEF7C224E4DF800DD0CE0 /* DomainChannels+frontm.m in Sources */,
-				04CAEF7D224E4DF800DD0CE0 /* BooleanResponse+frontm.m in Sources */,
-				04CAEF7E224E4DF800DD0CE0 /* CatalogBotClients+frontm.m in Sources */,
-				04CAEF7F224E4DF800DD0CE0 /* Channel+frontm.m in Sources */,
-				04CAEF80224E4DF800DD0CE0 /* QueueMessage+frontm.m in Sources */,
-				04CAEF81224E4DF800DD0CE0 /* ConversationServiceClient.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3511,7 +2987,60 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		04CAF002224E4DF800DD0CE0 /* Debug */ = {
+		04040655224F5C0200D9E237 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = DebugDevelop;
+		};
+		04040656224F5C0200D9E237 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
 			buildSettings = {
@@ -3565,7 +3094,7 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
@@ -3573,9 +3102,55 @@
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = Debug;
+			name = DebugDevelop;
 		};
-		04CAF003224E4DF800DD0CE0 /* Release */ = {
+		04040658224F5C0A00D9E237 /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseDevelop;
+		};
+		04040659224F5C0A00D9E237 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */;
 			buildSettings = {
@@ -3615,7 +3190,7 @@
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-transformable-image/Demo/ios/Demo",
 				);
-				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				INFOPLIST_FILE = "frontm_mobile/Info-prod.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3629,14 +3204,14 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = Release;
+			name = ReleaseDevelop;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -3867,20 +3442,13 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		04CAF001224E4DF800DD0CE0 /* Build configuration list for PBXNativeTarget "frontm_mobile_develop" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				04CAF002224E4DF800DD0CE0 /* Debug */,
-				04CAF003224E4DF800DD0CE0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "frontm_mobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
+				04040656224F5C0200D9E237 /* DebugDevelop */,
 				13B07F951A680F5B00A75B9A /* Release */,
+				04040659224F5C0A00D9E237 /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3889,7 +3457,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
+				04040655224F5C0200D9E237 /* DebugDevelop */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+				04040658224F5C0A00D9E237 /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
