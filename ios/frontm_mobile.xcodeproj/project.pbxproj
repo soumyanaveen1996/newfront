@@ -1113,7 +1113,7 @@
 		04905663223BBA01008FECC8 /* Contact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Contact+frontm.m"; sourceTree = "<group>"; };
 		04905665223BBB24008FECC8 /* QueueResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueResponse+frontm.h"; sourceTree = "<group>"; };
 		04905666223BBB24008FECC8 /* QueueResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueResponse+frontm.m"; sourceTree = "<group>"; };
-		04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
+		04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-prod.plist"; path = "frontm_mobile/Info-prod.plist"; sourceTree = "<group>"; };
 		04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRPCMetadata.h; sourceTree = "<group>"; };
 		04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GRPCMetadata.m; sourceTree = "<group>"; };
 		04CAEF3A224E4D5900DD0CE0 /* frontm_mobile copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "frontm_mobile copy-Info.plist"; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile copy-Info.plist"; sourceTree = "<absolute>"; };
