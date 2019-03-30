@@ -44,6 +44,7 @@ class NetworkPoller {
         await this.listenToEvents();
         this.startPolling();
         this.subscribeToServerEvents();
+        this.alreadySubscribed = false;
     };
 
     userLoggedInHandler = async () => {
@@ -80,6 +81,9 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
+        if (this.alreadySubscribed) {
+            return;
+        }
         let user = await Auth.getUser();
         const QueueServiceClient = NativeModules.QueueServiceClient;
         eventEmitter = new NativeEventEmitter(QueueServiceClient);
@@ -101,9 +105,10 @@ class NetworkPoller {
         );
 
         QueueServiceClient.startChatSSE(user.creds.sessionId);
+        this.alreadySubscribed = true;
     };
 
-    unsubscribeFromServerEvents = () => {
+    unsubscribeFromServerEvents = loggedOut => {
         if (this.grpcSubscription) {
             this.grpcSubscription.remove();
             this.grpcSubscription = null;
@@ -112,6 +117,10 @@ class NetworkPoller {
             this.grpcEndSubscription.remove();
             this.grpcEndSubscription = null;
         }
+        if (loggedOut) {
+            QueueServiceClient.logout();
+        }
+        this.alreadySubscribed = false;
     };
     /*
     subscribeToServerEvents = async () => {
@@ -212,7 +221,7 @@ class NetworkPoller {
     userLoggedOutHandler = async () => {
         console.log('Network Poller: User Loggedout');
         this.stopPolling();
-        this.unsubscribeFromServerEvents();
+        this.unsubscribeFromServerEvents(true);
     };
 
     restartPolling = async () => {

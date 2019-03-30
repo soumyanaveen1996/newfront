@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import io.grpc.Context;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
+import io.grpc.Status;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
@@ -144,6 +145,14 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(Throwable t) {
+                Status status = Status.fromThrowable(t);
+                Log.d("GRPC:::read queue message", "" + status.getCode());
+                if (status != null) {
+                    Log.d("GRPC:::read queue message", "" + status.getCode());
+                    if (status.getCode() == Status.Code.UNAUTHENTICATED) {
+                        sendEvent("logout", null);
+                    }
+                }
                 //callback.invoke(Arguments.createMap());
             }
 
@@ -153,6 +162,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
             }
         });
 
+
     }
 
     public void handleError() {
@@ -161,6 +171,14 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         setmIsAlreadyListening(false);
         startChatSSE(getmSessionId());
 
+    }
+
+    @ReactMethod
+    public void logout() {
+        mChannel.shutdown();
+        mChannel = null;
+        setmIsAlreadyListening(false);
+        setmSessionId(null);
     }
 
     @ReactMethod
