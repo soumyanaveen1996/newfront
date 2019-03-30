@@ -316,14 +316,25 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    modal: {
-        width: wp('90%'),
-        height: hp('60%'),
-        borderRadius: 10,
-        flexDirection: 'column',
-        backgroundColor: 'white',
-        alignItems: 'center'
-    },
+    modal: Platform.select({
+        ios: {
+            width: wp('90%'),
+            height: hp('40%'),
+            borderRadius: 10,
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignItems: 'center'
+        },
+        android: {
+            width: wp('90%'),
+            height: hp('60%'),
+            borderRadius: 10,
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignItems: 'center'
+        }
+    }),
+
     phoneContainer: {
         height: hp('10%'),
         width: '100%',

@@ -658,13 +658,14 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getChannelAdmins(String sessionId, ReadableMap params, final Callback callback)
     {
-        Log.d("GRPC:::getPendingParticipants", sessionId);
+        Log.d("GRPC :::getChannelAdmins", sessionId);
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
 
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
                 .setChannelName(params.getString("channelName"))
                 .setUserDomain(params.getString("userDomain"));
+
 
 
         Metadata header=new Metadata();
@@ -674,7 +675,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.getParticipants(input.build(), new StreamObserver<ParticipantsListResponse>() {
+        stub.getChannelAdmins(input.build(), new StreamObserver<ParticipantsListResponse>() {
 
             @Override
             public void onNext(ParticipantsListResponse value) {

@@ -249,7 +249,7 @@ export default class AddressBookScreen extends React.Component {
             })
             .then(
                 data => {
-                    if (ata.data.error === 0) {
+                    if (data.data.error === 0) {
                         console.log('invitation sent');
                         this.setState({ loading: false }, () => {
                             if (!this.state.loading) {

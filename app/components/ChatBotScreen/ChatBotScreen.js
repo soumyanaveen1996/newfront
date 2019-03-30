@@ -1453,9 +1453,9 @@ class ChatBotScreen extends React.Component {
         console.log('[FrontM] Is Promise?', isPromise);
         if (isPromise) {
             getNext.then(response => {
-                if (response.status === 200) {
+                const status = R.pathOr(1, ['data', 'error'], response);
+                if (status == 0) {
                     message.setStatus(1);
-
                     this.updateChat(message);
                 }
             });
