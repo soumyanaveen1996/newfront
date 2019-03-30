@@ -1,5 +1,6 @@
 package com.frontm.frontm.proto;
 
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -96,6 +97,8 @@ public abstract class JsonConvert {
                 writableMap.putInt(key, jsonObject.getInt(key));
             } else if (value instanceof String) {
                 writableMap.putString(key, jsonObject.getString(key));
+            } else if (value instanceof Boolean){
+                writableMap.putBoolean(key, jsonObject.getBoolean(key));
             } else if (value instanceof JSONObject) {
                 writableMap.putMap(key,jsonToReact(jsonObject.getJSONObject(key)));
             } else if (value instanceof JSONArray){
