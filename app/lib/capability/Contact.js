@@ -378,6 +378,7 @@ export default class Contact {
 
     static getUserDetails = (user, userId) => {
         return new Promise((resolve, reject) => {
+            console.log('>>>>>>>1');
             UserServiceClient.getUserDetails(
                 user.creds.sessionId,
                 { userId: userId },
