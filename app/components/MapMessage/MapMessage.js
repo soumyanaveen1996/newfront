@@ -62,11 +62,11 @@ export default class MapMessage extends React.Component {
                 });
         } else {
             ControlDAO.getContentById(this.props.mapOptions.mapId)
-                .then(() => {
+                .then(mapData => {
                     return Mapbox.snapshotManager.takeSnap({
                         centerCoordinate: [
-                            content.region.longitude,
-                            content.region.latitude
+                            mapData.region.longitude,
+                            mapData.region.latitude
                         ],
                         width: width,
                         height: width,
