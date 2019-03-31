@@ -12,6 +12,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.frontm.commonmessages.proto.Empty;
 import com.frontm.contacts.proto.EmailIdList;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.QueueMessageConverter;
 import com.frontm.frontm.proto.converters.QueueResponseConverter;
 import com.frontm.queue.proto.QueueMessage;
@@ -71,8 +72,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
     public ManagedChannel getmChannel() {
         if (mChannel == null) {
-            String host = "grpcdev.frontm.ai";
-            int port = 50051;
+            String host = BuildConfig.GRPC_HOST;
+            int port = BuildConfig.GRPC_PORT;
             try {
                 mChannel = OkHttpChannelBuilder.forAddress(host, port)
                         .connectionSpec(ConnectionSpec.MODERN_TLS)

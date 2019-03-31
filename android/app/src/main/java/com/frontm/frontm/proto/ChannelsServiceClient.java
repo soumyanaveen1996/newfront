@@ -24,6 +24,7 @@ import com.frontm.channels.proto.InputChannel;
 import com.frontm.channels.proto.ParticipantsListResponse;
 import com.frontm.channels.proto.SubUnsubInput;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BooleanResponseConverter;
 import com.frontm.frontm.proto.converters.ChannelListResponseConverter;
 import com.frontm.frontm.proto.converters.CreateChannelResponseConverter;
@@ -45,8 +46,8 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
     public ChannelsServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

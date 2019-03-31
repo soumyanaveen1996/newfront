@@ -12,11 +12,7 @@
 #import <GRPCClient/GRPCCall+ChannelArg.h>
 #import <GRPCClient/GRPCCall+ChannelCredentials.h>
 #import <GRPCClient/GRPCCall+Tests.h>
-
-
-
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 
 int main(int argc, char * argv[]) {
@@ -29,10 +25,10 @@ int main(int argc, char * argv[]) {
                                                            error:&error];
 
     [GRPCCall setTLSPEMRootCerts:contentInUTF8
-                         forHost:kHostAddress
+                         forHost:GRPCMetadata.shared.uri
                            error:nil];
 
-    [GRPCCall setUserAgentPrefix:@"FrontM/1.0" forHost:kHostAddress];
+    [GRPCCall setUserAgentPrefix:@"FrontM/1.0" forHost:GRPCMetadata.shared.uri];
     return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }
 }

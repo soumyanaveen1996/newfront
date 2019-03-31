@@ -20,8 +20,7 @@
 #import "ContactsResponse+frontm.h"
 #import "PhoneNumbers+frontm.h"
 #import <React/RCTLog.h>
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 @interface UserServiceClient()
 
@@ -38,7 +37,8 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[UserService alloc] initWithHost:kHostAddress];
+    RCTLog(@"GRPC URI : %@", GRPCMetadata.shared.uri);
+    _serviceClient = [[UserService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }
