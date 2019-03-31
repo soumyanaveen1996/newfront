@@ -6,7 +6,8 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    TextInput
+    TextInput,
+    Platform
 } from 'react-native';
 import { BotListStyles, MainScreenStyles } from './styles';
 import BotListItem from './BotListItem';
@@ -35,7 +36,6 @@ const isEqual = require('react-fast-compare');
 import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
 import CustomPlaceholder from './CustomPlaceholder';
-import { platform } from 'os';
 
 export const FAVOURITE_BOTS = 'favourite_bots';
 class BotList extends React.Component {
@@ -324,6 +324,7 @@ class BotList extends React.Component {
     };
     render() {
         const { loaded, data } = this.state;
+        const clipped = Platform.OS === 'ios' ? false : true;
 
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
@@ -440,7 +441,7 @@ class BotList extends React.Component {
                         previewOpenValue={-40}
                         previewOpenDelay={3000}
                         // Performance settings
-                        removeClippedSubviews={false} // Unmount components when outside of window
+                        removeClippedSubviews={clipped} // Unmount components when outside of window
                         initialNumToRender={2} // Reduce initial render amount
                         maxToRenderPerBatch={1} // Reduce number in each render batch
                         maxToRenderPerBatch={100} // Increase time between renders
