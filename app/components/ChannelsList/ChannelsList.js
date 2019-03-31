@@ -40,6 +40,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import _ from 'lodash';
+import images from '../../images';
 
 const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -125,7 +126,8 @@ class ChannelsList extends React.Component {
             filter: [],
             searchString: '',
             user: null,
-            wait: false
+            wait: false,
+            loaded: false
         };
     }
 
@@ -281,18 +283,23 @@ class ChannelsList extends React.Component {
     };
 
     async refresh(onback = false, handleEmptyChannels = false) {
-        const channels = await Channel.getSubscribedChannels();
-        if (handleEmptyChannels && channels.length === 0) {
-            if (onback) {
-                if (this.props.onBack) {
-                    this.props.onBack();
+        let channels = await Channel.getSubscribedChannels();
+        let filteredChannels = await this.applyFilter(channels);
+        for (const channel of filteredChannels) {
+            if (channel.subcription === 'true') {
+                const admins = await Channel.getAdmins(
+                    channel.channelName,
+                    channel.userDomain
+                );
+                const isAdmin = _.find(admins, adm => {
+                    return adm.userId === this.state.user.userId;
+                });
+                if (isAdmin) {
+                    channel.isAdmin = true;
                 }
-                Actions.pop();
             }
-        } else {
-            let filteredChannels = await this.applyFilter(channels);
-            this.setState({ channels: filteredChannels });
         }
+        this.setState({ channels: filteredChannels, loaded: true });
         this.checkPollingStrategy();
     }
 
@@ -399,11 +406,18 @@ class ChannelsList extends React.Component {
             filter => filter.checked === true
         );
 
-        const channels = this.state.channels.filter(channel =>
-            channel.channelName
-                .toLowerCase()
-                .includes(this.state.searchString.toLowerCase())
-        );
+        let channels;
+        if (this.state.searchString.length > 0) {
+            channels = this.state.channels.filter(channel =>
+                channel.channelName
+                    .toLowerCase()
+                    .includes(this.state.searchString.toLowerCase())
+            );
+        } else {
+            channels = this.state.channels.filter(
+                channel => channel.subcription === 'true'
+            );
+        }
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
@@ -467,15 +481,34 @@ class ChannelsList extends React.Component {
                             </View>
                         </ScrollView>
                     </View>
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        <FlatList
-                            style={styles.flatList}
-                            keyExtractor={(item, index) => item.id.toString()}
-                            data={channels}
-                            renderItem={this.renderRowItem.bind(this)}
-                            extraData={this.state}
-                        />
-                    </View>
+                    {channels.length > 0 || !this.state.loaded ? (
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            <FlatList
+                                style={styles.flatList}
+                                keyExtractor={(item, index) =>
+                                    item.id.toString()
+                                }
+                                data={channels}
+                                renderItem={this.renderRowItem.bind(this)}
+                                extraData={this.state}
+                            />
+                        </View>
+                    ) : (
+                        <View
+                            style={{
+                                marginTop: '30%',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Image source={images.empty_channel} />
+                            <Text>
+                                {this.state.searchString.length > 0
+                                    ? '\nNo channel has been found.'
+                                    : '\nYou are not subscribed to any channel.\nSearch or create a new one.'}
+                            </Text>
+                        </View>
+                    )}
                 </ScrollView>
                 {this.state.wait ? (
                     <View
