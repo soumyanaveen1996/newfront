@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 222
+        versionCode 225
         versionName "4.0.0"
         multiDexEnabled true
         ndk {
@@ -154,7 +154,10 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
         debug {
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            // For Debug Prod Uncomment this Line
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // For Debug Dev Uncomment this line
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
