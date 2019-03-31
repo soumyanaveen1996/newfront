@@ -32,7 +32,7 @@ const stageConfig = {
         enabled: true,
         host: 'deprecated',
         resource_host_old: 'api.frontm.ai',
-        resource_host: '3nf11ibj25.execute-api.us-east-1.amazonaws.com/dev',
+        resource_host: 'eg4dh0bm07.execute-api.us-east-1.amazonaws.com/prod',
         protocol: 'https://',
         queuePath: '/queueLambda',
         pingPath: '/ping',
