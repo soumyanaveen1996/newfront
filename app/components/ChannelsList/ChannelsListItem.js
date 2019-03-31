@@ -40,19 +40,11 @@ export default class ChannelsListItem extends React.Component {
     }
 
     async componentDidMount() {
-        Channel.getAdmins(
-            this.props.channel.channelName,
-            this.props.channel.userDomain
-        ).then(admins => {
-            const isAdmin = _.find(admins, adm => {
-                return adm.userId === this.props.user.userId;
-            });
-            if (isAdmin) {
-                this.setState({ isAdmin: true });
-            } else {
-                this.setState({ isAdmin: false });
-            }
-        });
+        if (this.props.channel.isAdmin) {
+            this.setState({ isAdmin: true });
+        } else {
+            this.setState({ isAdmin: false });
+        }
     }
 
     unsubscribeChannel() {}
