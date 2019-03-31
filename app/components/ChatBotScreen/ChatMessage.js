@@ -376,6 +376,7 @@ export default class ChatMessage extends React.Component {
 
     renderMessage() {
         let { message } = this.props;
+
         if (
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_STRING ||

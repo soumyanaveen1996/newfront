@@ -12,7 +12,6 @@ export const synchronizeUserData = async () => {
     //     await Contact.refreshContacts();
     //     await debounce();
     // } catch (error) {
-    //     console.log('Cannot Load Contacts Data', error);
     // }
     // Conversation.downloadRemoteConversations();
     // await debounce();
@@ -33,7 +32,6 @@ export const synchronizeUserData = async () => {
         setTimeout(() => Channel.refreshChannels(), 1000);
         setTimeout(() => Channel.refreshUnsubscribedChannels(), 1500);
     } catch (error) {
-        console.log('Cannot Load Contacts');
         setTimeout(() => RemoteBotInstall.syncronizeBots(), 200);
         setTimeout(() => Conversation.downloadRemoteConversations(), 500);
         setTimeout(() => Channel.refreshChannels(), 1000);
