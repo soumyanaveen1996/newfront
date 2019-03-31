@@ -977,6 +977,7 @@
 		3C941F20D78F444194CAAEB0 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../assets/fonts/Roboto/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		3FEFB1C6C4704FD8B66D30B4 /* SF-Pro-Text-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Text-RegularItalic.otf"; path = "../assets/fonts/SFPro/SF-Pro-Text-RegularItalic.otf"; sourceTree = "<group>"; };
 		429900950192486080C1A87E /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
+		4624829DCC2E58CA263D2EB7 /* Pods-frontm_mobile.releasedevelop.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontm_mobile.releasedevelop.xcconfig"; path = "Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile.releasedevelop.xcconfig"; sourceTree = "<group>"; };
 		498B9A007F1540289E4FB3E1 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
 		4ADB3CA7D1A6496C8CECFD75 /* libRNSound.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSound.a; sourceTree = "<group>"; };
 		4B13B0FB619C4CDD98899BF5 /* RNSound.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
@@ -1022,6 +1023,7 @@
 		AD4BF23652804675A540A09D /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		AE77840702AB4684BBD7AA82 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		AE85DF25A0530C85F2965C65 /* Pods-frontm_mobile.debugdevelop.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontm_mobile.debugdevelop.xcconfig"; path = "Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile.debugdevelop.xcconfig"; sourceTree = "<group>"; };
 		AF211C1B79C4421DA60C8697 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		AF4196B376234F78A314980A /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		AF8E97A68C6747C986CC381E /* RNKeychain.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNKeychain.xcodeproj; path = "../node_modules/react-native-keychain/RNKeychain.xcodeproj"; sourceTree = "<group>"; };
@@ -1902,6 +1904,8 @@
 			children = (
 				9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */,
 				AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */,
+				AE85DF25A0530C85F2965C65 /* Pods-frontm_mobile.debugdevelop.xcconfig */,
+				4624829DCC2E58CA263D2EB7 /* Pods-frontm_mobile.releasedevelop.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -3042,7 +3046,7 @@
 		};
 		04040656224F5C0200D9E237 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
+			baseConfigurationReference = AE85DF25A0530C85F2965C65 /* Pods-frontm_mobile.debugdevelop.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -3152,7 +3156,7 @@
 		};
 		04040659224F5C0A00D9E237 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */;
+			baseConfigurationReference = 4624829DCC2E58CA263D2EB7 /* Pods-frontm_mobile.releasedevelop.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

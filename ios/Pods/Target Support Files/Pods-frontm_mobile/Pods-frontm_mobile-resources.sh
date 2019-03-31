@@ -95,7 +95,15 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle"
 fi
+if [[ "$CONFIGURATION" == "DebugDevelop" ]]; then
+  install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle"
+fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle"
+fi
+if [[ "$CONFIGURATION" == "ReleaseDevelop" ]]; then
   install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle"
 fi
