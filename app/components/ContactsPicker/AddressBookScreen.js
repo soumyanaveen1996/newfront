@@ -67,9 +67,12 @@ export default class AddressBookScreen extends React.Component {
 
     gettingAllCOntactData = () => {
         let contactArray = [];
+        console.log('>>>>>>>>1');
         Contacts.getAll((err, contacts) => {
+            console.log('>>>>>>>>2');
             if (err) {
-                throw err;
+                console.log('>>>>>>>>3', err);
+                contacts = [];
             }
 
             contacts.forEach((data, index) => {
@@ -208,7 +211,11 @@ export default class AddressBookScreen extends React.Component {
                 );
             });
         } else {
-            return null;
+            return (
+                <View>
+                    <Text>There are no contacts</Text>
+                </View>
+            );
         }
     };
 

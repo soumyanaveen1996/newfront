@@ -122,9 +122,9 @@ export default class ChatMessage extends React.Component {
             });
     }
 
-    onImagePress(headers) {
+    onImagePress(headers, uri) {
         const { message } = this.props;
-        Actions.imageViewer({ uri: message.getMessage(), headers: headers });
+        Actions.imageViewer({ uri: uri, headers: headers });
     }
 
     wrapBetweenFavAndTalk(message, component) {
@@ -177,7 +177,7 @@ export default class ChatMessage extends React.Component {
             <TapToLoadImage
                 alignRight={this.props.alignRight}
                 source={{ uri: url, headers: headers }}
-                onImagePress={this.onImagePress.bind(this, headers)}
+                onImagePress={this.onImagePress.bind(this, headers, url)}
             />
         );
         const component = this.wrapWithTitle(imageComponent);

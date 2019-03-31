@@ -26,17 +26,27 @@ export default class MapMessage extends React.Component {
     }
 
     openMap() {
-        this.props.openMap(
-            this.props.mapOptions.mapId,
-            this.props.mapOptions.title
-        );
+        if (this.props.mapData) {
+            this.props.openMap(
+                this.props.mapData,
+                this.props.mapOptions.mapId,
+                this.props.mapOptions.title
+            );
+        } else {
+            this.props.openMap(
+                this.props.mapOptions.mapId,
+                this.props.mapOptions.title
+            );
+        }
     }
 
     async componentDidMount() {
         const { width, height } = Dimensions.get('window');
-        ControlDAO.getContentById(this.props.mapOptions.mapId)
-            .then(content => {
-                return Mapbox.snapshotManager.takeSnap({
+        let content;
+        if (this.props.mapData) {
+            content = this.props.mapData;
+            Mapbox.snapshotManager
+                .takeSnap({
                     centerCoordinate: [
                         content.region.longitude,
                         content.region.latitude
@@ -46,11 +56,29 @@ export default class MapMessage extends React.Component {
                     zoomLevel: 11,
                     styleURL: Mapbox.StyleURL.Street,
                     writeToDisk: true // creates a temp file
+                })
+                .then(uri => {
+                    this.setState({ mapSnapshotUri: uri });
                 });
-            })
-            .then(uri => {
-                this.setState({ mapSnapshotUri: uri });
-            });
+        } else {
+            ControlDAO.getContentById(this.props.mapOptions.mapId)
+                .then(() => {
+                    return Mapbox.snapshotManager.takeSnap({
+                        centerCoordinate: [
+                            content.region.longitude,
+                            content.region.latitude
+                        ],
+                        width: width,
+                        height: width,
+                        zoomLevel: 11,
+                        styleURL: Mapbox.StyleURL.Street,
+                        writeToDisk: true // creates a temp file
+                    });
+                })
+                .then(uri => {
+                    this.setState({ mapSnapshotUri: uri });
+                });
+        }
     }
 
     render() {
