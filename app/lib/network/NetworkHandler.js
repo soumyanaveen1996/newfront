@@ -59,6 +59,7 @@ const readRemoteLambdaQueue = user => {
 
     const QueueServiceClient = NativeModules.QueueServiceClient;
     eventEmitter = new NativeEventEmitter(QueueServiceClient);
+    let logoutSubscribtion;
     const subscription = eventEmitter.addListener('message', message => {
         console.log('GRPC:::Event GRPC message : ', message, message);
         handleLambdaResponse(message, user);
@@ -68,7 +69,17 @@ const readRemoteLambdaQueue = user => {
         console.log('GRPC:::End GRPC message : ', message, message);
         subscription.remove();
         endSubscribtion.remove();
+        logoutSubscribtion.remove();
         currentlyReading = false;
+    });
+
+    logoutSubscribtion = eventEmitter.addListener('logout', message => {
+        console.log('GRPC:::Logout GRPC message : ', message, message);
+        subscription.remove();
+        endSubscribtion.remove();
+        logoutSubscribtion.remove();
+        currentlyReading = false;
+        Auth.logout();
     });
 
     QueueServiceClient.getAllQueueMessages(user.creds.sessionId);

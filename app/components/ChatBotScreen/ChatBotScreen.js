@@ -915,6 +915,20 @@ class ChatBotScreen extends React.Component {
         });
     }
 
+    openLocationMessage(content, mapId, title) {
+        Keyboard.dismiss();
+        this.currentMapId = mapId;
+        Store.dispatch(setCurrentMap(content));
+        Actions.mapView({
+            title: title || 'Map',
+            mapId: mapId,
+            onClosing: () => {
+                Store.dispatch(setCurrentMap(null));
+                this.currentMap = null;
+            }
+        });
+    }
+
     openChart(message) {
         Keyboard.dismiss();
         Actions.SNRChart({
@@ -1290,8 +1304,9 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={false}
                         isFromBot={false}
-                        openMap={this.openMap.bind(this)}
+                        openMap={this.openLocationMessage.bind(this)}
                         mapOptions={message.getMessageOptions()}
+                        mapData={message.getMessage()}
                     />
                 );
             } else if (
@@ -1381,8 +1396,9 @@ class ChatBotScreen extends React.Component {
                     <MapMessage
                         isFromUser={true}
                         isFromBot={false}
-                        openMap={this.openMap.bind(this)}
+                        openMap={this.openLocationMessage.bind(this)}
                         mapOptions={message.getMessageOptions()}
+                        mapData={message.getMessage()}
                     />
                 );
             } else {

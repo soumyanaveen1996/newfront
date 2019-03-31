@@ -37,22 +37,12 @@ export default class ContactCard extends React.Component {
                 this.newContact = true;
                 Auth.getUser()
                     .then(user => {
-                        const options = {
-                            method: 'GET',
-                            url:
-                                config.proxy.protocol +
-                                config.proxy.host +
-                                '/userDetails?userId=' +
-                                this.props.id,
-                            headers: {
-                                sessionId: user.creds.sessionId
-                            }
-                        };
-                        return Network(options);
+                        return Contact.getUserDetails(user, this.props.id);
                     })
                     .then(c => {
                         this.setState({ userName: c.data.userName });
-                    });
+                    })
+                    .catch(e);
             }
         });
     }

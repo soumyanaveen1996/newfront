@@ -51,6 +51,7 @@ RCT_EXPORT_MODULE();
   return @[
            @"message",
            @"end",
+           @"logout",
            @"sse_message",
            @"sse_end",
            @"sse_error"
@@ -68,6 +69,13 @@ RCT_EXPORT_MODULE();
 
 RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString *)sessionId) {
   GRPCProtoCall *call = [self.serviceClient RPCToGetAllQueueMessagesWithRequest:[Empty new] eventHandler:^(BOOL done, QueueResponse * _Nullable response, NSError * _Nullable error) {
+    if (error) {
+      if (error.code == 16) {
+        [self sendEventWithName:@"logout" body:@{}];
+      }
+      RCTLog(@"Error in getAllQueueMessages %@", [error description]);
+      return;
+    }
     if (done) {
       [self sendEventWithName:@"end" body:@{}];
     } else {
@@ -79,18 +87,7 @@ RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString
   [call start];
 }
 
-/*
-RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)sessionId) {
-  GRPCProtoCall *call = [self.serviceClient RPCToGetSampleMessagesWithRequest:[Empty new] eventHandler:^(BOOL done, MessageList * _Nullable response, NSError * _Nullable error) {
-    if (done) {
-      [self sendEventWithName:@"end" body:@{}];
-    } else {
-      [self sendEventWithName:@"message" body:[response toJSON]];
-    }
-  }];
-  call.requestHeaders[@"sessionId"] = sessionId;
-  [call start];
-} */
+
 
 - (void) handleError {
   self.alreadyListening = NO;
@@ -101,32 +98,22 @@ RCT_REMAP_METHOD(getSampleMessages, getSampleMessagesWithSessionId:(NSString *)s
 
 RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) {
 
-  /*
-  GRPCProtoCall *call = [self.serviceClient
-                         RPCToGetSampleBufferedMessageWithRequest:[Empty new] eventHandler:^(BOOL done, BufferMessage * _Nullable response, NSError * _Nullable error) {
-                           NSError *jsonError = nil;
-                           NSString *myString = [[NSString alloc] initWithData:response.message encoding:NSUTF8StringEncoding];
-
-                           RCTLog(@"Done startChatSSE : %d %@ %@", done, myString, jsonError);
-                           if (done) {
-                             [self sendEventWithName:@"end" body:@{}];
-                           } else {
-                             [self sendEventWithName:@"message" body:response.message];
-                           }
-
-                         }];
-
-  call.requestHeaders[@"sessionId"] = sessionId;
-  [call start]; */
 
   if (self.alreadyListening && [sessionId isEqualToString:self.sessionId]) {
     return;
   }
+
   if (![sessionId isEqualToString:self.sessionId]) {
     if (self.sseCall) {
       [self.sseCall cancel];
+      self.sseCall = nil;
     }
   }
+
+  if (!sessionId || [sessionId isEqual:[NSNull null]] || [sessionId isEqualToString:@""]) {
+    return;
+  }
+
   self.alreadyListening = YES;
   self.sessionId = sessionId;
 
@@ -149,6 +136,14 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
 
   self.sseCall.requestHeaders[@"sessionId"] = sessionId;
   [self.sseCall start];
+}
+
+
+RCT_REMAP_METHOD(logout, logout) {
+  self.alreadyListening = NO;
+  [self.sseCall cancel];
+  self.sseCall = nil;
+  self.sessionId = nil;
 }
 
 /*
