@@ -11,8 +11,7 @@
 #import "SignupResponse+frontm.h"
 #import "SigninResponse+frontm.h"
 #import <React/RCTLog.h>
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 @interface AuthServiceClient()
 
@@ -29,7 +28,8 @@ RCT_EXPORT_MODULE();
 - (id) init {
   self = [super init];
   if (self) {
-    _serviceClient = [[AuthService alloc] initWithHost:kHostAddress];
+    RCTLog(@"GRPC URI : %@", GRPCMetadata.shared.uri);
+    _serviceClient = [[AuthService alloc] initWithHost:GRPCMetadata.shared.uri];
   }
   return self;
 }

@@ -17,6 +17,7 @@ import com.frontm.commonmessages.proto.Empty;
 import com.frontm.company.proto.CompanyServiceGrpc;
 import com.frontm.company.proto.CreateCompanyInput;
 import com.frontm.company.proto.CreateCompanyResponse;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.CreateCompanyResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
@@ -48,8 +49,8 @@ public class CompanyServiceClient extends ReactContextBaseJavaModule {
 
     public CompanyServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

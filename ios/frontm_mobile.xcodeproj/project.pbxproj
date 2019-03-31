@@ -82,6 +82,8 @@
 		0491AC4B208F32BA009A6D9F /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F4A9F2208A234300662D34 /* libRNCamera.a */; };
 		049BCDC420B343D60065E4F7 /* libRNVersionCheck.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04143DA020B30D08001DDCE3 /* libRNVersionCheck.a */; };
 		04B52D3320C0AB6E00540193 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CFE32520C0993A009319B5 /* libRNBackgroundFetch.a */; };
+		04CAED6E224E3E2100DD0CE0 /* Info-prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */; };
+		04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */; };
 		04E0FF7E22383F80004F19B1 /* ConversationServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */; };
 		04E0FF8122384232004F19B1 /* CatalogResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF8022384232004F19B1 /* CatalogResponse+frontm.m */; };
 		04E0FF852238426E004F19B1 /* CatalogBot+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E0FF842238426E004F19B1 /* CatalogBot+frontm.m */; };
@@ -912,6 +914,11 @@
 		04905663223BBA01008FECC8 /* Contact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Contact+frontm.m"; sourceTree = "<group>"; };
 		04905665223BBB24008FECC8 /* QueueResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QueueResponse+frontm.h"; sourceTree = "<group>"; };
 		04905666223BBB24008FECC8 /* QueueResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QueueResponse+frontm.m"; sourceTree = "<group>"; };
+		04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-prod.plist"; path = "frontm_mobile/Info-prod.plist"; sourceTree = "<group>"; };
+		04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GRPCMetadata.h; sourceTree = "<group>"; };
+		04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GRPCMetadata.m; sourceTree = "<group>"; };
+		04CAEF3A224E4D5900DD0CE0 /* frontm_mobile copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "frontm_mobile copy-Info.plist"; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile copy-Info.plist"; sourceTree = "<absolute>"; };
+		04CAF005224E4DF800DD0CE0 /* frontm_mobile copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "frontm_mobile copy2-Info.plist"; path = "/Users/amal/dev/client-projects/frontm/frontm_mobile/ios/frontm_mobile copy2-Info.plist"; sourceTree = "<absolute>"; };
 		04CFE2F220C0993A009319B5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		04E0FF7C22383F80004F19B1 /* ConversationServiceClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationServiceClient.h; sourceTree = "<group>"; };
 		04E0FF7D22383F80004F19B1 /* ConversationServiceClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationServiceClient.m; sourceTree = "<group>"; };
@@ -1508,6 +1515,8 @@
 				219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */,
 				219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */,
 				219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */,
+				04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */,
+				04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */,
 			);
 			name = grpc_utils;
 			sourceTree = "<group>";
@@ -1569,6 +1578,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				04CAED6D224E3E2100DD0CE0 /* Info-prod.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				6129E30450BD4EA1A9E28D48 /* RNBackgroundFetch+AppDelegate.m */,
@@ -1757,6 +1767,8 @@
 				040C5A321FFCF9A40071B62D /* Products */,
 				D3362C033AE81F21F8C363ED /* Pods */,
 				0485F18920769A8500D5525E /* frontm_mobile-Bridging-Header.h */,
+				04CAEF3A224E4D5900DD0CE0 /* frontm_mobile copy-Info.plist */,
+				04CAF005224E4DF800DD0CE0 /* frontm_mobile copy2-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -2745,6 +2757,7 @@
 				E477AD9AB06B49D68C085521 /* SimpleLineIcons.ttf in Resources */,
 				040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */,
 				D18C2379935446B6A457F93B /* Zocial.ttf in Resources */,
+				04CAED6E224E3E2100DD0CE0 /* Info-prod.plist in Resources */,
 				D3A06324C3C94398979C5641 /* SF-Pro-Display-Black.otf in Resources */,
 				A782D4400596458C8D506EA6 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				37E21ADEC5A946EB8AFC1899 /* SF-Pro-Display-Bold.otf in Resources */,
@@ -2806,7 +2819,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY='node --max_old_space_size=8192'\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2942,6 +2955,7 @@
 				04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */,
 				04905643223B855A008FECC8 /* DBChannel+frontm.m in Sources */,
 				04704B762236E08C003ABE94 /* ContactsServiceClient.m in Sources */,
+				04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */,
 				0458FAB42238E647002D37A3 /* GetConversationDetailsChannels+frontm.m in Sources */,
 				04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */,
 				0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */,
@@ -2973,6 +2987,232 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		04040655224F5C0200D9E237 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = DebugDevelop;
+		};
+		04040656224F5C0200D9E237 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@mapbox/react-native-mapbox-gl/ios/**",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-sqlite-storage/src/ios",
+					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-transformable-image/Demo/ios/Demo",
+				);
+				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/frontm_mobile\"",
+					"\"$(SRCROOT)/frontm_mobile\"",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+					"$(OTHER_LDFLAGS)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
+				PRODUCT_NAME = frontm_mobile;
+				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = DebugDevelop;
+		};
+		04040658224F5C0A00D9E237 /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseDevelop;
+		};
+		04040659224F5C0A00D9E237 /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AD330A6F97E18C233AFE5B3E /* Pods-frontm_mobile.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
+					"$(PROJECT_DIR)/../node_modules/@mapbox/react-native-mapbox-gl/ios/**",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-audio/ios",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios",
+					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-sound/RNSound",
+					"$(SRCROOT)/../node_modules/react-native-sqlite-storage/src/ios",
+					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-transformable-image/Demo/ios/Demo",
+				);
+				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/frontm_mobile\"",
+					"\"$(SRCROOT)/frontm_mobile\"",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+					"$(OTHER_LDFLAGS)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
+				PRODUCT_NAME = frontm_mobile;
+				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = ReleaseDevelop;
+		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9A2690673383950305CE5ECC /* Pods-frontm_mobile.debug.xcconfig */;
@@ -3077,7 +3317,7 @@
 					"$(SRCROOT)/../node_modules/react-native-tcp/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-transformable-image/Demo/ios/Demo",
 				);
-				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				INFOPLIST_FILE = "frontm_mobile/Info-prod.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3206,7 +3446,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
+				04040656224F5C0200D9E237 /* DebugDevelop */,
 				13B07F951A680F5B00A75B9A /* Release */,
+				04040659224F5C0A00D9E237 /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3215,7 +3457,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
+				04040655224F5C0200D9E237 /* DebugDevelop */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+				04040658224F5C0A00D9E237 /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

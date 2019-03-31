@@ -8,8 +8,7 @@
 
 #import "PingServiceClient.h"
 #import "Pingservice.pbrpc.h"
-
-static NSString * const kHostAddress = @"grpcdev.frontm.ai:50051";
+#import "GRPCMetadata.h"
 
 @implementation PingServiceClient
 
@@ -17,7 +16,7 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(pingWithCallback:(RCTResponseSenderBlock)callback) {
 
-  PingService *service = [[PingService alloc] initWithHost:kHostAddress];
+  PingService *service = [[PingService alloc] initWithHost:GRPCMetadata.shared.uri];
   Empty *empty = [[Empty alloc] init];
 
   [service pingWithRequest:empty handler:^(PingReply * _Nullable response, NSError * _Nullable error) {

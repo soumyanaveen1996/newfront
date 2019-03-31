@@ -10,6 +10,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.ping.proto.PingReply;
 import com.frontm.ping.proto.PingServiceGrpc;
 import com.squareup.okhttp.ConnectionSpec;
@@ -33,8 +34,8 @@ public class PingServiceClient extends ReactContextBaseJavaModule {
 
     public PingServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>167</string>
+	<string>162</string>
 	<key>CodePushDeploymentKey</key>
 	<string>yvzJ1O25Y_eEGExdv2HTossDvImU033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
 	<key>FacebookAppID</key>
@@ -190,7 +190,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>GRPC_HOST</key>
-	<string>grpcdev.frontm.ai</string>
+	<string>prod.frontm.ai</string>
 	<key>GRPC_PORT</key>
 	<string>50051</string>
 </dict>

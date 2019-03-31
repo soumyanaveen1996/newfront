@@ -16,6 +16,7 @@ import com.frontm.contacts.proto.EmailIdList;
 import com.frontm.contacts.proto.FindResponse;
 import com.frontm.contacts.proto.SearchQuery;
 import com.frontm.contacts.proto.UserIdList;
+import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.AgentGuardBoolResponseConverter;
 import com.frontm.frontm.proto.converters.FindResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
@@ -48,8 +49,8 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
 
     public ContactsServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)
