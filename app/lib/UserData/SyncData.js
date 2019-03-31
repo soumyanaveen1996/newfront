@@ -21,18 +21,24 @@ export const synchronizeUserData = async () => {
     // RemoteBotInstall.syncronizeBots();
     // await debounce();
     // Channel.refreshUnsubscribedChannels();
+    try {
+        setTimeout(() => {
+            RemoteBotInstall.syncronizeBots();
+        }, 200);
+        setTimeout(() => {
+            Conversation.downloadRemoteConversations();
+        }, 500);
 
-    InteractionManager.runAfterInteractions(async () => {
-        try {
-            await Contact.refreshContacts();
-        } catch (error) {
-            console.log('Cannot Load Contacts');
-        }
-        setTimeout(() => RemoteBotInstall.syncronizeBots(), 500);
-        setTimeout(() => Conversation.downloadRemoteConversations(), 1000);
-        setTimeout(() => Channel.refreshChannels(), 1500);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 2000);
-    });
+        await Contact.refreshContacts();
+        setTimeout(() => Channel.refreshChannels(), 1000);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1500);
+    } catch (error) {
+        console.log('Cannot Load Contacts');
+        setTimeout(() => RemoteBotInstall.syncronizeBots(), 200);
+        setTimeout(() => Conversation.downloadRemoteConversations(), 500);
+        setTimeout(() => Channel.refreshChannels(), 1000);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1500);
+    }
 };
 
 export const clearDataOnLogout = () => {

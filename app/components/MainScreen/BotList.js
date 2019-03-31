@@ -46,7 +46,8 @@ class BotList extends React.Component {
             data: [],
             favData: [],
             rowMap: null,
-            rowKey: null
+            rowKey: null,
+            stopFaker: false
         };
     }
 
@@ -133,6 +134,17 @@ class BotList extends React.Component {
 
         if (
             this.props.user.remoteBotsInstalled &&
+            this.props.user.allConversationsLoaded
+        ) {
+            if (__DEV__) {
+                console.tron('STOPPPP  FAKER');
+            }
+
+            this.setState({ stopFaker: true });
+        }
+
+        if (
+            this.props.user.remoteBotsInstalled &&
             this.props.user.allConversationsLoaded &&
             allChatsData.length == 1
         ) {
@@ -180,12 +192,9 @@ class BotList extends React.Component {
                     },
                     ...recentData
                 ];
-        setTimeout(() => {
-            this.setState({
-                loaded: true,
-                data: AllTimelineData
-            });
-        }, 2000);
+        this.setState({
+            data: AllTimelineData
+        });
 
         // const prevTimeline = this.props.timeline.allChats
         // if (true) {
@@ -323,7 +332,7 @@ class BotList extends React.Component {
         }
     };
     render() {
-        const { loaded, data } = this.state;
+        const { loaded, data, stopFaker } = this.state;
         const clipped = Platform.OS === 'ios' ? false : true;
 
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
@@ -333,7 +342,7 @@ class BotList extends React.Component {
         return (
             <View style={BotListStyles.listViewStyle}>
                 <CustomPlaceholder
-                    onReady={loaded}
+                    onReady={this.state.stopFaker}
                     animate="fade"
                     // header={this.renderSearchBar}
                 >
