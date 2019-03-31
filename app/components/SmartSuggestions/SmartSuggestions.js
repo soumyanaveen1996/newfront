@@ -25,8 +25,16 @@ export default class SmartSuggestions extends React.Component {
     }
 
     smartSuggestion = ({ item }) => (
-        <Suggestion reply={item} onReplySelected={this.props.onReplySelected} />
+        <Suggestion
+            reply={item}
+            onReplySelected={this.onReplySelected.bind(this)}
+        />
     );
+
+    onReplySelected(messageStr) {
+        this.props.onReplySelected(messageStr);
+        this.update([]);
+    }
 
     update = suggestions => {
         if (Platform.OS === 'ios') {
