@@ -568,7 +568,8 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
         ) {
             try {
                 return JSON.parse(this._options);

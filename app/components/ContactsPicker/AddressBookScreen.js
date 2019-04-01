@@ -67,11 +67,8 @@ export default class AddressBookScreen extends React.Component {
 
     gettingAllCOntactData = () => {
         let contactArray = [];
-        console.log('>>>>>>>>1');
         Contacts.getAll((err, contacts) => {
-            console.log('>>>>>>>>2');
             if (err) {
-                console.log('>>>>>>>>3', err);
                 contacts = [];
             }
 
