@@ -197,7 +197,9 @@ class ChatBotScreen extends React.Component {
             showOptions: false,
             showSearchBox: false,
             searchBoxData: null,
-            currentMap: null
+            currentMap: null,
+            currentUser: null,
+            allContacts: []
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -285,7 +287,12 @@ class ChatBotScreen extends React.Component {
             }
 
             // 1. Get the user
-            self.user = await Promise.resolve(Auth.getUser());
+            self.user = await Auth.getUser();
+            this.setState({ currentUser: self.user });
+
+            const contacts = await Contact.getAddedContacts();
+            const contactIds = contacts.map(contact => contact.userId);
+            this.setState({ allContacts: contactIds });
 
             // 2. Get the conversation context
             self.conversationContext = await this.getConversationContext(
@@ -2297,17 +2304,45 @@ class ChatBotScreen extends React.Component {
             return <View />;
         }
 
-        const lastButOne = R.take(
-            this.state.messages.length - 1,
-            this.state.messages
-        );
-        const lastMessage = R.takeLast(1, this.state.messages);
-        const removeButtonMessages = lastButOne.filter(
-            msg =>
-                msg.message.getMessageType() !==
-                MessageTypeConstants.MESSAGE_TYPE_BUTTON
-        );
-        const AllMessages = [...removeButtonMessages, ...lastMessage];
+        let AllMessages = this.state.messages;
+
+        // TODO---> Sourav
+
+        // const { allContacts, messages } = this.state;
+        // const currentUserId = R.pathOr(
+        //     false,
+        //     ['currentUser', 'userId'],
+        //     this.state
+        // );
+        // const message_now_coll = R.takeLast(1, this.state.messages);
+        // // Remove Button Message For Add Contact Once the Contact has been added
+        // if (
+        //     message_now_coll.length > 0 &&
+        //     messages.length < 15 &&
+        //     currentUserId
+        // ) {
+        //     const message_now = message_now_coll[0];
+        //     const msgCreatedBy = message_now.message.getCreatedBy();
+        //     if (
+        //         msgCreatedBy !== currentUserId &&
+        //         allContacts.includes(msgCreatedBy)
+        //     ) {
+        //         const lastButOne = R.take(
+        //             this.state.messages.length - 1,
+        //             this.state.messages
+        //         );
+        //         const lastMessage = R.takeLast(1, this.state.messages);
+        //         const removeButtonMessages = lastButOne.filter(
+        //             msg =>
+        //                 msg.message.getMessageType() !==
+        //                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
+        //         );
+        //         AllMessages = [...removeButtonMessages, ...lastMessage];
+        //     }
+        // }
+
+        // End TODO
+
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (

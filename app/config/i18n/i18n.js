@@ -34,7 +34,7 @@ I18n.translations = {
         ChatBots: 'Chatbots',
         Configure: 'Configure',
         Authenticate: 'Authenticate',
-        Bot_Store: 'Chatbot',
+        Bot_Store: 'Chatbots',
         Featured: 'Featured',
         Developer: 'Company',
         Categories: 'Categories',
