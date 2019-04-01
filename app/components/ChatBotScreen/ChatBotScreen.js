@@ -723,11 +723,15 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    invokeWait = () => {
+        let msg = new Message({ addedByBot: true });
+        msg.waitMessage();
+        this.queueMessage(msg);
+    };
+
     wait = shouldWait => {
         if (shouldWait) {
-            let msg = new Message({ addedByBot: true });
-            msg.waitMessage();
-            this.queueMessage(msg);
+            setTimeout(() => this.invokeWait(), 0);
         } else {
             this.stopWaiting();
         }
@@ -780,6 +784,7 @@ class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
+
         this.stopWaiting();
         this.countMessage(message);
 
