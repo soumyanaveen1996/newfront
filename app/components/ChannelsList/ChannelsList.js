@@ -496,9 +496,10 @@ class ChannelsList extends React.Component {
                     ) : (
                         <View
                             style={{
-                                marginTop: '30%',
+                                marginTop: '20%',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                height: hp('40%')
                             }}
                         >
                             <Image source={images.empty_channel} />

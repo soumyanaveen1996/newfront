@@ -49,7 +49,7 @@ import ReduxStore from '../../redux/store/configureStore';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 71; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 72; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';

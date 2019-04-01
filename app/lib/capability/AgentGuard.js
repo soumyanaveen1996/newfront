@@ -1,6 +1,8 @@
 import Promise from './Promise';
 import Auth from './Auth';
 
+const R = require('ramda');
+
 import { NativeModules } from 'react-native';
 const AgentGuardServiceClient = NativeModules.AgentGuardServiceClient;
 
@@ -40,7 +42,8 @@ export default class AgentGuard {
                                     'GRPC::::Agent guard response : ',
                                     result
                                 );
-                                resolve(result);
+                                const response = convertResponse(result);
+                                resolve(response);
                             }
                         }
                     );
@@ -51,3 +54,16 @@ export default class AgentGuard {
         });
     };
 }
+
+const convertResponse = response => {
+    const content = R.pathOr([], ['data', 'content'], response);
+    const objContent = content.map(str => JSON.parse(str));
+
+    return {
+        error: response.error,
+        data: {
+            error: response.error,
+            content: objContent
+        }
+    };
+};

@@ -27,8 +27,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js',
+                version: '1.3.0'
             },
             authContext: {
                 remote: 'true',
@@ -58,13 +58,18 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js',
+                version: '1.3.0'
             },
             authContext: {
                 remote: 'true',
                 url: 'botfarm/rc/frontmai/authContext/1.4.0/authContext.js',
                 version: '1.4.0'
+            },
+            archiveUtils: {
+                remote: 'true',
+                url: 'botfarm/rc/frontmai/archiveUtils/1.0.0/archiveUtils.js',
+                version: '1.0.0'
             }
         },
         description:
@@ -169,14 +174,19 @@ export const SYSTEM_BOT_MANIFEST = {
         dependencies: {
             agentGuardService: {
                 remote: true,
-                version: '1.2.0',
+                version: '1.3.0',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js'
+                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js'
             },
             authContext: {
                 remote: true,
                 version: '1.2.0',
                 url: 'botfarm/rc/frontmai/authContext/1.2.0/authContext.js'
+            },
+            archiveUtils: {
+                remote: 'true',
+                url: 'botfarm/rc/frontmai/archiveUtils/1.0.0/archiveUtils.js',
+                version: '1.0.0'
             }
         },
         description: 'Bot that executes jobs in the backend',
