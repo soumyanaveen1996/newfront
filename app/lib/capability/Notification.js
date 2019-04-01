@@ -2,6 +2,7 @@ import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
 import config from '../../config/config';
+import Bugsnag from '../../config/ErrorMonitoring';
 
 const NotificationKeys = {
     notification: 'notification'
@@ -32,8 +33,12 @@ export default class Notification {
                                 reject(error);
                             });
                     } else {
+                        Bugsnag.notify(
+                            'We will Register for App Notificaitons'
+                        );
                         PushNotification.configure({
                             onRegister: function(response) {
+                                Bugsnag.notify('Notification Received');
                                 console.log('onRegister', response);
                                 if (response) {
                                     var notificationDeviceInfo = {
