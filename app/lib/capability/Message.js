@@ -372,6 +372,7 @@ export default class Message {
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX;
     };
+
     searchBoxResponseMessage = (response, options) => {
         this._msg = JSON.stringify(response || {});
         if (options) {

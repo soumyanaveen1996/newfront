@@ -132,6 +132,10 @@ class ChannelsList extends React.Component {
     }
 
     async componentDidMount() {
+        EventEmitter.addListener(
+            AuthEvents.tabSelected,
+            this.tabSelected.bind(this)
+        );
         // const channels = await Channel.getSubscribedChannels()
         // if (channels.length > 0) {
         //     return this.refresh()
@@ -187,6 +191,12 @@ class ChannelsList extends React.Component {
         // if (user.allChannelsLoaded === false) {
         //     Channel.refreshChannels();
         // }
+    }
+
+    tabSelected(scene) {
+        if (scene === 'Channels') {
+            this.setState({ searchString: '' });
+        }
     }
 
     static onExit() {
@@ -436,6 +446,7 @@ class ChannelsList extends React.Component {
                                 this.setState({ searchString });
                             }}
                             underlineColorAndroid="transparent"
+                            value={this.state.searchString}
                         />
                     </View>
 

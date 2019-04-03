@@ -26,7 +26,6 @@ export default class MapMessage extends React.Component {
     }
 
     openMap() {
-        console.log('>>>>>>ma', this.mapOptions);
         if (this.props.mapData) {
             this.props.openMap(
                 this.props.mapData,
