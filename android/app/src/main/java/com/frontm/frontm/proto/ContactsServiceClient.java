@@ -9,7 +9,12 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+
+import com.frontm.commonmessages.proto.EmailAddresses;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.commonmessages.proto.LocalContact;
+import com.frontm.commonmessages.proto.PhoneNumbers;
 import com.frontm.contacts.proto.AgentGuardBoolResponse;
 import com.frontm.contacts.proto.ContactsInput;
 import com.frontm.contacts.proto.ContactsServiceGrpc;
@@ -117,11 +122,30 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
             }
         }
 
-        if (params.getArray("localContacts") != null) {
-            ReadableArray localContacts = params.getArray("localContacts");
-            for(int i = 0; i < localContacts.size(); ++i) {
+        if (params.hasKey("localContacts")) {
 
-//                input.addUserIds(userIds.getString(i));
+            ReadableArray localContacts = params.getArray("localContacts");
+            for (int i = 0; i < localContacts.size(); ++i) {
+
+                ReadableMap lContactDict = localContacts.getMap(i);
+                String userName = lContactDict.getString("userName");
+                ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
+                ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
+
+                EmailAddresses emailAddresses = EmailAddresses.newBuilder().
+                        setHome(emailAddressesDict.getString("home")).
+                        setWork(emailAddressesDict.getString("work")).build();
+
+                PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
+                        setLand(phoneNumbersDict.getString("land")).
+                        setMobile(phoneNumbersDict.getString("mobile")).
+                        setSatellite(phoneNumbersDict.getString("satellite")).build();
+
+                LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setEmailAddresses(emailAddresses)
+                        .setPhoneNumbers(phoneNumbers).build();
+                input.addLocalContacts(localContact);
+
             }
         }
 
