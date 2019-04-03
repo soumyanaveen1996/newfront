@@ -155,9 +155,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
