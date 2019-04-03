@@ -63,8 +63,8 @@ class NetworkPoller {
                     '<------JSAVSCRIPT:::: CHECKING SUBSCRIPTIONS---->'
                 );
 
-                console.log(this.grpcSubscription);
-                console.log(this.grpcEndSubscription);
+                // console.log(this.grpcSubscription);
+                // console.log(this.grpcEndSubscription);
                 if (
                     this.grpcSubscription.length == 0 ||
                     this.grpcEndSubscription == 0
