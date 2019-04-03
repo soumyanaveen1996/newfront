@@ -136,10 +136,6 @@ class BotList extends React.Component {
             this.props.user.remoteBotsInstalled &&
             this.props.user.allConversationsLoaded
         ) {
-            if (__DEV__) {
-                console.tron('STOPPPP  FAKER');
-            }
-
             this.setState({ stopFaker: true });
         }
 

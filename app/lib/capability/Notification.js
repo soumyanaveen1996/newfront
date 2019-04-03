@@ -2,7 +2,7 @@ import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
 import config from '../../config/config';
-import Bugsnag from '../../config/ErrorMonitoring';
+import RL from '../../lib/utils/remoteDebugger';
 
 const NotificationKeys = {
     notification: 'notification'
@@ -33,12 +33,8 @@ export default class Notification {
                                 reject(error);
                             });
                     } else {
-                        Bugsnag.notify(
-                            'We will Register for App Notificaitons'
-                        );
                         PushNotification.configure({
                             onRegister: function(response) {
-                                Bugsnag.notify('Notification Received');
                                 console.log('onRegister', response);
                                 if (response) {
                                     var notificationDeviceInfo = {
@@ -77,6 +73,11 @@ export default class Notification {
                             senderID: config.gcm.senderID,
                             requestPermissions: true,
                             onError: error => {
+                                RL(`Error occured getting Device token 
+
+                                > ${JSON.stringify(error)}
+                                
+                                `);
                                 console.log('onError', error);
                                 clearTimeout(timer);
                                 reject(error);
