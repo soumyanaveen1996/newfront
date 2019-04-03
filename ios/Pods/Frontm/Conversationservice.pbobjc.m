@@ -43,6 +43,53 @@ static GPBFileDescriptor *ConversationserviceRoot_FileDescriptor(void) {
   return descriptor;
 }
 
+#pragma mark - TimeLineInput
+
+@implementation TimeLineInput
+
+@dynamic isWebRequest;
+
+typedef struct TimeLineInput__storage_ {
+  uint32_t _has_storage_[1];
+} TimeLineInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "isWebRequest",
+        .dataTypeSpecific.className = NULL,
+        .number = TimeLineInput_FieldNumber_IsWebRequest,
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TimeLineInput class]
+                                     rootClass:[ConversationserviceRoot class]
+                                          file:ConversationserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TimeLineInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - UpdateFavouritesInput
 
 @implementation UpdateFavouritesInput
@@ -312,6 +359,7 @@ typedef struct TimelineContent__storage_ {
 @dynamic hasBot, bot;
 @dynamic lastMessage;
 @dynamic hasContact, contact;
+@dynamic hasChannel, channel;
 
 typedef struct TimelineConversation__storage_ {
   uint32_t _has_storage_[1];
@@ -323,6 +371,7 @@ typedef struct TimelineConversation__storage_ {
   TimelineBotInfo *bot;
   NSData *lastMessage;
   TimelineContact *contact;
+  TimelineChannel *channel;
   double createdOn;
   double modifiedOn;
 } TimelineConversation__storage_;
@@ -432,6 +481,15 @@ typedef struct TimelineConversation__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "channel",
+        .dataTypeSpecific.className = GPBStringifySymbol(TimelineChannel),
+        .number = TimelineConversation_FieldNumber_Channel,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(TimelineConversation__storage_, channel),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TimelineConversation class]
@@ -444,6 +502,76 @@ typedef struct TimelineConversation__storage_ {
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\007\003\t\000\004\n\000\005\n\000\006\016\000\007\t\000\010\000onChannels\000\n\013\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TimelineChannel
+
+@implementation TimelineChannel
+
+@dynamic channelName;
+@dynamic userDomain;
+@dynamic description_p;
+
+typedef struct TimelineChannel__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *channelName;
+  NSString *userDomain;
+  NSString *description_p;
+} TimelineChannel__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "channelName",
+        .dataTypeSpecific.className = NULL,
+        .number = TimelineChannel_FieldNumber_ChannelName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TimelineChannel__storage_, channelName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = TimelineChannel_FieldNumber_UserDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TimelineChannel__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "description_p",
+        .dataTypeSpecific.className = NULL,
+        .number = TimelineChannel_FieldNumber_Description_p,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TimelineChannel__storage_, description_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TimelineChannel class]
+                                     rootClass:[ConversationserviceRoot class]
+                                          file:ConversationserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TimelineChannel__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\004\013\000\005\n\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -732,10 +860,14 @@ typedef struct TimelineContact__storage_ {
 @implementation CatalogResponse
 
 @dynamic botsArray, botsArray_Count;
+@dynamic companies, companies_Count;
+@dynamic categories, categories_Count;
 
 typedef struct CatalogResponse__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *botsArray;
+  NSMutableDictionary *companies;
+  NSMutableDictionary *categories;
 } CatalogResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -753,6 +885,24 @@ typedef struct CatalogResponse__storage_ {
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "companies",
+        .dataTypeSpecific.className = GPBStringifySymbol(CatalogResponse_CatalogBots),
+        .number = CatalogResponse_FieldNumber_Companies,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CatalogResponse__storage_, companies),
+        .flags = GPBFieldMapKeyString,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "categories",
+        .dataTypeSpecific.className = GPBStringifySymbol(CatalogResponse_CatalogBots),
+        .number = CatalogResponse_FieldNumber_Categories,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CatalogResponse__storage_, categories),
+        .flags = GPBFieldMapKeyString,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[CatalogResponse class]
@@ -762,6 +912,50 @@ typedef struct CatalogResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(CatalogResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CatalogResponse_CatalogBots
+
+@implementation CatalogResponse_CatalogBots
+
+@dynamic botsArray, botsArray_Count;
+
+typedef struct CatalogResponse_CatalogBots__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *botsArray;
+} CatalogResponse_CatalogBots__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "botsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(CatalogBot),
+        .number = CatalogResponse_CatalogBots_FieldNumber_BotsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CatalogResponse_CatalogBots__storage_, botsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CatalogResponse_CatalogBots class]
+                                     rootClass:[ConversationserviceRoot class]
+                                          file:ConversationserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CatalogResponse_CatalogBots__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    [localDescriptor setupContainingMessageClassName:GPBStringifySymbol(CatalogResponse)];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -1736,6 +1930,75 @@ typedef struct GetArchivedMessagesContent__storage_ {
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\004\001\t\000\002\013\000\003\t\000\004\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CatalogInput
+
+@implementation CatalogInput
+
+@dynamic isWebRequest;
+@dynamic query;
+@dynamic output;
+
+typedef struct CatalogInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *query;
+  NSString *output;
+} CatalogInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "isWebRequest",
+        .dataTypeSpecific.className = NULL,
+        .number = CatalogInput_FieldNumber_IsWebRequest,
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "query",
+        .dataTypeSpecific.className = NULL,
+        .number = CatalogInput_FieldNumber_Query,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CatalogInput__storage_, query),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "output",
+        .dataTypeSpecific.className = NULL,
+        .number = CatalogInput_FieldNumber_Output,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(CatalogInput__storage_, output),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CatalogInput class]
+                                     rootClass:[ConversationserviceRoot class]
+                                          file:ConversationserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CatalogInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\014\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

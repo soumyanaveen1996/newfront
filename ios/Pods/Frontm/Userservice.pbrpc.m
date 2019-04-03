@@ -163,6 +163,18 @@
              responseClass:[TwilioTokenResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark GenerateWebTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse)
+
+- (void)generateWebTwilioTokenWithRequest:(TwilioTokenInput *)request handler:(void(^)(TwilioTokenResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGenerateWebTwilioTokenWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGenerateWebTwilioTokenWithRequest:(TwilioTokenInput *)request handler:(void(^)(TwilioTokenResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GenerateWebTwilioToken"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[TwilioTokenResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 #pragma mark ManageTnc(ManageTncInput) returns (ManageTncResponse)
 
 - (void)manageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler{

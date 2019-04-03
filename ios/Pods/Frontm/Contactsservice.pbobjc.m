@@ -14,6 +14,7 @@
 #endif
 
 #import "Contactsservice.pbobjc.h"
+#import "Commonmessages.pbobjc.h"
 // @@protoc_insertion_point(imports)
 
 #pragma clang diagnostic push
@@ -23,8 +24,8 @@
 
 @implementation ContactsserviceRoot
 
-// No extensions in the file and no imports, so no need to generate
-// +extensionRegistry.
+// No extensions in the file and none of the imports (direct or indirect)
+// defined extensions, so no need to generate +extensionRegistry.
 
 @end
 
@@ -90,16 +91,18 @@ typedef struct SearchQuery__storage_ {
 
 @end
 
-#pragma mark - UserIdList
+#pragma mark - ContactsInput
 
-@implementation UserIdList
+@implementation ContactsInput
 
 @dynamic userIdsArray, userIdsArray_Count;
+@dynamic localContactsArray, localContactsArray_Count;
 
-typedef struct UserIdList__storage_ {
+typedef struct ContactsInput__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *userIdsArray;
-} UserIdList__storage_;
+  NSMutableArray *localContactsArray;
+} ContactsInput__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -110,24 +113,33 @@ typedef struct UserIdList__storage_ {
       {
         .name = "userIdsArray",
         .dataTypeSpecific.className = NULL,
-        .number = UserIdList_FieldNumber_UserIdsArray,
+        .number = ContactsInput_FieldNumber_UserIdsArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(UserIdList__storage_, userIdsArray),
+        .offset = (uint32_t)offsetof(ContactsInput__storage_, userIdsArray),
         .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "localContactsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(LocalContact),
+        .number = ContactsInput_FieldNumber_LocalContactsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(ContactsInput__storage_, localContactsArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[UserIdList class]
+        [GPBDescriptor allocDescriptorForClass:[ContactsInput class]
                                      rootClass:[ContactsserviceRoot class]
                                           file:ContactsserviceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(UserIdList__storage_)
+                                   storageSize:sizeof(ContactsInput__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\001\001\000userIds\000";
+        "\002\001\000userIds\000\002\000localContacts\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
