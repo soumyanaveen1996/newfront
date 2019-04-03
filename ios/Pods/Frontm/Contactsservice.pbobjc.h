@@ -27,6 +27,7 @@
 
 CF_EXTERN_C_BEGIN
 
+@class LocalContact;
 @class MatchedUser;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -58,17 +59,22 @@ typedef GPB_ENUM(SearchQuery_FieldNumber) {
 
 @end
 
-#pragma mark - UserIdList
+#pragma mark - ContactsInput
 
-typedef GPB_ENUM(UserIdList_FieldNumber) {
-  UserIdList_FieldNumber_UserIdsArray = 1,
+typedef GPB_ENUM(ContactsInput_FieldNumber) {
+  ContactsInput_FieldNumber_UserIdsArray = 1,
+  ContactsInput_FieldNumber_LocalContactsArray = 2,
 };
 
-@interface UserIdList : GPBMessage
+@interface ContactsInput : GPBMessage
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *userIdsArray;
 /** The number of items in @c userIdsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger userIdsArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<LocalContact*> *localContactsArray;
+/** The number of items in @c localContactsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger localContactsArray_Count;
 
 @end
 

@@ -10,12 +10,13 @@
 #endif
 
 @class AgentGuardBoolResponse;
+@class ContactsInput;
 @class EmailIdList;
 @class FindResponse;
 @class SearchQuery;
-@class UserIdList;
 
 #if !defined(GPB_GRPC_FORWARD_DECLARE_MESSAGE_PROTO) || !GPB_GRPC_FORWARD_DECLARE_MESSAGE_PROTO
+  #import "Commonmessages.pbobjc.h"
 #endif
 
 @class GRPCProtoCall;
@@ -32,25 +33,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToFindWithRequest:(SearchQuery *)request handler:(void(^)(FindResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark Add(UserIdList) returns (AgentGuardBoolResponse)
+#pragma mark Add(ContactsInput) returns (AgentGuardBoolResponse)
 
-- (void)addWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)addWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToAddWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
-
-
-#pragma mark Accept(UserIdList) returns (AgentGuardBoolResponse)
-
-- (void)acceptWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
-
-- (GRPCProtoCall *)RPCToAcceptWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToAddWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark Remove(UserIdList) returns (AgentGuardBoolResponse)
+#pragma mark Accept(ContactsInput) returns (AgentGuardBoolResponse)
 
-- (void)removeWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)acceptWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToRemoveWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToAcceptWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark Remove(ContactsInput) returns (AgentGuardBoolResponse)
+
+- (void)removeWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToRemoveWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark Invite(EmailIdList) returns (AgentGuardBoolResponse)

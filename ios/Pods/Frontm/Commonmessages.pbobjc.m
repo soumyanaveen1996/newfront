@@ -191,6 +191,130 @@ typedef struct DomainRoles__storage_ {
 
 @end
 
+#pragma mark - EmailAddresses
+
+@implementation EmailAddresses
+
+@dynamic home;
+@dynamic work;
+
+typedef struct EmailAddresses__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *home;
+  NSString *work;
+} EmailAddresses__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "home",
+        .dataTypeSpecific.className = NULL,
+        .number = EmailAddresses_FieldNumber_Home,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(EmailAddresses__storage_, home),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "work",
+        .dataTypeSpecific.className = NULL,
+        .number = EmailAddresses_FieldNumber_Work,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(EmailAddresses__storage_, work),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[EmailAddresses class]
+                                     rootClass:[CommonmessagesRoot class]
+                                          file:CommonmessagesRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(EmailAddresses__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - LocalContact
+
+@implementation LocalContact
+
+@dynamic userName;
+@dynamic hasEmailAddresses, emailAddresses;
+@dynamic hasPhoneNumbers, phoneNumbers;
+
+typedef struct LocalContact__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *userName;
+  EmailAddresses *emailAddresses;
+  PhoneNumbers *phoneNumbers;
+} LocalContact__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userName",
+        .dataTypeSpecific.className = NULL,
+        .number = LocalContact_FieldNumber_UserName,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(LocalContact__storage_, userName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "emailAddresses",
+        .dataTypeSpecific.className = GPBStringifySymbol(EmailAddresses),
+        .number = LocalContact_FieldNumber_EmailAddresses,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(LocalContact__storage_, emailAddresses),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "phoneNumbers",
+        .dataTypeSpecific.className = GPBStringifySymbol(PhoneNumbers),
+        .number = LocalContact_FieldNumber_PhoneNumbers,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(LocalContact__storage_, phoneNumbers),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[LocalContact class]
+                                     rootClass:[CommonmessagesRoot class]
+                                          file:CommonmessagesRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(LocalContact__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\003\001\010\000\002\016\000\003\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

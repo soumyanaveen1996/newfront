@@ -323,11 +323,13 @@ typedef struct SubscribedBotsContent__storage_ {
 
 @dynamic contactsArray, contactsArray_Count;
 @dynamic ignoredArray, ignoredArray_Count;
+@dynamic localContactsArray, localContactsArray_Count;
 
 typedef struct ContactsResponse__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *contactsArray;
   NSMutableArray *ignoredArray;
+  NSMutableArray *localContactsArray;
 } ContactsResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -354,6 +356,15 @@ typedef struct ContactsResponse__storage_ {
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "localContactsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(LocalContact),
+        .number = ContactsResponse_FieldNumber_LocalContactsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(ContactsResponse__storage_, localContactsArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[ContactsResponse class]
@@ -363,6 +374,11 @@ typedef struct ContactsResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(ContactsResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\003\000localContacts\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

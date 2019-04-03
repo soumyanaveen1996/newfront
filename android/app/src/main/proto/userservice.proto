@@ -19,6 +19,7 @@ service UserService {
     rpc DisableVoip(commonmessages.Empty) returns (VoipToggleResponse) {}
     rpc GetVoipStatus(VoipStatusInput) returns (VoipStatusResponse) {}
     rpc GenerateTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
+    rpc GenerateWebTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
     rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
 }
 
@@ -51,6 +52,7 @@ message SubscribedBotsContent {
 message ContactsResponse {
     repeated Contact contacts = 1;
     repeated Contact ignored = 2;
+    repeated commonmessages.LocalContact localContacts = 3;
 }
 
 message Contact {
