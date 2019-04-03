@@ -9,13 +9,12 @@
 #import <RxLibrary/GRXWriter.h>
 #endif
 
-@class CatalogInput;
 @class CatalogResponse;
+@class Empty;
 @class GetArchivedMessagesInput;
 @class GetArchivedMessagesResponse;
 @class GetConversationDetailsInput;
 @class GetConversationDetailsResponse;
-@class TimeLineInput;
 @class TimelineResponse;
 @class UpdateFavouritesInput;
 @class UpdateFavouritesResponse;
@@ -38,18 +37,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToUpdateFavouritesWithRequest:(UpdateFavouritesInput *)request handler:(void(^)(UpdateFavouritesResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetTimeline(TimeLineInput) returns (TimelineResponse)
+#pragma mark GetTimeline(Empty) returns (TimelineResponse)
 
-- (void)getTimelineWithRequest:(TimeLineInput *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getTimelineWithRequest:(Empty *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetTimelineWithRequest:(TimeLineInput *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetTimelineWithRequest:(Empty *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetCatalog(CatalogInput) returns (CatalogResponse)
+#pragma mark GetCatalog(Empty) returns (CatalogResponse)
 
-- (void)getCatalogWithRequest:(CatalogInput *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getCatalogWithRequest:(Empty *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetCatalogWithRequest:(CatalogInput *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetCatalogWithRequest:(Empty *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark GetConversationDetails(GetConversationDetailsInput) returns (GetConversationDetailsResponse)

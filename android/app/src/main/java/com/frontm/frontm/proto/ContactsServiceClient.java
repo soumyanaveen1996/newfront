@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.frontm.commonmessages.proto.Empty;
 import com.frontm.contacts.proto.AgentGuardBoolResponse;
+import com.frontm.contacts.proto.ContactsInput;
 import com.frontm.contacts.proto.ContactsServiceGrpc;
 import com.frontm.contacts.proto.EmailIdList;
 import com.frontm.contacts.proto.FindResponse;
@@ -108,13 +109,22 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::add", sessionId);
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
-        UserIdList.Builder input = UserIdList.newBuilder();
+        ContactsInput.Builder input = ContactsInput.newBuilder();
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
             }
         }
+
+        if (params.getArray("localContacts") != null) {
+            ReadableArray localContacts = params.getArray("localContacts");
+            for(int i = 0; i < localContacts.size(); ++i) {
+
+//                input.addUserIds(userIds.getString(i));
+            }
+        }
+
 
 
         Metadata header=new Metadata();
