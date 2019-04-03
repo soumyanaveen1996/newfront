@@ -7,11 +7,20 @@ option java_package = "com.frontm.conversation.proto";
 package conversation;
 
 service ConversationService {
-    rpc UpdateFavourites(UpdateFavouritesInput) returns (UpdateFavouritesResponse) {}
-    rpc GetTimeline(commonmessages.Empty) returns (TimelineResponse) {}
-    rpc GetCatalog(commonmessages.Empty) returns (CatalogResponse) {}
-    rpc GetConversationDetails(GetConversationDetailsInput) returns (GetConversationDetailsResponse) {}
-    rpc GetArchivedMessages(GetArchivedMessagesInput) returns (GetArchivedMessagesResponse) {}
+    rpc UpdateFavourites (UpdateFavouritesInput) returns (UpdateFavouritesResponse) {
+    }
+    rpc GetTimeline (TimeLineInput) returns (TimelineResponse) {
+    }
+    rpc GetCatalog (CatalogInput) returns (CatalogResponse) {
+    }
+    rpc GetConversationDetails (GetConversationDetailsInput) returns (GetConversationDetailsResponse) {
+    }
+    rpc GetArchivedMessages (GetArchivedMessagesInput) returns (GetArchivedMessagesResponse) {
+    }
+}
+
+message TimeLineInput {
+    bool isWebRequest = 1;
 }
 
 message UpdateFavouritesInput {
@@ -49,7 +58,15 @@ message TimelineConversation {
     TimelineBotInfo bot = 9;
     bytes lastMessage = 10;
     TimelineContact contact = 11;
+    TimelineChannel channel = 12;
 }
+
+message TimelineChannel {
+    string channelName = 4;
+    string userDomain = 5;
+    string description = 7;
+}
+
 
 message TimelineChannels {
     string channelName = 1;
@@ -77,6 +94,11 @@ message TimelineContact {
 
 message CatalogResponse {
     repeated CatalogBot bots = 1;
+    message CatalogBots {
+        repeated CatalogBot bots = 1;
+    }
+    map<string, CatalogBots> companies = 2;
+    map<string, CatalogBots> categories = 3;
 }
 
 message CatalogBot {
@@ -163,4 +185,10 @@ message GetArchivedMessagesContent {
     string createdBy = 4;
     bytes content = 5;
     bytes options = 6;
+}
+
+message CatalogInput {
+    bool isWebRequest = 1;
+    string query = 2;
+    string output = 3;
 }
