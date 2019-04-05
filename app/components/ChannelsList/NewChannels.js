@@ -52,6 +52,8 @@ class NewChannels extends React.Component {
         } else {
             navigationOptions.headerLeft = (
                 <HeaderBack
+                    accessibilityLabel="back"
+                    testID="back"
                     onPress={() => {
                         state.params.onBack();
                     }}

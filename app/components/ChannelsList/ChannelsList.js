@@ -90,10 +90,14 @@ class ChannelsList extends React.Component {
 
         const headerRight = (
             <TouchableOpacity
+                accessibilityLabel="new channel button"
+                testID="new-channel-button"
                 style={styles.headerRight}
                 onPress={state.params.newChannel}
             >
                 <Image
+                    accessibilityLabel="new channel item"
+                    testID="new-channel-item"
                     source={require('../../images/channels/plus-white-good.png')}
                     style={{ width: 15, height: 15 }}
                 />
@@ -507,9 +511,10 @@ class ChannelsList extends React.Component {
                     ) : (
                         <View
                             style={{
-                                marginTop: '30%',
+                                marginTop: '20%',
                                 alignItems: 'center',
-                                justifyContent: 'center'
+                                justifyContent: 'center',
+                                height: hp('40%')
                             }}
                         >
                             <Image source={images.empty_channel} />
