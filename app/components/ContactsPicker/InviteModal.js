@@ -141,11 +141,14 @@ export default class InviteModal extends React.Component {
             ]
         };
 
-        AddLocalContacts(fakeData);
+        AddLocalContacts(fakeData).then(elem => {
+            console.log('data ', elem);
+            this.props.setVisible(false);
+        });
     };
 
     createNewContact = () => {
-        console.log('move to create new contact Screen');
+        // console.log('move to create new contact Screen');
         Actions.newContactScreen();
         this.props.setVisible(false);
     };
@@ -308,7 +311,7 @@ export default class InviteModal extends React.Component {
                                         Invite Friends to FrontM
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
                                         display: 'flex',
@@ -334,7 +337,7 @@ export default class InviteModal extends React.Component {
                                         FAKE CREATE LOCAL CONTACTS(REMOVE
                                         THIS!!!)
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </View>
                         </TouchableWithoutFeedback>
                     ) : (

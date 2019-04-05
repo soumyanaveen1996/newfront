@@ -37,6 +37,8 @@ export default class ContactsPickerRow extends React.Component {
     render() {
         const contact = this.props.contact;
 
+        // console.log('let check contact ', contact);
+
         const uuid = contact.id || contact.userId;
         return (
             <TouchableOpacity onPress={this.onItemPressed.bind(this)}>
@@ -102,10 +104,34 @@ export default class ContactsPickerRow extends React.Component {
                                 style={{
                                     fontSize: 12,
                                     fontWeight: '100',
-                                    color: 'rgba(174,174,174,1)'
+                                    color: 'rgba(174,174,174,1)',
+                                    textalign: 'center'
                                 }}
                             >
                                 Awaiting for authorization
+                            </Text>
+                        </View>
+                    ) : null}
+                    {contact.contactType === 'Personal' ? (
+                        <View
+                            style={{
+                                width: 90,
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text
+                                numberOfLines={1}
+                                ellipsizeMode="middle"
+                                style={{
+                                    fontSize: 12,
+                                    fontWeight: '100',
+                                    color: 'rgba(174,174,174,1)',
+                                    textalign: 'center'
+                                }}
+                            >
+                                Personal
                             </Text>
                         </View>
                     ) : null}

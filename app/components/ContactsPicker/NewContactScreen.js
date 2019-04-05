@@ -17,7 +17,13 @@ import { SafeAreaView } from 'react-navigation';
 import images from '../../config/images';
 import Config from './config';
 import config from '../../config/config';
-import { Auth, Media, ResourceTypes, Resource } from '../../lib/capability';
+import {
+    Auth,
+    Media,
+    ResourceTypes,
+    Resource,
+    Contact
+} from '../../lib/capability';
 import Utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
 import PhoneTypeModal from './PhoneTypeModal';
@@ -32,6 +38,7 @@ import { HeaderBack } from '../Header';
 import { connect } from 'react-redux';
 import { uploadImage } from '../../redux/actions/UserActions';
 import LocalContactModal from './LocalContactModal';
+import { AddLocalContacts } from '../../api/ContactServices';
 
 class NewContactScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -61,6 +68,8 @@ class NewContactScreen extends React.Component {
             myName: '',
             phoneNumbers: [{ mobile: '' }],
             emailAddress: [{ email: '' }],
+            phoneNumbersObj: {},
+            emailAddressObj: {},
             searchable: false,
             visible: false,
             inviteModalVisible: false,
@@ -91,8 +100,6 @@ class NewContactScreen extends React.Component {
         getEmail[index] = email;
         this.setState({ emailAddress: [...getEmail] });
     };
-
-    saveProfile = async () => {};
 
     selectNumberType = index => {
         this.setState({ currentIndex: index });
@@ -150,17 +157,18 @@ class NewContactScreen extends React.Component {
 
     infoRender = (type, myInfoData) => {
         return myInfoData.map((info, index) => {
-            console.log('all th data ', info);
-
             let key;
             let phValue;
+            let emailValue;
+            key = Object.keys(info)[0];
 
             if (type === 'phNumber') {
-                key = Object.keys(info)[0];
                 phValue = info[key];
             } else {
-                emailValue = info.email;
+                emailValue = info[key];
             }
+
+            // console.log('all th data ', info, phValue, key, emailValue);
 
             return (
                 <View
@@ -177,13 +185,9 @@ class NewContactScreen extends React.Component {
                                 style={styles.emailIcon}
                             />
                         )}
-                        {type === 'phNumber' ? (
-                            <Text style={styles.labelStyle}>{key}</Text>
-                        ) : (
-                            <Text style={styles.labelStyle}>
-                                {I18n.t('Email')}
-                            </Text>
-                        )}
+
+                        <Text style={styles.labelStyle}>{key}</Text>
+
                         {type === 'phNumber' ? (
                             <TouchableOpacity
                                 style={{
@@ -439,29 +443,102 @@ class NewContactScreen extends React.Component {
     }
 
     importPhoneBook = () => {
-        console.log('open phone book modal');
+        // console.log('open phone book modal');
         this.setState({ modalVisible: true });
     };
 
     importSelectedContact = data => {
-        console.log('selected contact data ', data);
+        // console.log('selected contact data ', data);
         let contactEmails = [];
+        let contactEmailsObj = {};
         let contactPhoneNumbers = [];
+        let contactPhoneNumbersObj = {};
+
+        if (Object.keys(data).length <= 0) {
+            this.setState({ modalVisible: false });
+            return;
+        }
 
         data.emails.map(elem => {
-            contactEmails.push({ email: elem.email });
+            let keyName = elem.label;
+            let objEmail = {};
+            objEmail[keyName] = elem.email;
+            contactEmails.push(objEmail);
+            contactEmailsObj[elem.label] = elem.email;
         });
 
         data.phoneNumbers.map(elem => {
-            contactPhoneNumbers.push({ mobile: elem.number });
+            let keyName = elem.label;
+            let objNumber = {};
+            objNumber[keyName] = elem.number;
+            contactPhoneNumbers.push(objNumber);
+            contactPhoneNumbersObj[elem.label] = elem.number;
         });
-        // console.log('added email  ', contactPhoneNumbers);
+
+        Object.keys(contactPhoneNumbersObj).map(elem => {
+            if (elem !== 'mobile') {
+                contactPhoneNumbersObj.mobile = '';
+            }
+            if (elem !== 'land') {
+                contactPhoneNumbersObj.land = '';
+            }
+            if (elem !== 'satellite') {
+                contactPhoneNumbersObj.satellite = '';
+            }
+        });
+
+        Object.keys(contactEmailsObj).map(elem => {
+            if (elem !== 'home') {
+                contactEmailsObj.home = '';
+            }
+            if (elem !== 'work') {
+                contactEmailsObj.work = '';
+            }
+        });
+
+        // console.log(
+        //     'added contact  ',
+        //     contactPhoneNumbersObj,
+        //     contactEmailsObj
+        // );
 
         this.setState({
             myName: data.name,
             emailAddress: [...contactEmails],
             phoneNumbers: [...contactPhoneNumbers],
+            emailAddressObj: { ...contactEmailsObj },
+            phoneNumbersObj: { ...contactPhoneNumbersObj },
             reloadProfileImage: data.profileImage
+        });
+    };
+
+    saveProfile = () => {
+        let { emailAddressObj, phoneNumbersObj, myName } = this.state;
+
+        let saveLocalContactData = {
+            localContacts: [
+                {
+                    userName: myName,
+                    emailAddresses: {
+                        ...emailAddressObj
+                    },
+                    phoneNumbers: {
+                        ...phoneNumbersObj
+                    }
+                }
+            ]
+        };
+
+        console.log('save sata ', saveLocalContactData);
+        AddLocalContacts(saveLocalContactData).then(elem => {
+            console.log('data ', elem);
+            // Actions.newContactScreen({});
+            Actions.pop();
+            setTimeout(() => {
+                Actions.refresh({
+                    key: Math.random()
+                });
+            }, 100);
         });
     };
 
@@ -613,9 +690,7 @@ class NewContactScreen extends React.Component {
                         <View style={styles.btn_container}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    Actions.pop(
-                                        this.props.updateContactScreen()
-                                    );
+                                    Actions.pop();
                                 }}
                                 style={styles.cancel_btn}
                             >

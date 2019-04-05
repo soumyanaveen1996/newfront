@@ -26,6 +26,15 @@ export default class LocalContactModal extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({ selectedContact: {} });
+        let array = [...this.state.contactsList];
+
+        if (array && array.length > 0) {
+            array.map(elem => {
+                elem.selected = false;
+            });
+        }
+
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
@@ -175,7 +184,17 @@ export default class LocalContactModal extends React.Component {
 
     importSelectedContact = () => {
         let selectedContact = { ...this.state.selectedContact };
-        this.props.selectedContact(selectedContact);
+
+        // console.log('mapping contact labels ', selectedContact);
+
+        if (selectedContact && Object.keys(selectedContact).length > 0) {
+            selectedContact.phoneNumbers.map(elem => {
+                if (elem.label === 'home') {
+                    elem.label = 'land';
+                }
+            });
+            this.props.selectedContact(selectedContact);
+        }
         this.props.setVisible(false);
     };
 

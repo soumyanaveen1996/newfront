@@ -39,7 +39,8 @@ export default class ContactsPickerDataSource {
                 emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
                 phoneNumbers: data.phoneNumbers,
                 isWaitingForConfirmation: data.waitingForConfirmation || false,
-                isFavourite: data.isFavourite || false
+                isFavourite: data.isFavourite || false,
+                contactType: data.contactType || 'frontm'
             };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));
