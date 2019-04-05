@@ -74,6 +74,7 @@ import MyProfileScreen from '../components/ContactsPicker/MyProfileScreen';
 import SetChannelOwner from '../components/ChannelsList/SetChannelOwner';
 import NewPhoneBookContacts from '../components/NewChat/NewPhoneBookContacts';
 import DialPadButton from '../components/NewChat/DialPadButton';
+import NewContactScreen from '../components/ContactsPicker/NewContactScreen';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -379,6 +380,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.myProfileScreen}
                                         title="My Profile"
                                         component={MyProfileScreen}
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.newContactScreen}
+                                        title="Add new contact"
+                                        component={NewContactScreen}
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.channelChat}

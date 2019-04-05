@@ -146,6 +146,12 @@ export default class InviteModal extends React.Component {
     setInviteVisible = () => this.setState({ isInviteVisible: true });
     setInviteHide = () => this.setState({ isInviteVisible: false });
 
+    createNewContact = () => {
+        console.log('move to create new contact Screen');
+        Actions.newContactScreen();
+        this.props.setVisible(false);
+    };
+
     render() {
         const contactSelected = this.state.contactSelected;
         return (
@@ -219,7 +225,7 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
 
-                                {/* <View
+                                <View
                                     style={{
                                         width: wp('90%'),
                                         display: 'flex',
@@ -250,6 +256,7 @@ export default class InviteModal extends React.Component {
                                         }}
                                     />
                                 </View>
+
                                 <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
@@ -260,7 +267,7 @@ export default class InviteModal extends React.Component {
                                         marginBottom: 5
                                     }}
                                     onPress={() => {
-                                        this.setInviteVisible();
+                                        this.createNewContact();
                                     }}
                                 >
                                     <Image
@@ -276,7 +283,7 @@ export default class InviteModal extends React.Component {
                                     <Text style={styles.inviteEmail}>
                                         Create New Contact
                                     </Text>
-                                </TouchableOpacity> */}
+                                </TouchableOpacity>
                                 <TouchableOpacity
                                     style={{
                                         width: wp('80%'),

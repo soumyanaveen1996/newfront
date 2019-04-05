@@ -67,6 +67,7 @@ const ROUTER_SCENE_KEYS = {
     callSummary: 'callSummary',
     multiselection: 'multiselection',
     myProfileScreen: 'myProfileScreen',
+    newContactScreen: 'newContactScreen',
     manageContacts: 'manageContacts'
 };
 

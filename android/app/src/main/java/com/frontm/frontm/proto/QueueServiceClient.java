@@ -42,10 +42,7 @@ import io.grpc.okhttp.OkHttpChannelBuilder;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
 
-
 public class QueueServiceClient extends ReactContextBaseJavaModule {
-
-
 
     private ManagedChannel mChannel;
     private Boolean mIsAlreadyListening = false;
@@ -59,8 +56,6 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         this.mIsAlreadyListening = mIsAlreadyListening;
     }
 
-
-
     public String getmSessionId() {
         return mSessionId;
     }
@@ -69,16 +64,13 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         this.mSessionId = mSessionId;
     }
 
-
     public ManagedChannel getmChannel() {
         if (mChannel == null) {
             String host = BuildConfig.GRPC_HOST;
             int port = BuildConfig.GRPC_PORT;
             try {
-                mChannel = OkHttpChannelBuilder.forAddress(host, port)
-                        .connectionSpec(ConnectionSpec.MODERN_TLS)
-                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
-                        .build();
+                mChannel = OkHttpChannelBuilder.forAddress(host, port).connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory()).build();
             } catch (Exception e) {
                 mChannel = null;
             }
@@ -90,48 +82,37 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         this.mChannel = mChannel;
     }
 
-
-
     public QueueServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
         String host = "grpcdev.frontm.ai";
         int port = 50051;
         try {
-            mChannel = OkHttpChannelBuilder.forAddress(host, port)
-                    .connectionSpec(ConnectionSpec.MODERN_TLS)
-                    .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
-                    .build();
+            mChannel = OkHttpChannelBuilder.forAddress(host, port).connectionSpec(ConnectionSpec.MODERN_TLS)
+                    .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory()).build();
         } catch (Exception e) {
             mChannel = null;
         }
     }
-
-
 
     @Override
     public String getName() {
         return "QueueServiceClient";
     }
 
-
-    private void sendEvent(String eventName,
-                           @Nullable WritableMap params) {
-        getReactApplicationContext()
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
+    private void sendEvent(String eventName, @Nullable WritableMap params) {
+        getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName,
+                params);
     }
 
     @ReactMethod
-    public void getAllQueueMessages(String sessionId)
-    {
+    public void getAllQueueMessages(String sessionId) {
         Log.d("GRPC:::getAllQMess", sessionId);
         QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
         Empty input = Empty.newBuilder().build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -139,7 +120,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         stub.getAllQueueMessages(input, new StreamObserver<QueueResponse>() {
             @Override
             public void onNext(QueueResponse value) {
-                //callback.invoke(null, new QueueResponseConverter().toResponse(value));
+                // callback.invoke(null, new QueueResponseConverter().toResponse(value));
                 Log.d("GRPC:::read queue message", value.toString());
                 sendEvent("message", new QueueResponseConverter().toResponse(value));
             }
@@ -154,7 +135,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                         sendEvent("logout", null);
                     }
                 }
-                //callback.invoke(Arguments.createMap());
+                // callback.invoke(Arguments.createMap());
             }
 
             @Override
@@ -162,7 +143,6 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                 sendEvent("end", null);
             }
         });
-
 
     }
 
@@ -183,8 +163,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startChatSSE(String sessionId)
-    {
+    public void startChatSSE(String sessionId) {
         if (getmIsAlreadyListening() && getmSessionId() != null && getmSessionId().equals(sessionId)) {
             return;
         }
@@ -204,9 +183,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
         Empty input = Empty.newBuilder().build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -223,7 +201,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                 Log.d("GRPC:::SSE error", t.getStackTrace().toString());
                 handleError();
                 sendEvent("sse_error", null);
-                //callback.invoke(Arguments.createMap());
+                // callback.invoke(Arguments.createMap());
             }
 
             @Override
