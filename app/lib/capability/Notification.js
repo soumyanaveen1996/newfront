@@ -2,6 +2,7 @@ import PushNotification from 'react-native-push-notification';
 import DeviceStorage from './DeviceStorage';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
 import config from '../../config/config';
+import RL from '../../lib/utils/remoteDebugger';
 
 const NotificationKeys = {
     notification: 'notification'
@@ -72,6 +73,11 @@ export default class Notification {
                             senderID: config.gcm.senderID,
                             requestPermissions: true,
                             onError: error => {
+                                RL(`Error occured getting Device token 
+
+                                > ${JSON.stringify(error)}
+                                
+                                `);
                                 console.log('onError', error);
                                 clearTimeout(timer);
                                 reject(error);

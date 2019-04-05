@@ -9,13 +9,18 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+
+import com.frontm.commonmessages.proto.EmailAddresses;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.commonmessages.proto.LocalContact;
+import com.frontm.commonmessages.proto.PhoneNumbers;
 import com.frontm.contacts.proto.AgentGuardBoolResponse;
+import com.frontm.contacts.proto.ContactsInput;
 import com.frontm.contacts.proto.ContactsServiceGrpc;
 import com.frontm.contacts.proto.EmailIdList;
 import com.frontm.contacts.proto.FindResponse;
 import com.frontm.contacts.proto.SearchQuery;
-import com.frontm.contacts.proto.UserIdList;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.AgentGuardBoolResponseConverter;
 import com.frontm.frontm.proto.converters.FindResponseConverter;
@@ -108,13 +113,41 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::add", sessionId);
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
-        UserIdList.Builder input = UserIdList.newBuilder();
-        if (params.getArray("userIds") != null) {
+        ContactsInput.Builder input = ContactsInput.newBuilder();
+        if (params.hasKey("userIds")) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
             }
         }
+
+        if (params.hasKey("localContacts")) {
+
+            ReadableArray localContacts = params.getArray("localContacts");
+            for (int i = 0; i < localContacts.size(); ++i) {
+
+                ReadableMap lContactDict = localContacts.getMap(i);
+                String userName = lContactDict.getString("userName");
+                ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
+                ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
+
+                EmailAddresses emailAddresses = EmailAddresses.newBuilder().
+                        setHome(emailAddressesDict.getString("home")).
+                        setWork(emailAddressesDict.getString("work")).build();
+
+                PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
+                        setLand(phoneNumbersDict.getString("land")).
+                        setMobile(phoneNumbersDict.getString("mobile")).
+                        setSatellite(phoneNumbersDict.getString("satellite")).build();
+
+                LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setEmailAddresses(emailAddresses)
+                        .setPhoneNumbers(phoneNumbers).build();
+                input.addLocalContacts(localContact);
+
+            }
+        }
+
 
 
         Metadata header=new Metadata();
@@ -150,13 +183,41 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::accept", sessionId);
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
-        UserIdList.Builder input = UserIdList.newBuilder();
+        ContactsInput.Builder input = ContactsInput.newBuilder();
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
             }
         }
+
+        if (params.hasKey("localContacts")) {
+
+            ReadableArray localContacts = params.getArray("localContacts");
+            for (int i = 0; i < localContacts.size(); ++i) {
+
+                ReadableMap lContactDict = localContacts.getMap(i);
+                String userName = lContactDict.getString("userName");
+                ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
+                ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
+
+                EmailAddresses emailAddresses = EmailAddresses.newBuilder().
+                        setHome(emailAddressesDict.getString("home")).
+                        setWork(emailAddressesDict.getString("work")).build();
+
+                PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
+                        setLand(phoneNumbersDict.getString("land")).
+                        setMobile(phoneNumbersDict.getString("mobile")).
+                        setSatellite(phoneNumbersDict.getString("satellite")).build();
+
+                LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setEmailAddresses(emailAddresses)
+                        .setPhoneNumbers(phoneNumbers).build();
+                input.addLocalContacts(localContact);
+
+            }
+        }
+
 
 
         Metadata header=new Metadata();
@@ -191,13 +252,41 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::remove", sessionId);
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
-        UserIdList.Builder input = UserIdList.newBuilder();
+        ContactsInput.Builder input = ContactsInput.newBuilder();
         if (params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
             }
         }
+
+        if (params.hasKey("localContacts")) {
+
+            ReadableArray localContacts = params.getArray("localContacts");
+            for (int i = 0; i < localContacts.size(); ++i) {
+
+                ReadableMap lContactDict = localContacts.getMap(i);
+                String userName = lContactDict.getString("userName");
+                ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
+                ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
+
+                EmailAddresses emailAddresses = EmailAddresses.newBuilder().
+                        setHome(emailAddressesDict.getString("home")).
+                        setWork(emailAddressesDict.getString("work")).build();
+
+                PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
+                        setLand(phoneNumbersDict.getString("land")).
+                        setMobile(phoneNumbersDict.getString("mobile")).
+                        setSatellite(phoneNumbersDict.getString("satellite")).build();
+
+                LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setEmailAddresses(emailAddresses)
+                        .setPhoneNumbers(phoneNumbers).build();
+                input.addLocalContacts(localContact);
+
+            }
+        }
+
 
 
         Metadata header=new Metadata();

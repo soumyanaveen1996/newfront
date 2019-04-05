@@ -45,6 +45,7 @@
            @"requestUuid": self.requestUuid,
            @"error": self.error,
            @"details": self.details && self.details.length > 0 ? object : [NSNull null]
+//           @"details": detailsString
            };
 }
 

@@ -19,3 +19,13 @@ message DomainRoles {
     repeated string roles = 2;
 }
 
+message EmailAddresses {
+    string home = 1;
+    string work = 2;
+}
+
+message LocalContact {
+    string userName = 1;
+    commonmessages.EmailAddresses emailAddresses = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+}

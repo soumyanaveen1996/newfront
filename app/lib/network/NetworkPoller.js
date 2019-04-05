@@ -22,6 +22,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
+const R = require('ramda');
 
 const NetworkPollerStates = {
     gsm: 'gsm',
@@ -36,7 +37,12 @@ BackgroundTask.define(async () => {
 });
 
 class NetworkPoller {
+    grpcSubscription = [];
+    grpcEndSubscription = [];
+    cleanupInterval = null;
     start = async () => {
+        console.log('-----------App Start ---------------');
+
         console.log('Network Poller: Starting Polling On start');
         this.connectedToSatellite = false;
         this.keepAliveCount = 0;
@@ -44,9 +50,53 @@ class NetworkPoller {
         await this.listenToEvents();
         this.startPolling();
         this.subscribeToServerEvents();
+        this.cleanupSubscriptions();
         this.alreadySubscribed = false;
     };
 
+    cleanupSubscriptions = () => {
+        console.log('App Active ----> Start Cleanup Service');
+
+        this.cleanupInterval = setInterval(() => {
+            InteractionManager.runAfterInteractions(() => {
+                console.log(
+                    '<------JSAVSCRIPT:::: CHECKING SUBSCRIPTIONS---->'
+                );
+
+                // console.log(this.grpcSubscription);
+                // console.log(this.grpcEndSubscription);
+                if (
+                    this.grpcSubscription.length == 0 ||
+                    this.grpcEndSubscription == 0
+                ) {
+                    this.subscribeToServerEvents();
+                }
+
+                if (this.grpcSubscription.length > 1) {
+                    R.takeLast(
+                        this.grpcSubscription.length - 1,
+                        this.grpcSubscription
+                    ).forEach(sub => {
+                        sub.remove();
+                    });
+                    this.grpcSubscription = R.take(1, this.grpcSubscription);
+                }
+                if (this.grpcEndSubscription.length > 1) {
+                    R.takeLast(
+                        this.grpcEndSubscription.length - 1,
+                        this.grpcEndSubscription
+                    ).forEach(sub => {
+                        sub.remove();
+                    });
+
+                    this.grpcEndSubscription = R.take(
+                        1,
+                        this.grpcEndSubscription
+                    );
+                }
+            });
+        }, 30000);
+    };
     userLoggedInHandler = async () => {
         await this.createBackgroundTasks();
         console.log('Network Poller: User Logged in');
@@ -81,27 +131,24 @@ class NetworkPoller {
     };
 
     subscribeToServerEvents = async () => {
-        if (this.alreadySubscribed) {
-            return;
-        }
+        // if (this.alreadySubscribed) {
+        //     return;
+        // }
         let user = await Auth.getUser();
         const QueueServiceClient = NativeModules.QueueServiceClient;
         eventEmitter = new NativeEventEmitter(QueueServiceClient);
-        this.grpcSubscription = eventEmitter.addListener(
-            'sse_message',
-            message => {
-                console.log('GRPC:::SSE GRPC message : ', message, message);
-                MessageQueue.push(message);
-            }
-        );
+        console.log('JS::::::: Subscribing to EVENTS');
 
-        this.grpcEndSubscription = eventEmitter.addListener(
-            'sse_end',
-            message => {
+        this.grpcSubscription.push(
+            eventEmitter.addListener('sse_message', message => {
+                MessageQueue.push(message);
+            })
+        );
+        this.grpcEndSubscription.push(
+            eventEmitter.addListener('sse_end', message => {
                 console.log('GRPC:::SSE End GRPC message : ', message, message);
                 this.unsubscribeFromServerEvents();
-                this.subscribeToServerEvents();
-            }
+            })
         );
 
         QueueServiceClient.startChatSSE(user.creds.sessionId);
@@ -109,14 +156,18 @@ class NetworkPoller {
     };
 
     unsubscribeFromServerEvents = loggedOut => {
-        if (this.grpcSubscription) {
-            this.grpcSubscription.remove();
-            this.grpcSubscription = null;
-        }
-        if (this.grpcEndSubscription) {
-            this.grpcEndSubscription.remove();
-            this.grpcEndSubscription = null;
-        }
+        // if (this.grpcSubscription) {
+        //     this.grpcSubscription.remove();
+        //     this.grpcSubscription = null;
+        // }
+        // if (this.grpcEndSubscription) {
+        //     this.grpcEndSubscription.remove();
+        //     this.grpcEndSubscription = null;
+        // }
+        this.grpcSubscription.forEach(subscription => subscription.remove());
+        this.grpcEndSubscription.forEach(subscription => subscription.remove());
+        this.grpcSubscription = [];
+        this.grpcEndSubscription = [];
         if (loggedOut) {
             QueueServiceClient.logout();
         }
@@ -193,14 +244,19 @@ class NetworkPoller {
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
+                console.log('---------App in Active State -----------');
+
                 RemoteBotInstall.syncronizeBots();
                 NetworkHandler.readLambda();
-                this.subscribeToServerEvents();
+                setTimeout(() => this.subscribeToServerEvents(), 500);
+                setTimeout(() => this.cleanupSubscriptions(), 1000);
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {
                 await this.stopPolling();
                 this.unsubscribeFromServerEvents();
+                console.log('App Inactive ---------> Stop Cleanup Service');
+                clearInterval(this.cleanupInterval);
                 this.appState = nextAppState;
                 console.log(
                     'Network Poller: Starting Polling on App State change'
@@ -222,6 +278,7 @@ class NetworkPoller {
         console.log('Network Poller: User Loggedout');
         this.stopPolling();
         this.unsubscribeFromServerEvents(true);
+        clearInterval(this.cleanupInterval);
     };
 
     restartPolling = async () => {

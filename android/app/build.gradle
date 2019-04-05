@@ -105,8 +105,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 231
-        versionName "4.0.0"
+        versionCode 235
+        versionName "4.0.1"
         multiDexEnabled true
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -155,9 +155,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {

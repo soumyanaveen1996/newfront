@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.6.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.7.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,13 +46,13 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.6.0'
+        version: '1.7.0'
     },
     'onboarding-bot': {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
         botName: 'FrontM Assistant',
-        botUrl: 'botfarm/frontmai/onboardingBot/2.0.2/onboardingBot.js',
+        botUrl: 'botfarm/frontmai/onboardingBot/2.0.3/onboardingBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -78,7 +78,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'onboarding-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '2.0.2'
+        version: '2.0.3'
     },
     'contacts-bot': {
         allowResetConversation: 'false',

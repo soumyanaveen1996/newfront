@@ -330,6 +330,11 @@ export default class Contact {
                             error: error.code
                         });
                     } else {
+                        console.log(
+                            '----------MY CONTACTS ARE--------',
+                            result
+                        );
+
                         resolve(result);
                     }
                 }
