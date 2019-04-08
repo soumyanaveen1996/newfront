@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -113,6 +114,8 @@
 		1F5F715922F241099C363C04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4BF23652804675A540A09D /* libRCTFBSDK.a */; };
 		21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21149E0121930D9200F429AC /* libRNDefaultPreference.a */; };
 		2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2123A5C3216DFA9C00CDC29A /* libCodePush.a */; };
+		2125608E225B6F6800FFCEAF /* LocalContact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 2125608D225B6F6800FFCEAF /* LocalContact+frontm.m */; };
+		21256091225B71EE00FFCEAF /* EmailAddresses+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 21256090225B71EE00FFCEAF /* EmailAddresses+frontm.m */; };
 		212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E0FB6621C3740A00C9B1E4 /* libBugsnagReactNative.a */; };
 		219B34FC224D559300DE5BD9 /* ParticpantUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */; };
 		219B34FF224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */; };
@@ -959,6 +962,10 @@
 		1F07CF9DB86348CB860AFB38 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Semibold.otf"; path = "../assets/fonts/SFPro/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
 		21149DC521930D9200F429AC /* RNDefaultPreference.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDefaultPreference.xcodeproj; path = "../node_modules/react-native-default-preference/ios/RNDefaultPreference.xcodeproj"; sourceTree = "<group>"; };
 		2123A5BA216DFA9C00CDC29A /* CodePush.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CodePush.xcodeproj; path = "../node_modules/react-native-code-push/ios/CodePush.xcodeproj"; sourceTree = "<group>"; };
+		2125608D225B6F6800FFCEAF /* LocalContact+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "LocalContact+frontm.m"; sourceTree = "<group>"; };
+		2125608F225B701200FFCEAF /* EmailAddresses+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EmailAddresses+frontm.h"; sourceTree = "<group>"; };
+		21256090225B71EE00FFCEAF /* EmailAddresses+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "EmailAddresses+frontm.m"; sourceTree = "<group>"; };
+		21256092225B74F400FFCEAF /* LocalContact+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LocalContact+frontm.h"; sourceTree = "<group>"; };
 		219B34FA224D546C00DE5BD9 /* ParticpantUser+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ParticpantUser+frontm.h"; sourceTree = "<group>"; };
 		219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ParticpantUser+frontm.m"; sourceTree = "<group>"; };
 		219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ParticipantsListResponse+frontm.h"; sourceTree = "<group>"; };
@@ -1518,6 +1525,10 @@
 				219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */,
 				04CAEDBF224E3F1900DD0CE0 /* GRPCMetadata.h */,
 				04CAEDC0224E3F1900DD0CE0 /* GRPCMetadata.m */,
+				21256092225B74F400FFCEAF /* LocalContact+frontm.h */,
+				2125608D225B6F6800FFCEAF /* LocalContact+frontm.m */,
+				2125608F225B701200FFCEAF /* EmailAddresses+frontm.h */,
+				21256090225B71EE00FFCEAF /* EmailAddresses+frontm.m */,
 			);
 			name = grpc_utils;
 			sourceTree = "<group>";
@@ -2915,6 +2926,7 @@
 				0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */,
 				0490565B223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m in Sources */,
 				04905613223B61BB008FECC8 /* TimelineContent+frontm.m in Sources */,
+				2125608E225B6F6800FFCEAF /* LocalContact+frontm.m in Sources */,
 				0490564F223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m in Sources */,
 				04704B732236DA7F003ABE94 /* ChannelsServiceClient.m in Sources */,
 				04905658223BB809008FECC8 /* VoipToggleResponse+frontm.m in Sources */,
@@ -2956,6 +2968,7 @@
 				0490562B223B7447008FECC8 /* MatchedUser+frontm.m in Sources */,
 				04E2D94A22256231004C1AC0 /* PingServiceClient.m in Sources */,
 				04704B282236899A003ABE94 /* SignInUser+frontm.m in Sources */,
+				21256091225B71EE00FFCEAF /* EmailAddresses+frontm.m in Sources */,
 				04905643223B855A008FECC8 /* DBChannel+frontm.m in Sources */,
 				04704B762236E08C003ABE94 /* ContactsServiceClient.m in Sources */,
 				04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */,

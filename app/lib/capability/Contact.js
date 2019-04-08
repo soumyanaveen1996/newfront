@@ -355,10 +355,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
-                        // console.log(
-                        //     'all conatcts ======================= >',
-                        //     response.data
-                        // );
+                        console.log(
+                            '<==================all contacts ======================= >',
+                            response.data
+                        );
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
