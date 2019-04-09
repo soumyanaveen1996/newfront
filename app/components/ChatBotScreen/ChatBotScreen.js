@@ -425,40 +425,6 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-
-        ///////////////////
-        let testMessage = new Message();
-        testMessage.cards([
-            {
-                title: 'field1 contact',
-                pictureUrl: 'picture url', //Needs to be cached locally
-                description: 'Text of the description',
-                data: {
-                    field2: 12345,
-                    field3: true,
-                    field4: 'etc',
-                    field5: 'etc'
-                },
-                url: '',
-                action: 'Action Name'
-            },
-            {
-                title: 'field2 contact',
-                pictureUrl: 'picture url', //Needs to be cached locally
-                description:
-                    'Text of the description 2 abuhbsadhba ajsbdiabsdb djibwidbahdb dihsuinriue',
-                data: {
-                    field2: 12345,
-                    field3: true,
-                    field4: 'etc',
-                    field5: 'etc'
-                },
-                url: '',
-                action: 'Action Name'
-            }
-            //... More cards
-        ]);
-        this.tell(testMessage);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -982,6 +948,13 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
+    sendCardAction(action) {
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        message.cardAction(action);
+        return this.sendMessage(message);
+    }
+
     sendSliderResponseMessage(selectedRows) {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
@@ -1372,8 +1345,10 @@ class ChatBotScreen extends React.Component {
             ) {
                 return (
                     <Cards
-                        cards={message.getAddedContacts()}
+                        cards={message.getMessage()}
                         onCardSelected={this.openModalWithContent.bind(this)}
+                        hideModal={this.hideChatModal.bind(this)}
+                        sendCardAction={this.sendCardAction.bind(this)}
                     />
                 );
             } else if (
@@ -1469,13 +1444,6 @@ class ChatBotScreen extends React.Component {
                 );
             }
         }
-    }
-
-    openModalWithContent(content) {
-        this.setState({
-            chatModalContent: content,
-            isModalVisible: true
-        });
     }
 
     waitForQueueProcessing() {
@@ -2325,6 +2293,13 @@ class ChatBotScreen extends React.Component {
 
     hideChatModal() {
         this.setState({ isModalVisible: false });
+    }
+
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
     }
 
     onFormOpen = formMessage => {

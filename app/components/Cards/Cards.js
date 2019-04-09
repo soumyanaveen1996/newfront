@@ -13,13 +13,20 @@ import _ from 'lodash';
 import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { ModalCardSize } from './config';
+import { Actions } from 'react-native-router-flux';
 
 export default class Cards extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalVisible: false
+            isModalVisible: false,
+            showTitle: []
         };
+        this.showTitle = [];
+    }
+
+    componentDidMount() {
+        this.setState({ showTitle: this.showTitle });
     }
 
     card = ({ item, index }) => {
@@ -27,41 +34,39 @@ export default class Cards extends React.Component {
             <TouchableOpacity
                 style={styles.bigCard}
                 key={index}
-                onPress={this.onCardSelected.bind(this)}
+                onPress={this.onCardSelected.bind(this, index)}
             >
                 <View style={styles.verticalContainer}>
-                    <Image
-                        style={{ flex: 1 }}
-                        source={{ uri: item.imageUrl }}
-                    />
+                    {this.state.showTitle[index] ? (
+                        <Text
+                            style={styles.title}
+                            numberOfLines={2}
+                            ellipsizeMode={'tail'}
+                        >
+                            {item.title}
+                        </Text>
+                    ) : (
+                        <Image
+                            style={styles.image}
+                            source={{ uri: item.pictureUrl }}
+                            onError={() => {
+                                this.showTitle[index] = true;
+                            }}
+                        />
+                    )}
                     <Text
-                        style={[
-                            styles.description,
-                            { marginTop: 5, marginHorizontal: 15 }
-                        ]}
-                        numberOfLines={2}
+                        style={styles.description}
                         ellipsizeMode={'tail'}
+                        numberOfLines={this.state.showTitle[index] ? 5 : 3}
                     >
-                        {item.title}
+                        {item.description}
                     </Text>
                 </View>
                 <Text
-                    style={[
-                        styles.footer,
-                        { marginHorizontal: 15, marginBottom: 20 }
-                    ]}
+                    style={styles.action}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}
-                >
-                    {item.description}
-                </Text>
-                <Text
-                    style={[
-                        styles.footer,
-                        { marginHorizontal: 15, marginBottom: 20 }
-                    ]}
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
+                    onPress={this.fireAction.bind(this, item.action)}
                 >
                     {item.action}
                 </Text>
@@ -115,28 +120,71 @@ export default class Cards extends React.Component {
     }
 
     onCardSelected(initialIndex) {
-        this.props.onCardSelected(this.renderModalSlideshow(initialIndex));
+        if (
+            (!this.props.cards[initialIndex].data ||
+                this.props.cards[initialIndex].data === []) &&
+            this.props.cards[initialIndex].url
+        ) {
+            Actions.webview({ url: this.props.cards[initialIndex].url });
+        } else {
+            this.props.onCardSelected(this.renderModalSlideshow(initialIndex));
+        }
     }
 
-    renderModalContent({ item }) {
-        let keys = Object.keys(item);
-        keys = keys.slice(1, keys.length);
-        const fields = _.map(keys, key => {
-            return (
-                <View style={styles.fieldModal}>
-                    <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
-                    {this.renderValue(item[key], true)}
-                </View>
-            );
-        });
+    renderModalContent({ item, index }) {
+        let fields;
+        if (item.data) {
+            let keys = Object.keys(item.data);
+            keys = keys.slice(1, keys.length);
+            fields = _.map(keys, key => {
+                return (
+                    <View style={styles.fieldModal}>
+                        <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
+                        {this.renderValue(item.data[key], true)}
+                    </View>
+                );
+            });
+        }
         return (
             <View style={styles.modalCard}>
+                {this.state.showTitle[index] ? null : (
+                    <Image
+                        style={styles.imageModal}
+                        source={{ uri: item.pictureUrl }}
+                    />
+                )}
                 <ScrollView>
-                    <View style={styles.topArea}>
-                        <Text style={styles.cardTitle}>{item.title}</Text>
+                    <View style={styles.fieldsModal}>
+                        <Text style={styles.titleModal}>{item.title}</Text>
+                        {(!this.props.cards[index].data ||
+                            this.props.cards[index].data === []) &&
+                        this.props.cards[index].url ? (
+                                <Text style={styles.descriptionModal}>
+                                    {item.description + '\n'}
+                                    <Text
+                                        style={styles.urlModal}
+                                        ellipsizeMode={'tail'}
+                                        numberOfLines={1}
+                                        onPress={() => {
+                                            Actions.webview({ url: item.url });
+                                            this.props.hideModal();
+                                        }}
+                                    >
+                                        {item.url}
+                                    </Text>
+                                </Text>
+                            ) : null}
                         {fields}
                     </View>
                 </ScrollView>
+                <Text
+                    style={styles.action}
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    onPress={this.fireAction.bind(this, item.action)}
+                >
+                    {item.action}
+                </Text>
             </View>
         );
     }
@@ -146,7 +194,7 @@ export default class Cards extends React.Component {
             <View style={styles.slideshowContainer}>
                 <FlatList
                     style={styles.modalSlideshow}
-                    data={this.props.datacardList}
+                    data={this.props.cards}
                     renderItem={this.renderModalContent.bind(this)}
                     horizontal={true}
                     snapToInterval={
@@ -170,6 +218,11 @@ export default class Cards extends React.Component {
         );
     }
 
+    fireAction(action) {
+        this.props.hideModal();
+        this.props.sendCardAction(action);
+    }
+
     render() {
         return (
             <View>
@@ -177,7 +230,7 @@ export default class Cards extends React.Component {
                     data={this.props.cards}
                     renderItem={this.card.bind(this)}
                     horizontal={true}
-                    style={styles.dataCards}
+                    style={styles.cards}
                     showsHorizontalScrollIndicator={false}
                     decelerationRate="fast"
                     ListFooterComponent={<View style={styles.emptyFooter} />}

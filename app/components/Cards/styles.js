@@ -3,35 +3,9 @@ import { GlobalColors } from '../../config/styles';
 import { ModalCardSize } from './config';
 
 export default StyleSheet.create({
-    dataCards: {
-        paddingLeft: 60
-    },
-    card: {
-        backgroundColor: GlobalColors.white,
-        borderRadius: 10,
-        borderWidth: 0.2,
-        width: 250,
-        height: 200,
-        marginRight: 10,
-        marginVertical: 30,
-        padding: 19,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'stretch',
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4
-    },
-    topArea: {
-        alignItems: 'flex-start'
-    },
-    cardTitle: {
-        textAlign: 'left',
-        fontSize: 19,
-        marginBottom: 13,
-        color: GlobalColors.sideButtons,
-        textTransform: 'uppercase'
+    cards: {
+        paddingLeft: 60,
+        marginVertical: 30
     },
     field: {
         flexDirection: 'row',
@@ -59,10 +33,14 @@ export default StyleSheet.create({
         width: 64
     },
     bigCard: {
-        height: 200,
-        width: 280,
+        height: 250,
+        width: 250,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
         overflow: 'hidden',
         marginHorizontal: 10,
+        paddingBottom: 20,
         borderRadius: 12,
         borderColor: 'gray',
         borderWidth: 0.1,
@@ -71,24 +49,29 @@ export default StyleSheet.create({
     verticalContainer: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-start',
+        alignItems: 'stretch'
+    },
+    image: {
+        height: 125
     },
     title: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: GlobalColors.sideButtons
-    },
-    description: {
+        marginHorizontal: 18,
+        paddingTop: 20,
         fontSize: 16,
         fontWeight: '200',
         color: GlobalColors.headerBlack
     },
-    footer: {
+    description: {
+        marginHorizontal: 18,
+        marginVertical: 15,
         fontSize: 14,
         fontWeight: '100',
-        color: GlobalColors.translucentDark
+        color: GlobalColors.darkGray
     },
-    seeMore: {
+    action: {
+        marginHorizontal: 18,
+        marginTop: 7,
         fontSize: 16,
         fontWeight: '100',
         color: GlobalColors.sideButtons
@@ -101,22 +84,37 @@ export default StyleSheet.create({
     modalSlideshow: {
         paddingHorizontal: 10
     },
+    imageModal: {
+        height: 150
+    },
+    fieldsModal: {
+        alignItems: 'flex-start',
+        paddingHorizontal: 20
+    },
     modalCard: {
         width: ModalCardSize.WIDTH,
         flexDirection: 'column',
         alignItems: 'stretch',
         marginHorizontal: ModalCardSize.MARGIN,
-        paddingHorizontal: 20,
-        paddingVertical: 40,
+        paddingBottom: 40,
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 4,
         borderRadius: 10,
         borderWidth: 0.2,
+        overflow: 'hidden',
         backgroundColor: GlobalColors.white
     },
     emptyFooterModal: {
         width: 20
+    },
+    titleModal: {
+        textAlign: 'left',
+        fontSize: 19,
+        marginTop: 40,
+        marginBottom: 15,
+        color: GlobalColors.sideButtons,
+        textTransform: 'uppercase'
     },
     fieldModal: {
         width: '100%',
@@ -131,5 +129,18 @@ export default StyleSheet.create({
         width: '45%',
         fontSize: 17,
         color: GlobalColors.headerBlack
+    },
+    descriptionModal: {
+        marginVertical: 15,
+        fontSize: 14,
+        fontWeight: '100',
+        color: GlobalColors.darkGray
+    },
+    urlModal: {
+        fontSize: 16,
+        fontWeight: '100',
+        lineHeight: 25,
+        textDecorationLine: 'underline',
+        color: GlobalColors.sideButtons
     }
 });
