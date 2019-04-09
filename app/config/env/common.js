@@ -43,14 +43,12 @@ const config = {
                 dev: {
                     scopes: ['profile', 'email'],
                     webClientId:
-                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
-                    clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
+                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com'
                 },
                 prod: {
                     scopes: ['profile', 'email'],
                     webClientId:
-                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com',
-                    clientSecret: 'NwLXpaQUMeJBxoUDWOt6q_l7'
+                        '705702062891-d1f5q7nh6k8defah173n247vh4kp5kt9.apps.googleusercontent.com'
                 }
             },
             facebook: {
