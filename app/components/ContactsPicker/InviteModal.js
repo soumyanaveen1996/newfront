@@ -129,7 +129,9 @@ export default class InviteModal extends React.Component {
                         Math.random() * 20
                     ).toString()}`,
                     emailAddresses: {
-                        home: 'sid_hello@example.com',
+                        home: `sid_hello+${Math.floor(
+                            Math.random() * 20
+                        ).toString()}@example.com`,
                         work: ''
                     },
                     phoneNumbers: {

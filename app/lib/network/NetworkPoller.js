@@ -95,7 +95,7 @@ class NetworkPoller {
                     );
                 }
             });
-        }, 30000);
+        }, 60000);
     };
     userLoggedInHandler = async () => {
         await this.createBackgroundTasks();

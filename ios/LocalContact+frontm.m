@@ -1,22 +1,25 @@
 //
-//  ContactsResponse+frontm.m
+//  LocalContact+frontm.m
 //  frontm_mobile
 //
-//  Created by Amal on 3/15/19.
+//  Created by Sourav Chatterjee on 08/04/19.
 //  Copyright © 2019 Facebook. All rights reserved.
 //
 
-#import "ContactsResponse+frontm.h"
-#import "Contact+frontm.h"
 #import "LocalContact+frontm.h"
+#import "PhoneNumbers+frontm.h"
+#import "EmailAddresses+frontm.h"
 #import "NSArray+Map.h"
 
-@implementation ContactsResponse (frontm)
+@implementation LocalContact (frontm)
+
+
 - (NSDictionary *) toJSON {
+  
   return @{
-           @"contacts": [Contact jsonArrayFromObjects:self.contactsArray],
-           @"ignored": [Contact jsonArrayFromObjects:self.ignoredArray],
-           @"localContacts": [LocalContact jsonArrayFromObjects:self.localContactsArray]
+           @"userName": self.userName,
+           @"emailAddress": self.hasEmailAddresses ? [self.emailAddresses toJSON] : [NSNull null],
+           @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
            };
 }
 
@@ -34,4 +37,5 @@
     return [obj toJSON];
   }];
 }
+
 @end
