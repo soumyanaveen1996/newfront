@@ -152,7 +152,8 @@ const stylesheet = StyleSheet.create({
         alignSelf: 'center',
         flex: 1,
         backgroundColor: GlobalColors.white,
-        height: 35
+        minHeight: 35,
+        maxHeight: 110
     },
     moreOptionContainer: {
         position: 'absolute',

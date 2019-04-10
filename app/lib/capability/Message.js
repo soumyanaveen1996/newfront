@@ -52,7 +52,9 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_STRIPE: 'stripe',
     MESSAGE_TYPE_STRIPE_RESPONSE: 'stripe_response',
     MESSAGE_TYPE_SEARCH_BOX: 'search_box',
-    MESSAGE_TYPE_SEARCH_BOX_RESPONSE: 'search_box_response'
+    MESSAGE_TYPE_SEARCH_BOX_RESPONSE: 'search_box_response',
+    MESSAGE_TYPE_CARDS: 'cards',
+    MESSAGE_TYPE_CARD_ACTION: 'card_action'
 };
 
 export const IntToMessageTypeConstants = {
@@ -87,7 +89,9 @@ export const IntToMessageTypeConstants = {
     480: MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
     490: MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE,
     510: MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
-    520: MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE
+    520: MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE,
+    530: MessageTypeConstants.MESSAGE_TYPE_CARDS,
+    540: MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -372,6 +376,7 @@ export default class Message {
         }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX;
     };
+
     searchBoxResponseMessage = (response, options) => {
         this._msg = JSON.stringify(response || {});
         if (options) {
@@ -379,6 +384,19 @@ export default class Message {
         }
         this._messageType =
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE;
+    };
+
+    cards = (data, options) => {
+        this._msg = JSON.stringify(data || []);
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_CARDS;
+    };
+
+    cardAction = action => {
+        this._msg = action;
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION;
     };
 
     messageByBot = (option = true) => {
@@ -424,7 +442,8 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX ||
             this._messageType ===
-                MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE
+                MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CARDS
         ) {
             try {
                 return JSON.parse(this._msg);
@@ -514,6 +533,10 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_CONTACT_CARD
         ) {
             return 'Contact';
+        } else if (
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CARDS
+        ) {
+            return 'Cards';
         } else {
             return this.getMessage();
         }
@@ -569,7 +592,8 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CARDS
         ) {
             try {
                 return JSON.parse(this._options);
@@ -705,7 +729,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
-            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE
+            MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE,
+            MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;
