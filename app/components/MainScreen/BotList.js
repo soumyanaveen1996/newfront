@@ -344,6 +344,7 @@ class BotList extends React.Component {
                 >
                     <SwipeListView
                         useFlatList
+                        style={{ height: '100%' }}
                         data={allData}
                         closeOnScroll={true}
                         closeOnRowPress={true}

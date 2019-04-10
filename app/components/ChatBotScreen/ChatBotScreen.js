@@ -102,6 +102,7 @@ import {
     SearchBoxBotAction
 } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
+import Cards from '../Cards/Cards';
 
 const R = require('ramda');
 
@@ -952,6 +953,13 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
+    sendCardAction(action) {
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        message.cardAction(action);
+        return this.sendMessage(message);
+    }
+
     sendSliderResponseMessage(selectedRows) {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
@@ -1338,6 +1346,18 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CARDS
+            ) {
+                return (
+                    <Cards
+                        cards={message.getMessage()}
+                        onCardSelected={this.openModalWithContent.bind(this)}
+                        hideModal={this.hideChatModal.bind(this)}
+                        sendCardAction={this.sendCardAction.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
             ) {
                 return (
@@ -1429,13 +1449,6 @@ class ChatBotScreen extends React.Component {
                 );
             }
         }
-    }
-
-    openModalWithContent(content) {
-        this.setState({
-            chatModalContent: content,
-            isModalVisible: true
-        });
     }
 
     waitForQueueProcessing() {
@@ -2285,6 +2298,13 @@ class ChatBotScreen extends React.Component {
 
     hideChatModal() {
         this.setState({ isModalVisible: false });
+    }
+
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
     }
 
     onFormOpen = formMessage => {
