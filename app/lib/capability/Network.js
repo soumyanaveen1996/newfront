@@ -12,6 +12,11 @@ import Auth from './Auth';
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
 import Bugsnag from '../../config/ErrorMonitoring';
+
+import { NativeModules } from 'react-native';
+const { AgentGuardServiceClient } = NativeModules;
+
+const R = require('ramda');
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -55,22 +60,22 @@ export class NetworkError extends Error {
     }
 }
 
-function converOptionsToFetchRequest(options) {
-    const isGetRequest = _.lowerCase(options.method) === 'get';
-    return {
-        method: options.method || 'GET',
-        body: isGetRequest
-            ? undefined
-            : typeof options.data === 'string'
-                ? options.data
-                : JSON.stringify(options.data),
-        headers: _.merge(
-            { 'Content-Type': 'application/json' },
-            options.headers
-        ),
-        redirect: 'follow'
-    };
-}
+// function converOptionsToFetchRequest(options) {
+//     const isGetRequest = _.lowerCase(options.method) === 'get';
+//     return {
+//         method: options.method || 'GET',
+//         body: isGetRequest
+//             ? undefined
+//             : typeof options.data === 'string'
+//                 ? options.data
+//                 : JSON.stringify(options.data),
+//         headers: _.merge(
+//             { 'Content-Type': 'application/json' },
+//             options.headers
+//         ),
+//         redirect: 'follow'
+//     };
+// }
 
 /*
 function Network(options, queue = false) {
@@ -109,11 +114,6 @@ function Network(options, queue = false) {
 
 export class NetworkRequest {
     constructor(options) {
-        if (!options) {
-            throw new Error(
-                'Developer error - NetworkRequest requires a valid options object'
-            );
-        }
         this.options = options;
     }
 
@@ -126,74 +126,73 @@ export class NetworkRequest {
     }
 }
 
+const getGrpcService = name => {
+    switch (name) {
+    case 'AgentGuardServiceClient':
+        return AgentGuardServiceClient;
+
+    default:
+        return null;
+    }
+};
+
+const convertResponse = response => {
+    const content = R.pathOr([], ['data', 'content'], response);
+    const objContent = content.map(str => JSON.parse(str));
+
+    return {
+        error: response.error,
+        data: {
+            error: response.error,
+            content: objContent
+        }
+    };
+};
+
 function Network(options, queue = false) {
     // console.log('option in network ', options);
 
     return new Promise((resolve, reject) => {
         Network.isConnected().then(connected => {
+            console.log('Sourav Logging:::: Connection', connected);
+
+            // connected = false;
+
+            const {
+                serviceName,
+                action,
+                sessionId,
+                params,
+                key = null
+            } = options;
             if (connected) {
                 RStore.dispatch(setNetwork('full'));
-                const requestOptions = converOptionsToFetchRequest(options);
-                fetch(options.url, requestOptions)
-                    .then(response => {
-                        // console.log('Response raw : ', response);
-                        if (response.status === 200) {
-                            response.json().then(json => {
-                                // console.log('get network json', json);
-                                resolve({
-                                    data: json,
-                                    status: response.status,
-                                    statusText: response.statusText
-                                });
-                            });
-                        } else {
-                            console.log(
-                                '>>>>>>NETWORK ERROR CODE NE 200',
-                                response
-                            );
-                            Auth.getUser().then(user => {
-                                Bugsnag.setUser(user.info.userName);
-                                Bugsnag.notify(
-                                    new Error(JSON.stringify(response))
-                                );
-                            });
-                            if (
-                                response.status === 401 ||
-                                response.status === 400
-                            ) {
-                                console.log('need to logout');
-                                Auth.logout();
-                                return resolve();
-                            }
-                            const loadError = response.statusText
-                                ? new NetworkError(
-                                    response.status,
-                                    response.statusText
-                                )
-                                : new NetworkError(
-                                    response.status,
-                                    'Error Loading Data'
-                                );
-                            reject(loadError);
-                        }
-                    })
-                    .catch(err => {
-                        console.log('>>>>>>>>>>>>>Network in Catch', err);
-                        Bugsnag.notify(err);
-                        reject();
-                    });
-                /*
-                    axios(options)
-                        .then((data) => {
-                            const now = moment().valueOf();
-                            resolve(data);
-                        })
-                        .catch(reject); */
+
+                const grpcService = getGrpcService(serviceName);
+
+                grpcService[action](sessionId, params, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    console.log(
+                        'Sourav Logging::::Agent guard response : ',
+                        result
+                    );
+                    const response = convertResponse(result);
+                    resolve(response);
+                });
             } else {
                 if (queue) {
-                    let key = SHA1(JSON.stringify(options.data)).toString();
+                    const deferredKey = key
+                        ? key
+                        : SHA1(JSON.stringify(params)).toString();
+                    console.log(
+                        'Sourav Logging:::: Offline Mode------Deferred Request Key is',
+                        deferredKey
+                    );
+
                     return resolve(
-                        futureRequest(key, new NetworkRequest(options))
+                        futureRequest(deferredKey, new NetworkRequest(options))
                     );
                 } else {
                     RStore.dispatch(setNetwork('none'));
@@ -259,10 +258,5 @@ export default Network;
  * @return {Promise} that resolves to a request_id (that can potentially be stashed for future if needed)
  */
 export function futureRequest(key, networkRequest) {
-    if (!key || !networkRequest) {
-        throw new Error(
-            'Developer error - A valid key and NetworkRequest object is required to for making future requests'
-        );
-    }
     return Queue.queueNetworkRequest(key, networkRequest);
 }

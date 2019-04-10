@@ -490,9 +490,9 @@ class NetworkPoller {
         // setTimeout(() => BackgroundTaskProcessor.process(), 5000);
     };
     clearQueue = () => {
-        InteractionManager.runAfterInteractions(() => {
-            setTimeout(() => NetworkDAO.deleteAllRows(), 500);
-        });
+        // InteractionManager.runAfterInteractions(() => {
+        //     setTimeout(() => NetworkDAO.deleteAllRows(), 500);
+        // });
     };
 }
 

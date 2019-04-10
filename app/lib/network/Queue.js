@@ -20,14 +20,6 @@ import { NETWORK_EVENTS_CONSTANTS } from './index';
  */
 const queueNetworkRequest = (key, networkRequest) =>
     new Promise((resolve, reject) => {
-        if (!key || !networkRequest) {
-            throw new Error(
-                'A valid key and networkRequest are required to queue'
-            );
-        }
-        // We will only cache the options - getNetworkRequest()
-        // First add it to the sql store to get an id
-        // Use the botkey:id to store as key in async storage (better for json)
         return NetworkDAO.insertNetworkRequest(
             key,
             networkRequest.getNetworkRequestOptions()
@@ -60,7 +52,8 @@ const dequeueNetworkRequest = () =>
                 const result = {
                     id: res.id,
                     key: res.key,
-                    request: new NetworkRequest(res.request)
+                    // request: new NetworkRequest(res.request)
+                    request: res.request
                 };
                 return resolve(result);
             })
@@ -83,9 +76,13 @@ const completeNetworkRequest = (id, key, result) =>
                     result: result
                 };
                 // Notify any event listeners if subscribed
-                AsyncResultEventEmitter.emit(
-                    NETWORK_EVENTS_CONSTANTS.result,
-                    obj
+                setTimeout(
+                    () =>
+                        AsyncResultEventEmitter.emit(
+                            NETWORK_EVENTS_CONSTANTS.result,
+                            obj
+                        ),
+                    5000
                 );
                 resolve(obj);
             })
