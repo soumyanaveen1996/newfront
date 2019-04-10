@@ -342,7 +342,8 @@ const stylesheet = StyleSheet.create({
             borderRadius: 10,
             flexDirection: 'column',
             backgroundColor: 'white',
-            alignItems: 'center'
+            alignItems: 'center',
+            padding: 20
         },
         android: {
             width: wp('90%'),
@@ -350,7 +351,8 @@ const stylesheet = StyleSheet.create({
             borderRadius: 10,
             flexDirection: 'column',
             backgroundColor: 'white',
-            alignItems: 'center'
+            alignItems: 'center',
+            padding: 20
         }
     }),
 

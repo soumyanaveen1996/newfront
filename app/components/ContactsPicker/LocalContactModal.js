@@ -114,7 +114,6 @@ export default class LocalContactModal extends React.Component {
     toggleSelectContacts = (data, index) => {
         let array = [...this.state.contactsList];
 
-        let emailArray = [];
         array[index].selected = !array[index].selected;
 
         array.map((elem, elemIndex) => {
@@ -123,12 +122,10 @@ export default class LocalContactModal extends React.Component {
             }
         });
 
-        this.setState(
-            { contactsList: [...array], selectedContact: { ...array[index] } },
-            () => {
-                console.log('new array ', this.state.selectedContact);
-            }
-        );
+        this.setState({
+            contactsList: [...array],
+            selectedContact: { ...array[index] }
+        });
     };
 
     renderContacts = () => {
@@ -222,9 +219,13 @@ export default class LocalContactModal extends React.Component {
                         Your contacts{' '}
                     </Text>
                     <View
-                        style={{ width: '100%', height: 450, marginBottom: 20 }}
+                        style={{
+                            flex: 1,
+                            marginBottom: 20,
+                            backgroundColor: 'rgba(0,0,0,0.3)'
+                        }}
                     >
-                        <ScrollView>
+                        <ScrollView style={{ flex: 1 }}>
                             <View style={styles.allContacts}>
                                 {this.renderContacts()}
                             </View>

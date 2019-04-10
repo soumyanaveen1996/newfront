@@ -121,6 +121,8 @@ export default class ContactDetailsScreen extends React.Component {
         const { emailAddresses = [] } = contact;
         const phoneEmails = emailAddresses.map(email => email.email);
         const { emails } = this.props.contact;
+        // console.log('emails fo contacts ', emails);
+
         const contactEmail = emails.map(email => email.email);
         return R.intersection(contactEmail, phoneEmails).length > 0;
     };
@@ -529,7 +531,34 @@ export default class ContactDetailsScreen extends React.Component {
     renderEmails() {
         if (
             !this.props.contact.isWaitingForConfirmation &&
-            this.props.contact.emails[0].email
+            this.props.contact.emails[0].email &&
+            this.props.contact.emails[0].email.home &&
+            this.props.contact.emails[0].email.home !== ''
+        ) {
+            return _.map(this.props.contact.emails, () =>
+                this.renderDetailRow(
+                    'email',
+                    'Email',
+                    this.props.contact.emails[0].email.home
+                )
+            );
+        } else if (
+            !this.props.contact.isWaitingForConfirmation &&
+            this.props.contact.emails[0].email &&
+            this.props.contact.emails[0].email.work &&
+            this.props.contact.emails[0].email.work !== ''
+        ) {
+            return _.map(this.props.contact.emails, () =>
+                this.renderDetailRow(
+                    'email',
+                    'Email',
+                    this.props.contact.emails[0].email.work
+                )
+            );
+        } else if (
+            !this.props.contact.isWaitingForConfirmation &&
+            this.props.contact.emails[0].email &&
+            typeof this.props.contact.emails[0].email === 'string'
         ) {
             return _.map(this.props.contact.emails, () =>
                 this.renderDetailRow(

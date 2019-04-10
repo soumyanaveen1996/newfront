@@ -65,7 +65,7 @@ RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessi
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
-                             RCTLog(@"GRPC:::Channels Service Client method:unsubscribed response : %@", [response toResponse]);
+                            //  RCTLog(@"GRPC:::Channels Service Client method:unsubscribed response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];

@@ -422,6 +422,8 @@ class ChannelAdminScreen extends React.Component {
     }
 
     render() {
+        console.log('all channel details ======================', this.channel);
+
         return (
             <ScrollView style={styles.adminContainer}>
                 {this.renderTopArea()}

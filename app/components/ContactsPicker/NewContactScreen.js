@@ -530,16 +530,20 @@ class NewContactScreen extends React.Component {
         };
 
         console.log('save sata ', saveLocalContactData);
-        AddLocalContacts(saveLocalContactData).then(elem => {
-            console.log('data ', elem);
-            // Actions.newContactScreen({});
-            Actions.pop();
-            setTimeout(() => {
-                Actions.refresh({
-                    key: Math.random()
-                });
-            }, 100);
-        });
+        AddLocalContacts(saveLocalContactData)
+            .then(elem => {
+                console.log('data ', elem);
+                // Actions.newContactScreen({});
+                Actions.pop();
+                setTimeout(() => {
+                    Actions.refresh({
+                        key: Math.random()
+                    });
+                }, 100);
+            })
+            .catch(err => {
+                console.log('error on saving local contact ', err);
+            });
     };
 
     render() {
