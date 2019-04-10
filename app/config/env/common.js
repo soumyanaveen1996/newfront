@@ -9,7 +9,7 @@ if (Platform.OS === 'android') {
     pollingInterval = 120000;
     clearQueue = 120000;
 } else {
-    pollingInterval = 180000;
+    pollingInterval = 30000;
     clearQueue = 600000;
 }
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.

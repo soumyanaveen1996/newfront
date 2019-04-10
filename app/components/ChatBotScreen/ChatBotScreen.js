@@ -713,8 +713,13 @@ class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
+
         Queue.selectCompletedNetworkRequests(this.getBotKey()).then(
             pendingAsyncResults => {
+                console.log(
+                    'Sourav Logging:::: Flushing out pending results bot',
+                    pendingAsyncResults
+                );
                 pendingAsyncResults = pendingAsyncResults || [];
                 pendingAsyncResults.forEach(pendingAsyncResult => {
                     self.handleAsyncMessageResult(pendingAsyncResult);
