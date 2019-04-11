@@ -31,6 +31,7 @@ const stageConfig = {
     proxy: {
         enabled: true,
         host: PROXY_HOST,
+        resource_host: '6uj792e685.execute-api.us-east-1.amazonaws.com/stage',
         protocol: 'https://',
         queuePath: '/queueLambda',
         pingPath: '/ping',
