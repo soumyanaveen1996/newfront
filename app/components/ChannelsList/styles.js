@@ -501,7 +501,7 @@ export default StyleSheet.create({
         marginRight: 10
     },
     selectContactContainer: {
-        height: hp('20%'),
+        maxHeight: hp('20%'),
         backgroundColor: '#f4f4f4'
     },
     selectedChip: {

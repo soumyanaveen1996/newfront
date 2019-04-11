@@ -302,6 +302,7 @@ class NewChannels extends React.Component {
                 console.log('err on creating channel', err);
             });
     }
+
     addParticipants() {
         Actions.addParticipants();
     }

@@ -391,7 +391,8 @@ class ChannelsList extends React.Component {
             () =>
                 Actions.newChannels({
                     title: 'Create new channel',
-                    edit: false
+                    edit: false,
+                    user: this.state.user
                 }),
             200
         );
