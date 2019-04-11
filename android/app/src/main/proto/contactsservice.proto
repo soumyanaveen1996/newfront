@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "commonmessages.proto";
+
 option java_multiple_files = true;
 option java_package = "com.frontm.contacts.proto";
 
@@ -7,9 +9,9 @@ package contacts;
 
 service ContactsService {
     rpc Find (SearchQuery) returns (FindResponse) {}
-    rpc Add (UserIdList) returns (AgentGuardBoolResponse) {}
-    rpc Accept (UserIdList) returns (AgentGuardBoolResponse) {}
-    rpc Remove (UserIdList) returns (AgentGuardBoolResponse) {}
+    rpc Add (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Accept (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Remove (ContactsInput) returns (AgentGuardBoolResponse) {}
     rpc Invite (EmailIdList) returns (AgentGuardBoolResponse) {}
 }
 
@@ -17,8 +19,9 @@ message SearchQuery {
     string queryString = 1;
 }
 
-message UserIdList {
+message ContactsInput {
     repeated string userIds = 1;
+    repeated commonmessages.LocalContact localContacts = 2;
 }
 
 message EmailIdList {

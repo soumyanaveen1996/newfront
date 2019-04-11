@@ -437,7 +437,7 @@ export default class PeopleChat extends ChatBotScreen {
         }
         if (this.allLocalMessagesLoaded) {
             messages = await this.loadOldMessagesFromServer();
-            if (messages.length === 0) {
+            if (messages && messages.length === 0) {
                 this.allOldMessagesLoaded = true;
             }
         }

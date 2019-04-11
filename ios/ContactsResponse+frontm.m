@@ -8,6 +8,7 @@
 
 #import "ContactsResponse+frontm.h"
 #import "Contact+frontm.h"
+#import "LocalContact+frontm.h"
 #import "NSArray+Map.h"
 
 @implementation ContactsResponse (frontm)
@@ -15,6 +16,7 @@
   return @{
            @"contacts": [Contact jsonArrayFromObjects:self.contactsArray],
            @"ignored": [Contact jsonArrayFromObjects:self.ignoredArray],
+           @"localContacts": [LocalContact jsonArrayFromObjects:self.localContactsArray]
            };
 }
 

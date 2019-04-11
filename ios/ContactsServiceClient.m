@@ -57,14 +57,48 @@ RCT_REMAP_METHOD(find, findWithSessionId:(NSString *)sessionId andParams:(NSDict
 
 RCT_REMAP_METHOD(add, addWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::ContactService  method:add Params : %@", sessionId);
+  
+  
+  ContactsInput *idList = [ContactsInput new];
 
-  UserIdList *idList = [UserIdList new];
-  idList.userIdsArray = params[@"userIds"];
+
+//  UserIdList *idList = [UserIdList new];
+  if (params[@"userIds"] != nil) {
+    idList.userIdsArray = params[@"userIds"];
+  }
+  if(params[@"localContacts"] != nil){
+    NSArray *localContactsArray = params[@"localContacts"];
+    for (int i=0; i < [localContactsArray count]; i++) {
+      NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userName = lContactsDict[@"userName"];
+      NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
+      NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
+      
+      EmailAddresses *emailAddresses = [EmailAddresses new];
+      emailAddresses.home = emailAddressesDict[@"home"];
+      emailAddresses.work = emailAddressesDict[@"work"];
+
+      PhoneNumbers *phoneNumbers = [PhoneNumbers new];
+      phoneNumbers.satellite = phoneNumbersDict[@"satellite"];
+      phoneNumbers.land = phoneNumbersDict[@"land"];
+      phoneNumbers.mobile = phoneNumbersDict[@"mobile"];
+      
+      LocalContact *localContact = [LocalContact new];
+      localContact.userName = userName;
+      localContact.phoneNumbers = phoneNumbers;
+      localContact.emailAddresses = emailAddresses;
+      
+      [idList.localContactsArray addObject:localContact];
+
+    }
+  }
+  
+
   GRPCProtoCall *call = [self.serviceClient
                          RPCToAddWithRequest:idList handler:^(AgentGuardBoolResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
                              callback(@[@{}, [NSNull null]]);
-                             return;
+                              return;
                            } else {
                              callback(@[[NSNull null], [response toResponse]]);
                            }
@@ -78,8 +112,42 @@ RCT_REMAP_METHOD(add, addWithSessionId:(NSString *)sessionId andParams:(NSDictio
 RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::ContactService method:accept Params : %@", sessionId);
 
-  UserIdList *idList = [UserIdList new];
-  idList.userIdsArray = params[@"userIds"];
+  
+  ContactsInput *idList = [ContactsInput new];
+  
+  
+  //  UserIdList *idList = [UserIdList new];
+  if (params[@"userIds"] != nil) {
+    idList.userIdsArray = params[@"userIds"];
+  }
+  if(params[@"localContacts"] != nil){
+    NSArray *localContactsArray = params[@"localContacts"];
+    for (int i=0; i < [localContactsArray count]; i++) {
+      NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userName = lContactsDict[@"userName"];
+      NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
+      NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
+      
+      EmailAddresses *emailAddresses = [EmailAddresses new];
+      emailAddresses.home = emailAddressesDict[@"home"];
+      emailAddresses.work = emailAddressesDict[@"work"];
+      
+      PhoneNumbers *phoneNumbers = [PhoneNumbers new];
+      phoneNumbers.satellite = phoneNumbersDict[@"satellite"];
+      phoneNumbers.land = phoneNumbersDict[@"land"];
+      phoneNumbers.mobile = phoneNumbersDict[@"mobile"];
+      
+      LocalContact *localContact = [LocalContact new];
+      localContact.userName = userName;
+      localContact.phoneNumbers = phoneNumbers;
+      localContact.emailAddresses = emailAddresses;
+      
+      [idList.localContactsArray addObject:localContact];
+    }
+  }
+  
+
+
   GRPCProtoCall *call = [self.serviceClient
                          RPCToAcceptWithRequest:idList handler:^(AgentGuardBoolResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
@@ -97,8 +165,42 @@ RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NS
 RCT_REMAP_METHOD(remove, removeWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::ContactService method:remove Params : %@", sessionId);
 
-  UserIdList *idList = [UserIdList new];
-  idList.userIdsArray = params[@"userIds"];
+  
+  ContactsInput *idList = [ContactsInput new];
+  
+  
+  //  UserIdList *idList = [UserIdList new];
+  if (params[@"userIds"] != nil) {
+    idList.userIdsArray = params[@"userIds"];
+  }
+  if(params[@"localContacts"] != nil){
+    NSArray *localContactsArray = params[@"localContacts"];
+    for (int i=0; i < [localContactsArray count]; i++) {
+      NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userName = lContactsDict[@"userName"];
+      NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
+      NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
+      
+      EmailAddresses *emailAddresses = [EmailAddresses new];
+      emailAddresses.home = emailAddressesDict[@"home"];
+      emailAddresses.work = emailAddressesDict[@"work"];
+      
+      PhoneNumbers *phoneNumbers = [PhoneNumbers new];
+      phoneNumbers.satellite = phoneNumbersDict[@"satellite"];
+      phoneNumbers.land = phoneNumbersDict[@"land"];
+      phoneNumbers.mobile = phoneNumbersDict[@"mobile"];
+      
+      LocalContact *localContact = [LocalContact new];
+      localContact.userName = userName;
+      localContact.phoneNumbers = phoneNumbers;
+      localContact.emailAddresses = emailAddresses;
+      
+      [idList.localContactsArray addObject:localContact];
+    }
+  }
+  
+
+  
   GRPCProtoCall *call = [self.serviceClient
                          RPCToRemoveWithRequest:idList handler:^(AgentGuardBoolResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {

@@ -19,13 +19,13 @@ import { Auth, Network } from '../../lib/capability';
 import { GlobalColors } from '../../config/styles';
 import _ from 'lodash';
 
+import { AddLocalContacts, grpcInvite } from '../../api/ContactServices';
 import { NativeModules } from 'react-native';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
-import { relativeTimeRounding } from 'moment';
 
 export default class InviteModal extends React.Component {
     constructor(props) {
@@ -78,30 +78,6 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
     }
 
-    grpcInvite(user, emailIds) {
-        return new Promise((resolve, reject) => {
-            ContactsServiceClient.invite(
-                user.creds.sessionId,
-                { emailIds },
-                (error, result) => {
-                    console.log(
-                        'GRPC:::ContactsServiceClient::find : ',
-                        error,
-                        result
-                    );
-                    if (error) {
-                        reject({
-                            type: 'error',
-                            error: error.code
-                        });
-                    } else {
-                        resolve(result);
-                    }
-                }
-            );
-        });
-    }
-
     onChangeText = text => this.setState({ email: text });
     sendInvite = () => {
         let reg = /\S+@\S+/;
@@ -115,9 +91,9 @@ export default class InviteModal extends React.Component {
         Auth.getUser()
             .then(user => {
                 if (_.isArray(this.state.email)) {
-                    return this.grpcInvite(user, this.state.email);
+                    return grpcInvite(user, this.state.email);
                 } else {
-                    return this.grpcInvite(user, [this.state.email]);
+                    return grpcInvite(user, [this.state.email]);
                 }
             })
             .then(data => {
@@ -145,6 +121,39 @@ export default class InviteModal extends React.Component {
 
     setInviteVisible = () => this.setState({ isInviteVisible: true });
     setInviteHide = () => this.setState({ isInviteVisible: false });
+    createLocalContact = () => {
+        const fakeData = {
+            localContacts: [
+                {
+                    userName: `SidHemu${Math.floor(
+                        Math.random() * 20
+                    ).toString()}`,
+                    emailAddresses: {
+                        home: `sid_hello+${Math.floor(
+                            Math.random() * 20
+                        ).toString()}@example.com`,
+                        work: ''
+                    },
+                    phoneNumbers: {
+                        land: '08045678955',
+                        mobile: '919880433199',
+                        satellite: ''
+                    }
+                }
+            ]
+        };
+
+        AddLocalContacts(fakeData).then(elem => {
+            console.log('data ', elem);
+            this.props.setVisible(false);
+        });
+    };
+
+    createNewContact = () => {
+        // console.log('move to create new contact Screen');
+        Actions.newContactScreen();
+        this.props.setVisible(false);
+    };
 
     render() {
         const contactSelected = this.state.contactSelected;
@@ -219,7 +228,7 @@ export default class InviteModal extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
 
-                                {/* <View
+                                <View
                                     style={{
                                         width: wp('90%'),
                                         display: 'flex',
@@ -250,6 +259,7 @@ export default class InviteModal extends React.Component {
                                         }}
                                     />
                                 </View>
+
                                 <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
@@ -260,7 +270,7 @@ export default class InviteModal extends React.Component {
                                         marginBottom: 5
                                     }}
                                     onPress={() => {
-                                        this.setInviteVisible();
+                                        this.createNewContact();
                                     }}
                                 >
                                     <Image
@@ -276,7 +286,7 @@ export default class InviteModal extends React.Component {
                                     <Text style={styles.inviteEmail}>
                                         Create New Contact
                                     </Text>
-                                </TouchableOpacity> */}
+                                </TouchableOpacity>
                                 <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
@@ -303,6 +313,33 @@ export default class InviteModal extends React.Component {
                                         Invite Friends to FrontM
                                     </Text>
                                 </TouchableOpacity>
+                                {/* <TouchableOpacity
+                                    style={{
+                                        width: wp('80%'),
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginVertical: 10
+                                    }}
+                                    onPress={() => {
+                                        this.createLocalContact();
+                                    }}
+                                >
+                                    <Image
+                                        style={{
+                                            width: 25,
+                                            height: 25,
+                                            resizeMode: 'contain',
+                                            marginLeft: 10
+                                        }}
+                                        source={require('../../images/email-icon/send-invitation-icon3x.png')}
+                                    />
+
+                                    <Text style={styles.inviteEmail}>
+                                        FAKE CREATE LOCAL CONTACTS(REMOVE
+                                        THIS!!!)
+                                    </Text>
+                                </TouchableOpacity> */}
                             </View>
                         </TouchableWithoutFeedback>
                     ) : (

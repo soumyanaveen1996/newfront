@@ -65,6 +65,13 @@ export default class MessageQueue {
 
     async isMessageAlreadyProcessed(message) {
         console.log('Message  : ', message);
+        if (
+            message.messageId === '' ||
+            message.messageId == null ||
+            !message.messageId
+        ) {
+            return false;
+        }
         try {
             const networkItem = await NetworkDAO.selectByMessageId(
                 message.messageId
@@ -103,7 +110,10 @@ export default class MessageQueue {
     async handleMessage(message) {
         let user = await Auth.getUser();
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
-        console.log('Already processed : ', alreadyProcessed);
+        console.log(
+            'Sourav Logging ::::::Already processed : ',
+            alreadyProcessed
+        );
         if (alreadyProcessed) {
             return true;
         }

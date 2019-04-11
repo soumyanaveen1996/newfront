@@ -33,6 +33,16 @@ public class ContactsResponseConverter {
             map.putArray("ignored", Arguments.createArray());
         }
 
+        if (response.getLocalContactsCount() > 0) {
+            WritableArray array = Arguments.createArray();
+            for (int i = 0; i < response.getLocalContactsCount(); ++i) {
+                array.pushMap(new LocalContactConverter().toJson(response.getLocalContacts(i)));
+            }
+            map.putArray("localContacts", array);
+        } else {
+            map.putArray("localContacts", Arguments.createArray());
+        }
+
         return map;
     }
 

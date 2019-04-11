@@ -27,6 +27,9 @@
 
 CF_EXTERN_C_BEGIN
 
+@class EmailAddresses;
+@class PhoneNumbers;
+
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - CommonmessagesRoot
@@ -82,6 +85,43 @@ typedef GPB_ENUM(DomainRoles_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *rolesArray;
 /** The number of items in @c rolesArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger rolesArray_Count;
+
+@end
+
+#pragma mark - EmailAddresses
+
+typedef GPB_ENUM(EmailAddresses_FieldNumber) {
+  EmailAddresses_FieldNumber_Home = 1,
+  EmailAddresses_FieldNumber_Work = 2,
+};
+
+@interface EmailAddresses : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *home;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *work;
+
+@end
+
+#pragma mark - LocalContact
+
+typedef GPB_ENUM(LocalContact_FieldNumber) {
+  LocalContact_FieldNumber_UserName = 1,
+  LocalContact_FieldNumber_EmailAddresses = 2,
+  LocalContact_FieldNumber_PhoneNumbers = 3,
+};
+
+@interface LocalContact : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
+
+@property(nonatomic, readwrite, strong, null_resettable) EmailAddresses *emailAddresses;
+/** Test to see if @c emailAddresses has been set. */
+@property(nonatomic, readwrite) BOOL hasEmailAddresses;
+
+@property(nonatomic, readwrite, strong, null_resettable) PhoneNumbers *phoneNumbers;
+/** Test to see if @c phoneNumbers has been set. */
+@property(nonatomic, readwrite) BOOL hasPhoneNumbers;
 
 @end
 

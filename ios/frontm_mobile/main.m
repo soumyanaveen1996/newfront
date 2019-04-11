@@ -29,6 +29,9 @@ int main(int argc, char * argv[]) {
                            error:nil];
 
     [GRPCCall setUserAgentPrefix:@"FrontM/1.0" forHost:GRPCMetadata.shared.uri];
+
     return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }
 }
+
+

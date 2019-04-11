@@ -136,10 +136,6 @@ class BotList extends React.Component {
             this.props.user.remoteBotsInstalled &&
             this.props.user.allConversationsLoaded
         ) {
-            if (__DEV__) {
-                console.tron('STOPPPP  FAKER');
-            }
-
             this.setState({ stopFaker: true });
         }
 
@@ -348,6 +344,7 @@ class BotList extends React.Component {
                 >
                     <SwipeListView
                         useFlatList
+                        style={{ height: '100%' }}
                         data={allData}
                         closeOnScroll={true}
                         closeOnRowPress={true}

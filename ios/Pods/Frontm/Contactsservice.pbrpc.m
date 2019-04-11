@@ -4,6 +4,7 @@
 #import <ProtoRPC/ProtoRPC.h>
 #import <RxLibrary/GRXWriter+Immediate.h>
 
+#import "Commonmessages.pbobjc.h"
 
 @implementation ContactsService
 
@@ -42,37 +43,37 @@
              responseClass:[FindResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark Add(UserIdList) returns (AgentGuardBoolResponse)
+#pragma mark Add(ContactsInput) returns (AgentGuardBoolResponse)
 
-- (void)addWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)addWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToAddWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToAddWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToAddWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"Add"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[AgentGuardBoolResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark Accept(UserIdList) returns (AgentGuardBoolResponse)
+#pragma mark Accept(ContactsInput) returns (AgentGuardBoolResponse)
 
-- (void)acceptWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)acceptWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToAcceptWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToAcceptWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToAcceptWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"Accept"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[AgentGuardBoolResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark Remove(UserIdList) returns (AgentGuardBoolResponse)
+#pragma mark Remove(ContactsInput) returns (AgentGuardBoolResponse)
 
-- (void)removeWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)removeWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToRemoveWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToRemoveWithRequest:(UserIdList *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToRemoveWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"Remove"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[AgentGuardBoolResponse class]

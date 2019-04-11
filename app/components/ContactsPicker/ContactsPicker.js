@@ -319,8 +319,6 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
-        console.log('I am now rendering::::', info.item);
-
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
@@ -603,7 +601,7 @@ class ContactsPicker extends React.Component {
         //     section => section.title
         // );
 
-        // console.log('contact list ', this.state.contactsData);
+        console.log('contact list ', this.state.contactsData);
 
         if (this.state.contactsData) {
             return (

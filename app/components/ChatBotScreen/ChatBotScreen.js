@@ -102,6 +102,7 @@ import {
     SearchBoxBotAction
 } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
+import Cards from '../Cards/Cards';
 
 const R = require('ramda');
 
@@ -197,7 +198,9 @@ class ChatBotScreen extends React.Component {
             showOptions: false,
             showSearchBox: false,
             searchBoxData: null,
-            currentMap: null
+            currentMap: null,
+            currentUser: null,
+            allContacts: []
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -207,7 +210,6 @@ class ChatBotScreen extends React.Component {
         this.firstUnreadIndex = -1;
 
         // Create a new botcontext with this as the bot
-        console.log('GRPC:::bot context', this.bot);
         this.botContext = new BotContext(this, this.bot);
 
         // Susbscribe to async result handler
@@ -286,7 +288,12 @@ class ChatBotScreen extends React.Component {
             }
 
             // 1. Get the user
-            self.user = await Promise.resolve(Auth.getUser());
+            self.user = await Auth.getUser();
+            this.setState({ currentUser: self.user });
+
+            const contacts = await Contact.getAddedContacts();
+            const contactIds = contacts.map(contact => contact.userId);
+            this.setState({ allContacts: contactIds });
 
             // 2. Get the conversation context
             self.conversationContext = await this.getConversationContext(
@@ -362,12 +369,10 @@ class ChatBotScreen extends React.Component {
                             this.showCallMessage();
                         }
                     } else {
-                        console.log('Error setting state with messages', err);
                     }
                 }
             );
         } catch (e) {
-            console.log('Error occurred during componentDidMount; ', e);
             // TODO: handle errors
             self.botLoaded = false;
         }
@@ -401,8 +406,6 @@ class ChatBotScreen extends React.Component {
             this.satelliteDisconnectHandler
         );
 
-        console.log('Checking polling strategy');
-
         this.props.navigation.setParams({
             refresh: this.readLambdaQueue.bind(this),
             showConnectionMessage: this.showConnectionMessage.bind(this)
@@ -425,7 +428,6 @@ class ChatBotScreen extends React.Component {
     }
 
     static onEnter({ navigation, screenProps }) {
-        console.log('Enter Chats Screen', Actions.refs.peopleChat.props);
         const shouldPop =
             Actions.refs.peopleChat &&
             Actions.refs.peopleChat.props.call &&
@@ -552,7 +554,6 @@ class ChatBotScreen extends React.Component {
 
     async checkPollingStrategy() {
         let pollingStrategy = await Settings.getPollingStrategy();
-        console.log('Polling strategy changed : ', pollingStrategy);
         this.showButton(pollingStrategy);
     }
 
@@ -632,8 +633,6 @@ class ChatBotScreen extends React.Component {
     }
 
     keyboardWillShow = () => {
-        //     console.log('>>>>>WS')
-        //     console.log(this.sliderPreviousState, '>>>>>>WS')
         //     if (this.slider) {
         //         this.slider.close(undefined, true);
         //         this.setState({ sliderClosed: true });
@@ -664,13 +663,11 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardWillHide = () => {
-        //     console.log(this.sliderPreviousState, '>>>>>>WH')
         // this.scrollToBottomIfNeeded();
         // this.setState({ showSlider: this.sliderPreviousState || false });
         // if (Platform.OS === 'android' && this.state.sliderClosed) {
         //     this.setState({ showSlider: true });
         // }
-        // console.log(this.sliderPreviousState, '>>>>>>')
         // if (!this.state.showOptions) {
         //     this.setState({ showSlider: this.sliderPreviousState || false })
         // }
@@ -717,8 +714,13 @@ class ChatBotScreen extends React.Component {
     // Clear out any pending network asyn results that need to become messages
     async flushPendingAsyncResults() {
         let self = this;
+
         Queue.selectCompletedNetworkRequests(this.getBotKey()).then(
             pendingAsyncResults => {
+                console.log(
+                    'Sourav Logging:::: Flushing out pending results bot',
+                    pendingAsyncResults
+                );
                 pendingAsyncResults = pendingAsyncResults || [];
                 pendingAsyncResults.forEach(pendingAsyncResult => {
                     self.handleAsyncMessageResult(pendingAsyncResult);
@@ -727,11 +729,15 @@ class ChatBotScreen extends React.Component {
         );
     }
 
+    invokeWait = () => {
+        let msg = new Message({ addedByBot: true });
+        msg.waitMessage();
+        this.queueMessage(msg);
+    };
+
     wait = shouldWait => {
         if (shouldWait) {
-            let msg = new Message({ addedByBot: true });
-            msg.waitMessage();
-            this.queueMessage(msg);
+            setTimeout(() => this.invokeWait(), 0);
         } else {
             this.stopWaiting();
         }
@@ -775,7 +781,6 @@ class ChatBotScreen extends React.Component {
                         resolve();
                     })
                     .catch(err => {
-                        console.log('Error persisting session message::', err);
                         resolve();
                     });
             } else {
@@ -785,6 +790,7 @@ class ChatBotScreen extends React.Component {
 
     tell = message => {
         // Removing the waiting message.
+
         this.stopWaiting();
         this.countMessage(message);
 
@@ -809,6 +815,10 @@ class ChatBotScreen extends React.Component {
             } else {
                 this.setState({ showSearchBox: false, searchBoxData: null });
             }
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_WAIT
+        ) {
+            this.wait(true);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_SLIDER
@@ -851,8 +861,6 @@ class ChatBotScreen extends React.Component {
 
     done = () => {
         // Done with the bot - navigate away?
-
-        console.log('Done called from bot code');
     };
 
     /** Retrun when the message has been persisted*/
@@ -942,6 +950,13 @@ class ChatBotScreen extends React.Component {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
         // message.sliderResponseMessage(selectedRows);
+        return this.sendMessage(message);
+    }
+
+    sendCardAction(action) {
+        let message = new Message();
+        message.setCreatedBy(this.getUserId());
+        message.cardAction(action);
         return this.sendMessage(message);
     }
 
@@ -1331,6 +1346,18 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CARDS
+            ) {
+                return (
+                    <Cards
+                        cards={message.getMessage()}
+                        onCardSelected={this.openModalWithContent.bind(this)}
+                        hideModal={this.hideChatModal.bind(this)}
+                        sendCardAction={this.sendCardAction.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
             ) {
                 return (
@@ -1403,27 +1430,25 @@ class ChatBotScreen extends React.Component {
                 );
             } else {
                 return (
-                    <ChatMessage
-                        showTime={item.showTime}
-                        message={message}
-                        alignRight
-                        user={this.user}
-                        openModalWithContent={this.openModalWithContent.bind(
-                            this
-                        )}
-                        hideChatModal={this.hideChatModal.bind(this)}
-                        conversationContext={this.conversationContext}
-                    />
+                    <View>
+                        <ChatMessage
+                            showTime={item.showTime}
+                            message={message}
+                            alignRight
+                            user={this.user}
+                            openModalWithContent={this.openModalWithContent.bind(
+                                this
+                            )}
+                            hideChatModal={this.hideChatModal.bind(this)}
+                            conversationContext={this.conversationContext}
+                        />
+                        {this.state.messages.length == 2 ? (
+                            <View style={{ height: 0 }} />
+                        ) : null}
+                    </View>
                 );
             }
         }
-    }
-
-    openModalWithContent(content) {
-        this.setState({
-            chatModalContent: content,
-            isModalVisible: true
-        });
     }
 
     waitForQueueProcessing() {
@@ -1466,7 +1491,6 @@ class ChatBotScreen extends React.Component {
             this.botContext
         );
         const isPromise = getNext instanceof Promise;
-        console.log('[FrontM] Is Promise?', isPromise);
         if (isPromise) {
             getNext.then(response => {
                 const status = R.pathOr(1, ['data', 'error'], response);
@@ -1481,7 +1505,6 @@ class ChatBotScreen extends React.Component {
 
         //     //this.scrollToBottomIfNeeded();
         // this.waitForQueueProcessing().then(() => {
-        //     console.log('Sending my mESSSSAGE', message);
         //     this.loadedBot.next(
         //         message,
         //         this.botState,
@@ -1489,8 +1512,6 @@ class ChatBotScreen extends React.Component {
         //         this.botContext
         //     );
         //     // .then(response => {
-        //     //     console.log('Acknowledgement from BOT is...', response);
-        //     //     console.log(this.state.messages);
         //     //     if (response.status === 200) {
         //     //         message.setStatus(1);
         //     //         this.updateChat(message);
@@ -1657,7 +1678,6 @@ class ChatBotScreen extends React.Component {
     recordVideo() {
         Media.recordVideo().then(result => {
             if (!result.cancelled) {
-                console.log('Recorded video : ', result);
                 this.onVideoCaptured(result.uri);
             }
         });
@@ -1694,7 +1714,6 @@ class ChatBotScreen extends React.Component {
             [
                 {
                     text: 'cancel',
-                    onPress: () => console.log('Permission denied'),
                     style: 'cancel'
                 },
                 { text: 'Open Settings', onPress: Permissions.openSettings }
@@ -1812,9 +1831,7 @@ class ChatBotScreen extends React.Component {
                     this.botContext
                 );
             })
-            .catch(err => {
-                console.log('Error resetting coversation ', err);
-            });
+            .catch(err => {});
     }
 
     addSelectedContactsToBot = selectedRows => {
@@ -2002,16 +2019,17 @@ class ChatBotScreen extends React.Component {
 
     oldestLoadedDate() {
         let date = moment().valueOf();
-        /*
+
         if (this.state.messages.length > 0) {
             const message = this.state.messages[0];
             date = moment(message.message.getMessageDate()).valueOf();
-        }*/
+        }
+
         return date;
     }
 
     async loadOldMessagesFromServer() {
-        return;
+        return [];
         let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
             this.conversationContext.conversationId,
             this.getBotId(),
@@ -2282,6 +2300,13 @@ class ChatBotScreen extends React.Component {
         this.setState({ isModalVisible: false });
     }
 
+    openModalWithContent(content) {
+        this.setState({
+            chatModalContent: content,
+            isModalVisible: true
+        });
+    }
+
     onFormOpen = formMessage => {
         let message = new Message({ addedByBot: false });
         message.formOpenMessage();
@@ -2309,17 +2334,45 @@ class ChatBotScreen extends React.Component {
             return <View />;
         }
 
-        const lastButOne = R.take(
-            this.state.messages.length - 1,
-            this.state.messages
-        );
-        const lastMessage = R.takeLast(1, this.state.messages);
-        const removeButtonMessages = lastButOne.filter(
-            msg =>
-                msg.message.getMessageType() !==
-                MessageTypeConstants.MESSAGE_TYPE_BUTTON
-        );
-        const AllMessages = [...removeButtonMessages, ...lastMessage];
+        let AllMessages = this.state.messages;
+
+        // TODO---> Sourav
+
+        // const { allContacts, messages } = this.state;
+        // const currentUserId = R.pathOr(
+        //     false,
+        //     ['currentUser', 'userId'],
+        //     this.state
+        // );
+        // const message_now_coll = R.takeLast(1, this.state.messages);
+        // // Remove Button Message For Add Contact Once the Contact has been added
+        // if (
+        //     message_now_coll.length > 0 &&
+        //     messages.length < 15 &&
+        //     currentUserId
+        // ) {
+        //     const message_now = message_now_coll[0];
+        //     const msgCreatedBy = message_now.message.getCreatedBy();
+        //     if (
+        //         msgCreatedBy !== currentUserId &&
+        //         allContacts.includes(msgCreatedBy)
+        //     ) {
+        //         const lastButOne = R.take(
+        //             this.state.messages.length - 1,
+        //             this.state.messages
+        //         );
+        //         const lastMessage = R.takeLast(1, this.state.messages);
+        //         const removeButtonMessages = lastButOne.filter(
+        //             msg =>
+        //                 msg.message.getMessageType() !==
+        //                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
+        //         );
+        //         AllMessages = [...removeButtonMessages, ...lastMessage];
+        //     }
+        // }
+
+        // End TODO
+
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
