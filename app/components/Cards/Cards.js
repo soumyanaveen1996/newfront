@@ -156,9 +156,8 @@ export default class Cards extends React.Component {
                 <ScrollView>
                     <View style={styles.fieldsModal}>
                         <Text style={styles.titleModal}>{item.title}</Text>
-                        {(!this.props.cards[index].data ||
-                            this.props.cards[index].data === []) &&
-                        this.props.cards[index].url ? (
+                        {!this.props.cards[index].data ||
+                        this.props.cards[index].data === [] ? (
                                 <Text style={styles.descriptionModal}>
                                     {item.description + '\n'}
                                     <Text
@@ -173,8 +172,9 @@ export default class Cards extends React.Component {
                                         {item.url}
                                     </Text>
                                 </Text>
-                            ) : null}
-                        {fields}
+                            ) : (
+                                fields
+                            )}
                     </View>
                 </ScrollView>
                 <Text
