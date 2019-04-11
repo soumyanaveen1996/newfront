@@ -94,8 +94,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
     public QueueServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
-        String host = "grpcdev.frontm.ai";
-        int port = 50051;
+        String host = BuildConfig.GRPC_HOST;
+        int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)

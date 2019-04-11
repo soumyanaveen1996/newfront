@@ -33,6 +33,7 @@ const NetworkPollerStates = {
 BackgroundTask.define(async () => {
     await NetworkHandler.poll();
     await BackgroundTaskProcessor.process();
+    // await NetworkDAO.deleteAllRows();
     BackgroundTask.finish();
 });
 
@@ -279,6 +280,7 @@ class NetworkPoller {
         this.stopPolling();
         this.unsubscribeFromServerEvents(true);
         clearInterval(this.cleanupInterval);
+        BackgroundTimer.stopBackgroundTimer();
     };
 
     restartPolling = async () => {
@@ -345,7 +347,7 @@ class NetworkPoller {
                 'App is in background. So starting background task every 15 minutes'
             );
             BackgroundTask.schedule({
-                period: 900
+                period: 1200
             });
         }
     };
