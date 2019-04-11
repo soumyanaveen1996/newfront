@@ -162,7 +162,10 @@ android {
         }
         stage {
             initWith release
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            // Uncomment for Stage Build
+            buildConfigField 'String', 'GRPC_HOST', '"stage.frontm.ai"'
+            // Uncomment for Dev Build
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
             matchingFallbacks = ['release']
         }
