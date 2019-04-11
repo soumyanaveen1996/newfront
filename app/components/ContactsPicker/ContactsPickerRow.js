@@ -34,8 +34,66 @@ export default class ContactsPickerRow extends React.Component {
         }
     };
 
+    getContactEmail = contact => {
+        console.log('emails ', contact);
+
+        if (
+            contact.emails &&
+            contact.emails.length > 0 &&
+            typeof contact.emails[0].email === 'string'
+        ) {
+            return (
+                <Text style={styles.contactItemEmail}>
+                    {contact.emails[0].email}
+                </Text>
+            );
+        }
+
+        if (
+            contact.emails &&
+            contact.emails.length > 0 &&
+            contact.emails[0].email.work &&
+            contact.emails[0].email.work !== ''
+        ) {
+            return (
+                <Text style={styles.contactItemEmail}>
+                    {contact.emails[0].email.work}
+                </Text>
+            );
+        }
+        if (
+            contact.emails &&
+            contact.emails.length > 0 &&
+            contact.emails[0].email.home &&
+            contact.emails[0].email.home !== ''
+        ) {
+            return (
+                <Text style={styles.contactItemEmail}>
+                    {contact.emails[0].email.home}
+                </Text>
+            );
+        }
+
+        if (
+            contact.emails &&
+            contact.emails.length > 0 &&
+            contact.emails[0].email.home &&
+            contact.emails[0].email.home !== '' &&
+            contact.emails[0].email.work &&
+            contact.emails[0].email.work !== ''
+        ) {
+            return (
+                <Text style={styles.contactItemEmail}>
+                    {contact.emails[0].email.work}
+                </Text>
+            );
+        }
+    };
+
     render() {
         const contact = this.props.contact;
+
+        // console.log('let check contact ', contact);
 
         const uuid = contact.id || contact.userId;
         return (
@@ -87,11 +145,8 @@ export default class ContactsPickerRow extends React.Component {
                             <Text style={styles.contactItemName}>
                                 {contact.name || contact.userName}
                             </Text>
-                            {contact.emails && contact.emails.length > 0 ? (
-                                <Text style={styles.contactItemEmail}>
-                                    {contact.emails[0].email}
-                                </Text>
-                            ) : null}
+
+                            {this.getContactEmail(contact)}
                         </View>
                     </View>
                     {contact.isWaitingForConfirmation ? (
@@ -102,13 +157,37 @@ export default class ContactsPickerRow extends React.Component {
                                 style={{
                                     fontSize: 12,
                                     fontWeight: '100',
-                                    color: 'rgba(174,174,174,1)'
+                                    color: 'rgba(174,174,174,1)',
+                                    textAlign: 'center'
                                 }}
                             >
                                 Awaiting for authorization
                             </Text>
                         </View>
                     ) : null}
+                    {contact.contactType === 'Personal' && (
+                        <View
+                            style={{
+                                width: 90,
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <Text
+                                numberOfLines={1}
+                                ellipsizeMode="middle"
+                                style={{
+                                    fontSize: 12,
+                                    fontWeight: '100',
+                                    color: 'rgba(174,174,174,1)',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                Personal
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </TouchableOpacity>
         );

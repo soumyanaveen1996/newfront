@@ -335,6 +335,27 @@ const stylesheet = StyleSheet.create({
         }
     }),
 
+    localContactModal: Platform.select({
+        ios: {
+            width: wp('90%'),
+            height: hp('70%'),
+            borderRadius: 10,
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignItems: 'center',
+            padding: 20
+        },
+        android: {
+            width: wp('90%'),
+            height: hp('80%'),
+            borderRadius: 10,
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignItems: 'center',
+            padding: 20
+        }
+    }),
+
     phoneContainer: {
         height: hp('10%'),
         width: '100%',
@@ -553,6 +574,10 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'column',
         flex: 1
     },
+
+    participantName: {
+        color: 'rgba(0,0,0,1)'
+    },
     myProfileContainer: {
         width: wp('100%'),
         height: 80,
@@ -727,7 +752,8 @@ const stylesheet = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: 30
     },
     longTextStyle: {
         color: 'rgba(102, 102, 102, 1)',
@@ -739,6 +765,17 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(0,167,214,1)',
         fontFamily: 'SF Pro Text',
         fontSize: 16
+    },
+
+    import_btn: {
+        width: 310,
+        height: 30,
+        backgroundColor: '#ffffff',
+        borderColor: 'rgba(0,167,214,1)',
+        borderWidth: 1,
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     cancel_btn: {
         width: 150,

@@ -342,6 +342,27 @@ export default class Contact {
         });
     };
 
+    static randomString = () => {
+        let length = 32;
+        let chars =
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var result = '';
+        for (var i = length; i > 0; --i) {
+            result += chars[Math.round(Math.random() * (chars.length - 1))];
+        }
+        return result;
+    };
+
+    static addUniqueUserId(arr) {
+        arr.map(elem => {
+            uniqueUserId = Contact.randomString();
+            elem.userId = uniqueUserId;
+            elem.contactType = 'Personal';
+        });
+
+        return arr;
+    }
+
     static refreshContacts = () =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -355,10 +376,6 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
-                        console.log(
-                            '<==================all contacts ======================= >',
-                            response.data
-                        );
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -367,10 +384,25 @@ export default class Contact {
                                 });
                             }
                         );
+                        // var localContacts = [...response.data.localContacts];
+
+                        var localContacts = Contact.addUniqueUserId(
+                            response.data.localContacts
+                        );
+
                         var ignored = _.map(response.data.contacts, contact => {
                             return _.extend({}, contact, { ignored: true });
                         });
-                        var allContacts = _.concat(contacts, ignored);
+                        var allContacts = _.concat(
+                            contacts,
+                            localContacts,
+                            ignored
+                        );
+
+                        // console.log(
+                        //     'all conatcts ======================= >',
+                        //     allContacts
+                        // );
 
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
