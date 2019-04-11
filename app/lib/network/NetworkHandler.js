@@ -103,7 +103,17 @@ const processNetworkQueueRequest = () => {
     dequeueAndProcessQueueRequest();
 };
 
+const debounce = () => {
+    console.log('Sourav Logging:::: Sleeping zzzzzzzz...');
+
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(), 10000);
+    });
+};
+
 const dequeueAndProcessQueueRequest = async () => {
+    // Add Delay
+    await debounce();
     let requestId = null;
     let key = null;
     try {

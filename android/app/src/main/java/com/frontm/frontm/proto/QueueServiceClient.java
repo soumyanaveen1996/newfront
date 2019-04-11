@@ -1,5 +1,6 @@
 package com.frontm.frontm.proto;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -170,6 +171,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         mChannel.shutdown();
         mChannel = null;
         setmIsAlreadyListening(false);
+        Log.d("GRPC::: sse", "Retry Connecting to GRPC Server");
+        SystemClock.sleep(5000);
         startChatSSE(getmSessionId());
 
     }

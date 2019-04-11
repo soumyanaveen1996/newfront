@@ -52,6 +52,7 @@ export default class ContactsPickerRow extends React.Component {
         if (
             contact.emails &&
             contact.emails.length > 0 &&
+            contact.emails[0].email &&
             contact.emails[0].email.work &&
             contact.emails[0].email.work !== ''
         ) {
@@ -64,6 +65,7 @@ export default class ContactsPickerRow extends React.Component {
         if (
             contact.emails &&
             contact.emails.length > 0 &&
+            contact.emails[0].email &&
             contact.emails[0].email.home &&
             contact.emails[0].email.home !== ''
         ) {
@@ -77,6 +79,7 @@ export default class ContactsPickerRow extends React.Component {
         if (
             contact.emails &&
             contact.emails.length > 0 &&
+            contact.emails[0].email &&
             contact.emails[0].email.home &&
             contact.emails[0].email.home !== '' &&
             contact.emails[0].email.work &&
