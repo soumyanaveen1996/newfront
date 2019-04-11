@@ -52,6 +52,8 @@ class NewChannels extends React.Component {
         } else {
             navigationOptions.headerLeft = (
                 <HeaderBack
+                    accessibilityLabel="back"
+                    testID="back"
                     onPress={() => {
                         state.params.onBack();
                     }}
@@ -300,6 +302,7 @@ class NewChannels extends React.Component {
                 console.log('err on creating channel', err);
             });
     }
+
     addParticipants() {
         Actions.addParticipants();
     }

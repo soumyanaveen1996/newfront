@@ -90,10 +90,14 @@ class ChannelsList extends React.Component {
 
         const headerRight = (
             <TouchableOpacity
+                accessibilityLabel="new channel button"
+                testID="new-channel-button"
                 style={styles.headerRight}
                 onPress={state.params.newChannel}
             >
                 <Image
+                    accessibilityLabel="new channel item"
+                    testID="new-channel-item"
                     source={require('../../images/channels/plus-white-good.png')}
                     style={{ width: 15, height: 15 }}
                 />
@@ -132,6 +136,10 @@ class ChannelsList extends React.Component {
     }
 
     async componentDidMount() {
+        EventEmitter.addListener(
+            AuthEvents.tabSelected,
+            this.tabSelected.bind(this)
+        );
         // const channels = await Channel.getSubscribedChannels()
         // if (channels.length > 0) {
         //     return this.refresh()
@@ -187,6 +195,12 @@ class ChannelsList extends React.Component {
         // if (user.allChannelsLoaded === false) {
         //     Channel.refreshChannels();
         // }
+    }
+
+    tabSelected(scene) {
+        if (scene === 'Channels') {
+            this.setState({ searchString: '' });
+        }
     }
 
     static onExit() {
@@ -377,7 +391,8 @@ class ChannelsList extends React.Component {
             () =>
                 Actions.newChannels({
                     title: 'Create new channel',
-                    edit: false
+                    edit: false,
+                    user: this.state.user
                 }),
             200
         );
@@ -436,6 +451,7 @@ class ChannelsList extends React.Component {
                                 this.setState({ searchString });
                             }}
                             underlineColorAndroid="transparent"
+                            value={this.state.searchString}
                         />
                     </View>
 

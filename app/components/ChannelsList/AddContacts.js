@@ -5,12 +5,14 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Image
+    Image,
+    NativeModules
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 import ContactStyles from '../ContactsPicker/styles';
 import { searchBarConfig } from '../ContactsPicker/config';
@@ -24,10 +26,12 @@ import { RNChipView } from 'react-native-chip-view';
 import ProfileImage from '../ProfileImage';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { GlobalColors } from '../../config/styles';
+import { Auth } from '../../lib/capability';
 import _ from 'lodash';
 
 const R = require('ramda');
 const cancelImg = require('../../images/channels/cross-deselect-participant.png');
+const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 class AddContacts extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -93,6 +97,7 @@ class AddContacts extends React.Component {
         }
         return navigationOptions;
     }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -104,43 +109,6 @@ class AddContacts extends React.Component {
 
     componentDidMount() {
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
-        if (this.props.channels.participants.length > 0) {
-            this.setState({ contacts: this.props.channels.participants });
-            return;
-        }
-
-        if (this.props.appState.contactsLoaded) {
-            Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
-                    ...contact,
-                    selected: false
-                }));
-
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
-                this.setState({ contacts: contactsUniq });
-            });
-        } else {
-            Contact.refreshContacts();
-        }
-    }
-
-    componentDidUpdate(prevProps) {
-        if (
-            prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsLoaded
-        ) {
-            Contact.getAddedContacts().then(contacts => {
-                const allContacts = contacts.map(contact => ({
-                    ...contact,
-                    selected: false
-                }));
-
-                const uniqId = R.eqProps('userId');
-                const contactsUniq = R.uniqWith(uniqId)(allContacts);
-                this.setState({ contacts: contactsUniq });
-            });
-        }
     }
 
     componentWillUnmount() {
@@ -152,6 +120,76 @@ class AddContacts extends React.Component {
         return (
             nextProps.appState.currentScene ===
             ROUTER_SCENE_KEYS.addParticipants
+        );
+    }
+
+    renderRow(elem) {
+        return (
+            <TouchableOpacity
+                onPress={() => this.toggleSelectContacts(elem)}
+                style={styles.contactContainer}
+                key={elem.userId}
+            >
+                <Image
+                    style={{ marginRight: 10 }}
+                    source={
+                        !elem.selected
+                            ? images.checkmark_normal
+                            : images.checkmark_selected
+                    }
+                />
+                <ProfileImage
+                    uuid={elem.userId}
+                    placeholder={images.user_image}
+                    style={ContactStyles.contactItemImage}
+                    placeholderStyle={ContactStyles.contactItemImage}
+                    resizeMode="cover"
+                />
+                <View
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1
+                    }}
+                >
+                    <Text style={styles.participantName}>{elem.userName}</Text>
+                    <Text style={styles.participantEmail}>
+                        {elem.emailAddress}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+
+    renderSelectedRow(elem) {
+        return (
+            <View style={styles.selectedChip}>
+                <RNChipView
+                    title={elem.userName}
+                    titleStyle={styles.chipFont}
+                    avatar={
+                        <ProfileImage
+                            uuid={elem.userId}
+                            placeholder={images.user_image}
+                            style={selectedAvatarStyle}
+                            placeholderStyle={selectedAvatarStyle}
+                            resizeMode="contain"
+                        />
+                    }
+                    avatarStyle={{ margin: 5 }}
+                    cancelable={<Image source={cancelImg} />}
+                    // cancelableStyle={{
+                    //     backgroundColor:
+                    //         'rgba(255,255,255,1)'
+                    // }}
+                    backgroundColor={GlobalColors.transparent}
+                    borderRadius={6}
+                    height={30}
+                    onPress={() => {
+                        this.toggleSelectContacts(elem);
+                    }}
+                />
+            </View>
         );
     }
 
@@ -177,26 +215,65 @@ class AddContacts extends React.Component {
             contacts: array
         });
     };
-    onSearchQueryChange(text) {
-        if (text !== '') {
-            this.setState({ searchText: text });
-        }
-    }
+
     renderSearchBar = () => {
         return (
             <View style={ContactStyles.searchBar}>
+                <Icon
+                    style={styles.searchIcon}
+                    name="search"
+                    size={24}
+                    color="rgba(0, 189, 242, 1)"
+                />
                 <TextInput
                     style={ContactStyles.searchTextInput}
+                    returnKeyType="search"
                     autoFocus={true}
                     underlineColorAndroid="transparent"
                     placeholder="Search"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
-                    onChangeText={this.onSearchQueryChange.bind(this)}
+                    onSubmitEditing={this.searchUsers.bind(this)}
+                    // onChangeText={this.onSearchQueryChange.bind(this)}
                 />
             </View>
         );
     };
+
+    searchUsers(e) {
+        const searchString = e.nativeEvent.text;
+        Auth.getUser()
+            .then(user => {
+                return this.grpcSearch(user, searchString);
+            })
+            .then(users => {
+                this.setState({ contacts: users });
+            });
+    }
+
+    grpcSearch(user, queryString) {
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.find(
+                user.creds.sessionId,
+                { queryString },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result.data.content);
+                    }
+                }
+            );
+        });
+    }
 
     render() {
         const {
@@ -210,25 +287,27 @@ class AddContacts extends React.Component {
             width: 30,
             borderRadius: 15
         };
-        const allContacts = this.state.contacts.filter(contact =>
-            contact.userName
-                .toLowerCase()
-                .includes(this.state.searchText.toLowerCase())
-        );
+        const allContacts = this.state.contacts;
+        const selectedContacts = this.state.contacts.filter((elem, index) => {
+            return elem && elem.selected;
+        });
+
         return (
             <SafeAreaView style={styles.addContactsContainer}>
                 {this.renderSearchBar()}
                 <View style={styles.selectContactContainer}>
-                    <Text
-                        style={{
-                            paddingHorizontal: 10,
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                            color: '#4A4A4A'
-                        }}
-                    >
-                        Selected
-                    </Text>
+                    {selectedContacts && selectedContacts.length > 0 ? (
+                        <Text
+                            style={{
+                                paddingHorizontal: 10,
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                color: '#4A4A4A'
+                            }}
+                        >
+                            Selected
+                        </Text>
+                    ) : null}
                     <ScrollView>
                         <View
                             style={{
@@ -237,44 +316,8 @@ class AddContacts extends React.Component {
                                 alignItems: 'flex-start'
                             }}
                         >
-                            {this.state.contacts.map((elem, index) => {
-                                return elem && elem.selected ? (
-                                    <View style={styles.selectedChip}>
-                                        <RNChipView
-                                            title={elem.userName}
-                                            titleStyle={styles.chipFont}
-                                            avatar={
-                                                <ProfileImage
-                                                    uuid={elem.userId}
-                                                    placeholder={
-                                                        images.user_image
-                                                    }
-                                                    style={selectedAvatarStyle}
-                                                    placeholderStyle={
-                                                        selectedAvatarStyle
-                                                    }
-                                                    resizeMode="contain"
-                                                />
-                                            }
-                                            avatarStyle={{ margin: 5 }}
-                                            cancelable={
-                                                <Image source={cancelImg} />
-                                            }
-                                            // cancelableStyle={{
-                                            //     backgroundColor:
-                                            //         'rgba(255,255,255,1)'
-                                            // }}
-                                            backgroundColor={
-                                                GlobalColors.transparent
-                                            }
-                                            borderRadius={6}
-                                            height={30}
-                                            onPress={() => {
-                                                this.toggleSelectContacts(elem);
-                                            }}
-                                        />
-                                    </View>
-                                ) : null;
+                            {selectedContacts.map(elem => {
+                                return this.renderSelectedRow(elem);
                             })}
                         </View>
                     </ScrollView>
@@ -293,53 +336,9 @@ class AddContacts extends React.Component {
                             }}
                         >
                             {allContacts.map((elem, index) => {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            this.toggleSelectContacts(elem)
-                                        }
-                                        style={styles.contactContainer}
-                                        key={elem.userId}
-                                    >
-                                        <Image
-                                            style={{ marginRight: 10 }}
-                                            source={
-                                                !elem.selected
-                                                    ? images.checkmark_normal
-                                                    : images.checkmark_selected
-                                            }
-                                        />
-                                        <ProfileImage
-                                            uuid={elem.userId}
-                                            placeholder={images.user_image}
-                                            style={
-                                                ContactStyles.contactItemImage
-                                            }
-                                            placeholderStyle={
-                                                ContactStyles.contactItemImage
-                                            }
-                                            resizeMode="cover"
-                                        />
-                                        <View
-                                            style={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                flex: 1
-                                            }}
-                                        >
-                                            <Text
-                                                style={styles.participantName}
-                                            >
-                                                {elem.userName}
-                                            </Text>
-                                            <Text
-                                                style={styles.participantEmail}
-                                            >
-                                                {elem.emailAddress}
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                );
+                                if (elem && !elem.selected) {
+                                    return this.renderRow(elem);
+                                }
                             })}
                         </View>
                     </ScrollView>
