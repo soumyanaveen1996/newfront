@@ -132,42 +132,49 @@ export default class LocalContactModal extends React.Component {
         if (this.state.contactsList && this.state.contactsList.length > 0) {
             return this.state.contactsList.map((elem, index) => {
                 return (
-                    <TouchableOpacity
-                        onPress={() => this.toggleSelectContacts(elem, index)}
+                    <View
                         style={{
-                            flexDirection: 'row',
-                            width: '90%',
-                            height: 40,
-                            marginBottom: 10,
-                            alignItems: 'center',
-                            padding: 5
+                            flex: 1,
+                            backgroundColor: '#fff',
+                            padding: 10
                         }}
-                        key={index}
                     >
-                        <Image
-                            style={{ marginRight: 10 }}
-                            source={
-                                !elem.selected
-                                    ? images.checkmark_normal
-                                    : images.checkmark_selected
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.toggleSelectContacts(elem, index)
                             }
-                        />
-                        {this.renderProfileImage(elem.profileImage)}
-                        <View
                             style={{
-                                textAlign: 'center'
+                                flexDirection: 'row',
+                                height: 35,
+                                alignItems: 'center'
                             }}
+                            key={index}
                         >
-                            <Text
+                            <Image
+                                style={{ marginRight: 5 }}
+                                source={
+                                    !elem.selected
+                                        ? images.checkmark_normal
+                                        : images.checkmark_selected
+                                }
+                            />
+                            {this.renderProfileImage(elem.profileImage)}
+                            <View
                                 style={{
-                                    fontSize: 14,
-                                    color: 'rgba(0,0,0,0.6)'
+                                    textAlign: 'center'
                                 }}
                             >
-                                {elem.name}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
+                                <Text
+                                    style={{
+                                        fontSize: 14,
+                                        color: 'rgba(0,0,0,0.6)'
+                                    }}
+                                >
+                                    {elem.name}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 );
             });
         } else {
@@ -225,10 +232,15 @@ export default class LocalContactModal extends React.Component {
                             backgroundColor: 'rgba(0,0,0,0.3)'
                         }}
                     >
-                        <ScrollView style={{ flex: 1 }}>
-                            <View style={styles.allContacts}>
-                                {this.renderContacts()}
-                            </View>
+                        <ScrollView
+                            style={{
+                                flex: 1,
+                                backgroundColor: '#fff',
+                                paddingVertical: 5,
+                                paddingHorizontal: 70
+                            }}
+                        >
+                            {this.renderContacts()}
                         </ScrollView>
                     </View>
                     <View>

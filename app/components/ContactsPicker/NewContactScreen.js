@@ -97,7 +97,8 @@ class NewContactScreen extends React.Component {
     };
     setEmail = (email, index, key) => {
         let getEmail = [...this.state.emailAddress];
-        getEmail[index] = email;
+        // console.log('email set ', getEmail, email, index, key);
+        getEmail[index][key] = email;
         this.setState({ emailAddress: [...getEmail] });
     };
 
@@ -167,8 +168,12 @@ class NewContactScreen extends React.Component {
             } else {
                 emailValue = info[key];
             }
-
-            // console.log('all th data ', info, phValue, key, emailValue);
+            // if (type === 'email') {
+            //     console.log('email ', info);
+            //     console.log('key ', key);
+            //     console.log('emailValue ', emailValue);
+            //     console.log('state email ', this.state.emailAddress);
+            // }
 
             return (
                 <View
@@ -185,8 +190,11 @@ class NewContactScreen extends React.Component {
                                 style={styles.emailIcon}
                             />
                         )}
-
-                        <Text style={styles.labelStyle}>{key}</Text>
+                        {type === 'phNumber' ? (
+                            <Text style={styles.labelStyle}>{key}</Text>
+                        ) : (
+                            <Text style={styles.labelStyle}>Email</Text>
+                        )}
 
                         {type === 'phNumber' ? (
                             <TouchableOpacity
@@ -235,8 +243,8 @@ class NewContactScreen extends React.Component {
                             <TextInput
                                 style={styles.inputNumber}
                                 value={emailValue}
+                                keyboardType="email-address"
                                 autoCorrect={false}
-                                maxLength={15}
                                 blurOnSubmit={false}
                                 onChangeText={value => {
                                     this.setEmail(value, index, key);

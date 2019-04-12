@@ -260,7 +260,10 @@ export default class ContactDetailsScreen extends React.Component {
                 }
                 this.setState({ loading: false });
             })
-            .catch(err => console.log('Cannot set favorite', err));
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('Cannot set favorite', err);
+            });
     };
 
     removeFavourite = () => {
@@ -458,7 +461,7 @@ export default class ContactDetailsScreen extends React.Component {
             bodyParse.users.push(this.props.contact.id);
         }
 
-        console.log('delete this contact ', bodyParse);
+        console.log('delete this contact ', bodyParse, this.props.contact.id);
 
         Conversation.deleteContacts(bodyParse)
             .then(value => {
@@ -466,6 +469,8 @@ export default class ContactDetailsScreen extends React.Component {
                     let updateContacts = contactsData.filter(elem => {
                         return elem.userId !== this.props.contact.id;
                     });
+
+                    console.log('on deleting contacts ', updateContacts);
 
                     Contact.saveContacts(updateContacts).then(allNewContact => {
                         this.props.updateContactScreen();

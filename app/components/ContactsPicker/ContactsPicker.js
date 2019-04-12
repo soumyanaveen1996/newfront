@@ -589,7 +589,7 @@ class ContactsPicker extends React.Component {
         //     section => section.title
         // );
 
-        console.log('contact list ', this.state.contactsData);
+        // console.log('contact list ', this.state.contactsData);
 
         if (this.state.contactsData) {
             return (

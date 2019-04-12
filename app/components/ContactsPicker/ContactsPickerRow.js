@@ -35,7 +35,7 @@ export default class ContactsPickerRow extends React.Component {
     };
 
     getContactEmail = contact => {
-        console.log('emails ', contact);
+        // console.log('emails ', contact);
 
         if (
             contact.emails &&
