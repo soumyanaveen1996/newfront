@@ -204,7 +204,7 @@ export default class ImageCacheManager {
      */
     download(cache) {
         const { uri, headers } = cache;
-        console.log('Profile Image downloading file: ', uri, headers);
+        // console.log('Profile Image downloading file: ', uri, headers);
         if (!cache.downloading) {
             const path = this.getPath(uri);
             this.notifyImageDownloadStarted(uri);
@@ -217,11 +217,11 @@ export default class ImageCacheManager {
             cache.task
                 .then(response => {
                     cache.downloading = false;
-                    console.log(
-                        'Profile Image downloading file: ',
-                        response.respInfo.status,
-                        path
-                    );
+                    // console.log(
+                    //     'Profile Image downloading file: ',
+                    //     response.respInfo.status,
+                    //     path
+                    // );
                     if (
                         response.respInfo.status >= 200 &&
                         response.respInfo.status < 300

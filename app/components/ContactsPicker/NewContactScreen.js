@@ -64,6 +64,7 @@ class NewContactScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            user: {},
             profileImage: '',
             reloadProfileImage: '',
             userId: this.props.userId,
@@ -82,7 +83,12 @@ class NewContactScreen extends React.Component {
         this.mounted = true;
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        Auth.getUser().then(data => {
+            console.log('all data for user', data);
+            this.setState({ user: { ...data } });
+        });
+    }
 
     componentWillUnmount() {
         this.mounted = false;
@@ -99,7 +105,8 @@ class NewContactScreen extends React.Component {
     };
     setEmail = (email, index, key) => {
         let getEmail = [...this.state.emailAddress];
-        getEmail[index] = email;
+        // console.log('email set ', getEmail, email, index, key);
+        getEmail[index][key] = email;
         this.setState({ emailAddress: [...getEmail] });
     };
 
@@ -169,8 +176,12 @@ class NewContactScreen extends React.Component {
             } else {
                 emailValue = info[key];
             }
-
-            // console.log('all th data ', info, phValue, key, emailValue);
+            // if (type === 'email') {
+            //     console.log('email ', info);
+            //     console.log('key ', key);
+            //     console.log('emailValue ', emailValue);
+            //     console.log('state email ', this.state.emailAddress);
+            // }
 
             return (
                 <View
@@ -187,8 +198,11 @@ class NewContactScreen extends React.Component {
                                 style={styles.emailIcon}
                             />
                         )}
-
-                        <Text style={styles.labelStyle}>{key}</Text>
+                        {type === 'phNumber' ? (
+                            <Text style={styles.labelStyle}>{key}</Text>
+                        ) : (
+                            <Text style={styles.labelStyle}>Email</Text>
+                        )}
 
                         {type === 'phNumber' ? (
                             <TouchableOpacity
@@ -237,8 +251,8 @@ class NewContactScreen extends React.Component {
                             <TextInput
                                 style={styles.inputNumber}
                                 value={emailValue}
+                                keyboardType="email-address"
                                 autoCorrect={false}
-                                maxLength={15}
                                 blurOnSubmit={false}
                                 onChangeText={value => {
                                     this.setEmail(value, index, key);
@@ -531,18 +545,51 @@ class NewContactScreen extends React.Component {
             ]
         };
 
-        console.log('save sata ', saveLocalContactData);
+        console.log('save sata ', saveLocalContactData, this.state.userId);
         AddLocalContacts(saveLocalContactData)
             .then(elem => {
                 console.log('data ', elem);
                 // Actions.newContactScreen({});
                 Store.dispatch(completeContactsLoad(false));
+                return Contact.fetchGrpcContacts(this.state.user);
+                // Contact.fetchGrpcContacts(this.state.user)
+                //     .then(contactsData => {
+                //         let updateContacts = contactsData.contacts.concat(
+                //             contactsData.localContacts
+                //         );
+                //         console.log('on deleting contacts ', updateContacts);
+
+                //         Contact.saveContacts(updateContacts).then(
+                //             allNewContact => {
+                //                 this.props.updateContactScreen();
+                //             }
+                //         );
+                //         Actions.pop();
+                //         setTimeout(() => {
+                //             Actions.refresh({
+                //                 key: Math.random()
+                //             });
+                //         }, 100);
+                //     })
+                //     .catch(err => {
+                //         console.log('error in fecthing new contact list ', err);
+                //     });
+            })
+            .then(contactsData => {
+                console.log('all contact ', contactsData);
+                let frontmContact = [...contactsData.data.contacts];
+                let localContacts = [...contactsData.data.localContacts];
+                let updateContacts = frontmContact.concat(localContacts);
+
+                console.log('on adding contacts ', updateContacts);
+
+                // Contact.saveContacts(updateContacts);
                 Actions.pop();
                 setTimeout(() => {
                     Actions.refresh({
                         key: Math.random()
                     });
-                }, 500);
+                }, 100);
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);
@@ -550,12 +597,17 @@ class NewContactScreen extends React.Component {
     };
 
     render() {
+        // console.log('all the things ', this.state, this.props);
+
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={styles.mainViewContainer}>
                         <Loader loading={this.state.loading} />
                         <PhoneTypeModal
+                            currentValue={
+                                this.state.phoneNumbers[this.state.currentIndex]
+                            }
                             currentIndex={this.state.currentIndex}
                             isVisible={this.state.inviteModalVisible}
                             setVisible={this.setInviteVisible.bind(this)}

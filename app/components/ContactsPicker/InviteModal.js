@@ -150,7 +150,6 @@ export default class InviteModal extends React.Component {
     };
 
     createNewContact = () => {
-        // console.log('move to create new contact Screen');
         Actions.newContactScreen();
         this.props.setVisible(false);
     };

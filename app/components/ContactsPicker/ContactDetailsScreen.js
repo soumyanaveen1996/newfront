@@ -260,7 +260,10 @@ export default class ContactDetailsScreen extends React.Component {
                 }
                 this.setState({ loading: false });
             })
-            .catch(err => console.log('Cannot set favorite', err));
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('Cannot set favorite', err);
+            });
     };
 
     removeFavourite = () => {
@@ -322,24 +325,84 @@ export default class ContactDetailsScreen extends React.Component {
         );
     };
 
-    renderActionButtons() {
-        if (!this.props.contact.isWaitingForConfirmation) {
-            return (
-                <View style={styles.actionAreaCD}>
+    checkFavourite = () => {
+        if (
+            this.props.contact.contactType &&
+            this.props.contact.contactType !== 'Personal'
+        ) {
+            if (this.state.isFavourite) {
+                return (
                     <TouchableOpacity
                         style={styles.actionButtonCD}
-                        onPress={this.startChat.bind(this)}
+                        onPress={() => {
+                            this.removeFavourite();
+                        }}
                     >
                         <View
                             style={[
                                 styles.actionIconCD,
-                                { backgroundColor: GlobalColors.sideButtons }
+                                { backgroundColor: GlobalColors.darkGray }
                             ]}
                         >
-                            <Icon name="chat" size={16} color={'white'} />
+                            <Image
+                                source={images.add_remove_favourite}
+                                style={{ width: 32, height: 32 }}
+                            />
                         </View>
-                        <Text>Chat</Text>
+                        <Text>Remove Favourite</Text>
                     </TouchableOpacity>
+                );
+            } else {
+                return (
+                    <TouchableOpacity
+                        style={styles.actionButtonCD}
+                        onPress={() => {
+                            this.addToFavourite();
+                        }}
+                    >
+                        <View
+                            style={[
+                                styles.actionIconCD,
+                                { backgroundColor: GlobalColors.darkGray }
+                            ]}
+                        >
+                            <Image
+                                source={images.add_remove_favourite}
+                                style={{ width: 32, height: 32 }}
+                            />
+                        </View>
+                        <Text>Favourite</Text>
+                    </TouchableOpacity>
+                );
+            }
+        }
+    };
+
+    renderActionButtons() {
+        if (!this.props.contact.isWaitingForConfirmation) {
+            return (
+                <View style={styles.actionAreaCD}>
+                    {this.props.contact.contactType &&
+                    this.props.contact.contactType !== 'Personal' ? (
+                            <TouchableOpacity
+                                style={styles.actionButtonCD}
+                                onPress={this.startChat.bind(this)}
+                            >
+                                <View
+                                    style={[
+                                        styles.actionIconCD,
+                                        {
+                                            backgroundColor:
+                                            GlobalColors.sideButtons
+                                        }
+                                    ]}
+                                >
+                                    <Icon name="chat" size={16} color={'white'} />
+                                </View>
+                                <Text>Chat</Text>
+                            </TouchableOpacity>
+                        ) : null}
+
                     <TouchableOpacity
                         style={styles.actionButtonCD}
                         onPress={this.callContact.bind(this)}
@@ -354,47 +417,7 @@ export default class ContactDetailsScreen extends React.Component {
                         </View>
                         <Text>Call</Text>
                     </TouchableOpacity>
-                    {this.state.isFavourite ? (
-                        <TouchableOpacity
-                            style={styles.actionButtonCD}
-                            onPress={() => {
-                                this.removeFavourite();
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.actionIconCD,
-                                    { backgroundColor: GlobalColors.darkGray }
-                                ]}
-                            >
-                                <Image
-                                    source={images.add_remove_favourite}
-                                    style={{ width: 32, height: 32 }}
-                                />
-                            </View>
-                            <Text>Remove Favourite</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity
-                            style={styles.actionButtonCD}
-                            onPress={() => {
-                                this.addToFavourite();
-                            }}
-                        >
-                            <View
-                                style={[
-                                    styles.actionIconCD,
-                                    { backgroundColor: GlobalColors.darkGray }
-                                ]}
-                            >
-                                <Image
-                                    source={images.add_remove_favourite}
-                                    style={{ width: 32, height: 32 }}
-                                />
-                            </View>
-                            <Text>Favourite</Text>
-                        </TouchableOpacity>
-                    )}
+                    {this.checkFavourite()}
                 </View>
             );
         } else {
@@ -458,7 +481,7 @@ export default class ContactDetailsScreen extends React.Component {
             bodyParse.users.push(this.props.contact.id);
         }
 
-        console.log('delete this contact ', bodyParse);
+        console.log('delete this contact ', bodyParse, this.props.contact.id);
 
         Conversation.deleteContacts(bodyParse)
             .then(value => {
@@ -466,6 +489,8 @@ export default class ContactDetailsScreen extends React.Component {
                     let updateContacts = contactsData.filter(elem => {
                         return elem.userId !== this.props.contact.id;
                     });
+
+                    console.log('on deleting contacts ', updateContacts);
 
                     Contact.saveContacts(updateContacts).then(allNewContact => {
                         this.props.updateContactScreen();
@@ -651,6 +676,7 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
+        // console.log('thhhhhhhhhhhhhhhh', this.props.contact);
         if (!this.props.contact) {
             return <View />;
         }
@@ -661,9 +687,14 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
+                {/* {this.props.contact.contactType &&
+                    this.props.contact.contactType !== 'Personal' && ( */}
                 <View style={{ alignItems: 'center' }}>
                     <TouchableOpacity
-                        style={{ flexDirection: 'row', marginVertical: 40 }}
+                        style={{
+                            flexDirection: 'row',
+                            marginVertical: 40
+                        }}
                         onPress={this.deleteContact.bind(this)}
                     >
                         <Image source={images.delete_icon_trash} />
@@ -679,6 +710,8 @@ export default class ContactDetailsScreen extends React.Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
+                {/* )} */}
+
                 <CallModal
                     isVisible={this.state.modalVisible}
                     setVisible={this.setModalVisible.bind(this)}
