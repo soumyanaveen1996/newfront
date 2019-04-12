@@ -103,7 +103,7 @@ class ManageContacts extends React.Component {
     }
 
     componentDidMount() {
-        this.props.setCurrentScene(ROUTER_SCENE_KEYS.addParticipants);
+        this.props.setCurrentScene(ROUTER_SCENE_KEYS.manageContacts);
         if (this.props.allContacts) {
             const allContacts = _.map(this.props.allContacts, contact => {
                 return {
@@ -216,8 +216,7 @@ class ManageContacts extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.appState.currentScene ===
-            ROUTER_SCENE_KEYS.addParticipants
+            nextProps.appState.currentScene === ROUTER_SCENE_KEYS.manageContacts
         );
     }
 

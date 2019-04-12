@@ -149,7 +149,8 @@ class ContactsPicker extends React.Component {
             selectedContacts: [],
             inviteModalVisible: false,
             userInfo: {},
-            userId: ''
+            userId: '',
+            searchString: ''
         };
     }
 
@@ -169,6 +170,10 @@ class ContactsPicker extends React.Component {
     }
 
     async componentDidMount() {
+        EventEmitter.addListener(
+            AuthEvents.tabSelected,
+            this.tabSelected.bind(this)
+        );
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
             inviteUser: this.inviteUser.bind(this)
@@ -233,6 +238,12 @@ class ContactsPicker extends React.Component {
         // }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
+    }
+
+    tabSelected(scene) {
+        if (scene === 'Contacts') {
+            this.setState({ searchString: '' });
+        }
     }
 
     showConnectionMessage = connectionType => {
@@ -336,7 +347,7 @@ class ContactsPicker extends React.Component {
         } else {
             contactsList = this.dataSource.getFilteredData(text);
         }
-        this.setState({ contactsData: contactsList });
+        this.setState({ contactsData: contactsList, searchString: text });
     }
 
     onContactSelected(contact) {
@@ -507,6 +518,7 @@ class ContactsPicker extends React.Component {
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
+                    value={this.state.searchString}
                 />
             </View>
         );

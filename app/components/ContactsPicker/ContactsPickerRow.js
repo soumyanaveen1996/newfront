@@ -10,6 +10,8 @@ import { GlobalColors } from '../../config/styles';
 import Icon from 'react-native-vector-icons';
 import images from '../../images';
 
+const R = require('ramda');
+
 export default class ContactsPickerRow extends React.Component {
     onItemPressed() {
         if (this.props.onContactSelected) {
@@ -37,11 +39,24 @@ export default class ContactsPickerRow extends React.Component {
     getContactEmail = contact => {
         // console.log('emails ', contact);
 
-        if (
-            contact.emails &&
-            contact.emails.length > 0 &&
-            typeof contact.emails[0].email === 'string'
-        ) {
+        // https://ramdajs.com/docs/#pathOr
+
+        const homeEmail = R.pathOr(
+            null,
+            ['emails', 0, 'email', 'home'],
+            contact
+        );
+        const workEmail = R.pathOr(
+            null,
+            ['emails', 0, 'email', 'work'],
+            contact
+        );
+        const generalEmail =
+            typeof R.pathOr(null, ['emails', 0, 'email'], contact) === 'string'
+                ? R.pathOr(null, ['emails', 0, 'email'], contact)
+                : null;
+
+        if (generalEmail) {
             return (
                 <Text style={styles.contactItemEmail}>
                     {contact.emails[0].email}
@@ -49,44 +64,11 @@ export default class ContactsPickerRow extends React.Component {
             );
         }
 
-        if (
-            contact.emails &&
-            contact.emails.length > 0 &&
-            contact.emails[0].email.work &&
-            contact.emails[0].email.work !== ''
-        ) {
-            return (
-                <Text style={styles.contactItemEmail}>
-                    {contact.emails[0].email.work}
-                </Text>
-            );
+        if (workEmail) {
+            return <Text style={styles.contactItemEmail}>{workEmail}</Text>;
         }
-        if (
-            contact.emails &&
-            contact.emails.length > 0 &&
-            contact.emails[0].email.home &&
-            contact.emails[0].email.home !== ''
-        ) {
-            return (
-                <Text style={styles.contactItemEmail}>
-                    {contact.emails[0].email.home}
-                </Text>
-            );
-        }
-
-        if (
-            contact.emails &&
-            contact.emails.length > 0 &&
-            contact.emails[0].email.home &&
-            contact.emails[0].email.home !== '' &&
-            contact.emails[0].email.work &&
-            contact.emails[0].email.work !== ''
-        ) {
-            return (
-                <Text style={styles.contactItemEmail}>
-                    {contact.emails[0].email.work}
-                </Text>
-            );
+        if (homeEmail) {
+            return <Text style={styles.contactItemEmail}>{homeEmail}</Text>;
         }
     };
 

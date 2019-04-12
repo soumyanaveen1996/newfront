@@ -151,6 +151,18 @@ class ChannelAdminScreen extends React.Component {
         Actions.pop();
     }
 
+    setFavourite() {
+        const data = {
+            type: 'channel',
+            channelConvId: this.channel.channelId,
+            channelName: this.channel.channelName,
+            action: 'add',
+            userDomain: this.channel.userDomain
+        };
+
+        Conversation.setFavorite(data);
+    }
+
     //PARTICIPANTS
     manageParticipants() {
         Actions.manageContacts({
@@ -249,26 +261,42 @@ class ChannelAdminScreen extends React.Component {
     }
 
     deleteChannel() {
-        this.setState({ uiDisabled: true }, () => {
-            Channel.deleteChannel(this.channel)
-                .then(() => {
-                    return Conversation.deleteChannelConversation(
-                        this.channel.channelId
-                    );
-                })
-                .then(() => {
-                    return MessageDAO.deleteBotMessages(this.channel.channelId);
-                })
-                .then(() => {
-                    Actions.pop();
-                })
-                .catch(e => {
-                    this.refs.toast.show(
-                        'Unable to delete channel',
-                        DURATION.LENGTH_SHORT
-                    );
-                });
-        });
+        Alert.alert(
+            'Delete channel',
+            'Are you sure you want to delete this channel?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                        Channel.deleteChannel(this.channel)
+                            .then(() => {
+                                return Conversation.deleteChannelConversation(
+                                    this.channel.channelId
+                                );
+                            })
+                            .then(() => {
+                                return MessageDAO.deleteBotMessages(
+                                    this.channel.channelId
+                                );
+                            })
+                            .then(() => {
+                                Actions.pop();
+                            })
+                            .catch(e => {
+                                this.refs.toast.show(
+                                    'Unable to delete channel',
+                                    DURATION.LENGTH_SHORT
+                                );
+                            });
+                    }
+                }
+            ]
+        );
     }
 
     renderTopArea() {
@@ -298,6 +326,7 @@ class ChannelAdminScreen extends React.Component {
                 <TouchableOpacity
                     style={styles.adminRow}
                     disabled={this.state.uiDisabled}
+                    onPress={this.setFavourite.bind(this)}
                 >
                     <Text style={styles.adminH2}>Add to favourite</Text>
                 </TouchableOpacity>

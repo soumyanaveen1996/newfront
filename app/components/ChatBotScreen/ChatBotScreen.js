@@ -1905,9 +1905,13 @@ class ChatBotScreen extends React.Component {
 
     pickContact() {
         Keyboard.dismiss();
-        Actions.addParticipants({
-            onSelected: this.shareContacts.bind(this),
-            title: 'Share contacts'
+        // Actions.addParticipants({
+        //     onSelected: this.shareContacts.bind(this),
+        //     title: 'Share contacts'
+        // });
+        Actions.manageContacts({
+            title: 'Share contacts',
+            onSelected: this.shareContacts.bind(this)
         });
     }
 

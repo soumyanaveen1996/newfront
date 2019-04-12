@@ -137,6 +137,15 @@ const getGrpcService = name => {
 };
 
 const convertResponse = response => {
+    if (!response) {
+        return {
+            error: 0,
+            data: {
+                error: 0,
+                content: []
+            }
+        };
+    }
     const content = R.pathOr([], ['data', 'content'], response);
     const objContent = content.map(str => JSON.parse(str));
 
