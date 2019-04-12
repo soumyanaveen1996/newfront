@@ -25,7 +25,7 @@ const stylesheet = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: GlobalColors.borderBottom,
         height: 40,
-        marginTop: 3
+        marginVertical: 3
     },
     searchIcon: {
         paddingHorizontal: 10
