@@ -411,7 +411,8 @@ export default class ConversationContext {
         });
 
     static _getStorageKey = function(botContext) {
-        return 'conversation-' + botContext.getBotKey();
+        const key = botContext.getBotKey();
+        return 'conversation-' + key;
     };
 
     static _getStorageKeyForId = function(id) {
@@ -422,6 +423,7 @@ export default class ConversationContext {
         if (!conversationContext) {
             return;
         }
+
         if (conversationContext.onChannels.length > 0) {
             return conversationContext.onChannels[0].channelName;
         } else {

@@ -409,7 +409,7 @@ export default class Contact {
                         resolve();
                     }
                 })
-                .catch(reject);
+                .catch(reject(Error('Unable to Get Contacts from Server')));
         });
 
     static getUserDetails = (user, userId) => {

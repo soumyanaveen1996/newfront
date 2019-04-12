@@ -109,7 +109,7 @@ const getMessageDataFor = botKey =>
     new Promise((resolve, reject) => {
         let message = null;
         let totalUnread = 0;
-        let lastMessageDate = new Date('1970');
+        let lastMessageDate = new Date();
         loadLastMessage(botKey)
             .then(messages => {
                 if (messages.length > 0) {
