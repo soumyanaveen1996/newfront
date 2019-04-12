@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     TextInput,
     Image,
-    NativeModules
+    NativeModules,
+    FlatList
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
@@ -103,7 +104,8 @@ class AddContacts extends React.Component {
         this.state = {
             contacts: [],
             loading: false,
-            searchText: ''
+            searchText: '',
+            selectedContacts: this.props.channels.participants
         };
     }
 
@@ -123,23 +125,23 @@ class AddContacts extends React.Component {
         );
     }
 
-    renderRow(elem) {
+    renderRow = ({ item, index }) => {
         return (
             <TouchableOpacity
-                onPress={() => this.toggleSelectContacts(elem)}
+                onPress={() => this.addContact(item, index)}
                 style={styles.contactContainer}
-                key={elem.userId}
+                key={index}
             >
                 <Image
                     style={{ marginRight: 10 }}
                     source={
-                        !elem.selected
+                        !item.selected
                             ? images.checkmark_normal
                             : images.checkmark_selected
                     }
                 />
                 <ProfileImage
-                    uuid={elem.userId}
+                    uuid={item.userId}
                     placeholder={images.user_image}
                     style={ContactStyles.contactItemImage}
                     placeholderStyle={ContactStyles.contactItemImage}
@@ -152,24 +154,24 @@ class AddContacts extends React.Component {
                         flex: 1
                     }}
                 >
-                    <Text style={styles.participantName}>{elem.userName}</Text>
+                    <Text style={styles.participantName}>{item.userName}</Text>
                     <Text style={styles.participantEmail}>
-                        {elem.emailAddress}
+                        {item.emailAddress}
                     </Text>
                 </View>
             </TouchableOpacity>
         );
-    }
+    };
 
-    renderSelectedRow(elem) {
+    renderSelectedRow = ({ item, index }) => {
         return (
             <View style={styles.selectedChip}>
                 <RNChipView
-                    title={elem.userName}
+                    title={item.userName}
                     titleStyle={styles.chipFont}
                     avatar={
                         <ProfileImage
-                            uuid={elem.userId}
+                            uuid={item.userId}
                             placeholder={images.user_image}
                             style={selectedAvatarStyle}
                             placeholderStyle={selectedAvatarStyle}
@@ -186,33 +188,38 @@ class AddContacts extends React.Component {
                     borderRadius={6}
                     height={30}
                     onPress={() => {
-                        this.toggleSelectContacts(elem);
+                        this.removeContact(item, index);
                     }}
                 />
             </View>
         );
-    }
+    };
 
     selectContacts = () => {
-        if (this.props.onSelected) {
-            const selectedContacts = _.filter(this.state.contacts, contact => {
-                return contact.selected;
-            });
-            const users = _.map(selectedContacts, contact => {
-                return contact.userId;
-            });
-            this.props.onSelected(users);
-        }
-        this.props.setParticipants(this.state.contacts);
+        this.props.setParticipants(this.state.selectedContacts);
         Actions.pop();
     };
 
-    toggleSelectContacts = elem => {
-        let array = [...this.state.contacts];
-        const index = R.findIndex(R.propEq('userId', elem.userId))(array);
-        array[index].selected = !array[index].selected;
+    addContact = (elem, index) => {
+        this.state.contacts[index].selected = true;
+        this.state.selectedContacts.push(this.state.contacts[index]);
         this.setState({
-            contacts: array
+            contacts: this.state.contacts,
+            selectedContacts: this.state.selectedContacts
+        });
+    };
+
+    removeContact = (elem, index) => {
+        this.state.selectedContacts.splice(index, 1);
+        const ind = _.findIndex(this.state.contacts, contact => {
+            return contact.userId === elem.userId;
+        });
+        if (ind !== -1) {
+            this.state.contacts[ind].selected = false;
+        }
+        this.setState({
+            contacts: this.state.contacts,
+            selectedContacts: this.state.selectedContacts
         });
     };
 
@@ -247,6 +254,14 @@ class AddContacts extends React.Component {
                 return this.grpcSearch(user, searchString);
             })
             .then(users => {
+                _.map(this.state.selectedContacts, contact => {
+                    let found = _.find(users, user => {
+                        return user.userId === contact.userId;
+                    });
+                    if (found) {
+                        found.selected = true;
+                    }
+                });
                 this.setState({ contacts: users });
             });
     }
@@ -288,66 +303,39 @@ class AddContacts extends React.Component {
             borderRadius: 15
         };
         const allContacts = this.state.contacts;
-        const selectedContacts = this.state.contacts.filter((elem, index) => {
-            return elem && elem.selected;
-        });
+        const selectedContacts = this.state.selectedContacts;
 
         return (
             <SafeAreaView style={styles.addContactsContainer}>
-                {this.renderSearchBar()}
-                <View style={styles.selectContactContainer}>
+                <View style={{ flex: 1, overflow: 'hidden' }}>
+                    {this.renderSearchBar()}
+
                     {selectedContacts && selectedContacts.length > 0 ? (
-                        <Text
-                            style={{
-                                paddingHorizontal: 10,
-                                paddingTop: 10,
-                                paddingBottom: 10,
-                                color: '#4A4A4A'
-                            }}
-                        >
-                            Selected
-                        </Text>
+                        <View style={styles.selectContactContainer}>
+                            <Text
+                                style={{
+                                    paddingHorizontal: 10,
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    color: '#4A4A4A'
+                                }}
+                            >
+                                Selected
+                            </Text>
+                            <FlatList
+                                data={selectedContacts}
+                                renderItem={this.renderSelectedRow}
+                                extraData={this.state}
+                            />
+                        </View>
                     ) : null}
-                    <ScrollView>
-                        <View
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'flex-start'
-                            }}
-                        >
-                            {selectedContacts.map(elem => {
-                                return this.renderSelectedRow(elem);
-                            })}
-                        </View>
-                    </ScrollView>
+                    <FlatList
+                        data={allContacts}
+                        renderItem={this.renderRow}
+                        extraData={this.state}
+                    />
                 </View>
-                <View style={styles.participantsContainer}>
-                    <ScrollView
-                        style={{
-                            backgroundColor: 'white'
-                        }}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: 'white',
-                                alignItems: 'center',
-                                padding: 5
-                            }}
-                        >
-                            {allContacts.map((elem, index) => {
-                                if (elem && !elem.selected) {
-                                    return this.renderRow(elem);
-                                }
-                            })}
-                        </View>
-                    </ScrollView>
-                </View>
-                <View
-                    style={{
-                        ...styleButton
-                    }}
-                >
+                <View>
                     <TouchableOpacity
                         style={styles.buttonContainer}
                         onPress={this.selectContacts}
