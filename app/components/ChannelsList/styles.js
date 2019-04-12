@@ -140,7 +140,7 @@ export default StyleSheet.create({
         marginTop: 3
     },
     searchIcon: {
-        padding: 10
+        margin: 10
     },
 
     input: {
@@ -177,6 +177,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
+        alignSelf: 'center',
         justifyContent: 'center',
         marginVertical: 10,
         shadowOffset: { width: 0.5, height: 1 },
@@ -478,11 +479,11 @@ export default StyleSheet.create({
         paddingLeft: 20
     },
     addContactsContainer: {
-        backgroundColor: GlobalColors.white,
-        flex: 1
+        height: '100%',
+        justifyContent: 'space-between',
+        backgroundColor: GlobalColors.white
     },
     contactContainer: {
-        backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         width: SCREEN_WIDTH - 40,
         height: 60,
@@ -502,18 +503,20 @@ export default StyleSheet.create({
     },
     selectContactContainer: {
         maxHeight: hp('20%'),
-        backgroundColor: '#f4f4f4'
+        backgroundColor: '#f4f4f4',
+        alignItems: 'stretch'
     },
     selectedChip: {
         paddingBottom: wp('2%'),
-        paddingHorizontal: wp('2%')
+        paddingHorizontal: wp('2%'),
+        alignSelf: 'flex-start'
     },
     chipFont: {
         fontSize: wp('3.5%'),
         color: 'rgba(102,102,102,1)'
     },
     participantsContainer: {
-        height: hp('50%')
+        flexGrow: 1
     },
     teamContainer: {
         height: hp('70%')
