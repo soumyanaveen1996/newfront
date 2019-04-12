@@ -39,6 +39,8 @@ import { connect } from 'react-redux';
 import { uploadImage } from '../../redux/actions/UserActions';
 import LocalContactModal from './LocalContactModal';
 import { AddLocalContacts } from '../../api/ContactServices';
+import Store from '../../redux/store/configureStore';
+import { completeContactsLoad } from '../../redux/actions/UserActions';
 
 class NewContactScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -534,12 +536,13 @@ class NewContactScreen extends React.Component {
             .then(elem => {
                 console.log('data ', elem);
                 // Actions.newContactScreen({});
+                Store.dispatch(completeContactsLoad(false));
                 Actions.pop();
                 setTimeout(() => {
                     Actions.refresh({
                         key: Math.random()
                     });
-                }, 100);
+                }, 500);
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);
