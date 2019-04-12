@@ -956,7 +956,8 @@ class ChatBotScreen extends React.Component {
     sendCardAction(action) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
-        message.cardAction(action);
+        // message.cardAction(action);
+        message.stringMessage(action);
         return this.sendMessage(message);
     }
 
