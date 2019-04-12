@@ -169,6 +169,10 @@ class ContactsPicker extends React.Component {
             });
     }
 
+    componentWillReceiveProps(nextProps) {
+        console.log('next props ', nextProps);
+    }
+
     async componentDidMount() {
         EventEmitter.addListener(
             AuthEvents.tabSelected,

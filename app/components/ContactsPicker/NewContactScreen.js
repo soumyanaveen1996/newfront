@@ -64,6 +64,7 @@ class NewContactScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            user: {},
             profileImage: '',
             reloadProfileImage: '',
             userId: this.props.userId,
@@ -82,7 +83,12 @@ class NewContactScreen extends React.Component {
         this.mounted = true;
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        Auth.getUser().then(data => {
+            console.log('all data for user', data);
+            this.setState({ user: { ...data } });
+        });
+    }
 
     componentWillUnmount() {
         this.mounted = false;
@@ -539,18 +545,51 @@ class NewContactScreen extends React.Component {
             ]
         };
 
-        console.log('save sata ', saveLocalContactData);
+        console.log('save sata ', saveLocalContactData, this.state.userId);
         AddLocalContacts(saveLocalContactData)
             .then(elem => {
                 console.log('data ', elem);
                 // Actions.newContactScreen({});
                 Store.dispatch(completeContactsLoad(false));
+                return Contact.fetchGrpcContacts(this.state.user);
+                // Contact.fetchGrpcContacts(this.state.user)
+                //     .then(contactsData => {
+                //         let updateContacts = contactsData.contacts.concat(
+                //             contactsData.localContacts
+                //         );
+                //         console.log('on deleting contacts ', updateContacts);
+
+                //         Contact.saveContacts(updateContacts).then(
+                //             allNewContact => {
+                //                 this.props.updateContactScreen();
+                //             }
+                //         );
+                //         Actions.pop();
+                //         setTimeout(() => {
+                //             Actions.refresh({
+                //                 key: Math.random()
+                //             });
+                //         }, 100);
+                //     })
+                //     .catch(err => {
+                //         console.log('error in fecthing new contact list ', err);
+                //     });
+            })
+            .then(contactsData => {
+                console.log('all contact ', contactsData);
+                let frontmContact = [...contactsData.data.contacts];
+                let localContacts = [...contactsData.data.localContacts];
+                let updateContacts = frontmContact.concat(localContacts);
+
+                console.log('on adding contacts ', updateContacts);
+
+                // Contact.saveContacts(updateContacts);
                 Actions.pop();
                 setTimeout(() => {
                     Actions.refresh({
                         key: Math.random()
                     });
-                }, 500);
+                }, 100);
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);
@@ -558,6 +597,8 @@ class NewContactScreen extends React.Component {
     };
 
     render() {
+        // console.log('all the things ', this.state, this.props);
+
         return (
             <SafeAreaView style={styles.safeAreaStyle}>
                 <ScrollView style={{ flex: 1 }}>
