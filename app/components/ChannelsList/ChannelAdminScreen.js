@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     Alert,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
@@ -103,7 +104,8 @@ class ChannelAdminScreen extends React.Component {
             participants: [],
             admins: [],
             pendingRequests: [],
-            uiDisabled: true
+            uiDisabled: true,
+            isLoading: true
         };
         this.channel = this.props.channel;
     }
@@ -133,12 +135,18 @@ class ChannelAdminScreen extends React.Component {
             })
             .then(adm => {
                 admins = adm;
-                this.setState({
+                return this.setState({
                     participants: participants,
                     admins: admins,
                     pendingRequests: pendingRequests,
                     uiDisabled: false
                 });
+            })
+            .then(() => {
+                this.setState({ isLoading: false });
+            })
+            .catch(() => {
+                Actions.pop();
             });
     }
 
@@ -453,16 +461,24 @@ class ChannelAdminScreen extends React.Component {
     render() {
         console.log('all channel details ======================', this.channel);
 
-        return (
-            <ScrollView style={styles.adminContainer}>
-                {this.renderTopArea()}
-                {this.renderSeparator(SeparatorSize.BIG)}
-                {this.renderAdminArea()}
-                {this.renderSeparator(SeparatorSize.BIG)}
-                {this.renderParticipantsArea()}
-                {this.renderToast()}
-            </ScrollView>
-        );
+        if (this.state.isLoading) {
+            return (
+                <ScrollView style={styles.adminContainer}>
+                    <ActivityIndicator size="small" />
+                </ScrollView>
+            );
+        } else {
+            return (
+                <ScrollView style={styles.adminContainer}>
+                    {this.renderTopArea()}
+                    {this.renderSeparator(SeparatorSize.BIG)}
+                    {this.renderAdminArea()}
+                    {this.renderSeparator(SeparatorSize.BIG)}
+                    {this.renderParticipantsArea()}
+                    {this.renderToast()}
+                </ScrollView>
+            );
+        }
     }
 }
 

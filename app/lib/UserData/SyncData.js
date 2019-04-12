@@ -9,16 +9,26 @@ import { InteractionManager } from 'react-native';
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 export const synchronizeUserData = async () => {
     try {
+        await Contact.refreshContacts();
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
-        }, 200);
+        }, 500);
         setTimeout(() => {
             Conversation.downloadRemoteConversations();
-        }, 500);
+        }, 1000);
         setTimeout(() => Channel.refreshChannels(), 1000);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1500);
-        setTimeout(() => Contact.refreshContacts(), 800);
-    } catch (error) {}
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+    } catch (error) {
+        console.error('CRITICAL:::::Unable to refresh Contacts from Server');
+        setTimeout(() => {
+            RemoteBotInstall.syncronizeBots();
+        }, 500);
+        setTimeout(() => {
+            Conversation.downloadRemoteConversations();
+        }, 1000);
+        setTimeout(() => Channel.refreshChannels(), 1000);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+    }
 };
 
 export const clearDataOnLogout = () => {

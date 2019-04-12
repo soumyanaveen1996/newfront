@@ -956,7 +956,8 @@ class ChatBotScreen extends React.Component {
     sendCardAction(action) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
-        message.cardAction(action);
+        // message.cardAction(action);
+        message.stringMessage(action);
         return this.sendMessage(message);
     }
 
@@ -1054,8 +1055,14 @@ class ChatBotScreen extends React.Component {
         return this.sendMessage(message);
     }
 
-    onButtonDone = selectedItem => {
-        this.sendButtonResponseMessage(selectedItem);
+    onButtonDone = (messageIndex, selectedItem) => {
+        console.log('>>>>>>>>', messageIndex);
+        console.log('>>>>>>>>1', this.state.messages[messageIndex]);
+        this.state.messages.splice(messageIndex, 1);
+        this.setState({ messages: this.state.messages }, () => {
+            console.log('>>>>>>>>mes', this.state.messages);
+            this.sendButtonResponseMessage(selectedItem);
+        });
     };
 
     replaceUpdatedMessage = updatedMessage => {
@@ -1296,7 +1303,7 @@ class ChatBotScreen extends React.Component {
         }
     } */
 
-    renderItem({ item }) {
+    renderItem({ item, index }) {
         const message = item.message;
         if (message.isMessageByBot()) {
             if (
@@ -1365,7 +1372,7 @@ class ChatBotScreen extends React.Component {
                         title={message.getMessage().title}
                         body={message.getMessage().body}
                         buttons={message.getMessage().buttons}
-                        onButtonClick={this.onButtonDone.bind()}
+                        onButtonClick={this.onButtonDone.bind(this, index)}
                     />
                 );
             } else if (
@@ -2338,45 +2345,6 @@ class ChatBotScreen extends React.Component {
             return <View />;
         }
 
-        let AllMessages = this.state.messages;
-
-        // TODO---> Sourav
-
-        // const { allContacts, messages } = this.state;
-        // const currentUserId = R.pathOr(
-        //     false,
-        //     ['currentUser', 'userId'],
-        //     this.state
-        // );
-        // const message_now_coll = R.takeLast(1, this.state.messages);
-        // // Remove Button Message For Add Contact Once the Contact has been added
-        // if (
-        //     message_now_coll.length > 0 &&
-        //     messages.length < 15 &&
-        //     currentUserId
-        // ) {
-        //     const message_now = message_now_coll[0];
-        //     const msgCreatedBy = message_now.message.getCreatedBy();
-        //     if (
-        //         msgCreatedBy !== currentUserId &&
-        //         allContacts.includes(msgCreatedBy)
-        //     ) {
-        //         const lastButOne = R.take(
-        //             this.state.messages.length - 1,
-        //             this.state.messages
-        //         );
-        //         const lastMessage = R.takeLast(1, this.state.messages);
-        //         const removeButtonMessages = lastButOne.filter(
-        //             msg =>
-        //                 msg.message.getMessageType() !==
-        //                 MessageTypeConstants.MESSAGE_TYPE_BUTTON
-        //         );
-        //         AllMessages = [...removeButtonMessages, ...lastMessage];
-        //     }
-        // }
-
-        // End TODO
-
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
@@ -2414,7 +2382,7 @@ class ChatBotScreen extends React.Component {
                                         this.chatList = list;
                                         this.checkForScrolling();
                                     }}
-                                    data={AllMessages}
+                                    data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}
                                     onLayout={this.onChatListLayout.bind(this)}
                                     refreshControl={

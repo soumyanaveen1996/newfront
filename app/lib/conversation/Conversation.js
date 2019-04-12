@@ -94,11 +94,19 @@ export default class Conversation {
                     }));
 
                     const allConversations = [...conversations, ...favorites];
-
                     // let conversations = res.data.content
                     const localConversations = await Conversation.getLocalConversations();
+
+                    console.log(
+                        'Sourav Logging:::: All Conversations',
+                        allConversations
+                    );
+
                     let promise = _.map(allConversations, conversation => {
-                        if (conversation.bot === 'im-bot') {
+                        if (
+                            conversation.onChannels.length > 0 &&
+                            conversation.bot.botId === 'im-bot'
+                        ) {
                             let botContext;
 
                             const devConv = localConversations.filter(
@@ -120,7 +128,7 @@ export default class Conversation {
                                 )
                                 .then(() => {
                                     const botScreen = BackgroundTaskProcessor.generateScreen(
-                                        conversation.bot,
+                                        conversation.bot.botId,
                                         conversation.conversationId
                                     );
                                     botContext = new BotContext(
@@ -130,13 +138,14 @@ export default class Conversation {
                                     return ConversationContext.createNewChannelConversationContext(
                                         botContext,
                                         user,
-                                        conversation.channel
+                                        conversation.onChannels[0],
+                                        conversation.conversationId
                                     );
                                 })
                                 .then(newChanConvContext => {
                                     ConversationContext.updateParticipants(
                                         newChanConvContext,
-                                        conversation.channel.participants
+                                        conversation.participants
                                     );
                                     return ConversationContext.saveConversationContext(
                                         newChanConvContext,
@@ -158,12 +167,15 @@ export default class Conversation {
                                         };
                                         return BackgroundTaskProcessor.processLastMessageonLoad(
                                             message,
-                                            conversation.bot,
+                                            conversation.bot.botId,
                                             conversation.conversationId
                                         );
                                     });
                                 });
-                        } else if (conversation.bot.botId === 'im-bot') {
+                        } else if (
+                            conversation.bot.botId === 'im-bot' &&
+                            conversation.onChannels.length === 0
+                        ) {
                             let botContext;
                             if (!conversation.contact) {
                                 return null;
