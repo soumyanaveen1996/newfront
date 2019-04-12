@@ -319,7 +319,7 @@ const stylesheet = StyleSheet.create({
     modal: Platform.select({
         ios: {
             width: wp('90%'),
-            height: hp('40%'),
+            height: hp('50%'),
             borderRadius: 10,
             flexDirection: 'column',
             backgroundColor: 'white',

@@ -86,6 +86,9 @@ export default class PhoneTypeModal extends React.Component {
                         onPress={value => {
                             this.setState({ selectValue: value });
                         }}
+                        initial={this.radio_props.findIndex(
+                            x => x.value === this.state.selectValue
+                        )}
                         borderWidth={1}
                         buttonInnerColor={'#00BDF2'}
                         buttonOuterColor={'#00BDF2'}

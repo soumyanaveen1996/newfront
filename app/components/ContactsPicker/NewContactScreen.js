@@ -605,6 +605,9 @@ class NewContactScreen extends React.Component {
                     <View style={styles.mainViewContainer}>
                         <Loader loading={this.state.loading} />
                         <PhoneTypeModal
+                            currentValue={
+                                this.state.phoneNumbers[this.state.currentIndex]
+                            }
                             currentIndex={this.state.currentIndex}
                             isVisible={this.state.inviteModalVisible}
                             setVisible={this.setInviteVisible.bind(this)}
