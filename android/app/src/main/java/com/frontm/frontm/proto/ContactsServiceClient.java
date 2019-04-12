@@ -132,13 +132,14 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
                 ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
 
                 EmailAddresses emailAddresses = EmailAddresses.newBuilder().
-                        setHome(emailAddressesDict.getString("home")).
-                        setWork(emailAddressesDict.getString("work")).build();
+                        setHome(emailAddressesDict.hasKey("home") ? emailAddressesDict.getString("home") : "").
+                        setWork(emailAddressesDict.hasKey("work") ? emailAddressesDict.getString("work") : "").build();
+
 
                 PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
-                        setLand(phoneNumbersDict.getString("land")).
-                        setMobile(phoneNumbersDict.getString("mobile")).
-                        setSatellite(phoneNumbersDict.getString("satellite")).build();
+                        setLand(phoneNumbersDict.hasKey("land") ? phoneNumbersDict.getString("land") : "").
+                        setMobile(phoneNumbersDict.hasKey("mobile") ? phoneNumbersDict.getString("mobile") : "").
+                        setSatellite(phoneNumbersDict.hasKey("satellite") ? phoneNumbersDict.getString("satellite") : "").build();
 
                 LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
                         .setEmailAddresses(emailAddresses)
