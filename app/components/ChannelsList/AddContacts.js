@@ -7,7 +7,8 @@ import {
     TextInput,
     Image,
     NativeModules,
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
@@ -226,12 +227,16 @@ class AddContacts extends React.Component {
     renderSearchBar = () => {
         return (
             <View style={ContactStyles.searchBar}>
-                <Icon
-                    style={styles.searchIcon}
-                    name="search"
-                    size={24}
-                    color="rgba(0, 189, 242, 1)"
-                />
+                {this.state.searching ? (
+                    <ActivityIndicator style={styles.searchIcon} size="small" />
+                ) : (
+                    <Icon
+                        style={styles.searchIcon}
+                        name="search"
+                        size={24}
+                        color="rgba(0, 189, 242, 1)"
+                    />
+                )}
                 <TextInput
                     style={ContactStyles.searchTextInput}
                     returnKeyType="search"
@@ -248,6 +253,7 @@ class AddContacts extends React.Component {
     };
 
     searchUsers(e) {
+        this.setState({ searching: true });
         const searchString = e.nativeEvent.text;
         Auth.getUser()
             .then(user => {
@@ -262,8 +268,9 @@ class AddContacts extends React.Component {
                         found.selected = true;
                     }
                 });
-                this.setState({ contacts: users });
-            });
+                this.setState({ contacts: users, searching: false });
+            })
+            .catch(() => this.setState({ searching: false }));
     }
 
     grpcSearch(user, queryString) {
@@ -309,7 +316,6 @@ class AddContacts extends React.Component {
             <SafeAreaView style={styles.addContactsContainer}>
                 <View style={{ flex: 1, overflow: 'hidden' }}>
                     {this.renderSearchBar()}
-
                     {selectedContacts && selectedContacts.length > 0 ? (
                         <View style={styles.selectContactContainer}>
                             <Text
