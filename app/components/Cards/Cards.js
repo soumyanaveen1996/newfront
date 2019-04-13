@@ -52,7 +52,7 @@ export default class Cards extends React.Component {
                             onError={() => {
                                 this.showTitle[index] = true;
                             }}
-                            resizeMode="center"
+                            resizeMode="contain"
                         />
                     )}
                     <Text
@@ -152,7 +152,7 @@ export default class Cards extends React.Component {
                     <Image
                         style={styles.imageModal}
                         source={{ uri: item.pictureUrl }}
-                        resizeMode="center"
+                        resizeMode="contain"
                     />
                 )}
                 <ScrollView>
