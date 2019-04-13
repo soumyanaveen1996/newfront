@@ -529,23 +529,17 @@ class NewContactScreen extends React.Component {
     };
 
     saveProfile = () => {
-        let {
-            emailAddressObj,
-            phoneNumbersObj,
-            myName,
-            emailAddress,
-            phoneNumbers
-        } = this.state;
+        let { emailAddressObj, phoneNumbersObj, myName } = this.state;
 
         let saveLocalContactData = {
             localContacts: [
                 {
                     userName: myName,
                     emailAddresses: {
-                        ...emailAddress
+                        ...emailAddressObj
                     },
                     phoneNumbers: {
-                        ...phoneNumbers
+                        ...phoneNumbersObj
                     }
                 }
             ]
