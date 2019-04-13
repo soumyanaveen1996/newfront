@@ -529,17 +529,23 @@ class NewContactScreen extends React.Component {
     };
 
     saveProfile = () => {
-        let { emailAddressObj, phoneNumbersObj, myName } = this.state;
+        let {
+            emailAddressObj,
+            phoneNumbersObj,
+            myName,
+            emailAddress,
+            phoneNumbers
+        } = this.state;
 
         let saveLocalContactData = {
             localContacts: [
                 {
                     userName: myName,
                     emailAddresses: {
-                        ...emailAddressObj
+                        ...emailAddress
                     },
                     phoneNumbers: {
-                        ...phoneNumbersObj
+                        ...phoneNumbers
                     }
                 }
             ]
@@ -585,11 +591,11 @@ class NewContactScreen extends React.Component {
 
                 // Contact.saveContacts(updateContacts);
                 Actions.pop();
-                setTimeout(() => {
-                    Actions.refresh({
-                        key: Math.random()
-                    });
-                }, 100);
+                // setTimeout(() => {
+                //     Actions.refresh({
+                //         key: Math.random()
+                //     });
+                // }, 100);
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);

@@ -367,6 +367,10 @@ export default class Contact {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
+                    console.log(
+                        'Sourav Logging:::: Fetching COntacts Data from DB'
+                    );
+
                     if (user) {
                         Store.dispatch(completeContactsLoad(false));
                         return Contact.fetchGrpcContacts(user);

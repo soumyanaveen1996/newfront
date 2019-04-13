@@ -158,7 +158,8 @@ class NewChatContacts extends React.Component {
             return;
         }
 
-        const AddressBook = this.createAddressBook(contacts);
+        const FrontMContacts = contacts.filter(contact => !contact.contactType);
+        const AddressBook = this.createAddressBook(FrontMContacts);
         let newAddressBook = AddressBook.filter(elem => {
             return elem.data.length > 0;
         });
