@@ -81,6 +81,7 @@ export default class Conversation {
                     let manifest = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
+
                     // And the DS has changed :(
                     let conversations = res.data.content.conversations.map(
                         conv => ({
@@ -93,20 +94,15 @@ export default class Conversation {
                         favorite: true
                     }));
 
-                    const allConversations = [...conversations, ...favorites];
+                    const unfilteredConv = [...conversations, ...favorites];
+                    const allConversations = unfilteredConv.filter(
+                        conv => conv.bot.botId === 'im-bot'
+                    );
                     // let conversations = res.data.content
                     const localConversations = await Conversation.getLocalConversations();
 
-                    console.log(
-                        'Sourav Logging:::: All Conversations',
-                        allConversations
-                    );
-
                     let promise = _.map(allConversations, conversation => {
-                        if (
-                            conversation.onChannels.length > 0 &&
-                            conversation.bot.botId === 'im-bot'
-                        ) {
+                        if (conversation.onChannels) {
                             let botContext;
 
                             const devConv = localConversations.filter(
@@ -172,14 +168,8 @@ export default class Conversation {
                                         );
                                     });
                                 });
-                        } else if (
-                            conversation.bot.botId === 'im-bot' &&
-                            conversation.onChannels.length === 0
-                        ) {
+                        } else if (conversation.contact) {
                             let botContext;
-                            if (!conversation.contact) {
-                                return null;
-                            }
                             const otherParticipant = {
                                 userName: conversation.contact.userName,
                                 userId: conversation.contact.userId
@@ -261,8 +251,16 @@ export default class Conversation {
                     return Promise.all(promise);
                 })
                 .then(() => {
+                    console.log('Sourav Logging:::: Loaded All Conversations');
                     Store.dispatch(completeConversationsLoad(true));
                     return resolve();
+                })
+                .catch(error => {
+                    console.log(
+                        'Sourav Logging::::: Error logging Conversations',
+                        error
+                    );
+                    return reject(error);
                 });
         });
 

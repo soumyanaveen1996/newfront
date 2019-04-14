@@ -30,7 +30,6 @@ export class AgentGuardError extends Error {
 export default class AgentGuard {
     static execute = async params => {
         try {
-            console.log('Sourav Logging::::Agent Guard params : ', params);
             const user = await Auth.getUser();
 
             const key = R.pathOr(null, ['conversation', 'bot'], params);

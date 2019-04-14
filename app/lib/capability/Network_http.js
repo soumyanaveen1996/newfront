@@ -8,15 +8,6 @@ import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
 import moment from 'moment';
 import _ from 'lodash';
-import Auth from './Auth';
-import RStore from '../../redux/store/configureStore';
-import { setNetwork } from '../../redux/actions/UserActions';
-import Bugsnag from '../../config/ErrorMonitoring';
-
-import { NativeModules } from 'react-native';
-const { AgentGuardServiceClient } = NativeModules;
-
-const R = require('ramda');
 /**
  * Lets you generate an options object like axios's option object: https://github.com/mzabriskie/axios#request-config
  * This will be persisted in the queue for later calls.
@@ -42,7 +33,7 @@ const R = require('ramda');
 
 export class NetworkError extends Error {
     constructor(code, message) {
-        super(message);
+        super();
         this.code = code;
         this.message = message;
     }
@@ -60,22 +51,22 @@ export class NetworkError extends Error {
     }
 }
 
-// function converOptionsToFetchRequest(options) {
-//     const isGetRequest = _.lowerCase(options.method) === 'get';
-//     return {
-//         method: options.method || 'GET',
-//         body: isGetRequest
-//             ? undefined
-//             : typeof options.data === 'string'
-//                 ? options.data
-//                 : JSON.stringify(options.data),
-//         headers: _.merge(
-//             { 'Content-Type': 'application/json' },
-//             options.headers
-//         ),
-//         redirect: 'follow'
-//     };
-// }
+function converOptionsToFetchRequest(options) {
+    const isGetRequest = _.lowerCase(options.method) === 'get';
+    return {
+        method: options.method || 'GET',
+        body: isGetRequest
+            ? undefined
+            : typeof options.data === 'string'
+                ? options.data
+                : JSON.stringify(options.data),
+        headers: _.merge(
+            { 'Content-Type': 'application/json' },
+            options.headers
+        ),
+        redirect: 'follow'
+    };
+}
 
 /*
 function Network(options, queue = false) {
@@ -84,11 +75,14 @@ function Network(options, queue = false) {
             .then((connected) => {
                 if (connected) {
                     const requestOptions = converOptionsToFetchRequest(options);
+                    console.log('Request : ', options, requestOptions);
                     fetch(options.url, requestOptions)
                         .then((response) => {
+                            console.log('Response raw : ', response);
                             if (response.status === 200) {
                                 response.json()
                                     .then((json) => {
+                                        console.log('Response : ', json);
                                         resolve({
                                             data: json,
                                             status: response.status,
@@ -114,6 +108,11 @@ function Network(options, queue = false) {
 
 export class NetworkRequest {
     constructor(options) {
+        if (!options) {
+            throw new Error(
+                'Developer error - NetworkRequest requires a valid options object'
+            );
+        }
         this.options = options;
     }
 
@@ -126,79 +125,59 @@ export class NetworkRequest {
     }
 }
 
-const getGrpcService = name => {
-    switch (name) {
-    case 'AgentGuardServiceClient':
-        return AgentGuardServiceClient;
-
-    default:
-        return null;
-    }
-};
-
-const convertResponse = response => {
-    if (!response) {
-        return {
-            error: 0,
-            data: {
-                error: 0,
-                content: []
-            }
-        };
-    }
-    const content = R.pathOr([], ['data', 'content'], response);
-    const objContent = content.map(str => JSON.parse(str));
-
-    return {
-        error: response.error,
-        data: {
-            error: response.error,
-            content: objContent
-        }
-    };
-};
-
-function Network(options, queue = false) {
-    // console.log('option in network ', options);
-
+function Network_http(options, queue = false) {
+    const start = moment().valueOf();
     return new Promise((resolve, reject) => {
-        Network.isConnected().then(connected => {
-            // connected = false;
+        Network_http.isConnected().then(connected => {
+            console.log(
+                'Time connected : ',
+                connected,
+                moment().valueOf() - start,
+                options.url
+            );
 
-            const {
-                serviceName,
-                action,
-                sessionId,
-                params,
-                key = null
-            } = options;
             if (connected) {
-                RStore.dispatch(setNetwork('full'));
-
-                const grpcService = getGrpcService(serviceName);
-
-                grpcService[action](sessionId, params, (error, result) => {
-                    if (error) {
-                        reject(error);
-                    }
+                const requestOptions = converOptionsToFetchRequest(options);
+                fetch(options.url, requestOptions).then(response => {
+                    //console.log('Response raw : ', response);
                     console.log(
-                        'Sourav Logging::::Agent guard response : ',
-                        result
+                        'Time for network call : ',
+                        options.url,
+                        moment().valueOf() - start
                     );
-                    const response = convertResponse(result);
-                    resolve(response);
+                    if (response.status === 200) {
+                        response.json().then(json => {
+                            console.log('Response : ', json);
+                            resolve({
+                                data: json,
+                                status: response.status,
+                                statusText: response.statusText
+                            });
+                        });
+                    } else {
+                        reject(
+                            new NetworkError(
+                                response.status,
+                                response.statusText
+                            )
+                        );
+                    }
                 });
+                /*
+                    axios(options)
+                        .then((data) => {
+                            const now = moment().valueOf();
+                            console.log('Time for network call : ', options.url, now - start);
+                            resolve(data);
+                        })
+                        .catch(reject); */
             } else {
                 if (queue) {
-                    const deferredKey = key
-                        ? key
-                        : SHA1(JSON.stringify(params)).toString();
-
+                    let key = SHA1(JSON.stringify(options.data)).toString();
                     return resolve(
-                        futureRequest(deferredKey, new NetworkRequest(options))
+                        futureRequest(key, new NetworkRequest(options))
                     );
                 } else {
-                    RStore.dispatch(setNetwork('none'));
                     reject(new Error('No network connectivity'));
                 }
             }
@@ -206,32 +185,33 @@ function Network(options, queue = false) {
     });
 }
 
-Network.getNetworkInfo = () => NetInfo.getConnectionInfo();
+Network_http.getNetworkInfo = () => NetInfo.getConnectionInfo();
 
-Network.isWiFi = () =>
+Network_http.isWiFi = () =>
     new Promise((resolve, reject) => {
         NetInfo.getConnectionInfo().then(connectionInfo => {
             resolve(connectionInfo.type === 'wifi');
         });
     });
 
-Network.isCellular = () =>
+Network_http.isCellular = () =>
     new Promise((resolve, reject) => {
         NetInfo.getConnectionInfo().then(connectionInfo => {
             resolve(connectionInfo.type === 'cellular');
         });
     });
 
-Network.addConnectionChangeEventListener = handleConnectionChange => {
+Network_http.addConnectionChangeEventListener = handleConnectionChange => {
     NetInfo.addEventListener('connectionChange', handleConnectionChange);
 };
 
-Network.removeConnectionChangeEventListener = handleConnectionChange => {
+Network_http.removeConnectionChangeEventListener = handleConnectionChange => {
     NetInfo.removeEventListener('connectionChange', handleConnectionChange);
 };
 
-Network.isConnected = () => {
+Network_http.isConnected = () => {
     return NetInfo.getConnectionInfo().then(reachability => {
+        console.log('Time for isConnected : ', reachability);
         if (reachability.type === 'unknown' && Platform.OS === 'ios') {
             return new Promise(resolve => {
                 const handleFirstConnectivityChangeIOS = isConnected => {
@@ -252,7 +232,7 @@ Network.isConnected = () => {
     });
 };
 
-export default Network;
+export default Network_http;
 
 /**
  * Make a request in the future; The request will be queued for later.
@@ -261,5 +241,10 @@ export default Network;
  * @return {Promise} that resolves to a request_id (that can potentially be stashed for future if needed)
  */
 export function futureRequest(key, networkRequest) {
+    if (!key || !networkRequest) {
+        throw new Error(
+            'Developer error - A valid key and NetworkRequest object is required to for making future requests'
+        );
+    }
     return Queue.queueNetworkRequest(key, networkRequest);
 }

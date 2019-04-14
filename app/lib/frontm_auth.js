@@ -1,9 +1,13 @@
 import { Platform, Alert } from 'react-native';
 import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
-import { Network } from './capability';
+import { Network_http } from './capability';
 import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-sign-in';
+import queryString from 'querystring';
+
+const axios = require('axios');
+
 // import {
 //     AccessToken,
 //     LoginManager,
@@ -12,10 +16,11 @@ import GoogleSignin from 'react-native-google-sign-in';
 // } from 'react-native-fbsdk';
 import _ from 'lodash';
 import config from '../config/config';
-import queryString from 'querystring';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
 const AuthServiceClient = NativeModules.AuthServiceClient;
+
+const clientIdAndroid = Config.auth.android.google.dev.webClientId;
 
 if (Platform.OS === 'ios') {
     GoogleSignin.configure({
@@ -34,7 +39,7 @@ if (Platform.OS === 'ios') {
         scopes: Config.auth.ios.google.scopes,
         //iosClientId: Config.auth.ios.google.iosClientId,
         //webClientId: __DEV__ ? Config.auth.android.google.dev.webClientId : Config.auth.android.google.prod.webClientId,
-        serverClientID: Config.auth.android.google.dev.webClientId,
+        serverClientID: clientIdAndroid,
         offlineAccess: true,
         forceConsentPrompt: true,
         shouldFetchBasicProfile: true,
@@ -66,6 +71,34 @@ class FrontmAuth {
         return new Promise((resolve, reject) => {
             if (user.refreshToken) {
                 resolve(user);
+            } else {
+                const options = {
+                    method: 'post',
+                    url: 'https://www.googleapis.com/oauth2/v4/token',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: queryString.stringify({
+                        code: user.serverAuthCode,
+                        grant_type: 'authorization_code',
+                        client_id: Config.auth.android.google.dev.webClientId,
+                        client_secret:
+                            Config.auth.android.google.dev.clientSecret
+                    })
+                };
+                return Network_http(options)
+                    .then(res => {
+                        // console.log('res : ', res);
+                        user.idToken = res.data.id_token;
+                        user.refreshToken = res.data.refresh_token;
+                        user.accessToken = res.data.access_token;
+                        console.log('Google user after refresh token : ', user);
+                        resolve(user);
+                    })
+                    .catch(err => {
+                        console.log('Error', err);
+                        reject(err);
+                    });
             }
         });
     }

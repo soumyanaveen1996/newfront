@@ -61,7 +61,6 @@ const readRemoteLambdaQueue = user => {
     eventEmitter = new NativeEventEmitter(QueueServiceClient);
     let logoutSubscribtion;
     const subscription = eventEmitter.addListener('message', message => {
-        console.log('Sourav Logging:::Event GRPC message : ', message);
         handleLambdaResponse(message, user);
     });
 
@@ -104,8 +103,6 @@ const processNetworkQueueRequest = () => {
 };
 
 const debounce = () => {
-    console.log('Sourav Logging:::: Sleeping zzzzzzzz...');
-
     return new Promise((resolve, reject) => {
         setTimeout(() => resolve(), 10000);
     });
@@ -118,7 +115,6 @@ const dequeueAndProcessQueueRequest = async () => {
     let key = null;
     try {
         let res = await Queue.dequeueNetworkRequest();
-        console.log('Sourav Logging:::: Netwrok request Queue is...', res);
 
         if (!res) {
             processingFutureRequest = false;
@@ -128,35 +124,16 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         // let request = res.request;
         const options = res.request;
-        console.log(
-            'Sourav Logging::::: In Dequeu request with Options',
-            options
-        );
 
         const response = await Network(options);
         // const response = await Network(request.getNetworkRequestOptions();
 
-        console.log(
-            'Sourav Logging:::: Completed Queued Network Request. Write results',
-            response
-        );
-
-        if (__DEV__) {
-        }
         if (response && response.data) {
             let results = response.data;
             await Queue.completeNetworkRequest(requestId, key, results);
-            console.log(
-                'Sourav Logging:::: Completed Saving results to DB for Further processing'
-            );
         }
         dequeueAndProcessQueueRequest();
     } catch (err) {
-        console.log(
-            'Sourav Logging:::: Error while Processing Queued Reequests',
-            err
-        );
-
         // TODO(amal): Do we have to reject request if it fails ?
         if (requestId) {
             try {

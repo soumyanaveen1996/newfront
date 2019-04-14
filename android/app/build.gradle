@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 253
+        versionCode 255
         versionName "4.1.0"
         multiDexEnabled true
         ndk {
@@ -156,9 +156,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
