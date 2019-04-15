@@ -102,7 +102,10 @@ export default class Conversation {
                     const localConversations = await Conversation.getLocalConversations();
 
                     let promise = _.map(allConversations, conversation => {
-                        if (conversation.onChannels) {
+                        if (
+                            conversation.onChannels &&
+                            conversation.onChannels.length > 0
+                        ) {
                             let botContext;
 
                             const devConv = localConversations.filter(
@@ -168,7 +171,10 @@ export default class Conversation {
                                         );
                                     });
                                 });
-                        } else if (conversation.contact) {
+                        } else if (
+                            conversation.contact &&
+                            conversation.onChannels.length == 0
+                        ) {
                             let botContext;
                             const otherParticipant = {
                                 userName: conversation.contact.userName,
