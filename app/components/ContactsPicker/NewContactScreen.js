@@ -100,14 +100,31 @@ class NewContactScreen extends React.Component {
 
     setPhoneNumber = (number, index, key) => {
         let getPhoneNumbers = [...this.state.phoneNumbers];
+        let getPhoneNumbersObj = { ...this.state.phoneNumbersObj };
         getPhoneNumbers[index][key] = number;
-        this.setState({ phoneNumbers: [...getPhoneNumbers] });
+
+        getPhoneNumbers.map(elem => {
+            let getKey = Object.keys(elem)[0];
+            getPhoneNumbersObj[getKey] = elem[getKey];
+        });
+        this.setState({
+            phoneNumbers: [...getPhoneNumbers],
+            phoneNumbersObj: { ...getPhoneNumbersObj }
+        });
     };
     setEmail = (email, index, key) => {
         let getEmail = [...this.state.emailAddress];
+        let getEmailObj = { ...this.state.emailAddressObj };
         // console.log('email set ', getEmail, email, index, key);
         getEmail[index][key] = email;
-        this.setState({ emailAddress: [...getEmail] });
+        getEmail.map(elem => {
+            let getKey = Object.keys(elem)[0];
+            getEmailObj[getKey] = elem[getKey];
+        });
+        this.setState({
+            emailAddress: [...getEmail],
+            emailAddressObj: { ...getEmailObj }
+        });
     };
 
     selectNumberType = index => {
@@ -119,6 +136,7 @@ class NewContactScreen extends React.Component {
 
     addNewNumber = () => {
         let number = [...this.state.phoneNumbers];
+
         number.push({ mobile: '' });
         this.setState(() => {
             return { phoneNumbers: [...number] };
@@ -464,7 +482,7 @@ class NewContactScreen extends React.Component {
     };
 
     importSelectedContact = data => {
-        // console.log('selected contact data ', data);
+        console.log('selected contact data ', data);
         let contactEmails = [];
         let contactEmailsObj = {};
         let contactPhoneNumbers = [];
@@ -491,32 +509,44 @@ class NewContactScreen extends React.Component {
             contactPhoneNumbersObj[elem.label] = elem.number;
         });
 
+        let checkMobile = contactPhoneNumbersObj.hasOwnProperty('mobile');
+        let checkLand = contactPhoneNumbersObj.hasOwnProperty('land');
+        let checkSatellite = contactPhoneNumbersObj.hasOwnProperty('satellite');
+        let checkHomeEmail = contactEmailsObj.hasOwnProperty('home');
+        let checkWorkEmail = contactEmailsObj.hasOwnProperty('work');
+
         Object.keys(contactPhoneNumbersObj).map(elem => {
-            if (elem !== 'mobile') {
-                contactPhoneNumbersObj.mobile = '';
-            }
-            if (elem !== 'land') {
-                contactPhoneNumbersObj.land = '';
-            }
-            if (elem !== 'satellite') {
-                contactPhoneNumbersObj.satellite = '';
+            if (elem !== 'mobile' && elem !== 'land' && elem !== 'satellite') {
+                delete contactPhoneNumbersObj[elem];
             }
         });
-
         Object.keys(contactEmailsObj).map(elem => {
-            if (elem !== 'home') {
-                contactEmailsObj.home = '';
-            }
-            if (elem !== 'work') {
-                contactEmailsObj.work = '';
+            if (elem !== 'home' && elem !== 'work') {
+                delete contactEmailsObj[elem];
             }
         });
 
-        // console.log(
-        //     'added contact  ',
-        //     contactPhoneNumbersObj,
-        //     contactEmailsObj
-        // );
+        if (!checkMobile) {
+            contactPhoneNumbersObj.mobile = '';
+        }
+        if (!checkLand) {
+            contactPhoneNumbersObj.land = '';
+        }
+        if (!checkSatellite) {
+            contactPhoneNumbersObj.satellite = '';
+        }
+        if (!checkHomeEmail) {
+            contactEmailsObj.home = '';
+        }
+        if (!checkWorkEmail) {
+            contactEmailsObj.work = '';
+        }
+
+        console.log(
+            'added contact  ',
+            contactPhoneNumbersObj,
+            contactEmailsObj
+        );
 
         this.setState({
             myName: data.name,
@@ -529,7 +559,13 @@ class NewContactScreen extends React.Component {
     };
 
     saveProfile = () => {
-        let { emailAddressObj, phoneNumbersObj, myName } = this.state;
+        let {
+            emailAddressObj,
+            phoneNumbersObj,
+            myName,
+            phoneNumbers,
+            emailAddress
+        } = this.state;
 
         let saveLocalContactData = {
             localContacts: [
@@ -552,28 +588,6 @@ class NewContactScreen extends React.Component {
                 // Actions.newContactScreen({});
                 Store.dispatch(completeContactsLoad(false));
                 return Contact.fetchGrpcContacts(this.state.user);
-                // Contact.fetchGrpcContacts(this.state.user)
-                //     .then(contactsData => {
-                //         let updateContacts = contactsData.contacts.concat(
-                //             contactsData.localContacts
-                //         );
-                //         console.log('on deleting contacts ', updateContacts);
-
-                //         Contact.saveContacts(updateContacts).then(
-                //             allNewContact => {
-                //                 this.props.updateContactScreen();
-                //             }
-                //         );
-                //         Actions.pop();
-                //         setTimeout(() => {
-                //             Actions.refresh({
-                //                 key: Math.random()
-                //             });
-                //         }, 100);
-                //     })
-                //     .catch(err => {
-                //         console.log('error in fecthing new contact list ', err);
-                //     });
             })
             .then(contactsData => {
                 console.log('all contact ', contactsData);

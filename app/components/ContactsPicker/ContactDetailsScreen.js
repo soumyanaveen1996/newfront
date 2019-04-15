@@ -687,30 +687,30 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
-                {/* {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' && ( */}
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            marginVertical: 40
-                        }}
-                        onPress={this.deleteContact.bind(this)}
-                    >
-                        <Image source={images.delete_icon_trash} />
-                        <Text
+                {this.props.contact.contactType &&
+                    this.props.contact.contactType !== 'Personal' && (
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity
                             style={{
-                                color: 'rgba(229, 69, 59, 1)',
-                                fontFamily: 'SF Pro Text',
-                                fontSize: 16,
-                                marginHorizontal: 10
+                                flexDirection: 'row',
+                                marginVertical: 40
                             }}
+                            onPress={this.deleteContact.bind(this)}
                         >
-                            Delete contact
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                {/* )} */}
+                            <Image source={images.delete_icon_trash} />
+                            <Text
+                                style={{
+                                    color: 'rgba(229, 69, 59, 1)',
+                                    fontFamily: 'SF Pro Text',
+                                    fontSize: 16,
+                                    marginHorizontal: 10
+                                }}
+                            >
+                                    Delete contact
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 <CallModal
                     isVisible={this.state.modalVisible}
