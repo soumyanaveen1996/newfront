@@ -165,11 +165,8 @@ class RemoteBotInstall {
                                 return result === true;
                             })
                         ) {
-                            if (__DEV__) {
-                                console.tron('BOTS INSTALEED');
-                            }
+                            console.log('Sourav Logging::: All Bots Installed');
 
-                            console.log('Bots installed');
                             Store.dispatch(completeBotInstall(true));
                             return resolve();
                         } else {
@@ -180,7 +177,10 @@ class RemoteBotInstall {
                     });
                 })
                 .then(() => resolve())
-                .catch(error => console.log(error));
+                .catch(error => {
+                    console.log('Sourav Logging::: Error loading Bots', error);
+                    return reject(error);
+                });
         });
 }
 

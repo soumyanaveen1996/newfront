@@ -19,7 +19,7 @@ export const synchronizeUserData = async () => {
         setTimeout(() => Channel.refreshChannels(), 1000);
         setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
     } catch (error) {
-        console.error('CRITICAL:::::Unable to refresh Contacts from Server');
+        console.error('CRITICAL:::::Errror Synching Data', error);
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
         }, 500);

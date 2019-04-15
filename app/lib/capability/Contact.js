@@ -367,6 +367,10 @@ export default class Contact {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
+                    console.log(
+                        'Sourav Logging:::: Fetching COntacts Data from DB'
+                    );
+
                     if (user) {
                         Store.dispatch(completeContactsLoad(false));
                         return Contact.fetchGrpcContacts(user);
@@ -376,6 +380,8 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
+                        console.log('Sourav Logging::: Loaded Contacts');
+
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
@@ -406,10 +412,13 @@ export default class Contact {
 
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
-                        resolve();
+                        return resolve();
                     }
                 })
-                .catch(reject(Error('Unable to Get Contacts from Server')));
+                .catch(error => {
+                    console.log('Contacts Load', error);
+                    reject(error);
+                });
         });
 
     static getUserDetails = (user, userId) => {

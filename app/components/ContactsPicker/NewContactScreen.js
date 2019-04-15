@@ -599,11 +599,11 @@ class NewContactScreen extends React.Component {
 
                 // Contact.saveContacts(updateContacts);
                 Actions.pop();
-                setTimeout(() => {
-                    Actions.refresh({
-                        key: Math.random()
-                    });
-                }, 100);
+                // setTimeout(() => {
+                //     Actions.refresh({
+                //         key: Math.random()
+                //     });
+                // }, 100);
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);

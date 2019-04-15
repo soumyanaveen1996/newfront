@@ -237,9 +237,9 @@ class ContactsPicker extends React.Component {
 
     static onEnter() {
         const user = Store.getState().user;
-        // if (user.contactsLoaded === false) {
-        //     Contact.refreshContacts()
-        // }
+        if (user.contactsLoaded === false) {
+            Contact.refreshContacts();
+        }
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
         Store.dispatch(refreshContacts(true));
     }

@@ -717,10 +717,6 @@ class ChatBotScreen extends React.Component {
 
         Queue.selectCompletedNetworkRequests(this.getBotKey()).then(
             pendingAsyncResults => {
-                console.log(
-                    'Sourav Logging:::: Flushing out pending results bot',
-                    pendingAsyncResults
-                );
                 pendingAsyncResults = pendingAsyncResults || [];
                 pendingAsyncResults.forEach(pendingAsyncResult => {
                     self.handleAsyncMessageResult(pendingAsyncResult);

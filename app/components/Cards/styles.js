@@ -74,6 +74,7 @@ export default StyleSheet.create({
         marginTop: 7,
         fontSize: 16,
         fontWeight: '100',
+        textAlign: 'center',
         color: GlobalColors.sideButtons
     },
 

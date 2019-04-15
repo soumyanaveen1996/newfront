@@ -1,6 +1,7 @@
 import Contact from './Contact';
 import DeviceStorage from './DeviceStorage';
 import Network from './Network';
+import Network_http from './Network_http';
 import Promise from './Promise';
 import Utils from './Utils';
 import Channel from './Channel';
@@ -35,6 +36,7 @@ export {
     Contact,
     DeviceStorage,
     Network,
+    Network_http,
     Promise,
     Utils,
     Message,

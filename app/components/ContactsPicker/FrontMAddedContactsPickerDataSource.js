@@ -29,6 +29,7 @@ export default class ContactsPickerDataSource {
     }
 
     updateData(contactsData) {
+        this.allContactIds = [];
         const contactIds = _.map(contactsData, data => {
             return data.userId;
         });
