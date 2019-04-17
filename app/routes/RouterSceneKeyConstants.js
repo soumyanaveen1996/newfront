@@ -68,7 +68,9 @@ const ROUTER_SCENE_KEYS = {
     multiselection: 'multiselection',
     myProfileScreen: 'myProfileScreen',
     newContactScreen: 'newContactScreen',
-    manageContacts: 'manageContacts'
+    manageContacts: 'manageContacts',
+    resetPassword: 'resetPassword',
+    sendCodePassword: 'sendCodePassword'
 };
 
 export default ROUTER_SCENE_KEYS;
