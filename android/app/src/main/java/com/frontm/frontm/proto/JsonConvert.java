@@ -94,7 +94,7 @@ public abstract class JsonConvert {
             if (value instanceof Float || value instanceof Double) {
                 writableMap.putDouble(key, jsonObject.getDouble(key));
             } else if (value instanceof Number) {
-                writableMap.putInt(key, jsonObject.getInt(key));
+                writableMap.putDouble(key, jsonObject.getDouble(key));
             } else if (value instanceof String) {
                 writableMap.putString(key, jsonObject.getString(key));
             } else if (value instanceof Boolean){

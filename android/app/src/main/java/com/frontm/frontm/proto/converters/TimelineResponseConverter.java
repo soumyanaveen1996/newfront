@@ -79,9 +79,9 @@ public class TimelineResponseConverter {
                 for (int i = 0; i < conversation.getOnChannelsCount(); ++i) {
                     array.pushMap(new TimelineChannelsConverter().toJson(conversation.getOnChannels(i)));
                 }
-                map.putArray("participants", array);
+                map.putArray("onChannels", array);
             } else {
-                map.putArray("participants", Arguments.createArray());
+                map.putArray("onChannels", Arguments.createArray());
             }
 
             if (conversation.hasBot()) {

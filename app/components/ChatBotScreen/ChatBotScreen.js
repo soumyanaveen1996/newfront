@@ -806,6 +806,7 @@ class ChatBotScreen extends React.Component {
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX
         ) {
             const data = message.getMessage();
+
             if (data.action !== SearchBoxBotAction.CLOSE) {
                 this.setState({ showSearchBox: true, searchBoxData: data });
             } else {

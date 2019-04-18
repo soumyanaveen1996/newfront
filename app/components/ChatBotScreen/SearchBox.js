@@ -44,8 +44,11 @@ export class SearchBox extends React.Component {
         };
     }
 
-    componentDidUpdate() {
-        if (this.props.data.action === SearchBoxBotAction.OPEN) {
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.data.action !== this.props.data.action &&
+            this.props.data.action === SearchBoxBotAction.OPEN
+        ) {
             this.setState({
                 response: [],
                 canDone: false,
