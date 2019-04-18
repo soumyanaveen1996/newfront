@@ -64,7 +64,7 @@ export default class MessageQueue {
     }
 
     async isMessageAlreadyProcessed(message) {
-        console.log('Message  : ', message);
+        // console.log('Message  : ', message);
         if (
             message.messageId === '' ||
             message.messageId == null ||

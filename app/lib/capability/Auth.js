@@ -259,8 +259,8 @@ export default class Auth {
             });
         });
 
-    static resetPassword = userDetails =>
-        new Promise((resolve, reject) => {
+    static resetPassword = userDetails => {
+        return new Promise((resolve, reject) => {
             AuthServiceClient.resetPassword(userDetails, (err, result) => {
                 if (err) {
                     reject(
@@ -279,6 +279,7 @@ export default class Auth {
                 }
             });
         });
+    };
 
     static confirmReset = userDetails =>
         new Promise((resolve, reject) => {

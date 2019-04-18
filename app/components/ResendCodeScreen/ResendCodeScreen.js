@@ -79,17 +79,22 @@ export default class ResendCodeScreen extends Component {
             });
         }
 
-        // console.log('send code again');
         const userDetails = {
             email: this.state.userEmail
         };
+        // console.log('send code again', userDetails, getStatus);
 
         await Auth.resendFrontmSignupCode(userDetails)
             .then(async data => {
+                // console.log('response =========', data);
+
                 if (data.success) {
                     this.setState({ loading: false });
-                    await AsyncStorage.setItem('userEmail', data.data);
-                    await AsyncStorage.setItem('signupStage', 'confirmCode');
+                    await AsyncStorage.setItem(
+                        'userEmail',
+                        this.state.userEmail
+                    );
+                    await AsyncStorage.setItem('signupStage', 'checkCode');
                     Actions.confirmationScreen({
                         type: ActionConst.REPLACE,
                         userEmail: this.state.userEmail,

@@ -188,7 +188,7 @@ export default class Splash extends React.Component {
                     this.goToLoginPage();
                 });
         } else {
-            if (checkStatus && checkStatus === 'confirmCode') {
+            if (checkStatus && checkStatus === 'checkCode') {
                 Actions.confirmationScreen({ type: ActionConst.REPLACE });
             } else {
                 this.goToLoginPage();

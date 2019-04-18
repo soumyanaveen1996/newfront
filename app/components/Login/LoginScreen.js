@@ -273,6 +273,11 @@ export default class LoginScreen extends React.Component {
         this.inputs[id].focus();
     };
 
+    goToForgotPassword = () => {
+        Actions.sendCodePassword();
+        // Actions.resetPassword({ email: 'sidhemu09@gmail.com' });
+    };
+
     render() {
         const B = props => (
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
@@ -351,7 +356,10 @@ export default class LoginScreen extends React.Component {
                                 />
                                 {this.displayPasswordErrorMessege()}
                             </View>
-                            <Text style={styles.forgotPassowrd}>
+                            <Text
+                                style={styles.forgotPassowrd}
+                                onPress={this.goToForgotPassword}
+                            >
                                 Forgot Password?
                             </Text>
                             <TouchableOpacity

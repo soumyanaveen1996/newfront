@@ -75,6 +75,8 @@ import SetChannelOwner from '../components/ChannelsList/SetChannelOwner';
 import NewPhoneBookContacts from '../components/NewChat/NewPhoneBookContacts';
 import DialPadButton from '../components/NewChat/DialPadButton';
 import NewContactScreen from '../components/ContactsPicker/NewContactScreen';
+import ResetPassword from '../components/ResetPassword/ResetPassword';
+import SendCodePassword from '../components/ResetPassword/SendCodePassword';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -129,6 +131,16 @@ class MainRouter extends React.Component {
                                             ROUTER_SCENE_KEYS.confirmationScreen
                                         }
                                         component={ConfirmationScreen}
+                                        hideNavBar
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.resetPassword}
+                                        component={ResetPassword}
+                                        hideNavBar
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.sendCodePassword}
+                                        component={SendCodePassword}
                                         hideNavBar
                                     />
                                     <Scene
