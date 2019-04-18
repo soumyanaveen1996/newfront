@@ -785,6 +785,7 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
+        console.log('>>>>>>>>message', message.getMessage());
         // Removing the waiting message.
 
         this.stopWaiting();
@@ -809,6 +810,9 @@ class ChatBotScreen extends React.Component {
 
             if (data.action !== SearchBoxBotAction.CLOSE) {
                 this.setState({ showSearchBox: true, searchBoxData: data });
+                if (this.searchBox) {
+                    this.searchBox.onResponseReceived();
+                }
             } else {
                 this.setState({ showSearchBox: false, searchBoxData: null });
             }
@@ -2153,9 +2157,13 @@ class ChatBotScreen extends React.Component {
     renderSearchBox() {
         return (
             <SearchBox
+                ref={searchBox => {
+                    this.searchBox = searchBox;
+                }}
                 data={this.state.searchBoxData}
                 sendResponse={this.sendSearchBoxResponse.bind(this)}
                 sendSearchQuery={this.sendSearchBoxQuery.bind(this)}
+                onOpenInfo={this.openModalWithContent.bind(this)}
             />
         );
     }
