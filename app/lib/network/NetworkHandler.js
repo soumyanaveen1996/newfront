@@ -16,6 +16,7 @@ import {} from '../../redux/actions/UserActions';
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import RemoteLogger from '../utils/remoteDebugger';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 /**
@@ -52,16 +53,24 @@ const handleLambdaResponse = (res, user) => {
 let currentlyReading = false;
 
 const readRemoteLambdaQueue = user => {
+    console.log('Sourav Logging:::: Reading Remote Lambda Queue');
+    RemoteLogger('Sourav Logging:::: Reading Remote Lambda Queue');
+
     if (currentlyReading === true) {
         return;
     }
     currentlyReading = true;
+    console.log('Sourav Logging:::: Will Read Remote Lambda Queue Now');
+    RemoteLogger('Sourav Logging:::: Will Read Remote Lambda Queue Now');
 
     const QueueServiceClient = NativeModules.QueueServiceClient;
     eventEmitter = new NativeEventEmitter(QueueServiceClient);
     let logoutSubscribtion;
     const subscription = eventEmitter.addListener('message', message => {
+        console.log('Sourav Logging:::: Received Queue Messages', message);
+        RemoteLogger('Sourav Logging:::: Received Queue Messages', message);
         handleLambdaResponse(message, user);
+        currentlyReading = false;
     });
 
     const endSubscribtion = eventEmitter.addListener('end', message => {

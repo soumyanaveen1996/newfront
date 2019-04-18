@@ -42,6 +42,8 @@ import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
 import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
+import RemoteLogger from '../../lib/utils/remoteDebugger';
+
 //import jsonEncoder from 'serialize-json';
 
 // const BusyIndicator = require('react-native-busy-indicator')
@@ -233,7 +235,9 @@ export default class Splash extends React.Component {
 
     handleNotification = notification => {
         let conversation;
+        RemoteLogger('In Notificaiton Handler');
         if (!notification.foreground && notification.userInteraction) {
+            RemoteLogger('Notifcaiton Touched');
             Conversation.getConversation(notification.conversationId)
                 .then(conv => {
                     conversation = conv;
@@ -291,8 +295,10 @@ export default class Splash extends React.Component {
                     }
                 });
         }
+        RemoteLogger('Read Remote lambda');
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
+            RemoteLogger('IOS Crap');
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
     };
