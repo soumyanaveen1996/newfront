@@ -182,10 +182,7 @@ export default class SignupScreen extends React.Component {
                             'userDisplayName',
                             this.state.name
                         );
-                        await AsyncStorage.setItem(
-                            'signupStage',
-                            'confirmCode'
-                        );
+                        await AsyncStorage.setItem('signupStage', 'checkCode');
 
                         this.setState({ loading: false, name: '', email: '' });
                         Actions.confirmationScreen({

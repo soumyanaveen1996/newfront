@@ -14,12 +14,16 @@ export default StyleSheet.create({
         position: 'absolute',
         flexDirection: 'row',
         alignItems: 'center',
+        textAlign: 'center',
         justifyContent: 'center',
+        width: SCREEN_WIDTH,
         height: 40,
         bottom: 60
     },
     loginScreenText: {
         color: 'rgba(0, 189, 242, 1)',
+        alignItems: 'center',
+        textAlign: 'center',
         fontSize: 14,
         marginRight: 10
     },
@@ -274,6 +278,7 @@ export default StyleSheet.create({
             padding: 10,
             color: 'rgba(0,0,0,0.8)',
             fontSize: 16,
+            textAlign: 'center',
             borderTopRightRadius: 0,
             borderBottomLeftRadius: 10,
             borderBottomRightRadius: 10,

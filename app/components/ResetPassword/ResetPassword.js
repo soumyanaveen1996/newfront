@@ -284,7 +284,7 @@ export default class ResetPassword extends React.Component {
                                     style={styles.textInput}
                                     keyboardType="numeric"
                                     autoFocus={true}
-                                    placeholder="------"
+                                    placeholder="- - - - - -"
                                     onChangeText={this.onChangeCode.bind(this)}
                                     underlineColorAndroid="transparent"
                                     blurOnSubmit={false}
