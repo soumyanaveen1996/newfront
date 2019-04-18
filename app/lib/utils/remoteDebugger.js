@@ -5,6 +5,7 @@ const axios = require('axios');
 const RemoteLogger = text => {
     console.log(text);
 
+    return;
     if (Platform.OS === 'android') {
         return;
     }
