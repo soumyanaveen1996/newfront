@@ -339,7 +339,7 @@ class MainScreen extends React.Component {
     };
 
     readLambdaQueue() {
-        NetworkHandler.readLambda();
+        // NetworkHandler.readLambda();
     }
 
     setNoChats = value => this.setState({ noChats: value });

@@ -147,8 +147,8 @@ class NetworkPoller {
         );
         this.grpcEndSubscription.push(
             eventEmitter.addListener('sse_end', message => {
-                console.log('GRPC:::SSE End GRPC message : ', message, message);
-                this.unsubscribeFromServerEvents();
+                // this.unsubscribeFromServerEvents();
+                console.log('Sourav Logging:::: GRPC DONE');
             })
         );
 
@@ -248,12 +248,9 @@ class NetworkPoller {
                 console.log('---------App in Active State -----------');
 
                 RemoteBotInstall.syncronizeBots();
-                setTimeout(
-                    () => NetworkHandler.readLambda((force = true)),
-                    500
-                );
-                setTimeout(() => this.subscribeToServerEvents(), 200);
-                setTimeout(() => this.cleanupSubscriptions(), 1000);
+                setTimeout(() => NetworkHandler.readLambda(), 500);
+                setTimeout(() => this.subscribeToServerEvents(), 2000);
+                setTimeout(() => this.cleanupSubscriptions(), 5000);
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {
@@ -262,9 +259,7 @@ class NetworkPoller {
                 console.log('App Inactive ---------> Stop Cleanup Service');
                 clearInterval(this.cleanupInterval);
                 this.appState = nextAppState;
-                console.log(
-                    'Network Poller: Starting Polling on App State change'
-                );
+
                 this.startPolling();
             }
         }

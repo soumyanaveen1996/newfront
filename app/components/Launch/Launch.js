@@ -43,6 +43,7 @@ import { Conversation } from '../../lib/conversation';
 import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
 import RemoteLogger from '../../lib/utils/remoteDebugger';
+import PushNotification from 'react-native-push-notification';
 
 //import jsonEncoder from 'serialize-json';
 
@@ -226,7 +227,7 @@ export default class Splash extends React.Component {
                     RemoteLogger(
                         '------------Received Remote Notifcation--------'
                     );
-                    NetworkHandler.readLambda(true);
+                    // NetworkHandler.readLambda();
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
@@ -237,7 +238,7 @@ export default class Splash extends React.Component {
                     RemoteLogger(
                         '------------Received Local Notifcation--------'
                     );
-                    NetworkHandler.readLambda(true);
+                    // NetworkHandler.readLambda(true);
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
@@ -261,6 +262,7 @@ export default class Splash extends React.Component {
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             RemoteLogger(`Notifcaiton Touched ${JSON.stringify(notification)}`);
+            PushNotification.setApplicationIconBadgeNumber(0);
             Conversation.getConversation(notification.conversationId)
                 .then(conv => {
                     conversation = conv;
@@ -318,8 +320,7 @@ export default class Splash extends React.Component {
                     }
                 });
         }
-        RemoteLogger('Read Remote lambda');
-        NetworkHandler.readLambda();
+        // NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             RemoteLogger('IOS Crap');
             notification.finish(PushNotificationIOS.FetchResult.NoData);

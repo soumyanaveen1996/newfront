@@ -79,7 +79,6 @@ export default class MessageQueue {
             const dbMessage = await MessageDAO.selectMessageById(
                 message.messageId
             );
-            console.log('isMessageAlreadyProcessed : ', networkItem, dbMessage);
             if (dbMessage || networkItem) {
                 return true;
             }
