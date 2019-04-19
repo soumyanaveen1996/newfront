@@ -193,7 +193,12 @@ export class SearchBox extends React.Component {
 
     rightButton() {
         if (this.state.searching) {
-            return <ActivityIndicator size="small" />;
+            return (
+                <ActivityIndicator
+                    style={{ marginHorizontal: 10 }}
+                    size="small"
+                />
+            );
         } else {
             return (
                 <TouchableOpacity
