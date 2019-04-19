@@ -51,7 +51,7 @@ import RemoteLogger from '../../lib/utils/remoteDebugger';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 81; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 82; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -128,7 +128,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (false && forceUpdate) {
+        if (true && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -260,7 +260,7 @@ export default class Splash extends React.Component {
     handleNotification = notification => {
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            RemoteLogger('Notifcaiton Touched');
+            RemoteLogger(`Notifcaiton Touched ${JSON.stringify(notification)}`);
             Conversation.getConversation(notification.conversationId)
                 .then(conv => {
                     conversation = conv;
