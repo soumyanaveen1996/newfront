@@ -223,8 +223,10 @@ export default class Splash extends React.Component {
             PushNotificationIOS.addEventListener(
                 'notification',
                 notification => {
-                    RemoteLogger('------------Received Notifcation--------');
-                    NetworkHandler.readLambda();
+                    RemoteLogger(
+                        '------------Received Remote Notifcation--------'
+                    );
+                    NetworkHandler.readLambda(true);
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
@@ -232,8 +234,10 @@ export default class Splash extends React.Component {
             PushNotificationIOS.addEventListener(
                 'localNotification',
                 notification => {
-                    RemoteLogger('------------Received Notifcation--------');
-                    NetworkHandler.readLambda();
+                    RemoteLogger(
+                        '------------Received Local Notifcation--------'
+                    );
+                    NetworkHandler.readLambda(true);
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
@@ -255,7 +259,6 @@ export default class Splash extends React.Component {
 
     handleNotification = notification => {
         let conversation;
-        RemoteLogger('In Notificaiton Handler');
         if (!notification.foreground && notification.userInteraction) {
             RemoteLogger('Notifcaiton Touched');
             Conversation.getConversation(notification.conversationId)
