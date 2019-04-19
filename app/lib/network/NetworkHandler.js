@@ -31,10 +31,10 @@ const poll = () => {
     });
 };
 
-const readLambda = () => {
+const readLambda = (force = false) => {
     Auth.getUser().then(authUser => {
         processNetworkQueue();
-        readRemoteLambdaQueue(authUser);
+        readRemoteLambdaQueue(authUser, force);
     });
 };
 
@@ -44,19 +44,23 @@ const handleLambdaResponse = (res, user) => {
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
-        _.forEach(messages, function(message) {
-            MessageQueue.push(message);
+        messages.forEach((message, index) => {
+            setTimeout(() => {
+                MessageQueue.push(message);
+            }, index * 100);
         });
+        // _.forEach(messages, function(message) {
+        //     MessageQueue.push(message);
+        // });
     }
 };
 
 let currentlyReading = false;
 
-const readRemoteLambdaQueue = user => {
+const readRemoteLambdaQueue = (user, force = false) => {
     console.log('Sourav Logging:::: Reading Remote Lambda Queue');
-    RemoteLogger('Sourav Logging:::: Reading Remote Lambda Queue');
 
-    if (currentlyReading === true) {
+    if (currentlyReading === true && !force) {
         return;
     }
     currentlyReading = true;

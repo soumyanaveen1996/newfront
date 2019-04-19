@@ -248,8 +248,11 @@ class NetworkPoller {
                 console.log('---------App in Active State -----------');
 
                 RemoteBotInstall.syncronizeBots();
-                NetworkHandler.readLambda();
-                setTimeout(() => this.subscribeToServerEvents(), 500);
+                setTimeout(
+                    () => NetworkHandler.readLambda((force = true)),
+                    500
+                );
+                setTimeout(() => this.subscribeToServerEvents(), 200);
                 setTimeout(() => this.cleanupSubscriptions(), 1000);
             }
             console.log('Moving to app state : ', nextAppState);
@@ -485,7 +488,7 @@ class NetworkPoller {
     };
 
     process = () => {
-        setTimeout(() => NetworkHandler.poll(), 1000);
+        setTimeout(() => NetworkHandler.poll(), 0);
         InteractionManager.runAfterInteractions(() =>
             BackgroundTaskProcessor.process()
         );

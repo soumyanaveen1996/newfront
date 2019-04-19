@@ -218,6 +218,26 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = () => {
+        RemoteLogger('Sourav Logging::: Configuring Push Notifications');
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.addEventListener(
+                'notification',
+                notification => {
+                    RemoteLogger('------------Received Notifcation--------');
+                    NetworkHandler.readLambda();
+                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+
+            PushNotificationIOS.addEventListener(
+                'localNotification',
+                notification => {
+                    RemoteLogger('------------Received Notifcation--------');
+                    NetworkHandler.readLambda();
+                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+        }
         Notification.deviceInfo()
             .then(info => {
                 if (info) {
@@ -342,6 +362,10 @@ export default class Splash extends React.Component {
             NotificationEvents.registeredNotifications,
             this.notificationRegistrationHandler
         );
+
+        if (Platform.OS === 'ios') {
+            this.configureNotifications();
+        }
     };
 
     removeListeners = () => {
