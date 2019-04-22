@@ -320,7 +320,7 @@ export default class Splash extends React.Component {
                     }
                 });
         }
-        // NetworkHandler.readLambda();
+        NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             RemoteLogger('IOS Crap');
             notification.finish(PushNotificationIOS.FetchResult.NoData);

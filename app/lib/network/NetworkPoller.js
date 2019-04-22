@@ -9,6 +9,7 @@ import EventEmitter, {
     SatelliteConnectionEvents
 } from '../events';
 import { AppState, Platform, InteractionManager } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 import BackgroundTask from 'react-native-background-task';
 import RNEventSource from 'react-native-event-source';
@@ -251,6 +252,7 @@ class NetworkPoller {
                 setTimeout(() => NetworkHandler.readLambda(), 500);
                 setTimeout(() => this.subscribeToServerEvents(), 2000);
                 setTimeout(() => this.cleanupSubscriptions(), 5000);
+                PushNotification.setApplicationIconBadgeNumber(0);
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {

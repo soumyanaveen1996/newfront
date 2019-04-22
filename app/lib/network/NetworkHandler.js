@@ -10,7 +10,6 @@ import _ from 'lodash';
 import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
 import Store from '../../lib/Store';
-import PushNotification from 'react-native-push-notification';
 import {} from '../../redux/actions/UserActions';
 
 import RStore from '../../redux/store/configureStore';
@@ -75,6 +74,7 @@ const readRemoteLambdaQueue = user => {
     let logoutSubscribtion;
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
+            RemoteLogger('Read Queue Messages');
             handleLambdaResponse(message, user);
         })
     );
@@ -90,7 +90,6 @@ const readRemoteLambdaQueue = user => {
 
     logoutSubscriptions.push(
         eventEmitter.addListener('logout', message => {
-            console.log('GRPC:::Logout GRPC message : ', message, message);
             // subscription.remove();
             // endSubscribtion.remove();
             // logoutSubscribtion.remove();
@@ -100,6 +99,7 @@ const readRemoteLambdaQueue = user => {
         })
     );
 
+    RemoteLogger('Reading Queue');
     QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
 
     /*
@@ -114,17 +114,14 @@ const readRemoteLambdaQueue = user => {
 };
 
 const cleanupSubscriptions = () => {
-    console.log('Sourav Logging:::End Read Lambda Queue----- CleanUP:');
+    RemoteLogger('Sourav Logging:::End Read Lambda Queue----- CleanUP:');
     for (let sub of messageSubscriptions) {
-        console.log('Sourav Logging:::: Remove Subscription');
         sub.remove();
     }
     for (let sub of endSubscriptions) {
-        console.log('Sourav Logging:::: Remove Subscription');
         sub.remove();
     }
     for (let sub of logoutSubscriptions) {
-        console.log('Sourav Logging:::: Remove Subscription');
         sub.remove();
     }
     messageSubscriptions.splice(0, messageSubscriptions.length);

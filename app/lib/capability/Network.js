@@ -177,9 +177,25 @@ function Network(options, queue = false) {
 
                 const grpcService = getGrpcService(serviceName);
 
+                console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
                     if (error) {
-                        reject(error);
+                        console.log(
+                            'Sourav Logging:::: Errro Sending the message, should we Quque it????'
+                        );
+
+                        const deferredKey = key
+                            ? key
+                            : SHA1(JSON.stringify(params)).toString();
+
+                        return resolve(
+                            futureRequest(
+                                deferredKey,
+                                new NetworkRequest(options)
+                            )
+                        );
+
+                        // reject(error);
                     }
                     console.log(
                         'Sourav Logging::::Agent guard response : ',
