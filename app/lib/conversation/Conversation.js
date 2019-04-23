@@ -327,6 +327,8 @@ export default class Conversation {
         Conversation.removeConversation(conversationId, CHANNEL_CHAT);
 
     static grpcDeleteContacts = (user, userIds) => {
+        // console.log('delete grpc contcat ', userIds);
+
         return new Promise((resolve, reject) => {
             ContactsServiceClient.remove(
                 user.creds.sessionId,
@@ -345,8 +347,29 @@ export default class Conversation {
             );
         });
     };
+    static grpcDeleteLocalContacts = (user, localContacts) => {
+        // console.log('delete grpc contcat ', localContacts);
+
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.remove(
+                user.creds.sessionId,
+                { localContacts },
+                (error, result) => {
+                    console.log('GRPC:::delete contacts : ', error, result);
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    };
     static deleteContacts = body => {
-        console.log('sending data for delete before', body);
+        // console.log('sending data for delete before', body);
         let currentUserId;
         return new Promise((resolve, reject) => {
             Auth.getUser()
@@ -366,6 +389,23 @@ export default class Conversation {
                         otherUserId,
                         currentUserId
                     });
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    };
+    static deleteLocalContacts = body => {
+        // console.log('sending data for local conatct delete before', body);
+
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        return Conversation.grpcDeleteLocalContacts(
+                            user,
+                            body.localContacts
+                        );
+                    }
                 })
                 .then(resolve)
                 .catch(reject);
@@ -490,7 +530,7 @@ export default class Conversation {
                     }
                 })
                 .then(async response => {
-                    // console.log('response fav ', response);
+                    console.log('response fav ', response);
 
                     let err = _.get(response, 'data.error');
                     if (err !== '0' && err !== 0) {

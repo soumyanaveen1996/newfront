@@ -529,7 +529,7 @@ class NewCallContacts extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     {this.renderContactsList()}
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{
                             position: 'absolute',
                             width: 160,
@@ -549,7 +549,7 @@ class NewCallContacts extends React.Component {
                             source={require('../../images/contact/tab-dialpad-icon-active.png')}
                         />
                         <Text style={{ color: '#fff' }}>DialPad</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <Modal
                         isVisible={this.state.contactVisible}
                         onBackdropPress={() => {

@@ -7,7 +7,7 @@ import {
     TextInput,
     FlatList,
     Platform,
-    BackHandler,
+    Alert,
     TouchableOpacity,
     SafeAreaView
 } from 'react-native';
@@ -36,7 +36,8 @@ export default class ResetPassword extends React.Component {
             confirmPassword: '',
             passwordError: '',
             confirmPasswordError: '',
-            errorMessage: ''
+            errorMessage: '',
+            codeError: ''
         };
         this.inputs = {};
     }
@@ -150,6 +151,20 @@ export default class ResetPassword extends React.Component {
         this.inputs[id].focus();
     };
 
+    displayCodeErrorMessege = () => {
+        if (this.state.codeError && this.state.codeError.length > 0) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            {this.state.codeError}
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
     displayPasswordErrorMessege = () => {
         if (this.state.passwordError && this.state.passwordError.length > 0) {
             return (
@@ -226,16 +241,23 @@ export default class ResetPassword extends React.Component {
             Auth.confirmReset(userDetails)
                 .then(data => {
                     if (data.success) {
-                        this.setState(() => {
-                            return { loading: false };
+                        this.setState({ loading: false, codeError: '' }, () => {
+                            setTimeout(() => {
+                                this.showAlert(
+                                    'Password successfully changed.'
+                                );
+                            }, 200);
                         });
-                        Actions.loginScreen();
                     }
                 })
                 .catch(err => {
                     console.log('error from reset password ', err);
                     this.setState(() => {
-                        return { loading: false };
+                        return {
+                            loading: false,
+                            codeError: 'Wrong code',
+                            verificationCode: ''
+                        };
                     });
                 });
         } else {
@@ -252,6 +274,22 @@ export default class ResetPassword extends React.Component {
             });
         }
     };
+
+    showAlert(msg) {
+        Alert.alert(
+            '',
+            msg,
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        Actions.loginScreen();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    }
 
     render() {
         return (
@@ -294,6 +332,7 @@ export default class ResetPassword extends React.Component {
                                     }}
                                     maxLength={6} //setting limit of input
                                 />
+                                {this.displayCodeErrorMessege()}
                             </View>
                             <View style={styles.entryFields}>
                                 <Text style={styles.placeholderText}>
