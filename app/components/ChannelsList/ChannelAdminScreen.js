@@ -459,7 +459,7 @@ class ChannelAdminScreen extends React.Component {
     }
 
     render() {
-        console.log('all channel details ======================', this.channel);
+        console.log('all data for channels ', this.state, this.props);
 
         if (this.state.isLoading) {
             return (
