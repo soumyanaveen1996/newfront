@@ -219,14 +219,10 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = () => {
-        RemoteLogger('Sourav Logging::: Configuring Push Notifications');
         if (Platform.OS === 'ios') {
             PushNotificationIOS.addEventListener(
                 'notification',
                 notification => {
-                    RemoteLogger(
-                        '------------Received Remote Notifcation--------'
-                    );
                     // NetworkHandler.readLambda();
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
@@ -235,9 +231,6 @@ export default class Splash extends React.Component {
             PushNotificationIOS.addEventListener(
                 'localNotification',
                 notification => {
-                    RemoteLogger(
-                        '------------Received Local Notifcation--------'
-                    );
                     // NetworkHandler.readLambda(true);
                     notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
@@ -261,7 +254,6 @@ export default class Splash extends React.Component {
     handleNotification = notification => {
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
-            RemoteLogger(`Notifcaiton Touched ${JSON.stringify(notification)}`);
             PushNotification.setApplicationIconBadgeNumber(0);
             Conversation.getConversation(notification.conversationId)
                 .then(conv => {
@@ -322,7 +314,6 @@ export default class Splash extends React.Component {
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
-            RemoteLogger('IOS Crap');
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
     };
