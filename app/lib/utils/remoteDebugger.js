@@ -1,8 +1,18 @@
+import { Platform } from 'react-native';
 const R = require('ramda');
 const axios = require('axios');
 
 const RemoteLogger = text => {
     console.log(text);
+
+    // return;
+    // if (Platform.OS === 'android') {
+    //     return;
+    // }
+
+    if (__DEV__) {
+        return;
+    }
 
     axios
         .request({

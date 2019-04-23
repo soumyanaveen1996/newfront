@@ -7,9 +7,12 @@ import {
     Image,
     Text,
     Alert,
-    FlatList
+    FlatList,
+    ActivityIndicator,
+    ScrollView
 } from 'react-native';
 import styles, { chatBarStyle } from './styles';
+import modalStyle from '../Cards/styles';
 import Images from '../../config/images';
 import Icons from '../../config/icons';
 import Utils from '../../lib/utils';
@@ -40,7 +43,8 @@ export class SearchBox extends React.Component {
             text: '',
             lastSearch: null,
             canDone: false,
-            response: []
+            response: [],
+            searching: false
         };
     }
 
@@ -103,7 +107,10 @@ export class SearchBox extends React.Component {
                     ItemSeparatorComponent={this.renderSeparator.bind(this)}
                 />
             );
-        } else if (this.state.lastSearch) {
+        } else if (
+            this.props.data.results &&
+            this.props.data.results.length === 0
+        ) {
             return (
                 <View>
                     <Text
@@ -164,7 +171,11 @@ export class SearchBox extends React.Component {
     }
 
     renderInfoIcon(info) {
-        return <TouchableOpacity>{Icons.info()}</TouchableOpacity>;
+        return (
+            <TouchableOpacity onPress={this.onOpenInfo.bind(this, info)}>
+                {Icons.info()}
+            </TouchableOpacity>
+        );
     }
 
     renderSeparator() {
@@ -181,18 +192,92 @@ export class SearchBox extends React.Component {
     }
 
     rightButton() {
-        return (
-            <TouchableOpacity
-                accessibilityLabel="Right Button Send"
-                testID="right-button-send"
-                onPress={this.onSearch.bind(this)}
-            >
-                <Image
-                    source={Images.btn_send}
-                    style={styles.chatBarSendButton}
+        if (this.state.searching) {
+            return (
+                <ActivityIndicator
+                    style={{ marginHorizontal: 10 }}
+                    size="small"
                 />
-            </TouchableOpacity>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    accessibilityLabel="Right Button Send"
+                    testID="right-button-send"
+                    onPress={this.onSearch.bind(this)}
+                    disabled={this.state.canDone}
+                >
+                    <Image
+                        source={Images.btn_send}
+                        style={[
+                            styles.chatBarSendButton,
+                            {
+                                tintColor: this.state.canDone
+                                    ? GlobalColors.disabledGray
+                                    : null
+                            }
+                        ]}
+                    />
+                </TouchableOpacity>
+            );
+        }
+    }
+
+    renderModalContent(info) {
+        let fields;
+        if (info) {
+            let keys = Object.keys(info);
+            keys = keys.slice(1, keys.length);
+            fields = _.map(keys, key => {
+                return (
+                    <View style={modalStyle.fieldModal}>
+                        <Text style={modalStyle.fieldLabelModal}>
+                            {key + ': '}
+                        </Text>
+                        {this.renderValue(info[key], true)}
+                    </View>
+                );
+            });
+        }
+        return (
+            <View style={[modalStyle.modalCard, { height: '65%' }]}>
+                <ScrollView>
+                    <View style={modalStyle.fieldsModal}>{fields}</View>
+                </ScrollView>
+            </View>
         );
+    }
+
+    renderValue(value, isModal) {
+        if (value === null || value === undefined) {
+            return <Text style={modalStyle.fieldText}>-</Text>;
+        } else if (typeof value === 'boolean') {
+            if (value) {
+                return Icons.cardsTrue();
+            } else {
+                return Icons.cardsFalse();
+            }
+        } else {
+            if (isModal) {
+                return (
+                    <Text style={modalStyle.fieldText}>{value.toString()}</Text>
+                );
+            } else {
+                return (
+                    <Text
+                        style={[modalStyle.fieldText, { textAlign: 'left' }]}
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                    >
+                        {value.toString()}
+                    </Text>
+                );
+            }
+        }
+    }
+
+    onOpenInfo(info) {
+        this.props.onOpenInfo(this.renderModalContent(info));
     }
 
     onChangeText(text) {
@@ -222,12 +307,16 @@ export class SearchBox extends React.Component {
     }
 
     onSearch() {
-        this.setState({ lastSearch: this.state.text });
+        this.setState({ lastSearch: this.state.text, searching: true });
         query = {
             action: SearchBoxUserAction.SEARCH,
             queryString: this.state.text
         };
         this.props.sendSearchQuery(query);
+    }
+
+    onResponseReceived() {
+        this.setState({ searching: false });
     }
 
     render() {

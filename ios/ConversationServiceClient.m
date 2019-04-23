@@ -44,7 +44,6 @@ RCT_REMAP_METHOD(getCatalog, getCatalogWithSessionId:(NSString *)sessionId andCa
       callback(@[@{}, [NSNull null]]);
       return;
     } else {
-      RCTLog(@"method:getCatalog response Params : %@", [response toResponse]);
       callback(@[[NSNull null], [response toResponse]]);
     }
   }];

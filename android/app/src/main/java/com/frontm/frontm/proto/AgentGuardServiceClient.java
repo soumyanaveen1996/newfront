@@ -109,19 +109,25 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
+        Log.d("Sourav Logging::::Sending Agent Guard Message", input.toString());
+
         stub.execute(input, new StreamObserver<AgentGuardStringResponse>() {
             @Override
             public void onNext(AgentGuardStringResponse value) {
+                Log.d("Received AG Response", value.toString());
                 callback.invoke(null, new AgentGuardStringResponseConverter().toResponse(value));
             }
 
             @Override
             public void onError(Throwable t) {
+                Log.d("Error Calling Agent Guard", t.toString());
                 callback.invoke(Arguments.createMap());
             }
 
             @Override
             public void onCompleted() {
+
+                Log.d("On Completed AG", "Completed");
 
             }
         });

@@ -68,6 +68,7 @@ RCT_EXPORT_MODULE();
 
 
 RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString *)sessionId) {
+  RCTLog(@"Reading Remote Lambda");
   GRPCProtoCall *call = [self.serviceClient RPCToGetAllQueueMessagesWithRequest:[Empty new] eventHandler:^(BOOL done, QueueResponse * _Nullable response, NSError * _Nullable error) {
     if (error) {
       if (error.code == 16) {
@@ -77,8 +78,10 @@ RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString
       return;
     }
     if (done) {
+      RCTLog(@"Reading Done");
       [self sendEventWithName:@"end" body:@{}];
     } else {
+      RCTLog(@"---------------Sending Remote Lambda response------------");
       [self sendEventWithName:@"message" body:[response toResponse]];
     }
   }];

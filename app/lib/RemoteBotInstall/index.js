@@ -23,7 +23,6 @@ class RemoteBotInstall {
                     if (err) {
                         return reject(new Error('Unknown Error'));
                     }
-                    console.log('GRPC:::Bots subscription', result.data);
                     if (result.data) {
                         resolve(result);
                     } else {
@@ -51,10 +50,6 @@ class RemoteBotInstall {
                     //     'list of bots installed ========== ',
                     //     subscribedBots
                     // );
-                    console.log(
-                        'GRPC:::list of bots installed',
-                        subscribedBots
-                    );
                     resolve(subscribedBots.data.content);
                 })
                 .catch(reject);
