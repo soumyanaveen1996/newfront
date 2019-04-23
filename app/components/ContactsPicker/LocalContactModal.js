@@ -14,6 +14,11 @@ import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import images from '../../images';
+import {
+    SECTION_HEADER_HEIGHT,
+    SCREEN_WIDTH,
+    scrollViewConfig
+} from './config';
 
 export default class LocalContactModal extends React.Component {
     constructor(props) {
@@ -133,10 +138,12 @@ export default class LocalContactModal extends React.Component {
             return this.state.contactsList.map((elem, index) => {
                 return (
                     <View
+                        key={index}
                         style={{
                             flex: 1,
                             backgroundColor: '#fff',
-                            padding: 10
+                            padding: 5,
+                            margin: 5
                         }}
                     >
                         <TouchableOpacity
@@ -145,7 +152,7 @@ export default class LocalContactModal extends React.Component {
                             }
                             style={{
                                 flexDirection: 'row',
-                                height: 35,
+                                height: 30,
                                 alignItems: 'center'
                             }}
                             key={index}
@@ -206,44 +213,63 @@ export default class LocalContactModal extends React.Component {
         return (
             <Modal
                 isVisible={this.props.isVisible}
+                swipeArea={50}
                 onBackdropPress={() => {
                     this.props.setVisible(false);
                 }}
                 onBackButtonPress={() => {
                     this.props.setVisible(false);
                 }}
-                onSwipe={() => this.props.setVisible(false)}
-                swipeDirection="right"
+                // onSwipe={() => this.props.setVisible(false)}
+                // swipeDirection="right"
+                swipeToClose={false}
             >
                 <View style={styles.localContactModal}>
+                    <View style={{ position: 'absolute', right: 10, top: 10 }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.props.setVisible(false);
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: 15,
+                                    height: 15,
+                                    resizeMode: 'center',
+                                    padding: 5
+                                }}
+                                source={require('../../images/remove-icon/popup-close.png')}
+                            />
+                        </TouchableOpacity>
+                    </View>
                     <Text
                         style={{
-                            marginVertical: 5,
-                            fontSize: 16,
-                            fontWeight: 'bold'
+                            marginBottom: 10,
+                            fontSize: 18,
+                            height: 45
                         }}
                     >
                         Your contacts{' '}
                     </Text>
-                    <View
+
+                    <ScrollView
                         style={{
-                            flex: 1,
-                            marginBottom: 20,
-                            backgroundColor: 'rgba(0,0,0,0.3)'
+                            width: '100%',
+                            height: 200,
+                            backgroundColor: '#fff',
+                            marginBottom: 10,
+                            paddingHorizontal: 45
                         }}
                     >
-                        <ScrollView
-                            style={{
-                                flex: 1,
-                                backgroundColor: '#fff',
-                                paddingVertical: 5,
-                                paddingHorizontal: 70
-                            }}
-                        >
-                            {this.renderContacts()}
-                        </ScrollView>
-                    </View>
-                    <View>
+                        {this.renderContacts()}
+                    </ScrollView>
+
+                    <View
+                        style={{
+                            justifyContent: 'flex-end',
+                            height: 45
+                        }}
+                    >
                         <TouchableOpacity
                             onPress={() => {
                                 this.importSelectedContact();

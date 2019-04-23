@@ -104,6 +104,12 @@ class ManageContacts extends React.Component {
 
     componentDidMount() {
         this.props.setCurrentScene(ROUTER_SCENE_KEYS.manageContacts);
+        console.log(
+            'all contacts from props ',
+            this.props.allContacts,
+            this.props.appState.contactsLoaded
+        );
+
         if (this.props.allContacts) {
             const allContacts = _.map(this.props.allContacts, contact => {
                 return {
@@ -234,7 +240,7 @@ class ManageContacts extends React.Component {
         Actions.pop();
     };
 
-    toggleSelectContacts = elem => {
+    toggleSelectContacts(elem) {
         if (!elem.disabled) {
             let array = [...this.state.contacts];
             const index = R.findIndex(R.propEq('userId', elem.userId))(array);
@@ -243,7 +249,7 @@ class ManageContacts extends React.Component {
                 contacts: array
             });
         }
-    };
+    }
     onSearchQueryChange(text) {
         if (text !== '') {
             this.setState({ searchText: text });
@@ -277,6 +283,9 @@ class ManageContacts extends React.Component {
                 .toLowerCase()
                 .includes(this.state.searchText.toLowerCase())
         );
+
+        // console.log('contacts details ', this.state.contacts);
+
         return (
             <SafeAreaView style={styles.addContactsContainer}>
                 {this.renderSearchBar()}
@@ -301,7 +310,10 @@ class ManageContacts extends React.Component {
                         >
                             {this.state.contacts.map((elem, index) => {
                                 return elem && elem.selected ? (
-                                    <View style={styles.selectedChip}>
+                                    <View
+                                        key={index}
+                                        style={styles.selectedChip}
+                                    >
                                         <RNChipView
                                             title={elem.userName}
                                             titleStyle={styles.chipFont}
@@ -332,7 +344,10 @@ class ManageContacts extends React.Component {
                                             borderRadius={6}
                                             height={30}
                                             onPress={() => {
-                                                this.toggleSelectContacts(elem);
+                                                this.toggleSelectContacts.bind(
+                                                    this,
+                                                    elem
+                                                );
                                             }}
                                         />
                                     </View>
