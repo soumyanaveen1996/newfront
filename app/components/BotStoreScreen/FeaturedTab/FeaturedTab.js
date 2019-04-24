@@ -64,7 +64,7 @@ export default class FeaturedTab extends React.Component {
     renderGridItem = ({ item }) => {
         return (
             <View key={item.botId} style={styles.rowContainer}>
-                <View style={styles.rowContent}>{this.renderBot(item)}</View>
+                {this.renderBot(item)}
             </View>
         );
     };
