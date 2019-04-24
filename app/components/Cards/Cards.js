@@ -14,22 +14,22 @@ import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { ModalCardSize } from './config';
 import { Actions } from 'react-native-router-flux';
+import CardImage from './CardImage';
 
 export default class Cards extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalVisible: false,
-            showTitle: []
+            isModalVisible: false
         };
-        this.showTitle = [];
-    }
-
-    componentDidMount() {
-        this.setState({ showTitle: this.showTitle });
     }
 
     card = ({ item, index }) => {
+        const title = (
+            <Text style={styles.title} numberOfLines={2} ellipsizeMode={'tail'}>
+                {item.title}
+            </Text>
+        );
         return (
             <TouchableOpacity
                 style={styles.bigCard}
@@ -37,28 +37,16 @@ export default class Cards extends React.Component {
                 onPress={this.onCardSelected.bind(this, index)}
             >
                 <View style={styles.verticalContainer}>
-                    {this.state.showTitle[index] ? (
-                        <Text
-                            style={styles.title}
-                            numberOfLines={2}
-                            ellipsizeMode={'tail'}
-                        >
-                            {item.title}
-                        </Text>
-                    ) : (
-                        <Image
-                            style={styles.image}
-                            source={{ uri: item.pictureUrl }}
-                            onError={() => {
-                                this.showTitle[index] = true;
-                            }}
-                            resizeMode="contain"
-                        />
-                    )}
+                    <CardImage
+                        style={styles.image}
+                        source={{ uri: item.pictureUrl }}
+                        resizeMode="contain"
+                        placeholder={title}
+                    />
                     <Text
                         style={styles.description}
                         ellipsizeMode={'tail'}
-                        numberOfLines={this.state.showTitle[index] ? 5 : 3}
+                        numberOfLines={3}
                     >
                         {item.description}
                     </Text>
@@ -148,13 +136,12 @@ export default class Cards extends React.Component {
         }
         return (
             <View style={styles.modalCard}>
-                {this.state.showTitle[index] ? null : (
-                    <Image
-                        style={styles.imageModal}
-                        source={{ uri: item.pictureUrl }}
-                        resizeMode="contain"
-                    />
-                )}
+                <CardImage
+                    style={styles.imageModal}
+                    source={{ uri: item.pictureUrl }}
+                    resizeMode="contain"
+                    placeholder={null}
+                />
                 <ScrollView>
                     <View style={styles.fieldsModal}>
                         <Text style={styles.titleModal}>{item.title}</Text>
