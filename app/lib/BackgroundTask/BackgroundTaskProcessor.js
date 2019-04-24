@@ -30,7 +30,6 @@ class BackgroundTaskBotScreen {
     persistMessage = async message => {
         console.log('GRPC:::processAsyncMessage - persistMessage', message);
         await MessageHandler.persistOnDevice(this.getBotKey(), message);
-        console.log('GRPC:::processAsyncMessage - persistedMessage', message);
         // Just a check
         if (this.receivedMessage && !this.receivedMessageProcessed) {
             EventEmitter.emit(MessageEvents.messageProcessed, {

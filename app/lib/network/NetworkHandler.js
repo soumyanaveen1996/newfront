@@ -10,14 +10,20 @@ import _ from 'lodash';
 import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
 import Store from '../../lib/Store';
-import PushNotification from 'react-native-push-notification';
 import {} from '../../redux/actions/UserActions';
 
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import RemoteLogger from '../utils/remoteDebugger';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
+
+const QueueServiceClient = NativeModules.QueueServiceClient;
+eventEmitter = new NativeEventEmitter(QueueServiceClient);
+var messageSubscriptions = [];
+var endSubscriptions = [];
+var logoutSubscriptions = [];
 /**
  * Polls the local queue for pending network request and makes them.
  * TODO: Should there be retry here? How to validate there is data? etc - logic needs to be incoporated
@@ -43,44 +49,57 @@ const handleLambdaResponse = (res, user) => {
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
-        _.forEach(messages, function(message) {
-            MessageQueue.push(message);
+        messages.forEach((message, index) => {
+            setTimeout(() => {
+                MessageQueue.push(message);
+            }, index * 100);
         });
+        // _.forEach(messages, function(message) {
+        //     MessageQueue.push(message);
+        // });
     }
 };
 
 let currentlyReading = false;
 
 const readRemoteLambdaQueue = user => {
-    if (currentlyReading === true) {
-        return;
-    }
+    // we will remove Subscription when the APp goes to background
+
+    // console.log('Sourav Logging:::: currently Reading', currentlyReading);
+    // if (currentlyReading === true) {
+    //     return;
+    // }
     currentlyReading = true;
 
-    const QueueServiceClient = NativeModules.QueueServiceClient;
-    eventEmitter = new NativeEventEmitter(QueueServiceClient);
     let logoutSubscribtion;
-    const subscription = eventEmitter.addListener('message', message => {
-        handleLambdaResponse(message, user);
-    });
+    messageSubscriptions.push(
+        eventEmitter.addListener('message', message => {
+            RemoteLogger('Read Queue Messages');
+            handleLambdaResponse(message, user);
+        })
+    );
 
-    const endSubscribtion = eventEmitter.addListener('end', message => {
-        console.log('GRPC:::End GRPC message : ', message, message);
-        subscription.remove();
-        endSubscribtion.remove();
-        logoutSubscribtion.remove();
-        currentlyReading = false;
-    });
+    endSubscriptions.push(
+        eventEmitter.addListener('end', message => {
+            const rand = (Math.floor(Math.random() * 5) + 2) * 1000;
+            setTimeout(() => {
+                cleanupSubscriptions();
+            }, rand);
+        })
+    );
 
-    logoutSubscribtion = eventEmitter.addListener('logout', message => {
-        console.log('GRPC:::Logout GRPC message : ', message, message);
-        subscription.remove();
-        endSubscribtion.remove();
-        logoutSubscribtion.remove();
-        currentlyReading = false;
-        Auth.logout();
-    });
+    logoutSubscriptions.push(
+        eventEmitter.addListener('logout', message => {
+            // subscription.remove();
+            // endSubscribtion.remove();
+            // logoutSubscribtion.remove();
+            // currentlyReading = false;
+            cleanupSubscriptions();
+            Auth.logout();
+        })
+    );
 
+    RemoteLogger('Reading Queue');
     QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
 
     /*
@@ -92,6 +111,22 @@ const readRemoteLambdaQueue = user => {
         .catch(error => {
             console.log('Error in Reading Lambda queue', error);
         }); */
+};
+
+const cleanupSubscriptions = () => {
+    RemoteLogger('Sourav Logging:::End Read Lambda Queue----- CleanUP:');
+    for (let sub of messageSubscriptions) {
+        sub.remove();
+    }
+    for (let sub of endSubscriptions) {
+        sub.remove();
+    }
+    for (let sub of logoutSubscriptions) {
+        sub.remove();
+    }
+    messageSubscriptions.splice(0, messageSubscriptions.length);
+    endSubscriptions.splice(0, endSubscriptions.length);
+    logoutSubscriptions.splice(0, logoutSubscriptions.length);
 };
 
 const processNetworkQueueRequest = () => {

@@ -1,25 +1,24 @@
 import React from 'react';
 import {
     View,
+    ScrollView,
     Text,
     Image,
-    FlatList,
     TextInput,
-    SafeAreaView,
+    FlatList,
     Platform,
+    Alert,
     TouchableOpacity,
-    ScrollView,
-    BackHandler,
-    AsyncStorage
+    SafeAreaView
 } from 'react-native';
 import styles from './styles';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import Loader from '../Loader/Loader';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import images from '../../images';
 import { Auth } from '../../lib/capability';
-import Loader from '../Loader/Loader';
+import { Actions } from 'react-native-router-flux';
 
-export default class SignupScreen extends React.Component {
+export default class ResetPassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,35 +30,19 @@ export default class SignupScreen extends React.Component {
                 { text: ' One number', isDone: false },
                 { text: ' 8 characters minimum', isDone: false }
             ],
-            name: this.props.userName || '',
-            email: this.props.userEmail || '',
+            email: this.props.email || '',
+            verificationCode: '',
             password: '',
             confirmPassword: '',
-            nameError: '',
-            emailError: '',
             passwordError: '',
             confirmPasswordError: '',
-            errorMessage: ''
+            errorMessage: '',
+            codeError: ''
         };
         this.inputs = {};
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
-    }
-
-    handleBackButtonClick() {
-        console.log('going back from signup screen');
-
-        if (Actions.currentScene === 'signupScreen') {
-            BackHandler.exitApp();
-        }
-    }
-
-    validateEmail(email) {
+    alidateEmail(email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
@@ -139,96 +122,20 @@ export default class SignupScreen extends React.Component {
         }
     };
 
-    goBackToLogin = () => {
-        Actions.swiperScreen({ type: ActionConst.REPLACE });
-    };
-
     checkFieldEmpty = () => {
-        let emailResult = this.validateEmail(this.state.email);
         let passworResult = this.passwordValidation(this.state.password);
         let passwordConfirmResult = this.passwordConfirm();
 
-        if (
-            this.state.name.length >= 3 &&
-            emailResult &&
-            passworResult &&
-            passwordConfirmResult
-        ) {
+        if (passworResult && passwordConfirmResult) {
             return true;
         }
     };
 
-    onSignup = async () => {
+    onChangeCode(text) {
+        // Keyboard.dismiss()
         this.setState(() => {
-            return { loading: true };
+            return { verificationCode: text };
         });
-        let emailResult = this.validateEmail(this.state.email);
-        let passworResult = this.passwordValidation(this.state.password);
-        let passwordConfirmResult = this.passwordConfirm();
-        if (emailResult && passworResult && passwordConfirmResult) {
-            const userDetails = {
-                userName: this.state.name,
-                email: this.state.email,
-                password: this.state.password
-            };
-            await Auth.signupWithFrontm(userDetails)
-                .then(async data => {
-                    if (data.success) {
-                        await AsyncStorage.setItem(
-                            'userEmail',
-                            this.state.email
-                        );
-                        await AsyncStorage.setItem(
-                            'userDisplayName',
-                            this.state.name
-                        );
-                        await AsyncStorage.setItem('signupStage', 'checkCode');
-
-                        this.setState({ loading: false, name: '', email: '' });
-                        Actions.confirmationScreen({
-                            type: ActionConst.REPLACE,
-                            userEmail: this.state.email,
-                            password: this.state.password
-                        });
-                    } else {
-                        this.setState({ emailError: err.message });
-                        this.setState(() => {
-                            return { loading: false };
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.log('error from signup ', err);
-
-                    this.setState({ emailError: 'Email already in use' });
-                    this.setState(() => {
-                        return { loading: false };
-                    });
-                });
-        } else {
-            if (!emailResult) {
-                this.setState({ emailError: 'Invalid Email' });
-            }
-            if (!passworResult) {
-                this.setState({ passwordError: 'Invalid Password' });
-            }
-            if (!passwordConfirmResult) {
-                this.setState({
-                    confirmPasswordError: 'Password do not match'
-                });
-            }
-            this.setState(() => {
-                return { loading: false };
-            });
-        }
-    };
-
-    onChangeName(text) {
-        this.setState({ name: text });
-    }
-
-    onChangeEmail(text) {
-        this.setState({ email: text });
     }
 
     onChangePassword(text) {
@@ -244,40 +151,13 @@ export default class SignupScreen extends React.Component {
         this.inputs[id].focus();
     };
 
-    getCorrectPassword = () => {
-        return (
-            <Image
-                style={{
-                    width: 15,
-                    height: 15,
-                    marginRight: 5
-                }}
-                source={images.pass_checkbox_empty}
-            />
-        );
-    };
-
-    displayNameErrorMessege = () => {
-        if (this.state.nameError && this.state.nameError.length > 0) {
+    displayCodeErrorMessege = () => {
+        if (this.state.codeError && this.state.codeError.length > 0) {
             return (
                 <View style={styles.errorContainer}>
                     <View style={styles.userError}>
                         <Text style={styles.errorText}>
-                            {this.state.nameError}
-                        </Text>
-                    </View>
-                </View>
-            );
-        }
-    };
-
-    displayEmailErrorMessege = () => {
-        if (this.state.emailError && this.state.emailError.length > 0) {
-            return (
-                <View style={styles.errorContainer}>
-                    <View style={styles.userError}>
-                        <Text style={styles.errorText}>
-                            {this.state.emailError}
+                            {this.state.codeError}
                         </Text>
                     </View>
                 </View>
@@ -344,21 +224,78 @@ export default class SignupScreen extends React.Component {
         }
     };
 
-    goToLoginPage = () => {
-        Actions.swiperScreen({
-            type: ActionConst.REPLACE,
-            swiperIndex: 4
+    onResetPassword = () => {
+        this.setState(() => {
+            return { loading: true };
         });
+
+        let passworResult = this.passwordValidation(this.state.password);
+        let passwordConfirmResult = this.passwordConfirm();
+        if (passworResult && passwordConfirmResult) {
+            const userDetails = {
+                verificationCode: this.state.verificationCode,
+                email: this.state.email,
+                newPassword: this.state.password
+            };
+            // console.log('userdetails ', userDetails);
+            Auth.confirmReset(userDetails)
+                .then(data => {
+                    if (data.success) {
+                        this.setState({ loading: false, codeError: '' }, () => {
+                            setTimeout(() => {
+                                this.showAlert(
+                                    'Password successfully changed.'
+                                );
+                            }, 200);
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log('error from reset password ', err);
+                    this.setState(() => {
+                        return {
+                            loading: false,
+                            codeError: 'Wrong code',
+                            verificationCode: ''
+                        };
+                    });
+                });
+        } else {
+            if (!passworResult) {
+                this.setState({ passwordError: 'Invalid Password' });
+            }
+            if (!passwordConfirmResult) {
+                this.setState({
+                    confirmPasswordError: 'Password do not match'
+                });
+            }
+            this.setState(() => {
+                return { loading: false };
+            });
+        }
     };
+
+    showAlert(msg) {
+        Alert.alert(
+            '',
+            msg,
+            [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        Actions.loginScreen();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    }
 
     render() {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-                <View style={styles.logoHeader}>
-                    <Image source={images.frontm_header_logo} />
-                </View>
+            <SafeAreaView style={styles.safeAreaView}>
                 <ScrollView
-                    style={styles.container}
+                    style={styles.containerReset}
                     keyboardShouldPersistTaps="always"
                 >
                     <Loader loading={this.state.loading} />
@@ -368,10 +305,8 @@ export default class SignupScreen extends React.Component {
                         scrollEnabled={false}
                     >
                         <View style={styles.headerContainer}>
-                            <Text style={styles.signupHeader}> Welcome! </Text>
-                            <Text style={styles.signupSubHeader}>
-                                {' '}
-                                Sign up to FrontM{' '}
+                            <Text style={styles.headerText}>
+                                Reset your password
                             </Text>
                         </View>
                         <View
@@ -381,74 +316,23 @@ export default class SignupScreen extends React.Component {
                             <View style={styles.entryFields}>
                                 <Text style={styles.placeholderText}>
                                     {' '}
-                                    Name{' '}
+                                    Confirmation Code{' '}
                                 </Text>
                                 <TextInput
-                                    style={styles.input}
-                                    autoCorrect={false}
-                                    returnKeyType={'next'}
+                                    style={styles.textInput}
+                                    keyboardType="numeric"
+                                    autoFocus={true}
+                                    placeholder="- - - - - -"
+                                    onChangeText={this.onChangeCode.bind(this)}
+                                    underlineColorAndroid="transparent"
                                     blurOnSubmit={false}
-                                    value={this.state.name}
-                                    onBlur={() => {
-                                        if (this.state.name.length < 3) {
-                                            this.setState({
-                                                nameError: 'Atleast 3 letters'
-                                            });
-                                        } else {
-                                            this.setState({
-                                                nameError: ''
-                                            });
-                                        }
-                                    }}
-                                    onSubmitEditing={() => {
-                                        this.focusNextField('email');
-                                    }}
-                                    placeholder="Name"
-                                    onChangeText={this.onChangeName.bind(this)}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                    clearButtonMode="always"
-                                />
-                                {this.displayNameErrorMessege()}
-                            </View>
-                            <View style={styles.entryFields}>
-                                <Text style={styles.placeholderText}>
-                                    {' '}
-                                    Email{' '}
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                    value={this.state.email}
-                                    keyboardType="email-address"
                                     returnKeyType={'next'}
-                                    blurOnSubmit={false}
-                                    onBlur={() => {
-                                        const isValidEmail = this.validateEmail(
-                                            this.state.email
-                                        );
-                                        if (!isValidEmail) {
-                                            this.setState({
-                                                emailError: 'Invalid Email'
-                                            });
-                                        } else {
-                                            this.setState({
-                                                emailError: ''
-                                            });
-                                        }
-                                    }}
                                     onSubmitEditing={() => {
                                         this.focusNextField('password');
                                     }}
-                                    ref={input => {
-                                        this.inputs.email = input;
-                                    }}
-                                    placeholder="Email"
-                                    onChangeText={this.onChangeEmail.bind(this)}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                    clearButtonMode="always"
+                                    maxLength={6} //setting limit of input
                                 />
-                                {this.displayEmailErrorMessege()}
+                                {this.displayCodeErrorMessege()}
                             </View>
                             <View style={styles.entryFields}>
                                 <Text style={styles.placeholderText}>
@@ -587,52 +471,12 @@ export default class SignupScreen extends React.Component {
                                         ? styles.buttonContainer
                                         : styles.diableButton
                                 }
-                                onPress={this.onSignup}
+                                onPress={this.onResetPassword}
                             >
-                                <Text style={styles.buttonText}>SIGNUP</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.bottomMargin}>
-                            <TouchableOpacity
-                                onPress={this.goToLoginPage}
-                                style={{
-                                    alignItems: 'center',
-                                    marginBottom: 10
-                                }}
-                            >
-                                <Text style={styles.goToLine}>
-                                    Already have an account?{' '}
-                                    <Text style={styles.bolder}> Log in </Text>
-                                    <Image
-                                        style={styles.arrow}
-                                        source={images.blue_arrow}
-                                    />
+                                <Text style={styles.buttonText}>
+                                    Reset Password
                                 </Text>
                             </TouchableOpacity>
-                            <View style={styles.dotSider}>
-                                <View style={styles.innerWidth}>
-                                    <Image
-                                        style={styles.dotSize}
-                                        source={images.dot_gray}
-                                    />
-                                    <Image
-                                        style={styles.dotSize}
-                                        source={images.dot_gray}
-                                    />
-                                    <Image
-                                        style={styles.dotSize}
-                                        source={images.dot_gray}
-                                    />
-                                    <Image
-                                        style={styles.dotSize}
-                                        source={images.dot_gray}
-                                    />
-                                    <Image
-                                        style={styles.lastDotSize}
-                                        source={images.dot_gray}
-                                    />
-                                </View>
-                            </View>
                         </View>
                     </KeyboardAwareScrollView>
                 </ScrollView>

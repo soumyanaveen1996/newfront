@@ -42,6 +42,9 @@ import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
 import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
+import RemoteLogger from '../../lib/utils/remoteDebugger';
+import PushNotification from 'react-native-push-notification';
+
 //import jsonEncoder from 'serialize-json';
 
 // const BusyIndicator = require('react-native-busy-indicator')
@@ -49,7 +52,7 @@ import ReduxStore from '../../redux/store/configureStore';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 81; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 82; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -126,7 +129,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (false && forceUpdate) {
+        if (true && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -186,7 +189,7 @@ export default class Splash extends React.Component {
                     this.goToLoginPage();
                 });
         } else {
-            if (checkStatus && checkStatus === 'confirmCode') {
+            if (checkStatus && checkStatus === 'checkCode') {
                 Actions.confirmationScreen({ type: ActionConst.REPLACE });
             } else {
                 this.goToLoginPage();
@@ -216,6 +219,30 @@ export default class Splash extends React.Component {
     };
 
     configureNotifications = () => {
+        RemoteLogger('Sourav Logging::: Configuring Push Notifications');
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.addEventListener(
+                'notification',
+                notification => {
+                    RemoteLogger(
+                        '------------Received Remote Notifcation--------'
+                    );
+                    // NetworkHandler.readLambda();
+                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+
+            PushNotificationIOS.addEventListener(
+                'localNotification',
+                notification => {
+                    RemoteLogger(
+                        '------------Received Local Notifcation--------'
+                    );
+                    // NetworkHandler.readLambda(true);
+                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+        }
         Notification.deviceInfo()
             .then(info => {
                 if (info) {
@@ -234,6 +261,8 @@ export default class Splash extends React.Component {
     handleNotification = notification => {
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
+            RemoteLogger(`Notifcaiton Touched ${JSON.stringify(notification)}`);
+            PushNotification.setApplicationIconBadgeNumber(0);
             Conversation.getConversation(notification.conversationId)
                 .then(conv => {
                     conversation = conv;
@@ -293,6 +322,7 @@ export default class Splash extends React.Component {
         }
         NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
+            RemoteLogger('IOS Crap');
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
     };
@@ -336,6 +366,10 @@ export default class Splash extends React.Component {
             NotificationEvents.registeredNotifications,
             this.notificationRegistrationHandler
         );
+
+        if (Platform.OS === 'ios') {
+            this.configureNotifications();
+        }
     };
 
     removeListeners = () => {

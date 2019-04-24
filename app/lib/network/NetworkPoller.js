@@ -9,6 +9,7 @@ import EventEmitter, {
     SatelliteConnectionEvents
 } from '../events';
 import { AppState, Platform, InteractionManager } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
 import BackgroundTask from 'react-native-background-task';
 import RNEventSource from 'react-native-event-source';
@@ -147,8 +148,8 @@ class NetworkPoller {
         );
         this.grpcEndSubscription.push(
             eventEmitter.addListener('sse_end', message => {
-                console.log('GRPC:::SSE End GRPC message : ', message, message);
-                this.unsubscribeFromServerEvents();
+                // this.unsubscribeFromServerEvents();
+                console.log('Sourav Logging:::: GRPC DONE');
             })
         );
 
@@ -248,9 +249,10 @@ class NetworkPoller {
                 console.log('---------App in Active State -----------');
 
                 RemoteBotInstall.syncronizeBots();
-                NetworkHandler.readLambda();
-                setTimeout(() => this.subscribeToServerEvents(), 500);
-                setTimeout(() => this.cleanupSubscriptions(), 1000);
+                setTimeout(() => NetworkHandler.readLambda(), 500);
+                setTimeout(() => this.subscribeToServerEvents(), 2000);
+                setTimeout(() => this.cleanupSubscriptions(), 5000);
+                PushNotification.setApplicationIconBadgeNumber(0);
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {
@@ -259,9 +261,7 @@ class NetworkPoller {
                 console.log('App Inactive ---------> Stop Cleanup Service');
                 clearInterval(this.cleanupInterval);
                 this.appState = nextAppState;
-                console.log(
-                    'Network Poller: Starting Polling on App State change'
-                );
+
                 this.startPolling();
             }
         }
@@ -485,7 +485,7 @@ class NetworkPoller {
     };
 
     process = () => {
-        setTimeout(() => NetworkHandler.poll(), 1000);
+        setTimeout(() => NetworkHandler.poll(), 0);
         InteractionManager.runAfterInteractions(() =>
             BackgroundTaskProcessor.process()
         );

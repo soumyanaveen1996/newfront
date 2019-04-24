@@ -469,8 +469,55 @@ export default class ContactDetailsScreen extends React.Component {
             return null;
         }
     }
+    deletePersonalContact = () => {
+        this.setState({ loading: true });
+        let { name, phoneNumbers, emails } = this.props.contact;
+        let localContactObj = {
+            emailAddresses: {
+                ...emails[0].email
+            },
+            phoneNumbers: {
+                ...phoneNumbers
+            },
+            userName: name
+        };
+
+        let bodyParse = {
+            capability: 'RemoveContact',
+            botId: 'onboarding-bot',
+            localContacts: [localContactObj]
+        };
+
+        // console.log('data to send ', bodyParse);
+        Conversation.deleteLocalContacts(bodyParse)
+            .then(value => {
+                Contact.getAddedContacts().then(contactsData => {
+                    let updateContacts = contactsData.filter(elem => {
+                        return elem.userId !== this.props.contact.id;
+                    });
+
+                    // console.log('on deleting contacts ', updateContacts);
+
+                    Contact.saveContacts(updateContacts).then(allNewContact => {
+                        this.props.updateContactScreen();
+                    });
+                });
+                this.setState({ loading: false });
+                Actions.pop();
+                setTimeout(() => {
+                    Actions.refresh({
+                        key: Math.random()
+                    });
+                }, 100);
+            })
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('Cannot delete local conatcts', err);
+            });
+    };
 
     deleteContact() {
+        this.setState({ loading: true });
         let bodyParse = {
             capability: 'RemoveContact',
             botId: 'onboarding-bot',
@@ -481,7 +528,7 @@ export default class ContactDetailsScreen extends React.Component {
             bodyParse.users.push(this.props.contact.id);
         }
 
-        console.log('delete this contact ', bodyParse, this.props.contact.id);
+        // console.log('delete this contact ', bodyParse, this.props.contact.id);
 
         Conversation.deleteContacts(bodyParse)
             .then(value => {
@@ -490,7 +537,7 @@ export default class ContactDetailsScreen extends React.Component {
                         return elem.userId !== this.props.contact.id;
                     });
 
-                    console.log('on deleting contacts ', updateContacts);
+                    // console.log('on deleting contacts ', updateContacts);
 
                     Contact.saveContacts(updateContacts).then(allNewContact => {
                         this.props.updateContactScreen();
@@ -506,6 +553,7 @@ export default class ContactDetailsScreen extends React.Component {
                         .catch(() => console.log('DB Update Failed>>>>>>'));
                 }
 
+                this.setState({ loading: false });
                 Actions.pop();
                 setTimeout(() => {
                     Actions.refresh({
@@ -513,7 +561,10 @@ export default class ContactDetailsScreen extends React.Component {
                     });
                 }, 100);
             })
-            .catch(err => console.log('Cannot delete conatcts', err));
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('Cannot delete conatcts', err);
+            });
     }
 
     renderFooterButtons() {
@@ -687,30 +738,55 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderActionButtons()}
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
-                {/* {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' && ( */}
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity
-                        style={{
-                            flexDirection: 'row',
-                            marginVertical: 40
-                        }}
-                        onPress={this.deleteContact.bind(this)}
-                    >
-                        <Image source={images.delete_icon_trash} />
-                        <Text
+                {this.props.contact.contactType &&
+                    this.props.contact.contactType !== 'Personal' && (
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity
                             style={{
-                                color: 'rgba(229, 69, 59, 1)',
-                                fontFamily: 'SF Pro Text',
-                                fontSize: 16,
-                                marginHorizontal: 10
+                                flexDirection: 'row',
+                                marginVertical: 40
                             }}
+                            onPress={this.deleteContact.bind(this)}
                         >
-                            Delete contact
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                {/* )} */}
+                            <Image source={images.delete_icon_trash} />
+                            <Text
+                                style={{
+                                    color: 'rgba(229, 69, 59, 1)',
+                                    fontFamily: 'SF Pro Text',
+                                    fontSize: 16,
+                                    marginHorizontal: 10
+                                }}
+                            >
+                                    Delete contact
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+
+                {this.props.contact.contactType &&
+                    this.props.contact.contactType === 'Personal' && (
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'row',
+                                marginVertical: 40
+                            }}
+                            onPress={this.deletePersonalContact.bind(this)}
+                        >
+                            <Image source={images.delete_icon_trash} />
+                            <Text
+                                style={{
+                                    color: 'rgba(229, 69, 59, 1)',
+                                    fontFamily: 'SF Pro Text',
+                                    fontSize: 16,
+                                    marginHorizontal: 10
+                                }}
+                            >
+                                    Delete contact
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
 
                 <CallModal
                     isVisible={this.state.modalVisible}

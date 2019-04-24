@@ -82,7 +82,7 @@ export default class AfterLogin {
                     }
                 });
         }
-        NetworkHandler.readLambda();
+        // NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }
