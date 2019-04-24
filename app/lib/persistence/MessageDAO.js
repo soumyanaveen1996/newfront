@@ -562,6 +562,23 @@ const deleteBotMessages = botKey =>
         });
     });
 
+const deleteMessage = messageId =>
+    new Promise((resolve, reject) => {
+        const args = [messageId];
+        db.transaction(transaction => {
+            transaction.executeSql(
+                messageSql.deleteMessage,
+                args,
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to delete message'));
+                }
+            );
+        });
+    });
+
 const addCompletedColumn = () =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
@@ -650,5 +667,6 @@ export default {
     createMessageDateIndex: createMessageDateIndex,
     selectMessageById: selectMessageById,
     deleteAllMessages: deleteAllMessages,
+    deleteMessage: deleteMessage,
     addStatusColumn
 };
