@@ -55,12 +55,19 @@ export default class ContextSlideshow extends React.Component {
                             {item.description}
                         </Text>
                     </View>
-                    <Text style={styles.seeMore}>See more</Text>
+                    <Text
+                        style={styles.seeMore}
+                        onPress={() =>
+                            Actions.webview({ url: item.seeMoreUrl })
+                        }
+                    >
+                        See more
+                    </Text>
                 </View>
                 <Image style={{ flex: 1 }} source={{ uri: item.imageUrl }} />
             </View>
         );
-        const action = () => Actions.webview({ url: item.seeMoreUrl });
+        const action = () => this.props.focusOnMarker(item.cardId);
         return {
             action: action,
             content: content
@@ -176,13 +183,20 @@ export default class ContextSlideshow extends React.Component {
                         {item.title}
                     </Text>
                 </View>
-                <Text style={styles.seeMore} numberOfLines={1}>
+                <Text
+                    style={styles.seeMore}
+                    numberOfLines={1}
+                    onPress={() =>
+                        this.props.onDataCardSelected(
+                            this.renderModalContent(item.data)
+                        )
+                    }
+                >
                     More info
                 </Text>
             </View>
         );
-        const action = () =>
-            this.props.onDataCardSelected(this.renderModalContent(item.data));
+        const action = () => this.props.focusOnMarker(item.cardId);
         return {
             action: action,
             content: content
