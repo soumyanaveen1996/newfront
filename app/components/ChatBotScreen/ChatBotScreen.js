@@ -1912,20 +1912,20 @@ class ChatBotScreen extends React.Component {
 
     pickContact() {
         Keyboard.dismiss();
-        // Actions.addParticipants({
-        //     onSelected: this.shareContacts.bind(this),
-        //     title: 'Share contacts'
-        // });
-        Actions.manageContacts({
-            title: 'Share contacts',
-            onSelected: this.shareContacts.bind(this)
+        Contact.getAddedContacts().then(contacts => {
+            Actions.manageContacts({
+                title: 'Share contacts',
+                allContacts: contacts,
+                onSelected: this.shareContacts.bind(this),
+                disabledUserIds: []
+            });
         });
     }
 
     shareContacts(selectedContacts) {
         _.map(selectedContacts, contact => {
             message = new Message();
-            message.contactCard(contact);
+            message.contactCard(contact.userId);
             message.messageByBot(false);
             message.setCreatedBy(this.getUserId());
             this.sendMessage(message);
