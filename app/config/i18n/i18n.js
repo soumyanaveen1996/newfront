@@ -152,8 +152,10 @@ I18n.translations = {
         Select_team: 'Select Team',
         Share_Contact: 'Share contact',
         SAVE: 'Save',
-        Search_my_info_text: "I don't want to appear in searches",
-        Share_my_info_text: 'Share my information with my contacts',
+        Search_my_info_text:
+            'I want to appear in search results to enable networking',
+        Share_my_info_text:
+            'I want to share my profile information with my contacts',
         Add_phone: 'Add phone',
         Camera_option: 'Camera',
         Gallery_option: 'Photo Library',

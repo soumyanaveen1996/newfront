@@ -180,7 +180,9 @@ const selectMessageById = `
     WHERE message_id = ?
 `;
 
-const deleteMessage = 'TBD';
+const deleteMessage = `
+    DELETE FROM messages where message_id = ?;
+`;
 
 // Total Messages typed by the user, since a date string. Empty message_date ('') means since beginning.
 const totalUserMessageCountSince = `

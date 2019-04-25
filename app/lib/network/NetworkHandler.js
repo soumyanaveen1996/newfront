@@ -74,7 +74,6 @@ const readRemoteLambdaQueue = user => {
     let logoutSubscribtion;
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
-            RemoteLogger('Read Queue Messages');
             handleLambdaResponse(message, user);
         })
     );
@@ -99,7 +98,6 @@ const readRemoteLambdaQueue = user => {
         })
     );
 
-    RemoteLogger('Reading Queue');
     QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
 
     /*
@@ -114,7 +112,6 @@ const readRemoteLambdaQueue = user => {
 };
 
 const cleanupSubscriptions = () => {
-    RemoteLogger('Sourav Logging:::End Read Lambda Queue----- CleanUP:');
     for (let sub of messageSubscriptions) {
         sub.remove();
     }

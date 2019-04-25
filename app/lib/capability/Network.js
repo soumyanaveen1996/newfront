@@ -14,6 +14,7 @@ import { setNetwork } from '../../redux/actions/UserActions';
 import Bugsnag from '../../config/ErrorMonitoring';
 
 import { NativeModules } from 'react-native';
+import RemoteLogger from '../utils/remoteDebugger';
 const { AgentGuardServiceClient } = NativeModules;
 
 const R = require('ramda');
@@ -158,6 +159,15 @@ const convertResponse = response => {
     };
 };
 
+const queueMessage = ({ options, resolve, reject }) => {
+    console.log(
+        'Sourav Logging:::: Errro Sending the message, should we Quque it????'
+    );
+    const { params, key = null } = options;
+    const deferredKey = key ? key : SHA1(JSON.stringify(params)).toString();
+    return resolve(futureRequest(deferredKey, new NetworkRequest(options)));
+};
+
 function Network(options, queue = false) {
     // console.log('option in network ', options);
 
@@ -174,16 +184,23 @@ function Network(options, queue = false) {
             } = options;
             if (connected) {
                 RStore.dispatch(setNetwork('full'));
-
                 const grpcService = getGrpcService(serviceName);
-
+                const timerId = setTimeout(
+                    () =>
+                        queueMessage({
+                            options,
+                            resolve,
+                            reject
+                        }),
+                    10000
+                );
                 console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
+                    clearTimeout(timerId);
                     if (error) {
                         console.log(
                             'Sourav Logging:::: Errro Sending the message, should we Quque it????'
                         );
-
                         const deferredKey = key
                             ? key
                             : SHA1(JSON.stringify(params)).toString();
