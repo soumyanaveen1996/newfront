@@ -25,6 +25,7 @@
            @"discoverable": self.discoverable,
            @"logo": self.logo,
            @"isPlatformChannel": @(self.isPlatformChannel),
+           @"isFavourite": @(self.isFavourite),
            @"participants": self.participantsArray,
            };
 }

@@ -20,6 +20,7 @@ public class DBChannelConverter {
 
         map.putDouble("createdOn", channel.getCreatedOn());
         map.putBoolean("isPlatformChannel", channel.getIsPlatformChannel());
+        map.putBoolean("isFavourite", channel.getIsFavourite());
 
         if (channel.hasChannelOwner()) {
             map.putMap("channelOwner", new ChannelOwnerConverter().toJson(channel.getChannelOwner()));
