@@ -141,6 +141,11 @@ function TwentytoTwentyOne() {
         return DbVersionDAO.updateVersion(21);
     });
 }
+function TwentyOnetoTwentyTwo() {
+    return ChannelDAO.addIsFavourite().then(() => {
+        return DbVersionDAO.updateVersion(22);
+    });
+}
 
 function runMigrations() {
     return new Promise((resolve, reject) => {
@@ -296,6 +301,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 20) {
                     return TwentytoTwentyOne();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 21) {
+                    return TwentyOnetoTwentyTwo();
                 } else {
                     return version;
                 }

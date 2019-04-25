@@ -364,6 +364,7 @@ export default class Channel {
                             const user = await Auth.getUser();
                             const channelId = response.data.content[0];
                             let isPlatformChannel = false;
+                            let isFavourite = false;
                             if (channel.userDomain === 'frontmai') {
                                 isPlatformChannel = true;
                             }
@@ -382,7 +383,8 @@ export default class Channel {
                                 'true',
                                 isPlatformChannel,
                                 channel.channelType,
-                                channel.discoverable
+                                channel.discoverable,
+                                isFavourite
                             );
                         } else {
                             reject(new ChannelError(99));
@@ -831,7 +833,8 @@ export default class Channel {
                                 'true',
                                 channel.isPlatformChannel,
                                 channel.channelType,
-                                channel.discoverable
+                                channel.discoverable,
+                                channel.isFavourite
                             );
                         });
                         return Promise.all(channelInsertPromises);
@@ -878,7 +881,8 @@ export default class Channel {
                                 'false',
                                 channel.isPlatformChannel,
                                 channel.channelType,
-                                channel.discoverable
+                                channel.discoverable,
+                                channel.isFavourite
                             );
                         });
                         return Promise.all(channelInsertPromises);
@@ -927,7 +931,8 @@ export default class Channel {
                                 'true',
                                 channel.isPlatformChannel,
                                 channel.channelType,
-                                channel.discoverable
+                                channel.discoverable,
+                                channel.isFavourite
                             );
                         });
                         return Promise.all(channelInsertPromises);

@@ -32,7 +32,8 @@ const insertChannel = (
     subcription,
     isPlatformChannel,
     channelType,
-    discoverable
+    discoverable,
+    isFavourite
 ) =>
     new Promise((resolve, reject) => {
         let isPlatform = isPlatformChannel ? 1 : 0;
@@ -49,7 +50,8 @@ const insertChannel = (
             subcription,
             isPlatform,
             channelType,
-            discoverable
+            discoverable,
+            isFavourite
         ];
         db.transaction(tx => {
             tx.executeSql(
@@ -183,7 +185,8 @@ const channelDataFromDbResult = dbResult => {
         subcription: dbResult.subcription,
         isPlatformChannel: dbResult.isPlatformChannel,
         channelType: dbResult.channelType,
-        discoverable: dbResult.discoverable
+        discoverable: dbResult.discoverable,
+        isFavourite: dbResult.isFavourite
     };
 };
 
@@ -278,7 +281,8 @@ const insertIfNotPresent = (
     subcription,
     isPlatformChannel,
     channelType,
-    discoverable = 'public'
+    discoverable = 'public',
+    isFavourite
 ) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
@@ -298,7 +302,8 @@ const insertIfNotPresent = (
                         subcription,
                         isPlatform,
                         channelType,
-                        discoverable
+                        discoverable,
+                        isFavourite
                     );
                 } else {
                     resolve();
@@ -457,6 +462,21 @@ const addDiscoverable = () =>
             );
         });
     });
+const addIsFavourite = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addIsFavourite,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add favourite column'));
+                }
+            );
+        });
+    });
 
 export default {
     createChannelsTable,
@@ -478,5 +498,6 @@ export default {
     addisPlatform,
     addChannelType,
     updateChannelSubscription,
-    addDiscoverable
+    addDiscoverable,
+    addIsFavourite
 };
