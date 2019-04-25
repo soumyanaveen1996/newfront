@@ -570,21 +570,32 @@ export default StyleSheet.create({
     adminContainer: {
         backgroundColor: GlobalColors.white,
         paddingTop: 30,
-        flex: 1
+        width: '100%',
+        overflow: 'hidden'
     },
     adminTopArea: {
         flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
         paddingBottom: 30,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        overflow: 'hidden',
+        width: '100%'
     },
     adminLogo: {
         height: 90,
         width: 90
     },
     adminTopRightArea: {
-        marginLeft: 5
+        paddingHorizontal: 5,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        overflow: 'hidden'
     },
     adminH1: {
+        width: SCREEN_WIDTH - 120,
+        flexWrap: 'wrap',
         fontSize: 22,
         fontWeight: 'bold',
         color: GlobalColors.grey

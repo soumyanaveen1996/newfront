@@ -197,7 +197,11 @@ class AddContacts extends React.Component {
     };
 
     selectContacts = () => {
-        this.props.setParticipants(this.state.selectedContacts);
+        if (this.props.onSelected) {
+            this.props.onSelected(this.state.selectedContacts);
+        } else {
+            this.props.setParticipants(this.state.selectedContacts);
+        }
         Actions.pop();
     };
 

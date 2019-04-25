@@ -343,6 +343,10 @@ export default class MessageHandler extends events.EventEmitter {
         return MessageDAO.deleteBotMessages(botKey);
     };
 
+    deleteMessage = messageId => {
+        return MessageDAO.deleteMessage(messageId);
+    };
+
     moveMessages = (fromBotKey, toBotKey) => {
         return MessageDAO.moveMessagesToNewBotKey(fromBotKey, toBotKey);
     };

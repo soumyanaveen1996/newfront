@@ -732,17 +732,18 @@ const stylesheet = StyleSheet.create({
     bottomSettingContainer: {
         height: 130,
         width: '100%',
+        justifyContent: 'space-evenly',
+        alignItems: 'stretch',
         borderBottomWidth: 5,
         borderTopWidth: 5,
         borderColor: 'rgba(222,222,222,1)'
     },
     switchContainer: {
-        flex: 1,
         paddingHorizontal: 20,
         flexDirection: 'row',
         alignItems: 'center',
-        textAlign: 'left',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        textAlign: 'left'
     },
     swithcStyle: {
         borderWidth: 1,
@@ -758,6 +759,7 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 30
     },
     longTextStyle: {
+        width: '70%',
         color: 'rgba(102, 102, 102, 1)',
         fontFamily: 'SF Pro Text',
         fontSize: 14,

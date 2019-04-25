@@ -96,7 +96,7 @@ export default class BotListScreen extends React.Component {
     renderRowItem = ({ item }) => {
         return (
             <View key={item.botId} style={styles.rowContainer}>
-                <View style={styles.rowContent}>{this.renderRow(item)}</View>
+                {this.renderRow(item)}
             </View>
         );
     };

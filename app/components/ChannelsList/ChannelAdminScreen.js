@@ -121,6 +121,7 @@ class ChannelAdminScreen extends React.Component {
         )
             .then(prt => {
                 participants = prt;
+                this.props.setParticipants(prt);
                 return Channel.getRequests(
                     this.channel.channelName,
                     this.channel.userDomain
@@ -173,11 +174,9 @@ class ChannelAdminScreen extends React.Component {
 
     //PARTICIPANTS
     manageParticipants() {
-        Actions.manageContacts({
+        Actions.addParticipants({
             title: 'Manage participants',
-            onSelected: this.updateParticipants.bind(this),
-            alreadySelected: this.state.participants,
-            disabledUserIds: [this.channel.ownerId]
+            onSelected: this.updateParticipants.bind(this)
         });
     }
 

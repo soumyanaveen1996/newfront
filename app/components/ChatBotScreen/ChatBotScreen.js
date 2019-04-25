@@ -785,7 +785,6 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
-        console.log('>>>>>>>>message', message.getMessage());
         // Removing the waiting message.
 
         this.stopWaiting();
@@ -1057,11 +1056,11 @@ class ChatBotScreen extends React.Component {
     }
 
     onButtonDone = (messageIndex, selectedItem) => {
-        console.log('>>>>>>>>', messageIndex);
-        console.log('>>>>>>>>1', this.state.messages[messageIndex]);
+        MessageHandler.deleteMessage(
+            this.state.messages[messageIndex].message.getMessageId()
+        );
         this.state.messages.splice(messageIndex, 1);
         this.setState({ messages: this.state.messages }, () => {
-            console.log('>>>>>>>>mes', this.state.messages);
             this.sendButtonResponseMessage(selectedItem);
         });
     };
@@ -1913,20 +1912,20 @@ class ChatBotScreen extends React.Component {
 
     pickContact() {
         Keyboard.dismiss();
-        // Actions.addParticipants({
-        //     onSelected: this.shareContacts.bind(this),
-        //     title: 'Share contacts'
-        // });
-        Actions.manageContacts({
-            title: 'Share contacts',
-            onSelected: this.shareContacts.bind(this)
+        Contact.getAddedContacts().then(contacts => {
+            Actions.manageContacts({
+                title: 'Share contacts',
+                allContacts: contacts,
+                onSelected: this.shareContacts.bind(this),
+                disabledUserIds: []
+            });
         });
     }
 
     shareContacts(selectedContacts) {
         _.map(selectedContacts, contact => {
             message = new Message();
-            message.contactCard(contact);
+            message.contactCard(contact.userId);
             message.messageByBot(false);
             message.setCreatedBy(this.getUserId());
             this.sendMessage(message);

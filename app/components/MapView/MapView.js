@@ -578,6 +578,7 @@ class MapView extends React.Component {
                     )}
                     onDataCardSelected={this.openModalWithContent.bind(this)}
                     onCardSelected={this.onAction.bind(this)}
+                    focusOnMarker={this.focusOnMarker.bind(this)}
                 />
             );
         }
@@ -636,6 +637,19 @@ class MapView extends React.Component {
             chatModalContent: content,
             isModalVisible: true
         });
+    }
+
+    focusOnMarker(id) {
+        const foundMarker = _.find(this.props.mapData.markers, marker => {
+            return marker.id === id;
+        });
+        if (foundMarker) {
+            this.flyTo(foundMarker.coordinate);
+        }
+    }
+
+    flyTo(coordinate, time = null) {
+        this.map.flyTo([coordinate.longitude, coordinate.latitude], time);
     }
 
     render() {

@@ -13,12 +13,10 @@ export default StyleSheet.create({
     },
 
     rowContainer: {
-        width: SCREEN_WIDTH - 20,
-        height: 110,
-        borderBottomWidth: 1,
-        backgroundColor: '#fff',
-        borderColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'stretch',
         borderRadius: 6,
+        overflow: 'hidden',
         marginBottom: 10
     },
     rowContent: {

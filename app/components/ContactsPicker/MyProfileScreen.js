@@ -62,7 +62,7 @@ class MyProfileScreen extends React.Component {
             myName: '',
             phoneNumbers: [],
             emailAddress: [],
-            searchable: false,
+            searchable: true,
             visible: false,
             inviteModalVisible: false,
             currentIndex: null,

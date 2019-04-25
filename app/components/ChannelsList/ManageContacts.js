@@ -250,11 +250,7 @@ class ManageContacts extends React.Component {
             });
         }
     }
-    onSearchQueryChange(text) {
-        if (text !== '') {
-            this.setState({ searchText: text });
-        }
-    }
+
     renderSearchBar = () => {
         return (
             <View style={ContactStyles.searchBar}>
@@ -265,7 +261,7 @@ class ManageContacts extends React.Component {
                     placeholder="Search"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
-                    onChangeText={this.onSearchQueryChange.bind(this)}
+                    onChangeText={text => this.setState({ searchText: text })}
                 />
             </View>
         );
@@ -344,10 +340,7 @@ class ManageContacts extends React.Component {
                                             borderRadius={6}
                                             height={30}
                                             onPress={() => {
-                                                this.toggleSelectContacts.bind(
-                                                    this,
-                                                    elem
-                                                );
+                                                this.toggleSelectContacts(elem);
                                             }}
                                         />
                                     </View>

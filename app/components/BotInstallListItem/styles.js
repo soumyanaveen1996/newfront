@@ -24,7 +24,7 @@ export const BotListItemStyles = StyleSheet.create({
         paddingVertical: 12,
         borderRadius: 6,
         alignItems: 'stretch',
-        backgroundColor: 'transparent'
+        backgroundColor: GlobalColors.white
     },
     title: {
         color: BotListItemColors.titleColor,
