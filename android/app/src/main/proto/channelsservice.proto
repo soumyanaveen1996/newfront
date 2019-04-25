@@ -72,6 +72,8 @@ message DBChannel {
     string logo = 9;
     bool isPlatformChannel = 10;
     repeated string participants = 11;
+    bool requestSent = 12;
+    bool isFavourite = 13;
 }
 
 message ChannelOwner {

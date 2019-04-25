@@ -424,6 +424,8 @@ typedef struct ChannelListResponse__storage_ {
 @dynamic logo;
 @dynamic isPlatformChannel;
 @dynamic participantsArray, participantsArray_Count;
+@dynamic requestSent;
+@dynamic isFavourite;
 
 typedef struct DBChannel__storage_ {
   uint32_t _has_storage_[1];
@@ -544,6 +546,24 @@ typedef struct DBChannel__storage_ {
         .flags = GPBFieldRepeated,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "requestSent",
+        .dataTypeSpecific.className = NULL,
+        .number = DBChannel_FieldNumber_RequestSent,
+        .hasIndex = 11,
+        .offset = 12,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "isFavourite",
+        .dataTypeSpecific.className = NULL,
+        .number = DBChannel_FieldNumber_IsFavourite,
+        .hasIndex = 13,
+        .offset = 14,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[DBChannel class]
@@ -555,7 +575,7 @@ typedef struct DBChannel__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\007\001\t\000\002\013\000\003\t\000\004\013\000\005\n\000\006\014\000\n\021\000";
+        "\t\001\t\000\002\013\000\003\t\000\004\013\000\005\n\000\006\014\000\n\021\000\014\013\000\r\013\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

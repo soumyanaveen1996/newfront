@@ -170,6 +170,8 @@ typedef GPB_ENUM(DBChannel_FieldNumber) {
   DBChannel_FieldNumber_Logo = 9,
   DBChannel_FieldNumber_IsPlatformChannel = 10,
   DBChannel_FieldNumber_ParticipantsArray = 11,
+  DBChannel_FieldNumber_RequestSent = 12,
+  DBChannel_FieldNumber_IsFavourite = 13,
 };
 
 @interface DBChannel : GPBMessage
@@ -199,6 +201,10 @@ typedef GPB_ENUM(DBChannel_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *participantsArray;
 /** The number of items in @c participantsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger participantsArray_Count;
+
+@property(nonatomic, readwrite) BOOL requestSent;
+
+@property(nonatomic, readwrite) BOOL isFavourite;
 
 @end
 
