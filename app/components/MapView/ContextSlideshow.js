@@ -55,14 +55,16 @@ export default class ContextSlideshow extends React.Component {
                             {item.description}
                         </Text>
                     </View>
-                    <Text
-                        style={styles.seeMore}
-                        onPress={() =>
-                            Actions.webview({ url: item.seeMoreUrl })
-                        }
-                    >
-                        See more
-                    </Text>
+                    {item.seeMoreUrl ? (
+                        <Text
+                            style={styles.seeMore}
+                            onPress={() =>
+                                Actions.webview({ url: item.seeMoreUrl })
+                            }
+                        >
+                            See more
+                        </Text>
+                    ) : null}
                 </View>
                 <Image style={{ flex: 1 }} source={{ uri: item.imageUrl }} />
             </View>
