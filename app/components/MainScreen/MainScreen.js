@@ -584,7 +584,7 @@ class MainScreen extends React.Component {
                 });
                 this.update();
             })
-            .catch(err => console.log('Cannot set favorite', err));
+            .catch(err => console.log('Cannot set un favorite', err));
     };
 
     renderNetworkStatusBar = () => {
