@@ -1,6 +1,7 @@
 const CountryCodes = () => {
     const codes = {
         Inmarsat: '+870',
+        Iridium: '+881',
         'United Kingdom': '+44',
         'United States': '+1',
         India: '+91',
