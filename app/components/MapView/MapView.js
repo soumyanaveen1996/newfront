@@ -115,6 +115,16 @@ class MapView extends React.Component {
         super(props);
         // UIManager.setLayoutAnimationEnabledExperimental &&
         //     UIManager.setLayoutAnimationEnabledExperimental(true);
+        this.defaultRegion = {
+            zoom: 0,
+            latitude: 0,
+            longitude: 0
+        };
+        if (!this.props.mapData.region) {
+            this.region = this.defaultRegion;
+        } else {
+            this.region = this.props.mapData.region;
+        }
         this.state = {
             userTrackingMode:
                 Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
@@ -214,8 +224,44 @@ class MapView extends React.Component {
     //     });
     // }
 
+    getRegion() {
+        return new Promise((resolve, reject) => {
+            let region = {};
+            this.map
+                .getZoom()
+                .then(zoom => {
+                    region.zoom = zoom;
+                    return this.map.getCenter();
+                })
+                .then(center => {
+                    region.longitude = center[0];
+                    region.latitude = center[1];
+                    resolve(region);
+                })
+                .catch(() => {
+                    reject(this.defaultRegion);
+                });
+        });
+    }
+
     //Create a new GEOJson
-    refreshMap() {
+    async refreshMap() {
+        //REGION
+        let region = {};
+        if (this.props.mapData.region) {
+            if (
+                !this.props.mapData.region.zoom ||
+                !this.props.mapData.region.longitude ||
+                !this.props.mapData.region.latitude
+            ) {
+                region = await this.getRegion();
+            } else {
+                region = this.props.mapData.region;
+            }
+        } else {
+            region = await this.getRegion();
+        }
+        this.region = region;
         //GREAT CIRCLE
         const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
@@ -487,27 +533,34 @@ class MapView extends React.Component {
     }
 
     zoomIn() {
-        this.map.getZoom().then(zoom => {
-            this.map.getCenter().then(center => {
-                this.map.setCamera({
-                    centerCoordinate: center,
-                    zoom: zoom + 1,
-                    duration: 500
-                });
+        let cameraSetting = {};
+        cameraSetting.duration = 500;
+        this.map
+            .getZoom()
+            .then(zoom => {
+                cameraSetting.zoom = zoom + 1;
+                return this.map.getCenter();
+            })
+            .then(center => {
+                cameraSetting.centerCoordinate = center;
+                this.map.setCamera(cameraSetting);
             });
-        });
     }
 
     zoomOut() {
-        this.map.getZoom().then(zoom => {
-            this.map.getCenter().then(center => {
-                this.map.setCamera({
-                    centerCoordinate: center,
-                    zoom: zoom - 1,
-                    duration: 500
-                });
+        // this.props.TEST()
+        let cameraSetting = {};
+        cameraSetting.duration = 500;
+        this.map
+            .getZoom()
+            .then(zoom => {
+                cameraSetting.zoom = zoom - 1;
+                return this.map.getCenter();
+            })
+            .then(center => {
+                cameraSetting.centerCoordinate = center;
+                this.map.setCamera(cameraSetting);
             });
-        });
     }
 
     locateUser() {
@@ -536,10 +589,7 @@ class MapView extends React.Component {
     onMapRendered() {
         if (Platform.OS === 'android') {
             this.setState({ userTrackingMode: 0 });
-            this.map.moveTo([
-                this.props.mapData.region.longitude,
-                this.props.mapData.region.latitude
-            ]);
+            this.map.moveTo([this.region.longitude, this.region.latitude]);
         }
     }
 
@@ -548,11 +598,8 @@ class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={this.props.mapData.region.zoom || 11}
-                centerCoordinate={[
-                    this.props.mapData.region.longitude,
-                    this.props.mapData.region.latitude
-                ]}
+                zoomLevel={this.region.zoom}
+                centerCoordinate={[this.region.longitude, this.region.latitude]}
                 showsUserLocation={true}
                 userTrackingMode={this.state.userTrackingMode}
                 onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
