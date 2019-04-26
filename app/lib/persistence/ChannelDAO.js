@@ -32,7 +32,8 @@ const insertChannel = (
     subcription,
     isPlatformChannel,
     channelType,
-    discoverable
+    discoverable,
+    isFavourite
 ) =>
     new Promise((resolve, reject) => {
         let isPlatform = isPlatformChannel ? 1 : 0;
@@ -49,7 +50,8 @@ const insertChannel = (
             subcription,
             isPlatform,
             channelType,
-            discoverable
+            discoverable,
+            isFavourite
         ];
         db.transaction(tx => {
             tx.executeSql(
@@ -137,6 +139,24 @@ const updateChannelSubscription = (name, domain, subscription) =>
             );
         });
     });
+const updateChannelisfavourite = (name, domain, isFavourite) =>
+    new Promise((resolve, reject) => {
+        const args = [isFavourite, name, domain];
+        console.log('ChannelDAO::updateChannel::', args);
+        db.transaction(tx => {
+            tx.executeSql(
+                channelSql.setChannelFavourite,
+                args,
+                function success(tx2, res) {
+                    console.log('ChannelDAO::Subscribe Updated::', args, res);
+                    return resolve(+res.insertId || 0);
+                },
+                function failure(tx3, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
 
 const selectChannels = () =>
     new Promise((resolve, reject) => {
@@ -183,7 +203,8 @@ const channelDataFromDbResult = dbResult => {
         subcription: dbResult.subcription,
         isPlatformChannel: dbResult.isPlatformChannel,
         channelType: dbResult.channelType,
-        discoverable: dbResult.discoverable
+        discoverable: dbResult.discoverable,
+        isFavourite: dbResult.isFavourite
     };
 };
 
@@ -278,13 +299,15 @@ const insertIfNotPresent = (
     subcription,
     isPlatformChannel,
     channelType,
-    discoverable = 'public'
+    discoverable = 'public',
+    isFavouriteChannel
 ) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
                 if (!channel) {
                     let isPlatform = isPlatformChannel ? 1 : 0;
+                    let isFavourite = isFavouriteChannel ? 1 : 0;
                     return insertChannel(
                         name,
                         description,
@@ -298,7 +321,8 @@ const insertIfNotPresent = (
                         subcription,
                         isPlatform,
                         channelType,
-                        discoverable
+                        discoverable,
+                        isFavourite
                     );
                 } else {
                     resolve();
@@ -457,6 +481,21 @@ const addDiscoverable = () =>
             );
         });
     });
+const addIsFavourite = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                channelSql.addIsFavourite,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add favourite column'));
+                }
+            );
+        });
+    });
 
 export default {
     createChannelsTable,
@@ -478,5 +517,7 @@ export default {
     addisPlatform,
     addChannelType,
     updateChannelSubscription,
-    addDiscoverable
+    addDiscoverable,
+    addIsFavourite,
+    updateChannelisfavourite
 };
