@@ -69,25 +69,34 @@ export default class LocalContactModal extends React.Component {
             if (err) {
                 contacts = [];
             }
-
             contacts.forEach((data, index) => {
                 let contactName = '';
-
-                if (data.givenName && data.familyName) {
-                    contactName = data.givenName + ' ' + data.familyName;
-                } else {
-                    contactName = data.givenName;
+                let userName;
+                if (data.givenName) {
+                    userName = data.givenName;
+                    if (data.familyName) {
+                        contactName = data.givenName + ' ' + data.familyName;
+                    } else {
+                        contactName = data.givenName;
+                    }
+                } else if (data.familyName) {
+                    contactName = data.familyName;
+                    userName = data.familyName;
+                } else if (data.emails && data.emails[0]) {
+                    userName = data.emails[0];
                 }
-                let contactObj = {
-                    idTemp: index,
-                    emails: [...data.emailAddresses],
-                    profileImage: data.thumbnailPath,
-                    userName: data.givenName.toLowerCase(),
-                    name: contactName,
-                    phoneNumbers: [...data.phoneNumbers],
-                    selected: false
-                };
-                contactArray.push(contactObj);
+                if (userName) {
+                    let contactObj = {
+                        idTemp: index,
+                        emails: [...data.emailAddresses],
+                        profileImage: data.thumbnailPath,
+                        userName: userName,
+                        name: contactName,
+                        phoneNumbers: [...data.phoneNumbers],
+                        selected: false
+                    };
+                    contactArray.push(contactObj);
+                }
             });
             this.setState({
                 contactsList: [...contactArray],

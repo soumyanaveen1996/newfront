@@ -919,6 +919,16 @@ class ChatBotScreen extends React.Component {
                     Store.dispatch(setCurrentMap(null));
                     this.currentMap = null;
                 }
+                // TEST: () => {
+                //     let msg = new Message()
+                //     msg.mapMessage({}, {
+                //         mapId: 'nQVFDWLbEZ6CAe7Yw7cXDb',
+                //         title: 'Title',
+                //         description: 'Description'
+                //     })
+                //     msg.messageByBot(true)
+                //     this.tell(msg)
+                // }
             });
         });
     }
