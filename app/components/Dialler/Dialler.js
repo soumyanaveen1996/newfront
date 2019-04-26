@@ -60,9 +60,9 @@ const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 export default class Dialler extends React.Component {
     constructor(props) {
         super(props);
-        const { Inmarsat, ...rest } = CountryCodes();
+        const { Inmarsat, Iridium, ...rest } = CountryCodes();
         const countries = kSort(rest);
-        const countryCodes = { Inmarsat, ...countries };
+        const countryCodes = { Inmarsat, Iridium, ...countries };
         this.state = {
             diallerState: DiallerState.initial,
             dialledNumber: '+',
