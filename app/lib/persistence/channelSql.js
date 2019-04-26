@@ -61,6 +61,14 @@ const setChannelSubscription = `
         name = ?
     AND domain = ?
 `;
+const setChannelFavourite = `
+    UPDATE channel
+    SET
+        isFavourite = ?
+    WHERE
+        name = ?
+    AND domain = ?
+`;
 
 const selectChannels = `
     SELECT
@@ -201,5 +209,6 @@ export default {
     addChannelType,
     setChannelSubscription,
     addDiscoverable,
-    addIsFavourite
+    addIsFavourite,
+    setChannelFavourite
 };

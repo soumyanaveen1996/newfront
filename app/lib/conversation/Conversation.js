@@ -5,7 +5,8 @@ import {
     Network,
     Auth,
     ConversationContext,
-    DeviceStorage
+    DeviceStorage,
+    Channel
 } from '../capability';
 import config from '../../config/config';
 import BackgroundTaskProcessor from '../BackgroundTask/BackgroundTaskProcessor';
@@ -480,8 +481,10 @@ export default class Conversation {
     static setFavorite = data => {
         // Call API And set Favorite- TODO
         let favorite = false;
+        let channelIsFavourite = 0;
         if (data.action === 'add') {
             favorite = true;
+            channelIsFavourite = 1;
         }
         let jsonData;
 
@@ -555,10 +558,29 @@ export default class Conversation {
                                     data.channelConvId
                                 );
 
-                                return ConversationDAO.updateConvFavorite(
-                                    data.channelConvId,
-                                    favoriteDb
-                                );
+                                Channel.changeIsFavourite(
+                                    data.channelName,
+                                    data.userDomain,
+                                    channelIsFavourite
+                                ).then(chanelData => {
+                                    console.log(
+                                        'favourite part data ',
+                                        chanelData
+                                    );
+
+                                    return ConversationDAO.updateConvFavorite(
+                                        data.channelConvId,
+                                        favoriteDb
+                                    );
+                                });
+                            } else {
+                                Channel.changeIsFavourite(
+                                    data.channelName,
+                                    data.userDomain,
+                                    channelIsFavourite
+                                ).then(channelData => {
+                                    return resolve(channelData);
+                                });
                             }
                         }
 

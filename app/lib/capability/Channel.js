@@ -799,6 +799,23 @@ export default class Channel {
 
     static clearChannels = ChannelDAO.deleteAllChannels;
 
+    static changeIsFavourite = (name, domain, isFavourite) => {
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        return ChannelDAO.updateChannelisfavourite(
+                            name,
+                            domain,
+                            isFavourite
+                        );
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
+        });
+    };
+
     static refreshChannels = () =>
         new Promise((resolve, reject) => {
             let newChannels;

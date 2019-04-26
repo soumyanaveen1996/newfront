@@ -139,6 +139,24 @@ const updateChannelSubscription = (name, domain, subscription) =>
             );
         });
     });
+const updateChannelisfavourite = (name, domain, isFavourite) =>
+    new Promise((resolve, reject) => {
+        const args = [isFavourite, name, domain];
+        console.log('ChannelDAO::updateChannel::', args);
+        db.transaction(tx => {
+            tx.executeSql(
+                channelSql.setChannelFavourite,
+                args,
+                function success(tx2, res) {
+                    console.log('ChannelDAO::Subscribe Updated::', args, res);
+                    return resolve(+res.insertId || 0);
+                },
+                function failure(tx3, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
 
 const selectChannels = () =>
     new Promise((resolve, reject) => {
@@ -282,13 +300,14 @@ const insertIfNotPresent = (
     isPlatformChannel,
     channelType,
     discoverable = 'public',
-    isFavourite
+    isFavouriteChannel
 ) =>
     new Promise((resolve, reject) => {
         selectChannelByNameAndDomain(name, domain)
             .then(channel => {
                 if (!channel) {
                     let isPlatform = isPlatformChannel ? 1 : 0;
+                    let isFavourite = isFavouriteChannel ? 1 : 0;
                     return insertChannel(
                         name,
                         description,
@@ -499,5 +518,6 @@ export default {
     addChannelType,
     updateChannelSubscription,
     addDiscoverable,
-    addIsFavourite
+    addIsFavourite,
+    updateChannelisfavourite
 };

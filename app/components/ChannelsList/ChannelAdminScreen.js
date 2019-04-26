@@ -105,7 +105,8 @@ class ChannelAdminScreen extends React.Component {
             admins: [],
             pendingRequests: [],
             uiDisabled: true,
-            isLoading: true
+            isLoading: true,
+            checkIsFavourite: 0
         };
         this.channel = this.props.channel;
     }
@@ -115,6 +116,13 @@ class ChannelAdminScreen extends React.Component {
         let admins;
         let pendingRequests;
         this.props.navigation.setParams({ onBack: this.onBack.bind(this) });
+        let { isFavourite } = this.props.channel;
+
+        if (typeof isFavourite === 'string') {
+            this.setState({ checkIsFavourite: +isFavourite });
+        } else {
+            this.setState({ checkIsFavourite: isFavourite });
+        }
         Channel.getParticipants(
             this.channel.channelName,
             this.channel.userDomain
@@ -161,15 +169,46 @@ class ChannelAdminScreen extends React.Component {
     }
 
     setFavourite() {
+        this.setState({ isLoading: true });
         const data = {
             type: 'channel',
             channelConvId: this.channel.channelId,
             channelName: this.channel.channelName,
             action: 'add',
+            description: this.channel.description,
             userDomain: this.channel.userDomain
         };
 
-        Conversation.setFavorite(data);
+        Conversation.setFavorite(data)
+            .then(() => {
+                this.setState({ checkIsFavourite: 1 });
+                this.setState({ isLoading: false });
+            })
+            .catch(err => {
+                console.log('updtaing error on channel add favourite', err);
+                this.setState({ isLoading: false });
+            });
+    }
+    removeFavourite() {
+        this.setState({ isLoading: true });
+        const data = {
+            type: 'channel',
+            channelConvId: this.channel.channelId,
+            channelName: this.channel.channelName,
+            action: 'remove',
+            description: this.channel.description,
+            userDomain: this.channel.userDomain
+        };
+
+        Conversation.setFavorite(data)
+            .then(() => {
+                this.setState({ checkIsFavourite: 0 });
+                this.setState({ isLoading: false });
+            })
+            .catch(err => {
+                console.log('updtaing error on channel remove favourite', err);
+                this.setState({ isLoading: false });
+            });
     }
 
     //PARTICIPANTS
@@ -328,15 +367,28 @@ class ChannelAdminScreen extends React.Component {
     }
 
     renderAdminArea() {
+        let { checkIsFavourite } = this.state;
+
         return (
             <View>
-                <TouchableOpacity
-                    style={styles.adminRow}
-                    disabled={this.state.uiDisabled}
-                    onPress={this.setFavourite.bind(this)}
-                >
-                    <Text style={styles.adminH2}>Add to favourite</Text>
-                </TouchableOpacity>
+                {!checkIsFavourite ? (
+                    <TouchableOpacity
+                        style={styles.adminRow}
+                        disabled={this.state.uiDisabled}
+                        onPress={this.setFavourite.bind(this)}
+                    >
+                        <Text style={styles.adminH2}>Add to favourite</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        style={styles.adminRow}
+                        disabled={this.state.uiDisabled}
+                        onPress={this.removeFavourite.bind(this)}
+                    >
+                        <Text style={styles.adminH2}>Remove favourite</Text>
+                    </TouchableOpacity>
+                )}
+
                 {this.renderSeparator(SeparatorSize.SMALL)}
                 {this.props.isOwner ? (
                     <TouchableOpacity
@@ -458,8 +510,6 @@ class ChannelAdminScreen extends React.Component {
     }
 
     render() {
-        console.log('all data for channels ', this.state, this.props);
-
         if (this.state.isLoading) {
             return (
                 <ScrollView style={styles.adminContainer}>
