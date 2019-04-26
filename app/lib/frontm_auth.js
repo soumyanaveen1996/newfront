@@ -5,6 +5,7 @@ import { Network_http } from './capability';
 import { UUID } from '../lib/capability/Utils';
 import GoogleSignin from 'react-native-google-sign-in';
 import queryString from 'querystring';
+import AuthError from '../lib/capability/Auth';
 
 const axios = require('axios');
 
