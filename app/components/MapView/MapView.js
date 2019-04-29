@@ -247,21 +247,21 @@ class MapView extends React.Component {
     //Create a new GEOJson
     async refreshMap() {
         //REGION
-        let region = {};
-        if (this.props.mapData.region) {
-            if (
-                !this.props.mapData.region.zoom ||
-                !this.props.mapData.region.longitude ||
-                !this.props.mapData.region.latitude
-            ) {
-                region = await this.getRegion();
-            } else {
-                region = this.props.mapData.region;
-            }
-        } else {
-            region = await this.getRegion();
-        }
-        this.region = region;
+        // let region = {};
+        // if (this.props.mapData.region) {
+        //     if (
+        //         !this.props.mapData.region.zoom ||
+        //         !this.props.mapData.region.longitude ||
+        //         !this.props.mapData.region.latitude
+        //     ) {
+        //         region = await this.getRegion();
+        //     } else {
+        //         region = this.props.mapData.region;
+        //     }
+        // } else {
+        //     region = await this.getRegion();
+        // }
+        // this.region = region;
         //GREAT CIRCLE
         const planeRoutes = _.map(this.props.mapData.planeRoutes, route => {
             let start = turf_helpers.point([
@@ -599,7 +599,9 @@ class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={this.region.zoom}
+                zoomLevel={
+                    this.region.zoom == undefined ? 11 : this.region.zoom
+                } // == instead of === catch also null
                 centerCoordinate={[this.region.longitude, this.region.latitude]}
                 showsUserLocation={true}
                 userTrackingMode={this.state.userTrackingMode}
