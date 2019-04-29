@@ -506,7 +506,8 @@ class MapView extends React.Component {
                         <Text style={styles.bottomTextRS}>
                             Arriving in{' '}
                             <Text style={{ fontWeight: 'bold' }}>
-                                {hour} : {minute}
+                                {hour <= 0 ? '00' : hour} :{' '}
+                                {minute <= 0 ? '00' : minute}
                             </Text>
                         </Text>
                     </View>
