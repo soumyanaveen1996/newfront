@@ -691,12 +691,16 @@ class MapView extends React.Component {
             return marker.id === id;
         });
         if (foundMarker) {
-            this.flyTo(foundMarker.coordinate);
+            this.flyTo(foundMarker.coordinate, 1000);
         }
     }
 
-    flyTo(coordinate, time = null) {
-        this.map.flyTo([coordinate.longitude, coordinate.latitude], time);
+    flyTo(coordinate, time = 1000) {
+        this.map.setCamera({
+            centerCoordinate: [coordinate.longitude, coordinate.latitude],
+            zoom: 15,
+            duration: time
+        });
     }
 
     render() {
