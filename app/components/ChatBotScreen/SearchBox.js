@@ -101,6 +101,7 @@ export class SearchBox extends React.Component {
         if (this.props.data.results && this.props.data.results.length > 0) {
             return (
                 <FlatList
+                    keyboardShouldPersistTaps="handled"
                     data={this.props.data.results}
                     renderItem={this.renderItem.bind(this)}
                     extraData={this.state}

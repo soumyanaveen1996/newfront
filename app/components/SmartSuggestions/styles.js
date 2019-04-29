@@ -17,9 +17,11 @@ export default StyleSheet.create({
         marginTop: 20
     },
     smartSuggestions: {
-        paddingLeft: 64
+        // paddingLeft: 64
+        alignSelf: 'flex-end',
+        overflow: 'visible'
     },
     emptyFooter: {
-        width: 64
+        // width: 64
     }
 });
