@@ -593,7 +593,7 @@ const stylesheet = StyleSheet.create({
     },
     //SEARCH BOX
     searchBoxContainer: {
-        maxHeight: '40%',
+        maxHeight: (Dimensions.get('screen').height / 100) * 40,
         alignItems: 'stretch',
         backgroundColor: GlobalColors.white
     },
