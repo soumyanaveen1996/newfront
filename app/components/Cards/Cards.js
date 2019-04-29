@@ -218,6 +218,7 @@ export default class Cards extends React.Component {
                 <FlatList
                     data={this.props.cards}
                     renderItem={this.card.bind(this)}
+                    keyboardShouldPersistTaps="handled"
                     horizontal={true}
                     style={styles.cards}
                     showsHorizontalScrollIndicator={false}

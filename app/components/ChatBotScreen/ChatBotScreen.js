@@ -2389,6 +2389,7 @@ class ChatBotScreen extends React.Component {
                             >
                                 <FlatList
                                     style={chatStyles.messagesList}
+                                    keyboardShouldPersistTaps="handled"
                                     ListFooterComponent={this.renderSmartSuggestions()}
                                     accessibilityLabel="Messages List"
                                     testID="messages-list"

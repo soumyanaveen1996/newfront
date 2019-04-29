@@ -24,6 +24,12 @@ export default class SmartSuggestions extends React.Component {
         this.update([]);
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.suggestions !== this.state.suggestions) {
+            this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
+        }
+    }
+
     smartSuggestion = ({ item }) => (
         <Suggestion
             reply={item}
@@ -42,30 +48,23 @@ export default class SmartSuggestions extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
         }
-        this.setState(
-            {
-                suggestions: suggestions
-            },
-            () => {
-                this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
-            }
-        );
+        this.setState({ suggestions: suggestions });
     };
 
     render() {
         return (
-            <View>
+            <View style={{ overflow: 'visible' }}>
                 <FlatList
                     ref={flatListRef => {
                         this.flatListRef = flatListRef;
                     }}
+                    keyboardShouldPersistTaps="always"
                     data={this.state.suggestions}
                     renderItem={this.smartSuggestion.bind(this)}
                     horizontal={true}
                     style={styles.smartSuggestions}
                     extraData={this.state}
                     showsHorizontalScrollIndicator={false}
-                    ListFooterComponent={<View style={styles.emptyFooter} />}
                     decelerationRate="fast"
                 />
             </View>

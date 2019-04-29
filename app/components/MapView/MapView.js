@@ -506,7 +506,8 @@ class MapView extends React.Component {
                         <Text style={styles.bottomTextRS}>
                             Arriving in{' '}
                             <Text style={{ fontWeight: 'bold' }}>
-                                {hour} : {minute}
+                                {hour <= 0 ? '00' : hour} :{' '}
+                                {minute <= 0 ? '00' : minute}
                             </Text>
                         </Text>
                     </View>
@@ -691,12 +692,16 @@ class MapView extends React.Component {
             return marker.id === id;
         });
         if (foundMarker) {
-            this.flyTo(foundMarker.coordinate);
+            this.flyTo(foundMarker.coordinate, 1000);
         }
     }
 
-    flyTo(coordinate, time = null) {
-        this.map.flyTo([coordinate.longitude, coordinate.latitude], time);
+    flyTo(coordinate, time = 1000) {
+        this.map.setCamera({
+            centerCoordinate: [coordinate.longitude, coordinate.latitude],
+            zoom: 15,
+            duration: time
+        });
     }
 
     render() {
