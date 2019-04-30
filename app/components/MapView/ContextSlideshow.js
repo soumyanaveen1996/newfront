@@ -302,6 +302,9 @@ export default class ContextSlideshow extends React.Component {
         if (this.props.isOpen) {
             return (
                 <FlatList
+                    ref={ref => {
+                        this.list = ref;
+                    }}
                     data={this.props.contentData || []}
                     // data={this.testData}
                     renderItem={this.renderItem.bind(this)}
@@ -311,6 +314,21 @@ export default class ContextSlideshow extends React.Component {
                     style={{ paddingHorizontal: 15 }}
                 />
             );
+        }
+    }
+
+    scrollToIndex(index) {
+        if (this.list) {
+            this.list.scrollToIndex({ index: index, viewOffset: 0 });
+        }
+    }
+
+    scrollToCard(id) {
+        const index = _.findIndex(this.props.contentData, card => {
+            return card.cardId === id;
+        });
+        if (index >= 0) {
+            this.scrollToIndex(index);
         }
     }
 

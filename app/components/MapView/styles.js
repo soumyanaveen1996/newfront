@@ -338,6 +338,12 @@ const layerStyles = Mapbox.StyleSheet.create({
     poiMarker: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
+        iconImage: images.map_regularpin_normal,
+        iconSize: 1.5
+    },
+    poiMarker_selected: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
         iconImage: images.map_pin,
         iconSize: 1.5
     },
