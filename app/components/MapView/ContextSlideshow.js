@@ -24,11 +24,7 @@ export default class ContextSlideshow extends React.Component {
     }
 
     renderUrlBigCard(item) {
-        if (
-            !item.seeMoreUrl ||
-            typeof item.seeMoreUrl !== 'string' ||
-            item.seeMoreUrl === ''
-        ) {
+        if (typeof item.seeMoreUrl !== 'string' || item.seeMoreUrl === '') {
             return this.renderErrorCard('url missing');
         }
         const content = (
