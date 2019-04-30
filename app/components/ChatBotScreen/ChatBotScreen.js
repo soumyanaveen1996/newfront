@@ -377,6 +377,8 @@ class ChatBotScreen extends React.Component {
             self.botLoaded = false;
         }
 
+        this.checkForScrolling();
+
         this.keyboardWillShowListener = Keyboard.addListener(
             'keyboardWillShow',
             this.keyboardWillShow.bind(this)
@@ -897,6 +899,7 @@ class ChatBotScreen extends React.Component {
         // Suggestions
         this.smartSuggestionsArea.update([]);
         this.smartSuggestionsArea.update(message.getMessage());
+        this.checkForScrolling();
     }
 
     fireSlider(message) {
@@ -1254,6 +1257,7 @@ class ChatBotScreen extends React.Component {
             this.messageQueue.push(message);
             if (this.processingMessageQueue === false) {
                 await this.processMessageQueue();
+                this.checkForScrolling();
                 resolve(false);
             } else {
                 resolve(true);
@@ -2395,7 +2399,7 @@ class ChatBotScreen extends React.Component {
                                     testID="messages-list"
                                     ref={list => {
                                         this.chatList = list;
-                                        this.checkForScrolling();
+                                        // this.checkForScrolling();
                                     }}
                                     data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}
