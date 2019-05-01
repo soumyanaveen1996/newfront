@@ -494,6 +494,17 @@ class MapView extends React.Component {
                     routeId: markerToTrack.id,
                     startId: routeToTrack.start.id,
                     endId: routeToTrack.end.id,
+                    //metric system ftw!
+                    altitude:
+                        (markerToTrack.coordinate.altitude
+                            ? JSON.stringify(markerToTrack.coordinate.altitude)
+                            : '-') +
+                        (markerToTrack.coordinate.imperial ? ' ft' : ' m'),
+                    speed:
+                        (markerToTrack.coordinate.speed
+                            ? JSON.stringify(markerToTrack.coordinate.speed)
+                            : '-') +
+                        (markerToTrack.coordinate.imperial ? ' mph' : ' km/h'),
                     // startCoord: [
                     //     routeToTrack.start.longitude,
                     //     routeToTrack.start.latitude
@@ -582,6 +593,21 @@ class MapView extends React.Component {
                             <Text style={{ fontWeight: 'bold' }}>
                                 {hour <= 0 ? '00' : hour} :{' '}
                                 {minute <= 0 ? '00' : minute}
+                            </Text>
+                        </Text>
+                    </View>
+                    <View style={styles.separatorRS} />
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.bottomTextRS}>
+                            Altitude:{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.altitude}
+                            </Text>
+                        </Text>
+                        <Text style={styles.bottomTextRS}>
+                            Speed:{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.speed}
                             </Text>
                         </Text>
                     </View>
