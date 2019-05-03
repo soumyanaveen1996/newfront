@@ -103,40 +103,55 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         top: 13,
-        height: 70,
+        height: 110,
         flexDirection: 'row',
-        borderTopRightRadius: 10,
-        borderBottomRightRadius: 10,
+        alignItems: 'center',
         overflow: 'hidden'
     },
     containerRSClosed: {
         position: 'absolute',
-        left: -270,
+        left: -260,
         top: 13,
-        height: 70,
+        height: 110,
         flexDirection: 'row',
+        alignItems: 'center',
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         overflow: 'hidden'
     },
     leftContainerRS: {
-        width: 270,
+        width: 260,
+        height: 110,
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'stretch',
         paddingHorizontal: 17,
         paddingVertical: 7,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
         backgroundColor: GlobalColors.grey
     },
     rightContainerRS: {
-        width: 45,
+        width: 40,
+        height: 60,
         justifyContent: 'center',
         alignItems: 'center',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
         backgroundColor: GlobalColors.chatLeftTextColor
     },
     sliderTrackRS: {
         width: '100%',
         height: 3,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.chatLeftTextColor,
+        overflow: 'visible'
+    },
+    separatorRS: {
+        width: '100%',
+        height: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
@@ -336,6 +351,12 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconSize: 1.5
     },
     poiMarker: {
+        iconAllowOverlap: true,
+        iconIgnorePlacement: true,
+        iconImage: images.map_regularpin_normal,
+        iconSize: 1.5
+    },
+    poiMarker_selected: {
         iconAllowOverlap: true,
         iconIgnorePlacement: true,
         iconImage: images.map_pin,

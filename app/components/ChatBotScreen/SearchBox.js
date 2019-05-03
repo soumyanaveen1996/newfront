@@ -290,7 +290,7 @@ export class SearchBox extends React.Component {
             return this.state.response[index];
         });
         results = _.map(results, res => {
-            return res.text;
+            return { text: res.text };
         });
 
         response = {
