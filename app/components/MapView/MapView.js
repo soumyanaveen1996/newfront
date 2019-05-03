@@ -136,7 +136,8 @@ class MapView extends React.Component {
             showRouteTracker: false,
             routeTrackerClosed: false,
             trackerData: {},
-            GEOJson: {}
+            GEOJson: {},
+            POI: []
         };
     }
 
@@ -274,29 +275,66 @@ class MapView extends React.Component {
             ]);
             return turf_great_circle(start, end, { name: route.id });
         });
-        //MARKERS
-        const markers = _.map(this.props.mapData.markers, marker => {
-            const position = [
-                marker.coordinate.longitude,
-                marker.coordinate.latitude
-            ];
-            const markerObject = {
-                type: 'Feature',
-                properties: {
-                    iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+        //MARKERS and POI
+        let markers = [];
+        let pointsOfInterest = [];
+        this.props.mapData.markers.forEach(marker => {
+            if (marker.iconType === MarkerIconTypes.POI) {
+                const position = [
+                    marker.coordinate.longitude,
+                    marker.coordinate.latitude
+                ];
+                const poi = {
                     id: marker.id,
-                    title: marker.title,
-                    description: marker.description,
-                    draggable: marker.draggable,
-                    rotation: marker.coordinate.direction - 90
-                },
-                geometry: {
-                    type: 'Point',
-                    coordinates: position
-                }
-            };
-            return markerObject;
+                    coordinate: position
+                };
+                pointsOfInterest.push(poi);
+            } else {
+                const position = [
+                    marker.coordinate.longitude,
+                    marker.coordinate.latitude
+                ];
+                const markerObject = {
+                    type: 'Feature',
+                    properties: {
+                        iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+                        id: marker.id,
+                        title: marker.title,
+                        description: marker.description,
+                        draggable: marker.draggable,
+                        rotation: marker.coordinate.direction - 90
+                    },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: position
+                    }
+                };
+                markers.push(markerObject);
+            }
         });
+
+        // const markers = _.map(this.props.mapData.markers, marker => {
+        //     const position = [
+        //         marker.coordinate.longitude,
+        //         marker.coordinate.latitude
+        //     ];
+        //     const markerObject = {
+        //         type: 'Feature',
+        //         properties: {
+        //             iconType: marker.iconType || MarkerIconTypes.CIRCLE,
+        //             id: marker.id,
+        //             title: marker.title,
+        //             description: marker.description,
+        //             draggable: marker.draggable,
+        //             rotation: marker.coordinate.direction - 90
+        //         },
+        //         geometry: {
+        //             type: 'Point',
+        //             coordinates: position
+        //         }
+        //     };
+        //     return markerObject;
+        // });
 
         //POLYLINES
         const polylines = _.map(this.props.mapData.polylines, polyline => {
@@ -332,11 +370,13 @@ class MapView extends React.Component {
             this.setState({
                 GEOJson: GEOJson,
                 showRouteTracker: true,
-                trackerData: trackerData
+                trackerData: trackerData,
+                POI: pointsOfInterest
             });
         } else {
             this.setState({
-                GEOJson: GEOJson
+                GEOJson: GEOJson,
+                POI: pointsOfInterest
             });
         }
     }
@@ -381,6 +421,40 @@ class MapView extends React.Component {
         );
     }
 
+    renderPointsOfInterest() {
+        const POIs = this.state.POI.map((poi, index) => {
+            return (
+                <Mapbox.PointAnnotation
+                    key={poi.id}
+                    id={poi.id}
+                    onSelected={this.onPOISelected.bind(this, poi.id, index)}
+                    // onDeselected={this.onPOIDeselected.bind(this)}
+                    coordinate={poi.coordinate}
+                >
+                    <Image
+                        resizeMode="cover"
+                        style={
+                            poi.selected
+                                ? { width: 30, height: 30, overflow: 'visible' }
+                                : { width: 20, height: 20, overflow: 'visible' }
+                        }
+                        source={
+                            poi.selected
+                                ? images.map_pin
+                                : images.map_regularpin_normal
+                        }
+                    />
+                </Mapbox.PointAnnotation>
+            );
+        });
+        return POIs;
+    }
+
+    onPOISelected(id, index, feature) {
+        this.slideshow.scrollToCard(id);
+        this.selectPOI(index);
+    }
+
     renderButtons() {
         return (
             <View style={styles.buttonsContainer}>
@@ -420,6 +494,17 @@ class MapView extends React.Component {
                     routeId: markerToTrack.id,
                     startId: routeToTrack.start.id,
                     endId: routeToTrack.end.id,
+                    //metric system ftw!
+                    altitude:
+                        (markerToTrack.coordinate.altitude
+                            ? JSON.stringify(markerToTrack.coordinate.altitude)
+                            : '-') +
+                        (markerToTrack.coordinate.imperial ? ' ft' : ' m'),
+                    speed:
+                        (markerToTrack.coordinate.speed
+                            ? JSON.stringify(markerToTrack.coordinate.speed)
+                            : '-') +
+                        (markerToTrack.coordinate.imperial ? ' mph' : ' km/h'),
                     // startCoord: [
                     //     routeToTrack.start.longitude,
                     //     routeToTrack.start.latitude
@@ -508,6 +593,21 @@ class MapView extends React.Component {
                             <Text style={{ fontWeight: 'bold' }}>
                                 {hour <= 0 ? '00' : hour} :{' '}
                                 {minute <= 0 ? '00' : minute}
+                            </Text>
+                        </Text>
+                    </View>
+                    <View style={styles.separatorRS} />
+                    <View style={styles.dataContainerRS}>
+                        <Text style={styles.bottomTextRS}>
+                            Altitude:{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.altitude}
+                            </Text>
+                        </Text>
+                        <Text style={styles.bottomTextRS}>
+                            Speed:{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.trackerData.speed}
                             </Text>
                         </Text>
                     </View>
@@ -613,6 +713,7 @@ class MapView extends React.Component {
                 style={{ flex: 1 }}
             >
                 {this.renderElements()}
+                {this.renderPointsOfInterest()}
             </Mapbox.MapView>
         );
     }
@@ -621,6 +722,9 @@ class MapView extends React.Component {
         if (this.props.mapData.cards && this.props.mapData.cards.length > 0) {
             return (
                 <ContextSlideshow
+                    ref={ref => {
+                        this.slideshow = ref;
+                    }}
                     contentData={this.props.mapData.cards}
                     isOpen={this.state.slideshowOpen}
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
@@ -690,17 +794,31 @@ class MapView extends React.Component {
     }
 
     focusOnMarker(id) {
-        const foundMarker = _.find(this.props.mapData.markers, marker => {
-            return marker.id === id;
+        let foundIndex;
+        const foundMarker = _.find(this.state.POI, (poi, index) => {
+            foundIndex = index;
+            return poi.id === id;
         });
         if (foundMarker) {
             this.flyTo(foundMarker.coordinate, 1000);
+            this.selectPOI(foundIndex);
+        }
+    }
+
+    selectPOI(index) {
+        if (this.state.POI && this.state.POI[index]) {
+            this.state.POI[index].selected = true;
+            if (this.lastPOISelected) {
+                this.state.POI[this.lastPOISelected].selected = false;
+            }
+            this.lastPOISelected = index;
+            this.setState({ POI: this.state.POI });
         }
     }
 
     flyTo(coordinate, time = 1000) {
         this.map.setCamera({
-            centerCoordinate: [coordinate.longitude, coordinate.latitude],
+            centerCoordinate: coordinate,
             zoom: 15,
             duration: time
         });

@@ -102,7 +102,8 @@ const images = {
     add_remove_favourite: require('./add-remove-favorite-btn/add-remove-favorite-btn.png'),
     delete_icon_trash: require('./delete-icon-trash/delete-icon-trash.png'),
     moving_maps_plane_blue_icon: require('./mapbox/moving-maps-plane-blue-icon.png'),
-    moving_maps_plane: require('./mapbox/moving-maps-plane.png')
+    moving_maps_plane: require('./mapbox/moving-maps-plane.png'),
+    map_regularpin_normal: require('./mapbox/map-regularpin-normal.png')
 };
 
 export default images;

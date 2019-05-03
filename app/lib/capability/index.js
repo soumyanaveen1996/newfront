@@ -30,6 +30,7 @@ import UpdateCallQuota from './CallQuota';
 import RemoteBotInstall from '../RemoteBotInstall';
 import InAppPurchase from './InAppPurchase';
 import OfflineMap from './OfflineMap';
+import { Moment, MomentTimezone } from './Moment';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
@@ -66,5 +67,7 @@ export {
     RemoteBotInstall,
     InAppPurchase,
     AgentGuard,
-    OfflineMap
+    OfflineMap,
+    Moment,
+    MomentTimezone
 };
