@@ -819,7 +819,7 @@ class MapView extends React.Component {
     flyTo(coordinate, time = 1000) {
         this.map.setCamera({
             centerCoordinate: coordinate,
-            zoom: 15,
+            zoom: 16,
             duration: time
         });
     }
