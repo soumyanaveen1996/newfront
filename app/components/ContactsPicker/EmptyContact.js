@@ -8,6 +8,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import { GlobalColors } from '../../config/styles';
+import { Actions } from 'react-native-router-flux';
 
 export default class EmptyContact extends React.Component {
     constructor(props) {
@@ -44,37 +45,40 @@ export default class EmptyContact extends React.Component {
                             You have no contacts yet.
                         </Text>
                     </View>
-                    <TouchableOpacity
-                        style={{
-                            backgroundColor: 'rgba(47,199,111,1)',
-                            borderRadius: 5,
-                            height: 40,
-                            width: wp('40%'),
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginTop: 20
-                        }}
-                        onPress={this.props.inviteUser}
-                    >
-                        <Image
-                            source={require('../../images/contact/new-contact-icon.png')}
+
+                    {Actions.currentScene !== 'phoneContactsCall' && (
+                        <TouchableOpacity
                             style={{
-                                height: 20,
-                                width: 20,
-                                resizeMode: 'contain'
+                                backgroundColor: 'rgba(47,199,111,1)',
+                                borderRadius: 5,
+                                height: 40,
+                                width: wp('40%'),
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: 20
                             }}
-                        />
-                        <Text
-                            style={{
-                                color: GlobalColors.white,
-                                marginLeft: 5
-                            }}
+                            onPress={this.props.inviteUser}
                         >
-                            Add Contacts
-                        </Text>
-                    </TouchableOpacity>
+                            <Image
+                                source={require('../../images/contact/new-contact-icon.png')}
+                                style={{
+                                    height: 20,
+                                    width: 20,
+                                    resizeMode: 'contain'
+                                }}
+                            />
+                            <Text
+                                style={{
+                                    color: GlobalColors.white,
+                                    marginLeft: 5
+                                }}
+                            >
+                                Add Contacts
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </BackgroundImage>
         );
