@@ -17,8 +17,19 @@ import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
 import SystemBot from '../../lib/bot/SystemBot';
-import { Contact, Auth, Network } from '../../lib/capability';
-import EventEmitter, { AuthEvents } from '../../lib/events';
+import {
+    Contact,
+    Auth,
+    Network,
+    Message,
+    MessageTypeConstants
+} from '../../lib/capability';
+import {
+    EventEmitter,
+    AuthEvents,
+    CallQuotaEvents,
+    TwilioEvents
+} from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
@@ -43,10 +54,14 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { Icons } from '../../config/icons';
 import { EmptyContact } from '../ContactsPicker';
 import { BackgroundImage } from '../BackgroundImage';
-
 import config from '../../config/config';
 import InviteModal from '../ContactsPicker/InviteModal';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import Bot from '../../lib/bot';
+
 const R = require('ramda');
+
+let EventListeners = [];
 
 class NewCallContacts extends React.Component {
     constructor(props) {
@@ -56,11 +71,30 @@ class NewCallContacts extends React.Component {
             contactsData: [],
             contactVisible: false,
             inviteModalVisible: false,
-            contactSelected: null
+            contactSelected: null,
+            callQuota: 0,
+            callQuotaUpdateError: false,
+            updatingCallQuota: false
         };
     }
 
     async componentDidMount() {
+        this.initBackGroundBot();
+        // Subscribe to Events
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPDATED_QUOTA,
+                this.handleCallQuotaUpdateSuccess
+            )
+        );
+
+        EventListeners.push(
+            EventEmitter.addListener(
+                CallQuotaEvents.UPD_QUOTA_ERROR,
+                this.handleCallQuotaUpdateFailure
+            )
+        );
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
@@ -116,6 +150,39 @@ class NewCallContacts extends React.Component {
         }
     }
 
+    initBackGroundBot = async () => {
+        const message = new Message({
+            msg: {
+                callQuotaUsed: 0
+            },
+            messageType: MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA
+        });
+        message.setCreatedBy({ addedByBot: true });
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+
+        await bgBotScreen.initialize();
+
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        this.setState({ updatingCallQuota: true, bgBotScreen });
+    };
+
+    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+        this.setState({
+            callQuota,
+            updatingCallQuota: false,
+            callQuotaUpdateError: false
+        });
+    };
+
+    handleCallQuotaUpdateFailure = ({ error }) => {
+        this.setState({
+            updatingCallQuota: false,
+            callQuotaUpdateError: true
+        });
+    };
+
     gettingAllContactData = () => {
         Contact.getAddedContacts().then(contacts => {
             this.refresh(contacts);
@@ -136,6 +203,7 @@ class NewCallContacts extends React.Component {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
+
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Contacts_call');
     }
@@ -195,6 +263,7 @@ class NewCallContacts extends React.Component {
         });
         return PhoneContacts;
     };
+
     refresh = contacts => {
         // this.dataSource.loadData()
         if (!contacts) {
@@ -207,6 +276,26 @@ class NewCallContacts extends React.Component {
         });
         this.setState({ contactsData: newAddressBook });
     };
+
+    getCredit() {
+        Bot.getInstalledBots()
+            .then(bots => {
+                // console.log(bots);
+                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+                if (dwIndex < 0) {
+                    return Alert.alert(
+                        'You have to download DigitalWallet Bot to buy Credits'
+                    );
+                }
+                const DWBot = bots[dwIndex];
+                this.setContactVisible(false, null);
+                Actions.botChat({ bot: DWBot });
+            })
+            .catch(err => {
+                console.log(err);
+                Alert.alert('An error occured');
+            });
+    }
 
     renderItem(info) {
         const contact = info.item;
@@ -608,6 +697,24 @@ class NewCallContacts extends React.Component {
                                 contactSelected,
                                 phoneNumbers
                             )}
+                        </View>
+                        <View style={styles.balanceContainer}>
+                            <Text style={styles.balanceText}>
+                                Current Balance:{' '}
+                                <Text style={{ color: 'black' }}>
+                                    {' '}
+                                    ${this.state.callQuota}
+                                </Text>
+                            </Text>
+                            <TouchableOpacity
+                                style={styles.getCretidButton}
+                                onPress={this.getCredit.bind(this)}
+                                disabled={this.state.updatingCallQuota}
+                            >
+                                <Text style={styles.getCreditText}>
+                                    Get credit
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 ) : (

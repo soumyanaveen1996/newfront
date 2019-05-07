@@ -143,7 +143,7 @@ const stylesheet = StyleSheet.create({
     },
     modalContainer: {
         // margin: 5,
-        backgroundColor: 'rgba(255,255,255,1)',
+        backgroundColor: GlobalColors.white,
         display: 'flex',
         // flex: 1,
         height: hp('60%'),
@@ -242,6 +242,29 @@ const stylesheet = StyleSheet.create({
     modalImage: {
         width: 22,
         height: 22
+    },
+    balanceContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    balanceText: {
+        fontSize: 14,
+        color: 'rgba(155,155,155,1)'
+    },
+    getCretidButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 7,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderRadius: 3,
+        borderColor: GlobalColors.sideButtons
+    },
+    getCreditText: {
+        fontSize: 16,
+        color: GlobalColors.sideButtons
     }
 });
 
