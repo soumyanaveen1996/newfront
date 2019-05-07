@@ -242,7 +242,8 @@ class NewCallContacts extends React.Component {
                         id: contact.userId,
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: contact.phoneNumbers || undefined
+                        phoneNumbers: contact.phoneNumbers || undefined,
+                        waitingForConfirmation: contact.waitingForConfirmation
                     }));
             } else {
                 contactBook = phoneContacts
@@ -253,7 +254,8 @@ class NewCallContacts extends React.Component {
                         id: contact.userId,
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
-                        phoneNumbers: contact.phoneNumber || undefined
+                        phoneNumbers: contact.phoneNumber || undefined,
+                        waitingForConfirmation: contact.waitingForConfirmation
                     }));
             }
             return {
@@ -317,6 +319,7 @@ class NewCallContacts extends React.Component {
                 id={contact.id}
                 onItemPressed={this.onContactSelected}
                 email={contact.emails[0].email}
+                waitingForConfirmation={contact.waitingForConfirmation}
             />
         );
     }

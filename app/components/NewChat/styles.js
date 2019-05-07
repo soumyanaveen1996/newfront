@@ -55,9 +55,16 @@ const stylesheet = StyleSheet.create({
     contactItemContainer: {
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
         height: 55,
+        width: '100%',
         paddingHorizontal: 10
+    },
+    contactItemLeftContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     },
     contactItemDetailsContainer: {
         flexDirection: 'column',
@@ -265,6 +272,16 @@ const stylesheet = StyleSheet.create({
     getCreditText: {
         fontSize: 16,
         color: GlobalColors.sideButtons
+    },
+    waitingConfirmation: {
+        width: 90,
+        height: 40
+    },
+    waitingConfirmationText: {
+        fontSize: 12,
+        fontWeight: '100',
+        color: 'rgba(174,174,174,1)',
+        textAlign: 'center'
     }
 });
 
