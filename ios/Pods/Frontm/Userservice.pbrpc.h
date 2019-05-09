@@ -10,6 +10,8 @@
 #endif
 
 @class BotSubscriptionsResponse;
+@class CallHistoryResponse;
+@class CompaniesResponse;
 @class ContactsResponse;
 @class Empty;
 @class ManageTncInput;
@@ -126,6 +128,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)manageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToManageTncWithRequest:(ManageTncInput *)request handler:(void(^)(ManageTncResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetCompanies(Empty) returns (CompaniesResponse)
+
+- (void)getCompaniesWithRequest:(Empty *)request handler:(void(^)(CompaniesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetCompaniesWithRequest:(Empty *)request handler:(void(^)(CompaniesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetCallHistory(Empty) returns (CallHistoryResponse)
+
+- (void)getCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

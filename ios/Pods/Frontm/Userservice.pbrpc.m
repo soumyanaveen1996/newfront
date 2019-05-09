@@ -187,5 +187,29 @@
              responseClass:[ManageTncResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark GetCompanies(Empty) returns (CompaniesResponse)
+
+- (void)getCompaniesWithRequest:(Empty *)request handler:(void(^)(CompaniesResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetCompaniesWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetCompaniesWithRequest:(Empty *)request handler:(void(^)(CompaniesResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetCompanies"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[CompaniesResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark GetCallHistory(Empty) returns (CallHistoryResponse)
+
+- (void)getCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetCallHistoryWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetCallHistory"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[CallHistoryResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

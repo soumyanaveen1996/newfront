@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     Image,
     PermissionsAndroid,
-    Alert
+    Alert,
+    NativeModules
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -62,6 +63,7 @@ import Bot from '../../lib/bot';
 const R = require('ramda');
 
 let EventListeners = [];
+const UserServiceClient = NativeModules.UserServiceClient;
 
 class NewCallContacts extends React.Component {
     constructor(props) {

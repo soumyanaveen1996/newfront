@@ -1076,6 +1076,195 @@ typedef struct ManageTncObject__storage_ {
 
 @end
 
+#pragma mark - CompaniesResponse
+
+@implementation CompaniesResponse
+
+@dynamic companiesArray, companiesArray_Count;
+
+typedef struct CompaniesResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *companiesArray;
+} CompaniesResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "companiesArray",
+        .dataTypeSpecific.className = NULL,
+        .number = CompaniesResponse_FieldNumber_CompaniesArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CompaniesResponse__storage_, companiesArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CompaniesResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CompaniesResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CallHistoryResponse
+
+@implementation CallHistoryResponse
+
+@dynamic contentArray, contentArray_Count;
+
+typedef struct CallHistoryResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *contentArray;
+} CallHistoryResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "contentArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(CallHistoryObject),
+        .number = CallHistoryResponse_FieldNumber_ContentArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CallHistoryResponse__storage_, contentArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CallHistoryObject
+
+@implementation CallHistoryObject
+
+@dynamic callCharge;
+@dynamic callTimestamp;
+@dynamic callTo;
+@dynamic currentBalance;
+@dynamic duration;
+@dynamic userId;
+
+typedef struct CallHistoryObject__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t callCharge;
+  float currentBalance;
+  int32_t duration;
+  NSString *callTo;
+  NSString *userId;
+  int64_t callTimestamp;
+} CallHistoryObject__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "callCharge",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallCharge,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callCharge),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "callTimestamp",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallTimestamp,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callTimestamp),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "callTo",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallTo,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callTo),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "currentBalance",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CurrentBalance,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, currentBalance),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeFloat,
+      },
+      {
+        .name = "duration",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_Duration,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, duration),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "userId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_UserId,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, userId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryObject class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryObject__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\005\001\n\000\002\r\000\003\006\000\004\016\000\006\006\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 
