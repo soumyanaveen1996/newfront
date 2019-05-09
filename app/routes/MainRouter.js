@@ -263,24 +263,6 @@ class MainRouter extends React.Component {
                                             />
                                         </Scene>
                                         <Scene
-                                            key={ROUTER_SCENE_KEYS.botsMenuChat}
-                                            titleScreen={I18n.t('Bots')}
-                                            imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
-                                            imageSelected={require('../images/tabbar-marketplace-active/tabbar-marketplace-active.png')}
-                                            icon={TabIconTop}
-                                        >
-                                            <Scene
-                                                key={
-                                                    ROUTER_SCENE_KEYS.botsListChat
-                                                }
-                                                component={NewChatBots}
-                                                // title={I18n.t('Channels')}
-                                                type="push"
-                                                hideNavBar={true}
-                                                // back
-                                            />
-                                        </Scene>
-                                        <Scene
                                             key={
                                                 ROUTER_SCENE_KEYS.channelsMenuChat
                                             }
@@ -294,6 +276,24 @@ class MainRouter extends React.Component {
                                                     ROUTER_SCENE_KEYS.channelsListChat
                                                 }
                                                 component={NewChatChannels}
+                                                // title={I18n.t('Channels')}
+                                                type="push"
+                                                hideNavBar={true}
+                                                // back
+                                            />
+                                        </Scene>
+                                        <Scene
+                                            key={ROUTER_SCENE_KEYS.botsMenuChat}
+                                            titleScreen={I18n.t('Bots')}
+                                            imageSource={require('../images/tabbar-marketplace/tabbar-marketplace.png')}
+                                            imageSelected={require('../images/tabbar-marketplace-active/tabbar-marketplace-active.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.botsListChat
+                                                }
+                                                component={NewChatBots}
                                                 // title={I18n.t('Channels')}
                                                 type="push"
                                                 hideNavBar={true}
