@@ -145,7 +145,8 @@ const getMessageDataFor = botKey =>
 
 const loadLastMessage = key => {
     return MessageHandler.fetchDeviceMessages(key, 1, 0, [
-        MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+        MessageTypeConstants.MESSAGE_TYPE_SESSION_START,
+        MessageTypeConstants.MESSAGE_TYPE_CARDS
     ]);
 };
 
