@@ -285,6 +285,8 @@ class BotList extends React.Component {
     };
 
     setFavorite = (key, rowMap, conversationId, botId, chatData, type) => {
+        // console.log('conversation id ', conversationId);
+
         let setType = type;
         let favId = conversationId;
 
@@ -333,7 +335,6 @@ class BotList extends React.Component {
 
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
-        // console.log('data on main page list ', allData);
 
         return (
             <View style={BotListStyles.listViewStyle}>
