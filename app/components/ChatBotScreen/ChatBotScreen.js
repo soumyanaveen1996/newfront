@@ -897,9 +897,9 @@ class ChatBotScreen extends React.Component {
 
     updateSmartSuggestions(message) {
         // Suggestions
-        this.smartSuggestionsArea.update([]);
-        this.smartSuggestionsArea.update(message.getMessage());
-        this.checkForScrolling();
+        this.smartSuggestionsArea
+            .update(message.getMessage())
+            .then(() => this.checkForScrolling());
     }
 
     fireSlider(message) {
