@@ -289,9 +289,9 @@ export class SearchBox extends React.Component {
         let results = _.filter(this.props.data.results, (res, index) => {
             return this.state.response[index];
         });
-        results = _.map(results, res => {
-            return { text: res.text };
-        });
+        // results = _.map(results, res => {
+        //     return { text: res.text };
+        // });
 
         response = {
             action: SearchBoxUserAction.DONE,

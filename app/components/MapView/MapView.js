@@ -800,7 +800,7 @@ class MapView extends React.Component {
             return poi.id === id;
         });
         if (foundMarker) {
-            this.flyTo(foundMarker.coordinate, 1000);
+            this.flyTo(foundMarker.coordinate, 1500);
             this.selectPOI(foundIndex);
         }
     }
@@ -816,12 +816,9 @@ class MapView extends React.Component {
         }
     }
 
-    flyTo(coordinate, time = 1000) {
-        this.map.setCamera({
-            centerCoordinate: coordinate,
-            zoom: 15,
-            duration: time
-        });
+    async flyTo(coordinate, time) {
+        await this.map.flyTo(coordinate, time);
+        this.map.zoomTo(16, 1000);
     }
 
     render() {

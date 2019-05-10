@@ -39,6 +39,7 @@ const PSTN_CALL = {
 };
 
 let EventListeners = [];
+
 export const DiallerState = {
     initial: 'initial',
     connecting: 'connecting',
@@ -160,6 +161,7 @@ export default class Dialler extends React.Component {
         }
         return [PSTN_CALL.OTHER_CALL];
     }
+
     async getSatelliteCallNumber(number, user) {
         try {
             // const options = {
@@ -326,6 +328,7 @@ export default class Dialler extends React.Component {
             callQuotaUpdateError: true
         });
     };
+
     componentWillUnmount() {
         this.mounted = false;
         EventListeners.forEach(listener => listener.remove());
@@ -686,6 +689,7 @@ export default class Dialler extends React.Component {
                 Alert.alert('An error occured');
             });
     }
+
     renderCountryCode = () => {
         if (this.state.countryElements.length > 0) {
             return this.state.countryElements;

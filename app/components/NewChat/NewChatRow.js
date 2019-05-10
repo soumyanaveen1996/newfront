@@ -13,11 +13,16 @@ const NewChatRow = ({
     id,
     image,
     onItemPressed,
-    email = undefined
+    email = undefined,
+    waitingForConfirmation
 }) => {
     return (
-        <TouchableOpacity onPress={() => onItemPressed(item)}>
-            <View style={styles.contactItemContainer}>
+        <TouchableOpacity
+            style={styles.contactItemContainer}
+            onPress={() => onItemPressed(item)}
+            disabled={waitingForConfirmation}
+        >
+            <View style={styles.contactItemLeftContainer}>
                 {image}
                 <View style={styles.contactItemDetailsContainer}>
                     <Text style={styles.contactItemName}>{title}</Text>
@@ -26,6 +31,17 @@ const NewChatRow = ({
                     ) : null}
                 </View>
             </View>
+            {waitingForConfirmation ? (
+                <View style={styles.waitingConfirmation}>
+                    <Text
+                        numberOfLines={2}
+                        ellipsizeMode="middle"
+                        style={styles.waitingConfirmationText}
+                    >
+                        Awaiting for authorization
+                    </Text>
+                </View>
+            ) : null}
         </TouchableOpacity>
     );
 };
