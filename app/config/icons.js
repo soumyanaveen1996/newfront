@@ -283,14 +283,7 @@ export const Icons = {
     mic: icon('ios-mic', 'ionicon', 50, Colors.darkGray, 'red', '500'),
     micOff: icon('ios-mic-off', 'ionicon', 50, Colors.darkGray, 'red', '500'),
     numdial: icon('ios-keypad', 'ionicon', 50, Colors.darkGray, 'red', '500'),
-    speakerOn: icon(
-        'ios-volume-up',
-        'ionicon',
-        50,
-        Colors.darkGray,
-        'red',
-        '500'
-    ),
+    speakerOn: icon('unmute', 'octicon', 50, Colors.darkGray, 'red', '500'),
     speakerOff: icon(
         'ios-volume-off',
         'ionicon',
@@ -401,6 +394,14 @@ export const Icons = {
         GlobalColors.sideButtons,
         Colors.transparent,
         '200'
+    ),
+
+    //CALLSCREEN
+    phoneHangup: icon(
+        'phone-hangup',
+        'material-community',
+        25,
+        GlobalColors.white
     )
 };
 

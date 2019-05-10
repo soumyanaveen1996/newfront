@@ -46,30 +46,34 @@ const Styles = StyleSheet.create({
         height: hp('50%'),
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-around',
-        ...Platform.select({
-            android: {
-                marginTop: hp('5%')
-            },
-            ios: {
-                marginTop: hp('10%')
-            }
-        })
+        justifyContent: 'space-around'
+        // ...Platform.select({
+        //     android: {
+        //         marginTop: hp('5%')
+        //     },
+        //     ios: {
+        //         marginTop: hp('10%')
+        //     }
+        // })
     },
     buttonContainer: {
+        alignItems: 'stretch',
+        justifyContent: 'space-evenly'
+    },
+    topButtonContainer: {
         display: 'flex',
-        height: hp('20%'),
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        ...Platform.select({
-            android: {
-                marginTop: hp('5%')
-            },
-            ios: {
-                marginTop: hp('10%')
-            }
-        })
+        marginBottom: 25
+        // ...Platform.select({
+        //     android: {
+        //         marginTop: hp('5%')
+        //     },
+        //     ios: {
+        //         marginTop: hp('10%')
+        //     }
+        // })
     },
     nameContainer: {},
     callingText: {
@@ -139,18 +143,28 @@ const Styles = StyleSheet.create({
     },
     buttonCtr: {
         borderRadius: wp('20%') / 2,
+        borderWidth: 1,
+        borderColor: GlobalColors.white,
         width: wp('20%'),
         height: wp('20%'),
         justifyContent: 'center',
         alignItems: 'center'
     },
-    buttonCtrOn: {
+    buttonCtrGreen: {
         borderRadius: wp('20%') / 2,
         width: wp('20%'),
         height: wp('20%'),
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(47,199,111,1)'
+        backgroundColor: GlobalColors.green
+    },
+    buttonCtrRed: {
+        borderRadius: wp('20%') / 2,
+        width: wp('20%'),
+        height: wp('20%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.red
     },
     btnImg: {
         width: wp('15%'),
