@@ -583,6 +583,8 @@ export default class ChatMessage extends React.Component {
 
     render() {
         let { message, showTime } = this.props;
+        let msgData = message.getDisplayMessage();
+
         if (message.isEmptyMessage()) {
             return null;
         }

@@ -3,6 +3,7 @@ import { MessageHandler } from '../message';
 import I18n from '../../config/i18n/i18n';
 import _ from 'lodash';
 import { UUID } from './Utils';
+import { AsyncStorage } from 'react-native';
 
 export const ButtonStyle = {
     light: 0,
@@ -459,6 +460,7 @@ export default class Message {
 
     getDisplayMessage = () => {
         // TODO(amal): Have to handle other message types.
+
         if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
