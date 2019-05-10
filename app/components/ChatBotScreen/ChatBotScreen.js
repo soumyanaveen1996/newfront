@@ -836,7 +836,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
-            this.queueMessage(message);
+            this.updateChat(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
@@ -1410,7 +1410,6 @@ class ChatBotScreen extends React.Component {
                         shouldShowUserName={this.shouldShowUserName()}
                         user={this.user}
                         imageSource={{ uri: this.bot.logoUrl }}
-                        onDoneBtnClick={this.onButtonDone.bind()}
                         showTime={item.showTime}
                         openModalWithContent={this.openModalWithContent.bind(
                             this
