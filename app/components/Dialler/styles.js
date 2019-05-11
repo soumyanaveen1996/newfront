@@ -133,7 +133,7 @@ const Styles = StyleSheet.create({
     callButtonContainer: {
         height: hp('15%'),
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: GlobalColors.white,
         width: wp('100%')
@@ -178,26 +178,20 @@ const Styles = StyleSheet.create({
         backgroundColor: 'green'
     },
     roundButton: {
-        width: hp('5%'),
-        height: hp('5%'),
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: hp('2.5%'),
-        borderWidth: 1,
-        borderColor: GlobalColors.white
+        height: '100%'
     },
     roundButtonDel: {
-        width: hp('5%'),
-        height: hp('5%'),
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: hp('2%'),
-        // borderWidth: 1,
-        borderColor: GlobalColors.white
+        height: '100%'
     },
     backspaceButton: {
         width: hp('2.5%'),
@@ -205,7 +199,8 @@ const Styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        height: '25%'
     },
     roundButtonStar: {
         color: GlobalColors.black,
@@ -334,6 +329,30 @@ const Styles = StyleSheet.create({
     callButtonGreen: {
         height: hp('8%'),
         width: hp('8%')
+    },
+    modalDialPad: {
+        justifyContent: 'flex-end',
+        alignItems: 'stretch',
+        margin: 0
+    },
+    modalDialPadTopBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 40,
+        paddingVertical: 20,
+        backgroundColor: 'rgba(25,29,34,1)',
+        borderBottomWidth: 1,
+        borderBottomColor: 'black'
+    },
+    modalDialPadString: {
+        fontSize: hp('3.5%'),
+        color: 'white'
+    },
+    modalDialPadContainer: {
+        height: '50%',
+        width: '100%',
+        backgroundColor: 'rgba(25,29,34,1)'
     }
 });
 
