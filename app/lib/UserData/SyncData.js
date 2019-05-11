@@ -18,7 +18,7 @@ debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 export const synchronizeUserData = async () => {
     try {
         let connection = await Network.isConnected();
-        connection = false;
+        // connection = false;
         if (!connection) {
             console.log('Sourav Logging ::::::: NO CONNECTION');
             syncNoNetwork();
