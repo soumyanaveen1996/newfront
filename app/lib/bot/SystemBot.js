@@ -48,6 +48,7 @@ export const SYSTEM_BOT_MANIFEST = {
         userDomain: 'frontmai',
         version: '1.7.0'
     },
+
     'onboarding-bot': {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
