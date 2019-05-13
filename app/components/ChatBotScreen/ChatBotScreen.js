@@ -647,11 +647,7 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
-        if (Platform.OS === 'ios') {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         // if (Platform.OS === 'android' && this.slider) {
         //     this.slider.close(undefined, true);
         //     this.setState({ sliderClosed: true, showOptions: false });
@@ -1220,11 +1216,9 @@ class ChatBotScreen extends React.Component {
         return new Promise(async resolve => {
             this.processingMessageQueue = true;
             while (this.messageQueue.length > 0) {
-                if (Platform.OS === 'ios') {
-                    LayoutAnimation.configureNext(
-                        LayoutAnimation.Presets.easeInEaseOut
-                    );
-                }
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
                 await this.appendMessageToChat(this.messageQueue.shift());
             }
             this.processingMessageQueue = false;
@@ -1947,11 +1941,9 @@ class ChatBotScreen extends React.Component {
 
     onPlusButtonPressed() {
         if (this.state.showOptions === false) {
-            if (Platform.OS === 'ios') {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
-            }
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState(
                 {
                     showOptions: true,
@@ -1960,11 +1952,9 @@ class ChatBotScreen extends React.Component {
                 () => Keyboard.dismiss()
             );
         } else {
-            if (Platform.OS === 'ios') {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
-            }
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState({
                 showOptions: false,
                 showSlider: this.sliderPreviousState
@@ -1984,11 +1974,7 @@ class ChatBotScreen extends React.Component {
         //         showSlider: false
         //     });
         // } else {
-        if (Platform.OS === 'ios') {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         this.setState({
             showOptions: false,
             showSlider: this.sliderPreviousState
@@ -2264,11 +2250,9 @@ class ChatBotScreen extends React.Component {
                     onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
                     closeShowOptions={() => {
-                        if (Platform.OS === 'ios') {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                        }
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
                         this.setState({ showOptions: false });
                     }}
                 />

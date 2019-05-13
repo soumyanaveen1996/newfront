@@ -24,6 +24,10 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Conversation from '../../lib/conversation/Conversation';
 import ProfileImage from '../ProfileImage';
 import ModalDialPad from '../Dialler/ModalDialPad';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const PhoneState = {
     init: 'init',
@@ -317,6 +321,7 @@ export default class Phone extends React.Component {
             this.state.phoneState === PhoneState.incall ||
             this.state.phoneState === PhoneState.calling
         ) {
+            const buttonIconStyle = { size: wp('11%'), color: 'white' };
             return (
                 <SafeAreaView style={Styles.buttonContainer}>
                     <View style={Styles.topButtonContainer}>
@@ -328,7 +333,7 @@ export default class Phone extends React.Component {
                             }
                             onPress={this.toggleMic.bind(this)}
                         >
-                            {Icons.micOff({ size: 30, color: 'white' })}
+                            {Icons.micOff(buttonIconStyle)}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={Styles.buttonCtr}
@@ -336,7 +341,7 @@ export default class Phone extends React.Component {
                                 this.setState({ isModalDialPadVisible: true });
                             }}
                         >
-                            {Icons.numdial({ size: 30, color: 'white' })}
+                            {Icons.numdial(buttonIconStyle)}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={
@@ -346,14 +351,14 @@ export default class Phone extends React.Component {
                             }
                             onPress={this.toggleSpeaker.bind(this)}
                         >
-                            {Icons.speakerOn({ size: 30, color: 'white' })}
+                            {Icons.speakerOn(buttonIconStyle)}
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         style={[Styles.buttonCtrRed, { alignSelf: 'center' }]}
                         onPress={this.close.bind(this)}
                     >
-                        {Icons.phoneHangup({ size: 30, color: 'white' })}
+                        {Icons.phoneHangup(buttonIconStyle)}
                     </TouchableOpacity>
                 </SafeAreaView>
             );
@@ -365,14 +370,14 @@ export default class Phone extends React.Component {
                         style={Styles.buttonCtrGreen}
                         onPress={this.accept.bind(this)}
                     >
-                        {Icons.call({ size: 30, color: 'white' })}
+                        {Icons.call(buttonIconStyle)}
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={Styles.buttonCtrRed}
                         onPress={this.close.bind(this)}
                     >
-                        {Icons.phoneHangup({ size: 30, color: 'white' })}
+                        {Icons.phoneHangup(buttonIconStyle)}
                     </TouchableOpacity>
                 </View>
             );
