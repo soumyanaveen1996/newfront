@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Suggestion from './Suggestion';
 import styles from './styles';
+import { timeout } from 'rxjs/operator/timeout';
 
 export default class SmartSuggestions extends React.Component {
     constructor(props) {
@@ -20,14 +21,13 @@ export default class SmartSuggestions extends React.Component {
         };
     }
 
-    componentDidMount() {
-        this.update([]);
-    }
+    componentDidMount() {}
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.suggestions !== this.state.suggestions) {
-            this.flatListRef.scrollToOffset({ animated: true, offset: 0 });
-        }
+        // if (prevState.suggestions !== this.state.suggestions) {
+        //     console.log('>>>>>>>scroll')
+        //     this.flatListRef.scrollToOffset({ animated: true, offset: 10 });
+        // }
     }
 
     smartSuggestion = ({ item }) => (
@@ -43,27 +43,41 @@ export default class SmartSuggestions extends React.Component {
     }
 
     update = suggestions => {
-        if (Platform.OS === 'ios') {
+        return new Promise((resolve, reject) => {
             LayoutAnimation.configureNext(
                 LayoutAnimation.Presets.easeInEaseOut
             );
-        }
-        this.setState({ suggestions: suggestions });
+            this.setState({ suggestions: [] }, () => {
+                setTimeout(() => {
+                    this.setState({ suggestions: suggestions }, () => {
+                        setTimeout(() => {
+                            if (this.flatListRef && suggestions.length > 0) {
+                                this.flatListRef.scrollToIndex({
+                                    animated: true,
+                                    index: 0
+                                });
+                            }
+                        }, 1000);
+                        resolve();
+                    });
+                }, 1000);
+            });
+        });
     };
 
     render() {
         return (
             <View style={{ overflow: 'visible' }}>
                 <FlatList
-                    ref={flatListRef => {
-                        this.flatListRef = flatListRef;
+                    ref={ref => {
+                        this.flatListRef = ref;
                     }}
                     keyboardShouldPersistTaps="always"
                     data={this.state.suggestions}
                     renderItem={this.smartSuggestion.bind(this)}
                     horizontal={true}
                     style={styles.smartSuggestions}
-                    extraData={this.state}
+                    extraData={this.props}
                     showsHorizontalScrollIndicator={false}
                     decelerationRate="fast"
                 />

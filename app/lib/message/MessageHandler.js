@@ -54,6 +54,7 @@ export default class MessageHandler extends events.EventEmitter {
                 ) {
                     controlId = message.getMessageOptions().chartId;
                 }
+
                 ControlDAO.controlExist(controlId)
                     .then(res => {
                         if (res) {

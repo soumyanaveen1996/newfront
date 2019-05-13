@@ -157,6 +157,7 @@ const stylesheet = StyleSheet.create({
     },
     moreOptionContainer: {
         position: 'absolute',
+        left: 30,
         bottom: 70,
         width: wp('85%'),
         height: 180,

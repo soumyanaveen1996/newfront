@@ -7,7 +7,8 @@ import {
     Keyboard,
     Platform,
     InteractionManager,
-    Image
+    Image,
+    SafeAreaView
 } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
@@ -22,6 +23,11 @@ import { Auth, Network } from '../../lib/capability';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Conversation from '../../lib/conversation/Conversation';
 import ProfileImage from '../ProfileImage';
+import ModalDialPad from '../Dialler/ModalDialPad';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export const PhoneState = {
     init: 'init',
@@ -49,6 +55,7 @@ export default class Phone extends React.Component {
             }
         }
         this.state = {
+            isModalDialPadVisible: false,
             phoneState: props.state,
             micOn: true,
             speakerOn: false,
@@ -204,6 +211,10 @@ export default class Phone extends React.Component {
         Actions.pop();
     }
 
+    buttonPressedOnModal(char) {
+        TwilioVoice.sendDigits(char);
+    }
+
     renderAcceptButton() {
         const { phoneState } = this.state;
         if (phoneState === PhoneState.incomingcall) {
@@ -310,68 +321,63 @@ export default class Phone extends React.Component {
             this.state.phoneState === PhoneState.incall ||
             this.state.phoneState === PhoneState.calling
         ) {
+            const buttonIconStyle = { size: wp('11%'), color: 'white' };
             return (
-                <View style={Styles.buttonContainer}>
+                <SafeAreaView style={Styles.buttonContainer}>
+                    <View style={Styles.topButtonContainer}>
+                        <TouchableOpacity
+                            style={
+                                this.state.micOn
+                                    ? Styles.buttonCtr
+                                    : Styles.buttonCtrRed
+                            }
+                            onPress={this.toggleMic.bind(this)}
+                        >
+                            {Icons.micOff(buttonIconStyle)}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={Styles.buttonCtr}
+                            onPress={() => {
+                                this.setState({ isModalDialPadVisible: true });
+                            }}
+                        >
+                            {Icons.numdial(buttonIconStyle)}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={
+                                this.state.speakerOn
+                                    ? Styles.buttonCtrGreen
+                                    : Styles.buttonCtr
+                            }
+                            onPress={this.toggleSpeaker.bind(this)}
+                        >
+                            {Icons.speakerOn(buttonIconStyle)}
+                        </TouchableOpacity>
+                    </View>
                     <TouchableOpacity
-                        style={
-                            this.state.micOn
-                                ? Styles.buttonCtr
-                                : Styles.buttonCtrOn
-                        }
-                        onPress={this.toggleMic.bind(this)}
-                    >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-mute-btn.png')}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={Styles.buttonCtr}
+                        style={[Styles.buttonCtrRed, { alignSelf: 'center' }]}
                         onPress={this.close.bind(this)}
                     >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-endcall-btn.png')}
-                        />
+                        {Icons.phoneHangup(buttonIconStyle)}
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={
-                            this.state.speakerOn
-                                ? Styles.buttonCtrOn
-                                : Styles.buttonCtr
-                        }
-                        onPress={this.toggleSpeaker.bind(this)}
-                    >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-speaker-btn.png')}
-                        />
-                    </TouchableOpacity>
-                </View>
+                </SafeAreaView>
             );
         }
         if (this.state.phoneState === PhoneState.incomingcall) {
             return (
                 <View style={Styles.buttonContainer}>
                     <TouchableOpacity
-                        style={Styles.buttonCtr}
+                        style={Styles.buttonCtrGreen}
                         onPress={this.accept.bind(this)}
                     >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-btn-large.png')}
-                        />
+                        {Icons.call(buttonIconStyle)}
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={Styles.buttonCtr}
+                        style={Styles.buttonCtrRed}
                         onPress={this.close.bind(this)}
                     >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-endcall-btn.png')}
-                        />
+                        {Icons.phoneHangup(buttonIconStyle)}
                     </TouchableOpacity>
                 </View>
             );
@@ -379,9 +385,12 @@ export default class Phone extends React.Component {
 
         return <View style={Styles.buttonContainer} />;
     };
+
     renderInCall = () => {
         return (
-            <View>
+            <SafeAreaView
+                style={{ height: '100%', justifyContent: 'space-between' }}
+            >
                 <View style={Styles.callingContainer}>
                     <View style={{ display: 'flex', flexDirection: 'column' }}>
                         {this.renderCallerInfo()}
@@ -390,9 +399,10 @@ export default class Phone extends React.Component {
                     {this.renderAvatar()}
                 </View>
                 {this.renderButton()}
-            </View>
+            </SafeAreaView>
         );
     };
+
     render() {
         const { phoneState } = this.state;
         const message = this.statusMessage({
@@ -400,7 +410,18 @@ export default class Phone extends React.Component {
             userName: this.username()
         });
         // console.log('Current Phone State', phoneState);
-        return <View style={Styles.container}>{this.renderInCall()}</View>;
+        return (
+            <SafeAreaView style={Styles.container}>
+                {this.renderInCall()}
+                <ModalDialPad
+                    isVisible={this.state.isModalDialPadVisible}
+                    onClose={() => {
+                        this.setState({ isModalDialPadVisible: false });
+                    }}
+                    onButtonPressed={this.buttonPressedOnModal.bind(this)}
+                />
+            </SafeAreaView>
+        );
         // return (
         //     <View style={Styles.containerStyle}>
         //         <View style={Styles.nameContainer}>

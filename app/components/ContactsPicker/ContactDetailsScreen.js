@@ -306,7 +306,10 @@ export default class ContactDetailsScreen extends React.Component {
                 // console.log('conversation ID', conversationId);
                 this.setState({ loading: false });
             })
-            .catch(err => console.log('Cannot remove favorite', err));
+            .catch(err => {
+                this.setState({ loading: false });
+                console.log('Cannot remove favorite', err);
+            });
     };
 
     invitationSent = () => {

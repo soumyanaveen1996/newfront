@@ -377,6 +377,8 @@ class ChatBotScreen extends React.Component {
             self.botLoaded = false;
         }
 
+        this.checkForScrolling();
+
         this.keyboardWillShowListener = Keyboard.addListener(
             'keyboardWillShow',
             this.keyboardWillShow.bind(this)
@@ -645,11 +647,7 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
-        if (Platform.OS === 'ios') {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         // if (Platform.OS === 'android' && this.slider) {
         //     this.slider.close(undefined, true);
         //     this.setState({ sliderClosed: true, showOptions: false });
@@ -834,7 +832,7 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_BUTTON
         ) {
-            this.queueMessage(message);
+            this.updateChat(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
@@ -895,8 +893,9 @@ class ChatBotScreen extends React.Component {
 
     updateSmartSuggestions(message) {
         // Suggestions
-        this.smartSuggestionsArea.update([]);
-        this.smartSuggestionsArea.update(message.getMessage());
+        this.smartSuggestionsArea
+            .update(message.getMessage())
+            .then(() => this.checkForScrolling());
     }
 
     fireSlider(message) {
@@ -1217,11 +1216,9 @@ class ChatBotScreen extends React.Component {
         return new Promise(async resolve => {
             this.processingMessageQueue = true;
             while (this.messageQueue.length > 0) {
-                if (Platform.OS === 'ios') {
-                    LayoutAnimation.configureNext(
-                        LayoutAnimation.Presets.easeInEaseOut
-                    );
-                }
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
                 await this.appendMessageToChat(this.messageQueue.shift());
             }
             this.processingMessageQueue = false;
@@ -1254,6 +1251,7 @@ class ChatBotScreen extends React.Component {
             this.messageQueue.push(message);
             if (this.processingMessageQueue === false) {
                 await this.processMessageQueue();
+                this.checkForScrolling();
                 resolve(false);
             } else {
                 resolve(true);
@@ -1406,7 +1404,6 @@ class ChatBotScreen extends React.Component {
                         shouldShowUserName={this.shouldShowUserName()}
                         user={this.user}
                         imageSource={{ uri: this.bot.logoUrl }}
-                        onDoneBtnClick={this.onButtonDone.bind()}
                         showTime={item.showTime}
                         openModalWithContent={this.openModalWithContent.bind(
                             this
@@ -1944,11 +1941,9 @@ class ChatBotScreen extends React.Component {
 
     onPlusButtonPressed() {
         if (this.state.showOptions === false) {
-            if (Platform.OS === 'ios') {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
-            }
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState(
                 {
                     showOptions: true,
@@ -1957,11 +1952,9 @@ class ChatBotScreen extends React.Component {
                 () => Keyboard.dismiss()
             );
         } else {
-            if (Platform.OS === 'ios') {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
-            }
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState({
                 showOptions: false,
                 showSlider: this.sliderPreviousState
@@ -1981,11 +1974,7 @@ class ChatBotScreen extends React.Component {
         //         showSlider: false
         //     });
         // } else {
-        if (Platform.OS === 'ios') {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         this.setState({
             showOptions: false,
             showSlider: this.sliderPreviousState
@@ -2261,11 +2250,9 @@ class ChatBotScreen extends React.Component {
                     onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
                     closeShowOptions={() => {
-                        if (Platform.OS === 'ios') {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                        }
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
                         this.setState({ showOptions: false });
                     }}
                 />
@@ -2395,7 +2382,7 @@ class ChatBotScreen extends React.Component {
                                     testID="messages-list"
                                     ref={list => {
                                         this.chatList = list;
-                                        this.checkForScrolling();
+                                        // this.checkForScrolling();
                                     }}
                                     data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}

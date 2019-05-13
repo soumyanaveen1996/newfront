@@ -101,13 +101,12 @@ const stylesheet = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 15
     },
-    // allContacts: {
-    //     backgroundColor: 'red',
-    //     flex: 1,
-    //     alignItems: 'center',
-    //     paddingVertical: 20,
-    //     paddingHorizontal: 15
-    // },
+    allContacts: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 15
+    },
     profileImageStyle: {
         height: 35,
         width: 35,

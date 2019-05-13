@@ -33,7 +33,9 @@ class ContactsCache {
             if (contact) {
                 return contact;
             }
+            // console.log('we willsee wats the rreo is  ', userId, contact);
             contact = await this.fetchContactDetailsForUser(userId);
+
             return contact;
         } catch (error) {
             console.log('Error Fetch Contacts from Server', error);

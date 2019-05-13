@@ -516,6 +516,7 @@ export default StyleSheet.create({
         color: 'rgba(102,102,102,1)'
     },
     participantsContainer: {
+        maxHeight: hp('50%'),
         flexGrow: 1
     },
     teamContainer: {
