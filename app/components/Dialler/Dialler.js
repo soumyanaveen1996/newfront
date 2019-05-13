@@ -32,6 +32,10 @@ import config from '../../config/config';
 import Sound from 'react-native-sound';
 import phoneStyles from '../Phone/styles';
 import { ModalDialPad } from '.';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const R = require('ramda');
 
@@ -862,6 +866,7 @@ export default class Dialler extends React.Component {
     diallerConnecting = () => {
         const { diallerState } = this.state;
         const message = this.statusMessage(diallerState);
+        const buttonIconStyle = { size: wp('11%'), color: 'white' };
         return (
             <View
                 style={[Styles.container, { justifyContent: 'space-between' }]}
@@ -888,7 +893,7 @@ export default class Dialler extends React.Component {
                             }
                             onPress={this.toggleMic.bind(this)}
                         >
-                            {Icons.micOff({ size: 30, color: 'white' })}
+                            {Icons.micOff(buttonIconStyle)}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={phoneStyles.buttonCtr}
@@ -896,7 +901,7 @@ export default class Dialler extends React.Component {
                                 this.setState({ isModalDialPadVisible: true });
                             }}
                         >
-                            {Icons.numdial({ size: 30, color: 'white' })}
+                            {Icons.numdial(buttonIconStyle)}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={
@@ -906,7 +911,7 @@ export default class Dialler extends React.Component {
                             }
                             onPress={this.toggleSpeaker.bind(this)}
                         >
-                            {Icons.speakerOn({ size: 30, color: 'white' })}
+                            {Icons.speakerOn(buttonIconStyle)}
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity
@@ -916,7 +921,7 @@ export default class Dialler extends React.Component {
                         ]}
                         onPress={this.closeCall.bind(this)}
                     >
-                        {Icons.phoneHangup({ size: 30, color: 'white' })}
+                        {Icons.phoneHangup(buttonIconStyle)}
                     </TouchableOpacity>
                 </SafeAreaView>
                 <ModalDialPad
