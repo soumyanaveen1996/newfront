@@ -137,7 +137,7 @@ export default class PeopleChat extends ChatBotScreen {
         return this.conversation.conversationId;
     };
 
-    setNavigationParams(context, user, callDisabled = false) {
+    setNavigationParams(context, user, callDisabled = true) {
         this.props.navigation.setParams({
             title: ConversationContext.getChatName(context, user),
             botDone: this.loadedBot.done.bind(
@@ -226,7 +226,22 @@ export default class PeopleChat extends ChatBotScreen {
                     )
                 );
                 // TODO(amal); Should I check if participants are same in the conversation Context ?
-                this.setNavigationParams(context, user);
+                let callDisabled = true;
+                const otherUserId = context.participants.find(partId => {
+                    return partId !== user.userId;
+                });
+                if (otherUserId) {
+                    const contact = await Contact.getContactFieldForUUIDs(
+                        otherUserId
+                    );
+                    if (
+                        contact.length > 0 &&
+                        !contact[0].waitingForConfirmation
+                    ) {
+                        callDisabled = false;
+                    }
+                }
+                this.setNavigationParams(context, user, callDisabled);
                 return context;
             }
 

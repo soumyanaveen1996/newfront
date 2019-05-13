@@ -39,15 +39,14 @@ export default class SmartSuggestions extends React.Component {
 
     onReplySelected(messageStr) {
         this.props.onReplySelected(messageStr);
+        this.update([]);
     }
 
     update = suggestions => {
         return new Promise((resolve, reject) => {
-            if (Platform.OS === 'ios') {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
-            }
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState({ suggestions: [] }, () => {
                 setTimeout(() => {
                     this.setState({ suggestions: suggestions }, () => {
