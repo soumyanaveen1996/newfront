@@ -50,14 +50,14 @@ export default class SmartSuggestions extends React.Component {
             this.setState({ suggestions: [] }, () => {
                 setTimeout(() => {
                     this.setState({ suggestions: suggestions }, () => {
-                        if (suggestions.length > 0) {
-                            setTimeout(() => {
+                        setTimeout(() => {
+                            if (this.flatListRef && suggestions.length > 0) {
                                 this.flatListRef.scrollToIndex({
                                     animated: true,
                                     index: 0
                                 });
-                            }, 1000);
-                        }
+                            }
+                        }, 1000);
                         resolve();
                     });
                 }, 1000);
