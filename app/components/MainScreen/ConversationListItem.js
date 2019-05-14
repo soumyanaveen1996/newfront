@@ -167,7 +167,7 @@ export default class ConversationListItem extends React.Component {
                     {utils.formattedDate(
                         this.props.chatData.lastMessageDate
                             ? this.props.chatData.lastMessageDate
-                            : ''
+                            : this.props.conversation.createdOn
                     )}
                 </Text>
             </TouchableOpacity>

@@ -128,7 +128,15 @@ class BotList extends React.Component {
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,
-            o => o.chatData.lastMessageDate,
+            o => {
+                if (o.chatData.lastMessageDate) {
+                    return o.chatData.lastMessageDate;
+                } else if (o.bot.createdOn) {
+                    return o.bot.createdOn;
+                } else {
+                    return null;
+                }
+            },
             'desc'
         );
 
@@ -225,6 +233,7 @@ class BotList extends React.Component {
                 .includes(this.props.searchString.toLowerCase());
         }
     };
+
     renderSearchBar = ({ onSearch }) => {
         return (
             <View style={MainScreenStyles.searchArea}>
@@ -243,6 +252,7 @@ class BotList extends React.Component {
             </View>
         );
     };
+
     renderButtonBar = () => {
         return (
             <View style={MainScreenStyles.buttonArea}>
@@ -276,6 +286,7 @@ class BotList extends React.Component {
             </View>
         );
     };
+
     renderHeader = ({ headerText }) => {
         return (
             <View style={{ height: 30 }}>
@@ -329,6 +340,7 @@ class BotList extends React.Component {
             rowMap[key].closeRow();
         }
     };
+
     render() {
         const { loaded, data, stopFaker } = this.state;
         const clipped = Platform.OS === 'ios' ? false : true;
