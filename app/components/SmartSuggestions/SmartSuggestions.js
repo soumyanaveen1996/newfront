@@ -76,7 +76,11 @@ export default class SmartSuggestions extends React.Component {
                     data={this.state.suggestions}
                     renderItem={this.smartSuggestion.bind(this)}
                     horizontal={true}
-                    style={styles.smartSuggestions}
+                    style={
+                        Platform.OS === 'ios'
+                            ? styles.smartSuggestionsIOS
+                            : styles.smartSuggestionsAndroid
+                    }
                     extraData={this.props}
                     showsHorizontalScrollIndicator={false}
                     decelerationRate="fast"
