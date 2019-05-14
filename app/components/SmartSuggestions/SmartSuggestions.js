@@ -52,9 +52,9 @@ export default class SmartSuggestions extends React.Component {
                     this.setState({ suggestions: suggestions }, () => {
                         setTimeout(() => {
                             if (this.flatListRef && suggestions.length > 0) {
-                                this.flatListRef.scrollToIndex({
+                                this.flatListRef.scrollToOffset({
                                     animated: true,
-                                    index: 0
+                                    offset: 0
                                 });
                             }
                         }, 1000);

@@ -134,7 +134,7 @@ class BotList extends React.Component {
                 } else if (o.bot.createdOn) {
                     return o.bot.createdOn;
                 } else {
-                    return null;
+                    return 0;
                 }
             },
             'desc'
