@@ -97,7 +97,8 @@ const selectConversations = () =>
                                 id: dbResult.id,
                                 conversationId: dbResult.conversationId,
                                 type: dbResult.type,
-                                favorite: dbResult.favorite
+                                favorite: dbResult.favorite,
+                                createdOn: new Date(dbResult.created_at_date)
                             };
                         });
                         return resolve(formattedResults);

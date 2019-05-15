@@ -14,21 +14,29 @@ export default class SNRChart extends Component {
         };
     }
 
+    constructor(props) {
+        super(props);
+        this.data = [...this.props.chartData.data];
+        if (this.data.length === 1) {
+            this.data.push(this.props.chartData.data[0]);
+        }
+    }
+
     getYDomain() {
-        const snrData = this.props.chartData.data;
+        const snrData = this.data;
         const maxVal = _.maxBy(snrData, d => d.SNR);
         return [0, maxVal.SNR > 2 ? maxVal.SNR : 2];
     }
 
     getXDomain() {
-        const snrData = this.props.chartData.data;
+        const snrData = this.data;
         const minVal = _.minBy(snrData, d => d.Timestamp);
         const maxVal = _.maxBy(snrData, d => d.Timestamp);
         return [minVal.Timestamp, maxVal.Timestamp];
     }
 
     getTickValues() {
-        const snrData = this.props.chartData.data;
+        const snrData = this.data;
         const minVal = _.minBy(snrData, d => d.Timestamp);
         const maxVal = _.maxBy(snrData, d => d.Timestamp);
         const midVal = Math.floor((minVal.Timestamp + maxVal.Timestamp) / 2);
@@ -61,7 +69,7 @@ export default class SNRChart extends Component {
                     />
                     <VictoryLine
                         style={chartStyles.line}
-                        data={this.props.chartData.data}
+                        data={this.data}
                         x="Timestamp"
                         y="SNR"
                     />
