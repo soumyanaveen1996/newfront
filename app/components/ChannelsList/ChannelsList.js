@@ -127,6 +127,7 @@ class ChannelsList extends React.Component {
         super(props);
         this.state = {
             channels: [],
+            allChannels: [],
             filter: [],
             searchString: '',
             user: null,
@@ -313,7 +314,11 @@ class ChannelsList extends React.Component {
                 }
             }
         }
-        this.setState({ channels: filteredChannels, loaded: true });
+        this.setState({
+            channels: filteredChannels,
+            allChannels: channels,
+            loaded: true
+        });
         this.checkPollingStrategy();
     }
 
@@ -423,16 +428,17 @@ class ChannelsList extends React.Component {
 
         let channels;
         if (this.state.searchString.length > 0) {
-            channels = this.state.channels.filter(channel =>
+            channels = this.state.allChannels.filter(channel =>
                 channel.channelName
                     .toLowerCase()
                     .includes(this.state.searchString.toLowerCase())
             );
         } else {
-            channels = this.state.channels.filter(
+            channels = this.state.allChannels.filter(
                 channel => channel.subcription === 'true'
             );
         }
+
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />

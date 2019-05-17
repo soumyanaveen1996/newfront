@@ -27,6 +27,10 @@ import { Loader } from '../Loader';
 import { NativeModules } from 'react-native';
 import _ from 'lodash';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 export default class AddressBookScreen extends React.Component {
     constructor(props) {
@@ -34,6 +38,7 @@ export default class AddressBookScreen extends React.Component {
         this.state = {
             contactsData: [],
             searchContact: [],
+            selectedData: [],
             searchText: '',
             email: [],
             keyboard: false,
@@ -119,20 +124,31 @@ export default class AddressBookScreen extends React.Component {
         });
     }
 
-    toggleSelectContacts = index => {
+    toggleSelectContacts = (index, type) => {
         let array = [...this.state.contactsData];
         let emailArray = [];
-        array[index].selected = !array[index].selected;
+        let selectedData = [...this.state.selectedData];
+
+        switch (type) {
+        case 'add':
+            selectedData.push(array[index]);
+            array.splice(index, 1);
+            break;
+        default:
+            array.push(selectedData[index]);
+            selectedData.splice(index, 1);
+            break;
+        }
 
         this.setState(
             {
-                contactsData: array
+                contactsData: array,
+                searchContact: array,
+                selectedData: selectedData
             },
             () => {
-                this.state.contactsData.forEach(elem => {
-                    if (elem.selected) {
-                        emailArray.push(elem.emails[0].email);
-                    }
+                selectedData.forEach(elem => {
+                    emailArray.push(elem.emails[0].email);
                 });
 
                 this.setState({ email: [...emailArray] });
@@ -161,11 +177,13 @@ export default class AddressBookScreen extends React.Component {
     };
 
     renderSelectedContacts = () => {
-        return this.state.contactsData.map((elem, index) => {
-            return elem && elem.selected ? (
+        return this.state.selectedData.map((elem, index) => {
+            return elem ? (
                 <View style={styles.contactSelectedContainer} key={index}>
                     <TouchableOpacity
-                        onPress={() => this.toggleSelectContacts(index)}
+                        onPress={() =>
+                            this.toggleSelectContacts(index, 'remove')
+                        }
                     >
                         <Image
                             style={{ width: 24, height: 24, marginRight: 10 }}
@@ -186,17 +204,13 @@ export default class AddressBookScreen extends React.Component {
             return this.state.contactsData.map((elem, index) => {
                 return (
                     <TouchableOpacity
-                        onPress={() => this.toggleSelectContacts(index)}
+                        onPress={() => this.toggleSelectContacts(index, 'add')}
                         style={styles.contactContainer}
                         key={index}
                     >
                         <Image
                             style={{ marginRight: 10 }}
-                            source={
-                                !elem.selected
-                                    ? images.checkmark_normal
-                                    : images.checkmark_selected
-                            }
+                            source={images.checkmark_normal}
                         />
                         {this.renderProfileImage(elem.profileImage)}
                         <View style={styles.contactNameContainer}>
@@ -241,7 +255,7 @@ export default class AddressBookScreen extends React.Component {
     }
 
     sendInvite() {
-        // console.log('send invitation');
+        // console.log('send invitation', this.state.email);
         this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
@@ -296,8 +310,12 @@ export default class AddressBookScreen extends React.Component {
     };
 
     render() {
+        let lowerHeight = hp('90%') - 150 - this.state.upperHeight;
+
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView
+                style={{ flex: 1, backgroundColor: 'rgba(255,255,255,1)' }}
+            >
                 <Loader loading={this.state.loading} />
                 <View style={styles.searchBar}>
                     <Icon
@@ -317,10 +335,16 @@ export default class AddressBookScreen extends React.Component {
                         onChangeText={this.onSearchQueryChange.bind(this)}
                     />
                 </View>
-                <View style={{ flex: 1 }}>
+                <View
+                    style={{ flex: 1, backgroundColor: 'rgba(255,255,255,1)' }}
+                >
                     <View
+                        onLayout={event => {
+                            var { height } = event.nativeEvent.layout;
+                            this.setState({ upperHeight: height });
+                        }}
                         style={{
-                            flex: 2,
+                            maxHeight: '70%',
                             backgroundColor: 'rgba(244,244,244,1)'
                         }}
                     >
@@ -330,7 +354,14 @@ export default class AddressBookScreen extends React.Component {
                             </View>
                         </ScrollView>
                     </View>
-                    <View style={{ flex: 3, backgroundColor: '#fff' }}>
+                    <View
+                        style={{
+                            minHeight: '20%',
+                            maxHeight: lowerHeight,
+                            backgroundColor: '#fff',
+                            paddingVertical: 20
+                        }}
+                    >
                         <ScrollView>
                             <View style={styles.allContacts}>
                                 {this.renderContacts()}
