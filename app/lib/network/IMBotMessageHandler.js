@@ -210,7 +210,8 @@ const handleNewChannelConversation = (
                 return ConversationContext.saveConversationContext(
                     conversationContext,
                     botContext,
-                    user
+                    user,
+                    true
                 );
             })
             .then(() => {

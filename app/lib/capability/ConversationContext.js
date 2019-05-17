@@ -136,19 +136,28 @@ export default class ConversationContext {
                 });
         });
 
-    static saveConversationContext = (conversationContext, botContext, user) =>
+    static saveConversationContext = (
+        conversationContext,
+        botContext,
+        user,
+        isChannel = false
+    ) =>
         new Promise((resolve, reject) => {
-            DeviceStorage.save(
-                ConversationContext._getStorageKey(botContext),
-                conversationContext
-            )
-                .then(function(ctx) {
-                    botContext.setConversationContext(ctx);
-                    return resolve(ctx);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+            if (!isChannel && conversationContext.participants.length < 0) {
+                reject(err);
+            } else {
+                DeviceStorage.save(
+                    ConversationContext._getStorageKey(botContext),
+                    conversationContext
+                )
+                    .then(function(ctx) {
+                        botContext.setConversationContext(ctx);
+                        return resolve(ctx);
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            }
         });
 
     static createNewConversationContext = (
@@ -269,7 +278,8 @@ export default class ConversationContext {
                     return ConversationContext.saveConversationContext(
                         ctx,
                         botContext,
-                        user
+                        user,
+                        true
                     );
                 })
                 .then(function(ctx) {

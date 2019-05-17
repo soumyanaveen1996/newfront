@@ -21,15 +21,6 @@ export default class SmartSuggestions extends React.Component {
         };
     }
 
-    componentDidMount() {}
-
-    componentDidUpdate(prevProps, prevState) {
-        // if (prevState.suggestions !== this.state.suggestions) {
-        //     console.log('>>>>>>>scroll')
-        //     this.flatListRef.scrollToOffset({ animated: true, offset: 10 });
-        // }
-    }
-
     smartSuggestion = ({ item }) => (
         <Suggestion
             reply={item}
