@@ -350,9 +350,13 @@ export default class Contact {
 
     static addUniqueUserId(arr) {
         arr.map(elem => {
-            uniqueUserId = Contact.randomString();
-            elem.userId = uniqueUserId;
-            elem.contactType = 'Personal';
+            console.log('local contacts ', elem);
+
+            if (!elem.userId) {
+                uniqueUserId = Contact.randomString();
+                elem.userId = uniqueUserId;
+                elem.contactType = 'Personal';
+            }
         });
 
         return arr;
@@ -375,7 +379,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
-                        console.log('Sourav Logging::: Loaded Contacts');
+                        console.log(
+                            'Sourav Logging::: Loaded Contacts',
+                            response.data.localContacts
+                        );
 
                         var contacts = _.map(
                             response.data.contacts,

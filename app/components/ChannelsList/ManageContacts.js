@@ -299,12 +299,6 @@ class ManageContacts extends React.Component {
                 .includes(this.state.searchText.toLowerCase())
         );
 
-        console.log(
-            'contacts details ========',
-            this.state.contacts,
-            allContacts
-        );
-
         return (
             <SafeAreaView style={styles.addContactsContainer}>
                 {this.renderSearchBar()}
