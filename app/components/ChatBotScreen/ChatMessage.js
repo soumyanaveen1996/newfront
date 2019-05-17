@@ -448,11 +448,6 @@ export default class ChatMessage extends React.Component {
         ) {
             return this.renderVideoMessage(message);
         } else if (
-            message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_BUTTON
-        ) {
-            return component;
-        } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
             const component = (
@@ -554,10 +549,6 @@ export default class ChatMessage extends React.Component {
 
     htmlResponseOnPress(htmlText) {
         Actions.webview({ htmlString: htmlText.htmlMsg });
-    }
-
-    buttonResponseOnPress(index, item) {
-        this.props.onDoneBtnClick(item);
     }
 
     renderMetadata() {

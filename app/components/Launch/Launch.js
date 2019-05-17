@@ -52,7 +52,7 @@ import PushNotification from 'react-native-push-notification';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 85; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 95; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -129,7 +129,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (false && forceUpdate) {
+        if (true && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -158,8 +158,8 @@ export default class Splash extends React.Component {
                         DefaultPreference.setName('NativeStorage');
                     }
                     const ContactsURL = `${Config.network.queueProtocol}${
-                        Config.proxy.host
-                    }${Config.network.userDetailsPath}`;
+                        Config.proxy.user_details_path
+                    }`;
                     const ContactsBOT = SystemBot.contactsBot.botId;
                     DefaultPreference.set('SESSION', user.creds.sessionId);
                     DefaultPreference.set('URL', ContactsURL);
