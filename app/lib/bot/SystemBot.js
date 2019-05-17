@@ -21,14 +21,14 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.7.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.8.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js',
-                version: '1.3.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.4.0/agentGuardService.js',
+                version: '1.4.0'
             },
             authContext: {
                 remote: 'true',
@@ -46,7 +46,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.7.0'
+        version: '1.8.0'
     },
 
     'onboarding-bot': {
@@ -150,8 +150,8 @@ export const SYSTEM_BOT_MANIFEST = {
             agentGuardService: {
                 remote: true,
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.2.0/agentGuardService.js',
-                version: '1.2.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js',
+                version: '1.3.0'
             },
             authContext: {
                 remote: true,
