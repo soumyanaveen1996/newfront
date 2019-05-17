@@ -474,8 +474,9 @@ export default class ContactDetailsScreen extends React.Component {
     }
     deletePersonalContact = () => {
         this.setState({ loading: true });
-        let { name, phoneNumbers, emails } = this.props.contact;
+        let { name, phoneNumbers, emails, userId } = this.props.contact;
         let localContactObj = {
+            userId: userId,
             emailAddresses: {
                 ...emails[0].email
             },
@@ -491,7 +492,7 @@ export default class ContactDetailsScreen extends React.Component {
             localContacts: [localContactObj]
         };
 
-        // console.log('data to send ', bodyParse);
+        console.log('data to send ', bodyParse);
         Conversation.deleteLocalContacts(bodyParse)
             .then(value => {
                 Contact.getAddedContacts().then(contactsData => {
@@ -730,7 +731,7 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
-        // console.log('thhhhhhhhhhhhhhhh', this.props.contact);
+        console.log('thhhhhhhhhhhhhhhh', this.props.contact);
         if (!this.props.contact) {
             return <View />;
         }
