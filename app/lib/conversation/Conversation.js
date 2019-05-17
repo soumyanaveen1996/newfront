@@ -150,27 +150,32 @@ export default class Conversation {
                                     return ConversationContext.saveConversationContext(
                                         newChanConvContext,
                                         botContext,
-                                        user
-                                    ).then(() => {
-                                        // const message = Message.from(
-                                        //     conversation.lastMessage,
-                                        //     user,
-                                        //     conversation.conversationId
-                                        // )
-                                        const {
-                                            content,
-                                            ...rest
-                                        } = conversation.lastMessage;
-                                        const message = {
-                                            details: [{ message: content[0] }],
-                                            ...rest
-                                        };
-                                        return BackgroundTaskProcessor.processLastMessageonLoad(
-                                            message,
-                                            conversation.bot.botId,
-                                            conversation.conversationId
-                                        );
-                                    });
+                                        user,
+                                        true
+                                    );
+                                })
+                                .then(() => {
+                                    // const message = Message.from(
+                                    //     conversation.lastMessage,
+                                    //     user,
+                                    //     conversation.conversationId
+                                    // )
+                                    const {
+                                        content,
+                                        ...rest
+                                    } = conversation.lastMessage;
+                                    const message = {
+                                        details: [{ message: content[0] }],
+                                        ...rest
+                                    };
+                                    return BackgroundTaskProcessor.processLastMessageonLoad(
+                                        message,
+                                        conversation.bot.botId,
+                                        conversation.conversationId
+                                    );
+                                })
+                                .catch(() => {
+                                    return null;
                                 });
                         } else if (
                             conversation.contact &&
@@ -189,30 +194,16 @@ export default class Conversation {
                             if (devConv.length > 0) {
                                 return null;
                             }
-                            Conversation.createIMConversation(
+                            const botScreen = BackgroundTaskProcessor.generateScreen(
+                                conversation.bot.botId,
+                                conversation.conversationId
+                            );
+                            botContext = new BotContext(botScreen, manifest);
+                            ConversationContext.createNewConversationContext(
+                                botContext,
+                                user,
                                 conversation.conversationId
                             )
-                                .then(() =>
-                                    ConversationDAO.updateConvFavorite(
-                                        conversation.conversationId,
-                                        conversation.favorite
-                                    )
-                                )
-                                .then(() => {
-                                    const botScreen = BackgroundTaskProcessor.generateScreen(
-                                        conversation.bot.botId,
-                                        conversation.conversationId
-                                    );
-                                    botContext = new BotContext(
-                                        botScreen,
-                                        manifest
-                                    );
-                                    return ConversationContext.createNewConversationContext(
-                                        botContext,
-                                        user,
-                                        conversation.conversationId
-                                    );
-                                })
                                 .then(newConvContext => {
                                     ConversationContext.updateParticipants(
                                         newConvContext,
@@ -249,6 +240,20 @@ export default class Conversation {
                                         conversation.bot.botId,
                                         conversation.conversationId
                                     );
+                                })
+                                .then(() => {
+                                    return Conversation.createIMConversation(
+                                        conversation.conversationId
+                                    );
+                                })
+                                .then(() => {
+                                    return ConversationDAO.updateConvFavorite(
+                                        conversation.conversationId,
+                                        conversation.favorite
+                                    );
+                                })
+                                .catch(() => {
+                                    return null;
                                 });
                         } else {
                             return null;

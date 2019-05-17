@@ -25,7 +25,7 @@ const queueNetworkRequest = (key, networkRequest) =>
             networkRequest.getNetworkRequestOptions()
         )
             .then(id => {
-                resolve(networkRequest);
+                resolve({ networkRequest, queued: true });
             })
             .catch(function(e) {
                 reject(e);
