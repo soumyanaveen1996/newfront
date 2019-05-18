@@ -16,9 +16,11 @@ export default class SNRChart extends Component {
 
     constructor(props) {
         super(props);
-        this.data = [...this.props.chartData.data];
-        if (this.data.length === 1) {
-            this.data.push(this.props.chartData.data[0]);
+        if (this.props.chartData.data instanceof Array) {
+            this.data = [...this.props.chartData.data];
+            if (this.data.length === 1) {
+                this.data.push(this.props.chartData.data[0]);
+            }
         }
     }
 
