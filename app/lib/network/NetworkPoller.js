@@ -143,6 +143,11 @@ class NetworkPoller {
 
         this.grpcSubscription.push(
             eventEmitter.addListener('sse_message', message => {
+                console.log(
+                    'Sourav Logging:::: Received SSE Response',
+                    message
+                );
+
                 const delay = (Math.floor(Math.random() * 5) + 1) * 1000;
                 setTimeout(() => {
                     MessageQueue.push(message);
