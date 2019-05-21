@@ -223,14 +223,20 @@ class BotList extends React.Component {
             return true;
         }
         if (chats.type === 'bot') {
-            return chats.bot.botName
-                .toLowerCase()
-                .includes(this.props.searchString.toLowerCase());
+            return (
+                chats.bot.botName &&
+                chats.bot.botName
+                    .toLowerCase()
+                    .includes(this.props.searchString.toLowerCase())
+            );
         }
         if (chats.type === 'conversation') {
-            return chats.chatData.chatName
-                .toLowerCase()
-                .includes(this.props.searchString.toLowerCase());
+            return (
+                chats.chatData.chatName &&
+                chats.chatData.chatName
+                    .toLowerCase()
+                    .includes(this.props.searchString.toLowerCase())
+            );
         }
     };
 
