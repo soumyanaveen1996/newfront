@@ -16,6 +16,7 @@ import { MapCardType, MapCardDesign } from './config';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import { Message } from '../../lib/capability';
+import GlobalColors from '../../config/styles';
 
 export default class ContextSlideshow extends React.Component {
     constructor(props) {
@@ -370,7 +371,9 @@ export default class ContextSlideshow extends React.Component {
                         style={{ paddingVertical: 10 }}
                     >
                         {this.props.isOpen
-                            ? Icons.contextSlideshowButtonDown()
+                            ? Icons.arrowDown({
+                                color: GlobalColors.headerBlack
+                            })
                             : Icons.contextSlideshowButtonUp()}
                     </TouchableOpacity>
                     {this.renderFlatList()}
