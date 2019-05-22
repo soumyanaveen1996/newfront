@@ -317,11 +317,11 @@ export default class Phone extends React.Component {
     };
 
     renderButton = () => {
+        const buttonIconStyle = { size: wp('11%'), color: 'white' };
         if (
             this.state.phoneState === PhoneState.incall ||
             this.state.phoneState === PhoneState.calling
         ) {
-            const buttonIconStyle = { size: wp('11%'), color: 'white' };
             return (
                 <SafeAreaView style={Styles.buttonContainer}>
                     <View style={Styles.topButtonContainer}>
@@ -365,7 +365,7 @@ export default class Phone extends React.Component {
         }
         if (this.state.phoneState === PhoneState.incomingcall) {
             return (
-                <View style={Styles.buttonContainer}>
+                <View style={Styles.buttonContainerIn}>
                     <TouchableOpacity
                         style={Styles.buttonCtrGreen}
                         onPress={this.accept.bind(this)}

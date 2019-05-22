@@ -268,6 +268,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
 
                 ReadableMap lContactDict = localContacts.getMap(i);
                 String userName = lContactDict.getString("userName");
+                String userId = lContactDict.getString("userId");
                 ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
                 ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
 
@@ -281,6 +282,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
                         setSatellite(phoneNumbersDict.getString("satellite")).build();
 
                 LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setUserId(userId)
                         .setEmailAddresses(emailAddresses)
                         .setPhoneNumbers(phoneNumbers).build();
                 input.addLocalContacts(localContact);
