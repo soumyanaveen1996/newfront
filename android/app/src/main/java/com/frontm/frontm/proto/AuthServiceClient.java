@@ -118,7 +118,6 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
     public void resendSignupCode(ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::resendSignupCode", params.toString());
-        Log.d("GRPC:::resendSignupCode", params.getString("confirmCode"));
         AuthServiceGrpc.AuthServiceStub stub = AuthServiceGrpc.newStub(mChannel);
         SignupUser user = SignupUser.newBuilder()
                 .setEmail(params.getString("email"))

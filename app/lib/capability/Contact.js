@@ -353,8 +353,8 @@ export default class Contact {
             console.log('local contacts ', elem);
 
             if (!elem.userId) {
-                uniqueUserId = Contact.randomString();
-                elem.userId = uniqueUserId;
+                // uniqueUserId = Contact.randomString();
+                // elem.userId = uniqueUserId;
                 elem.contactType = 'Personal';
             }
         });
