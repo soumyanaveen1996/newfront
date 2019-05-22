@@ -374,7 +374,7 @@ export default class ContextSlideshow extends React.Component {
                             ? Icons.arrowDown({
                                 color: GlobalColors.headerBlack
                             })
-                            : Icons.contextSlideshowButtonUp()}
+                            : Icons.arrowUp()}
                     </TouchableOpacity>
                     {this.renderFlatList()}
                 </SafeAreaView>

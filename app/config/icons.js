@@ -303,12 +303,7 @@ export const Icons = {
         15,
         GlobalColors.sideButtons
     ),
-    contextSlideshowButtonUp: icon(
-        'ios-arrow-up',
-        'ionicon',
-        20,
-        GlobalColors.headerBlack
-    ),
+    arrowUp: icon('ios-arrow-up', 'ionicon', 20, GlobalColors.headerBlack),
     closeRouteSlider: icon('md-close', 'ionicon', 18, GlobalColors.white),
     planeRSWhite: icon(
         'airplane',

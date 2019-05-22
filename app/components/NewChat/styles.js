@@ -38,6 +38,7 @@ const stylesheet = StyleSheet.create({
         flex: 1
     },
     addressBook: {
+        marginTop: 65,
         flex: 1
     },
     sectionHeaderContainer: {
@@ -284,11 +285,11 @@ const stylesheet = StyleSheet.create({
         textAlign: 'center'
     },
     filterMenu: {
+        position: 'absolute',
         width: '90%',
         alignItems: 'stretch',
         alignSelf: 'center',
         marginVertical: 10,
-        backgroundColor: GlobalColors.white,
         shadowColor: 'black',
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.2,
@@ -299,12 +300,18 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 23,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
     },
     filterText: {
         fontSize: 14,
         fontWeight: '200',
-        color: GlobalColors.headerBlack
+        color: GlobalColors.textBlack
+    },
+    filterList: {
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        backgroundColor: GlobalColors.white
     }
 });
 
