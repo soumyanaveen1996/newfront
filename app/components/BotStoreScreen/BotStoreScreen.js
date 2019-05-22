@@ -142,6 +142,8 @@ class BotStoreScreen extends React.Component {
 
     async updateCatalog() {
         let catalog = await Bot.getCatalog();
+        // let user_bots = catalog.bots.filter(bot => bot.systemBot === false);
+        // catalog = { ...catalog, ...{ bots: user_bots } };
         this.setState({
             showSearchBar: false,
             selectedIndex: this.state.selectedIndex || 0,

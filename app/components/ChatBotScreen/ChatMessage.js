@@ -368,11 +368,9 @@ export default class ChatMessage extends React.Component {
         }
     }
 
-    renderStdNotification(message) {
+    renderNotification(message) {
         return <Text>{message.getDisplayMessage()}</Text>;
     }
-
-    renderCriticalNotification(message) {}
 
     renderMessage() {
         let { message } = this.props;
@@ -431,9 +429,11 @@ export default class ChatMessage extends React.Component {
             return this.wrapBetweenFavAndTalk(message, component);
         } else if (
             message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION
+                MessageTypeConstants.MESSAGE_TYPE_STD_NOTIFICATION ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CRITICAL_NOTIFICATION
         ) {
-            return this.renderStdNotification(message);
+            return this.renderNotification(message);
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
         ) {
@@ -447,11 +447,6 @@ export default class ChatMessage extends React.Component {
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_VIDEO
         ) {
             return this.renderVideoMessage(message);
-        } else if (
-            message.getMessageType() ===
-            MessageTypeConstants.MESSAGE_TYPE_BUTTON
-        ) {
-            return component;
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM
         ) {
@@ -556,10 +551,6 @@ export default class ChatMessage extends React.Component {
         Actions.webview({ htmlString: htmlText.htmlMsg });
     }
 
-    buttonResponseOnPress(index, item) {
-        this.props.onDoneBtnClick(item);
-    }
-
     renderMetadata() {
         let { message, alignRight } = this.props;
         return (
@@ -583,6 +574,8 @@ export default class ChatMessage extends React.Component {
 
     render() {
         let { message, showTime } = this.props;
+        let msgData = message.getDisplayMessage();
+
         if (message.isEmptyMessage()) {
             return null;
         }

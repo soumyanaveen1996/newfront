@@ -178,7 +178,8 @@ export default class ChannelChat extends ChatBotScreen {
                 ConversationContext.saveConversationContext(
                     context,
                     botContext,
-                    user
+                    user,
+                    true
                 )
             );
 

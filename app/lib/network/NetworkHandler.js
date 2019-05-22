@@ -74,7 +74,10 @@ const readRemoteLambdaQueue = user => {
     let logoutSubscribtion;
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
-            handleLambdaResponse(message, user);
+            const rand = (Math.floor(Math.random() * 5) + 1) * 1000;
+            setTimeout(() => {
+                handleLambdaResponse(message, user);
+            }, rand);
         })
     );
 

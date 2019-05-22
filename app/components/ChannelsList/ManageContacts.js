@@ -267,6 +267,25 @@ class ManageContacts extends React.Component {
         );
     };
 
+    renderEmailAddress = email => {
+        if (email !== '' && typeof email === 'string') {
+            return email;
+        }
+        if (typeof email === 'object') {
+            if (email.work && email.work !== '') {
+                return email.work;
+            }
+
+            if (email.home && email.home !== '') {
+                return email.home;
+            }
+
+            if (email.work !== '' && email.home !== '') {
+                return email.work;
+            }
+        }
+    };
+
     render() {
         const {
             marginVertical,
@@ -279,8 +298,6 @@ class ManageContacts extends React.Component {
                 .toLowerCase()
                 .includes(this.state.searchText.toLowerCase())
         );
-
-        // console.log('contacts details ', this.state.contacts);
 
         return (
             <SafeAreaView style={styles.addContactsContainer}>
@@ -352,7 +369,8 @@ class ManageContacts extends React.Component {
                 <View style={styles.participantsContainer}>
                     <ScrollView
                         style={{
-                            backgroundColor: 'white'
+                            backgroundColor: 'white',
+                            height: 500
                         }}
                     >
                         <View
@@ -405,7 +423,13 @@ class ManageContacts extends React.Component {
                                             <Text
                                                 style={styles.participantEmail}
                                             >
-                                                {elem.emailAddress}
+                                                {elem.emailAddress
+                                                    ? this.renderEmailAddress(
+                                                        elem.emailAddress
+                                                    )
+                                                    : this.renderEmailAddress(
+                                                        elem.emailAddresses
+                                                    )}
                                             </Text>
                                         </View>
                                     </TouchableOpacity>

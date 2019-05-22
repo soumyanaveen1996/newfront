@@ -16,10 +16,14 @@ export default StyleSheet.create({
         marginBottom: 15,
         marginTop: 20
     },
-    smartSuggestions: {
+    smartSuggestionsIOS: {
         // paddingLeft: 64
         alignSelf: 'flex-end',
         overflow: 'visible'
+    },
+    smartSuggestionsAndroid: {
+        // paddingLeft: 64
+        alignSelf: 'flex-end'
     },
     emptyFooter: {
         // width: 64

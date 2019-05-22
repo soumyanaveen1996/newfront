@@ -109,7 +109,7 @@ const getMessageDataFor = botKey =>
     new Promise((resolve, reject) => {
         let message = null;
         let totalUnread = 0;
-        let lastMessageDate = new Date('1970');
+        let lastMessageDate;
         loadLastMessage(botKey)
             .then(messages => {
                 if (messages.length > 0) {
@@ -145,7 +145,8 @@ const getMessageDataFor = botKey =>
 
 const loadLastMessage = key => {
     return MessageHandler.fetchDeviceMessages(key, 1, 0, [
-        MessageTypeConstants.MESSAGE_TYPE_SESSION_START
+        MessageTypeConstants.MESSAGE_TYPE_SESSION_START,
+        MessageTypeConstants.MESSAGE_TYPE_CARDS
     ]);
 };
 

@@ -11,14 +11,12 @@ export default StyleSheet.create({
     },
 
     loginScreenView: {
-        position: 'absolute',
         flexDirection: 'row',
         alignItems: 'center',
         textAlign: 'center',
         justifyContent: 'center',
         width: SCREEN_WIDTH,
-        height: 40,
-        bottom: 60
+        height: 40
     },
     loginScreenText: {
         color: 'rgba(0, 189, 242, 1)',

@@ -128,7 +128,15 @@ class BotList extends React.Component {
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,
-            o => o.chatData.lastMessageDate,
+            o => {
+                if (o.chatData.lastMessageDate) {
+                    return o.chatData.lastMessageDate;
+                } else if (o.bot.createdOn) {
+                    return o.bot.createdOn;
+                } else {
+                    return 0;
+                }
+            },
             'desc'
         );
 
@@ -215,16 +223,23 @@ class BotList extends React.Component {
             return true;
         }
         if (chats.type === 'bot') {
-            return chats.bot.botName
-                .toLowerCase()
-                .includes(this.props.searchString.toLowerCase());
+            return (
+                chats.bot.botName &&
+                chats.bot.botName
+                    .toLowerCase()
+                    .includes(this.props.searchString.toLowerCase())
+            );
         }
         if (chats.type === 'conversation') {
-            return chats.chatData.chatName
-                .toLowerCase()
-                .includes(this.props.searchString.toLowerCase());
+            return (
+                chats.chatData.chatName &&
+                chats.chatData.chatName
+                    .toLowerCase()
+                    .includes(this.props.searchString.toLowerCase())
+            );
         }
     };
+
     renderSearchBar = ({ onSearch }) => {
         return (
             <View style={MainScreenStyles.searchArea}>
@@ -243,6 +258,7 @@ class BotList extends React.Component {
             </View>
         );
     };
+
     renderButtonBar = () => {
         return (
             <View style={MainScreenStyles.buttonArea}>
@@ -276,6 +292,7 @@ class BotList extends React.Component {
             </View>
         );
     };
+
     renderHeader = ({ headerText }) => {
         return (
             <View style={{ height: 30 }}>
@@ -285,6 +302,8 @@ class BotList extends React.Component {
     };
 
     setFavorite = (key, rowMap, conversationId, botId, chatData, type) => {
+        // console.log('conversation id ', conversationId);
+
         let setType = type;
         let favId = conversationId;
 
@@ -327,13 +346,13 @@ class BotList extends React.Component {
             rowMap[key].closeRow();
         }
     };
+
     render() {
         const { loaded, data, stopFaker } = this.state;
         const clipped = Platform.OS === 'ios' ? false : true;
 
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
-        // console.log('data on main page list ', allData);
 
         return (
             <View style={BotListStyles.listViewStyle}>

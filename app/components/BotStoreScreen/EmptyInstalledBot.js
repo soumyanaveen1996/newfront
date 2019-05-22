@@ -41,7 +41,7 @@ export default class EmptyInstalledBot extends React.Component {
                             style={{ textAlign: 'center', alignSelf: 'center' }}
                             numberOfLines={3}
                         >
-                            You don’t have any Chatbot installed
+                            You don’t have any Assistant installed
                         </Text>
                     </View>
                     <TouchableOpacity

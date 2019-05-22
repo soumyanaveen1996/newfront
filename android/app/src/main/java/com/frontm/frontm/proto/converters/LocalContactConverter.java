@@ -9,6 +9,7 @@ public class LocalContactConverter {
     public WritableMap toJson(LocalContact contact) {
         WritableMap map = Arguments.createMap();
         map.putString("userName", contact.getUserName());
+        map.putString("userId", contact.getUserId());
         if (contact.hasPhoneNumbers()) {
             map.putMap("phoneNumbers", new PhoneNumbersConverter().toJson(contact.getPhoneNumbers()));
         }
