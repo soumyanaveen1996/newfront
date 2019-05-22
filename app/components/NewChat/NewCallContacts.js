@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     Image,
     PermissionsAndroid,
-    Alert
+    Alert,
+    FlatList
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -58,6 +59,7 @@ import config from '../../config/config';
 import InviteModal from '../ContactsPicker/InviteModal';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
+import GlobalColors from '../../config/styles';
 
 const R = require('ramda');
 
@@ -74,7 +76,9 @@ class NewCallContacts extends React.Component {
             contactSelected: null,
             callQuota: 0,
             callQuotaUpdateError: false,
-            updatingCallQuota: false
+            updatingCallQuota: false,
+            filters: ['All Contacts', 'People', 'Vessels'],
+            selectedFilter: 0
         };
     }
 
@@ -356,6 +360,7 @@ class NewCallContacts extends React.Component {
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
+                    {this.renderFilterMenu()}
                     <SectionList
                         ItemSeparatorComponent={NewChatItemSeparator}
                         ref={sectionList => {
@@ -378,6 +383,60 @@ class NewCallContacts extends React.Component {
         } else {
             return <EmptyContact inviteUser={this.inviteUser.bind(this)} />;
         }
+    }
+
+    renderFilterMenu() {
+        return (
+            <View style={styles.filterMenu}>
+                <TouchableOpacity style={styles.selectedFilter}>
+                    <Text style={styles.filterText}>
+                        Sort by:{' '}
+                        <Text style={{ fontWeight: '500' }}>
+                            {this.state.filters[this.state.selectedFilter]}
+                        </Text>
+                    </Text>
+                    {Icons.arrowDown({ color: GlobalColors.headerBlack })}
+                </TouchableOpacity>
+                <FlatList
+                    data={this.state.filters}
+                    extraData={this.state.selectedFilter}
+                    renderItem={this.renderFilterRow.bind(this)}
+                />
+            </View>
+        );
+    }
+
+    renderFilterRow({ item, index }) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.setState({ selectedFilter: index });
+                }}
+                style={[
+                    styles.selectedFilter,
+                    {
+                        backgroundColor:
+                            index === this.state.selectedFilter
+                                ? GlobalColors.frontmLightBlueTransparent
+                                : 'transparent'
+                    }
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.filterText,
+                        {
+                            fontWeight:
+                                index === this.state.selectedFilter
+                                    ? '500'
+                                    : '200'
+                        }
+                    ]}
+                >
+                    {item}
+                </Text>
+            </TouchableOpacity>
+        );
     }
 
     inviteUser() {

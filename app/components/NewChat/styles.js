@@ -282,6 +282,29 @@ const stylesheet = StyleSheet.create({
         fontWeight: '100',
         color: 'rgba(174,174,174,1)',
         textAlign: 'center'
+    },
+    filterMenu: {
+        width: '90%',
+        alignItems: 'stretch',
+        alignSelf: 'center',
+        marginVertical: 10,
+        backgroundColor: GlobalColors.white,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6
+    },
+    selectedFilter: {
+        paddingVertical: 14,
+        paddingHorizontal: 23,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    filterText: {
+        fontSize: 14,
+        fontWeight: '200',
+        color: GlobalColors.headerBlack
     }
 });
 
