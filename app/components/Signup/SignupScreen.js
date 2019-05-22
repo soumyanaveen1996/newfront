@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     ScrollView,
     BackHandler,
-    AsyncStorage
+    AsyncStorage,
+    NetInfo
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -191,18 +192,26 @@ export default class SignupScreen extends React.Component {
                             password: this.state.password
                         });
                     } else {
-                        this.setState({ emailError: err.message });
                         this.setState(() => {
                             return { loading: false };
                         });
                     }
                 })
                 .catch(err => {
-                    console.log('error from signup ', err);
-
-                    this.setState({ emailError: 'Email already in use' });
                     this.setState(() => {
                         return { loading: false };
+                    });
+                    console.log('error from signup ', err);
+                    NetInfo.isConnected.fetch().done(isConnected => {
+                        if (!isConnected) {
+                            this.setState({
+                                emailError: 'No Internet Connection'
+                            });
+                        } else {
+                            this.setState({
+                                emailError: 'Email already exist'
+                            });
+                        }
                     });
                 });
         } else {
