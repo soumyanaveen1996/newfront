@@ -253,7 +253,8 @@ class NewCallContacts extends React.Component {
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
                         phoneNumbers: contact.phoneNumbers || undefined,
-                        waitingForConfirmation: contact.waitingForConfirmation
+                        waitingForConfirmation: contact.waitingForConfirmation,
+                        type: contact.type
                     }));
             } else {
                 contactBook = phoneContacts
@@ -265,7 +266,8 @@ class NewCallContacts extends React.Component {
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
                         phoneNumbers: contact.phoneNumber || undefined,
-                        waitingForConfirmation: contact.waitingForConfirmation
+                        waitingForConfirmation: contact.waitingForConfirmation,
+                        type: contact.type
                     }));
             }
             return {
@@ -359,8 +361,21 @@ class NewCallContacts extends React.Component {
             this.state.contactsData,
             section => section.title
         );
-        console.log('>>>>>>>', this.state.contactsData);
         if (sectionTitles && sectionTitles.length > 0) {
+            let filteredContactsData = this.state.contactsData;
+            if (this.state.selectedFilter !== 0) {
+                filteredContactsData = this.state.contactsData.map(section => {
+                    return {
+                        title: section.title,
+                        data: section.data.filter(contact => {
+                            return (
+                                contact.type ===
+                                this.state.filters[this.state.selectedFilter]
+                            );
+                        })
+                    };
+                });
+            }
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
@@ -376,7 +391,7 @@ class NewCallContacts extends React.Component {
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
                         )}
-                        sections={this.state.contactsData}
+                        sections={filteredContactsData}
                         keyExtractor={(item, index) => item.id}
                     />
                     {this.renderFilterMenu()}
@@ -436,7 +451,10 @@ class NewCallContacts extends React.Component {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    this.setState({ selectedFilter: index });
+                    this.setState({
+                        selectedFilter: index,
+                        showFilterMenu: false
+                    });
                 }}
                 style={[
                     styles.selectedFilter,

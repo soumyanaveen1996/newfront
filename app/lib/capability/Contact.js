@@ -378,28 +378,47 @@ export default class Contact {
                             'Sourav Logging::: Loaded Contacts',
                             response.data.localContacts
                         );
-
+                        //CONTACTS
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
                                 return _.extend({}, contact, {
-                                    ignored: false
+                                    ignored: false,
+                                    type: 'People'
                                 });
                             }
                         );
                         // var localContacts = [...response.data.localContacts];
-
+                        //LOCAL CONTACTS
                         var localContacts = Contact.addUniqueUserId(
                             response.data.localContacts
                         );
-
+                        localContacts = localContacts.map(contact => {
+                            return {
+                                ...contact,
+                                type: 'People'
+                            };
+                        });
+                        //IGNORED CONTACTS
                         var ignored = _.map(response.data.contacts, contact => {
                             return _.extend({}, contact, { ignored: true });
                         });
+                        //SITES
+                        var sites = JSON.parse(response.data.sites);
+                        sites = sites.map(site => {
+                            return {
+                                ...site,
+                                userName: site.name + ' (' + site.type + ')',
+                                userId: site.siteId,
+                                waitingForConfirmation: false
+                            };
+                        });
+
                         var allContacts = _.concat(
                             contacts,
                             localContacts,
-                            ignored
+                            ignored,
+                            sites
                         );
 
                         // console.log(
