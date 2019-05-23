@@ -44,6 +44,10 @@ export default class AgentGuard {
                 };
 
                 const response = await Network(options, true);
+                console.log(
+                    'Sourav Logging:::: Sending Response Back to AG',
+                    response
+                );
                 return response;
                 // return convertResponse(response);
             }
