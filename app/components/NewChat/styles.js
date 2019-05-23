@@ -38,6 +38,7 @@ const stylesheet = StyleSheet.create({
         flex: 1
     },
     addressBook: {
+        marginTop: 65,
         flex: 1
     },
     sectionHeaderContainer: {
@@ -282,6 +283,35 @@ const stylesheet = StyleSheet.create({
         fontWeight: '100',
         color: 'rgba(174,174,174,1)',
         textAlign: 'center'
+    },
+    filterMenu: {
+        position: 'absolute',
+        width: '90%',
+        alignItems: 'stretch',
+        alignSelf: 'center',
+        marginVertical: 10,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6
+    },
+    selectedFilter: {
+        paddingVertical: 14,
+        paddingHorizontal: 23,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: GlobalColors.white
+    },
+    filterText: {
+        fontSize: 14,
+        fontWeight: '200',
+        color: GlobalColors.textBlack
+    },
+    filterList: {
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        backgroundColor: GlobalColors.white
     }
 });
 
