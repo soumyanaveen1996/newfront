@@ -16,7 +16,8 @@
   return @{
            @"contacts": [Contact jsonArrayFromObjects:self.contactsArray],
            @"ignored": [Contact jsonArrayFromObjects:self.ignoredArray],
-           @"localContacts": [LocalContact jsonArrayFromObjects:self.localContactsArray]
+           @"localContacts": [LocalContact jsonArrayFromObjects:self.localContactsArray],
+           @"sites": self.sites
            };
 }
 

@@ -20,6 +20,7 @@
            @"userName": self.userName,
            @"emailAddress": self.hasEmailAddresses ? [self.emailAddresses toJSON] : [NSNull null],
            @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
+           @"userId": self.userId
            };
 }
 

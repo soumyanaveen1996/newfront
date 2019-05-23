@@ -303,18 +303,7 @@ export const Icons = {
         15,
         GlobalColors.sideButtons
     ),
-    contextSlideshowButtonUp: icon(
-        'ios-arrow-up',
-        'ionicon',
-        20,
-        GlobalColors.headerBlack
-    ),
-    contextSlideshowButtonDown: icon(
-        'ios-arrow-down',
-        'ionicon',
-        20,
-        GlobalColors.headerBlack
-    ),
+    arrowUp: icon('ios-arrow-up', 'ionicon', 20, GlobalColors.headerBlack),
     closeRouteSlider: icon('md-close', 'ionicon', 18, GlobalColors.white),
     planeRSWhite: icon(
         'airplane',
@@ -340,12 +329,7 @@ export const Icons = {
         '500'
     ),
     formCompletedCheck: icon('md-checkmark', 'ionicon', 20, GlobalColors.green),
-    formDownArrow: icon(
-        'ios-arrow-down',
-        'ionicon',
-        20,
-        GlobalColors.sideButtons
-    ),
+    arrowDown: icon('ios-arrow-down', 'ionicon', 20, GlobalColors.sideButtons),
     formCalendar: icon(
         'ios-calendar-outline',
         'ionicon',

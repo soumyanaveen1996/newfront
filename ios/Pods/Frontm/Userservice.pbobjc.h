@@ -27,6 +27,7 @@
 
 CF_EXTERN_C_BEGIN
 
+@class CallHistoryObject;
 @class Contact;
 @class DomainRoles;
 @class LocalContact;
@@ -142,6 +143,7 @@ typedef GPB_ENUM(ContactsResponse_FieldNumber) {
   ContactsResponse_FieldNumber_ContactsArray = 1,
   ContactsResponse_FieldNumber_IgnoredArray = 2,
   ContactsResponse_FieldNumber_LocalContactsArray = 3,
+  ContactsResponse_FieldNumber_Sites = 4,
 };
 
 @interface ContactsResponse : GPBMessage
@@ -157,6 +159,8 @@ typedef GPB_ENUM(ContactsResponse_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<LocalContact*> *localContactsArray;
 /** The number of items in @c localContactsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger localContactsArray_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *sites;
 
 @end
 
@@ -348,6 +352,61 @@ typedef GPB_ENUM(ManageTncObject_FieldNumber) {
 @interface ManageTncObject : GPBMessage
 
 @property(nonatomic, readwrite) BOOL tncAccept;
+
+@end
+
+#pragma mark - CompaniesResponse
+
+typedef GPB_ENUM(CompaniesResponse_FieldNumber) {
+  CompaniesResponse_FieldNumber_CompaniesArray = 1,
+};
+
+@interface CompaniesResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *companiesArray;
+/** The number of items in @c companiesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger companiesArray_Count;
+
+@end
+
+#pragma mark - CallHistoryResponse
+
+typedef GPB_ENUM(CallHistoryResponse_FieldNumber) {
+  CallHistoryResponse_FieldNumber_ContentArray = 1,
+};
+
+@interface CallHistoryResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<CallHistoryObject*> *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
+
+@end
+
+#pragma mark - CallHistoryObject
+
+typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
+  CallHistoryObject_FieldNumber_CallCharge = 1,
+  CallHistoryObject_FieldNumber_CallTimestamp = 2,
+  CallHistoryObject_FieldNumber_CallTo = 3,
+  CallHistoryObject_FieldNumber_CurrentBalance = 4,
+  CallHistoryObject_FieldNumber_Duration = 5,
+  CallHistoryObject_FieldNumber_UserId = 6,
+};
+
+@interface CallHistoryObject : GPBMessage
+
+@property(nonatomic, readwrite) int32_t callCharge;
+
+@property(nonatomic, readwrite) int64_t callTimestamp;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *callTo;
+
+@property(nonatomic, readwrite) float currentBalance;
+
+@property(nonatomic, readwrite) int32_t duration;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
 @end
 
