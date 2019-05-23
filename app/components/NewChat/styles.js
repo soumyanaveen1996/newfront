@@ -62,13 +62,16 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 10
     },
     contactItemLeftContainer: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center'
     },
     contactItemDetailsContainer: {
         flexDirection: 'column',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        flex: 1
     },
     contactItemName: {
         color: 'rgb(23, 19, 19)',
@@ -282,6 +285,17 @@ const stylesheet = StyleSheet.create({
         fontWeight: '100',
         color: 'rgba(174,174,174,1)',
         textAlign: 'center'
+    },
+    callDetailsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%'
+    },
+    verticalSeparator: {
+        height: '100%',
+        width: 2,
+        marginHorizontal: 10,
+        backgroundColor: 'rgb(180, 180, 180)'
     }
 });
 

@@ -61,33 +61,29 @@ import InviteModal from '../ContactsPicker/InviteModal';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
+import { formattedDate } from '../../lib/utils';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
-export default class RecentCalls extends React.Component {
+export default class CallHistory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            recenteCalls: []
+            callHistory: []
         };
     }
 
     componentDidMount() {
         Calls.getCallHistory().then(res => {
-            this.setState({ recentCalls: res });
+            this.setState({ callHistory: res });
         });
     }
 
-    makeVoipCall() {
-        const { contactSelected } = this.state;
-        if (!contactSelected) {
-            alert('Sorry, cannot make call!');
-            return;
-        }
+    makeVoipCall(id, name) {
         let participants = [
             {
-                userId: contactSelected.id,
-                userName: contactSelected.name
+                userId: id,
+                userName: name
             }
         ];
         SystemBot.get(SystemBot.imBotManifestName).then(imBot => {
@@ -100,23 +96,31 @@ export default class RecentCalls extends React.Component {
     }
 
     makePstnCall(number) {
-        const { contactSelected } = this.state;
-        if (!contactSelected) {
-            alert('Sorry, cannot make call!');
-            return;
-        }
         Actions.dialler({
             call: true,
             number: number,
-            contact: this.state.contactSelected,
             newCallScreen: true
         });
     }
 
     renderRow({ item }) {
+        let id;
+        let name;
+        let number;
+        let icon;
+        if (item.callDirection === Calls.callDirection.INCOMING) {
+            id = item.fromUserId;
+            name = item.fromUserName;
+            icon = Icons.arrowBottomLeft();
+        } else {
+            id = item.toUserId;
+            name = item.toUserName ? item.toUserName : item.toNumber;
+            number = item.toNumber;
+            icon = Icons.arrowTopRight();
+        }
         const image = (
             <ProfileImage
-                uuid={item.id}
+                uuid={id}
                 placeholder={Images.user_image}
                 style={styles.avatarImage}
                 placeholderStyle={styles.avatarImage}
@@ -126,36 +130,66 @@ export default class RecentCalls extends React.Component {
         return (
             <TouchableOpacity
                 style={styles.contactItemContainer}
-                onPress={this.onRowPressed.bind(this, item)}
-                disabled={waitingForConfirmation}
+                // onPress={this.onRowPressed.bind(this, item)}
             >
                 <View style={styles.contactItemLeftContainer}>
                     {image}
                     <View style={styles.contactItemDetailsContainer}>
-                        <Text style={styles.contactItemName}>{item}</Text>
-                        <View>
-                            {/* image */}
-                            <Text style={styles.contactItemEmail} />
-                            <View style={styles.verticalSeparator} />
+                        <Text style={styles.contactItemName}>{name}</Text>
+                        <View style={styles.callDetailsContainer}>
+                            <View
+                                style={[
+                                    styles.callDetailsContainer,
+                                    { width: '50%' }
+                                ]}
+                            >
+                                {icon}
+                                <Text
+                                    style={[
+                                        styles.contactItemEmail,
+                                        { marginLeft: 10 }
+                                    ]}
+                                >
+                                    {formattedDate(
+                                        new Date(item.callTimestamp)
+                                    )}
+                                </Text>
+                                <View style={styles.verticalSeparator} />
+                            </View>
                             <Text style={styles.contactItemEmail}>
-                                {item.callTo}
+                                {item.callType === Calls.callType.PSTN
+                                    ? number
+                                    : 'Voip call'}
                             </Text>
                         </View>
                     </View>
                 </View>
-                {/* image */}
+                <TouchableOpacity
+                    style={styles.callButton}
+                    onPress={
+                        item.callType === Calls.callType.PSTN
+                            ? this.makePstnCall.bind(this, number)
+                            : this.makeVoipCall.bind(this, id, name)
+                    }
+                >
+                    {Icons.greenCallOutline()}
+                </TouchableOpacity>
             </TouchableOpacity>
         );
     }
 
     render() {
-        <SafeAreaView style={styles.container}>
-            <BackgroundImage>
-                <FlatList
-                    data={this.state.recentCalls}
-                    renderItem={this.renderRow.bind(this)}
-                />
-            </BackgroundImage>
-        </SafeAreaView>;
+        return (
+            <SafeAreaView style={styles.container}>
+                <BackgroundImage>
+                    <FlatList
+                        data={this.state.callHistory}
+                        extraData={this.state.callHistory}
+                        renderItem={this.renderRow.bind(this)}
+                        ItemSeparatorComponent={NewChatItemSeparator}
+                    />
+                </BackgroundImage>
+            </SafeAreaView>
+        );
     }
 }

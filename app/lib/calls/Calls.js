@@ -5,6 +5,16 @@ import { Auth } from '../capability';
 const UserServiceClient = NativeModules.UserServiceClient;
 
 export default class Calls {
+    static callDirection = {
+        OUTGOING: 'outgoing',
+        INCOMING: 'incoming'
+    };
+
+    static callType = {
+        PSTN: 'PSTN',
+        VOIP: 'VOIP'
+    };
+
     static getCallHistory() {
         return new Promise((resolve, reject) => {
             Auth.getUser().then(user => {
@@ -18,11 +28,9 @@ export default class Calls {
                             });
                         } else {
                             if (result.data && result.data.content) {
-                                console.log(
-                                    '>>>>>>>>>resolved',
-                                    result.data.content
-                                ); //TODO: return content directly
                                 resolve(result.data.content);
+                            } else {
+                                resolve([]);
                             }
                         }
                     }

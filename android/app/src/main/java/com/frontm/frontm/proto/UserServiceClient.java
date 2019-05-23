@@ -493,7 +493,6 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         stub.getCallHistory(Empty.newBuilder().build(), new StreamObserver<CallHistoryResponse>() {
             @Override
             public void onNext(CallHistoryResponse value) {
-                Log.d(">>>>>>>>>>valuecallhistory", value.toString());
                 callback.invoke(null, new CallHistoryResponseConverter().toResponse(value));
             }
 
