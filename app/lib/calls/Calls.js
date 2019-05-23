@@ -17,11 +17,13 @@ export default class Calls {
                                 error: error.code
                             });
                         } else {
-                            console.log(
-                                '>>>>>>>>>resolved',
-                                result.data.content
-                            ); //TODO: return content directly
-                            resolve(result.data.content);
+                            if (result.data && result.data.content) {
+                                console.log(
+                                    '>>>>>>>>>resolved',
+                                    result.data.content
+                                ); //TODO: return content directly
+                                resolve(result.data.content);
+                            }
                         }
                     }
                 );

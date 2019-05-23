@@ -59,6 +59,7 @@ import config from '../../config/config';
 import InviteModal from '../ContactsPicker/InviteModal';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
+import Calls from '../../lib/calls';
 
 const R = require('ramda');
 
@@ -81,6 +82,7 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
+        Calls.getCallHistory();
         this.initBackGroundBot();
         // Subscribe to Events
 

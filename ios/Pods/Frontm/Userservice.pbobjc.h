@@ -143,6 +143,7 @@ typedef GPB_ENUM(ContactsResponse_FieldNumber) {
   ContactsResponse_FieldNumber_ContactsArray = 1,
   ContactsResponse_FieldNumber_IgnoredArray = 2,
   ContactsResponse_FieldNumber_LocalContactsArray = 3,
+  ContactsResponse_FieldNumber_Sites = 4,
 };
 
 @interface ContactsResponse : GPBMessage
@@ -158,6 +159,8 @@ typedef GPB_ENUM(ContactsResponse_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<LocalContact*> *localContactsArray;
 /** The number of items in @c localContactsArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger localContactsArray_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *sites;
 
 @end
 

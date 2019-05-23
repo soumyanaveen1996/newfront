@@ -324,12 +324,14 @@ typedef struct SubscribedBotsContent__storage_ {
 @dynamic contactsArray, contactsArray_Count;
 @dynamic ignoredArray, ignoredArray_Count;
 @dynamic localContactsArray, localContactsArray_Count;
+@dynamic sites;
 
 typedef struct ContactsResponse__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *contactsArray;
   NSMutableArray *ignoredArray;
   NSMutableArray *localContactsArray;
+  NSString *sites;
 } ContactsResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -364,6 +366,15 @@ typedef struct ContactsResponse__storage_ {
         .offset = (uint32_t)offsetof(ContactsResponse__storage_, localContactsArray),
         .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "sites",
+        .dataTypeSpecific.className = NULL,
+        .number = ContactsResponse_FieldNumber_Sites,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ContactsResponse__storage_, sites),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =

@@ -55,6 +55,7 @@ message ContactsResponse {
     repeated Contact contacts = 1;
     repeated Contact ignored = 2;
     repeated commonmessages.LocalContact localContacts = 3;
+    string sites = 4;
 }
 
 message Contact {
@@ -135,4 +136,3 @@ message CallHistoryObject {
     int32 duration = 5;
     string userId = 6;
 }
-
