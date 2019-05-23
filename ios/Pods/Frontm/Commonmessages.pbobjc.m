@@ -252,12 +252,14 @@ typedef struct EmailAddresses__storage_ {
 @dynamic userName;
 @dynamic hasEmailAddresses, emailAddresses;
 @dynamic hasPhoneNumbers, phoneNumbers;
+@dynamic userId;
 
 typedef struct LocalContact__storage_ {
   uint32_t _has_storage_[1];
   NSString *userName;
   EmailAddresses *emailAddresses;
   PhoneNumbers *phoneNumbers;
+  NSString *userId;
 } LocalContact__storage_;
 
 // This method is threadsafe because it is initially called
@@ -293,6 +295,15 @@ typedef struct LocalContact__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "userId",
+        .dataTypeSpecific.className = NULL,
+        .number = LocalContact_FieldNumber_UserId,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(LocalContact__storage_, userId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[LocalContact class]
@@ -304,7 +315,7 @@ typedef struct LocalContact__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\003\001\010\000\002\016\000\003\014\000";
+        "\004\001\010\000\002\016\000\003\014\000\004\006\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
