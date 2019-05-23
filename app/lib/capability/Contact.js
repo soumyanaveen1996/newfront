@@ -351,12 +351,7 @@ export default class Contact {
     static addUniqueUserId(arr) {
         arr.map(elem => {
             console.log('local contacts ', elem);
-
-            if (!elem.userId) {
-                // uniqueUserId = Contact.randomString();
-                // elem.userId = uniqueUserId;
-                elem.contactType = 'Personal';
-            }
+            elem.contactType = 'Personal';
         });
 
         return arr;

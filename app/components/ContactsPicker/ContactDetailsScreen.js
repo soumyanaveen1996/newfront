@@ -474,14 +474,17 @@ export default class ContactDetailsScreen extends React.Component {
     }
     deletePersonalContact = () => {
         this.setState({ loading: true });
-        let { name, phoneNumbers, emails, userId } = this.props.contact;
+        let { name, phoneNumbers, emails, id } = this.props.contact;
         let localContactObj = {
-            userId: userId,
+            userId: id,
             emailAddresses: {
-                ...emails[0].email
+                home: '',
+                work: ''
             },
             phoneNumbers: {
-                ...phoneNumbers
+                land: '',
+                mobile: '',
+                satellite: ''
             },
             userName: name
         };

@@ -193,7 +193,7 @@ function Network(options, queue = false) {
                             resolve,
                             reject
                         }),
-                    10000
+                    20000
                 );
                 console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
