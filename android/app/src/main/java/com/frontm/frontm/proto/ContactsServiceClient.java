@@ -254,7 +254,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
         ContactsInput.Builder input = ContactsInput.newBuilder();
-        if (params.getArray("userIds") != null) {
+        if (params.hasKey("userIds") && params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));

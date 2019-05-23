@@ -8,6 +8,7 @@ import { MessageTypeConstants } from '../../lib/capability';
 import { CachedImage } from '../CachedImage';
 import SystemBot from '../../lib/bot/SystemBot';
 import images from '../../images';
+import { Auth } from '../../lib/capability';
 
 export default class BotListItem extends React.Component {
     constructor(props) {
@@ -16,7 +17,8 @@ export default class BotListItem extends React.Component {
             subTitle: '',
             date: '',
             count: 0,
-            message: null
+            message: null,
+            name: ''
         };
     }
 
@@ -24,8 +26,13 @@ export default class BotListItem extends React.Component {
         Actions.botChat({ bot: this.props.bot, onBack: this.props.onBack });
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         let stateObj = {};
+
+        const user = await Auth.getUser();
+        const userName = user.info.userName;
+
+        console.log('Sourav Logging:::: User is', user);
 
         if (this.props.chatData && this.props.chatData.lastMessage) {
             let message = this.props.chatData.lastMessage;
@@ -42,8 +49,11 @@ export default class BotListItem extends React.Component {
         if (this.props.chatData.totalUnread > 0) {
             stateObj.count = this.props.chatData.totalUnread;
         }
+        // Special Handling Onboarding Bot
+        stateObj.name = userName;
+
         this.setState(stateObj);
-    }
+    };
 
     renderSubview() {
         let message = null;
@@ -56,6 +66,15 @@ export default class BotListItem extends React.Component {
         } else {
             subTitle = SystemBot.imBot.desc;
         }
+
+        if (
+            this.props.bot.botId === 'onboarding-bot' &&
+            this.props.chatData.lastMessage === null
+        ) {
+            subTitle = `Hi ${this.state.name} open me to start using FrontM`;
+            date = Date.now();
+        }
+
         if (
             message &&
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_IMAGE
@@ -77,6 +96,14 @@ export default class BotListItem extends React.Component {
 
     render() {
         const { bot } = this.props;
+        let totalUnread = this.props.chatData.totalUnread;
+
+        if (
+            this.props.bot.botId === 'onboarding-bot' &&
+            this.props.chatData.lastMessage === null
+        ) {
+            totalUnread = 1;
+        }
 
         return (
             <TouchableOpacity
@@ -108,12 +135,12 @@ export default class BotListItem extends React.Component {
                     <Text
                         allowFontScaling={false}
                         style={
-                            this.props.chatData.totalUnread > 0
+                            totalUnread > 0
                                 ? BotListItemStyles.count
                                 : BotListItemStyles.hidden
                         }
                     >
-                        {this.props.chatData.totalUnread}
+                        {totalUnread}
                     </Text>
                 </View>
                 {/* <Text
