@@ -1179,18 +1179,30 @@ typedef struct CallHistoryResponse__storage_ {
 
 @dynamic callCharge;
 @dynamic callTimestamp;
-@dynamic callTo;
 @dynamic currentBalance;
 @dynamic duration;
 @dynamic userId;
+@dynamic callType;
+@dynamic callDirection;
+@dynamic fromUserId;
+@dynamic fromUserName;
+@dynamic toNumber;
+@dynamic toUserId;
+@dynamic toUserName;
 
 typedef struct CallHistoryObject__storage_ {
   uint32_t _has_storage_[1];
   int32_t callCharge;
   float currentBalance;
   int32_t duration;
-  NSString *callTo;
   NSString *userId;
+  NSString *callType;
+  NSString *callDirection;
+  NSString *fromUserId;
+  NSString *fromUserName;
+  NSString *toNumber;
+  NSString *toUserId;
+  NSString *toUserName;
   int64_t callTimestamp;
 } CallHistoryObject__storage_;
 
@@ -1219,19 +1231,10 @@ typedef struct CallHistoryObject__storage_ {
         .dataType = GPBDataTypeInt64,
       },
       {
-        .name = "callTo",
-        .dataTypeSpecific.className = NULL,
-        .number = CallHistoryObject_FieldNumber_CallTo,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callTo),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-      {
         .name = "currentBalance",
         .dataTypeSpecific.className = NULL,
         .number = CallHistoryObject_FieldNumber_CurrentBalance,
-        .hasIndex = 3,
+        .hasIndex = 2,
         .offset = (uint32_t)offsetof(CallHistoryObject__storage_, currentBalance),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeFloat,
@@ -1240,7 +1243,7 @@ typedef struct CallHistoryObject__storage_ {
         .name = "duration",
         .dataTypeSpecific.className = NULL,
         .number = CallHistoryObject_FieldNumber_Duration,
-        .hasIndex = 4,
+        .hasIndex = 3,
         .offset = (uint32_t)offsetof(CallHistoryObject__storage_, duration),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -1249,8 +1252,71 @@ typedef struct CallHistoryObject__storage_ {
         .name = "userId",
         .dataTypeSpecific.className = NULL,
         .number = CallHistoryObject_FieldNumber_UserId,
-        .hasIndex = 5,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(CallHistoryObject__storage_, userId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "callType",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallType,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callType),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "callDirection",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallDirection,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callDirection),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "fromUserId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_FromUserId,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, fromUserId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "fromUserName",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_FromUserName,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, fromUserName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toNumber",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToNumber,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toNumber),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toUserId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToUserId,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toUserId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toUserName",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToUserName,
+        .hasIndex = 11,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toUserName),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
@@ -1265,7 +1331,7 @@ typedef struct CallHistoryObject__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\005\001\n\000\002\r\000\003\006\000\004\016\000\006\006\000";
+        "\013\001\n\000\002\r\000\003\016\000\005\006\000\006\010\000\007\r\000\010\n\000\t\014\000\n\010\000\013\010\000\014\n\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

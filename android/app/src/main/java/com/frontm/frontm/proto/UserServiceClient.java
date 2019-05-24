@@ -28,7 +28,9 @@ import com.frontm.frontm.proto.converters.UpdateUserProfileResponseConverter;
 import com.frontm.frontm.proto.converters.UserConverter;
 import com.frontm.frontm.proto.converters.VoipStatusResponseConverter;
 import com.frontm.frontm.proto.converters.VoipToggleResponseConverter;
+import com.frontm.frontm.proto.converters.CallHistoryResponseConverter;
 import com.frontm.user.proto.BotSubscriptionsResponse;
+import com.frontm.user.proto.CallHistoryResponse;
 import com.frontm.user.proto.ContactsResponse;
 import com.frontm.user.proto.SubscribeBotInput;
 import com.frontm.user.proto.SubscribeBotResponse;
@@ -43,6 +45,7 @@ import com.frontm.user.proto.UserServiceGrpc;
 import com.frontm.user.proto.VoipStatusInput;
 import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
+import com.frontm.user.proto.CallHistoryResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
 import io.grpc.ManagedChannel;
@@ -120,7 +123,6 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-
         stub.getContacts(Empty.newBuilder().build(), new StreamObserver<ContactsResponse>() {
             @Override
             public void onNext(ContactsResponse value) {
@@ -478,7 +480,31 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
     }
 
+    @ReactMethod
+    public void getCallHistory(String sessionId, final Callback callback)
+    {
+        Log.d("GRPC:::getCallHistory", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(mChannel);
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        stub.getCallHistory(Empty.newBuilder().build(), new StreamObserver<CallHistoryResponse>() {
+            @Override
+            public void onNext(CallHistoryResponse value) {
+                callback.invoke(null, new CallHistoryResponseConverter().toResponse(value));
+            }
 
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
 
+            @Override
+            public void onCompleted() {
 
+            }
+        });
+    }
 }

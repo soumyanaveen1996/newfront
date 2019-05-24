@@ -386,6 +386,19 @@ export const Icons = {
         'material-community',
         25,
         GlobalColors.white
+    ),
+
+    arrowBottomLeft: icon(
+        'arrow-bottom-left',
+        'material-community',
+        20,
+        GlobalColors.green
+    ),
+    arrowTopRight: icon(
+        'arrow-top-right',
+        'material-community',
+        20,
+        GlobalColors.green
     )
 };
 

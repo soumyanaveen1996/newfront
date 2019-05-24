@@ -388,10 +388,16 @@ typedef GPB_ENUM(CallHistoryResponse_FieldNumber) {
 typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
   CallHistoryObject_FieldNumber_CallCharge = 1,
   CallHistoryObject_FieldNumber_CallTimestamp = 2,
-  CallHistoryObject_FieldNumber_CallTo = 3,
-  CallHistoryObject_FieldNumber_CurrentBalance = 4,
-  CallHistoryObject_FieldNumber_Duration = 5,
-  CallHistoryObject_FieldNumber_UserId = 6,
+  CallHistoryObject_FieldNumber_CurrentBalance = 3,
+  CallHistoryObject_FieldNumber_Duration = 4,
+  CallHistoryObject_FieldNumber_UserId = 5,
+  CallHistoryObject_FieldNumber_CallType = 6,
+  CallHistoryObject_FieldNumber_CallDirection = 7,
+  CallHistoryObject_FieldNumber_FromUserId = 8,
+  CallHistoryObject_FieldNumber_FromUserName = 9,
+  CallHistoryObject_FieldNumber_ToNumber = 10,
+  CallHistoryObject_FieldNumber_ToUserId = 11,
+  CallHistoryObject_FieldNumber_ToUserName = 12,
 };
 
 @interface CallHistoryObject : GPBMessage
@@ -400,13 +406,25 @@ typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
 
 @property(nonatomic, readwrite) int64_t callTimestamp;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *callTo;
-
 @property(nonatomic, readwrite) float currentBalance;
 
 @property(nonatomic, readwrite) int32_t duration;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *callType;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *callDirection;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *fromUserId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *fromUserName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *toNumber;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *toUserId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *toUserName;
 
 @end
 

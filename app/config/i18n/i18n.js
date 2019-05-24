@@ -16,6 +16,7 @@ I18n.translations = {
         WebM_Bot_Desc: 'Search the web - chat style!',
         Betty_Bot: 'Betty Botter',
         Betty_Bot_Desc: 'Play the Betty Botter Game',
+        Call_History: 'Recent calls',
         Chat_Input_Camera: 'Camera',
         Chat_Input_Video: 'Video',
         Chat_Input_Photo_Library: 'Photo/Video Library',

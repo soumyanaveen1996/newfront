@@ -12,6 +12,7 @@ import {
     Image,
     PermissionsAndroid,
     Alert,
+    NativeModules,
     FlatList,
     LayoutAnimation,
     UIManager,
@@ -62,11 +63,13 @@ import config from '../../config/config';
 import InviteModal from '../ContactsPicker/InviteModal';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
+import Calls from '../../lib/calls';
 import GlobalColors from '../../config/styles';
 
 const R = require('ramda');
 
 let EventListeners = [];
+const UserServiceClient = NativeModules.UserServiceClient;
 
 class NewCallContacts extends React.Component {
     constructor(props) {

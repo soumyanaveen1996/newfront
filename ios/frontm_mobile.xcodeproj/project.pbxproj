@@ -150,6 +150,8 @@
 		6B37D42621C2AB9B00E7A7FE /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B37D42E21C2AD7A00E7A7FE /* libRCTMGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D42D21C2AD4900E7A7FE /* libRCTMGL.a */; };
 		6B3FBBE52BEA41AFB7EA118A /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 515AD2D5FDDC4884A04D87B3 /* SF-Pro-Text-Semibold.otf */; };
+		6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */; };
+		6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */; };
 		6F7D7C1ACD58476CBE5E6FA5 /* SF-Pro-Display-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA8D401667BE4388A4AA9FEB /* SF-Pro-Display-ThinItalic.otf */; };
 		73C0954C2F71469DBEDB31A8 /* SF-Pro-Text-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 126075C521F94005B5517158 /* SF-Pro-Text-MediumItalic.otf */; };
 		767BF4875569421CA17B31C8 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 556C25EA73DE44548EE2DB82 /* libRNFetchBlob.a */; };
@@ -1005,6 +1007,10 @@
 		6B0F977F220C709A00659F09 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = "../node_modules/@mapbox/react-native-mapbox-gl/ios/Mapbox.framework"; sourceTree = "<group>"; };
 		6B37D42821C2AD4800E7A7FE /* RCTMGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTMGL.xcodeproj; path = "../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL.xcodeproj"; sourceTree = "<group>"; };
+		6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryResponse+frontm.m"; sourceTree = "<group>"; };
+		6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryResponse+frontm.h"; sourceTree = "<group>"; };
+		6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryObject+frontm.m"; sourceTree = "<group>"; };
+		6B6442552283F84500E81203 /* CallHistoryObject+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryObject+frontm.h"; sourceTree = "<group>"; };
 		6F18DD2DF5A44CEDB7FDC185 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		73878D11F22A4542A3FC9E8C /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TcpSockets.xcodeproj; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; };
 		74CD2B55BD4F4C88920F118D /* SF-Pro-Display-HeavyItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-HeavyItalic.otf"; path = "../assets/fonts/SFPro/SF-Pro-Display-HeavyItalic.otf"; sourceTree = "<group>"; };
@@ -1473,6 +1479,8 @@
 				0490561B223B6A13008FECC8 /* TimelineContact+frontm.m */,
 				0490561D223B6A33008FECC8 /* TimelineBotInfo+frontm.h */,
 				0490561E223B6A33008FECC8 /* TimelineBotInfo+frontm.m */,
+				6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */,
+				6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */,
 				04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */,
 				04905624223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m */,
 				04905626223B7414008FECC8 /* FindResponse+frontm.h */,
@@ -1515,6 +1523,8 @@
 				04905660223BB9D9008FECC8 /* ContactsResponse+frontm.m */,
 				04905662223BBA01008FECC8 /* Contact+frontm.h */,
 				04905663223BBA01008FECC8 /* Contact+frontm.m */,
+				6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */,
+				6B6442552283F84500E81203 /* CallHistoryObject+frontm.h */,
 				04905665223BBB24008FECC8 /* QueueResponse+frontm.h */,
 				04905666223BBB24008FECC8 /* QueueResponse+frontm.m */,
 				0445655D2248C5DE00996110 /* DomainChannels+frontm.h */,
@@ -2918,6 +2928,7 @@
 				0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */,
 				04704B2522368937003ABE94 /* SigninResponse+frontm.m in Sources */,
 				04905661223BB9D9008FECC8 /* ContactsResponse+frontm.m in Sources */,
+				6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				04704B882237CB42003ABE94 /* Message+frontm.m in Sources */,
@@ -2925,6 +2936,7 @@
 				0490563A223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m in Sources */,
 				0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */,
 				0490565B223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m in Sources */,
+				6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */,
 				04905613223B61BB008FECC8 /* TimelineContent+frontm.m in Sources */,
 				2125608E225B6F6800FFCEAF /* LocalContact+frontm.m in Sources */,
 				0490564F223BB4EA008FECC8 /* CreateCompanyResponse+frontm.m in Sources */,
