@@ -411,7 +411,7 @@ export default class Form2 extends React.Component {
                 style={styles.textField}
             >
                 <Text>{content.options[this.state.answers[key].value]}</Text>
-                {Icons.formDownArrow()}
+                {Icons.arrowDown()}
             </TouchableOpacity>
         );
     }

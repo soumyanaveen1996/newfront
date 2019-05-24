@@ -12,7 +12,11 @@ import {
     Image,
     PermissionsAndroid,
     Alert,
-    NativeModules
+    NativeModules,
+    FlatList,
+    LayoutAnimation,
+    UIManager,
+    TouchableWithoutFeedback
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -60,6 +64,7 @@ import InviteModal from '../ContactsPicker/InviteModal';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
+import GlobalColors from '../../config/styles';
 
 const R = require('ramda');
 
@@ -69,6 +74,8 @@ const UserServiceClient = NativeModules.UserServiceClient;
 class NewCallContacts extends React.Component {
     constructor(props) {
         super(props);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         // this.dataSource = new FrontMAddedContactsPickerDataSource(this)
         this.state = {
             contactsData: [],
@@ -77,7 +84,10 @@ class NewCallContacts extends React.Component {
             contactSelected: null,
             callQuota: 0,
             callQuotaUpdateError: false,
-            updatingCallQuota: false
+            updatingCallQuota: false,
+            filters: ['All Contacts', 'People', 'Vessels'],
+            selectedFilter: 0,
+            showFilterMenu: false
         };
     }
 
@@ -247,7 +257,8 @@ class NewCallContacts extends React.Component {
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
                         phoneNumbers: contact.phoneNumbers || undefined,
-                        waitingForConfirmation: contact.waitingForConfirmation
+                        waitingForConfirmation: contact.waitingForConfirmation,
+                        type: contact.type
                     }));
             } else {
                 contactBook = phoneContacts
@@ -259,7 +270,8 @@ class NewCallContacts extends React.Component {
                         name: contact.userName,
                         emails: [{ email: contact.emailAddress }],
                         phoneNumbers: contact.phoneNumber || undefined,
-                        waitingForConfirmation: contact.waitingForConfirmation
+                        waitingForConfirmation: contact.waitingForConfirmation,
+                        type: contact.type
                     }));
             }
             return {
@@ -353,8 +365,21 @@ class NewCallContacts extends React.Component {
             this.state.contactsData,
             section => section.title
         );
-
         if (sectionTitles && sectionTitles.length > 0) {
+            let filteredContactsData = this.state.contactsData;
+            if (this.state.selectedFilter !== 0) {
+                filteredContactsData = this.state.contactsData.map(section => {
+                    return {
+                        title: section.title,
+                        data: section.data.filter(contact => {
+                            return (
+                                contact.type ===
+                                this.state.filters[this.state.selectedFilter]
+                            );
+                        })
+                    };
+                });
+            }
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
@@ -370,9 +395,10 @@ class NewCallContacts extends React.Component {
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
                         )}
-                        sections={this.state.contactsData}
+                        sections={filteredContactsData}
                         keyExtractor={(item, index) => item.id}
                     />
+                    {this.renderFilterMenu()}
                     {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
@@ -382,6 +408,83 @@ class NewCallContacts extends React.Component {
         } else {
             return <EmptyContact inviteUser={this.inviteUser.bind(this)} />;
         }
+    }
+
+    renderFilterMenu() {
+        return (
+            <View style={styles.filterMenu}>
+                <TouchableOpacity
+                    style={styles.selectedFilter}
+                    activeOpacity={1}
+                    onPress={() => {
+                        LayoutAnimation.configureNext(
+                            LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        this.setState({
+                            showFilterMenu: !this.state.showFilterMenu
+                        });
+                    }}
+                >
+                    <Text style={styles.filterText}>
+                        Sort by:{' '}
+                        <Text style={{ fontWeight: '500' }}>
+                            {this.state.filters[this.state.selectedFilter]}
+                        </Text>
+                    </Text>
+                    {this.state.showFilterMenu
+                        ? Icons.arrowUp({ color: GlobalColors.textBlack })
+                        : Icons.arrowDown({ color: GlobalColors.textBlack })}
+                </TouchableOpacity>
+                <View
+                    style={[
+                        styles.filterList,
+                        { maxHeight: this.state.showFilterMenu ? 250 : 0 }
+                    ]}
+                >
+                    <FlatList
+                        data={this.state.filters}
+                        extraData={this.state.selectedFilter}
+                        renderItem={this.renderFilterRow.bind(this)}
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    renderFilterRow({ item, index }) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.setState({
+                        selectedFilter: index,
+                        showFilterMenu: false
+                    });
+                }}
+                style={[
+                    styles.selectedFilter,
+                    {
+                        backgroundColor:
+                            index === this.state.selectedFilter
+                                ? GlobalColors.frontmLightBlueTransparent
+                                : 'transparent'
+                    }
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.filterText,
+                        {
+                            fontWeight:
+                                index === this.state.selectedFilter
+                                    ? '500'
+                                    : '200'
+                        }
+                    ]}
+                >
+                    {'           ' + item}
+                </Text>
+            </TouchableOpacity>
+        );
     }
 
     inviteUser() {
