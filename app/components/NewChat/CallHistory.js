@@ -128,7 +128,7 @@ export default class CallHistory extends React.Component {
             />
         );
         return (
-            <TouchableOpacity
+            <View
                 style={styles.contactItemContainer}
                 // onPress={this.onRowPressed.bind(this, item)}
             >
@@ -174,7 +174,7 @@ export default class CallHistory extends React.Component {
                 >
                     {Icons.greenCallOutline()}
                 </TouchableOpacity>
-            </TouchableOpacity>
+            </View>
         );
     }
 

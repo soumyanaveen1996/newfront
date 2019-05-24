@@ -17,16 +17,16 @@
   return @{
            @"callCharge": @(self.callCharge),
            @"callTimestamp": @(self.callTimestamp),
-           @"callTo": self.callTo,
            @"currentBalance": @(self.currentBalance),
            @"duration": @(self.duration),
            @"userId": self.userId,
-           };
-}
-
-- (NSDictionary *) toResponse {
-  return @{
-           @"data": [self toJSON]
+           @"callType": self.callType,
+           @"callDirection": self.callDirection,
+           @"fromUserId": self.fromUserId,
+           @"fromUserName": self.fromUserName,
+           @"toNumber": self.toNumber,
+           @"toUserId": self.toUserId,
+           @"toUserName": self.toUserName,
            };
 }
 

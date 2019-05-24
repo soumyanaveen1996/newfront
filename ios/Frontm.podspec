@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = "Frontm"
-  s.version  = "0.0.18"
+  s.version  = "0.0.19"
   s.license  = "Apache License, Version 2.0"
   s.authors  = { 'amal' => 'amal@frontm.com' }
   s.homepage = "https://frontm.ai/"

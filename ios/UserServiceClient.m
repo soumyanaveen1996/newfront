@@ -271,11 +271,9 @@ RCT_REMAP_METHOD(getCallHistory, getCallHistoryWithSessionId:(NSString *)session
                          RPCToGetCallHistoryWithRequest:[Empty new]
                          handler:^(CallHistoryResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
-                             RCTLog(@">>>>>>>>>>>error");
                              callback(@[@{}, [NSNull null]]);
                              return;
                            } else {
-                             RCTLog(@">>>>>>>>>>>done");
                              RCTLog(@"method:getCallHistory response : %@", [response toResponse]);
                              callback(@[[NSNull null], [response toResponse]]);
                            }
