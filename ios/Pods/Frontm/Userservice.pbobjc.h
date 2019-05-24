@@ -416,6 +416,7 @@ typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *callDirection;
 
+@property(nonatomic, readwrite, copy, null_resettable) NSString *fromUserId;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *fromUserName;
 
@@ -428,6 +429,8 @@ typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
 @end
 
 NS_ASSUME_NONNULL_END
+
+CF_EXTERN_C_END
 
 #pragma clang diagnostic pop
 

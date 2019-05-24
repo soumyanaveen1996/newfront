@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CallHistoryObject (frontm)
 
 - (NSDictionary *) toJSON;
-- (NSDictionary *) toResponse;
 + (NSArray *) jsonArrayFromObjects:(NSArray *)users;
 
 

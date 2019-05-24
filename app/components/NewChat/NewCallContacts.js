@@ -92,7 +92,6 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
-        Calls.getCallHistory();
         this.initBackGroundBot();
         // Subscribe to Events
 
