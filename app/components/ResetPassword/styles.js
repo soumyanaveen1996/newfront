@@ -39,10 +39,11 @@ export default StyleSheet.create({
         flex: 1
     },
     container: {
+        flex: 1,
         flexDirection: 'column',
-        marginTop: 100,
         textAlign: 'center',
         alignItems: 'center',
+        paddingVertical: 100,
         justifyContent: 'center'
     },
     headerText: {
@@ -78,8 +79,7 @@ export default StyleSheet.create({
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 25
+        justifyContent: 'center'
     },
     buttonText: {
         color: '#fff',
@@ -96,7 +96,6 @@ export default StyleSheet.create({
         },
         android: {
             minWidth: 180,
-            flex: 1,
             alignItems: 'flex-end'
         }
     }),

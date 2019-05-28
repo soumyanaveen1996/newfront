@@ -220,6 +220,8 @@ class MainScreen extends React.Component {
 
     async componentDidMount() {
         const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        console.log('get the first time user details ', getFirstTime);
+
         if (getFirstTime) {
             this.setState({ firstTimer: true }, () => {
                 firstTimer = this.state.firstTimer;

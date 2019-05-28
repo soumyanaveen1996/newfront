@@ -368,13 +368,15 @@ export default class SignupScreen extends React.Component {
                 </View>
                 <ScrollView
                     style={styles.container}
-                    keyboardShouldPersistTaps="always"
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
                 >
                     <Loader loading={this.state.loading} />
                     <KeyboardAwareScrollView
                         style={styles.keyboardConatiner}
-                        resetScrollToCoords={{ x: 0, y: 0 }}
                         scrollEnabled={false}
+                        enableOnAndroid={true}
+                        enableAutomaticScroll={Platform.OS === 'ios'}
                     >
                         <View style={styles.headerContainer}>
                             <Text style={styles.signupHeader}> Welcome! </Text>
