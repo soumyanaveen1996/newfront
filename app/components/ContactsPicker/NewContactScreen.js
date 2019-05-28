@@ -755,7 +755,7 @@ class NewContactScreen extends React.Component {
                                 }}
                             >
                                 <Text style={styles.cancel_text}>
-                                    Import phone from address book
+                                    Import details from address book
                                 </Text>
                             </TouchableOpacity>
                         </View>

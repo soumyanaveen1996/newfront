@@ -77,6 +77,7 @@ import DialPadButton from '../components/NewChat/DialPadButton';
 import NewContactScreen from '../components/ContactsPicker/NewContactScreen';
 import ResetPassword from '../components/ResetPassword/ResetPassword';
 import SendCodePassword from '../components/ResetPassword/SendCodePassword';
+import CallHistory from '../components/NewChat/CallHistory';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -330,8 +331,8 @@ class MainRouter extends React.Component {
                                             titleScreen={I18n.t(
                                                 'FrontM_Contacts'
                                             )}
-                                            imageSource={require('../images/fm/fm-iso.png')}
-                                            imageSelected={require('../images/fm/fm-iso.png')}
+                                            // imageSource={require('../images/fm/fm-iso.png')}
+                                            // imageSelected={require('../images/fm/fm-iso.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene
@@ -350,8 +351,8 @@ class MainRouter extends React.Component {
                                             titleScreen={I18n.t(
                                                 'Addr_Contacts'
                                             )}
-                                            imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
-                                            imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
+                                            // imageSource={require('../images/tabbar-contacts/tabbar-contacts.png')}
+                                            // imageSelected={require('../images/tabbar-contacts-active/tabbar-contacts-active.png')}
                                             icon={TabIconTop}
                                         >
                                             <Scene
@@ -361,6 +362,24 @@ class MainRouter extends React.Component {
                                                 component={NewPhoneBookContacts}
                                                 type="push"
                                                 hideNavBar={true}
+                                            />
+                                        </Scene>
+                                        <Scene
+                                            key={
+                                                ROUTER_SCENE_KEYS.callHistoryMenu
+                                            }
+                                            titleScreen={I18n.t('Call_History')}
+                                            // imageSource={require('../images/fm/fm-iso.png')}
+                                            // imageSelected={require('../images/fm/fm-iso.png')}
+                                            icon={TabIconTop}
+                                        >
+                                            <Scene
+                                                key={
+                                                    ROUTER_SCENE_KEYS.callHistory
+                                                }
+                                                component={CallHistory}
+                                                hideNavBar={true}
+                                                type="push"
                                             />
                                         </Scene>
                                     </Tabs>

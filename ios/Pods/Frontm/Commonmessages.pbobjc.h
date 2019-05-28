@@ -109,6 +109,7 @@ typedef GPB_ENUM(LocalContact_FieldNumber) {
   LocalContact_FieldNumber_UserName = 1,
   LocalContact_FieldNumber_EmailAddresses = 2,
   LocalContact_FieldNumber_PhoneNumbers = 3,
+  LocalContact_FieldNumber_UserId = 4,
 };
 
 @interface LocalContact : GPBMessage
@@ -122,6 +123,8 @@ typedef GPB_ENUM(LocalContact_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) PhoneNumbers *phoneNumbers;
 /** Test to see if @c phoneNumbers has been set. */
 @property(nonatomic, readwrite) BOOL hasPhoneNumbers;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
 @end
 

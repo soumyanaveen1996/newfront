@@ -12,6 +12,7 @@ import Auth from './Auth';
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
 import Bugsnag from '../../config/ErrorMonitoring';
+import { NetworkHandler } from '../network';
 
 import { NativeModules } from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
@@ -192,7 +193,7 @@ function Network(options, queue = false) {
                             resolve,
                             reject
                         }),
-                    10000
+                    20000
                 );
                 console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
@@ -283,6 +284,10 @@ Network.isConnected = () => {
             return reachability.type !== 'none';
         }
     });
+};
+
+Network.forcePoll = () => {
+    NetworkHandler.poll();
 };
 
 export default Network;

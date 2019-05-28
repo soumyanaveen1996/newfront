@@ -28,4 +28,5 @@ message LocalContact {
     string userName = 1;
     commonmessages.EmailAddresses emailAddresses = 2;
     commonmessages.PhoneNumbers phoneNumbers = 3;
+    string userId = 4;
 }

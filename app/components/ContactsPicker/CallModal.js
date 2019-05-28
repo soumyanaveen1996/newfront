@@ -19,6 +19,7 @@ export default class CallModal extends React.Component {
 
     makePhoneCall = number => {
         this.props.setVisible(false);
+        console.log('Sourav Logging:::: Calling Contact', this.props.contact);
         Actions.dialler({
             call: true,
             number: number,

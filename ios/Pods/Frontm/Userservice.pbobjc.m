@@ -324,12 +324,14 @@ typedef struct SubscribedBotsContent__storage_ {
 @dynamic contactsArray, contactsArray_Count;
 @dynamic ignoredArray, ignoredArray_Count;
 @dynamic localContactsArray, localContactsArray_Count;
+@dynamic sites;
 
 typedef struct ContactsResponse__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *contactsArray;
   NSMutableArray *ignoredArray;
   NSMutableArray *localContactsArray;
+  NSString *sites;
 } ContactsResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -364,6 +366,15 @@ typedef struct ContactsResponse__storage_ {
         .offset = (uint32_t)offsetof(ContactsResponse__storage_, localContactsArray),
         .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "sites",
+        .dataTypeSpecific.className = NULL,
+        .number = ContactsResponse_FieldNumber_Sites,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ContactsResponse__storage_, sites),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -1066,6 +1077,261 @@ typedef struct ManageTncObject__storage_ {
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\001\001\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CompaniesResponse
+
+@implementation CompaniesResponse
+
+@dynamic companiesArray, companiesArray_Count;
+
+typedef struct CompaniesResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *companiesArray;
+} CompaniesResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "companiesArray",
+        .dataTypeSpecific.className = NULL,
+        .number = CompaniesResponse_FieldNumber_CompaniesArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CompaniesResponse__storage_, companiesArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CompaniesResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CompaniesResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CallHistoryResponse
+
+@implementation CallHistoryResponse
+
+@dynamic contentArray, contentArray_Count;
+
+typedef struct CallHistoryResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *contentArray;
+} CallHistoryResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "contentArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(CallHistoryObject),
+        .number = CallHistoryResponse_FieldNumber_ContentArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(CallHistoryResponse__storage_, contentArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CallHistoryObject
+
+@implementation CallHistoryObject
+
+@dynamic callCharge;
+@dynamic callTimestamp;
+@dynamic currentBalance;
+@dynamic duration;
+@dynamic userId;
+@dynamic callType;
+@dynamic callDirection;
+@dynamic fromUserId;
+@dynamic fromUserName;
+@dynamic toNumber;
+@dynamic toUserId;
+@dynamic toUserName;
+
+typedef struct CallHistoryObject__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t callCharge;
+  float currentBalance;
+  int32_t duration;
+  NSString *userId;
+  NSString *callType;
+  NSString *callDirection;
+  NSString *fromUserId;
+  NSString *fromUserName;
+  NSString *toNumber;
+  NSString *toUserId;
+  NSString *toUserName;
+  int64_t callTimestamp;
+} CallHistoryObject__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "callCharge",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallCharge,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callCharge),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "callTimestamp",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallTimestamp,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callTimestamp),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "currentBalance",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CurrentBalance,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, currentBalance),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeFloat,
+      },
+      {
+        .name = "duration",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_Duration,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, duration),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "userId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_UserId,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, userId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "callType",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallType,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callType),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "callDirection",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_CallDirection,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callDirection),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "fromUserId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_FromUserId,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, fromUserId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "fromUserName",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_FromUserName,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, fromUserName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toNumber",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToNumber,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toNumber),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toUserId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToUserId,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toUserId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "toUserName",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryObject_FieldNumber_ToUserName,
+        .hasIndex = 11,
+        .offset = (uint32_t)offsetof(CallHistoryObject__storage_, toUserName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryObject class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryObject__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\013\001\n\000\002\r\000\003\016\000\005\006\000\006\010\000\007\r\000\010\n\000\t\014\000\n\010\000\013\010\000\014\n\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

@@ -56,6 +56,13 @@ const Styles = StyleSheet.create({
         //     }
         // })
     },
+    buttonContainerIn: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        justifyContent: 'space-evenly',
+        marginBottom: hp('4%')
+    },
     buttonContainer: {
         alignItems: 'stretch',
         justifyContent: 'space-evenly'

@@ -435,7 +435,7 @@ export default class Auth {
                 .then(() => {
                     EventEmitter.emit(AuthEvents.userLoggedOut);
                     // Logging in as Default user for Onboarding bot
-                    resolve(Auth.saveUser(DefaultUser));
+                    // resolve(Auth.saveUser(DefaultUser));
                 })
                 .catch(error => {
                     console.log('Error in logging out : ', error);

@@ -1,12 +1,8 @@
 syntax = "proto3";
-
 import "commonmessages.proto";
-
 option java_multiple_files = true;
 option java_package = "com.frontm.user.proto";
-
 package user;
-
 service UserService {
     rpc UpdateUserProfile (User) returns (UpdateUserProfileResponse) {}
     rpc GetUserDetails (User) returns (User) {}
@@ -21,9 +17,9 @@ service UserService {
     rpc GenerateTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
     rpc GenerateWebTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
     rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
+    rpc GetCompanies(commonmessages.Empty) returns (CompaniesResponse) {}
+    rpc GetCallHistory(commonmessages.Empty) returns (CallHistoryResponse) {}
 }
-
-
 message User {
     string userName = 1;
     string emailAddress = 2;
@@ -33,28 +29,24 @@ message User {
     string userId = 6;
     string companyId = 7;
 }
-
 message UpdateUserProfileResponse {
     int32 error = 1;
     repeated bool content = 2;
 }
-
 message BotSubscriptionsResponse {
     int32 error = 1;
     SubscribedBotsContent content = 2;
 }
-
 message SubscribedBotsContent {
     repeated string subscribed = 1;
     repeated string favourites = 2;
 }
-
 message ContactsResponse {
     repeated Contact contacts = 1;
     repeated Contact ignored = 2;
     repeated commonmessages.LocalContact localContacts = 3;
+    string sites = 4;
 }
-
 message Contact {
     string userName = 1;
     string emailAddress = 2;
@@ -62,56 +54,64 @@ message Contact {
     string userId = 4;
     bool waitingForConfirmation = 5;
 }
-
 message SubscribeBotInput {
     string botId = 1;
 }
-
 message SubscribeBotResponse {
     int32 error = 1;
     repeated bool content = 2;
 }
-
 message SubscribeDomainInput {
     string verificationCode = 1;
 }
-
 message SubscribeDomainResponse {
     repeated commonmessages.DomainRoles content = 1;
     int32 error = 2;
 }
-
 message VoipToggleResponse {
     bool success = 1;
 }
-
 message VoipStatusInput {
     string userId = 1;
 }
-
 message VoipStatusResponse {
     bool voipEnabled = 1;
     int32 error = 2;
 }
-
 message TwilioTokenInput {
     string platform = 1;
     string env = 2;
 }
-
 message TwilioTokenResponse {
     string accessToken = 1;
 }
-
 message ManageTncInput {
     string action = 1;
 }
-
 message ManageTncResponse {
     int32 error = 1;
     repeated ManageTncObject content = 2;
 }
-
 message ManageTncObject {
     bool tncAccept = 1;
+}
+message CompaniesResponse {
+    repeated string companies = 1;
+}
+message CallHistoryResponse {
+    repeated CallHistoryObject content = 1;
+}
+message CallHistoryObject {
+    int32 callCharge= 1;
+    int64 callTimestamp = 2;
+    float currentBalance = 3;
+    int32 duration = 4;
+    string userId = 5;
+    string callType = 6;
+    string callDirection = 7;
+    string fromUserId = 8;
+    string fromUserName = 9;
+    string toNumber = 10;
+    string toUserId = 11;
+    string toUserName = 12;
 }

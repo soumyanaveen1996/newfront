@@ -254,7 +254,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
 
         ContactsInput.Builder input = ContactsInput.newBuilder();
-        if (params.getArray("userIds") != null) {
+        if (params.hasKey("userIds") && params.getArray("userIds") != null) {
             ReadableArray userIds = params.getArray("userIds");
             for(int i = 0; i < userIds.size(); ++i) {
                 input.addUserIds(userIds.getString(i));
@@ -268,6 +268,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
 
                 ReadableMap lContactDict = localContacts.getMap(i);
                 String userName = lContactDict.getString("userName");
+                String userId = lContactDict.getString("userId");
                 ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
                 ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
 
@@ -281,6 +282,7 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
                         setSatellite(phoneNumbersDict.getString("satellite")).build();
 
                 LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setUserId(userId)
                         .setEmailAddresses(emailAddresses)
                         .setPhoneNumbers(phoneNumbers).build();
                 input.addLocalContacts(localContact);

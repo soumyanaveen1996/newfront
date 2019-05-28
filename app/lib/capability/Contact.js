@@ -351,12 +351,7 @@ export default class Contact {
     static addUniqueUserId(arr) {
         arr.map(elem => {
             console.log('local contacts ', elem);
-
-            if (!elem.userId) {
-                uniqueUserId = Contact.randomString();
-                elem.userId = uniqueUserId;
-                elem.contactType = 'Personal';
-            }
+            elem.contactType = 'Personal';
         });
 
         return arr;
@@ -381,30 +376,49 @@ export default class Contact {
                     if (response.data) {
                         console.log(
                             'Sourav Logging::: Loaded Contacts',
-                            response.data.localContacts
+                            response.data
                         );
-
+                        //CONTACTS
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
                                 return _.extend({}, contact, {
-                                    ignored: false
+                                    ignored: false,
+                                    type: 'People'
                                 });
                             }
                         );
                         // var localContacts = [...response.data.localContacts];
-
+                        //LOCAL CONTACTS
                         var localContacts = Contact.addUniqueUserId(
                             response.data.localContacts
                         );
-
+                        localContacts = localContacts.map(contact => {
+                            return {
+                                ...contact,
+                                type: 'People'
+                            };
+                        });
+                        //IGNORED CONTACTS
                         var ignored = _.map(response.data.contacts, contact => {
                             return _.extend({}, contact, { ignored: true });
                         });
+                        //SITES
+                        var sites = JSON.parse(response.data.sites);
+                        sites = sites.map(site => {
+                            return {
+                                ...site,
+                                userName: site.name + ' (' + site.type + ')',
+                                userId: site.siteId,
+                                waitingForConfirmation: false
+                            };
+                        });
+
                         var allContacts = _.concat(
                             contacts,
                             localContacts,
-                            ignored
+                            ignored,
+                            sites
                         );
 
                         // console.log(

@@ -178,6 +178,7 @@ RCT_REMAP_METHOD(remove, removeWithSessionId:(NSString *)sessionId andParams:(NS
     NSArray *localContactsArray = params[@"localContacts"];
     for (int i=0; i < [localContactsArray count]; i++) {
       NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userId = lContactsDict[@"userId"];
       NSString *userName = lContactsDict[@"userName"];
       NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
       NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
@@ -193,6 +194,7 @@ RCT_REMAP_METHOD(remove, removeWithSessionId:(NSString *)sessionId andParams:(NS
       
       LocalContact *localContact = [LocalContact new];
       localContact.userName = userName;
+      localContact.userId = userId;
       localContact.phoneNumbers = phoneNumbers;
       localContact.emailAddresses = emailAddresses;
       

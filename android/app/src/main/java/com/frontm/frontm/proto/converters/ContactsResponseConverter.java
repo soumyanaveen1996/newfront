@@ -43,6 +43,8 @@ public class ContactsResponseConverter {
             map.putArray("localContacts", Arguments.createArray());
         }
 
+        map.putString("sites", response.getSites());
+
         return map;
     }
 
