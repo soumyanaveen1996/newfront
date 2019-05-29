@@ -129,12 +129,18 @@ export default class CallHistory extends React.Component {
         if (item.callDirection === Calls.callDirection.INCOMING) {
             id = item.fromUserId;
             name = item.fromUserName;
-            icon = Icons.arrowBottomLeft();
+            icon =
+                item.duration <= 0
+                    ? Icons.arrowBottomLeft({ color: 'red' })
+                    : Icons.arrowBottomLeft();
         } else {
             id = item.toUserId;
             name = item.toUserName ? item.toUserName : item.toNumber;
             number = item.toNumber;
-            icon = Icons.arrowTopRight();
+            icon =
+                item.duration <= 0
+                    ? Icons.arrowTopRight({ color: 'red' })
+                    : Icons.arrowTopRight();
         }
         const image = (
             <ProfileImage

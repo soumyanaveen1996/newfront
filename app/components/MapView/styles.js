@@ -314,23 +314,6 @@ const layerStyles = Mapbox.StyleSheet.create({
         lineColor: GlobalColors.sideButtons,
         lineBlur: 1
     },
-    //Auto-generated MARKERS
-    startingPoint: {
-        iconAllowOverlap: true,
-        iconIgnorePlacement: true,
-        iconImage: images.map_starting_point
-    },
-    arrivalPoint: {
-        iconAllowOverlap: true,
-        iconIgnorePlacement: true,
-        iconImage: images.map_arrival_point
-    },
-    movingVessel: {
-        iconAllowOverlap: true,
-        iconImage: images.maps_maritime_icon,
-        iconRotationAlignment: 'map',
-        iconRotate: Mapbox.StyleSheet.identity('rotation')
-    },
     //MARKERS
     blackCircleMarker: {
         iconAllowOverlap: true,
