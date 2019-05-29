@@ -3,11 +3,12 @@ import { Platform, Alert, AppState } from 'react-native';
 import { Auth } from '../capability';
 import Twilio from './twilio';
 import Permissions from 'react-native-permissions';
-import EventEmitter, { TwilioEvents } from '../../lib/events';
+import EventEmitter, { TwilioEvents, CallsEvents } from '../../lib/events';
 import { Actions } from 'react-native-router-flux';
 import { PhoneState } from '../../components/Phone';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Store from '../../lib/Store';
+import Calls from '../calls';
 
 /*
 const _eventHandlers = {
@@ -164,6 +165,7 @@ export default class TwilioVoIP {
     closePhoneScreen = () => {
         console.log('FrontM VoIP : ', Actions.currentScene);
         if (Actions.currentScene === ROUTER_SCENE_KEYS.phone) {
+            Calls.fetchCallHistory();
             Actions.pop();
         }
     };
@@ -201,6 +203,7 @@ export default class TwilioVoIP {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
         Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.callRejected, data);
+        Calls.fetchCallHistory();
     };
 
     deviceDidReceiveIncomingHandler = data => {
