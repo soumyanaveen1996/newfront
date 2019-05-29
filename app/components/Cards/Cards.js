@@ -40,6 +40,7 @@ export default class Cards extends React.Component {
                     <CardImage
                         style={styles.image}
                         source={{ uri: item.pictureUrl }}
+                        alternativeSource={{ uri: item.defaultPictureUrl }}
                         resizeMode="contain"
                         placeholder={title}
                     />
@@ -139,6 +140,7 @@ export default class Cards extends React.Component {
                 <CardImage
                     style={styles.imageModal}
                     source={{ uri: item.pictureUrl }}
+                    alternativeSource={{ uri: item.defaultPictureUrl }}
                     resizeMode="contain"
                     placeholder={null}
                 />
