@@ -378,6 +378,9 @@ class NewCallContacts extends React.Component {
                         })
                     };
                 });
+                filteredContactsData = filteredContactsData.filter(section => {
+                    return section.data.length > 0;
+                });
             }
             return (
                 <View style={styles.addressBookContainer}>
