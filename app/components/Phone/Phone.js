@@ -28,6 +28,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import Calls from '../../lib/calls';
 
 export const PhoneState = {
     init: 'init',
@@ -89,6 +90,10 @@ export default class Phone extends React.Component {
             this.findCallerName({ username: this.state.username });
             Keyboard.dismiss();
         }
+    }
+
+    componentWillUnmount() {
+        Calls.fetchCallHistory();
     }
 
     async findCallerName({ username }) {
