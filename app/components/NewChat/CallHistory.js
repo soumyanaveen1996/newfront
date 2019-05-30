@@ -30,7 +30,8 @@ import {
     EventEmitter,
     AuthEvents,
     CallQuotaEvents,
-    TwilioEvents
+    TwilioEvents,
+    CallsEvents
 } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
@@ -62,6 +63,7 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import { formattedDate } from '../../lib/utils';
+import eventEmitter from '../../lib/events/EventEmitter';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -74,6 +76,22 @@ export default class CallHistory extends React.Component {
     }
 
     componentDidMount() {
+        eventEmitter.addListener(
+            CallsEvents.callHistoryUpdated,
+            this.getCallHistory.bind(this)
+        );
+        Calls.fetchCallHistory();
+        this.getCallHistory();
+    }
+
+    componentWillUnmount() {
+        eventEmitter.removeListener(
+            CallsEvents.callHistoryUpdated,
+            this.getCallHistory.bind(this)
+        );
+    }
+
+    getCallHistory() {
         Calls.getCallHistory().then(res => {
             this.setState({ callHistory: res });
         });
@@ -111,12 +129,18 @@ export default class CallHistory extends React.Component {
         if (item.callDirection === Calls.callDirection.INCOMING) {
             id = item.fromUserId;
             name = item.fromUserName;
-            icon = Icons.arrowBottomLeft();
+            icon =
+                item.duration <= 0
+                    ? Icons.arrowBottomLeft({ color: 'red' })
+                    : Icons.arrowBottomLeft();
         } else {
             id = item.toUserId;
             name = item.toUserName ? item.toUserName : item.toNumber;
             number = item.toNumber;
-            icon = Icons.arrowTopRight();
+            icon =
+                item.duration <= 0
+                    ? Icons.arrowTopRight({ color: 'red' })
+                    : Icons.arrowTopRight();
         }
         const image = (
             <ProfileImage

@@ -38,7 +38,6 @@ const stylesheet = StyleSheet.create({
         flex: 1
     },
     addressBook: {
-        marginTop: 65,
         flex: 1
     },
     sectionHeaderContainer: {

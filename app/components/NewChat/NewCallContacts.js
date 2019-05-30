@@ -389,7 +389,7 @@ class NewCallContacts extends React.Component {
                         ref={sectionList => {
                             this.contactsList = sectionList;
                         }}
-                        style={styles.addressBook}
+                        style={[styles.addressBook, { marginTop: 65 }]}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
