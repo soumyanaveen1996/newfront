@@ -17,3 +17,9 @@ export const fieldType = {
     multiselection: 'multi_selection',
     passwordField: 'password_field'
 };
+
+export const formAction = {
+    CONFIRM: 'confirm',
+    CANCEL: 'cancel',
+    CLOSE: 'close'
+};
