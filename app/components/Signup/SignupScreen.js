@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     ScrollView,
     BackHandler,
-    AsyncStorage
+    AsyncStorage,
+    NetInfo
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -191,18 +192,26 @@ export default class SignupScreen extends React.Component {
                             password: this.state.password
                         });
                     } else {
-                        this.setState({ emailError: err.message });
                         this.setState(() => {
                             return { loading: false };
                         });
                     }
                 })
                 .catch(err => {
-                    console.log('error from signup ', err);
-
-                    this.setState({ emailError: 'Email already in use' });
                     this.setState(() => {
                         return { loading: false };
+                    });
+                    console.log('error from signup ', err);
+                    NetInfo.isConnected.fetch().done(isConnected => {
+                        if (!isConnected) {
+                            this.setState({
+                                emailError: 'No Internet Connection'
+                            });
+                        } else {
+                            this.setState({
+                                emailError: 'Email already exist'
+                            });
+                        }
                     });
                 });
         } else {
@@ -359,13 +368,15 @@ export default class SignupScreen extends React.Component {
                 </View>
                 <ScrollView
                     style={styles.container}
-                    keyboardShouldPersistTaps="always"
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
                 >
                     <Loader loading={this.state.loading} />
                     <KeyboardAwareScrollView
                         style={styles.keyboardConatiner}
-                        resetScrollToCoords={{ x: 0, y: 0 }}
                         scrollEnabled={false}
+                        enableOnAndroid={true}
+                        enableAutomaticScroll={Platform.OS === 'ios'}
                     >
                         <View style={styles.headerContainer}>
                             <Text style={styles.signupHeader}> Welcome! </Text>

@@ -107,10 +107,7 @@ export default class SendCodePassword extends React.Component {
         return (
             <SafeAreaView style={styles.safeAreaView}>
                 <Loader loading={this.state.loading} />
-                <ScrollView
-                    style={{ flex: 1 }}
-                    keyboardShouldPersistTaps="always"
-                >
+                <ScrollView style={{ flex: 1 }}>
                     <KeyboardAvoidingView style={styles.container}>
                         <View>
                             <Text style={styles.headerText}>
@@ -152,7 +149,7 @@ export default class SendCodePassword extends React.Component {
                 </ScrollView>
                 <View
                     style={{
-                        height: 70,
+                        height: 60,
                         backgroundColor: '#fff',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -163,7 +160,7 @@ export default class SendCodePassword extends React.Component {
                         onPress={this.goBackToLogin}
                     >
                         <Text style={styles.loginScreenText}>
-                            Go back to the Log in screen...
+                            Go back to the Log in screen
                         </Text>
                         <Image
                             style={styles.arrow}
