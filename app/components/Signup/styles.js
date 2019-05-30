@@ -149,7 +149,7 @@ export default StyleSheet.create({
         ios: {
             backgroundColor: 'rgba(229,69,59,1)',
             zIndex: 999999,
-            width: 150,
+            minWidth: 150,
             padding: 5,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,
@@ -159,7 +159,7 @@ export default StyleSheet.create({
         },
         android: {
             backgroundColor: 'rgba(229,69,59,1)',
-            width: 150,
+            minWidth: 150,
             padding: 5,
             borderTopRightRadius: 10,
             borderBottomLeftRadius: 10,

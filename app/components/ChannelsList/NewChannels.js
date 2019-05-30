@@ -272,7 +272,7 @@ class NewChannels extends React.Component {
                         channelData.channelName,
                         channelData.userDomain,
                         userIds
-                    ).then(data => {
+                    ).then(dataVal => {
                         this.setState({ loading: false });
                         setTimeout(() => Actions.pop(), 100);
                     });
