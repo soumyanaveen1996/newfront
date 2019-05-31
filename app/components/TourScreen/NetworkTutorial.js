@@ -32,7 +32,8 @@ export default class NetworkTutorial extends Component {
                 </View>
                 <View style={styles.topTutorialContainer}>
                     <Text style={styles.welcomeSubHeader}>
-                        This is your network connection.
+                        This icon indicates if your connection mode is
+                        Automatic, Terrestrial or Satellite.
                     </Text>
                     <View style={styles.dotSider}>
                         <View style={styles.innerWidth}>

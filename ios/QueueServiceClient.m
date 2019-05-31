@@ -96,6 +96,7 @@ RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString
   self.alreadyListening = NO;
   [self.sseCall cancel];
   self.sseCall = nil;
+  [NSThread sleepForTimeInterval:3.0f];
   [self startChatSSEWithSessionId:self.sessionId];
 }
 
