@@ -39,10 +39,9 @@ export default class Cards extends React.Component {
                 <View style={styles.verticalContainer}>
                     <CardImage
                         style={styles.image}
-                        source={{ uri: item.pictureUrl, cache: 'default' }}
+                        source={{ uri: item.pictureUrl }}
                         alternativeSource={{
-                            uri: item.defaultPictureUrl,
-                            cache: 'default'
+                            uri: item.defaultPictureUrl
                         }}
                         resizeMode="contain"
                         placeholder={title}
@@ -142,10 +141,9 @@ export default class Cards extends React.Component {
             <View style={styles.modalCard}>
                 <CardImage
                     style={styles.imageModal}
-                    source={{ uri: item.pictureUrl, cache: 'default' }}
+                    source={{ uri: item.pictureUrl }}
                     alternativeSource={{
-                        uri: item.defaultPictureUrl,
-                        cache: 'default'
+                        uri: item.defaultPictureUrl
                     }}
                     resizeMode="contain"
                     placeholder={null}

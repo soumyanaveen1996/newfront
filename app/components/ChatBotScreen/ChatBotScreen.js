@@ -85,7 +85,7 @@ import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
-import { formStatus } from '../Form2Message/config';
+import { formStatus, formAction } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import {
@@ -1143,6 +1143,7 @@ class ChatBotScreen extends React.Component {
         let lastForm = validFormMessages[validFormMessages.length - 1];
         response = {
             formId: formId,
+            action: formAction.CANCEL,
             fields: _.map(lastForm.getMessage(), field => {
                 res = {
                     id: field.id,
