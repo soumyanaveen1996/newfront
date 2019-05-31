@@ -136,6 +136,7 @@ class NetworkPoller {
         // if (this.alreadySubscribed) {
         //     return;
         // }
+        console.log('Sourav Logging:::: Subscribing to Server Events');
         let user = await Auth.getUser();
         const QueueServiceClient = NativeModules.QueueServiceClient;
         eventEmitter = new NativeEventEmitter(QueueServiceClient);
@@ -254,8 +255,7 @@ class NetworkPoller {
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
-                console.log('---------App in Active State -----------');
-
+                console.log('Sourav Logging:::: App is in Active State Again');
                 RemoteBotInstall.syncronizeBots();
                 setTimeout(() => NetworkHandler.readLambda(), 500);
                 setTimeout(() => this.subscribeToServerEvents(), 2000);

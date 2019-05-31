@@ -139,7 +139,7 @@ const processNetworkQueueRequest = () => {
 
 const debounce = () => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), 10000);
+        setTimeout(() => resolve(), 3000);
     });
 };
 
@@ -186,6 +186,9 @@ const processNetworkQueue = () => {
     Network.isConnected().then(connected => {
         // connected = false;
         if (connected) {
+            console.log(
+                '---------------------Sourav Logging:::: Processing Network Queue------------------'
+            );
             processNetworkQueueRequest();
         }
     });

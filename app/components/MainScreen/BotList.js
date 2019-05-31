@@ -167,6 +167,18 @@ class BotList extends React.Component {
                 elemType: 'recents'
             }));
 
+        console.log(
+            'Sourav Logging:::: Recent Chat Data',
+            JSON.stringify(recentData)
+        );
+
+        const onboardingIndex = recentData.findIndex(
+            data => data.key === 'onboarding-bot'
+        );
+        const head = recentData.slice(0, onboardingIndex);
+        const tail = recentData.slice(onboardingIndex + 1, recentData.length);
+        const newRecentData = [recentData[onboardingIndex], ...head, ...tail];
+
         const AllTimelineData =
             favData.length > 0
                 ? [
@@ -183,7 +195,7 @@ class BotList extends React.Component {
                         headerText: 'Recents',
                         key: 'recents'
                     },
-                    ...recentData
+                    ...newRecentData
                 ]
                 : [
                     { elemType: 'search', key: 'search' },
@@ -194,7 +206,7 @@ class BotList extends React.Component {
                         headerText: 'Recents',
                         key: 'recents'
                     },
-                    ...recentData
+                    ...newRecentData
                 ];
         this.setState({
             data: AllTimelineData

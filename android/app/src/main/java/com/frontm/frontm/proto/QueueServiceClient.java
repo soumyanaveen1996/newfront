@@ -154,6 +154,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                     if (status.getCode() == Status.Code.UNAUTHENTICATED) {
                         sendEvent("logout", null);
                     }
+                    Log.d("Sourav Logging::: Error in Android", "We will handle the error?");
+                    handleError();
                 }
                 //callback.invoke(Arguments.createMap());
             }
