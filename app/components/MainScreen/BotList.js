@@ -167,11 +167,6 @@ class BotList extends React.Component {
                 elemType: 'recents'
             }));
 
-        console.log(
-            'Sourav Logging:::: Recent Chat Data',
-            JSON.stringify(recentData)
-        );
-
         const onboardingIndex = recentData.findIndex(
             data => data.key === 'onboarding-bot'
         );

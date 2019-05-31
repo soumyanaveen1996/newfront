@@ -257,7 +257,7 @@ class NetworkPoller {
             if (nextAppState === 'active') {
                 console.log('Sourav Logging:::: App is in Active State Again');
                 RemoteBotInstall.syncronizeBots();
-                setTimeout(() => NetworkHandler.readLambda(), 500);
+                setTimeout(() => NetworkHandler.readLambda(true), 500);
                 setTimeout(() => this.subscribeToServerEvents(), 2000);
                 setTimeout(() => this.cleanupSubscriptions(), 5000);
                 PushNotification.setApplicationIconBadgeNumber(0);
