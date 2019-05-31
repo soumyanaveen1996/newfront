@@ -26,7 +26,7 @@ import images from '../../config/images';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
-import { formStatus, fieldType } from './config';
+import { formStatus, fieldType, formAction } from './config';
 
 export default class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -44,7 +44,6 @@ export default class Form2 extends React.Component {
                             state.params.botDone();
                         }
                         if (state.params.onBack) {
-                            Actions.pop();
                             state.params.onBack();
                         } else {
                             Actions.pop();
@@ -210,7 +209,8 @@ export default class Form2 extends React.Component {
             disabled: this.props.formStatus === formStatus.COMPLETED
         };
         this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage
+            showConnectionMessage: this.showConnectionMessage,
+            onBack: this.onCloseForm.bind(this)
         });
     }
 
@@ -260,32 +260,33 @@ export default class Form2 extends React.Component {
 
     /////////////////////////////
 
-    getResponse() {
-        try {
-            let response = {
-                formId: this.props.id,
-                fields: _.map(this.answers, (answer, index) => {
-                    const responseValue = answer.getResponse();
-                    if (this.props.formData[index].mandatory) {
-                        if (
-                            !responseValue ||
-                            responseValue === '' ||
-                            responseValue === []
-                        ) {
-                            throw new Error('FORM: Mandatory answer not found');
-                        }
+    getResponse(action) {
+        let completed = true;
+        let response = {
+            formId: this.props.id,
+            action: action,
+            fields: _.map(this.answers, (answer, index) => {
+                const responseValue = answer.getResponse();
+                if (
+                    completed === true &&
+                    this.props.formData[index].mandatory
+                ) {
+                    if (
+                        !responseValue ||
+                        responseValue === '' ||
+                        responseValue === []
+                    ) {
+                        completed = false;
                     }
-                    let field = {
-                        id: answer.id,
-                        value: responseValue
-                    };
-                    return field;
-                })
-            };
-            return response;
-        } catch (e) {
-            throw e;
-        }
+                }
+                let field = {
+                    id: answer.id,
+                    value: responseValue
+                };
+                return field;
+            })
+        };
+        return { reponseData: response, completed: completed };
     }
 
     saveFormData() {
@@ -294,6 +295,22 @@ export default class Form2 extends React.Component {
             return field;
         });
         return data;
+    }
+
+    onCloseForm() {
+        if (!this.state.disabled) {
+            this.props.saveMessage(this.saveFormData());
+        }
+        let response = this.getResponse(formAction.CLOSE);
+        this.props.sendResponse(response.reponseData);
+        Actions.pop();
+    }
+
+    onCancelForm() {
+        let response = this.getResponse(formAction.CANCEL);
+        this.props.sendResponse(response.reponseData);
+        this.props.setCompleted();
+        Actions.pop();
     }
 
     renderTextField(content, key) {
@@ -716,12 +733,7 @@ export default class Form2 extends React.Component {
                     <View style={styles.f2BottomArea}>
                         <TouchableOpacity
                             style={styles.f2CancelButton}
-                            onPress={() => {
-                                if (!this.state.disabled) {
-                                    this.props.saveMessage(this.saveFormData());
-                                }
-                                Actions.pop();
-                            }}
+                            onPress={this.onCancelForm.bind(this)}
                         >
                             <Text style={styles.f2CancelButtonText}>
                                 {this.props.cancel || 'Cancel'}
@@ -731,15 +743,19 @@ export default class Form2 extends React.Component {
                             disabled={this.state.disabled}
                             style={styles.f2DoneButton}
                             onPress={() => {
-                                try {
-                                    let response = this.getResponse();
+                                let response = this.getResponse(
+                                    formAction.CONFIRM
+                                );
+                                if (response.completed) {
                                     this.props.onDone(
                                         this.saveFormData(),
-                                        response
+                                        response.reponseData
                                     );
                                     Actions.pop();
-                                } catch (e) {
-                                    console.log(e);
+                                } else {
+                                    console.log(
+                                        'FORM: you must fill all mandatory fields'
+                                    );
                                 }
                             }}
                         >
