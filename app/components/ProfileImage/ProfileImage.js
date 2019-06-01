@@ -12,11 +12,13 @@ export default class ProfileImage extends React.Component {
         super(props);
         this.state = {
             loaded: false,
-            style: {
-                width: 30,
-                height: 30,
-                borderRadius: 30 / 2
-            }
+            style: this.props.style
+                ? this.props.style
+                : {
+                    width: 30,
+                    height: 30,
+                    borderRadius: 30 / 2
+                }
         };
     }
 

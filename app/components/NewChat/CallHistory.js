@@ -168,7 +168,7 @@ export default class CallHistory extends React.Component {
                             <View
                                 style={[
                                     styles.callDetailsContainer,
-                                    { width: '50%' }
+                                    { width: '55%' }
                                 ]}
                             >
                                 {icon}
@@ -182,8 +182,8 @@ export default class CallHistory extends React.Component {
                                         new Date(item.callTimestamp)
                                     )}
                                 </Text>
-                                <View style={styles.verticalSeparator} />
                             </View>
+                            <View style={styles.verticalSeparator} />
                             <Text style={styles.contactItemEmail}>
                                 {item.callType === Calls.callType.PSTN
                                     ? number
@@ -200,7 +200,7 @@ export default class CallHistory extends React.Component {
                             : this.makeVoipCall.bind(this, id, name)
                     }
                 >
-                    {Icons.greenCallOutline({ size: hp('2%') })}
+                    {Icons.greenCallOutline({ size: 18 })}
                 </TouchableOpacity>
             </View>
         );
