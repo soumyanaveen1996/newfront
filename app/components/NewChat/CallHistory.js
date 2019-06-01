@@ -200,7 +200,7 @@ export default class CallHistory extends React.Component {
                             : this.makeVoipCall.bind(this, id, name)
                     }
                 >
-                    {Icons.greenCallOutline({ size: 18 })}
+                    {Icons.greenCallOutline({ size: 16 })}
                 </TouchableOpacity>
             </View>
         );
