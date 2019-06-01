@@ -75,3 +75,8 @@ export const setCurrentMap = payload => ({
 export const uploadImage = () => ({
     type: Actions.UPLOAD_IMAGE
 });
+
+export const setFirstLogin = payload => ({
+    type: Actions.SET_FIRST_LOGIN,
+    payload
+});

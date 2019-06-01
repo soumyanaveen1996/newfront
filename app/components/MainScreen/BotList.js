@@ -167,13 +167,20 @@ class BotList extends React.Component {
                 elemType: 'recents'
             }));
 
-        const onboardingIndex = recentData.findIndex(
-            data => data.key === 'onboarding-bot'
-        );
-        const head = recentData.slice(0, onboardingIndex);
-        const tail = recentData.slice(onboardingIndex + 1, recentData.length);
-        const newRecentData = [recentData[onboardingIndex], ...head, ...tail];
-
+        let newRecentData = [];
+        if (this.props.user.firstLogin) {
+            const onboardingIndex = recentData.findIndex(
+                data => data.key === 'onboarding-bot'
+            );
+            const head = recentData.slice(0, onboardingIndex);
+            const tail = recentData.slice(
+                onboardingIndex + 1,
+                recentData.length
+            );
+            newRecentData = [recentData[onboardingIndex], ...head, ...tail];
+        } else {
+            newRecentData = recentData;
+        }
         const AllTimelineData =
             favData.length > 0
                 ? [
