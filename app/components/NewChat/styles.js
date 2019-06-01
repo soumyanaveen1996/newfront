@@ -206,6 +206,14 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(47,199,111,1)'
     },
+    recallButton: {
+        height: hp('3.3%'),
+        width: hp('3.3%'),
+        borderRadius: hp('3.3%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(47,199,111,1)'
+    },
     callButtonDisabled: {
         height: hp('4%'),
         width: hp('4%'),

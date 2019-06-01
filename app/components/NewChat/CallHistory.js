@@ -64,6 +64,10 @@ import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import { formattedDate } from '../../lib/utils';
 import eventEmitter from '../../lib/events/EventEmitter';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -189,14 +193,14 @@ export default class CallHistory extends React.Component {
                     </View>
                 </View>
                 <TouchableOpacity
-                    style={styles.callButton}
+                    style={styles.recallButton}
                     onPress={
                         item.callType === Calls.callType.PSTN
                             ? this.makePstnCall.bind(this, number)
                             : this.makeVoipCall.bind(this, id, name)
                     }
                 >
-                    {Icons.greenCallOutline()}
+                    {Icons.greenCallOutline({ size: hp('2%') })}
                 </TouchableOpacity>
             </View>
         );
