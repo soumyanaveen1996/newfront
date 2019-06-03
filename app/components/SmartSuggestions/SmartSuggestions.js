@@ -14,8 +14,8 @@ import { timeout } from 'rxjs/operator/timeout';
 export default class SmartSuggestions extends React.Component {
     constructor(props) {
         super(props);
-        // UIManager.setLayoutAnimationEnabledExperimental &&
-        // UIManager.setLayoutAnimationEnabledExperimental(true);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.state = {
             suggestions: [] //array
         };
