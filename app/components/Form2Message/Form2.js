@@ -286,7 +286,7 @@ export default class Form2 extends React.Component {
                 return field;
             })
         };
-        return { reponseData: response, completed: completed };
+        return { responseData: response, completed: completed };
     }
 
     saveFormData() {
@@ -302,13 +302,13 @@ export default class Form2 extends React.Component {
             this.props.saveMessage(this.saveFormData());
         }
         let response = this.getResponse(formAction.CLOSE);
-        this.props.sendResponse(response.reponseData);
+        this.props.sendResponse(response.responseData);
         Actions.pop();
     }
 
     onCancelForm() {
         let response = this.getResponse(formAction.CANCEL);
-        this.props.sendResponse(response.reponseData);
+        this.props.sendResponse(response.responseData);
         this.props.setCompleted();
         Actions.pop();
     }
@@ -749,7 +749,7 @@ export default class Form2 extends React.Component {
                                 if (response.completed) {
                                     this.props.onDone(
                                         this.saveFormData(),
-                                        response.reponseData
+                                        response.responseData
                                     );
                                     Actions.pop();
                                 } else {

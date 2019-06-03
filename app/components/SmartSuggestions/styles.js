@@ -1,11 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
-export const FONT_COLOR = GlobalColors.black;
-export const FONT_SIZE = 15;
-
 export default StyleSheet.create({
     suggestionButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
         borderColor: GlobalColors.accent,
         borderWidth: 1,
         borderRadius: 8,
@@ -14,7 +13,8 @@ export default StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         marginBottom: 15,
-        marginTop: 20
+        marginTop: 20,
+        marginHorizontal: 15
     },
     smartSuggestionsIOS: {
         // paddingLeft: 64
@@ -27,5 +27,9 @@ export default StyleSheet.create({
     },
     emptyFooter: {
         // width: 64
+    },
+    suggestionText: {
+        fontSize: 15,
+        color: GlobalColors.black
     }
 });
