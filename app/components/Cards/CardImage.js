@@ -5,8 +5,8 @@ export default class CardImage extends React.Component {
         super(props);
         let showPlaceholder = false;
         let showAlternative = false;
-        if (!this.props.source) {
-            if (this.props.alternativeSource) {
+        if (!this.props.source.uri) {
+            if (this.props.alternativeSource.uri) {
                 showAlternative = true;
             } else {
                 showPlaceholder = true;
