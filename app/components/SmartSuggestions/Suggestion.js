@@ -1,7 +1,11 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import styles, { FONT_COLOR, FONT_SIZE } from './styles';
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    TouchableWithoutFeedback
+} from 'react-native';
+import styles from './styles';
 
 export default class Suggestion extends React.Component {
     constructor(props) {
@@ -15,13 +19,11 @@ export default class Suggestion extends React.Component {
 
     render() {
         return (
-            <Button
-                title={this.reply}
-                color={FONT_COLOR}
-                fontSize={FONT_SIZE}
-                buttonStyle={styles.suggestionButton}
-                onPress={this.onReplySelected}
-            />
+            <TouchableWithoutFeedback onPress={this.onReplySelected}>
+                <View style={styles.suggestionButton}>
+                    <Text style={styles.suggestionText}>{this.reply}</Text>
+                </View>
+            </TouchableWithoutFeedback>
         );
     }
 }

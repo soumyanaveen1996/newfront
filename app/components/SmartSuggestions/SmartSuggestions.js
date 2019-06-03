@@ -35,9 +35,11 @@ export default class SmartSuggestions extends React.Component {
 
     update = suggestions => {
         return new Promise((resolve, reject) => {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
+            if (Platform.OS === 'ios') {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+            }
             this.setState({ suggestions: [] }, () => {
                 setTimeout(() => {
                     this.setState({ suggestions: suggestions }, () => {
