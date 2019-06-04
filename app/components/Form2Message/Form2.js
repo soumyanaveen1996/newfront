@@ -13,7 +13,8 @@ import {
     ScrollView,
     Platform,
     Image,
-    Alert
+    Alert,
+    KeyboardAvoidingView
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -726,48 +727,50 @@ export default class Form2 extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.f2Container}>
-                <ScrollView>
-                    <Text style={styles.f2Title}>{this.props.title}</Text>
-                    {this.renderFields()}
-                    <View style={styles.f2BottomArea}>
-                        <TouchableOpacity
-                            style={styles.f2CancelButton}
-                            onPress={this.onCancelForm.bind(this)}
-                        >
-                            <Text style={styles.f2CancelButtonText}>
-                                {this.props.cancel || 'Cancel'}
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            disabled={this.state.disabled}
-                            style={styles.f2DoneButton}
-                            onPress={() => {
-                                let response = this.getResponse(
-                                    formAction.CONFIRM
-                                );
-                                if (response.completed) {
-                                    this.props.onDone(
-                                        this.saveFormData(),
-                                        response.responseData
+            <KeyboardAvoidingView behavior="padding">
+                <SafeAreaView style={styles.f2Container}>
+                    <ScrollView>
+                        <Text style={styles.f2Title}>{this.props.title}</Text>
+                        {this.renderFields()}
+                        <View style={styles.f2BottomArea}>
+                            <TouchableOpacity
+                                style={styles.f2CancelButton}
+                                onPress={this.onCancelForm.bind(this)}
+                            >
+                                <Text style={styles.f2CancelButtonText}>
+                                    {this.props.cancel || 'Cancel'}
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                disabled={this.state.disabled}
+                                style={styles.f2DoneButton}
+                                onPress={() => {
+                                    let response = this.getResponse(
+                                        formAction.CONFIRM
                                     );
-                                    Actions.pop();
-                                } else {
-                                    console.log(
-                                        'FORM: you must fill all mandatory fields'
-                                    );
-                                }
-                            }}
-                        >
-                            <Text style={styles.f2DoneButtonText}>
-                                {this.props.confirm || 'Done'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    {this.renderDateModalIOS()}
-                    {this.renderDropdownModal()}
-                </ScrollView>
-            </SafeAreaView>
+                                    if (response.completed) {
+                                        this.props.onDone(
+                                            this.saveFormData(),
+                                            response.responseData
+                                        );
+                                        Actions.pop();
+                                    } else {
+                                        console.log(
+                                            'FORM: you must fill all mandatory fields'
+                                        );
+                                    }
+                                }}
+                            >
+                                <Text style={styles.f2DoneButtonText}>
+                                    {this.props.confirm || 'Done'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {this.renderDateModalIOS()}
+                        {this.renderDropdownModal()}
+                    </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }
