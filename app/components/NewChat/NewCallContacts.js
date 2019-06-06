@@ -378,6 +378,9 @@ class NewCallContacts extends React.Component {
                         })
                     };
                 });
+                filteredContactsData = filteredContactsData.filter(section => {
+                    return section.data.length > 0;
+                });
             }
             return (
                 <View style={styles.addressBookContainer}>
@@ -389,7 +392,7 @@ class NewCallContacts extends React.Component {
                         ref={sectionList => {
                             this.contactsList = sectionList;
                         }}
-                        style={styles.addressBook}
+                        style={[styles.addressBook, { marginTop: 65 }]}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />

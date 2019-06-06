@@ -16,7 +16,8 @@ const initialState = {
         network: 'full',
         currentConversationId: '',
         upload: 0,
-        currentMap: null
+        currentMap: null,
+        firstLogin: false
     },
     botState: {
         id: null

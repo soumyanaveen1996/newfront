@@ -13,6 +13,7 @@ import {
     completeChannelInstall,
     completeConversationsLoad
 } from '../../redux/actions/UserActions';
+import Calls from '../calls';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 export const synchronizeUserData = async () => {
@@ -26,6 +27,7 @@ export const synchronizeUserData = async () => {
         }
 
         await Contact.refreshContacts();
+        await Calls.fetchCallHistory();
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
         }, 500);

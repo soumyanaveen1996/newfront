@@ -302,7 +302,7 @@ class MapView extends React.Component {
                         title: marker.title,
                         description: marker.description,
                         draggable: marker.draggable,
-                        rotation: marker.coordinate.direction - 90
+                        rotation: marker.coordinate.direction
                     },
                     geometry: {
                         type: 'Point',

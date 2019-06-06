@@ -81,11 +81,12 @@ import { WebCards } from '../WebCards';
 import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
+import { setFirstLogin } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
-import { formStatus } from '../Form2Message/config';
+import { formStatus, formAction } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import {
@@ -176,8 +177,8 @@ class ChatBotScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        // UIManager.setLayoutAnimationEnabledExperimental &&
-        //     UIManager.setLayoutAnimationEnabledExperimental(true);
+        UIManager.setLayoutAnimationEnabledExperimental &&
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         this.bot = props.bot;
         this.loadedBot = undefined;
         this.botLoaded = false;
@@ -237,6 +238,7 @@ class ChatBotScreen extends React.Component {
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         Store.dispatch(setLoadedBot(this.bot.botId));
+        Store.dispatch(setFirstLogin(false));
         this.mounted = true;
         let self = this;
 
@@ -647,7 +649,11 @@ class ChatBotScreen extends React.Component {
     };
 
     keyboardDidShow = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
         // if (Platform.OS === 'android' && this.slider) {
         //     this.slider.close(undefined, true);
         //     this.setState({ sliderClosed: true, showOptions: false });
@@ -1143,6 +1149,7 @@ class ChatBotScreen extends React.Component {
         let lastForm = validFormMessages[validFormMessages.length - 1];
         response = {
             formId: formId,
+            action: formAction.CANCEL,
             fields: _.map(lastForm.getMessage(), field => {
                 res = {
                     id: field.id,
@@ -1216,9 +1223,11 @@ class ChatBotScreen extends React.Component {
         return new Promise(async resolve => {
             this.processingMessageQueue = true;
             while (this.messageQueue.length > 0) {
-                LayoutAnimation.configureNext(
-                    LayoutAnimation.Presets.easeInEaseOut
-                );
+                if (Platform.OS === 'ios') {
+                    LayoutAnimation.configureNext(
+                        LayoutAnimation.Presets.easeInEaseOut
+                    );
+                }
                 await this.appendMessageToChat(this.messageQueue.shift());
             }
             this.processingMessageQueue = false;
@@ -1941,9 +1950,11 @@ class ChatBotScreen extends React.Component {
 
     onPlusButtonPressed() {
         if (this.state.showOptions === false) {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
+            if (Platform.OS === 'ios') {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+            }
             this.setState(
                 {
                     showOptions: true,
@@ -1952,9 +1963,11 @@ class ChatBotScreen extends React.Component {
                 () => Keyboard.dismiss()
             );
         } else {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
+            if (Platform.OS === 'ios') {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+            }
             this.setState({
                 showOptions: false,
                 showSlider: this.sliderPreviousState
@@ -1974,7 +1987,11 @@ class ChatBotScreen extends React.Component {
         //         showSlider: false
         //     });
         // } else {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if (Platform.OS === 'ios') {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
+        }
         this.setState({
             showOptions: false,
             showSlider: this.sliderPreviousState
@@ -2250,9 +2267,11 @@ class ChatBotScreen extends React.Component {
                     onPlusButtonPressed={this.onPlusButtonPressed.bind(this)}
                     showMoreOption={this.state.showOptions}
                     closeShowOptions={() => {
-                        LayoutAnimation.configureNext(
-                            LayoutAnimation.Presets.easeInEaseOut
-                        );
+                        if (Platform.OS === 'ios') {
+                            LayoutAnimation.configureNext(
+                                LayoutAnimation.Presets.easeInEaseOut
+                            );
+                        }
                         this.setState({ showOptions: false });
                     }}
                 />

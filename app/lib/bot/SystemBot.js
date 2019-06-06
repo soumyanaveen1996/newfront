@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.8.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.9.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,21 +46,21 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.8.0'
+        version: '1.9.0'
     },
 
     'onboarding-bot': {
         allowResetConversation: 'false',
         botId: 'onboarding-bot',
         botName: 'FrontM Assistant',
-        botUrl: 'botfarm/frontmai/onboardingBot/2.2.3/onboardingBot.js',
+        botUrl: 'botfarm/frontmai/onboardingBot/2.2.4/onboardingBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
                 remote: 'true',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js',
-                version: '1.3.0'
+                    'botfarm/rc/frontmai/agentGuardService/1.4.0/agentGuardService.js',
+                version: '1.4.0'
             },
             authContext: {
                 remote: 'true',
@@ -79,7 +79,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'onboarding-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '2.2.3'
+        version: '2.2.4'
     },
     'contacts-bot': {
         allowResetConversation: 'false',
@@ -175,9 +175,9 @@ export const SYSTEM_BOT_MANIFEST = {
         dependencies: {
             agentGuardService: {
                 remote: true,
-                version: '1.3.0',
+                version: '1.4.0',
                 url:
-                    'botfarm/rc/frontmai/agentGuardService/1.3.0/agentGuardService.js'
+                    'botfarm/rc/frontmai/agentGuardService/1.4.0/agentGuardService.js'
             },
             authContext: {
                 remote: true,

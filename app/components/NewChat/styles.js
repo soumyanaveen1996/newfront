@@ -38,7 +38,6 @@ const stylesheet = StyleSheet.create({
         flex: 1
     },
     addressBook: {
-        marginTop: 65,
         flex: 1
     },
     sectionHeaderContainer: {
@@ -58,7 +57,7 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 55,
+        height: 62,
         width: '100%',
         paddingHorizontal: 10
     },
@@ -133,9 +132,9 @@ const stylesheet = StyleSheet.create({
         marginRight: 5
     },
     avatarImage: {
-        height: 26,
-        width: 26,
-        borderRadius: 13,
+        height: 35,
+        width: 35,
+        borderRadius: 35 / 2,
         marginLeft: wp('2%'),
         marginRight: wp('3%')
     },
@@ -203,6 +202,14 @@ const stylesheet = StyleSheet.create({
         height: hp('4%'),
         width: hp('4%'),
         borderRadius: hp('4%') / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(47,199,111,1)'
+    },
+    recallButton: {
+        height: 30,
+        width: 30,
+        borderRadius: 30 / 2,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(47,199,111,1)'
@@ -293,9 +300,9 @@ const stylesheet = StyleSheet.create({
         width: '100%'
     },
     verticalSeparator: {
-        height: '100%',
-        width: 2,
-        marginHorizontal: 10,
+        height: '75%',
+        width: 1,
+        marginHorizontal: 5,
         backgroundColor: 'rgb(180, 180, 180)'
     },
     filterMenu: {

@@ -36,6 +36,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import Calls from '../../lib/calls';
 
 const R = require('ramda');
 
@@ -144,6 +145,10 @@ export default class Dialler extends React.Component {
                 this.setState({ filler });
             }
         );
+    }
+
+    componentWillUnmount() {
+        Calls.fetchCallHistory();
     }
 
     componentDidUpdate(prevProps, prevState) {

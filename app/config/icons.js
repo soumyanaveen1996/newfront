@@ -247,8 +247,8 @@ export const Icons = {
     ),
     greenCall: icon('ios-call', 'ionicon', 50, Colors.white, 'green', '500'),
     greenCallOutline: icon(
-        'ios-call-outline',
-        'ionicon',
+        'phone',
+        'simple-line-icon',
         hp('4%'),
         Colors.white,
         'green',

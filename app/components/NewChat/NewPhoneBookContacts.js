@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     Image,
     PermissionsAndroid,
-    Alert
+    Alert,
+    InteractionManager
 } from 'react-native';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import styles from './styles';
@@ -86,27 +87,30 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(granted => {
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        this.gettingAllContactData();
-                    } else {
-                        this.refresh([]);
+        InteractionManager.runAfterInteractions(() => {
+            if (Platform.OS === 'android') {
+                PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                    {
+                        title: 'Contacts',
+                        message:
+                            'Grant access for contacts to display in FrontM'
                     }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            this.gettingAllContactData();
-        }
+                )
+                    .then(granted => {
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                            this.gettingAllContactData();
+                        } else {
+                            this.refresh([]);
+                        }
+                    })
+                    .catch(err => {
+                        console.log('PermissionsAndroid', err);
+                    });
+            } else {
+                this.gettingAllContactData();
+            }
+        });
     }
 
     componentDidUpdate(prevProps) {
