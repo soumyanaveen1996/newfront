@@ -81,6 +81,7 @@ import { WebCards } from '../WebCards';
 import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
+import { setFirstLogin } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
@@ -237,6 +238,7 @@ class ChatBotScreen extends React.Component {
     async componentDidMount() {
         // TODO: Remove mounted instance variable when we add some state mangement to our app.
         Store.dispatch(setLoadedBot(this.bot.botId));
+        Store.dispatch(setFirstLogin(false));
         this.mounted = true;
         let self = this;
 

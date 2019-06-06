@@ -4,6 +4,8 @@ import { ActionTypes as Actions } from '../actions/ActionTypes';
 export const UserReducer = (state = initialState.user, action) => {
     let newState;
     switch (action.type) {
+    case Actions.SET_FIRST_LOGIN:
+        return { ...state, ...{ firstLogin: action.payload } };
     case Actions.SET_APP_MODE:
         return { ...state, ...{ satelliteMode: action.payload } };
     case Actions.COMPLETE_BOT_INSTALL:

@@ -164,6 +164,7 @@ const queueMessage = ({ options, resolve, reject }) => {
     console.log(
         'Sourav Logging:::: Errro Sending the message, should we Quque it????'
     );
+    NetworkHandler.readLambda(true);
     const { params, key = null } = options;
     const deferredKey = key ? key : SHA1(JSON.stringify(params)).toString();
     return resolve(futureRequest(deferredKey, new NetworkRequest(options)));

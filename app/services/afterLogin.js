@@ -6,11 +6,14 @@ import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
 import { Platform } from 'react-native';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
+import Store from '../redux/store/configureStore';
+import { setFirstLogin } from '../redux/actions/UserActions';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (isUserLoggedIn) {
+            // Store.dispatch(setFirstLogin(true));
             Mapbox.setAccessToken(
                 'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
             );

@@ -32,6 +32,8 @@ import Config, { overrideConsole } from '../../config/config';
 import { headerConfig } from './config';
 import CenterComponent from './header/CenterComponent';
 import DefaultPreference from 'react-native-default-preference';
+import Store from '../../redux/store/configureStore';
+import { setFirstLogin } from '../../redux/actions/UserActions';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -129,6 +131,7 @@ export default class LoginScreen extends React.Component {
             DefaultPreference.set('URL', ContactsURL);
             DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
         });
+        Store.dispatch(setFirstLogin(true));
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
         this.setState({

@@ -123,8 +123,13 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getAllQueueMessages(String sessionId)
+    public void getAllQueueMessages(String sessionId, Boolean force)
     {
+        if(force == true){
+            Log.d("Sourav Logging:::", "Forcing a Reconnect");
+            handleError();
+
+        }
         Log.d("GRPC:::getAllQMess", sessionId);
         QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
@@ -154,6 +159,8 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                     if (status.getCode() == Status.Code.UNAUTHENTICATED) {
                         sendEvent("logout", null);
                     }
+                    Log.d("Sourav Logging::: Error in Android", "We will handle the error?");
+                    handleError();
                 }
                 //callback.invoke(Arguments.createMap());
             }

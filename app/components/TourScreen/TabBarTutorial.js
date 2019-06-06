@@ -40,8 +40,8 @@ export default class TabBarTutorial extends Component {
                     <View style={{ height: '100%' }}>
                         <View style={styles.topTutorialContainer}>
                             <Text style={styles.welcomeSubHeader}>
-                                Send a direct message, start a group chat,
-                                install new bots, or configure your account
+                                Manage contacts, create or join group chat
+                                channels and install conversational assistants.
                             </Text>
                             <View style={styles.dotSider}>
                                 <View style={styles.innerWidth}>

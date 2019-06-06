@@ -60,7 +60,8 @@ import { connect } from 'react-redux';
 import {
     logout,
     refreshTimeline,
-    setCurrentScene
+    setCurrentScene,
+    setFirstLogin
 } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
@@ -277,6 +278,7 @@ class MainScreen extends React.Component {
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
         );
+        console.log('Sourav Logging:::: Is Login', this.props.login);
     }
 
     shouldComponentUpdate(nextProps) {

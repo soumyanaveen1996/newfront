@@ -14,7 +14,7 @@ import {} from '../../redux/actions/UserActions';
 
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
@@ -36,10 +36,10 @@ const poll = () => {
     });
 };
 
-const readLambda = () => {
+const readLambda = (force = false) => {
     Auth.getUser().then(authUser => {
         processNetworkQueue();
-        readRemoteLambdaQueue(authUser);
+        readRemoteLambdaQueue(authUser, force);
     });
 };
 
@@ -62,7 +62,7 @@ const handleLambdaResponse = (res, user) => {
 
 let currentlyReading = false;
 
-const readRemoteLambdaQueue = user => {
+const readRemoteLambdaQueue = (user, force = false) => {
     // we will remove Subscription when the APp goes to background
 
     // console.log('Sourav Logging:::: currently Reading', currentlyReading);
@@ -101,7 +101,11 @@ const readRemoteLambdaQueue = user => {
         })
     );
 
-    QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
+    if (Platform.OS === 'android') {
+        QueueServiceClient.getAllQueueMessages(user.creds.sessionId, force);
+    } else {
+        QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
+    }
 
     /*
     readQueue(user)
@@ -139,7 +143,7 @@ const processNetworkQueueRequest = () => {
 
 const debounce = () => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), 10000);
+        setTimeout(() => resolve(), 3000);
     });
 };
 
@@ -186,6 +190,9 @@ const processNetworkQueue = () => {
     Network.isConnected().then(connected => {
         // connected = false;
         if (connected) {
+            console.log(
+                '---------------------Sourav Logging:::: Processing Network Queue------------------'
+            );
             processNetworkQueueRequest();
         }
     });

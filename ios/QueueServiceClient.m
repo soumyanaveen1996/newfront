@@ -96,7 +96,17 @@ RCT_REMAP_METHOD(getAllQueueMessages, getAllQueueMessagesWithSessionId:(NSString
   self.alreadyListening = NO;
   [self.sseCall cancel];
   self.sseCall = nil;
-  [self startChatSSEWithSessionId:self.sessionId];
+  
+  double delayInSeconds = 5.0;
+  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+  dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    
+    // Your code here
+    [self startChatSSEWithSessionId:self.sessionId];
+
+    
+  });
+  
 }
 
 RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) {

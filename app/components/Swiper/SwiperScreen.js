@@ -28,13 +28,13 @@ export default class SwiperScreen extends Component {
                 {
                     header: 'Keep conversations going no matter where you are',
                     description:
-                        'The Safest and Lowest-data-consuming smart messenger, the cheapest voice calling and the most powerful Assistant Marketplace app out there.',
+                        'The safest and lowest data consuming smart messenger, voice calling and engaging chatbot assistants.',
                     imageSource: images.preview_slider_1
                 },
                 {
                     header: 'Say Goodbye to isolation',
                     description:
-                        'Easily collaborate with your friends, colleagues and companies while you’re at sea',
+                        "Tracking, situational awareness and easy collaboration. Keep in touch with your friends, colleagues and companies while you're at sea.",
                     imageSource: images.preview_slider_2
                 },
                 {

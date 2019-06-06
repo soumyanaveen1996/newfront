@@ -44,9 +44,7 @@ export default class WelcomeScreen extends Component {
                         style={styles.skipButtonContainer}
                         onPress={this.props.action}
                     >
-                        <Text style={styles.skipButtonText}>
-                            Skip this intro
-                        </Text>
+                        <Text style={styles.skipButtonText}>Skip</Text>
                     </TouchableOpacity>
                 </View>
             </View>
