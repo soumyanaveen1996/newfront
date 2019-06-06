@@ -166,7 +166,7 @@ const selectChannels = () =>
                 [],
                 function success(tx, res) {
                     res = Utils.addArrayToSqlResults(res);
-                    console.log('in the success ====== ', res);
+                    // console.log('in the success ====== ', res);
                     let dbResults = res.rows
                         ? res.rows._array
                             ? res.rows._array
@@ -178,6 +178,12 @@ const selectChannels = () =>
                         let formattedResults = dbResults.map(dbResult => {
                             return channelDataFromDbResult(dbResult);
                         });
+
+                        // console.log(
+                        //     'all formated data ===========',
+                        //     formattedResults
+                        // );
+
                         return resolve(formattedResults);
                     }
                 },

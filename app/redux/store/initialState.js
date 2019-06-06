@@ -17,6 +17,7 @@ const initialState = {
         currentConversationId: '',
         upload: 0,
         currentMap: null,
+        currentForm: null,
         firstLogin: false
     },
     botState: {

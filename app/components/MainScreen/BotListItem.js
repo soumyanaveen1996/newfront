@@ -32,7 +32,7 @@ export default class BotListItem extends React.Component {
         const user = await Auth.getUser();
         const userName = user.info.userName;
 
-        console.log('Sourav Logging:::: User is', user);
+        // console.log('Sourav Logging:::: User is', user);
 
         if (this.props.chatData && this.props.chatData.lastMessage) {
             let message = this.props.chatData.lastMessage;

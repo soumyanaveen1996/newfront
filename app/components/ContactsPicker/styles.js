@@ -755,7 +755,7 @@ const stylesheet = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: 30
+        paddingHorizontal: 15
     },
     longTextStyle: {
         width: '70%',
@@ -781,7 +781,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center'
     },
     cancel_btn: {
-        width: 150,
+        width: 120,
         height: 30,
         backgroundColor: '#ffffff',
         borderColor: 'rgba(0,167,214,1)',
@@ -791,7 +791,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center'
     },
     save_btn: {
-        width: 150,
+        width: 120,
         height: 30,
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 6,
