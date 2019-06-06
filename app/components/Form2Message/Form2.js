@@ -13,7 +13,9 @@ import {
     ScrollView,
     Platform,
     Image,
-    Alert
+    Alert,
+    KeyboardAvoidingView,
+    Keyboard
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -27,8 +29,10 @@ import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
+import { connect } from 'react-redux';
+import { setCurrentForm } from '../../redux/actions/UserActions';
 
-export default class Form2 extends React.Component {
+class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
@@ -97,6 +101,26 @@ export default class Form2 extends React.Component {
 
     constructor(props) {
         super(props);
+        this.answers = [];
+        this.initializeAnswers();
+        this.state = {
+            answers: this.answers,
+            dateModalVisible: false,
+            dateModalValue: new Date(),
+            dropdownModalVisible: false,
+            dropdownModalValue: null,
+            dropdownModalOptions: [],
+            dropdownModalTitle: '',
+            disabled: this.props.formStatus === formStatus.COMPLETED,
+            showInfoOfIndex: null
+        };
+        this.props.navigation.setParams({
+            showConnectionMessage: this.showConnectionMessage,
+            onBack: this.onCloseForm.bind(this)
+        });
+    }
+
+    initializeAnswers() {
         this.answers = []; //used to store data to render the UI. This is not what the form will send to the bot
         _.map(this.props.formData, (fieldData, index) => {
             let answer = {
@@ -194,23 +218,16 @@ export default class Form2 extends React.Component {
                     return answer.value;
                 };
                 break;
+            case fieldType.lookup:
+                answer.value = fieldData.value || '';
+                answer.search = '';
+                answer.getResponse = () => {
+                    return answer.value;
+                };
+                break;
             default:
             }
             this.answers.push(answer);
-        });
-        this.state = {
-            answers: this.answers,
-            dateModalVisible: false,
-            dateModalValue: new Date(),
-            dropdownModalVisible: false,
-            dropdownModalValue: null,
-            dropdownModalOptions: [],
-            dropdownModalTitle: '',
-            disabled: this.props.formStatus === formStatus.COMPLETED
-        };
-        this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage,
-            onBack: this.onCloseForm.bind(this)
         });
     }
 
@@ -220,10 +237,17 @@ export default class Form2 extends React.Component {
                 disabled: this.props.formStatus === formStatus.COMPLETED
             });
         }
+        if (this.props.change) {
+            this.updateForm();
+        }
     }
 
     componentDidMount() {
         this.checkPollingStrategy();
+    }
+
+    componentWillUnmount() {
+        setCurrentForm(null);
     }
 
     showConnectionMessage = connectionType => {
@@ -313,6 +337,57 @@ export default class Form2 extends React.Component {
         Actions.pop();
     }
 
+    onMoveAction(fieldId, fieldValue) {
+        const response = {
+            formId: this.props.id,
+            action: formAction.MOVE,
+            currentField: fieldId,
+            currentFieldValue: fieldValue
+        };
+        this.props.sendResponse(response);
+    }
+
+    onSearchAction(fieldId, fieldValue) {
+        const response = {
+            formId: this.props.id,
+            action: formAction.SEARCH,
+            currentField: fieldId,
+            currentFieldValue: fieldValue
+        };
+        this.props.sendResponse(response);
+    }
+
+    updateForm() {
+        let oldFormData = this.saveFormData();
+        let newFormData = _.differenceWith(
+            oldFormData,
+            this.props.change.remove,
+            (field, removeField) => {
+                return field.id === removeField;
+            }
+        );
+        this.props.change.fields.forEach(newField => {
+            const key = newFormData.findIndex(field => {
+                return field.id === newField.id;
+            });
+            if (key >= 0) {
+                newFormData[key] = newField;
+            } else {
+                newFormData.push(newField);
+            }
+        });
+        this.props.setCurrentForm({
+            formData: newFormData,
+            formMessage: this.props.formMessage,
+            currentResults: null,
+            change: null
+        });
+        this.initializeAnswers();
+        this.setState({ answers: this.answers });
+    }
+
+    ////////////FIELDS RENDERER/////////////
+
     renderTextField(content, key) {
         return (
             <TextInput
@@ -320,10 +395,22 @@ export default class Form2 extends React.Component {
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
                 }}
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
+                onSubmitEditing={e => {
+                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
         );
     }
@@ -334,11 +421,23 @@ export default class Form2 extends React.Component {
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
                 }}
                 placeholderTextColor={GlobalColors.disabledGray}
                 keyboardType="numeric"
                 value={this.state.answers[key].value}
+                onSubmitEditing={e => {
+                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
         );
     }
@@ -351,10 +450,22 @@ export default class Form2 extends React.Component {
                 style={styles.textArea}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
                 }}
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
+                onSubmitEditing={e => {
+                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
         );
     }
@@ -369,7 +480,14 @@ export default class Form2 extends React.Component {
                         if (!(this.state.disabled || content.readOnly)) {
                             this.answers[key].value[index] = !this.answers[key]
                                 .value[index];
-                            this.setState({ answers: this.answers });
+                            this.setState({
+                                answers: this.answers,
+                                showInfoOfIndex: null
+                            });
+                            this.onMoveAction(
+                                this.answers[key].id,
+                                this.answers[key].getResponse()
+                            );
                         }
                     }}
                     checked={this.state.answers[key].value[index]}
@@ -395,7 +513,11 @@ export default class Form2 extends React.Component {
                     onIconPress={() => {
                         if (!(this.state.disabled || content.readOnly)) {
                             this.answers[key].value = index;
-                            this.setState({ answers: this.answers });
+                            this.setState({
+                                answers: this.answers,
+                                showInfoOfIndex: null
+                            });
+                            this.onMoveAction(this.answers[key].id, option);
                         }
                     }}
                     checked={this.state.answers[key].value === index}
@@ -422,7 +544,8 @@ export default class Form2 extends React.Component {
                         dropdownModalOptions: content.options,
                         dropdownModalValue: this.answers[key].value, //index
                         dropdownModalVisible: true,
-                        dropdownModalTitle: this.props.formData[key].title
+                        dropdownModalTitle: this.props.formData[key].title,
+                        showInfoOfIndex: null
                     });
                 }}
                 style={styles.textField}
@@ -439,7 +562,8 @@ export default class Form2 extends React.Component {
                 isVisible={this.state.dropdownModalVisible}
                 onBackdropPress={() => {
                     this.setState({
-                        dropdownModalVisible: false
+                        dropdownModalVisible: false,
+                        showInfoOfIndex: null
                     });
                 }}
                 style={styles.dropdownModal}
@@ -458,7 +582,8 @@ export default class Form2 extends React.Component {
                                     title={item}
                                     onIconPress={() => {
                                         this.setState({
-                                            dropdownModalValue: index
+                                            dropdownModalValue: index,
+                                            showInfoOfIndex: null
                                         });
                                     }}
                                     checked={
@@ -483,8 +608,15 @@ export default class Form2 extends React.Component {
                             ].value = this.state.dropdownModalValue;
                             this.setState({
                                 dropdownModalVisible: false,
-                                answers: this.answers
+                                answers: this.answers,
+                                showInfoOfIndex: null
                             });
+                            this.onMoveAction(
+                                this.answers[this.currentDropdownModalKey].id,
+                                this.answers[
+                                    this.currentDropdownModalKey
+                                ].getResponse()
+                            );
                         }}
                     >
                         <Text style={styles.buttonTextContinue}>Done</Text>
@@ -500,7 +632,11 @@ export default class Form2 extends React.Component {
                 disabled={this.state.disabled || content.readOnly}
                 onValueChange={value => {
                     this.answers[key].value = value;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
+                    this.onMoveAction(this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
             />
@@ -515,7 +651,11 @@ export default class Form2 extends React.Component {
                 minimumValue={0}
                 onValueChange={value => {
                     this.answers[key].value = value;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
+                    this.onMoveAction(this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
                 minimumTrackTintColor={GlobalColors.sideButtons}
@@ -545,7 +685,14 @@ export default class Form2 extends React.Component {
                                         date.month,
                                         date.day
                                     );
-                                    this.setState({ answers: this.answers });
+                                    this.setState({
+                                        answers: this.answers,
+                                        showInfoOfIndex: null
+                                    });
+                                    this.onMoveAction(
+                                        this.answers[key].id,
+                                        this.answers[key].getResponse()
+                                    );
                                 }
                             })
                             .then(() => {
@@ -555,7 +702,8 @@ export default class Form2 extends React.Component {
                         this.currentDateModalKey = key;
                         this.setState({
                             dateModalValue: this.answers[key].value,
-                            dateModalVisible: true
+                            dateModalVisible: true,
+                            showInfoOfIndex: null
                         });
                     }
                 }}
@@ -579,7 +727,8 @@ export default class Form2 extends React.Component {
                 isVisible={this.state.dateModalVisible}
                 onBackdropPress={() => {
                     this.setState({
-                        dateModalVisible: false
+                        dateModalVisible: false,
+                        showInfoOfIndex: null
                     });
                 }}
                 style={styles.dateModalIOS}
@@ -588,7 +737,10 @@ export default class Form2 extends React.Component {
                 <View style={styles.datePickerIOS}>
                     <DatePickerIOS
                         onDateChange={date => {
-                            this.setState({ dateModalValue: date });
+                            this.setState({
+                                dateModalValue: date,
+                                showInfoOfIndex: null
+                            });
                         }}
                         date={this.state.dateModalValue}
                         mode="date"
@@ -602,8 +754,15 @@ export default class Form2 extends React.Component {
                                 ].value = this.state.dateModalValue;
                                 this.setState({
                                     dateModalVisible: false,
-                                    answers: this.answers
+                                    answers: this.answers,
+                                    showInfoOfIndex: null
                                 });
+                                this.onMoveAction(
+                                    this.answers[this.currentDateModalKey].id,
+                                    this.answers[
+                                        this.currentDateModalKey
+                                    ].getResponse()
+                                );
                             }}
                         >
                             <Text style={styles.buttonTextContinue}>Done</Text>
@@ -639,7 +798,11 @@ export default class Form2 extends React.Component {
 
     onMultiselectionDone(response, key) {
         this.answers[key].value = response;
-        this.setState({ answers: this.answers });
+        this.setState({ answers: this.answers, showInfoOfIndex: null });
+        this.onMoveAction(
+            this.answers[key].id,
+            this.answers[key].getResponse()
+        );
     }
 
     renderPasswordField(content, key) {
@@ -648,13 +811,119 @@ export default class Form2 extends React.Component {
                 editable={!(this.state.disabled || content.readOnly)}
                 onChangeText={text => {
                     this.answers[key].value = text;
-                    this.setState({ answers: this.answers });
+                    this.setState({
+                        answers: this.answers,
+                        showInfoOfIndex: null
+                    });
                 }}
                 secureTextEntry={true}
                 textContentType="password"
                 style={styles.textField}
                 value={this.state.answers[key].value}
+                onSubmitEditing={e => {
+                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
+        );
+    }
+
+    renderLookup(fieldData, key) {
+        return (
+            <View>
+                <View
+                    style={[
+                        styles.textField,
+                        { backgroundColor: GlobalColors.white }
+                    ]}
+                >
+                    {this.answers[key].value ? (
+                        <Text>{this.answers[key].value}</Text>
+                    ) : (
+                        <TextInput
+                            style={{ flex: 1 }}
+                            editable={
+                                !(this.state.disabled || fieldData.readOnly)
+                            }
+                            onChangeText={text => {
+                                this.answers[key].search = text;
+                                this.setState({
+                                    answers: this.answers,
+                                    showInfoOfIndex: null
+                                });
+                            }}
+                            placeholderTextColor={GlobalColors.disabledGray}
+                            placeholder="Search"
+                            value={this.answers[key].search}
+                            onSubmitEditing={e => {
+                                this.onSearchAction(
+                                    this.answers[key].id,
+                                    e.nativeEvent.text
+                                );
+                            }}
+                        />
+                    )}
+                    {!(this.state.disabled || fieldData.readOnly)
+                        ? this.answers[key].value
+                            ? Icons.close({
+                                size: 24,
+                                color: GlobalColors.frontmLightBlue,
+                                onPress: () => {
+                                    Keyboard.dismiss();
+                                    this.answers[key].value = '';
+                                    this.setState({ answers: this.answers });
+                                    this.onMoveAction(
+                                        this.answers[key].id,
+                                        ''
+                                    );
+                                }
+                            })
+                            : Icons.search({
+                                onPress: () => {
+                                    this.onSearchAction(
+                                        this.answers[key].id,
+                                        this.answers[key].search
+                                    );
+                                }
+                            })
+                        : null}
+                </View>
+                {this.props.currentResults &&
+                this.props.currentResults.field === this.answers[key].id ? (
+                        <FlatList
+                            data={this.props.currentResults.results}
+                            style={styles.resultList}
+                            keyboardShouldPersistTaps="handled"
+                            renderItem={({ item }) => (
+                                <Text
+                                    style={styles.resultText}
+                                    onPress={() => {
+                                        this.answers[key].value = item;
+                                        this.answers[key].search = '';
+                                        this.setState({ answers: this.answers });
+                                        this.props.setCurrentForm({
+                                            formData: this.props.formData,
+                                            formMessage: this.props.formMessage,
+                                            currentResults: null,
+                                            change: null
+                                        });
+                                        this.onMoveAction(
+                                            this.answers[key].id,
+                                            item
+                                        );
+                                    }}
+                                >
+                                    {item}
+                                </Text>
+                            )}
+                        />
+                    ) : null}
+            </View>
         );
     }
 
@@ -698,15 +967,49 @@ export default class Form2 extends React.Component {
         case fieldType.passwordField:
             field = this.renderPasswordField(fieldData, key);
             break;
+        case fieldType.lookup:
+            field = this.renderLookup(fieldData, key);
+            break;
         default:
         }
         return (
             <View style={styles.f2FieldContainer} key={key}>
-                <Text style={styles.f2LabelTitle}>
-                    {fieldData.title || ''}
-                    {this.renderMandatorySign(fieldData)}
-                </Text>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 13
+                    }}
+                >
+                    <Text style={styles.f2LabelTitle}>
+                        {fieldData.title || ''}
+                        {this.renderMandatorySign(fieldData)}
+                    </Text>
+                    {fieldData.info
+                        ? Icons.info({
+                            size: 18,
+                            onPress: () =>
+                                this.setState({ showInfoOfIndex: key })
+                        })
+                        : null}
+                    <View style={{ justifyContent: 'center' }}>
+                        {this.state.showInfoOfIndex === key
+                            ? this.renderInfoBubble(fieldData.info)
+                            : null}
+                    </View>
+                </View>
                 {field}
+            </View>
+        );
+    }
+
+    renderInfoBubble(info) {
+        return (
+            <View style={{ flexDirection: 'row', position: 'absolute' }}>
+                <View style={styles.infoTip} />
+                <View style={styles.infoBubble}>
+                    <Text style={styles.infoText}>{info}</Text>
+                </View>
             </View>
         );
     }
@@ -726,48 +1029,70 @@ export default class Form2 extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.f2Container}>
-                <ScrollView>
-                    <Text style={styles.f2Title}>{this.props.title}</Text>
-                    {this.renderFields()}
-                    <View style={styles.f2BottomArea}>
-                        <TouchableOpacity
-                            style={styles.f2CancelButton}
-                            onPress={this.onCancelForm.bind(this)}
-                        >
-                            <Text style={styles.f2CancelButtonText}>
-                                {this.props.cancel || 'Cancel'}
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            disabled={this.state.disabled}
-                            style={styles.f2DoneButton}
-                            onPress={() => {
-                                let response = this.getResponse(
-                                    formAction.CONFIRM
-                                );
-                                if (response.completed) {
-                                    this.props.onDone(
-                                        this.saveFormData(),
-                                        response.responseData
+            <KeyboardAvoidingView behavior="padding">
+                <SafeAreaView style={styles.f2Container}>
+                    <ScrollView keyboardShouldPersistTaps="handled">
+                        <Text style={styles.f2Title}>{this.props.title}</Text>
+                        {this.renderFields()}
+                        <View style={styles.f2BottomArea}>
+                            <TouchableOpacity
+                                style={styles.f2CancelButton}
+                                onPress={this.onCancelForm.bind(this)}
+                            >
+                                <Text style={styles.f2CancelButtonText}>
+                                    {this.props.cancel || 'Cancel'}
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                disabled={this.state.disabled}
+                                style={styles.f2DoneButton}
+                                onPress={() => {
+                                    let response = this.getResponse(
+                                        formAction.CONFIRM
                                     );
-                                    Actions.pop();
-                                } else {
-                                    console.log(
-                                        'FORM: you must fill all mandatory fields'
-                                    );
-                                }
-                            }}
-                        >
-                            <Text style={styles.f2DoneButtonText}>
-                                {this.props.confirm || 'Done'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    {this.renderDateModalIOS()}
-                    {this.renderDropdownModal()}
-                </ScrollView>
-            </SafeAreaView>
+                                    if (response.completed) {
+                                        this.props.onDone(
+                                            this.saveFormData(),
+                                            response.responseData
+                                        );
+                                        Actions.pop();
+                                    } else {
+                                        console.log(
+                                            'FORM: you must fill all mandatory fields'
+                                        );
+                                    }
+                                }}
+                            >
+                                <Text style={styles.f2DoneButtonText}>
+                                    {this.props.confirm || 'Done'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {this.renderDateModalIOS()}
+                        {this.renderDropdownModal()}
+                    </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        formData: state.user.currentForm.formData,
+        formMessage: state.user.currentForm.formMessage,
+        currentResults: state.user.currentForm.currentResults,
+        change: state.user.currentForm.change
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setCurrentForm: currentForm => dispatch(setCurrentForm(currentForm))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form2);

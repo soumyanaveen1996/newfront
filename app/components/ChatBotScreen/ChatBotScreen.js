@@ -81,12 +81,16 @@ import { WebCards } from '../WebCards';
 import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
-import { setFirstLogin } from '../../redux/actions/UserActions';
+import { setFirstLogin, setCurrentForm } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
-import { formStatus, formAction } from '../Form2Message/config';
+import {
+    formStatus,
+    formAction,
+    formUpdateAction
+} from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import {
@@ -858,6 +862,42 @@ class ChatBotScreen extends React.Component {
                 Store.dispatch(setCurrentMap(message.getMessage()));
             }
             this.updateChat(message);
+        } else if (
+            message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_FORM2
+        ) {
+            if (
+                message.getMessageOptions().action === formUpdateAction.RESULTS
+            ) {
+                const currentForm = Store.getState().user.currentForm;
+                if (
+                    message.getMessageOptions().formId ===
+                    currentForm.formMessage.formId
+                ) {
+                    Store.dispatch(
+                        setCurrentForm({
+                            ...currentForm,
+                            currentResults: message.getMessage()
+                        })
+                    );
+                }
+            } else if (
+                message.getMessageOptions().action === formUpdateAction.CHANGE
+            ) {
+                const currentForm = Store.getState().user.currentForm;
+                if (
+                    message.getMessageOptions().formId ===
+                    currentForm.formMessage.formId
+                ) {
+                    Store.dispatch(
+                        setCurrentForm({
+                            ...currentForm,
+                            change: message.getMessage()
+                        })
+                    );
+                }
+            } else {
+                this.updateChat(message);
+            }
         } else {
             this.updateChat(message);
         }
@@ -1118,6 +1158,7 @@ class ChatBotScreen extends React.Component {
     }
 
     onFormDone(response) {
+        console.log('>>>>>>>', response);
         let message = new Message();
         message.messageByBot(false);
         message.formResponseMessage(response);
