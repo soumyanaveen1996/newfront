@@ -143,7 +143,7 @@ const processNetworkQueueRequest = () => {
 
 const debounce = () => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), 3000);
+        setTimeout(() => resolve(), 2000);
     });
 };
 

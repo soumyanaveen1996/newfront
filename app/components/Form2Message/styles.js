@@ -87,8 +87,9 @@ export default (stylesheet = StyleSheet.create({
         borderColor: GlobalColors.disabledGray
     },
     f2LabelTitle: {
-        marginBottom: 13,
         fontSize: 16,
+        marginRight: 5,
+        alignSelf: 'center',
         color: GlobalColors.headerBlack
     },
     f2BottomArea: {
@@ -135,7 +136,12 @@ export default (stylesheet = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: GlobalColors.textField,
         borderRadius: 5,
-        borderTopRightRadius: 0
+        borderTopRightRadius: 0,
+        borderColor: GlobalColors.textField,
+        borderLeftWidth: 1,
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderRightWidth: 1
     },
     textArea: {
         height: 120,
@@ -241,5 +247,42 @@ export default (stylesheet = StyleSheet.create({
         borderColor: GlobalColors.sideButtons,
         backgroundColor: GlobalColors.sideButtons,
         borderRadius: 5
+    },
+
+    //INFO BUBBLE
+    infoTip: {
+        width: 0,
+        height: 0,
+        alignSelf: 'center',
+        borderTopWidth: 5,
+        borderRightWidth: 10,
+        borderBottomWidth: 5,
+        borderLeftWidth: 0,
+        borderRightColor: GlobalColors.textBlack,
+        borderBottomColor: 'transparent',
+        borderTopColor: 'transparent'
+    },
+    infoBubble: {
+        maxWidth: 150,
+        paddingHorizontal: 5,
+        paddingVertical: 8,
+        backgroundColor: GlobalColors.textBlack,
+        zIndex: 10
+    },
+    infoText: {
+        fontSize: 12,
+        color: GlobalColors.white
+    },
+    resultList: {
+        backgroundColor: GlobalColors.textField,
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        maxHeight: 200,
+        paddingHorizontal: 20
+    },
+    resultText: {
+        fontSize: 18,
+        marginVertical: 8,
+        color: GlobalColors.headerBlack
     }
 }));

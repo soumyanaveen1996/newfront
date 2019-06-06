@@ -399,7 +399,8 @@ export const Icons = {
         'material-community',
         20,
         GlobalColors.green
-    )
+    ),
+    close: icon('ios-close', 'ionicon', 45)
 };
 
 export default Icons;

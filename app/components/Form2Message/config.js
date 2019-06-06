@@ -15,11 +15,19 @@ export const fieldType = {
     slider: 'slider',
     date: 'date',
     multiselection: 'multi_selection',
-    passwordField: 'password_field'
+    passwordField: 'password_field',
+    lookup: 'lookup'
 };
 
 export const formAction = {
     CONFIRM: 'confirm',
     CANCEL: 'cancel',
-    CLOSE: 'close'
+    CLOSE: 'close',
+    MOVE: 'move',
+    SEARCH: 'search'
+};
+
+export const formUpdateAction = {
+    CHANGE: 'change',
+    RESULTS: 'results'
 };
