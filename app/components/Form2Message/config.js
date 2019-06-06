@@ -21,5 +21,7 @@ export const fieldType = {
 export const formAction = {
     CONFIRM: 'confirm',
     CANCEL: 'cancel',
-    CLOSE: 'close'
+    CLOSE: 'close',
+    MOVE: 'move',
+    SEARCH: 'search'
 };
