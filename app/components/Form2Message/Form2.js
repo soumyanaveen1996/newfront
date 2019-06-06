@@ -852,7 +852,6 @@ class Form2 extends React.Component {
                                         this.answers[key].id,
                                         this.answers[key].search
                                     );
-                                    this.props.sendResults();
                                 }
                             })
                         : null}

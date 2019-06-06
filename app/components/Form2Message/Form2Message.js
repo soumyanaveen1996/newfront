@@ -43,8 +43,7 @@ export default class Form2Message extends React.Component {
             saveMessage: this.saveMessage.bind(this),
             formStatus: this.state.status,
             sendResponse: this.props.onSubmit,
-            setCompleted: () => this.setState({ status: formStatus.COMPLETED }),
-            sendResults: this.props.sendResults
+            setCompleted: () => this.setState({ status: formStatus.COMPLETED })
         });
     }
 
