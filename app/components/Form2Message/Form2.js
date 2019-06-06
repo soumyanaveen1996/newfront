@@ -14,7 +14,8 @@ import {
     Platform,
     Image,
     Alert,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Keyboard
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -367,6 +368,12 @@ class Form2 extends React.Component {
                 onSubmitEditing={e => {
                     this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
                 }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
         );
     }
@@ -387,6 +394,12 @@ class Form2 extends React.Component {
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
                     this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
                 }}
             />
         );
@@ -409,6 +422,12 @@ class Form2 extends React.Component {
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
                     this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
                 }}
             />
         );
@@ -767,6 +786,12 @@ class Form2 extends React.Component {
                 onSubmitEditing={e => {
                     this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
                 }}
+                onBlur={() => {
+                    this.onMoveAction(
+                        this.answers[key].id,
+                        this.answers[key].value
+                    );
+                }}
             />
         );
     }
@@ -784,6 +809,7 @@ class Form2 extends React.Component {
                         <Text>{this.answers[key].value}</Text>
                     ) : (
                         <TextInput
+                            style={{ flex: 1 }}
                             editable={
                                 !(this.state.disabled || fieldData.readOnly)
                             }
@@ -811,6 +837,7 @@ class Form2 extends React.Component {
                                 size: 24,
                                 color: GlobalColors.frontmLightBlue,
                                 onPress: () => {
+                                    Keyboard.dismiss();
                                     this.answers[key].value = '';
                                     this.setState({ answers: this.answers });
                                     this.onMoveAction(
