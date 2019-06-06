@@ -30,7 +30,8 @@ export default class Form2Message extends React.Component {
             setCurrentForm({
                 formData: this.props.formData,
                 formMessage: this.props.messageData,
-                currentResults: null
+                currentResults: null,
+                change: null
             })
         );
         Actions.form2({

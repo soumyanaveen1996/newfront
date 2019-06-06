@@ -101,6 +101,26 @@ class Form2 extends React.Component {
 
     constructor(props) {
         super(props);
+        this.answers = [];
+        this.initializeAnswers();
+        this.state = {
+            answers: this.answers,
+            dateModalVisible: false,
+            dateModalValue: new Date(),
+            dropdownModalVisible: false,
+            dropdownModalValue: null,
+            dropdownModalOptions: [],
+            dropdownModalTitle: '',
+            disabled: this.props.formStatus === formStatus.COMPLETED,
+            showInfoOfIndex: null
+        };
+        this.props.navigation.setParams({
+            showConnectionMessage: this.showConnectionMessage,
+            onBack: this.onCloseForm.bind(this)
+        });
+    }
+
+    initializeAnswers() {
         this.answers = []; //used to store data to render the UI. This is not what the form will send to the bot
         _.map(this.props.formData, (fieldData, index) => {
             let answer = {
@@ -209,21 +229,6 @@ class Form2 extends React.Component {
             }
             this.answers.push(answer);
         });
-        this.state = {
-            answers: this.answers,
-            dateModalVisible: false,
-            dateModalValue: new Date(),
-            dropdownModalVisible: false,
-            dropdownModalValue: null,
-            dropdownModalOptions: [],
-            dropdownModalTitle: '',
-            disabled: this.props.formStatus === formStatus.COMPLETED,
-            showInfoOfIndex: null
-        };
-        this.props.navigation.setParams({
-            showConnectionMessage: this.showConnectionMessage,
-            onBack: this.onCloseForm.bind(this)
-        });
     }
 
     componentDidUpdate(prevProps) {
@@ -231,6 +236,9 @@ class Form2 extends React.Component {
             this.setState({
                 disabled: this.props.formStatus === formStatus.COMPLETED
             });
+        }
+        if (this.props.change) {
+            this.updateForm();
         }
     }
 
@@ -347,6 +355,35 @@ class Form2 extends React.Component {
             currentFieldValue: fieldValue
         };
         this.props.sendResponse(response);
+    }
+
+    updateForm() {
+        let oldFormData = this.saveFormData();
+        let newFormData = _.differenceWith(
+            oldFormData,
+            this.props.change.remove,
+            (field, removeField) => {
+                return field.id === removeField;
+            }
+        );
+        this.props.change.fields.forEach(newField => {
+            const key = newFormData.findIndex(field => {
+                return field.id === newField.id;
+            });
+            if (key >= 0) {
+                newFormData[key] = newField;
+            } else {
+                newFormData.push(newField);
+            }
+        });
+        this.props.setCurrentForm({
+            formData: newFormData,
+            formMessage: this.props.formMessage,
+            currentResults: null,
+            change: null
+        });
+        this.initializeAnswers();
+        this.setState({ answers: this.answers });
     }
 
     ////////////FIELDS RENDERER/////////////
@@ -872,7 +909,8 @@ class Form2 extends React.Component {
                                         this.props.setCurrentForm({
                                             formData: this.props.formData,
                                             formMessage: this.props.formMessage,
-                                            currentResults: null
+                                            currentResults: null,
+                                            change: null
                                         });
                                         this.onMoveAction(
                                             this.answers[key].id,
@@ -1043,7 +1081,8 @@ const mapStateToProps = state => {
     return {
         formData: state.user.currentForm.formData,
         formMessage: state.user.currentForm.formMessage,
-        currentResults: state.user.currentForm.currentResults
+        currentResults: state.user.currentForm.currentResults,
+        change: state.user.currentForm.change
     };
 };
 
