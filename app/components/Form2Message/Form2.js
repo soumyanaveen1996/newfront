@@ -28,8 +28,10 @@ import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
 import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
+import { connect } from 'react-redux';
+import { setCurrentForm } from '../../redux/actions/UserActions';
 
-export default class Form2 extends React.Component {
+class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
         let navigationOptions = {
@@ -195,6 +197,13 @@ export default class Form2 extends React.Component {
                     return answer.value;
                 };
                 break;
+            case fieldType.lookup:
+                answer.value = fieldData.value || '';
+                answer.search = '';
+                answer.getResponse = () => {
+                    return answer.value;
+                };
+                break;
             default:
             }
             this.answers.push(answer);
@@ -226,6 +235,10 @@ export default class Form2 extends React.Component {
 
     componentDidMount() {
         this.checkPollingStrategy();
+    }
+
+    componentWillUnmount() {
+        setCurrentForm(null);
     }
 
     showConnectionMessage = connectionType => {
@@ -758,6 +771,98 @@ export default class Form2 extends React.Component {
         );
     }
 
+    renderLookup(fieldData, key) {
+        return (
+            <View>
+                <View
+                    style={[
+                        styles.textField,
+                        { backgroundColor: GlobalColors.white }
+                    ]}
+                >
+                    {this.answers[key].value ? (
+                        <Text>{this.answers[key].value}</Text>
+                    ) : (
+                        <TextInput
+                            editable={
+                                !(this.state.disabled || fieldData.readOnly)
+                            }
+                            onChangeText={text => {
+                                this.answers[key].search = text;
+                                this.setState({
+                                    answers: this.answers,
+                                    showInfoOfIndex: null
+                                });
+                            }}
+                            placeholderTextColor={GlobalColors.disabledGray}
+                            placeholder="Search"
+                            value={this.answers[key].search}
+                            onSubmitEditing={e => {
+                                this.onSearchAction(
+                                    this.answers[key].id,
+                                    e.nativeEvent.text
+                                );
+                            }}
+                        />
+                    )}
+                    {!(this.state.disabled || fieldData.readOnly)
+                        ? this.answers[key].value
+                            ? Icons.close({
+                                size: 24,
+                                color: GlobalColors.frontmLightBlue,
+                                onPress: () => {
+                                    this.answers[key].value = '';
+                                    this.setState({ answers: this.answers });
+                                    this.onMoveAction(
+                                        this.answers[key].id,
+                                        ''
+                                    );
+                                }
+                            })
+                            : Icons.search({
+                                onPress: () => {
+                                    this.onSearchAction(
+                                        this.answers[key].id,
+                                        this.answers[key].search
+                                    );
+                                    this.props.sendResults();
+                                }
+                            })
+                        : null}
+                </View>
+                {this.props.currentResults &&
+                this.props.currentResults.field === this.answers[key].id ? (
+                        <FlatList
+                            data={this.props.currentResults.results}
+                            style={styles.resultList}
+                            keyboardShouldPersistTaps="handled"
+                            renderItem={({ item }) => (
+                                <Text
+                                    style={styles.resultText}
+                                    onPress={() => {
+                                        this.answers[key].value = item;
+                                        this.answers[key].search = '';
+                                        this.setState({ answers: this.answers });
+                                        this.props.setCurrentForm({
+                                            formData: this.props.formData,
+                                            formMessage: this.props.formMessage,
+                                            currentResults: null
+                                        });
+                                        this.onMoveAction(
+                                            this.answers[key].id,
+                                            item
+                                        );
+                                    }}
+                                >
+                                    {item}
+                                </Text>
+                            )}
+                        />
+                    ) : null}
+            </View>
+        );
+    }
+
     renderField(fieldData, key) {
         let field;
         switch (fieldData.type) {
@@ -797,6 +902,9 @@ export default class Form2 extends React.Component {
             break;
         case fieldType.passwordField:
             field = this.renderPasswordField(fieldData, key);
+            break;
+        case fieldType.lookup:
+            field = this.renderLookup(fieldData, key);
             break;
         default:
         }
@@ -859,7 +967,7 @@ export default class Form2 extends React.Component {
         return (
             <KeyboardAvoidingView behavior="padding">
                 <SafeAreaView style={styles.f2Container}>
-                    <ScrollView>
+                    <ScrollView keyboardShouldPersistTaps="handled">
                         <Text style={styles.f2Title}>{this.props.title}</Text>
                         {this.renderFields()}
                         <View style={styles.f2BottomArea}>
@@ -904,3 +1012,22 @@ export default class Form2 extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        formData: state.user.currentForm.formData,
+        formMessage: state.user.currentForm.formMessage,
+        currentResults: state.user.currentForm.currentResults
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setCurrentForm: currentForm => dispatch(setCurrentForm(currentForm))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form2);

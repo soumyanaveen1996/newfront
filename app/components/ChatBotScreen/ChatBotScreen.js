@@ -81,12 +81,16 @@ import { WebCards } from '../WebCards';
 import { MapMessage } from '../MapMessage';
 import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
-import { setFirstLogin } from '../../redux/actions/UserActions';
+import { setFirstLogin, setCurrentForm } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
-import { formStatus, formAction } from '../Form2Message/config';
+import {
+    formStatus,
+    formAction,
+    formUpdateAction
+} from '../Form2Message/config';
 import { Datacard } from '../Datacard';
 import PushNotification from 'react-native-push-notification';
 import {
@@ -429,6 +433,58 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+
+        let mm = new Message();
+        mm.messageByBot(true);
+        mm.form2Message(
+            [
+                {
+                    id: 'fieldId',
+                    title: 'field label',
+                    type: 'lookup'
+                },
+                {
+                    id: 'fieldId2',
+                    title: 'field label2',
+                    type: 'text_field'
+                }
+            ],
+            {
+                formId: 'formId',
+                title: 'Vessel details',
+                description: 'Please fill the vessel details',
+                confirm: 'Save', //Default is Done
+                cancel: 'Cancel' //Default is Cancel
+            }
+        );
+        // this.tell(mm)
+    }
+
+    sendFormResults() {
+        let mm = new Message();
+        mm.messageByBot(true);
+        mm.form2Message(
+            {
+                field: 'fieldId',
+                results: [
+                    'gino',
+                    'zio',
+                    'alberto',
+                    'giovanni',
+                    'marco',
+                    'gino2',
+                    'zio2',
+                    'alberto2',
+                    'giovanni2',
+                    'marco2'
+                ]
+            },
+            {
+                formId: 'formId',
+                action: 'results'
+            }
+        );
+        this.tell(mm);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -858,6 +914,24 @@ class ChatBotScreen extends React.Component {
                 Store.dispatch(setCurrentMap(message.getMessage()));
             }
             this.updateChat(message);
+        } else if (
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_FORM2 &&
+            message.getMessageOptions().action === formUpdateAction.RESULTS
+        ) {
+            const currentForm = Store.getState().user.currentForm;
+            if (
+                message.getMessageOptions().formId ===
+                currentForm.formMessage.formId
+            ) {
+                Store.dispatch(
+                    setCurrentForm({
+                        formData: currentForm.formData,
+                        formMessage: currentForm.formMessage,
+                        currentResults: message.getMessage()
+                    })
+                );
+            }
         } else {
             this.updateChat(message);
         }
@@ -1118,6 +1192,7 @@ class ChatBotScreen extends React.Component {
     }
 
     onFormDone(response) {
+        console.log('>>>>>>>', response);
         let message = new Message();
         message.messageByBot(false);
         message.formResponseMessage(response);
@@ -1403,6 +1478,7 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
                         onSubmit={this.onFormDone.bind(this)}
+                        sendResults={this.sendFormResults.bind(this)}
                     />
                 );
             } else {

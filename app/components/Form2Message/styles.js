@@ -136,7 +136,12 @@ export default (stylesheet = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: GlobalColors.textField,
         borderRadius: 5,
-        borderTopRightRadius: 0
+        borderTopRightRadius: 0,
+        borderColor: GlobalColors.textField,
+        borderLeftWidth: 1,
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderRightWidth: 1
     },
     textArea: {
         height: 120,
@@ -267,5 +272,17 @@ export default (stylesheet = StyleSheet.create({
     infoText: {
         fontSize: 12,
         color: GlobalColors.white
+    },
+    resultList: {
+        backgroundColor: GlobalColors.textField,
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        maxHeight: 200,
+        paddingHorizontal: 20
+    },
+    resultText: {
+        fontSize: 18,
+        marginVertical: 8,
+        color: GlobalColors.headerBlack
     }
 }));

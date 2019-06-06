@@ -4,6 +4,8 @@ import styles from './styles';
 import Icons from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
 import { formStatus } from './config';
+import Store from '../../redux/store/configureStore';
+import { setCurrentForm } from '../../redux/actions/UserActions';
 export default class Form2Message extends React.Component {
     constructor(props) {
         super(props);
@@ -24,8 +26,15 @@ export default class Form2Message extends React.Component {
         if (this.state.status === formStatus.NEW) {
             this.setState({ status: formStatus.OPENED });
         }
+        Store.dispatch(
+            setCurrentForm({
+                formData: this.props.formData,
+                formMessage: this.props.messageData,
+                currentResults: null
+            })
+        );
         Actions.form2({
-            formData: this.props.formData,
+            // formData: this.props.formData,
             id: this.props.messageData.formId,
             title: this.props.messageData.title,
             cancel: this.props.messageData.cancel,
@@ -34,7 +43,8 @@ export default class Form2Message extends React.Component {
             saveMessage: this.saveMessage.bind(this),
             formStatus: this.state.status,
             sendResponse: this.props.onSubmit,
-            setCompleted: () => this.setState({ status: formStatus.COMPLETED })
+            setCompleted: () => this.setState({ status: formStatus.COMPLETED }),
+            sendResults: this.props.sendResults
         });
     }
 
