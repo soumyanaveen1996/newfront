@@ -433,6 +433,42 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+
+        mss = new Message();
+        mss.messageByBot(true);
+        mss.mapMessage(
+            {
+                region: {
+                    zoom: 10,
+                    longitude: 7.41835,
+                    latitude: 55.46015
+                },
+                cards: [
+                    {
+                        cardId: 'poiId',
+                        title: 'Title',
+                        description: 'description',
+                        imageUrl:
+                            'https://static.tecnocino.it/tcwww/fotogallery/845X0/71991/immagine-profilo-whatsapp-originale-emoticon.jpg',
+                        seeMoreUrl: '',
+                        action: 'action',
+                        data: {
+                            title: 'field1 contact',
+                            field2: 12345,
+                            field3: true,
+                            field4: 'etc',
+                            field5: 'etc'
+                        }
+                    }
+                ]
+            },
+            {
+                mapId: 'maptest',
+                title: 'Title',
+                description: 'Description'
+            }
+        );
+        this.tell(mss);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -793,8 +829,8 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
+        // console.log('>>>>>>>MSG', message.getMesssage())
         // Removing the waiting message.
-
         this.stopWaiting();
         this.countMessage(message);
 
@@ -1158,7 +1194,6 @@ class ChatBotScreen extends React.Component {
     }
 
     onFormDone(response) {
-        console.log('>>>>>>>', response);
         let message = new Message();
         message.messageByBot(false);
         message.formResponseMessage(response);
