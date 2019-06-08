@@ -86,19 +86,23 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
+        Log.d("Sourav Logging:::", "getCatalog: Calling Catalog");
         stub.getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
+                Log.d("Sourav Logging:::", "Sourav Logging :::getCatalog: Success Catalog");
                 callback.invoke(null, new CatalogResponseConverter().toResponse(value));
             }
 
             @Override
             public void onError(Throwable t) {
+                Log.d("Sourav Logging:::", "getCatalog: Failed Catalog");
                 callback.invoke(Arguments.createMap());
             }
 
             @Override
             public void onCompleted() {
+                Log.d("Sourav Logging:::", "getCatalog: Done Catalog");
 
             }
         });

@@ -141,6 +141,7 @@ class BotStoreScreen extends React.Component {
     }
 
     async updateCatalog() {
+        console.log('Sourav Logging:::: Updatin Catalog');
         let catalog = await Bot.getCatalog();
         // let user_bots = catalog.bots.filter(bot => bot.systemBot === false);
         // catalog = { ...catalog, ...{ bots: user_bots } };
