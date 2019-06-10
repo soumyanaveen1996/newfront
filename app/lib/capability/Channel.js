@@ -832,6 +832,8 @@ export default class Channel {
                 })
                 .then(() => {
                     if (newChannels.data && newChannels.data.content) {
+                        // console.log('all subscribed channels ', newChannels);
+
                         let channels = newChannels.data.content;
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {
@@ -880,6 +882,8 @@ export default class Channel {
                 })
                 .then(response => {
                     if (response.data && response.data.content) {
+                        // console.log('all unscubscribe channels ', response);
+
                         let channels = response.data.content;
                         let channelInsertPromises = _.map(channels, channel => {
                             if (!channel.channelOwner) {

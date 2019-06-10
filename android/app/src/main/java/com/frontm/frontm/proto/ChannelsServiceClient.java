@@ -38,11 +38,73 @@ import io.grpc.Metadata;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
+import java.util.concurrent.TimeUnit;
+import android.os.Handler;
 
 
 public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
     private ManagedChannel mChannel;
+
+
+     private Boolean mIsAlreadyListening = false;
+    private String mSessionId;
+
+    public Boolean getmIsAlreadyListening() {
+        return mIsAlreadyListening;
+    }
+
+    public void setmIsAlreadyListening(Boolean mIsAlreadyListening) {
+        this.mIsAlreadyListening = mIsAlreadyListening;
+    }
+
+
+    public String getmSessionId() {
+        return mSessionId;
+    }
+
+    public void setmSessionId(String mSessionId) {
+        this.mSessionId = mSessionId;
+    }
+
+
+    public ManagedChannel getmChannel() {
+        if (mChannel == null) {
+            String host = BuildConfig.GRPC_HOST;
+            int port = BuildConfig.GRPC_PORT;
+            try {
+                mChannel = OkHttpChannelBuilder.forAddress(host, port)
+                        .connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
+                        .build();
+            } catch (Exception e) {
+                mChannel = null;
+            }
+        }
+        return mChannel;
+    }
+
+    public void setmChannel(ManagedChannel mChannel) {
+        this.mChannel = mChannel;
+    }
+
+    public void handleError() {
+        if(mChannel == null){
+            return;
+        }
+        mChannel.shutdown();
+        mChannel = null;
+        setmIsAlreadyListening(false);
+        Log.d("GRPC::: sse", "Retry Connecting to GRPC Server");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d("Sourav Logging:::", "Delay -----> Reconnect GRPC");
+
+            }
+        }, 10000);
+    }
 
     public ChannelsServiceClient(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -68,7 +130,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getSubscribed(String sessionId, final Callback callback)
     {
         Log.d("GRPC:::getSubscribed", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -77,7 +139,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
@@ -85,6 +147,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(Throwable t) {
+                handleError();
                 callback.invoke(Arguments.createMap());
             }
 
@@ -101,7 +164,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getUnsubscribed(String sessionId, final Callback callback)
     {
         Log.d("GRPC:::getUnsubscribed", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -110,7 +173,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
@@ -118,6 +181,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
             @Override
             public void onError(Throwable t) {
+                handleError();
                 callback.invoke(Arguments.createMap());
             }
 
@@ -133,7 +197,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getOwned(String sessionId, final Callback callback)
     {
         Log.d("GRPC:::getOwned", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -166,7 +230,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void subscribe(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::subscribe", params.toString());
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
@@ -219,7 +283,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void unsubscribe(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::unsubscribe", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         SubUnsubInput.Builder input = SubUnsubInput.newBuilder();
@@ -273,7 +337,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void addParticipants(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::unsubscribe", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         AddParticipantsInput.Builder input = AddParticipantsInput.newBuilder()
@@ -319,7 +383,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void create(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::create", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         InputChannel  channel = InputChannel.newBuilder()
                 .setChannelName(params.getString("channelName"))
@@ -362,7 +426,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void edit(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::edit", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         InputChannel channel = InputChannel.newBuilder()
                 .setChannelName(params.getString("channelName"))
@@ -406,7 +470,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getParticipants(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getParticipants", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
@@ -445,7 +509,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getPendingParticipants(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getPendingParticipants", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
@@ -486,7 +550,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void updateParticipants(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::UpdateParticipants", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         UpdateUsersInput.Builder input = UpdateUsersInput.newBuilder()
@@ -531,7 +595,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void requestPrivateChannelAccess(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::requestPrivateChannelAccess", params.toString());
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
                 .setChannelName(params.getString("channelName"))
@@ -568,7 +632,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void authorizeParticipants(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::authorizeParticipants", params.toString());
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         AuthorizeParticipantInput.Builder input = AuthorizeParticipantInput.newBuilder()
                 .setChannelName(params.getString("channelName"))
@@ -622,7 +686,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void changeOwner(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::changeOwner", params.toString());
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         ChangeOwnerInput.Builder input = ChangeOwnerInput.newBuilder()
                 .setChannelName(params.getString("channelName"))
@@ -660,7 +724,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void getChannelAdmins(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC :::getChannelAdmins", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
@@ -700,7 +764,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void updateChannelAdmins(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::UpdateChannelAdmins", sessionId);
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
 
         UpdateUsersInput.Builder input = UpdateUsersInput.newBuilder()
@@ -745,7 +809,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
     public void deleteChannel(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::requestPrivateChannelAccess", params.toString());
-        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(mChannel);
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         ChannelDomainInput.Builder input = ChannelDomainInput.newBuilder()
                 .setChannelName(params.getString("channelName"))

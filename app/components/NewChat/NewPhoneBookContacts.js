@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     Image,
     PermissionsAndroid,
-    Alert
+    Alert,
+    InteractionManager
 } from 'react-native';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import styles from './styles';
@@ -86,42 +87,34 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(granted => {
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        this.gettingAllContactData();
-                    } else {
-                        this.refresh([]);
+        InteractionManager.runAfterInteractions(() => {
+            console.log('Sourav Logging:::: Loading Contacts');
+            if (Platform.OS === 'android') {
+                PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                    {
+                        title: 'Contacts',
+                        message:
+                            'Grant access for contacts to display in FrontM'
                     }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            this.gettingAllContactData();
-        }
+                )
+                    .then(granted => {
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                            this.gettingAllContactData();
+                        } else {
+                            this.refresh([]);
+                        }
+                    })
+                    .catch(err => {
+                        console.log('PermissionsAndroid', err);
+                    });
+            } else {
+                this.gettingAllContactData();
+            }
+        });
     }
 
-    componentDidUpdate(prevProps) {
-        if (
-            prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsLoaded
-        ) {
-        }
-
-        if (
-            prevProps.appState.refreshContacts !==
-            this.props.appState.refreshContacts
-        ) {
-        }
-    }
+    componentDidUpdate(prevProps) {}
 
     componentWillUnmount() {
         EventListeners.forEach(listener => listener.remove());
@@ -129,10 +122,6 @@ class NewCallContacts extends React.Component {
     }
 
     initBackGroundBot = async () => {
-        if (__DEV__) {
-            console.tron('Init Bot');
-        }
-
         const message = new Message({
             msg: {
                 callQuotaUsed: 0
@@ -145,11 +134,6 @@ class NewCallContacts extends React.Component {
         });
 
         await bgBotScreen.initialize();
-
-        if (__DEV__) {
-            console.tron('Send MEssage BG Bot');
-        }
-
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
     };
@@ -203,33 +187,28 @@ class NewCallContacts extends React.Component {
                 return;
             }
 
-            contacts.forEach((data, index) => {
-                let contactName = '';
+            setTimeout(() => {
+                contacts.forEach((data, index) => {
+                    let contactName = '';
 
-                if (data.givenName && data.familyName) {
-                    contactName = data.givenName + ' ' + data.familyName;
-                } else {
-                    contactName = data.givenName;
-                }
-                let contactObj = {
-                    userId: index,
-                    emails: [...data.emailAddresses],
-                    profileImage: data.thumbnailPath,
-                    userName: data.givenName,
-                    name: contactName,
-                    phoneNumbers: [...data.phoneNumbers],
-                    selected: false
-                };
-                contactArray.push(contactObj);
-            });
-
-            this.refresh(contactArray);
-
-            if (err === 'denied') {
-                this.refresh([]);
-            } else {
+                    if (data.givenName && data.familyName) {
+                        contactName = data.givenName + ' ' + data.familyName;
+                    } else {
+                        contactName = data.givenName;
+                    }
+                    let contactObj = {
+                        userId: index,
+                        emails: [...data.emailAddresses],
+                        profileImage: data.thumbnailPath,
+                        userName: data.givenName,
+                        name: contactName,
+                        phoneNumbers: [...data.phoneNumbers],
+                        selected: false
+                    };
+                    contactArray.push(contactObj);
+                });
                 this.refresh(contactArray);
-            }
+            }, 0);
         });
     };
 

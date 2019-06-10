@@ -6,7 +6,7 @@ const PROXY_HOST = 'localhost:3000';
 let pollingInterval;
 let clearQueue;
 if (Platform.OS === 'android') {
-    pollingInterval = 30000;
+    pollingInterval = 20000;
     clearQueue = 600000;
 } else {
     pollingInterval = 30000;

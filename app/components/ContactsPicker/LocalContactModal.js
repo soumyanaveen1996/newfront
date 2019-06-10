@@ -31,6 +31,7 @@ export default class LocalContactModal extends React.Component {
     }
 
     componentDidMount() {
+        console.log('Sourav Logging:::: Loading Local Contacts...');
         this.setState({ selectedContact: {} });
         let array = [...this.state.contactsList];
 
