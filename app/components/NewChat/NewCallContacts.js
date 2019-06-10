@@ -360,6 +360,8 @@ class NewCallContacts extends React.Component {
     };
 
     renderContactsList() {
+        // console.log('all contacts ', this.state.contactsData);
+
         const sectionTitles = _.map(
             this.state.contactsData,
             section => section.title
@@ -637,7 +639,7 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -689,7 +691,7 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -734,7 +736,7 @@ class NewCallContacts extends React.Component {
                                 this.makePstnCall(phoneNumbers.satellite)
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -760,7 +762,7 @@ class NewCallContacts extends React.Component {
                         style={styles.callButton}
                         onPress={this.makeVoipCall}
                     >
-                        {Icons.greenCallOutline()}
+                        {Icons.greenCallOutline({ size: 16 })}
                     </TouchableOpacity>
                 </View>
             </View>
