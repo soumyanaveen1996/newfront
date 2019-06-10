@@ -29,6 +29,7 @@ import { NetworkError } from '../../lib/network';
 import { EventEmitter, AuthEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { Auth, Settings, PollingStrategyTypes } from '../../lib/capability';
+import images from '../../images';
 
 import { BackgroundImage } from '../BackgroundImage';
 import { connect } from 'react-redux';

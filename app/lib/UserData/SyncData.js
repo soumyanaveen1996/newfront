@@ -27,7 +27,6 @@ export const synchronizeUserData = async () => {
         }
 
         await Contact.refreshContacts();
-        await Calls.fetchCallHistory();
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
         }, 500);
@@ -36,16 +35,18 @@ export const synchronizeUserData = async () => {
         }, 1000);
         setTimeout(() => Channel.refreshChannels(), 1000);
         setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+        setTimeout(() => Calls.fetchCallHistory(), 1600);
     } catch (error) {
         console.error('CRITICAL:::::Errror Synching Contacts', error);
-        setTimeout(() => {
-            RemoteBotInstall.syncronizeBots();
-        }, 500);
-        setTimeout(() => {
-            Conversation.downloadRemoteConversations();
-        }, 1000);
-        setTimeout(() => Channel.refreshChannels(), 1000);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+        syncNoNetwork();
+        // setTimeout(() => {
+        //     RemoteBotInstall.syncronizeBots();
+        // }, 500);
+        // setTimeout(() => {
+        //     Conversation.downloadRemoteConversations();
+        // }, 1000);
+        // setTimeout(() => Channel.refreshChannels(), 1000);
+        // setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
     }
 };
 

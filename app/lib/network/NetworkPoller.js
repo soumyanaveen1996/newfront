@@ -61,12 +61,6 @@ class NetworkPoller {
 
         this.cleanupInterval = setInterval(() => {
             InteractionManager.runAfterInteractions(() => {
-                console.log(
-                    '<------JSAVSCRIPT:::: CHECKING SUBSCRIPTIONS---->'
-                );
-
-                // console.log(this.grpcSubscription);
-                // console.log(this.grpcEndSubscription);
                 if (
                     this.grpcSubscription.length == 0 ||
                     this.grpcEndSubscription == 0
@@ -257,7 +251,7 @@ class NetworkPoller {
             if (nextAppState === 'active') {
                 console.log('Sourav Logging:::: App is in Active State Again');
                 RemoteBotInstall.syncronizeBots();
-                setTimeout(() => NetworkHandler.readLambda(true), 500);
+                setTimeout(() => NetworkHandler.readLambda(true), 6000);
                 setTimeout(() => this.subscribeToServerEvents(), 2000);
                 setTimeout(() => this.cleanupSubscriptions(), 5000);
                 PushNotification.setApplicationIconBadgeNumber(0);

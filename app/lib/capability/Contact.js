@@ -374,10 +374,6 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
-                        console.log(
-                            'Sourav Logging::: Loaded Contacts',
-                            response.data
-                        );
                         //CONTACTS
                         var contacts = _.map(
                             response.data.contacts,

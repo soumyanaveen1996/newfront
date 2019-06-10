@@ -176,6 +176,9 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     }
 
     public void handleError() {
+        if(mChannel == null){
+            return;
+        }
         mChannel.shutdown();
         mChannel = null;
         setmIsAlreadyListening(false);
