@@ -179,10 +179,7 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         // let request = res.request;
         const options = res.request;
-        console.log(
-            'Sourav Logging:::: Processing Request',
-            res.request.serviceName
-        );
+        console.log('Sourav Logging:::: Processing Request', res.request);
 
         const response = await Network(options);
         // const response = await Network(request.getNetworkRequestOptions();
@@ -368,6 +365,7 @@ const ping = user => {
 };
 
 const keepAlive = () => {
+    return;
     Auth.getUser().then(authUser => {
         ping();
     });

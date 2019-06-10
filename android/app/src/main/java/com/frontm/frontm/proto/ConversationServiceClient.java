@@ -43,6 +43,8 @@ import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import io.grpc.ManagedChannel;
@@ -104,14 +106,6 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
         mChannel = null;
         setmIsAlreadyListening(false);
         Log.d("GRPC::: sse", "Retry Connecting to GRPC Server");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Log.d("Sourav Logging:::", "Delay -----> Reconnect GRPC");
-
-            }
-        }, 10000);
     }
 
     public ConversationServiceClient(ReactApplicationContext reactContext) {

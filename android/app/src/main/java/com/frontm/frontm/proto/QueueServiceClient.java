@@ -32,6 +32,9 @@ import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
@@ -126,11 +129,6 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getAllQueueMessages(String sessionId, Boolean force)
     {
-        if(force == true){
-            Log.d("Sourav Logging:::", "Forcing a Reconnect");
-            handleError();
-
-        }
         Log.d("GRPC:::getAllQMess", sessionId);
         QueueServiceGrpc.QueueServiceStub stub = QueueServiceGrpc.newStub(getmChannel());
 
@@ -143,7 +141,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.getAllQueueMessages(input, new StreamObserver<QueueResponse>() {
+        stub.withDeadlineAfter(20000, TimeUnit.MILLISECONDS).getAllQueueMessages(input, new StreamObserver<QueueResponse>() {
             @Override
             public void onNext(QueueResponse value) {
                 //callback.invoke(null, new QueueResponseConverter().toResponse(value));
@@ -161,7 +159,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
                         sendEvent("logout", null);
                     }
                     Log.d("Sourav Logging::: Error in Android", "We will handle the error?");
-                    handleError();
+                    handleErrorQueue();
                 }
                 //callback.invoke(Arguments.createMap());
             }
@@ -175,6 +173,19 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
     }
 
+
+
+
+        public void handleErrorQueue() {
+        if(mChannel == null){
+            return;
+        }
+        mChannel.shutdown();
+        mChannel = null;
+        setmIsAlreadyListening(false);
+
+    }
+
     public void handleError() {
         if(mChannel == null){
             return;
@@ -183,14 +194,20 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
         mChannel = null;
         setmIsAlreadyListening(false);
         Log.d("GRPC::: sse", "Retry Connecting to GRPC Server");
-        new Handler().postDelayed(new Runnable() {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-
                 Log.d("Sourav Logging:::", "Delay -----> Reconnect GRPC");
                 startChatSSE(getmSessionId());
             }
-        }, 5000);
+        }, 60000);
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }, 5000);
 
 
     }
