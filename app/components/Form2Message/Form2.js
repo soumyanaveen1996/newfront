@@ -321,6 +321,16 @@ class Form2 extends React.Component {
         return data;
     }
 
+    onDone() {
+        let response = this.getResponse(formAction.CONFIRM);
+        if (response.completed) {
+            this.props.onDone(this.saveFormData(), response.responseData);
+            Actions.pop();
+        } else {
+            console.log('FORM: you must fill all mandatory fields');
+        }
+    }
+
     onCloseForm() {
         if (!this.state.disabled) {
             this.props.saveMessage(this.saveFormData());
@@ -332,8 +342,12 @@ class Form2 extends React.Component {
 
     onCancelForm() {
         let response = this.getResponse(formAction.CANCEL);
-        this.props.sendResponse(response.responseData);
-        this.props.setCompleted();
+        this.props.onDone(this.saveFormData(), response.responseData);
+        // this.props.sendResponse(response.responseData);
+        // this.props.setCompleted();
+        // if (!this.state.disabled) {
+        //     this.props.saveMessage(this.saveFormData());
+        // }
         Actions.pop();
     }
 
@@ -1029,7 +1043,9 @@ class Form2 extends React.Component {
 
     render() {
         return (
-            <KeyboardAvoidingView behavior="padding">
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            >
                 <SafeAreaView style={styles.f2Container}>
                     <ScrollView keyboardShouldPersistTaps="handled">
                         <Text style={styles.f2Title}>{this.props.title}</Text>
@@ -1046,22 +1062,7 @@ class Form2 extends React.Component {
                             <TouchableOpacity
                                 disabled={this.state.disabled}
                                 style={styles.f2DoneButton}
-                                onPress={() => {
-                                    let response = this.getResponse(
-                                        formAction.CONFIRM
-                                    );
-                                    if (response.completed) {
-                                        this.props.onDone(
-                                            this.saveFormData(),
-                                            response.responseData
-                                        );
-                                        Actions.pop();
-                                    } else {
-                                        console.log(
-                                            'FORM: you must fill all mandatory fields'
-                                        );
-                                    }
-                                }}
+                                onPress={this.onDone.bind(this)}
                             >
                                 <Text style={styles.f2DoneButtonText}>
                                     {this.props.confirm || 'Done'}
