@@ -45,6 +45,7 @@ const poll = () => {
 
 const readLambda = (force = false) => {
     InteractionManager.runAfterInteractions(() => {
+        console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
         Auth.getUser().then(authUser => {
             processNetworkQueue();
             readRemoteLambdaQueue(authUser, force);
@@ -208,6 +209,12 @@ const processNetworkQueue = () => {
         // connected = false;
         if (connected) {
             processNetworkQueueRequest();
+        } else {
+            EventEmitter.emit(
+                SatelliteConnectionEvents.notConnectedToSatellite
+            );
+            Store.updateStore({ satelliteConnection: false });
+            RStore.dispatch(setNetwork('none'));
         }
     });
 };
