@@ -177,6 +177,13 @@ class ChannelsList extends React.Component {
     }
     async componentDidUpdate(prevProps) {
         if (
+            prevProps.appState.network !== this.props.appState.network &&
+            this.props.appState.network === 'full'
+        ) {
+            this.setState({ refreshing: false });
+        }
+
+        if (
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
@@ -449,20 +456,24 @@ class ChannelsList extends React.Component {
                 <NetworkStatusNotchBar />
                 <ScrollView
                     refreshControl={
-                        <RefreshControl
-                            onRefresh={() => {
-                                this.setState(
-                                    { refreshing: true },
-                                    async () => {
-                                        await Channel.refreshChannels();
-                                        await Channel.refreshUnsubscribedChannels();
-                                        this.refresh();
-                                        this.setState({ refreshing: false });
-                                    }
-                                );
-                            }}
-                            refreshing={this.state.refreshing}
-                        />
+                        this.props.appState.network === 'full' ? (
+                            <RefreshControl
+                                onRefresh={() => {
+                                    this.setState(
+                                        { refreshing: true },
+                                        async () => {
+                                            await Channel.refreshChannels();
+                                            await Channel.refreshUnsubscribedChannels();
+                                            this.refresh();
+                                            this.setState({
+                                                refreshing: false
+                                            });
+                                        }
+                                    );
+                                }}
+                                refreshing={this.state.refreshing}
+                            />
+                        ) : null
                     }
                 >
                     <View style={styles.searchSection}>
