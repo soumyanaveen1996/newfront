@@ -47,7 +47,8 @@ class BotList extends React.Component {
             favData: [],
             rowMap: null,
             rowKey: null,
-            stopFaker: false
+            stopFaker: false,
+            refreshing: false
         };
     }
 
@@ -376,6 +377,15 @@ class BotList extends React.Component {
                     // header={this.renderSearchBar}
                 >
                     <SwipeListView
+                        onRefresh={() => {
+                            this.setState({ refreshing: true }, async () => {
+                                await RemoteBotInstall.syncronizeBots();
+                                await Conversation.downloadRemoteConversations();
+                                await this.props.updateTimeline();
+                                this.setState({ refreshing: false });
+                            });
+                        }}
+                        refreshing={this.state.refreshing}
                         useFlatList
                         style={{ height: '100%' }}
                         data={allData}

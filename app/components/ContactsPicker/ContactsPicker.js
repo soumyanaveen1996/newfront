@@ -150,7 +150,8 @@ class ContactsPicker extends React.Component {
             inviteModalVisible: false,
             userInfo: {},
             userId: '',
-            searchString: ''
+            searchString: '',
+            refreshing: false
         };
     }
 
@@ -613,6 +614,14 @@ class ContactsPicker extends React.Component {
                     <ActivityIndicator size="small" />
                 ) : null} */}
                     <SectionList
+                        onRefresh={() => {
+                            this.setState({ refreshing: true }, async () => {
+                                await Contact.refreshContacts();
+                                this.updateList();
+                                this.setState({ refreshing: false });
+                            });
+                        }}
+                        refreshing={this.state.refreshing}
                         ItemSeparatorComponent={ContactsPickerItemSeparator}
                         ref={sectionList => {
                             this.contactsList = sectionList;

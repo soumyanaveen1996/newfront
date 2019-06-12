@@ -10,7 +10,8 @@ import {
     Image,
     Alert,
     Platform,
-    AlertIOS
+    AlertIOS,
+    RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
@@ -132,7 +133,8 @@ class ChannelsList extends React.Component {
             searchString: '',
             user: null,
             wait: false,
-            loaded: false
+            loaded: false,
+            refreshing: false
         };
     }
 
@@ -445,7 +447,24 @@ class ChannelsList extends React.Component {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={() => {
+                                this.setState(
+                                    { refreshing: true },
+                                    async () => {
+                                        await Channel.refreshChannels();
+                                        await Channel.refreshUnsubscribedChannels();
+                                        this.refresh();
+                                        this.setState({ refreshing: false });
+                                    }
+                                );
+                            }}
+                            refreshing={this.state.refreshing}
+                        />
+                    }
+                >
                     <View style={styles.searchSection}>
                         <Icon
                             style={styles.searchIcon}

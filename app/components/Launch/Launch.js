@@ -36,7 +36,10 @@ import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
-import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import {
+    synchronizeUserData,
+    syncNoNetwork
+} from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
 import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
@@ -335,7 +338,7 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
-        synchronizeUserData();
+        syncNoNetwork();
         Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding
