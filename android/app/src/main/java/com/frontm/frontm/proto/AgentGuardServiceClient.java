@@ -78,14 +78,6 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
         mChannel = null;
         setmIsAlreadyListening(false);
         Log.d("GRPC::: sse", "Retry Connecting to GRPC Server");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Log.d("Sourav Logging:::", "Delay -----> Reconnect GRPC");
-
-            }
-        }, 10000);
     }
 
     public AgentGuardServiceClient(ReactApplicationContext reactContext) {

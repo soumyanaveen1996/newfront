@@ -234,6 +234,9 @@ class BotList extends React.Component {
     }
 
     applyFilter = chats => {
+        if (!chats) {
+            return true;
+        }
         if (!chats.type) {
             return true;
         }

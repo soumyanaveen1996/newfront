@@ -527,7 +527,7 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>

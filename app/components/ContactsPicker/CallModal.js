@@ -95,7 +95,7 @@ export default class CallModal extends React.Component {
                                         this.makePhoneCall(phoneNumbers.mobile)
                                     }
                                 >
-                                    {Icons.greenCallOutline()}
+                                    {Icons.greenCallOutline({ size: 16 })}
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -134,7 +134,7 @@ export default class CallModal extends React.Component {
                                         this.makePhoneCall(phoneNumbers.local)
                                     }
                                 >
-                                    {Icons.greenCallOutline()}
+                                    {Icons.greenCallOutline({ size: 16 })}
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -163,7 +163,7 @@ export default class CallModal extends React.Component {
                                         );
                                     }}
                                 >
-                                    {Icons.greenCallOutline()}
+                                    {Icons.greenCallOutline({ size: 16 })}
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -190,7 +190,7 @@ export default class CallModal extends React.Component {
                                 style={styles.callButton}
                                 onPress={this.makeVoipCall.bind(this)}
                             >
-                                {Icons.greenCallOutline()}
+                                {Icons.greenCallOutline({ size: 16 })}
                             </TouchableOpacity>
                         </View>
                     </View>

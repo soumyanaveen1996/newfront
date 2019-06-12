@@ -45,6 +45,7 @@ const poll = () => {
 
 const readLambda = (force = false) => {
     InteractionManager.runAfterInteractions(() => {
+        console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
         Auth.getUser().then(authUser => {
             processNetworkQueue();
             readRemoteLambdaQueue(authUser, force);
@@ -179,10 +180,7 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         // let request = res.request;
         const options = res.request;
-        console.log(
-            'Sourav Logging:::: Processing Request',
-            res.request.serviceName
-        );
+        console.log('Sourav Logging:::: Processing Request', res.request);
 
         const response = await Network(options);
         // const response = await Network(request.getNetworkRequestOptions();
@@ -211,6 +209,12 @@ const processNetworkQueue = () => {
         // connected = false;
         if (connected) {
             processNetworkQueueRequest();
+        } else {
+            EventEmitter.emit(
+                SatelliteConnectionEvents.notConnectedToSatellite
+            );
+            Store.updateStore({ satelliteConnection: false });
+            RStore.dispatch(setNetwork('none'));
         }
     });
 };
@@ -368,6 +372,7 @@ const ping = user => {
 };
 
 const keepAlive = () => {
+    return;
     Auth.getUser().then(authUser => {
         ping();
     });
