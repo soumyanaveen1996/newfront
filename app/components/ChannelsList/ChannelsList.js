@@ -209,11 +209,11 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        const reduxState = Store.getState();
-        if (!reduxState.user.allChannelsLoaded) {
-            setTimeout(() => Channel.refreshChannels(), 0);
-            setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
-        }
+        // const reduxState = Store.getState();
+        // if (!reduxState.user.allChannelsLoaded) {
+        //     // setTimeout(() => Channel.refreshChannels(), 0);
+        //     // setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
+        // }
     }
 
     showConnectionMessage = connectionType => {
