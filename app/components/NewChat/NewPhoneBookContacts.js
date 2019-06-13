@@ -59,6 +59,7 @@ import DStyles from '../Dialler/styles';
 import Bot from '../../lib/bot';
 import contactsStyles from '../ContactsPicker/styles';
 import GlobalColors from '../../config/styles';
+import { LargeList } from 'react-native-largelist-v3';
 
 var EventListeners = [];
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
@@ -192,41 +193,6 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    gettingAllContactData = () => {
-        let contactArray = [];
-
-        Contacts.getAll((err, contacts) => {
-            if (err) {
-                console.log('on denial ', err);
-                this.refresh([]);
-                return;
-            }
-
-            setTimeout(() => {
-                contacts.forEach((data, index) => {
-                    let contactName = '';
-
-                    if (data.givenName && data.familyName) {
-                        contactName = data.givenName + ' ' + data.familyName;
-                    } else {
-                        contactName = data.givenName;
-                    }
-                    let contactObj = {
-                        userId: index,
-                        emails: [...data.emailAddresses],
-                        profileImage: data.thumbnailPath,
-                        userName: data.givenName,
-                        name: contactName,
-                        phoneNumbers: [...data.phoneNumbers],
-                        selected: false
-                    };
-                    contactArray.push(contactObj);
-                });
-                this.refresh(contactArray);
-            }, 0);
-        });
-    };
-
     static onEnter() {
         // const user = Store.getState().user;
         EventEmitter.emit(
@@ -249,8 +215,6 @@ class NewCallContacts extends React.Component {
         this.setState({ contactVisible: value, contactSelected: contact });
 
     createAddressBook = contacts => {
-        console.log('conatcts ========== ', contacts);
-
         const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
         const uniqId = R.eqProps('userId');
         const contactsUniq = R.uniqWith(uniqId)(contacts);
@@ -258,7 +222,7 @@ class NewCallContacts extends React.Component {
         const phoneContacts = contactsUniq.map(contact => ({
             ...contact,
             userName: contact.userName
-                ? contact.userName
+                ? contact.name
                     .trim()
                     .split(' ')
                     .map(
@@ -301,9 +265,20 @@ class NewCallContacts extends React.Component {
                             contact.emails.length > 0
                                 ? contact.emails[0].email
                                 : undefined;
+                        let name = '';
+                        if (contact.userName !== '') {
+                            name = contact.userName;
+                        } else if (yeahMail) {
+                            name = yeahMail;
+                        } else if (contact.phoneNumbers.length > 0) {
+                            name = contact.phoneNumbers[0].number;
+                        } else {
+                            name = '';
+                        }
+
                         return {
                             id: contact.userId,
-                            name: contact.userName,
+                            name,
                             profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
@@ -312,11 +287,12 @@ class NewCallContacts extends React.Component {
             }
             return {
                 title: letter,
-                data: contactBook
+                items: contactBook
             };
         });
         return PhoneContacts;
     };
+
     refresh = contacts => {
         // this.dataSource.loadData()
         if (!contacts) {
@@ -325,51 +301,62 @@ class NewCallContacts extends React.Component {
         const AddressBook = this.createAddressBook(contacts);
 
         let newAddressBook = AddressBook.filter(elem => {
-            return elem.data.length > 0;
+            return elem.items.length > 0;
         });
-        this.setState({ contactsData: newAddressBook }, () =>
-            this.generate_sections()
-        );
+        this.setState({ contactsData: newAddressBook });
     };
 
-    generate_sections = () => {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
-        );
-        let filteredSections = [];
-
-        if (sectionTitles && sectionTitles.length > 0) {
-            filteredSections = [...this.state.contactsData];
-            if (this.state.searchString.length > 0) {
-                filteredSections = this.state.contactsData.map(section => {
-                    let data = section.data.filter(contact =>
-                        contact.name
-                            .toLowerCase()
-                            .includes(this.state.searchString.toLowerCase())
-                    );
-                    return {
-                        ...section,
-                        data: data
-                    };
-                });
-            }
+    filter = () => {
+        if (this.state.searchString.length > 0) {
+            const filteredContacts = this.props.appState.phoneContacts.filter(
+                contact =>
+                    contact.userName
+                        .toLowerCase()
+                        .includes(this.state.searchString.toLowerCase())
+            );
+            this.refresh(filteredContacts);
         }
-        this.setState({ filteredSections, sectionTitles });
+
+        // const sectionTitles = _.map(
+        //     this.state.contactsData,
+        //     section => section.title
+        // );
+        // let filteredSections = [];
+
+        // if (sectionTitles && sectionTitles.length > 0) {
+        //     filteredSections = [...this.state.contactsData];
+        //     if (this.state.searchString.length > 0) {
+        //         filteredSections = this.state.contactsData.map(section => {
+        //             let data = section.data.filter(contact =>
+        //                 contact.name
+        //                     .toLowerCase()
+        //                     .includes(this.state.searchString.toLowerCase())
+        //             );
+        //             return {
+        //                 ...section,
+        //                 data: data
+        //             };
+        //         });
+        //     }
+        // }
+        // this.setState({ filteredSections, sectionTitles });
     };
 
-    renderItem(info) {
-        const contact = info.item;
+    renderItem(path) {
+        const contact = this.state.contactsData[path.section].items[path.row];
 
+        const image_path = `file://${contact.profileImage}`;
+        const placeHolderImage = require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png');
+        const pholder = `file://${placeHolderImage}`;
         const ImageProf = (
             <ImageLoad
                 style={styles.avatarImage}
-                resizeMode="contain"
-                source={contact.profileImage}
+                resizeMode="cover"
+                source={placeHolderImage}
                 isShowActivity={false}
                 placeholderStyle={styles.avatarImage}
                 borderRadius={styles.avatarImage.width / 2}
-                placeholderSource={require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png')}
+                placeholderSource={{ uri: pholder }}
             />
         );
         // const Image = (
@@ -382,15 +369,17 @@ class NewCallContacts extends React.Component {
         //     />
         // );
         return (
-            <NewChatRow
-                key={contact.id}
-                item={contact}
-                title={contact.name}
-                image={ImageProf}
-                id={contact.id}
-                onItemPressed={this.onContactSelected}
-                email={contact.emails[0].email}
-            />
+            <View>
+                <NewChatRow
+                    key={contact.id}
+                    item={contact}
+                    title={contact.name}
+                    image={ImageProf}
+                    id={contact.id}
+                    onItemPressed={this.onContactSelected}
+                    email={contact.emails[0].email}
+                />
+            </View>
         );
     }
     onContactSelected = contact => {
@@ -432,10 +421,9 @@ class NewCallContacts extends React.Component {
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={text =>
-                        this.setState(
-                            { searchString: text },
-                            this.generate_sections()
-                        )
+                        this.setState({ searchString: text }, () => {
+                            this.filter();
+                        })
                     }
                     value={this.state.searchString}
                 />
@@ -444,13 +432,26 @@ class NewCallContacts extends React.Component {
     }
 
     renderContactsList() {
-        if (this.state.sectionTitles.length > 0) {
+        if (this.state.contactsData.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
-                    <SectionList
+
+                    <LargeList
+                        style={styles.addressBook}
+                        data={this.state.contactsData}
+                        heightForSection={() => 30}
+                        renderSection={section => {
+                            const sec = this.state.contactsData[section].title;
+                            return <NewChatSectionHeader title={sec} />;
+                        }}
+                        heightForIndexPath={() => 50}
+                        renderIndexPath={this.renderItem.bind(this)}
+                    />
+
+                    {/* <SectionList
                         ItemSeparatorComponent={NewChatItemSeparator}
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
@@ -460,7 +461,7 @@ class NewCallContacts extends React.Component {
                         sections={this.state.filteredSections}
                         keyExtractor={(item, index) => item.id}
                         removeClippedSubviews={true}
-                    />
+                    /> */}
                     {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
