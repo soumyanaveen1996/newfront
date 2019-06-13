@@ -481,7 +481,10 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX ||
             this._messageType ===
-                MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE
+                MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE ||
+            this._messageType ===
+                MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE ||
+            !this._messageType
         ) {
             return '';
         } else if (

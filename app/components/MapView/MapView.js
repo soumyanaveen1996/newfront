@@ -730,8 +730,8 @@ class MapView extends React.Component {
                     closeAndOpenSlideshow={this.closeAndOpenSlideshow.bind(
                         this
                     )}
-                    onDataCardSelected={this.openModalWithContent.bind(this)}
-                    onCardSelected={this.onAction.bind(this)}
+                    openModalWithContent={this.openModalWithContent.bind(this)}
+                    onActionSelected={this.onAction.bind(this)}
                     focusOnMarker={this.focusOnMarker.bind(this)}
                 />
             );
@@ -774,10 +774,14 @@ class MapView extends React.Component {
             <ChatModal
                 content={this.state.chatModalContent}
                 isVisible={this.state.isModalVisible}
-                backdropOpacity={0.1}
+                backdropOpacity={0.3}
                 onBackButtonPress={this.hideChatModal.bind(this)}
                 onBackdropPress={() => this.setState({ isModalVisible: false })}
-                style={{ justifyContent: 'center', alignItems: 'center' }}
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: 0
+                }}
             />
         );
     }
@@ -802,6 +806,9 @@ class MapView extends React.Component {
         if (foundMarker) {
             this.flyTo(foundMarker.coordinate, 1500);
             this.selectPOI(foundIndex);
+            return true;
+        } else {
+            return false;
         }
     }
 
