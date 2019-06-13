@@ -29,5 +29,6 @@ export const formAction = {
 
 export const formUpdateAction = {
     CHANGE: 'change',
-    RESULTS: 'results'
+    RESULTS: 'results',
+    VALIDATION: 'validation'
 };

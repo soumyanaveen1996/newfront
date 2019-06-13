@@ -127,6 +127,10 @@ class Form2 extends React.Component {
                 id: fieldData.id,
                 getResponse: () => {}
             };
+            if (fieldData.validation) {
+                answer.valid = fieldData.savedValidationResult;
+                answer.validationMessage = fieldData.savedValidationMessage;
+            }
             switch (fieldData.type) {
             case fieldType.textField:
                 answer.value = fieldData.value || '';
@@ -239,6 +243,8 @@ class Form2 extends React.Component {
         }
         if (this.props.change) {
             this.updateForm();
+        } else if (this.props.validation) {
+            this.validateField();
         }
     }
 
@@ -291,14 +297,19 @@ class Form2 extends React.Component {
             action: action,
             fields: _.map(this.answers, (answer, index) => {
                 const responseValue = answer.getResponse();
-                if (
-                    completed === true &&
-                    this.props.formData[index].mandatory
-                ) {
+                if (completed === true) {
+                    if (this.props.formData[index].mandatory) {
+                        if (
+                            !responseValue ||
+                            responseValue === '' ||
+                            responseValue === []
+                        ) {
+                            completed = false;
+                        }
+                    }
                     if (
-                        !responseValue ||
-                        responseValue === '' ||
-                        responseValue === []
+                        this.props.formData[index].validation &&
+                        !answer.valid
                     ) {
                         completed = false;
                     }
@@ -316,6 +327,14 @@ class Form2 extends React.Component {
     saveFormData() {
         const data = _.map(this.props.formData, (field, index) => {
             field.value = this.answers[index].getResponse();
+            if (field.validation) {
+                field.savedValidationResult = this.answers[index].valid;
+                if (this.answers[index].valid === false) {
+                    field.savedValidationMessage = this.answers[
+                        index
+                    ].validationMessage;
+                }
+            }
             return field;
         });
         return data;
@@ -394,10 +413,33 @@ class Form2 extends React.Component {
             formData: newFormData,
             formMessage: this.props.formMessage,
             currentResults: null,
-            change: null
+            change: null,
+            validation: null
         });
         this.initializeAnswers();
         this.setState({ answers: this.answers });
+    }
+
+    validateField() {
+        const fieldToValidate = this.answers.findIndex(answer => {
+            return answer.id === this.props.validation.fieldId;
+        });
+        if (fieldToValidate >= 0) {
+            this.answers[
+                fieldToValidate
+            ].valid = this.props.validation.validationResult;
+            this.answers[
+                fieldToValidate
+            ].validationMessage = this.props.validation.validationMessage;
+            this.props.setCurrentForm({
+                formData: newFormData,
+                formMessage: this.props.formMessage,
+                currentResults: null,
+                change: null,
+                validation: null
+            });
+            this.setState({ answers: this.answers });
+        }
     }
 
     ////////////FIELDS RENDERER/////////////
@@ -409,6 +451,9 @@ class Form2 extends React.Component {
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.setState({
                         answers: this.answers,
                         showInfoOfIndex: null
@@ -434,6 +479,9 @@ class Form2 extends React.Component {
                 editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textField}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -463,6 +511,9 @@ class Form2 extends React.Component {
                 editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textArea}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -553,6 +604,9 @@ class Form2 extends React.Component {
             <TouchableOpacity
                 disabled={this.state.disabled || content.readOnly}
                 onPress={() => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.currentDropdownModalKey = key;
                     this.setState({
                         dropdownModalOptions: content.options,
@@ -684,6 +738,9 @@ class Form2 extends React.Component {
             <TouchableOpacity
                 disabled={this.state.disabled || content.readOnly}
                 onPress={async () => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     if (Platform.OS === 'android') {
                         DatePickerAndroid.open({
                             date: this.answers[key].value,
@@ -791,6 +848,9 @@ class Form2 extends React.Component {
         return (
             <TouchableOpacity
                 onPress={() => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     Actions.multiselection({
                         index: key,
                         options: content.options,
@@ -824,6 +884,9 @@ class Form2 extends React.Component {
             <TextInput
                 editable={!(this.state.disabled || content.readOnly)}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -888,6 +951,9 @@ class Form2 extends React.Component {
                                 size: 24,
                                 color: GlobalColors.frontmLightBlue,
                                 onPress: () => {
+                                    if (this.props.formData[key].validation) {
+                                        this.answers[key].valid = undefined;
+                                    }
                                     Keyboard.dismiss();
                                     this.answers[key].value = '';
                                     this.setState({ answers: this.answers });
@@ -1013,6 +1079,12 @@ class Form2 extends React.Component {
                     </View>
                 </View>
                 {field}
+                {fieldData.validation && this.answers[key].valid === false
+                    ? this.renderValidationMessage(
+                        this.answers[key].validationMessage ||
+                              'Validation error'
+                    )
+                    : null}
             </View>
         );
     }
@@ -1032,6 +1104,14 @@ class Form2 extends React.Component {
         if (fieldData.mandatory) {
             return <Text style={{ color: 'red' }}> *</Text>;
         }
+    }
+
+    renderValidationMessage(message) {
+        return (
+            <View style={styles.validationMessage}>
+                <Text style={styles.validationMessageText}>{message}</Text>
+            </View>
+        );
     }
 
     renderFields() {
@@ -1083,7 +1163,8 @@ const mapStateToProps = state => {
         formData: state.user.currentForm.formData,
         formMessage: state.user.currentForm.formMessage,
         currentResults: state.user.currentForm.currentResults,
-        change: state.user.currentForm.change
+        change: state.user.currentForm.change,
+        validation: state.user.currentForm.validation
     };
 };
 

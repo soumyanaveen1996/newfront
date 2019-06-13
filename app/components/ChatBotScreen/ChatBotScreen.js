@@ -895,6 +895,22 @@ class ChatBotScreen extends React.Component {
                         })
                     );
                 }
+            } else if (
+                message.getMessageOptions().action ===
+                formUpdateAction.VALIDATION
+            ) {
+                const currentForm = Store.getState().user.currentForm;
+                if (
+                    message.getMessageOptions().formId ===
+                    currentForm.formMessage.formId
+                ) {
+                    Store.dispatch(
+                        setCurrentForm({
+                            ...currentForm,
+                            validation: message.getMessage()
+                        })
+                    );
+                }
             } else {
                 this.updateChat(message);
             }

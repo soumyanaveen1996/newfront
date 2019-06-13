@@ -284,5 +284,24 @@ export default (stylesheet = StyleSheet.create({
         fontSize: 18,
         marginVertical: 8,
         color: GlobalColors.headerBlack
+    },
+
+    //VALIDATION
+    validationMessage: {
+        justifyContent: 'center',
+        alignSelf: 'flex-end',
+        backgroundColor: GlobalColors.red,
+        borderTopRightRadius: 5,
+        borderTopLeftRadius: 0,
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5,
+        paddingHorizontal: 5,
+        paddingVertical: 2,
+        marginTop: 3
+    },
+    validationMessageText: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: 'white'
     }
 }));
