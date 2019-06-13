@@ -18,7 +18,8 @@ const initialState = {
         upload: 0,
         currentMap: null,
         currentForm: null,
-        firstLogin: false
+        firstLogin: false,
+        phoneContacts: []
     },
     botState: {
         id: null

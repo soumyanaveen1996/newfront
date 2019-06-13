@@ -10,8 +10,12 @@ import { Auth, Network } from '.';
 import SystemBot from '../bot/SystemBot';
 import ChannelContactDAO from '../persistence/ChannelContactDAO';
 import Store from '../../redux/store/configureStore';
-import { completeContactsLoad } from '../../redux/actions/UserActions';
-import { NativeModules } from 'react-native';
+import {
+    completeContactsLoad,
+    setPhoneContacts
+} from '../../redux/actions/UserActions';
+import PhoneContacts from 'react-native-contacts';
+import { NativeModules, Platform, PermissionsAndroid } from 'react-native';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -30,6 +34,34 @@ const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
  *     "userId": "11A2A680-7E76-4154-A811-2A6BAB2A3BF9",
  * }
  */
+
+const getPhoneContacts = () => {
+    PhoneContacts.getAll((error, contacts) => {
+        if (error) {
+            console.log(
+                'Sourav Logging:::: Cannot Fetch Phone Contacts',
+                error
+            );
+            Store.dispatch(setPhoneContacts([]));
+            return;
+        }
+
+        const PhoneContacts = contacts.map((contact, index) => {
+            return {
+                userId: index,
+                emails: [...contact.emailAddresses],
+                profileImage: contact.thumbnailPath,
+                userName: contact.givenName,
+                name: contact.familyName
+                    ? `${contact.givenName} ${contact.familyName}`
+                    : contact.givenName,
+                phoneNumbers: [...contact.phoneNumbers],
+                selected: false
+            };
+        });
+        Store.dispatch(setPhoneContacts(PhoneContacts));
+    });
+};
 export default class Contact {
     static getAddedContacts = () =>
         new Promise((resolve, reject) => {
@@ -42,6 +74,30 @@ export default class Contact {
                     reject(err);
                 });
         });
+
+    static syncPhoneContacts = () => {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+                {
+                    title: 'Contacts',
+                    message: 'Grant access for contacts to display in FrontM'
+                }
+            )
+                .then(granted => {
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        getPhoneContacts();
+                    } else {
+                        Store.dispatch(setPhoneContacts([]));
+                    }
+                })
+                .catch(err => {
+                    console.log('PermissionsAndroid', err);
+                });
+        } else {
+            getPhoneContacts();
+        }
+    };
 
     /**
      * Returns an array of picked field from the contact. If field is empty will return full object

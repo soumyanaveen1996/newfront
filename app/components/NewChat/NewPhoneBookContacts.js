@@ -87,31 +87,39 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        InteractionManager.runAfterInteractions(() => {
-            console.log('Sourav Logging:::: Loading Contacts');
-            if (Platform.OS === 'android') {
-                PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                    {
-                        title: 'Contacts',
-                        message:
-                            'Grant access for contacts to display in FrontM'
-                    }
-                )
-                    .then(granted => {
-                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                            this.gettingAllContactData();
-                        } else {
-                            this.refresh([]);
-                        }
-                    })
-                    .catch(err => {
-                        console.log('PermissionsAndroid', err);
-                    });
-            } else {
-                this.gettingAllContactData();
-            }
-        });
+
+        // console.log(
+        //     'Sourav Logging:::: Phone Contacts',
+        //     this.props.appState.phoneContacts
+        // );
+
+        this.refresh(this.props.appState.phoneContacts);
+
+        // InteractionManager.runAfterInteractions(() => {
+        //     console.log('Sourav Logging:::: Loading Contacts');
+        //     if (Platform.OS === 'android') {
+        //         PermissionsAndroid.request(
+        //             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        //             {
+        //                 title: 'Contacts',
+        //                 message:
+        //                     'Grant access for contacts to display in FrontM'
+        //             }
+        //         )
+        //             .then(granted => {
+        //                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //                     this.gettingAllContactData();
+        //                 } else {
+        //                     this.refresh([]);
+        //                 }
+        //             })
+        //             .catch(err => {
+        //                 console.log('PermissionsAndroid', err);
+        //             });
+        //     } else {
+        //         this.gettingAllContactData();
+        //     }
+        // });
     }
 
     componentDidUpdate(prevProps) {}
@@ -133,9 +141,10 @@ class NewCallContacts extends React.Component {
             bot: SystemBot.backgroundTaskBot
         });
 
-        await bgBotScreen.initialize();
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
+        bgBotScreen.initialize().then(() => {
+            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        });
     };
 
     getCredit() {
@@ -213,21 +222,21 @@ class NewCallContacts extends React.Component {
     };
 
     static onEnter() {
-        const user = Store.getState().user;
+        // const user = Store.getState().user;
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
-            I18n.t('Contacts_call'),
+            'Phone Contacts',
             I18n.t('Contacts')
         );
-        Store.dispatch(refreshContacts(true));
+        // Store.dispatch(refreshContacts(true));
     }
 
     static onExit() {
-        Store.dispatch(refreshContacts(false));
+        // Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {
-        return nextProps.appState.currentScene === I18n.t('Contacts_call');
+        return nextProps.appState.currentScene === 'Phone Contacts';
     }
 
     setContactVisible = (value, contact) =>

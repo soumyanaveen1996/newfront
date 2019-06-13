@@ -108,28 +108,8 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(granted => {
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        this.gettingAllContactData();
-                    } else {
-                        this.refresh([]);
-                    }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            this.gettingAllContactData();
-        }
 
+        this.gettingAllContactData();
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
             this.props.summary
@@ -175,10 +155,11 @@ class NewCallContacts extends React.Component {
             bot: SystemBot.backgroundTaskBot
         });
 
-        await bgBotScreen.initialize();
-
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
+
+        bgBotScreen.initialize().then(() => {
+            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        });
     };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
@@ -218,6 +199,10 @@ class NewCallContacts extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        console.log(
+            'Sourav Logging:::: Current Scene',
+            nextProps.appState.currentScene
+        );
         return nextProps.appState.currentScene === I18n.t('Contacts_call');
     }
 
