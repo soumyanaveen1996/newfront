@@ -263,17 +263,39 @@ const styles = StyleSheet.create({
     //MODAL
     modal: {
         width: '90%',
-        height: '65%',
+        height: '75%',
         flexDirection: 'column',
         alignItems: 'stretch',
-        paddingHorizontal: 20,
-        paddingVertical: 40,
+        paddingBottom: 40,
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.08,
         shadowRadius: 4,
         borderRadius: 10,
         borderWidth: 0.2,
-        backgroundColor: GlobalColors.white
+        backgroundColor: GlobalColors.white,
+        overflow: 'hidden'
+    },
+    imageModal: {
+        height: 180
+    },
+    fieldsModal: {
+        alignItems: 'flex-start',
+        paddingHorizontal: 20
+    },
+    titleModal: {
+        textAlign: 'left',
+        fontSize: 20,
+        marginTop: 40,
+        marginBottom: 15,
+        fontWeight: '500',
+        color: GlobalColors.textBlack
+    },
+    descriptionModal: {
+        marginVertical: 15,
+        fontSize: 16,
+        fontWeight: '200',
+        textAlign: 'justify',
+        color: GlobalColors.darkGray
     },
     fieldModal: {
         width: '100%',
@@ -302,6 +324,14 @@ const styles = StyleSheet.create({
         marginBottom: 13,
         color: GlobalColors.sideButtons,
         textTransform: 'uppercase'
+    },
+    action: {
+        marginHorizontal: 18,
+        marginTop: 7,
+        fontSize: 16,
+        fontWeight: '100',
+        textAlign: 'center',
+        color: GlobalColors.sideButtons
     }
 });
 

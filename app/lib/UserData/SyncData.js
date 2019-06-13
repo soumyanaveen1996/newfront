@@ -16,6 +16,7 @@ import {
 import Calls from '../calls';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+
 export const synchronizeUserData = async () => {
     try {
         let connection = await Network.isConnected();
@@ -51,7 +52,7 @@ export const synchronizeUserData = async () => {
     }
 };
 
-const syncNoNetwork = () => {
+export const syncNoNetwork = () => {
     Store.dispatch(completeContactsLoad(true));
     Store.dispatch(completeBotInstall(true));
     Store.dispatch(completeChannelInstall(true));

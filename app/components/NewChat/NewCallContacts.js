@@ -65,6 +65,7 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import GlobalColors from '../../config/styles';
+import contactsStyles from '../ContactsPicker/styles';
 
 const R = require('ramda');
 
@@ -87,7 +88,8 @@ class NewCallContacts extends React.Component {
             updatingCallQuota: false,
             filters: ['All Contacts', 'People', 'Vessels'],
             selectedFilter: 0,
-            showFilterMenu: false
+            showFilterMenu: false,
+            searchString: ''
         };
     }
 
@@ -344,6 +346,27 @@ class NewCallContacts extends React.Component {
         Actions.dialCall();
     };
 
+    renderSearchBar() {
+        return (
+            <View style={contactsStyles.searchBar}>
+                {Icons.search({
+                    size: 18,
+                    color: GlobalColors.frontmLightBlue,
+                    iconStyle: { paddingHorizontal: 10 }
+                })}
+                <TextInput
+                    style={contactsStyles.searchTextInput}
+                    underlineColorAndroid="transparent"
+                    placeholder="Search contact"
+                    selectionColor={GlobalColors.darkGray}
+                    placeholderTextColor={searchBarConfig.placeholderTextColor}
+                    onChangeText={text => this.setState({ searchString: text })}
+                    value={this.state.searchString}
+                />
+            </View>
+        );
+    }
+
     renderContactsList() {
         // console.log('all contacts ', this.state.contactsData);
 
@@ -353,16 +376,32 @@ class NewCallContacts extends React.Component {
         );
         if (sectionTitles && sectionTitles.length > 0) {
             let filteredContactsData = this.state.contactsData;
-            if (this.state.selectedFilter !== 0) {
+            if (
+                this.state.selectedFilter !== 0 ||
+                this.state.searchString.length > 0
+            ) {
                 filteredContactsData = this.state.contactsData.map(section => {
-                    return {
-                        title: section.title,
-                        data: section.data.filter(contact => {
+                    let data = section.data;
+                    if (this.state.selectedFilter !== 0) {
+                        data = data.filter(contact => {
                             return (
                                 contact.type ===
                                 this.state.filters[this.state.selectedFilter]
                             );
-                        })
+                        });
+                    }
+                    if (this.state.searchString.length > 0) {
+                        data = data.filter(contact => {
+                            return contact.name
+                                .toLowerCase()
+                                .includes(
+                                    this.state.searchString.toLowerCase()
+                                );
+                        });
+                    }
+                    return {
+                        title: section.title,
+                        data: data
                     };
                 });
                 filteredContactsData = filteredContactsData.filter(section => {
@@ -832,6 +871,7 @@ class NewCallContacts extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
+                    {this.renderSearchBar()}
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}

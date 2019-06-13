@@ -58,8 +58,8 @@ class DataManager {
 
     userLoggedInHandler = async () => {
         console.log('DataManager : User Logged in');
-        await this.refreshChannels();
-        await this.refreshContacts();
+        // await this.refreshChannels();
+        // await this.refreshContacts();
     };
 
     userLoggedOutHandler = async () => {

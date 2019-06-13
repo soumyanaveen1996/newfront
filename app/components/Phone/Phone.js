@@ -93,6 +93,16 @@ export default class Phone extends React.Component {
     }
 
     componentWillUnmount() {
+        this.mounted = false;
+        if (this.connectionDidDisconnectListener) {
+            this.connectionDidDisconnectListener.remove();
+        }
+        if (this.connectionDidConnectListener) {
+            this.connectionDidConnectListener.remove();
+        }
+        if (this.deviceDidReceiveIncomingListener) {
+            this.deviceDidReceiveIncomingListener.remove();
+        }
         Calls.fetchCallHistory();
     }
 
@@ -147,23 +157,6 @@ export default class Phone extends React.Component {
         }
     }
 
-    componentWillUnmount() {
-        this.mounted = false;
-        if (this.connectionDidDisconnectListener) {
-            this.connectionDidDisconnectListener.remove();
-        }
-        if (this.connectionDidConnectListener) {
-            this.connectionDidConnectListener.remove();
-        }
-        if (this.deviceDidReceiveIncomingListener) {
-            this.deviceDidReceiveIncomingListener.remove();
-        }
-
-        InteractionManager.runAfterInteractions(() =>
-            Conversation.downloadRemoteConversations()
-        );
-    }
-
     connectionDidConnectHandler(data) {
         if (data.call_state === 'ACCEPTED' || data.call_state === 'CONNECTED') {
             this.setState({ phoneState: PhoneState.incall });
@@ -177,7 +170,6 @@ export default class Phone extends React.Component {
     }
 
     connectionDidDisconnectHandler(data) {
-        Conversation.downloadRemoteConversations();
         const sceneBefore = Actions.currentScene;
         Actions.pop();
         const sceneAfter = Actions.currentScene;

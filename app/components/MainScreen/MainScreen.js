@@ -364,20 +364,22 @@ class MainScreen extends React.Component {
         this.showButton(pollingStrategy);
     }
 
-    update = async () => {
-        const userLoggedIn = await Auth.isUserLoggedIn();
-        const botsList = userLoggedIn
-            ? await Bot.getInstalledBots()
-            : await Promise.resolve(SystemBot.getDefaultBots());
-        const authStatus = userLoggedIn
-            ? MainScreenStates.authenticated
-            : MainScreenStates.unauthenticated;
-        this.setState({ screenState: authStatus, bots: botsList });
-        if (this.botList) {
-            this.botList.refresh();
-        }
-        this.checkPollingStrategy();
-    };
+    update = async () =>
+        new Promise(async resolve => {
+            const userLoggedIn = await Auth.isUserLoggedIn();
+            const botsList = userLoggedIn
+                ? await Bot.getInstalledBots()
+                : await Promise.resolve(SystemBot.getDefaultBots());
+            const authStatus = userLoggedIn
+                ? MainScreenStates.authenticated
+                : MainScreenStates.unauthenticated;
+            this.setState({ screenState: authStatus, bots: botsList });
+            if (this.botList) {
+                await this.botList.refresh();
+            }
+            this.checkPollingStrategy();
+            resolve();
+        });
 
     componentWillUnmount = () => {
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
@@ -637,6 +639,7 @@ class MainScreen extends React.Component {
                     searchString={this.state.searchString}
                     onSearch={this.onSearch}
                     setNoChats={this.setNoChats}
+                    updateTimeline={this.update}
                 />
             </View>
         );

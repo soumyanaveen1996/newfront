@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Platform
+    Platform,
+    RefreshControl
 } from 'react-native';
 import { BotListStyles, MainScreenStyles } from './styles';
 import BotListItem from './BotListItem';
@@ -47,7 +48,8 @@ class BotList extends React.Component {
             favData: [],
             rowMap: null,
             rowKey: null,
-            stopFaker: false
+            stopFaker: false,
+            refreshing: false
         };
     }
 
@@ -59,6 +61,16 @@ class BotList extends React.Component {
         this.mounted = true;
         this.refresh();
     }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.user.network !== this.props.user.network &&
+            this.props.user.network === 'full'
+        ) {
+            this.setState({ refreshing: false });
+        }
+    }
+
     async componentWillMount() {
         // await RemoteBotInstall.syncronizeBots()
     }
@@ -379,6 +391,30 @@ class BotList extends React.Component {
                     // header={this.renderSearchBar}
                 >
                     <SwipeListView
+                        refreshControl={
+                            this.props.user.network === 'full' ? (
+                                <RefreshControl
+                                    onRefresh={() => {
+                                        if (
+                                            this.props.user.network === 'full'
+                                        ) {
+                                            this.setState(
+                                                { refreshing: true },
+                                                async () => {
+                                                    await RemoteBotInstall.syncronizeBots();
+                                                    await Conversation.downloadRemoteConversations();
+                                                    await this.props.updateTimeline();
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                }
+                                            );
+                                        }
+                                    }}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
+                        }
                         useFlatList
                         style={{ height: '100%' }}
                         data={allData}
