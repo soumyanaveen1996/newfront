@@ -17,6 +17,11 @@ import Calls from '../calls';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
 
+export const synchronizePhoneBook = async () => {
+    InteractionManager.runAfterInteractions(() => {
+        Contact.syncPhoneContacts();
+    });
+};
 export const synchronizeUserData = async () => {
     try {
         let connection = await Network.isConnected();
@@ -37,7 +42,6 @@ export const synchronizeUserData = async () => {
         setTimeout(() => Channel.refreshChannels(), 300);
         setTimeout(() => Channel.refreshUnsubscribedChannels(), 400);
         setTimeout(() => Calls.fetchCallHistory(), 500);
-        setTimeout(() => Contact.syncPhoneContacts());
     } catch (error) {
         console.error('CRITICAL:::::Errror Synching Contacts', error);
         syncNoNetwork();

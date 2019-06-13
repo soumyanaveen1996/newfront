@@ -322,8 +322,12 @@ class NewCallContacts extends React.Component {
         let newAddressBook = AddressBook.filter(elem => {
             return elem.data.length > 0;
         });
-        this.setState({ contactsData: newAddressBook });
+        this.setState({ contactsData: newAddressBook }, () =>
+            this.genrateSectionTitles()
+        );
     };
+
+    genrateSectionTitles = () => {};
 
     renderItem(info) {
         const contact = info.item;
