@@ -19,7 +19,10 @@ import Loader from '../Loader/Loader';
 import { SYSTEM_BOT_MANIFEST } from '../../lib/bot/SystemBot';
 import DefaultPreference from 'react-native-default-preference';
 import AfterLogin from '../../services/afterLogin';
-import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import {
+    synchronizeUserData,
+    synchronizePhoneBook
+} from '../../lib/UserData/SyncData';
 import { TwilioVoIP } from '../../lib/twilio';
 
 export default class ConfirmationScreen extends Component {
@@ -139,6 +142,7 @@ export default class ConfirmationScreen extends Component {
                 });
                 AfterLogin.executeAfterLogin();
                 synchronizeUserData();
+                synchronizePhoneBook();
                 setTimeout(
                     () =>
                         Actions.timeline({

@@ -135,7 +135,8 @@ export default StyleSheet.create({
         marginVertical: 15,
         fontSize: 14,
         fontWeight: '100',
-        color: GlobalColors.darkGray
+        color: GlobalColors.darkGray,
+        textAlign: 'justify'
     },
     urlModal: {
         fontSize: 16,

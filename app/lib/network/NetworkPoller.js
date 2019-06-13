@@ -20,6 +20,8 @@ import SystemBot from '../bot/SystemBot';
 import RemoteBotInstall from '../RemoteBotInstall';
 import { NetworkDAO } from '../../lib/persistence';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
+
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
@@ -61,12 +63,6 @@ class NetworkPoller {
 
         this.cleanupInterval = setInterval(() => {
             InteractionManager.runAfterInteractions(() => {
-                console.log(
-                    '<------JSAVSCRIPT:::: CHECKING SUBSCRIPTIONS---->'
-                );
-
-                // console.log(this.grpcSubscription);
-                // console.log(this.grpcEndSubscription);
                 if (
                     this.grpcSubscription.length == 0 ||
                     this.grpcEndSubscription == 0
@@ -256,11 +252,14 @@ class NetworkPoller {
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
                 console.log('Sourav Logging:::: App is in Active State Again');
-                RemoteBotInstall.syncronizeBots();
-                setTimeout(() => NetworkHandler.readLambda(true), 500);
-                setTimeout(() => this.subscribeToServerEvents(), 2000);
-                setTimeout(() => this.cleanupSubscriptions(), 5000);
-                PushNotification.setApplicationIconBadgeNumber(0);
+                InteractionManager.runAfterInteractions(() => {
+                    RemoteBotInstall.syncronizeBots();
+                    setTimeout(() => NetworkHandler.readLambda(true), 6000);
+                    setTimeout(() => this.subscribeToServerEvents(), 2000);
+                    setTimeout(() => this.cleanupSubscriptions(), 5000);
+                    setTimeout(() => synchronizePhoneBook(), 3000);
+                    PushNotification.setApplicationIconBadgeNumber(0);
+                });
             }
             console.log('Moving to app state : ', nextAppState);
             if (nextAppState !== 'inactive') {

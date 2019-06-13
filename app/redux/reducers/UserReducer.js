@@ -38,6 +38,8 @@ export const UserReducer = (state = initialState.user, action) => {
         return { ...state, ...{ currentForm: action.payload } };
     case Actions.UPLOAD_IMAGE:
         return { ...state, ...{ upload: state.upload + 1 } };
+    case Actions.SET_PHONE_CONTACTS:
+        return { ...state, ...{ phoneContacts: action.payload } };
     default:
         return state;
     }

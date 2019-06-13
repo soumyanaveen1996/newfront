@@ -24,201 +24,139 @@ export default class ContextSlideshow extends React.Component {
         this.state = {};
     }
 
-    renderUrlBigCard(item) {
-        if (typeof item.seeMoreUrl !== 'string' || item.seeMoreUrl === '') {
-            return this.renderErrorCard('url missing');
-        }
-        const content = (
-            <View style={styles.horizontalContainer}>
-                <View
-                    style={[
-                        styles.verticalContainer,
-                        { paddingVertical: 20, paddingHorizontal: 15 }
-                    ]}
-                >
-                    <View>
-                        <Text
-                            style={styles.title}
-                            numberOfLines={1}
-                            ellipsizeMode={'tail'}
-                        >
-                            {item.title}
-                        </Text>
-                        <Text
-                            style={styles.description}
-                            numberOfLines={4}
-                            ellipsizeMode={'tail'}
-                        >
-                            {item.description}
-                        </Text>
-                    </View>
-                    {item.seeMoreUrl ? (
-                        <Text
-                            style={styles.seeMore}
-                            onPress={() =>
-                                Actions.webview({ url: item.seeMoreUrl })
-                            }
-                        >
-                            See more
-                        </Text>
-                    ) : null}
-                </View>
-                <Image style={{ flex: 1 }} source={{ uri: item.imageUrl }} />
-            </View>
-        );
-        const action = () => this.props.focusOnMarker(item.cardId);
-        return {
-            action: action,
-            content: content
-        };
-    }
-
-    renderUrlSmallCard(item) {
-        if (
-            !item.seeMoreUrl ||
-            typeof item.seeMoreUrl !== 'string' ||
-            item.seeMoreUrl === ''
-        ) {
-            return this.renderErrorCard('url missing');
-        }
-        const content = (
-            <View style={styles.verticalContainer}>
-                <Text
-                    style={styles.smallCardTitle}
-                    numberOfLines={3}
-                    ellipsizeMode={'tail'}
-                >
-                    {item.title}
-                </Text>
-                <Text
-                    style={styles.footer}
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
-                >
-                    {item.seeMoreUrl}
-                </Text>
-            </View>
-        );
-        const action = () => Actions.webview({ url: item.seeMoreUrl });
-        return {
-            action: action,
-            content: content
-        };
-    }
-
-    renderActionBigCard(item) {
-        const content = (
-            <View style={styles.verticalContainer}>
-                <View style={styles.verticalContainer}>
-                    <Image
-                        style={{ flex: 1 }}
-                        source={{ uri: item.imageUrl }}
-                    />
-                    <Text
-                        style={[
-                            styles.description,
-                            { marginTop: 5, marginHorizontal: 15 }
-                        ]}
-                        numberOfLines={2}
-                        ellipsizeMode={'tail'}
-                    >
-                        {item.title}
-                    </Text>
-                </View>
-                <Text
-                    style={[
-                        styles.footer,
-                        { marginHorizontal: 15, marginBottom: 20 }
-                    ]}
-                    numberOfLines={1}
-                    ellipsizeMode={'tail'}
-                >
-                    {item.description}
-                </Text>
-            </View>
-        );
-        const action = () => this.props.onCardSelected(item.cardId);
-        return {
-            action: action,
-            content: content
-        };
-    }
-
-    renderActionSmallCard(item) {
-        const content = (
-            <View style={styles.verticalContainer}>
-                <Text
-                    style={styles.smallCardTitle}
-                    numberOfLines={3}
-                    ellipsizeMode={'tail'}
-                >
-                    {item.title}
-                </Text>
-            </View>
-        );
-        const action = () => this.props.onCardSelected(item.cardId);
-        return {
-            action: action,
-            content: content
-        };
-    }
-
-    renderDataCard(item) {
-        if (
-            !item.data ||
-            typeof item.data !== 'object' ||
-            item.data.length < 1
-        ) {
-            return this.renderErrorCard('data not found');
-        }
-        const content = (
-            <View style={styles.verticalContainer}>
-                <View>
-                    <Text
-                        style={styles.smallCardTitle}
-                        numberOfLines={3}
-                        ellipsizeMode={'tail'}
-                    >
-                        {item.title}
-                    </Text>
-                </View>
+    renderCard({ item }) {
+        let bottomButton;
+        if (item.seeMoreUrl) {
+            bottomButton = (
                 <Text
                     style={styles.seeMore}
-                    numberOfLines={1}
+                    onPress={() => Actions.webview({ url: item.seeMoreUrl })}
+                >
+                    See more
+                </Text>
+            );
+        } else if (item.data) {
+            bottomButton = (
+                <Text
+                    style={styles.seeMore}
                     onPress={() =>
-                        this.props.onDataCardSelected(
-                            this.renderModalContent(item.data)
+                        this.props.openModalWithContent(
+                            this.renderModalContent(item)
                         )
                     }
                 >
                     More info
                 </Text>
-            </View>
+            );
+        } else if (item.action) {
+            bottomButton = (
+                <Text
+                    style={styles.seeMore}
+                    onPress={() => this.props.onActionSelected(item.cardId)}
+                >
+                    {item.action}
+                </Text>
+            );
+        } else {
+            bottomButton = (
+                <Text
+                    style={styles.seeMore}
+                    onPress={() =>
+                        this.props.openModalWithContent(
+                            this.renderModalContent(item)
+                        )
+                    }
+                >
+                    More info
+                </Text>
+            );
+        }
+        return (
+            <TouchableOpacity
+                style={styles.bigCard}
+                onPress={() => this.focusOnMarker(item)}
+            >
+                <View style={styles.horizontalContainer}>
+                    <View
+                        style={[
+                            styles.verticalContainer,
+                            { paddingVertical: 20, paddingHorizontal: 15 }
+                        ]}
+                    >
+                        <View>
+                            <Text
+                                style={styles.title}
+                                numberOfLines={1}
+                                ellipsizeMode={'tail'}
+                            >
+                                {item.title}
+                            </Text>
+                            <Text
+                                style={styles.description}
+                                numberOfLines={4}
+                                ellipsizeMode={'tail'}
+                            >
+                                {item.description}
+                            </Text>
+                        </View>
+                        {bottomButton}
+                    </View>
+                    <Image
+                        style={{ flex: 1 }}
+                        source={{ uri: item.imageUrl }}
+                    />
+                </View>
+            </TouchableOpacity>
         );
-        const action = () => this.props.focusOnMarker(item.cardId);
-        return {
-            action: action,
-            content: content
-        };
     }
 
-    renderModalContent(cardData) {
-        let keys = Object.keys(cardData);
-        keys = keys.slice(1, keys.length);
-        const fields = _.map(keys, key => {
-            return (
-                <View style={styles.fieldModal}>
-                    <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
-                    {this.renderDataCardValue(cardData[key])}
-                </View>
-            );
-        });
+    focusOnMarker(card) {
+        const markerFound = this.props.focusOnMarker(card.cardId);
+        if (!markerFound) {
+            this.props.openModalWithContent(this.renderModalContent(card));
+        }
+    }
+
+    renderModalContent(card) {
+        let dataFields;
+        if (card.data) {
+            let keys = Object.keys(card.data);
+            keys = keys.slice(1, keys.length);
+            dataFields = _.map(keys, key => {
+                return (
+                    <View style={styles.fieldModal}>
+                        <Text style={styles.fieldLabelModal}>{key + ': '}</Text>
+                        {this.renderDataCardValue(card.data[key])}
+                    </View>
+                );
+            });
+        }
         return (
             <View style={styles.modal}>
+                {card.imageUrl ? (
+                    <Image
+                        style={styles.imageModal}
+                        source={{ uri: card.imageUrl }}
+                        resizeMode="cover"
+                    />
+                ) : null}
                 <ScrollView>
-                    <Text style={styles.dataTitle}>{cardData.title}</Text>
-                    {fields}
+                    <View style={styles.fieldsModal}>
+                        <Text style={styles.titleModal}>{card.title}</Text>
+                        <Text style={styles.descriptionModal}>
+                            {card.description + '\n'}
+                        </Text>
+                        {dataFields}
+                    </View>
                 </ScrollView>
+                <Text
+                    style={styles.action}
+                    numberOfLines={1}
+                    ellipsizeMode={'tail'}
+                    onPress={() => this.props.onActionSelected(card.cardId)}
+                >
+                    {card.action}
+                </Text>
             </View>
         );
     }
@@ -255,50 +193,6 @@ export default class ContextSlideshow extends React.Component {
         };
     }
 
-    renderBigCard(item) {
-        let card;
-        if (item.cardType === MapCardType.URL_CARD) {
-            card = this.renderUrlBigCard(item);
-        } else if (item.cardType === MapCardType.ACTION_CARD) {
-            card = this.renderActionBigCard(item);
-        } else if (item.cardType === MapCardType.DATA_CARD) {
-            card = this.renderDataCard(item);
-        } else {
-            card = this.renderErrorCard('Card type not found');
-        }
-        return (
-            <TouchableOpacity style={styles.bigCard} onPress={card.action}>
-                {card.content}
-            </TouchableOpacity>
-        );
-    }
-
-    renderSmallCard(item) {
-        let card;
-        if (item.cardType === MapCardType.URL_CARD) {
-            card = this.renderUrlSmallCard(item);
-        } else if (item.cardType === MapCardType.ACTION_CARD) {
-            card = this.renderActionSmallCard(item);
-        } else if (item.cardType === MapCardType.DATA_CARD) {
-            card = this.renderDataCard(item);
-        } else {
-            card = this.renderErrorCard('Card type not found');
-        }
-        return (
-            <TouchableOpacity style={styles.smallCard} onPress={card.action}>
-                {card.content}
-            </TouchableOpacity>
-        );
-    }
-
-    renderItem({ item }) {
-        if (item.design === MapCardDesign.BIG) {
-            return this.renderBigCard(item);
-        } else {
-            return this.renderSmallCard(item);
-        }
-    }
-
     renderFlatList() {
         if (this.props.isOpen) {
             return (
@@ -308,7 +202,7 @@ export default class ContextSlideshow extends React.Component {
                     }}
                     data={this.props.contentData || []}
                     // data={this.testData}
-                    renderItem={this.renderItem.bind(this)}
+                    renderItem={this.renderCard.bind(this)}
                     extraData={this.props}
                     horizontal={true}
                     decelerationRate="fast"

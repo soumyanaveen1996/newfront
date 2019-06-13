@@ -156,9 +156,10 @@ class MainRouter extends React.Component {
                                             height: 60
                                         }}
                                         swipeEnabled={true}
-                                        animationEnabled={true}
+                                        animationEnabled={false}
                                         showLabel={false}
                                         hideNavBar
+                                        lazy
                                     >
                                         <Scene
                                             key={ROUTER_SCENE_KEYS.homeMain}
@@ -234,7 +235,7 @@ class MainRouter extends React.Component {
                                             height: 50
                                         }}
                                         swipeEnabled={true}
-                                        animationEnabled={true}
+                                        animationEnabled={false}
                                         showLabel={false}
                                         tabBarPosition="top"
                                         showIcon={true}
@@ -242,6 +243,7 @@ class MainRouter extends React.Component {
                                         navBarButtonColor="rgba(22, 175, 239, 1)"
                                         titleStyle={{ color: 'black' }}
                                         // hideNavBar
+                                        lazy
                                     >
                                         <Scene
                                             key={
@@ -312,7 +314,7 @@ class MainRouter extends React.Component {
                                             height: 50
                                         }}
                                         swipeEnabled={true}
-                                        animationEnabled={true}
+                                        animationEnabled={false}
                                         showLabel={false}
                                         tabBarPosition="top"
                                         showIcon={true}
@@ -321,6 +323,7 @@ class MainRouter extends React.Component {
                                         titleStyle={{
                                             color: 'black'
                                         }}
+                                        lazy
 
                                         // hideNavBar
                                     >

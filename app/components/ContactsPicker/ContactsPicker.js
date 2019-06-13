@@ -11,7 +11,8 @@ import {
     Alert,
     TouchableOpacity,
     InteractionManager,
-    Image
+    Image,
+    RefreshControl
 } from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
@@ -150,7 +151,8 @@ class ContactsPicker extends React.Component {
             inviteModalVisible: false,
             userInfo: {},
             userId: '',
-            searchString: ''
+            searchString: '',
+            refreshing: false
         };
     }
 
@@ -207,6 +209,13 @@ class ContactsPicker extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.network !== this.props.appState.network &&
+            this.props.appState.network === 'full'
+        ) {
+            this.setState({ refreshing: false });
+        }
+
         if (
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
@@ -281,11 +290,11 @@ class ContactsPicker extends React.Component {
     static onExit() {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
-        if (!Store.getState().user.contactsLoaded) {
-            InteractionManager.runAfterInteractions(() =>
-                Contact.refreshContacts()
-            );
-        }
+        // if (!Store.getState().user.contactsLoaded) {
+        //     InteractionManager.runAfterInteractions(() =>
+        //         Contact.refreshContacts()
+        //     );
+        // }
     }
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Contacts');
@@ -613,6 +622,30 @@ class ContactsPicker extends React.Component {
                     <ActivityIndicator size="small" />
                 ) : null} */}
                     <SectionList
+                        refreshControl={
+                            this.props.appState.network === 'full' ? (
+                                <RefreshControl
+                                    onRefresh={() => {
+                                        if (
+                                            this.props.appState.network ===
+                                            'full'
+                                        ) {
+                                            this.setState(
+                                                { refreshing: true },
+                                                async () => {
+                                                    await Contact.refreshContacts();
+                                                    this.updateList();
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                }
+                                            );
+                                        }
+                                    }}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
+                        }
                         ItemSeparatorComponent={ContactsPickerItemSeparator}
                         ref={sectionList => {
                             this.contactsList = sectionList;
