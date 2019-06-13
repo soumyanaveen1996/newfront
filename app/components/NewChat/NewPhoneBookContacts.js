@@ -15,6 +15,7 @@ import {
     InteractionManager
 } from 'react-native';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import ImageLoad from 'react-native-image-placeholder';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -285,6 +286,7 @@ class NewCallContacts extends React.Component {
                         return {
                             id: contact.userId,
                             name: contact.userName,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -302,6 +304,7 @@ class NewCallContacts extends React.Component {
                         return {
                             id: contact.userId,
                             name: contact.userName,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -358,21 +361,32 @@ class NewCallContacts extends React.Component {
     renderItem(info) {
         const contact = info.item;
 
-        const Image = (
-            <ProfileImage
-                uuid={contact.id}
-                placeholder={Images.user_image}
+        const ImageProf = (
+            <ImageLoad
                 style={styles.avatarImage}
+                resizeMode="contain"
+                source={contact.profileImage}
+                isShowActivity={false}
                 placeholderStyle={styles.avatarImage}
-                resizeMode="cover"
+                borderRadius={styles.avatarImage.width / 2}
+                placeholderSource={require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png')}
             />
         );
+        // const Image = (
+        //     <ProfileImage
+        //         uuid={contact.id}
+        //         placeholder={Images.user_image}
+        //         style={styles.avatarImage}
+        //         placeholderStyle={styles.avatarImage}
+        //         resizeMode="cover"
+        //     />
+        // );
         return (
             <NewChatRow
                 key={contact.id}
                 item={contact}
                 title={contact.name}
-                image={Image}
+                image={ImageProf}
                 id={contact.id}
                 onItemPressed={this.onContactSelected}
                 email={contact.emails[0].email}
@@ -430,7 +444,6 @@ class NewCallContacts extends React.Component {
     }
 
     renderContactsList() {
-        console.log('Sourav Logging:::: Rendering Contact List');
         if (this.state.sectionTitles.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
@@ -439,9 +452,6 @@ class NewCallContacts extends React.Component {
                 ) : null} */}
                     <SectionList
                         ItemSeparatorComponent={NewChatItemSeparator}
-                        ref={sectionList => {
-                            this.contactsList = sectionList;
-                        }}
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={({ section }) => (
@@ -449,7 +459,6 @@ class NewCallContacts extends React.Component {
                         )}
                         sections={this.state.filteredSections}
                         keyExtractor={(item, index) => item.id}
-                        initialNumToRender={10}
                         removeClippedSubviews={true}
                     />
                     {/* <NewChatIndexView
@@ -505,8 +514,6 @@ class NewCallContacts extends React.Component {
     };
 
     phoneNumbers = () => {
-        console.log(this.state.contactSelected);
-
         const { contactSelected } = this.state;
         const phoneNumbers = contactSelected
             ? contactSelected.phoneNumbers
