@@ -71,7 +71,9 @@ class NewCallContacts extends React.Component {
             contactVisible: false,
             contactSelected: null,
             updatingCallQuota: false,
-            searchString: ''
+            searchString: '',
+            sectionTitles: [],
+            filteredSections: []
         };
     }
 
@@ -323,11 +325,35 @@ class NewCallContacts extends React.Component {
             return elem.data.length > 0;
         });
         this.setState({ contactsData: newAddressBook }, () =>
-            this.genrateSectionTitles()
+            this.generate_sections()
         );
     };
 
-    genrateSectionTitles = () => {};
+    generate_sections = () => {
+        const sectionTitles = _.map(
+            this.state.contactsData,
+            section => section.title
+        );
+        let filteredSections = [];
+
+        if (sectionTitles && sectionTitles.length > 0) {
+            filteredSections = [...this.state.contactsData];
+            if (this.state.searchString.length > 0) {
+                filteredSections = this.state.contactsData.map(section => {
+                    let data = section.data.filter(contact =>
+                        contact.name
+                            .toLowerCase()
+                            .includes(this.state.searchString.toLowerCase())
+                    );
+                    return {
+                        ...section,
+                        data: data
+                    };
+                });
+            }
+        }
+        this.setState({ filteredSections, sectionTitles });
+    };
 
     renderItem(info) {
         const contact = info.item;
@@ -385,12 +411,18 @@ class NewCallContacts extends React.Component {
                     iconStyle: { paddingHorizontal: 10 }
                 })}
                 <TextInput
+                    autoCorrect={false}
                     style={contactsStyles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search contact"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
-                    onChangeText={text => this.setState({ searchString: text })}
+                    onChangeText={text =>
+                        this.setState(
+                            { searchString: text },
+                            this.generate_sections()
+                        )
+                    }
                     value={this.state.searchString}
                 />
             </View>
@@ -398,25 +430,8 @@ class NewCallContacts extends React.Component {
     }
 
     renderContactsList() {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
-        );
-        if (sectionTitles && sectionTitles.length > 0) {
-            let filteredSections = [...this.state.contactsData];
-            if (this.state.searchString.length > 0) {
-                filteredSections = this.state.contactsData.map(section => {
-                    let data = section.data.filter(contact =>
-                        contact.name
-                            .toLowerCase()
-                            .includes(this.state.searchString.toLowerCase())
-                    );
-                    return {
-                        ...section,
-                        data: data
-                    };
-                });
-            }
+        console.log('Sourav Logging:::: Rendering Contact List');
+        if (this.state.sectionTitles.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
@@ -432,8 +447,10 @@ class NewCallContacts extends React.Component {
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
                         )}
-                        sections={filteredSections}
+                        sections={this.state.filteredSections}
                         keyExtractor={(item, index) => item.id}
+                        initialNumToRender={10}
+                        removeClippedSubviews={true}
                     />
                     {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
