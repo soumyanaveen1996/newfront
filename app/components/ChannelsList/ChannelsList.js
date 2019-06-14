@@ -309,7 +309,7 @@ class ChannelsList extends React.Component {
     async refresh(onback = false, handleEmptyChannels = false) {
         let channels = await Channel.getSubscribedChannels();
 
-        // console.log('all the data ========', channels);
+        console.log('all the data ========', channels);
 
         let filteredChannels = await this.applyFilter(channels);
         for (const channel of filteredChannels) {
