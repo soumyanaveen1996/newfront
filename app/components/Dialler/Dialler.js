@@ -302,7 +302,9 @@ export default class Dialler extends React.Component {
                 Actions.pop();
                 return;
             }
-            Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
+            Alert.alert(
+                'Sorry , I am unable to connect your call. Please try after sometime'
+            );
             this.closeCall();
         }
     }

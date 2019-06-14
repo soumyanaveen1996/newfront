@@ -133,6 +133,8 @@ export default class ContactDetailsScreen extends React.Component {
                 if (error) {
                     return reject('Cannt Find Local Contacts');
                 }
+                // console.log('get contacts ', contacts);
+
                 const foundLocalContact = R.filter(this.compareEmail, contacts);
                 return resolve(foundLocalContact);
 
@@ -142,10 +144,14 @@ export default class ContactDetailsScreen extends React.Component {
     };
 
     addLocalConatcts = localContacts => {
-        console.log(localContacts);
+        console.log('we see', this.props.contact.emails);
+        let emailToDisplay = this.props.contact.emails[0].email || '';
         if (localContacts.length === 0) {
             // this.setState({ loading: false });
-            return Alert.alert('No Local Contacts Found');
+            return Alert.alert(
+                'No phone contact found for email address ',
+                emailToDisplay
+            );
         }
         const localPhone = localContacts[0].phoneNumbers[0].number;
         if (localPhone && localPhone !== '') {
@@ -218,6 +224,8 @@ export default class ContactDetailsScreen extends React.Component {
                 });
         } else {
             localContacts = await this.getLocalContacts();
+            // console.log('we will see ', localContacts);
+
             this.addLocalConatcts(localContacts);
         }
     };
@@ -233,7 +241,7 @@ export default class ContactDetailsScreen extends React.Component {
 
         Conversation.setFavorite(data)
             .then(value => {
-                console.log('contacts Set as favorite', value);
+                // console.log('contacts Set as favorite', value);
                 Contact.getAddedContacts().then(contactsData => {
                     let updateContacts = contactsData.map(elem => {
                         if (elem.userId === value.otherUserId) {
@@ -386,7 +394,8 @@ export default class ContactDetailsScreen extends React.Component {
             return (
                 <View style={styles.actionAreaCD}>
                     {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' ? (
+                    this.props.contact.contactType !== 'Personal' &&
+                    this.props.contact.type !== 'Vessels' ? (
                             <TouchableOpacity
                                 style={styles.actionButtonCD}
                                 onPress={this.startChat.bind(this)}
@@ -734,7 +743,7 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
-        console.log('thhhhhhhhhhhhhhhh', this.props.contact);
+        // console.log('thhhhhhhhhhhhhhhh', this.props.contact);
         if (!this.props.contact) {
             return <View />;
         }
@@ -746,7 +755,8 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderDetails()}
                 {this.renderFooterButtons()}
                 {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' && (
+                    this.props.contact.contactType !== 'Personal' &&
+                    this.props.contact.type !== 'Vessels' && (
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{

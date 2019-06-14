@@ -15,6 +15,7 @@ import {
     InteractionManager
 } from 'react-native';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import ImageLoad from 'react-native-image-placeholder';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -58,6 +59,7 @@ import DStyles from '../Dialler/styles';
 import Bot from '../../lib/bot';
 import contactsStyles from '../ContactsPicker/styles';
 import GlobalColors from '../../config/styles';
+import { LargeList } from 'react-native-largelist-v3';
 
 var EventListeners = [];
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
@@ -71,7 +73,9 @@ class NewCallContacts extends React.Component {
             contactVisible: false,
             contactSelected: null,
             updatingCallQuota: false,
-            searchString: ''
+            searchString: '',
+            sectionTitles: [],
+            filteredSections: []
         };
     }
 
@@ -90,31 +94,39 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        InteractionManager.runAfterInteractions(() => {
-            console.log('Sourav Logging:::: Loading Contacts');
-            if (Platform.OS === 'android') {
-                PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                    {
-                        title: 'Contacts',
-                        message:
-                            'Grant access for contacts to display in FrontM'
-                    }
-                )
-                    .then(granted => {
-                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                            this.gettingAllContactData();
-                        } else {
-                            this.refresh([]);
-                        }
-                    })
-                    .catch(err => {
-                        console.log('PermissionsAndroid', err);
-                    });
-            } else {
-                this.gettingAllContactData();
-            }
-        });
+
+        // console.log(
+        //     'Sourav Logging:::: Phone Contacts',
+        //     this.props.appState.phoneContacts
+        // );
+
+        this.refresh(this.props.appState.phoneContacts);
+
+        // InteractionManager.runAfterInteractions(() => {
+        //     console.log('Sourav Logging:::: Loading Contacts');
+        //     if (Platform.OS === 'android') {
+        //         PermissionsAndroid.request(
+        //             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        //             {
+        //                 title: 'Contacts',
+        //                 message:
+        //                     'Grant access for contacts to display in FrontM'
+        //             }
+        //         )
+        //             .then(granted => {
+        //                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //                     this.gettingAllContactData();
+        //                 } else {
+        //                     this.refresh([]);
+        //                 }
+        //             })
+        //             .catch(err => {
+        //                 console.log('PermissionsAndroid', err);
+        //             });
+        //     } else {
+        //         this.gettingAllContactData();
+        //     }
+        // });
     }
 
     componentDidUpdate(prevProps) {}
@@ -136,9 +148,10 @@ class NewCallContacts extends React.Component {
             bot: SystemBot.backgroundTaskBot
         });
 
-        await bgBotScreen.initialize();
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
+        bgBotScreen.initialize().then(() => {
+            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        });
     };
 
     getCredit() {
@@ -180,65 +193,28 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    gettingAllContactData = () => {
-        let contactArray = [];
-
-        Contacts.getAll((err, contacts) => {
-            if (err) {
-                console.log('on denial ', err);
-                this.refresh([]);
-                return;
-            }
-
-            setTimeout(() => {
-                contacts.forEach((data, index) => {
-                    let contactName = '';
-
-                    if (data.givenName && data.familyName) {
-                        contactName = data.givenName + ' ' + data.familyName;
-                    } else {
-                        contactName = data.givenName;
-                    }
-                    let contactObj = {
-                        userId: index,
-                        emails: [...data.emailAddresses],
-                        profileImage: data.thumbnailPath,
-                        userName: data.givenName,
-                        name: contactName,
-                        phoneNumbers: [...data.phoneNumbers],
-                        selected: false
-                    };
-                    contactArray.push(contactObj);
-                });
-                this.refresh(contactArray);
-            }, 0);
-        });
-    };
-
     static onEnter() {
-        const user = Store.getState().user;
+        // const user = Store.getState().user;
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
-            I18n.t('Contacts_call'),
+            'Phone Contacts',
             I18n.t('Contacts')
         );
-        Store.dispatch(refreshContacts(true));
+        // Store.dispatch(refreshContacts(true));
     }
 
     static onExit() {
-        Store.dispatch(refreshContacts(false));
+        // Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {
-        return nextProps.appState.currentScene === I18n.t('Contacts_call');
+        return nextProps.appState.currentScene === 'Phone Contacts';
     }
 
     setContactVisible = (value, contact) =>
         this.setState({ contactVisible: value, contactSelected: contact });
 
     createAddressBook = contacts => {
-        console.log('conatcts ========== ', contacts);
-
         const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
         const uniqId = R.eqProps('userId');
         const contactsUniq = R.uniqWith(uniqId)(contacts);
@@ -246,7 +222,7 @@ class NewCallContacts extends React.Component {
         const phoneContacts = contactsUniq.map(contact => ({
             ...contact,
             userName: contact.userName
-                ? contact.userName
+                ? contact.name
                     .trim()
                     .split(' ')
                     .map(
@@ -274,6 +250,7 @@ class NewCallContacts extends React.Component {
                         return {
                             id: contact.userId,
                             name: contact.userName,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -288,9 +265,21 @@ class NewCallContacts extends React.Component {
                             contact.emails.length > 0
                                 ? contact.emails[0].email
                                 : undefined;
+                        let name = '';
+                        if (contact.userName !== '') {
+                            name = contact.userName;
+                        } else if (yeahMail) {
+                            name = yeahMail;
+                        } else if (contact.phoneNumbers.length > 0) {
+                            name = contact.phoneNumbers[0].number;
+                        } else {
+                            name = '';
+                        }
+
                         return {
                             id: contact.userId,
-                            name: contact.userName,
+                            name,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -298,11 +287,12 @@ class NewCallContacts extends React.Component {
             }
             return {
                 title: letter,
-                data: contactBook
+                items: contactBook
             };
         });
         return PhoneContacts;
     };
+
     refresh = contacts => {
         // this.dataSource.loadData()
         if (!contacts) {
@@ -311,33 +301,85 @@ class NewCallContacts extends React.Component {
         const AddressBook = this.createAddressBook(contacts);
 
         let newAddressBook = AddressBook.filter(elem => {
-            return elem.data.length > 0;
+            return elem.items.length > 0;
         });
         this.setState({ contactsData: newAddressBook });
     };
 
-    renderItem(info) {
-        const contact = info.item;
+    filter = () => {
+        if (this.state.searchString.length > 0) {
+            const filteredContacts = this.props.appState.phoneContacts.filter(
+                contact =>
+                    contact.userName
+                        .toLowerCase()
+                        .includes(this.state.searchString.toLowerCase())
+            );
+            this.refresh(filteredContacts);
+        }
 
-        const Image = (
-            <ProfileImage
-                uuid={contact.id}
-                placeholder={Images.user_image}
+        // const sectionTitles = _.map(
+        //     this.state.contactsData,
+        //     section => section.title
+        // );
+        // let filteredSections = [];
+
+        // if (sectionTitles && sectionTitles.length > 0) {
+        //     filteredSections = [...this.state.contactsData];
+        //     if (this.state.searchString.length > 0) {
+        //         filteredSections = this.state.contactsData.map(section => {
+        //             let data = section.data.filter(contact =>
+        //                 contact.name
+        //                     .toLowerCase()
+        //                     .includes(this.state.searchString.toLowerCase())
+        //             );
+        //             return {
+        //                 ...section,
+        //                 data: data
+        //             };
+        //         });
+        //     }
+        // }
+        // this.setState({ filteredSections, sectionTitles });
+    };
+
+    renderItem(path) {
+        const contact = this.state.contactsData[path.section].items[path.row];
+
+        const image_path = `file://${contact.profileImage}`;
+        const placeHolderImage = require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png');
+        const pholder = `file://${placeHolderImage}`;
+        const ImageProf = (
+            <ImageLoad
                 style={styles.avatarImage}
-                placeholderStyle={styles.avatarImage}
                 resizeMode="cover"
+                source={placeHolderImage}
+                isShowActivity={false}
+                placeholderStyle={styles.avatarImage}
+                borderRadius={styles.avatarImage.width / 2}
+                placeholderSource={{ uri: pholder }}
             />
         );
+        // const Image = (
+        //     <ProfileImage
+        //         uuid={contact.id}
+        //         placeholder={Images.user_image}
+        //         style={styles.avatarImage}
+        //         placeholderStyle={styles.avatarImage}
+        //         resizeMode="cover"
+        //     />
+        // );
         return (
-            <NewChatRow
-                key={contact.id}
-                item={contact}
-                title={contact.name}
-                image={Image}
-                id={contact.id}
-                onItemPressed={this.onContactSelected}
-                email={contact.emails[0].email}
-            />
+            <View>
+                <NewChatRow
+                    key={contact.id}
+                    item={contact}
+                    title={contact.name}
+                    image={ImageProf}
+                    id={contact.id}
+                    onItemPressed={this.onContactSelected}
+                    email={contact.emails[0].email}
+                />
+            </View>
         );
     }
     onContactSelected = contact => {
@@ -372,12 +414,17 @@ class NewCallContacts extends React.Component {
                     iconStyle: { paddingHorizontal: 10 }
                 })}
                 <TextInput
+                    autoCorrect={false}
                     style={contactsStyles.searchTextInput}
                     underlineColorAndroid="transparent"
                     placeholder="Search contact"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
-                    onChangeText={text => this.setState({ searchString: text })}
+                    onChangeText={text =>
+                        this.setState({ searchString: text }, () => {
+                            this.filter();
+                        })
+                    }
                     value={this.state.searchString}
                 />
             </View>
@@ -385,43 +432,36 @@ class NewCallContacts extends React.Component {
     }
 
     renderContactsList() {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
-        );
-        if (sectionTitles && sectionTitles.length > 0) {
-            let filteredSections = [...this.state.contactsData];
-            if (this.state.searchString.length > 0) {
-                filteredSections = this.state.contactsData.map(section => {
-                    let data = section.data.filter(contact =>
-                        contact.name
-                            .toLowerCase()
-                            .includes(this.state.searchString.toLowerCase())
-                    );
-                    return {
-                        ...section,
-                        data: data
-                    };
-                });
-            }
+        if (this.state.contactsData.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
-                    <SectionList
-                        ItemSeparatorComponent={NewChatItemSeparator}
-                        ref={sectionList => {
-                            this.contactsList = sectionList;
+
+                    <LargeList
+                        style={styles.addressBook}
+                        data={this.state.contactsData}
+                        heightForSection={() => 30}
+                        renderSection={section => {
+                            const sec = this.state.contactsData[section].title;
+                            return <NewChatSectionHeader title={sec} />;
                         }}
+                        heightForIndexPath={() => 50}
+                        renderIndexPath={this.renderItem.bind(this)}
+                    />
+
+                    {/* <SectionList
+                        ItemSeparatorComponent={NewChatItemSeparator}
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
                         )}
-                        sections={filteredSections}
+                        sections={this.state.filteredSections}
                         keyExtractor={(item, index) => item.id}
-                    />
+                        removeClippedSubviews={true}
+                    /> */}
                     {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
@@ -475,8 +515,6 @@ class NewCallContacts extends React.Component {
     };
 
     phoneNumbers = () => {
-        console.log(this.state.contactSelected);
-
         const { contactSelected } = this.state;
         const phoneNumbers = contactSelected
             ? contactSelected.phoneNumbers

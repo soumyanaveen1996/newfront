@@ -84,3 +84,8 @@ export const setFirstLogin = payload => ({
     type: Actions.SET_FIRST_LOGIN,
     payload
 });
+
+export const setPhoneContacts = payload => ({
+    type: Actions.SET_PHONE_CONTACTS,
+    payload
+});

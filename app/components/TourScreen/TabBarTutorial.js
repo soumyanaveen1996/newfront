@@ -56,9 +56,7 @@ export default class TabBarTutorial extends Component {
                                 style={styles.skipTotorialContainer}
                                 onPress={this.props.action}
                             >
-                                <Text style={styles.skipButtonText}>
-                                    Skip this intro
-                                </Text>
+                                <Text style={styles.skipButtonText}>Skip</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={styles.nextTutorialContainer}

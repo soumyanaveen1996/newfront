@@ -24,7 +24,10 @@ import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import config from '../../config/config';
 import Conversation from '../../lib/conversation/Conversation';
 import { TwilioVoIP } from '../../lib/twilio';
-import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import {
+    synchronizeUserData,
+    synchronizePhoneBook
+} from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
 import SystemBot from '../../lib/bot/SystemBot';
 import Config, { overrideConsole } from '../../config/config';
@@ -134,6 +137,7 @@ export default class LoginScreen extends React.Component {
         Store.dispatch(setFirstLogin(true));
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
+        synchronizePhoneBook();
         this.setState({
             loading: false,
             errorMessage: '',

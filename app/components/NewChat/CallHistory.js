@@ -71,7 +71,7 @@ import {
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
-export default class CallHistory extends React.Component {
+class CallHistory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -93,6 +93,22 @@ export default class CallHistory extends React.Component {
             CallsEvents.callHistoryUpdated,
             this.getCallHistory.bind(this)
         );
+    }
+
+    static onEnter() {
+        EventEmitter.emit(
+            AuthEvents.tabTopSelected,
+            I18n.t('Call_History'),
+            I18n.t('Call_History')
+        );
+    }
+
+    static onExit() {
+        Store.dispatch(setCurrentScene('none'));
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.appState.currentScene === I18n.t('Call_History');
     }
 
     getCallHistory() {
@@ -221,3 +237,16 @@ export default class CallHistory extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({
+    appState: state.user
+});
+
+const mapDispatchToProps = dispatch => {
+    return {};
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CallHistory);

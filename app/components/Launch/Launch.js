@@ -6,7 +6,8 @@ import {
     Platform,
     PushNotificationIOS,
     AsyncStorage,
-    StatusBar
+    StatusBar,
+    InteractionManager
 } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
@@ -38,6 +39,7 @@ import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
 import {
     synchronizeUserData,
+    synchronizePhoneBook,
     syncNoNetwork
 } from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
@@ -182,6 +184,11 @@ export default class Splash extends React.Component {
                             });
                             return;
                         }
+
+                        InteractionManager.runAfterInteractions(() =>
+                            synchronizePhoneBook()
+                        );
+
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();
