@@ -68,6 +68,8 @@ export default class Contact {
             DeviceStorage.get(CONTACT_STORAGE_KEY_CAPABILITY)
                 .then(function(contacts) {
                     contacts = contacts || [];
+                    // console.log('contacts ', contacts);
+
                     return resolve(contacts);
                 })
                 .catch(err => {
@@ -157,6 +159,8 @@ export default class Contact {
             Contact.getAddedContacts()
                 .then(data => {
                     let contactArray = data.map(elem => {
+                        // console.log('contact data ==========', elem);
+
                         if (elem.userId === contact.userId) {
                             elem.waitingForConfirmation =
                                 contact.waitingForConfirmation;
@@ -267,6 +271,8 @@ export default class Contact {
                     localContact,
                     contact
                 );
+                // console.log('save contcats **************** ', mergedContact);
+
                 AllContacts.push(mergedContact);
             }
 
@@ -462,7 +468,8 @@ export default class Contact {
                                 ...site,
                                 userName: site.name + ' (' + site.type + ')',
                                 userId: site.siteId,
-                                waitingForConfirmation: false
+                                waitingForConfirmation: false,
+                                type: site.type
                             };
                         });
 
@@ -473,10 +480,10 @@ export default class Contact {
                             sites
                         );
 
-                        // console.log(
-                        //     'all conatcts ======================= >',
-                        //     allContacts
-                        // );
+                        console.log(
+                            'all conatcts ======================= >',
+                            allContacts
+                        );
 
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
