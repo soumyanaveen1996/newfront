@@ -422,7 +422,7 @@ class Form2 extends React.Component {
 
     validateField() {
         const fieldToValidate = this.answers.findIndex(answer => {
-            return answer.id === this.props.validation.fieldId;
+            return answer.id === this.props.validation.field;
         });
         if (fieldToValidate >= 0) {
             this.answers[
@@ -432,7 +432,7 @@ class Form2 extends React.Component {
                 fieldToValidate
             ].validationMessage = this.props.validation.validationMessage;
             this.props.setCurrentForm({
-                formData: newFormData,
+                formData: this.props.formData,
                 formMessage: this.props.formMessage,
                 currentResults: null,
                 change: null,
@@ -1107,6 +1107,7 @@ class Form2 extends React.Component {
     }
 
     renderValidationMessage(message) {
+        console.log('>>>>>>>>>aa10');
         return (
             <View style={styles.validationMessage}>
                 <Text style={styles.validationMessageText}>{message}</Text>
