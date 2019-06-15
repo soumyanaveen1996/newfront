@@ -167,6 +167,11 @@ export default class Splash extends React.Component {
                     }`;
                     const ContactsBOT = SystemBot.contactsBot.botId;
                     DefaultPreference.set('SESSION', user.creds.sessionId);
+                    console.log('Sourav Logging:::: Contacts URL', ContactsURL);
+                    console.log(
+                        'Sourav Logging:::: Session ID',
+                        user.creds.sessionId
+                    );
                     DefaultPreference.set('URL', ContactsURL);
                     DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
                     if (user) {

@@ -111,6 +111,9 @@ import Cards from '../Cards/Cards';
 
 const R = require('ramda');
 
+var backTimer = null;
+const timeout = Platform.OS === 'android' ? 500 : 400;
+
 class ChatBotScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -127,10 +130,24 @@ class ChatBotScreen extends React.Component {
                             state.params.botDone();
                         }
                         if (state.params.onBack) {
-                            Actions.pop();
-                            state.params.onBack();
+                            if (backTimer) {
+                                console.log(
+                                    'Sourav Logging:::: Clearing timeout'
+                                );
+                                clearTimeout(backTimer);
+                            }
+                            backTimer = setTimeout(() => {
+                                console.log('Sourav Logging:::: Firing Back');
+                                Actions.pop();
+                                state.params.onBack();
+                            }, timeout);
                         } else {
-                            Actions.pop();
+                            console.log('Sourav Logging:::: Back Fire');
+                            clearTimeout(backTimer);
+                            backTimer = setTimeout(
+                                () => Actions.pop(),
+                                timeout
+                            );
                         }
                     }}
                 />
@@ -233,6 +250,7 @@ class ChatBotScreen extends React.Component {
     };
 
     goBack = () => {
+        console.log('Sourav Logging:::: GOBACK');
         Actions.pop();
         if (this.props.onBack) {
             this.props.onBack();

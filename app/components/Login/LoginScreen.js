@@ -127,8 +127,11 @@ export default class LoginScreen extends React.Component {
                 DefaultPreference.setName('NativeStorage');
             }
             const ContactsURL = `${Config.network.queueProtocol}${
-                Config.proxy.host
-            }${Config.network.userDetailsPath}`;
+                Config.proxy.user_details_path
+            }`;
+
+            console.log('Sourav Logging:::: Contacts URL', ContactsURL);
+
             const ContactsBOT = SystemBot.contactsBot.botId;
             DefaultPreference.set('SESSION', user.creds.sessionId);
             DefaultPreference.set('URL', ContactsURL);

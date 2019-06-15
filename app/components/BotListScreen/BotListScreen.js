@@ -11,12 +11,21 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import utils from '../../lib/utils';
 
+var backTimer = null;
+
 export default class BotListScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         return {
             headerTitle:
                 navigation.state.params.title || headerConfig.headerTitle,
-            headerLeft: <HeaderBack onPress={Actions.pop} />
+            headerLeft: (
+                <HeaderBack
+                    onPress={() => {
+                        clearTimeout(backTimer);
+                        backTimer = setTimeout(() => Actions.pop(), 500);
+                    }}
+                />
+            )
         };
     }
 

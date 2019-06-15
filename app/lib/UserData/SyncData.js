@@ -35,13 +35,13 @@ export const synchronizeUserData = async () => {
         await Contact.refreshContacts();
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
-        }, 100);
+        }, 500);
         setTimeout(() => {
             Conversation.downloadRemoteConversations();
-        }, 200);
-        setTimeout(() => Channel.refreshChannels(), 300);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 400);
-        setTimeout(() => Calls.fetchCallHistory(), 500);
+        }, 1000);
+        setTimeout(() => Channel.refreshChannels(), 2000);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 3000);
+        setTimeout(() => Calls.fetchCallHistory(), 4000);
     } catch (error) {
         console.error('CRITICAL:::::Errror Synching Contacts', error);
         syncNoNetwork();
