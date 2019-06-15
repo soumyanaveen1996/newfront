@@ -21,6 +21,7 @@ import {
 } from './config';
 import I18n from '../../config/i18n/i18n';
 import { Icons } from '../../config/icons';
+import GlobalColors from '../../config/styles';
 
 export const SLIDER_DEFAULT_HEIGHT = SCREEN_HEIGHT / 2.4;
 
@@ -137,14 +138,12 @@ export default class Slider extends React.Component {
             options.smartReply !== true
         ) {
             return (
-                <View style={styles.rightButton}>
-                    <Text
-                        onPress={this.onDonePress.bind(this)}
-                        style={styles.rightButtonText}
-                    >
-                        {I18n.t('Done')}
-                    </Text>
-                </View>
+                <Text
+                    onPress={this.onDonePress.bind(this)}
+                    style={styles.closeText}
+                >
+                    {I18n.t('Done')}
+                </Text>
             );
         } else {
             return (
@@ -253,10 +252,12 @@ export default class Slider extends React.Component {
                 <CheckBox
                     containerStyle={styles.checkboxContainer}
                     style={styles.checkboxIconStyle}
-                    uncheckedIcon={checkBoxConfig.uncheckedIcon}
-                    checkedIcon={checkBoxConfig.checkedIcon}
-                    checkedColor={checkBoxConfig.checkedColor}
-                    iconType={checkBoxConfig.iconType}
+                    textStyle={{ padding: 0, mergin: 0 }}
+                    size={24}
+                    iconType="ionicon"
+                    checkedIcon="ios-checkbox-outline"
+                    uncheckedIcon="ios-square-outline"
+                    checkedColor={GlobalColors.frontmLightBlue}
                     checked={selected}
                     onPress={() => this.onRowsSelect(index, i)}
                 />
@@ -280,10 +281,7 @@ export default class Slider extends React.Component {
                     }}
                     style={styles.infoImageContainer}
                 >
-                    <Image
-                        source={images.btn_info}
-                        style={styles.infoIconStyle}
-                    />
+                    {Icons.info()}
                 </TouchableOpacity>
             );
         }
@@ -393,25 +391,18 @@ export default class Slider extends React.Component {
         return (
             <Animated.View style={this.heightStyle()}>
                 <View style={styles.headerView}>
-                    <View style={{ flex: 1 }}>
-                        <TouchableOpacity
-                            accessibilityLabel="Slider Close Button"
-                            testID="slider-close-button"
-                            style={styles.closeButton}
-                            onPress={this.cancelSlider.bind(this)}
-                        >
-                            {Icons.sliderClose()}
-                        </TouchableOpacity>
-                    </View>
-                    <View
-                        {...this._panResponder.panHandlers}
-                        style={styles.sliderIconView}
+                    <Text
+                        accessibilityLabel="Slider Close Button"
+                        testID="slider-close-button"
+                        onPress={this.cancelSlider.bind(this)}
+                        style={styles.closeText}
                     >
-                        <Image
-                            source={images.icn_slider}
-                            style={styles.sliderIconImg}
-                        />
-                    </View>
+                        Close
+                    </Text>
+                    <View
+                        style={styles.topBarLine}
+                        {...this._panResponder.panHandlers}
+                    />
                     {this.headerRightButton()}
                 </View>
                 <ScrollView

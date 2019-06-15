@@ -626,21 +626,22 @@ class ContactsPicker extends React.Component {
                             this.props.appState.network === 'full' ? (
                                 <RefreshControl
                                     onRefresh={() => {
-                                        if (
-                                            this.props.appState.network ===
-                                            'full'
-                                        ) {
-                                            this.setState(
-                                                { refreshing: true },
-                                                async () => {
+                                        this.setState(
+                                            { refreshing: true },
+                                            async () => {
+                                                try {
                                                     await Contact.refreshContacts();
                                                     this.updateList();
                                                     this.setState({
                                                         refreshing: false
                                                     });
+                                                } catch (e) {
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
                                                 }
-                                            );
-                                        }
+                                            }
+                                        );
                                     }}
                                     refreshing={this.state.refreshing}
                                 />

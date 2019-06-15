@@ -395,21 +395,23 @@ class BotList extends React.Component {
                             this.props.user.network === 'full' ? (
                                 <RefreshControl
                                     onRefresh={() => {
-                                        if (
-                                            this.props.user.network === 'full'
-                                        ) {
-                                            this.setState(
-                                                { refreshing: true },
-                                                async () => {
+                                        this.setState(
+                                            { refreshing: true },
+                                            async () => {
+                                                try {
                                                     await RemoteBotInstall.syncronizeBots();
                                                     await Conversation.downloadRemoteConversations();
                                                     await this.props.updateTimeline();
                                                     this.setState({
                                                         refreshing: false
                                                     });
+                                                } catch (error) {
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
                                                 }
-                                            );
-                                        }
+                                            }
+                                        );
                                     }}
                                     refreshing={this.state.refreshing}
                                 />
