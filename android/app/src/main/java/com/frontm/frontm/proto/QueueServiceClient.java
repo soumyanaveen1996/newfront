@@ -141,7 +141,7 @@ public class QueueServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(20000, TimeUnit.MILLISECONDS).getAllQueueMessages(input, new StreamObserver<QueueResponse>() {
+        stub.withDeadlineAfter(10000, TimeUnit.MILLISECONDS).getAllQueueMessages(input, new StreamObserver<QueueResponse>() {
             @Override
             public void onNext(QueueResponse value) {
                 //callback.invoke(null, new QueueResponseConverter().toResponse(value));

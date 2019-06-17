@@ -190,9 +190,10 @@ export default class Splash extends React.Component {
                             return;
                         }
 
-                        InteractionManager.runAfterInteractions(() =>
-                            synchronizePhoneBook()
-                        );
+                        InteractionManager.runAfterInteractions(() => {
+                            synchronizePhoneBook();
+                            Notification.registeronLaunch();
+                        });
 
                         this.showMainScreen();
                     } else {
@@ -239,7 +240,7 @@ export default class Splash extends React.Component {
                 'notification',
                 notification => {
                     // NetworkHandler.readLambda();
-                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                    // notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
 
@@ -263,14 +264,21 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
+        console.log('Sourav Logging:::: Register for Notifcaitons');
         this.configureNotifications();
     };
 
     handleNotification = notification => {
+        console.log('Sourav Logging:::: In handle Notifcaiton', notification);
+        NetworkHandler.readLambda();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
+            const conversationId =
+                Platform.OS === 'android'
+                    ? notification.conversationId
+                    : notification.data.conversationId;
             PushNotification.setApplicationIconBadgeNumber(0);
-            Conversation.getConversation(notification.conversationId)
+            Conversation.getConversation(conversationId)
                 .then(conv => {
                     conversation = conv;
                     return SystemBot.get(SystemBot.imBotManifestName);
@@ -327,7 +335,6 @@ export default class Splash extends React.Component {
                     }
                 });
         }
-        NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }

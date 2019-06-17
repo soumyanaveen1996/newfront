@@ -148,7 +148,7 @@ class NetworkPoller {
                 const delay = (Math.floor(Math.random() * 5) + 1) * 1000;
                 setTimeout(() => {
                     MessageQueue.push(message);
-                }, delay);
+                }, 0);
             })
         );
         this.grpcEndSubscription.push(

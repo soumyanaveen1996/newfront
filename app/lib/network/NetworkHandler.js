@@ -44,12 +44,10 @@ const poll = () => {
 };
 
 const readLambda = (force = false) => {
-    InteractionManager.runAfterInteractions(() => {
-        console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
-        Auth.getUser().then(authUser => {
-            processNetworkQueue();
-            readRemoteLambdaQueue(authUser, force);
-        });
+    console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
+    Auth.getUser().then(authUser => {
+        processNetworkQueue();
+        readRemoteLambdaQueue(authUser, force);
     });
 };
 
@@ -62,7 +60,7 @@ const handleLambdaResponse = (res, user) => {
         messages.forEach((message, index) => {
             setTimeout(() => {
                 MessageQueue.push(message);
-            }, index * 100);
+            }, index * 10);
         });
         // _.forEach(messages, function(message) {
         //     MessageQueue.push(message);
@@ -84,7 +82,7 @@ const readRemoteLambdaQueue = (user, force = false) => {
     let logoutSubscribtion;
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
-            const rand = (Math.floor(Math.random() * 5) + 1) * 1000;
+            const rand = (Math.floor(Math.random() * 9) + 1) * 100;
             setTimeout(() => {
                 handleLambdaResponse(message, user);
             }, rand);
