@@ -165,6 +165,8 @@ const selectChannels = () =>
                 channelSql.selectChannels,
                 [],
                 function success(tx, res) {
+                    // console.log('before formating ================ res ', res);
+
                     res = Utils.addArrayToSqlResults(res);
                     // console.log('in the success ====== ', res);
                     let dbResults = res.rows
