@@ -480,10 +480,10 @@ export default class Contact {
                             sites
                         );
 
-                        console.log(
-                            'all conatcts ======================= >',
-                            allContacts
-                        );
+                        // console.log(
+                        //     'all conatcts ======================= >',
+                        //     allContacts
+                        // );
 
                         Contact.saveContacts(allContacts);
                         Store.dispatch(completeContactsLoad(true));
