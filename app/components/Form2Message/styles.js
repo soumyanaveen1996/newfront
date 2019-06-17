@@ -166,7 +166,7 @@ export default (stylesheet = StyleSheet.create({
     },
     dateField: {
         height: 42,
-        width: '40%',
+        width: '45%',
         paddingHorizontal: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
