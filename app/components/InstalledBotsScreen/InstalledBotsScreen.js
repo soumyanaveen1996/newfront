@@ -9,7 +9,8 @@ import {
     ActivityIndicator,
     Alert,
     ScrollView,
-    RefreshControl
+    RefreshControl,
+    Platform
 } from 'react-native';
 import styles, { BotListItemStyles } from './styles';
 import { Icon } from 'react-native-elements';
@@ -229,7 +230,7 @@ export default class InstalledBotsScreen extends React.Component {
                 user.creds.sessionId,
                 { botId: botId },
                 (error, result) => {
-                    console.log('GRPC:::subscribe bot : ', error, result);
+                    console.log('GRPC:::unsubscribe bot : ', error, result);
                     if (error) {
                         return reject({
                             type: 'error',
@@ -243,11 +244,15 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     deleteBot = async bot => {
+        const dceBot = dce.bot(bot);
         try {
-            await MessageHandler.deleteBotMessages(bot.botId);
-            const dceBot = dce.bot(bot);
             const user = await Promise.resolve(Auth.getUser());
             await this.unsubscribeFromBot(dceBot.botId, user);
+        } catch (e) {
+            this.refs.toast.show('Bot unsubscribe fail', DURATION.LENGTH_SHORT);
+        }
+        try {
+            await MessageHandler.deleteBotMessages(bot.botId);
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
             this.refs.toast.show(
@@ -259,7 +264,6 @@ export default class InstalledBotsScreen extends React.Component {
                 I18n.t('Bot_uninstall_failed'),
                 DURATION.LENGTH_SHORT
             );
-            throw e;
         }
     };
 
@@ -475,6 +479,14 @@ export default class InstalledBotsScreen extends React.Component {
         );
     }
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         const { loaded } = this.state;
         if (!loaded) {
@@ -505,7 +517,7 @@ export default class InstalledBotsScreen extends React.Component {
                                     />
                                 }
                             />
-                            <Toast ref="toast" positionValue={250} />
+                            {this.renderToast()}
                         </View>
                     </ScrollView>
                 );
