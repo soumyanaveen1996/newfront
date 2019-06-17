@@ -120,7 +120,8 @@ class Form2 extends React.Component {
             lookupModalInfo: null,
             showLookupModal: false,
             currentDateModalFieldType: fieldType.date,
-            dateModalMode: 'date'
+            dateModalMode: 'date',
+            formIsCompleted: this.checkFormValidation()
         };
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -140,6 +141,13 @@ class Form2 extends React.Component {
                     ? true
                     : fieldData.savedValidationResult;
                 answer.validationMessage = fieldData.savedValidationMessage;
+            } else {
+                answer.valid = true;
+            }
+            if (fieldData.mandatory) {
+                answer.filled = fieldData.value ? true : false;
+            } else {
+                answer.filled = true;
             }
             switch (fieldData.type) {
             case fieldType.textField:
@@ -350,6 +358,17 @@ class Form2 extends React.Component {
         return { responseData: response, completed: completed };
     }
 
+    checkFormValidation() {
+        const missingField = this.answers.find(answer => {
+            return !(answer.valid && answer.filled);
+        });
+        if (missingField) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     saveFormData() {
         const data = _.map(this.props.formData, (field, index) => {
             field.value = this.answers[index].getResponse();
@@ -396,7 +415,12 @@ class Form2 extends React.Component {
         Actions.pop();
     }
 
-    onMoveAction(fieldId, fieldValue) {
+    onMoveAction(key, fieldId, fieldValue) {
+        if (!fieldValue && this.props.formData[key].mandatory) {
+            this.answers[key].filled = false;
+        } else {
+            this.answers[key].filled = true;
+        }
         const response = {
             formId: this.props.id,
             action: formAction.MOVE,
@@ -443,7 +467,10 @@ class Form2 extends React.Component {
             validation: null
         });
         this.initializeAnswers();
-        this.setState({ answers: this.answers });
+        this.setState({
+            answers: this.answers,
+            formIsCompleted: this.checkFormValidation()
+        });
     }
 
     validateField() {
@@ -488,10 +515,15 @@ class Form2 extends React.Component {
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -518,10 +550,15 @@ class Form2 extends React.Component {
                 keyboardType="numeric"
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -549,10 +586,15 @@ class Form2 extends React.Component {
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -576,6 +618,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                             this.onMoveAction(
+                                key,
                                 this.answers[key].id,
                                 this.answers[key].getResponse()
                             );
@@ -608,7 +651,11 @@ class Form2 extends React.Component {
                                 answers: this.answers,
                                 showInfoOfIndex: null
                             });
-                            this.onMoveAction(this.answers[key].id, option);
+                            this.onMoveAction(
+                                key,
+                                this.answers[key].id,
+                                option
+                            );
                         }
                     }}
                     checked={this.state.answers[key].value === index}
@@ -706,6 +753,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                             this.onMoveAction(
+                                this.currentDropdownModalKey,
                                 this.answers[this.currentDropdownModalKey].id,
                                 this.answers[
                                     this.currentDropdownModalKey
@@ -730,7 +778,7 @@ class Form2 extends React.Component {
                         answers: this.answers,
                         showInfoOfIndex: null
                     });
-                    this.onMoveAction(this.answers[key].id, value);
+                    this.onMoveAction(key, this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
             />
@@ -749,7 +797,7 @@ class Form2 extends React.Component {
                         answers: this.answers,
                         showInfoOfIndex: null
                     });
-                    this.onMoveAction(this.answers[key].id, value);
+                    this.onMoveAction(key, this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
                 minimumTrackTintColor={GlobalColors.sideButtons}
@@ -798,7 +846,9 @@ class Form2 extends React.Component {
                             : null}
                     </Text>
                 ) : null}
-                {Icons.formCalendar()}
+                {content.type === fieldType.time
+                    ? Icons.time()
+                    : Icons.formCalendar()}
             </TouchableOpacity>
         );
     }
@@ -825,6 +875,7 @@ class Form2 extends React.Component {
                             showInfoOfIndex: null
                         });
                         this.onMoveAction(
+                            key,
                             this.answers[key].id,
                             this.answers[key].getResponse()
                         );
@@ -863,6 +914,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                             this.onMoveAction(
+                                key,
                                 this.answers[key].id,
                                 this.answers[key].getResponse()
                             );
@@ -885,6 +937,7 @@ class Form2 extends React.Component {
                             showInfoOfIndex: null
                         });
                         this.onMoveAction(
+                            key,
                             this.answers[key].id,
                             this.answers[key].getResponse()
                         );
@@ -980,6 +1033,7 @@ class Form2 extends React.Component {
                                     showInfoOfIndex: null
                                 });
                                 this.onMoveAction(
+                                    this.currentDateModalKey,
                                     this.answers[this.currentDateModalKey].id,
                                     this.answers[
                                         this.currentDateModalKey
@@ -1025,6 +1079,7 @@ class Form2 extends React.Component {
         this.answers[key].value = response;
         this.setState({ answers: this.answers, showInfoOfIndex: null });
         this.onMoveAction(
+            key,
             this.answers[key].id,
             this.answers[key].getResponse()
         );
@@ -1049,10 +1104,15 @@ class Form2 extends React.Component {
                 style={styles.textField}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -1116,7 +1176,11 @@ class Form2 extends React.Component {
                                     Keyboard.dismiss();
                                     this.answers[key].value = '';
                                     this.setState({ answers: this.answers });
-                                    this.onMoveAction(this.answers[key].id, '');
+                                    this.onMoveAction(
+                                        key,
+                                        this.answers[key].id,
+                                        ''
+                                    );
                                 }
                             })
                         ) : this.answers[key].searching ? (
@@ -1165,6 +1229,7 @@ class Form2 extends React.Component {
                                                 change: null
                                             });
                                             this.onMoveAction(
+                                                key,
                                                 this.answers[key].id,
                                                 item
                                             );
@@ -1365,6 +1430,7 @@ class Form2 extends React.Component {
     }
 
     render() {
+        const formIdCompleted = this.checkFormValidation();
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -1376,15 +1442,30 @@ class Form2 extends React.Component {
                         <View style={styles.f2BottomArea}>
                             <TouchableOpacity
                                 style={styles.f2CancelButton}
-                                onPress={this.onCancelForm.bind(this)}
+                                onPress={
+                                    this.state.disabled
+                                        ? () => Actions.pop()
+                                        : this.onCancelForm.bind(this)
+                                }
                             >
                                 <Text style={styles.f2CancelButtonText}>
                                     {this.props.cancel || 'Cancel'}
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                disabled={this.state.disabled}
-                                style={styles.f2DoneButton}
+                                disabled={
+                                    this.state.disabled || !formIdCompleted
+                                }
+                                style={[
+                                    styles.f2DoneButton,
+                                    {
+                                        opacity:
+                                            this.state.disabled ||
+                                            !formIdCompleted
+                                                ? 0.2
+                                                : 1
+                                    }
+                                ]}
                                 onPress={this.onDone.bind(this)}
                             >
                                 <Text style={styles.f2DoneButtonText}>
