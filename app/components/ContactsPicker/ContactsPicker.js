@@ -11,7 +11,8 @@ import {
     Alert,
     TouchableOpacity,
     InteractionManager,
-    Image
+    Image,
+    RefreshControl
 } from 'react-native';
 import styles from './styles';
 import { GlobalColors } from '../../config/styles';
@@ -150,7 +151,9 @@ class ContactsPicker extends React.Component {
             inviteModalVisible: false,
             userInfo: {},
             userId: '',
-            searchString: ''
+            searchString: '',
+            refreshing: false,
+            titleText: 'Selected'
         };
     }
 
@@ -207,6 +210,13 @@ class ContactsPicker extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (
+            prevProps.appState.network !== this.props.appState.network &&
+            this.props.appState.network === 'full'
+        ) {
+            this.setState({ refreshing: false });
+        }
+
         if (
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
@@ -281,11 +291,11 @@ class ContactsPicker extends React.Component {
     static onExit() {
         Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
-        if (!Store.getState().user.contactsLoaded) {
-            InteractionManager.runAfterInteractions(() =>
-                Contact.refreshContacts()
-            );
-        }
+        // if (!Store.getState().user.contactsLoaded) {
+        //     InteractionManager.runAfterInteractions(() =>
+        //         Contact.refreshContacts()
+        //     );
+        // }
     }
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Contacts');
@@ -347,7 +357,25 @@ class ContactsPicker extends React.Component {
         } else {
             contactsList = this.dataSource.getFilteredData(text);
         }
-        this.setState({ contactsData: contactsList, searchString: text });
+
+        this.setState(
+            {
+                contactsData: contactsList,
+                searchString: text,
+                titleText: 'Search results'
+            },
+            () => {
+                console.log('text ', this.state.searchString);
+                if (
+                    this.state.searchString === '' ||
+                    this.state.searchString.length === 0
+                ) {
+                    this.setState({
+                        titleText: 'Selected'
+                    });
+                }
+            }
+        );
     }
 
     onContactSelected(contact) {
@@ -583,6 +611,16 @@ class ContactsPicker extends React.Component {
                         </View>
                     )}
                 </View>
+                <View
+                    style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 4
+                    }}
+                >
+                    <Text style={{ fontSize: 14, color: 'rgba(74,74,74,1)' }}>
+                        {this.state.titleText}
+                    </Text>
+                </View>
             </View>
         );
     };
@@ -612,7 +650,33 @@ class ContactsPicker extends React.Component {
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
+
                     <SectionList
+                        refreshControl={
+                            this.props.appState.network === 'full' ? (
+                                <RefreshControl
+                                    onRefresh={() => {
+                                        this.setState(
+                                            { refreshing: true },
+                                            async () => {
+                                                try {
+                                                    await Contact.refreshContacts();
+                                                    this.updateList();
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                } catch (e) {
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                }
+                                            }
+                                        );
+                                    }}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
+                        }
                         ItemSeparatorComponent={ContactsPickerItemSeparator}
                         ref={sectionList => {
                             this.contactsList = sectionList;
@@ -686,7 +750,6 @@ class ContactsPicker extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
-
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}

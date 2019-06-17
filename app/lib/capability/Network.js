@@ -162,7 +162,7 @@ const convertResponse = response => {
 
 const queueMessage = ({ options, resolve, reject }) => {
     console.log(
-        'Sourav Logging:::: Errro Sending the message, should we Quque it????'
+        'Sourav Logging In Queue Message:::: Errro Sending the message, should we Quque it????'
     );
     NetworkHandler.readLambda(true);
     const { params, key = null } = options;

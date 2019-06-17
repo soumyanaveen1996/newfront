@@ -41,7 +41,8 @@ export default class ContactsPickerDataSource {
                 phoneNumbers: data.phoneNumbers,
                 isWaitingForConfirmation: data.waitingForConfirmation || false,
                 isFavourite: data.isFavourite || false,
-                contactType: data.contactType || 'frontm'
+                contactType: data.contactType || 'frontm',
+                type: data.type || 'people'
             };
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));

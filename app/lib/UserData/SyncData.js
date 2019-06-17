@@ -16,6 +16,12 @@ import {
 import Calls from '../calls';
 
 debounce = () => new Promise(resolve => setTimeout(resolve, 2000));
+
+export const synchronizePhoneBook = async () => {
+    InteractionManager.runAfterInteractions(() => {
+        Contact.syncPhoneContacts();
+    });
+};
 export const synchronizeUserData = async () => {
     try {
         let connection = await Network.isConnected();
@@ -27,29 +33,30 @@ export const synchronizeUserData = async () => {
         }
 
         await Contact.refreshContacts();
-        await Calls.fetchCallHistory();
         setTimeout(() => {
             RemoteBotInstall.syncronizeBots();
-        }, 500);
+        }, 100);
         setTimeout(() => {
             Conversation.downloadRemoteConversations();
-        }, 1000);
-        setTimeout(() => Channel.refreshChannels(), 1000);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+        }, 200);
+        setTimeout(() => Channel.refreshChannels(), 300);
+        setTimeout(() => Channel.refreshUnsubscribedChannels(), 400);
+        setTimeout(() => Calls.fetchCallHistory(), 500);
     } catch (error) {
         console.error('CRITICAL:::::Errror Synching Contacts', error);
-        setTimeout(() => {
-            RemoteBotInstall.syncronizeBots();
-        }, 500);
-        setTimeout(() => {
-            Conversation.downloadRemoteConversations();
-        }, 1000);
-        setTimeout(() => Channel.refreshChannels(), 1000);
-        setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
+        syncNoNetwork();
+        // setTimeout(() => {
+        //     RemoteBotInstall.syncronizeBots();
+        // }, 500);
+        // setTimeout(() => {
+        //     Conversation.downloadRemoteConversations();
+        // }, 1000);
+        // setTimeout(() => Channel.refreshChannels(), 1000);
+        // setTimeout(() => Channel.refreshUnsubscribedChannels(), 1200);
     }
 };
 
-const syncNoNetwork = () => {
+export const syncNoNetwork = () => {
     Store.dispatch(completeContactsLoad(true));
     Store.dispatch(completeBotInstall(true));
     Store.dispatch(completeChannelInstall(true));

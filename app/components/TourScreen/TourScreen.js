@@ -33,7 +33,7 @@ export default class TourScreen extends Component {
             show: false
         });
 
-        AsyncStorage.setItem('firstTimeUser', 'true');
+        AsyncStorage.setItem('firstTimeUser', 'false');
     }
 
     networkScreen() {
@@ -60,6 +60,7 @@ export default class TourScreen extends Component {
             showScreenFour: false,
             showScreenFive: true
         });
+        AsyncStorage.setItem('firstTimeUser', 'false');
     }
 
     render() {

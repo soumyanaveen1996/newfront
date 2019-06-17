@@ -14,7 +14,12 @@ import {} from '../../redux/actions/UserActions';
 
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
-import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
+import {
+    NativeModules,
+    NativeEventEmitter,
+    Platform,
+    InteractionManager
+} from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
@@ -30,16 +35,21 @@ var logoutSubscriptions = [];
  *  - Right now it is kinda dumb
  */
 const poll = () => {
-    Auth.getUser().then(authUser => {
-        processNetworkQueue();
-        readRemoteLambdaQueue(authUser);
+    InteractionManager.runAfterInteractions(() => {
+        Auth.getUser().then(authUser => {
+            processNetworkQueue();
+            readRemoteLambdaQueue(authUser);
+        });
     });
 };
 
 const readLambda = (force = false) => {
-    Auth.getUser().then(authUser => {
-        processNetworkQueue();
-        readRemoteLambdaQueue(authUser, force);
+    InteractionManager.runAfterInteractions(() => {
+        console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
+        Auth.getUser().then(authUser => {
+            processNetworkQueue();
+            readRemoteLambdaQueue(authUser, force);
+        });
     });
 };
 
@@ -135,6 +145,7 @@ const cleanupSubscriptions = () => {
 
 const processNetworkQueueRequest = () => {
     if (processingFutureRequest) {
+        console.log('Sourav Logging:::: I am processing Future Request');
         return;
     }
     processingFutureRequest = true;
@@ -143,9 +154,14 @@ const processNetworkQueueRequest = () => {
 
 const debounce = () => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(), 3000);
+        setTimeout(
+            () => resolve(),
+            (Math.floor(Math.random() * 10) + 1) * 1000
+        );
     });
 };
+
+console.log('Sourav Logging:::: Processing Network Request');
 
 const dequeueAndProcessQueueRequest = async () => {
     // Add Delay
@@ -156,6 +172,7 @@ const dequeueAndProcessQueueRequest = async () => {
         let res = await Queue.dequeueNetworkRequest();
 
         if (!res) {
+            console.log('Sourav Logging:::: Nothing to PRocess now...');
             processingFutureRequest = false;
             return;
         }
@@ -163,6 +180,7 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         // let request = res.request;
         const options = res.request;
+        console.log('Sourav Logging:::: Processing Request', res.request);
 
         const response = await Network(options);
         // const response = await Network(request.getNetworkRequestOptions();
@@ -190,10 +208,13 @@ const processNetworkQueue = () => {
     Network.isConnected().then(connected => {
         // connected = false;
         if (connected) {
-            console.log(
-                '---------------------Sourav Logging:::: Processing Network Queue------------------'
-            );
             processNetworkQueueRequest();
+        } else {
+            EventEmitter.emit(
+                SatelliteConnectionEvents.notConnectedToSatellite
+            );
+            Store.updateStore({ satelliteConnection: false });
+            RStore.dispatch(setNetwork('none'));
         }
     });
 };
@@ -351,6 +372,7 @@ const ping = user => {
 };
 
 const keepAlive = () => {
+    return;
     Auth.getUser().then(authUser => {
         ping();
     });

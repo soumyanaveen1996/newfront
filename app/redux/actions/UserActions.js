@@ -72,11 +72,20 @@ export const setCurrentMap = payload => ({
     type: Actions.SET_CURRENT_MAP,
     payload
 });
+export const setCurrentForm = payload => ({
+    type: Actions.SET_CURRENT_FORM,
+    payload
+});
 export const uploadImage = () => ({
     type: Actions.UPLOAD_IMAGE
 });
 
 export const setFirstLogin = payload => ({
     type: Actions.SET_FIRST_LOGIN,
+    payload
+});
+
+export const setPhoneContacts = payload => ({
+    type: Actions.SET_PHONE_CONTACTS,
     payload
 });

@@ -6,7 +6,8 @@ import {
     Platform,
     PushNotificationIOS,
     AsyncStorage,
-    StatusBar
+    StatusBar,
+    InteractionManager
 } from 'react-native';
 import images from '../../config/images';
 const Icon = images.splash_page_logo;
@@ -36,7 +37,11 @@ import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Store from '../../lib/Store';
 import { PhoneState } from '../../components/Phone';
-import { synchronizeUserData } from '../../lib/UserData/SyncData';
+import {
+    synchronizeUserData,
+    synchronizePhoneBook,
+    syncNoNetwork
+} from '../../lib/UserData/SyncData';
 import AfterLogin from '../../services/afterLogin';
 import DefaultPreference from 'react-native-default-preference';
 import { Conversation } from '../../lib/conversation';
@@ -52,7 +57,7 @@ import PushNotification from 'react-native-push-notification';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 105; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 110; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -129,7 +134,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (true && forceUpdate) {
+        if (false && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -179,6 +184,11 @@ export default class Splash extends React.Component {
                             });
                             return;
                         }
+
+                        InteractionManager.runAfterInteractions(() =>
+                            synchronizePhoneBook()
+                        );
+
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();
@@ -335,7 +345,7 @@ export default class Splash extends React.Component {
     };
 
     showMainScreen = (moveToOnboarding = false) => {
-        synchronizeUserData();
+        syncNoNetwork();
         Actions.homeMain({
             type: ActionConst.REPLACE,
             moveToOnboarding: moveToOnboarding

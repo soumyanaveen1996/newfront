@@ -17,7 +17,9 @@ const initialState = {
         currentConversationId: '',
         upload: 0,
         currentMap: null,
-        firstLogin: false
+        currentForm: null,
+        firstLogin: false,
+        phoneContacts: []
     },
     botState: {
         id: null

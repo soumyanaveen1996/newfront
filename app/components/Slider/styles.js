@@ -9,11 +9,15 @@ export default StyleSheet.create({
         height: HEADER_HEIGHT,
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
         borderColor: 'lightgrey',
-        backgroundColor: 'rgb(242, 242, 242)',
-        justifyContent: 'center'
+        backgroundColor: GlobalColors.white,
+        justifyContent: 'space-between',
+        borderTopRightRadius: 15,
+        borderTopLeftRadius: 15,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4
     },
     closeButton: {
         height: 24,
@@ -29,10 +33,10 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     listContainer1: {
-        paddingLeft: 15
+        paddingHorizontal: 15
     },
     scrollView: {
-        backgroundColor: 'rgb(232, 232, 232)'
+        backgroundColor: GlobalColors.white
     },
     listcontainer2: {
         flex: 1,
@@ -68,38 +72,34 @@ export default StyleSheet.create({
         color: GlobalColors.accent,
         fontWeight: '500'
     },
-    checkboxContainer: Platform.select({
-        ios: {
-            width: 22,
-            height: 22,
-            marginRight: 12.5,
-            padding: 0,
-            marginLeft: 0,
-            marginVertical: 0,
-            backgroundColor: GlobalColors.transparent
-        },
-        android: {
-            width: 24,
-            height: 25,
-            marginRight: 12.5,
-            padding: 0,
-            marginLeft: 0,
-            marginVertical: 0,
-            backgroundColor: GlobalColors.transparent,
-            alignSelf: 'center'
-        }
-    }),
+    checkboxContainer: {
+        margin: 0,
+        padding: 0,
+        borderWidth: 0
+    },
     checkboxIconStyle: {
-        height: 22,
-        width: 22
+        margin: 0,
+        padding: 0
     },
     animatedView: {
-        backgroundColor: 'white',
+        backgroundColor: GlobalColors.white,
         height: SCREEN_HEIGHT / 1.6,
         width: '100%'
     },
     sliderIconImg: {
         height: 18,
         width: 42
+    },
+    closeText: {
+        color: GlobalColors.frontmLightBlue,
+        width: '20%',
+        paddingHorizontal: '5%',
+        paddingVertical: 15,
+        fontSize: 16
+    },
+    topBarLine: {
+        height: 4,
+        width: 110,
+        backgroundColor: GlobalColors.disabledGray
     }
 });

@@ -15,6 +15,7 @@ import {
     InteractionManager
 } from 'react-native';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import ImageLoad from 'react-native-image-placeholder';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import _ from 'lodash';
@@ -56,6 +57,9 @@ import {
 
 import DStyles from '../Dialler/styles';
 import Bot from '../../lib/bot';
+import contactsStyles from '../ContactsPicker/styles';
+import GlobalColors from '../../config/styles';
+import { LargeList } from 'react-native-largelist-v3';
 
 var EventListeners = [];
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
@@ -68,7 +72,10 @@ class NewCallContacts extends React.Component {
             contactsData: [],
             contactVisible: false,
             contactSelected: null,
-            updatingCallQuota: false
+            updatingCallQuota: false,
+            searchString: '',
+            sectionTitles: [],
+            filteredSections: []
         };
     }
 
@@ -87,45 +94,42 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        InteractionManager.runAfterInteractions(() => {
-            if (Platform.OS === 'android') {
-                PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                    {
-                        title: 'Contacts',
-                        message:
-                            'Grant access for contacts to display in FrontM'
-                    }
-                )
-                    .then(granted => {
-                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                            this.gettingAllContactData();
-                        } else {
-                            this.refresh([]);
-                        }
-                    })
-                    .catch(err => {
-                        console.log('PermissionsAndroid', err);
-                    });
-            } else {
-                this.gettingAllContactData();
-            }
-        });
+
+        // console.log(
+        //     'Sourav Logging:::: Phone Contacts',
+        //     this.props.appState.phoneContacts
+        // );
+
+        this.refresh(this.props.appState.phoneContacts);
+
+        // InteractionManager.runAfterInteractions(() => {
+        //     console.log('Sourav Logging:::: Loading Contacts');
+        //     if (Platform.OS === 'android') {
+        //         PermissionsAndroid.request(
+        //             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        //             {
+        //                 title: 'Contacts',
+        //                 message:
+        //                     'Grant access for contacts to display in FrontM'
+        //             }
+        //         )
+        //             .then(granted => {
+        //                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //                     this.gettingAllContactData();
+        //                 } else {
+        //                     this.refresh([]);
+        //                 }
+        //             })
+        //             .catch(err => {
+        //                 console.log('PermissionsAndroid', err);
+        //             });
+        //     } else {
+        //         this.gettingAllContactData();
+        //     }
+        // });
     }
 
-    componentDidUpdate(prevProps) {
-        if (
-            prevProps.appState.contactsLoaded !==
-            this.props.appState.contactsLoaded
-        ) {
-        }
-
-        if (
-            prevProps.appState.refreshContacts !==
-            this.props.appState.refreshContacts
-        ) {
-        }
-    }
+    componentDidUpdate(prevProps) {}
 
     componentWillUnmount() {
         EventListeners.forEach(listener => listener.remove());
@@ -133,10 +137,6 @@ class NewCallContacts extends React.Component {
     }
 
     initBackGroundBot = async () => {
-        if (__DEV__) {
-            console.tron('Init Bot');
-        }
-
         const message = new Message({
             msg: {
                 callQuotaUsed: 0
@@ -148,14 +148,10 @@ class NewCallContacts extends React.Component {
             bot: SystemBot.backgroundTaskBot
         });
 
-        await bgBotScreen.initialize();
-
-        if (__DEV__) {
-            console.tron('Send MEssage BG Bot');
-        }
-
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
+        bgBotScreen.initialize().then(() => {
+            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        });
     };
 
     getCredit() {
@@ -197,70 +193,28 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    gettingAllContactData = () => {
-        let contactArray = [];
-
-        Contacts.getAll((err, contacts) => {
-            if (err) {
-                console.log('on denial ', err);
-                this.refresh([]);
-                return;
-            }
-
-            contacts.forEach((data, index) => {
-                let contactName = '';
-
-                if (data.givenName && data.familyName) {
-                    contactName = data.givenName + ' ' + data.familyName;
-                } else {
-                    contactName = data.givenName;
-                }
-                let contactObj = {
-                    userId: index,
-                    emails: [...data.emailAddresses],
-                    profileImage: data.thumbnailPath,
-                    userName: data.givenName,
-                    name: contactName,
-                    phoneNumbers: [...data.phoneNumbers],
-                    selected: false
-                };
-                contactArray.push(contactObj);
-            });
-
-            this.refresh(contactArray);
-
-            if (err === 'denied') {
-                this.refresh([]);
-            } else {
-                this.refresh(contactArray);
-            }
-        });
-    };
-
     static onEnter() {
-        const user = Store.getState().user;
+        // const user = Store.getState().user;
         EventEmitter.emit(
             AuthEvents.tabTopSelected,
-            I18n.t('Contacts_call'),
+            'Phone Contacts',
             I18n.t('Contacts')
         );
-        Store.dispatch(refreshContacts(true));
+        // Store.dispatch(refreshContacts(true));
     }
 
     static onExit() {
-        Store.dispatch(refreshContacts(false));
+        // Store.dispatch(refreshContacts(false));
         Store.dispatch(setCurrentScene('none'));
     }
     shouldComponentUpdate(nextProps) {
-        return nextProps.appState.currentScene === I18n.t('Contacts_call');
+        return nextProps.appState.currentScene === 'Phone Contacts';
     }
 
     setContactVisible = (value, contact) =>
         this.setState({ contactVisible: value, contactSelected: contact });
 
     createAddressBook = contacts => {
-        console.log('conatcts ========== ', contacts);
-
         const Alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
         const uniqId = R.eqProps('userId');
         const contactsUniq = R.uniqWith(uniqId)(contacts);
@@ -268,7 +222,7 @@ class NewCallContacts extends React.Component {
         const phoneContacts = contactsUniq.map(contact => ({
             ...contact,
             userName: contact.userName
-                ? contact.userName
+                ? contact.name
                     .trim()
                     .split(' ')
                     .map(
@@ -296,6 +250,7 @@ class NewCallContacts extends React.Component {
                         return {
                             id: contact.userId,
                             name: contact.userName,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -310,9 +265,21 @@ class NewCallContacts extends React.Component {
                             contact.emails.length > 0
                                 ? contact.emails[0].email
                                 : undefined;
+                        let name = '';
+                        if (contact.userName !== '') {
+                            name = contact.userName;
+                        } else if (yeahMail) {
+                            name = yeahMail;
+                        } else if (contact.phoneNumbers.length > 0) {
+                            name = contact.phoneNumbers[0].number;
+                        } else {
+                            name = '';
+                        }
+
                         return {
                             id: contact.userId,
-                            name: contact.userName,
+                            name,
+                            profileImage: contact.profileImage,
                             emails: [{ email: yeahMail }],
                             phoneNumbers: [...contact.phoneNumbers] || undefined
                         };
@@ -320,11 +287,12 @@ class NewCallContacts extends React.Component {
             }
             return {
                 title: letter,
-                data: contactBook
+                items: contactBook
             };
         });
         return PhoneContacts;
     };
+
     refresh = contacts => {
         // this.dataSource.loadData()
         if (!contacts) {
@@ -333,33 +301,85 @@ class NewCallContacts extends React.Component {
         const AddressBook = this.createAddressBook(contacts);
 
         let newAddressBook = AddressBook.filter(elem => {
-            return elem.data.length > 0;
+            return elem.items.length > 0;
         });
         this.setState({ contactsData: newAddressBook });
     };
 
-    renderItem(info) {
-        const contact = info.item;
+    filter = () => {
+        if (this.state.searchString.length > 0) {
+            const filteredContacts = this.props.appState.phoneContacts.filter(
+                contact =>
+                    contact.userName
+                        .toLowerCase()
+                        .includes(this.state.searchString.toLowerCase())
+            );
+            this.refresh(filteredContacts);
+        }
 
-        const Image = (
-            <ProfileImage
-                uuid={contact.id}
-                placeholder={Images.user_image}
+        // const sectionTitles = _.map(
+        //     this.state.contactsData,
+        //     section => section.title
+        // );
+        // let filteredSections = [];
+
+        // if (sectionTitles && sectionTitles.length > 0) {
+        //     filteredSections = [...this.state.contactsData];
+        //     if (this.state.searchString.length > 0) {
+        //         filteredSections = this.state.contactsData.map(section => {
+        //             let data = section.data.filter(contact =>
+        //                 contact.name
+        //                     .toLowerCase()
+        //                     .includes(this.state.searchString.toLowerCase())
+        //             );
+        //             return {
+        //                 ...section,
+        //                 data: data
+        //             };
+        //         });
+        //     }
+        // }
+        // this.setState({ filteredSections, sectionTitles });
+    };
+
+    renderItem(path) {
+        const contact = this.state.contactsData[path.section].items[path.row];
+
+        const image_path = `file://${contact.profileImage}`;
+        const placeHolderImage = require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png');
+        const pholder = `file://${placeHolderImage}`;
+        const ImageProf = (
+            <ImageLoad
                 style={styles.avatarImage}
-                placeholderStyle={styles.avatarImage}
                 resizeMode="cover"
+                source={placeHolderImage}
+                isShowActivity={false}
+                placeholderStyle={styles.avatarImage}
+                borderRadius={styles.avatarImage.width / 2}
+                placeholderSource={{ uri: pholder }}
             />
         );
+        // const Image = (
+        //     <ProfileImage
+        //         uuid={contact.id}
+        //         placeholder={Images.user_image}
+        //         style={styles.avatarImage}
+        //         placeholderStyle={styles.avatarImage}
+        //         resizeMode="cover"
+        //     />
+        // );
         return (
-            <NewChatRow
-                key={contact.id}
-                item={contact}
-                title={contact.name}
-                image={Image}
-                id={contact.id}
-                onItemPressed={this.onContactSelected}
-                email={contact.emails[0].email}
-            />
+            <View>
+                <NewChatRow
+                    key={contact.id}
+                    item={contact}
+                    title={contact.name}
+                    image={ImageProf}
+                    id={contact.id}
+                    onItemPressed={this.onContactSelected}
+                    email={contact.emails[0].email}
+                />
+            </View>
         );
     }
     onContactSelected = contact => {
@@ -385,31 +405,63 @@ class NewCallContacts extends React.Component {
         });
     }
 
-    renderContactsList() {
-        const sectionTitles = _.map(
-            this.state.contactsData,
-            section => section.title
+    renderSearchBar() {
+        return (
+            <View style={contactsStyles.searchBar}>
+                {Icons.search({
+                    size: 18,
+                    color: GlobalColors.frontmLightBlue,
+                    iconStyle: { paddingHorizontal: 10 }
+                })}
+                <TextInput
+                    autoCorrect={false}
+                    style={contactsStyles.searchTextInput}
+                    underlineColorAndroid="transparent"
+                    placeholder="Search contact"
+                    selectionColor={GlobalColors.darkGray}
+                    placeholderTextColor={searchBarConfig.placeholderTextColor}
+                    onChangeText={text =>
+                        this.setState({ searchString: text }, () => {
+                            this.filter();
+                        })
+                    }
+                    value={this.state.searchString}
+                />
+            </View>
         );
+    }
 
-        if (sectionTitles && sectionTitles.length > 0) {
+    renderContactsList() {
+        if (this.state.contactsData.length > 0) {
             return (
                 <View style={styles.addressBookContainer}>
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
-                    <SectionList
-                        ItemSeparatorComponent={NewChatItemSeparator}
-                        ref={sectionList => {
-                            this.contactsList = sectionList;
+
+                    <LargeList
+                        style={styles.addressBook}
+                        data={this.state.contactsData}
+                        heightForSection={() => 30}
+                        renderSection={section => {
+                            const sec = this.state.contactsData[section].title;
+                            return <NewChatSectionHeader title={sec} />;
                         }}
+                        heightForIndexPath={() => 50}
+                        renderIndexPath={this.renderItem.bind(this)}
+                    />
+
+                    {/* <SectionList
+                        ItemSeparatorComponent={NewChatItemSeparator}
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={({ section }) => (
                             <NewChatSectionHeader title={section.title} />
                         )}
-                        sections={this.state.contactsData}
+                        sections={this.state.filteredSections}
                         keyExtractor={(item, index) => item.id}
-                    />
+                        removeClippedSubviews={true}
+                    /> */}
                     {/* <NewChatIndexView
                         onItemPressed={this.onSideIndexItemPressed.bind(this)}
                         items={sectionTitles}
@@ -463,8 +515,6 @@ class NewCallContacts extends React.Component {
     };
 
     phoneNumbers = () => {
-        console.log(this.state.contactSelected);
-
         const { contactSelected } = this.state;
         const phoneNumbers = contactSelected
             ? contactSelected.phoneNumbers
@@ -515,13 +565,152 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
             );
         });
     };
+
+    renderModal(contactSelected, phoneNumbers) {
+        return (
+            <Modal
+                isVisible={this.state.contactVisible}
+                onBackdropPress={() => {
+                    this.setContactVisible(false, null);
+                }}
+                onBackButtonPress={() => this.setContactVisible(false, null)}
+                onSwipe={() => this.setContactVisible(false, null)}
+                swipeDirection="right"
+            >
+                {contactSelected ? (
+                    <View style={styles.contactModal}>
+                        <View style={styles.modalContainer}>
+                            <ProfileImage
+                                uuid={contactSelected.id}
+                                placeholder={Images.user_image}
+                                style={styles.avatarImageModal}
+                                placeholderStyle={styles.avatarImageModal}
+                                resizeMode="cover"
+                            />
+                            <View style={styles.nameContainer}>
+                                <Text style={styles.modalContactName}>
+                                    {contactSelected.name}
+                                </Text>
+                            </View>
+                            {phoneNumbers.map((phoneNum, index, pNumbers) => {
+                                return (
+                                    <View
+                                        style={
+                                            pNumbers.length - 1 === index
+                                                ? styles.phoneContainerNoBorder
+                                                : styles.phoneContainer
+                                        }
+                                    >
+                                        <View
+                                            style={styles.modalTextContainerImg}
+                                        >
+                                            <Image
+                                                style={{
+                                                    width: 16,
+                                                    height: 16
+                                                }}
+                                                source={require('../../images/tabbar-contacts/phone-good.png')}
+                                                resizeMode="contain"
+                                            />
+                                            <Text style={styles.modalText}>
+                                                {phoneNum.label}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.modalNumberContainer}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color:
+                                                        'rgba(155,155,155,1)',
+                                                    alignSelf: 'flex-start'
+                                                }}
+                                            >
+                                                {phoneNum.number &&
+                                                phoneNum.number !== ''
+                                                    ? phoneNum.number
+                                                    : 'Not Available'}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.modalCallButContainer}
+                                        >
+                                            <TouchableOpacity
+                                                style={
+                                                    contactSelected.phoneNumbers
+                                                        .length > 0
+                                                        ? styles.callButton
+                                                        : styles.callButtonDisabled
+                                                }
+                                                onPress={() =>
+                                                    this.makePstnCall(
+                                                        phoneNum.number
+                                                    )
+                                                }
+                                                disabled={
+                                                    !(
+                                                        contactSelected.phoneNumbers &&
+                                                        contactSelected
+                                                            .phoneNumbers
+                                                            .length > 0
+                                                    )
+                                                }
+                                            >
+                                                {Icons.greenCallOutline()}
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                );
+                            })}
+                            <View />
+                        </View>
+                        <View
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                height: hp('9%')
+                            }}
+                        >
+                            <Text style={{ marginLeft: 10 }}>
+                                {' Current Balance: '}
+                                <Text>
+                                    {this.state.updatingCallQuota
+                                        ? '...'
+                                        : this.state.callQuota}
+                                </Text>
+                            </Text>
+                            <TouchableOpacity
+                                style={{
+                                    ...DStyles.callQuotaBuy,
+                                    backgroundColor: 'rgba(255,255,255,1)'
+                                }}
+                                onPress={this.getCredit.bind(this)}
+                                disabled={this.state.updatingCallQuota}
+                            >
+                                <Text
+                                    style={{
+                                        color: 'rgba(0,167,214,1)'
+                                    }}
+                                >
+                                    Get Credit
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ) : (
+                    <View />
+                )}
+            </Modal>
+        );
+    }
 
     render() {
         const { contactSelected } = this.state;
@@ -532,6 +721,7 @@ class NewCallContacts extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
+                    {this.renderSearchBar()}
                     {this.renderContactsList()}
                     {/* <TouchableOpacity
                         style={{
@@ -554,162 +744,7 @@ class NewCallContacts extends React.Component {
                         />
                         <Text style={{ color: '#fff' }}>DialPad</Text>
                     </TouchableOpacity> */}
-                    <Modal
-                        isVisible={this.state.contactVisible}
-                        onBackdropPress={() => {
-                            this.setContactVisible(false, null);
-                        }}
-                        onBackButtonPress={() =>
-                            this.setContactVisible(false, null)
-                        }
-                        onSwipe={() => this.setContactVisible(false, null)}
-                        swipeDirection="right"
-                    >
-                        {contactSelected ? (
-                            <View style={styles.contactModal}>
-                                <View style={styles.modalContainer}>
-                                    <ProfileImage
-                                        uuid={contactSelected.id}
-                                        placeholder={Images.user_image}
-                                        style={styles.avatarImageModal}
-                                        placeholderStyle={
-                                            styles.avatarImageModal
-                                        }
-                                        resizeMode="cover"
-                                    />
-                                    <View style={styles.nameContainer}>
-                                        <Text style={styles.modalContactName}>
-                                            {contactSelected.name}
-                                        </Text>
-                                    </View>
-                                    {phoneNumbers.map(
-                                        (phoneNum, index, pNumbers) => {
-                                            return (
-                                                <View
-                                                    style={
-                                                        pNumbers.length - 1 ===
-                                                        index
-                                                            ? styles.phoneContainerNoBorder
-                                                            : styles.phoneContainer
-                                                    }
-                                                >
-                                                    <View
-                                                        style={
-                                                            styles.modalTextContainerImg
-                                                        }
-                                                    >
-                                                        <Image
-                                                            style={{
-                                                                width: 16,
-                                                                height: 16
-                                                            }}
-                                                            source={require('../../images/tabbar-contacts/phone-good.png')}
-                                                            resizeMode="contain"
-                                                        />
-                                                        <Text
-                                                            style={
-                                                                styles.modalText
-                                                            }
-                                                        >
-                                                            {phoneNum.label}
-                                                        </Text>
-                                                    </View>
-                                                    <View
-                                                        style={
-                                                            styles.modalNumberContainer
-                                                        }
-                                                    >
-                                                        <Text
-                                                            style={{
-                                                                color:
-                                                                    'rgba(155,155,155,1)',
-                                                                alignSelf:
-                                                                    'flex-start'
-                                                            }}
-                                                        >
-                                                            {phoneNum.number &&
-                                                            phoneNum.number !==
-                                                                ''
-                                                                ? phoneNum.number
-                                                                : 'Not Available'}
-                                                        </Text>
-                                                    </View>
-                                                    <View
-                                                        style={
-                                                            styles.modalCallButContainer
-                                                        }
-                                                    >
-                                                        <TouchableOpacity
-                                                            style={
-                                                                contactSelected
-                                                                    .phoneNumbers
-                                                                    .length > 0
-                                                                    ? styles.callButton
-                                                                    : styles.callButtonDisabled
-                                                            }
-                                                            onPress={() =>
-                                                                this.makePstnCall(
-                                                                    phoneNum.number
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                !(
-                                                                    contactSelected.phoneNumbers &&
-                                                                    contactSelected
-                                                                        .phoneNumbers
-                                                                        .length >
-                                                                        0
-                                                                )
-                                                            }
-                                                        >
-                                                            {Icons.greenCallOutline()}
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </View>
-                                            );
-                                        }
-                                    )}
-                                    <View />
-                                </View>
-                                <View
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        height: hp('9%')
-                                    }}
-                                >
-                                    <Text style={{ marginLeft: 10 }}>
-                                        {' Current Balance: '}
-                                        <Text>
-                                            {this.state.updatingCallQuota
-                                                ? '...'
-                                                : this.state.callQuota}
-                                        </Text>
-                                    </Text>
-                                    <TouchableOpacity
-                                        style={{
-                                            ...DStyles.callQuotaBuy,
-                                            backgroundColor:
-                                                'rgba(255,255,255,1)'
-                                        }}
-                                        onPress={this.getCredit.bind(this)}
-                                        disabled={this.state.updatingCallQuota}
-                                    >
-                                        <Text
-                                            style={{
-                                                color: 'rgba(0,167,214,1)'
-                                            }}
-                                        >
-                                            Get Credit
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        ) : (
-                            <View />
-                        )}
-                    </Modal>
+                    {this.renderModal(contactSelected, phoneNumbers)}
                 </BackgroundImage>
             </SafeAreaView>
         );

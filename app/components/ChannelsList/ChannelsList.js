@@ -10,7 +10,8 @@ import {
     Image,
     Alert,
     Platform,
-    AlertIOS
+    AlertIOS,
+    RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
@@ -132,7 +133,8 @@ class ChannelsList extends React.Component {
             searchString: '',
             user: null,
             wait: false,
-            loaded: false
+            loaded: false,
+            refreshing: false
         };
     }
 
@@ -175,6 +177,13 @@ class ChannelsList extends React.Component {
     }
     async componentDidUpdate(prevProps) {
         if (
+            prevProps.appState.network !== this.props.appState.network &&
+            this.props.appState.network === 'full'
+        ) {
+            this.setState({ refreshing: false });
+        }
+
+        if (
             prevProps.appState.allChannelsLoaded !==
             this.props.appState.allChannelsLoaded
         ) {
@@ -207,11 +216,11 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        const reduxState = Store.getState();
-        if (!reduxState.user.allChannelsLoaded) {
-            setTimeout(() => Channel.refreshChannels(), 0);
-            setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
-        }
+        // const reduxState = Store.getState();
+        // if (!reduxState.user.allChannelsLoaded) {
+        //     // setTimeout(() => Channel.refreshChannels(), 0);
+        //     // setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
+        // }
     }
 
     showConnectionMessage = connectionType => {
@@ -445,7 +454,34 @@ class ChannelsList extends React.Component {
         return (
             <BackgroundImage>
                 <NetworkStatusNotchBar />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        this.props.appState.network === 'full' ? (
+                            <RefreshControl
+                                onRefresh={() => {
+                                    this.setState(
+                                        { refreshing: true },
+                                        async () => {
+                                            try {
+                                                await Channel.refreshChannels();
+                                                await Channel.refreshUnsubscribedChannels();
+                                                this.refresh();
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            } catch (error) {
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            }
+                                        }
+                                    );
+                                }}
+                                refreshing={this.state.refreshing}
+                            />
+                        ) : null
+                    }
+                >
                     <View style={styles.searchSection}>
                         <Icon
                             style={styles.searchIcon}

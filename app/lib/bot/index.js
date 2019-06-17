@@ -194,6 +194,7 @@ class Bot extends events.EventEmitter {
 
     static grpcGetCatalog = user => {
         return new Promise((resolve, reject) => {
+            setTimeout(() => {});
             ConversationServiceClient.getCatalog(
                 user.creds.sessionId,
                 (error, result) => {

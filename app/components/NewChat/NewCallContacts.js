@@ -65,6 +65,7 @@ import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import GlobalColors from '../../config/styles';
+import contactsStyles from '../ContactsPicker/styles';
 
 const R = require('ramda');
 
@@ -87,7 +88,8 @@ class NewCallContacts extends React.Component {
             updatingCallQuota: false,
             filters: ['All Contacts', 'People', 'Vessels'],
             selectedFilter: 0,
-            showFilterMenu: false
+            showFilterMenu: false,
+            searchString: ''
         };
     }
 
@@ -108,28 +110,8 @@ class NewCallContacts extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(granted => {
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        this.gettingAllContactData();
-                    } else {
-                        this.refresh([]);
-                    }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            this.gettingAllContactData();
-        }
 
+        this.gettingAllContactData();
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
             this.props.summary
@@ -175,10 +157,11 @@ class NewCallContacts extends React.Component {
             bot: SystemBot.backgroundTaskBot
         });
 
-        await bgBotScreen.initialize();
-
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
         this.setState({ updatingCallQuota: true, bgBotScreen });
+
+        bgBotScreen.initialize().then(() => {
+            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        });
     };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
@@ -218,6 +201,10 @@ class NewCallContacts extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        console.log(
+            'Sourav Logging:::: Current Scene',
+            nextProps.appState.currentScene
+        );
         return nextProps.appState.currentScene === I18n.t('Contacts_call');
     }
 
@@ -359,23 +346,62 @@ class NewCallContacts extends React.Component {
         Actions.dialCall();
     };
 
+    renderSearchBar() {
+        return (
+            <View style={contactsStyles.searchBar}>
+                {Icons.search({
+                    size: 18,
+                    color: GlobalColors.frontmLightBlue,
+                    iconStyle: { paddingHorizontal: 10 }
+                })}
+                <TextInput
+                    style={contactsStyles.searchTextInput}
+                    underlineColorAndroid="transparent"
+                    placeholder="Search contact"
+                    selectionColor={GlobalColors.darkGray}
+                    placeholderTextColor={searchBarConfig.placeholderTextColor}
+                    onChangeText={text => this.setState({ searchString: text })}
+                    value={this.state.searchString}
+                />
+            </View>
+        );
+    }
+
     renderContactsList() {
+        // console.log('all contacts ', this.state.contactsData);
+
         const sectionTitles = _.map(
             this.state.contactsData,
             section => section.title
         );
         if (sectionTitles && sectionTitles.length > 0) {
             let filteredContactsData = this.state.contactsData;
-            if (this.state.selectedFilter !== 0) {
+            if (
+                this.state.selectedFilter !== 0 ||
+                this.state.searchString.length > 0
+            ) {
                 filteredContactsData = this.state.contactsData.map(section => {
-                    return {
-                        title: section.title,
-                        data: section.data.filter(contact => {
+                    let data = section.data;
+                    if (this.state.selectedFilter !== 0) {
+                        data = data.filter(contact => {
                             return (
                                 contact.type ===
                                 this.state.filters[this.state.selectedFilter]
                             );
-                        })
+                        });
+                    }
+                    if (this.state.searchString.length > 0) {
+                        data = data.filter(contact => {
+                            return contact.name
+                                .toLowerCase()
+                                .includes(
+                                    this.state.searchString.toLowerCase()
+                                );
+                        });
+                    }
+                    return {
+                        title: section.title,
+                        data: data
                     };
                 });
                 filteredContactsData = filteredContactsData.filter(section => {
@@ -637,7 +663,7 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -689,7 +715,7 @@ class NewCallContacts extends React.Component {
                                 )
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -734,7 +760,7 @@ class NewCallContacts extends React.Component {
                                 this.makePstnCall(phoneNumbers.satellite)
                             }
                         >
-                            {Icons.greenCallOutline()}
+                            {Icons.greenCallOutline({ size: 16 })}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -760,7 +786,7 @@ class NewCallContacts extends React.Component {
                         style={styles.callButton}
                         onPress={this.makeVoipCall}
                     >
-                        {Icons.greenCallOutline()}
+                        {Icons.greenCallOutline({ size: 16 })}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -845,6 +871,7 @@ class NewCallContacts extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
+                    {this.renderSearchBar()}
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}

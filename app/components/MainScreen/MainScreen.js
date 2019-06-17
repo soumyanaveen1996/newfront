@@ -220,14 +220,19 @@ class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
-        const getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        let getFirstTime = await AsyncStorage.getItem('firstTimeUser');
+        if (getFirstTime === null) {
+            getFirstTime = true;
+        }
         console.log('get the first time user details ', getFirstTime);
 
-        if (getFirstTime) {
+        if (getFirstTime === true) {
             this.setState({ firstTimer: true }, () => {
                 firstTimer = this.state.firstTimer;
             });
-        } else {
+        }
+
+        if (getFirstTime === false) {
             this.setState({ firstTimer: false }, () => {
                 firstTimer = this.state.firstTimer;
             });
@@ -364,20 +369,22 @@ class MainScreen extends React.Component {
         this.showButton(pollingStrategy);
     }
 
-    update = async () => {
-        const userLoggedIn = await Auth.isUserLoggedIn();
-        const botsList = userLoggedIn
-            ? await Bot.getInstalledBots()
-            : await Promise.resolve(SystemBot.getDefaultBots());
-        const authStatus = userLoggedIn
-            ? MainScreenStates.authenticated
-            : MainScreenStates.unauthenticated;
-        this.setState({ screenState: authStatus, bots: botsList });
-        if (this.botList) {
-            this.botList.refresh();
-        }
-        this.checkPollingStrategy();
-    };
+    update = async () =>
+        new Promise(async resolve => {
+            const userLoggedIn = await Auth.isUserLoggedIn();
+            const botsList = userLoggedIn
+                ? await Bot.getInstalledBots()
+                : await Promise.resolve(SystemBot.getDefaultBots());
+            const authStatus = userLoggedIn
+                ? MainScreenStates.authenticated
+                : MainScreenStates.unauthenticated;
+            this.setState({ screenState: authStatus, bots: botsList });
+            if (this.botList) {
+                await this.botList.refresh();
+            }
+            this.checkPollingStrategy();
+            resolve();
+        });
 
     componentWillUnmount = () => {
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
@@ -637,6 +644,7 @@ class MainScreen extends React.Component {
                     searchString={this.state.searchString}
                     onSearch={this.onSearch}
                     setNoChats={this.setNoChats}
+                    updateTimeline={this.update}
                 />
             </View>
         );
@@ -644,16 +652,19 @@ class MainScreen extends React.Component {
 
     displayButton() {
         firstTimer = false;
+
         console.log('this is being called', firstTimer);
     }
 
     render() {
+        // console.log('first timer ', this.state.firstTimer);
+
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <BackgroundImage
                     style={{ display: 'flex', flexDirection: 'column' }}
                 >
-                    {this.state.noChats && (
+                    {this.state.noChats && this.state.firstTimer && (
                         <TourScreen
                             showNetwork={this.displayButton.bind(this)}
                         />
