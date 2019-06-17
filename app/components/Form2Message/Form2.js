@@ -15,7 +15,8 @@ import {
     Image,
     Alert,
     KeyboardAvoidingView,
-    Keyboard
+    Keyboard,
+    ActivityIndicator
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -31,6 +32,8 @@ import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
 import { connect } from 'react-redux';
 import { setCurrentForm } from '../../redux/actions/UserActions';
+import ChatModal from '../ChatBotScreen/ChatModal';
+import modalStyle from '../Cards/styles';
 
 class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -112,7 +115,9 @@ class Form2 extends React.Component {
             dropdownModalOptions: [],
             dropdownModalTitle: '',
             disabled: this.props.formStatus === formStatus.COMPLETED,
-            showInfoOfIndex: null
+            showInfoOfIndex: null,
+            lookupModalInfo: null,
+            showLookupModal: false
         };
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -223,10 +228,10 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.lookup:
-                answer.value = fieldData.value || '';
+                answer.value = fieldData.value ? fieldData.value.text : '';
                 answer.search = '';
                 answer.getResponse = () => {
-                    return answer.value;
+                    return { text: answer.value };
                 };
                 break;
             default:
@@ -911,6 +916,12 @@ class Form2 extends React.Component {
     }
 
     renderLookup(fieldData, key) {
+        if (
+            this.props.currentResults &&
+            this.props.currentResults.field === this.answers[key].id
+        ) {
+            this.answers[key].searching = false;
+        }
         return (
             <View>
                 <View
@@ -920,7 +931,9 @@ class Form2 extends React.Component {
                     ]}
                 >
                     {this.answers[key].value ? (
-                        <Text>{this.answers[key].value}</Text>
+                        <Text numberOfLines={1} ellipsizeMode={'tail'}>
+                            {this.answers[key].value}
+                        </Text>
                     ) : (
                         <TextInput
                             style={{ flex: 1 }}
@@ -945,9 +958,9 @@ class Form2 extends React.Component {
                             }}
                         />
                     )}
-                    {!(this.state.disabled || fieldData.readOnly)
-                        ? this.answers[key].value
-                            ? Icons.close({
+                    {!(this.state.disabled || fieldData.readOnly) ? (
+                        this.answers[key].value ? (
+                            Icons.close({
                                 size: 24,
                                 color: GlobalColors.frontmLightBlue,
                                 onPress: () => {
@@ -957,21 +970,24 @@ class Form2 extends React.Component {
                                     Keyboard.dismiss();
                                     this.answers[key].value = '';
                                     this.setState({ answers: this.answers });
-                                    this.onMoveAction(
-                                        this.answers[key].id,
-                                        ''
-                                    );
+                                    this.onMoveAction(this.answers[key].id, '');
                                 }
                             })
-                            : Icons.search({
+                        ) : this.answers[key].searching ? (
+                            <ActivityIndicator size={'small'} />
+                        ) : (
+                            Icons.search({
                                 onPress: () => {
                                     this.onSearchAction(
                                         this.answers[key].id,
                                         this.answers[key].search
                                     );
+                                    this.answers[key].searching = true;
+                                    this.setState({ answers: this.answers });
                                 }
                             })
-                        : null}
+                        )
+                    ) : null}
                 </View>
                 {this.props.currentResults &&
                 this.props.currentResults.field === this.answers[key].id ? (
@@ -980,31 +996,106 @@ class Form2 extends React.Component {
                             style={styles.resultList}
                             keyboardShouldPersistTaps="handled"
                             renderItem={({ item }) => (
-                                <Text
-                                    style={styles.resultText}
-                                    onPress={() => {
-                                        this.answers[key].value = item;
-                                        this.answers[key].search = '';
-                                        this.setState({ answers: this.answers });
-                                        this.props.setCurrentForm({
-                                            formData: this.props.formData,
-                                            formMessage: this.props.formMessage,
-                                            currentResults: null,
-                                            change: null
-                                        });
-                                        this.onMoveAction(
-                                            this.answers[key].id,
-                                            item
-                                        );
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between'
                                     }}
                                 >
-                                    {item}
-                                </Text>
+                                    <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode={'tail'}
+                                        style={styles.resultText}
+                                        onPress={() => {
+                                            this.answers[key].value = item.text;
+                                            this.answers[key].search = '';
+                                            this.setState({
+                                                answers: this.answers
+                                            });
+                                            this.props.setCurrentForm({
+                                                formData: this.props.formData,
+                                                formMessage: this.props.formMessage,
+                                                currentResults: null,
+                                                change: null
+                                            });
+                                            this.onMoveAction(
+                                                this.answers[key].id,
+                                                item
+                                            );
+                                        }}
+                                    >
+                                        {item.text}
+                                    </Text>
+                                    {item.info
+                                        ? Icons.info({
+                                            size: 24,
+                                            onPress: () => {
+                                                this.setState({
+                                                    showLookupModal: true,
+                                                    lookupModalInfo: item.info
+                                                });
+                                            }
+                                        })
+                                        : null}
+                                </View>
                             )}
                         />
                     ) : null}
             </View>
         );
+    }
+
+    renderLookupInfoModalContent(info) {
+        let fields;
+        if (info) {
+            let keys = Object.keys(info);
+            keys = keys.slice(1, keys.length);
+            fields = _.map(keys, key => {
+                return (
+                    <View style={modalStyle.fieldModal}>
+                        <Text style={modalStyle.fieldLabelModal}>
+                            {key + ': '}
+                        </Text>
+                        {this.renderModalInfoValue(info[key], true)}
+                    </View>
+                );
+            });
+        }
+        return (
+            <View style={[modalStyle.modalCard, { height: '65%' }]}>
+                <ScrollView>
+                    <View style={modalStyle.fieldsModal}>{fields}</View>
+                </ScrollView>
+            </View>
+        );
+    }
+
+    renderModalInfoValue(value, isModal) {
+        if (value === null || value === undefined) {
+            return <Text style={modalStyle.fieldText}>-</Text>;
+        } else if (typeof value === 'boolean') {
+            if (value) {
+                return Icons.cardsTrue();
+            } else {
+                return Icons.cardsFalse();
+            }
+        } else {
+            if (isModal) {
+                return (
+                    <Text style={modalStyle.fieldText}>{value.toString()}</Text>
+                );
+            } else {
+                return (
+                    <Text
+                        style={[modalStyle.fieldText, { textAlign: 'left' }]}
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                    >
+                        {value.toString()}
+                    </Text>
+                );
+            }
+        }
     }
 
     renderField(fieldData, key) {
@@ -1107,7 +1198,6 @@ class Form2 extends React.Component {
     }
 
     renderValidationMessage(message) {
-        console.log('>>>>>>>>>aa10');
         return (
             <View style={styles.validationMessage}>
                 <Text style={styles.validationMessageText}>{message}</Text>
@@ -1152,6 +1242,30 @@ class Form2 extends React.Component {
                         </View>
                         {this.renderDateModalIOS()}
                         {this.renderDropdownModal()}
+                        <ChatModal
+                            content={this.renderLookupInfoModalContent(
+                                this.state.lookupModalInfo
+                            )}
+                            isVisible={this.state.showLookupModal}
+                            backdropOpacity={0.1}
+                            onBackButtonPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            onBackdropPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: 0
+                            }}
+                        />
                     </ScrollView>
                 </SafeAreaView>
             </KeyboardAvoidingView>
