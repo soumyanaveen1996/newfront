@@ -127,7 +127,6 @@ export default class Cards extends React.Component {
         let fields;
         if (item.data) {
             let keys = Object.keys(item.data);
-            keys = keys.slice(1, keys.length);
             fields = _.map(keys, key => {
                 return (
                     <View style={styles.fieldModal}>

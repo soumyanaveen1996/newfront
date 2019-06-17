@@ -66,7 +66,6 @@ export default class Conversation {
      */
     static downloadRemoteConversations = () =>
         new Promise((resolve, reject) => {
-            console.log('>>>>>>>>download');
             let user;
             //remote
             Auth.getUser()
