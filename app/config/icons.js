@@ -320,6 +320,7 @@ export const Icons = {
     ),
 
     //FORM
+    time: icon('ios-time-outline', 'ionicon', 20, GlobalColors.frontmLightBlue),
     formMessageArrow: icon(
         'ios-arrow-forward',
         'ionicon',

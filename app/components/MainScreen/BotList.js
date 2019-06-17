@@ -177,18 +177,21 @@ class BotList extends React.Component {
                 ...chat,
                 elemType: 'recents'
             }));
-
         let newRecentData = [];
         if (this.props.user.firstLogin) {
             const onboardingIndex = recentData.findIndex(
                 data => data.key === 'onboarding-bot'
             );
-            const head = recentData.slice(0, onboardingIndex);
-            const tail = recentData.slice(
-                onboardingIndex + 1,
-                recentData.length
-            );
-            newRecentData = [recentData[onboardingIndex], ...head, ...tail];
+            if (onboardingIndex >= 0) {
+                const head = recentData.slice(0, onboardingIndex);
+                const tail = recentData.slice(
+                    onboardingIndex + 1,
+                    recentData.length
+                );
+                newRecentData = [recentData[onboardingIndex], ...head, ...tail];
+            } else {
+                newRecentData = recentData;
+            }
         } else {
             newRecentData = recentData;
         }
@@ -196,7 +199,6 @@ class BotList extends React.Component {
             favData.length > 0
                 ? [
                     { elemType: 'search', key: 'search' },
-                    // { elemType: 'buttons' },
                     {
                         elemType: 'header',
                         headerText: 'Favourites',
@@ -212,7 +214,6 @@ class BotList extends React.Component {
                 ]
                 : [
                     { elemType: 'search', key: 'search' },
-                    // { elemType: 'buttons' },
                     ...favData,
                     {
                         elemType: 'header',
@@ -381,7 +382,6 @@ class BotList extends React.Component {
 
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
-
         return (
             <View style={BotListStyles.listViewStyle}>
                 <CustomPlaceholder
