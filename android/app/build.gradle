@@ -210,6 +210,7 @@ sourceSets {
 
 
 dependencies {
+    compile project(':react-native-spring-scrollview')
     compile project(':react-native-blur')
     compile project(':rn-fetch-blob')
     compile (project(':mapbox-react-native-mapbox-gl')) {

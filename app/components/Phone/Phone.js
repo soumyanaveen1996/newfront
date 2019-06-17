@@ -152,7 +152,8 @@ export default class Phone extends React.Component {
                 Actions.pop();
                 return;
             }
-            Alert.alert('VoIP Error', 'Error : ' + JSON.stringify(err));
+            console.log('Sourav Logging:::: VOIP Error', err);
+            Alert.alert('Sorry, I am unable to call. Please try again.');
             Actions.pop();
         }
     }

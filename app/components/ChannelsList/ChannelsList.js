@@ -462,12 +462,18 @@ class ChannelsList extends React.Component {
                                     this.setState(
                                         { refreshing: true },
                                         async () => {
-                                            await Channel.refreshChannels();
-                                            await Channel.refreshUnsubscribedChannels();
-                                            this.refresh();
-                                            this.setState({
-                                                refreshing: false
-                                            });
+                                            try {
+                                                await Channel.refreshChannels();
+                                                await Channel.refreshUnsubscribedChannels();
+                                                this.refresh();
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            } catch (error) {
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            }
                                         }
                                     );
                                 }}

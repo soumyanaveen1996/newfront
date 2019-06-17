@@ -8435,6 +8435,11 @@ react-native-keychain@^2.0.0-rc:
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-2.0.0.tgz#5e6ae75d66d2737a0b38a95c903b6d6f966dd475"
   integrity sha512-6XKr7JJi+8QgAkhFplIzr47if/lKLZRjz2rSUbsxLN5dAb2H29iorfpDkCzaBiXzeLF8dIR5yd/eptt31aZqSQ==
 
+react-native-largelist-v3@^3.0.14:
+  version "3.0.14"
+  resolved "https://registry.yarnpkg.com/react-native-largelist-v3/-/react-native-largelist-v3-3.0.14.tgz#0b03dc588ed90f90432361f91ffa26d8e529e7c0"
+  integrity sha512-eom9InjkKCGjFESft3/BmkNttV3EFOhSisd4DKDe/dAaj0+ySt+ukUTSv9AVnLim6HW3MiUkfNgMBxckoVyDqg==
+
 react-native-loading-spinner-overlay@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-0.5.2.tgz#b7bcd277476d596615fd7feee601789f9bdc7acc"
@@ -8541,6 +8546,11 @@ react-native-sound@^0.10.9:
   version "0.10.9"
   resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.9.tgz#6b00b0f4afd017cde09fbb9d171df1b5d5b851a8"
   integrity sha1-awCw9K/QF83gn7udFx3xtdW4Uag=
+
+react-native-spring-scrollview@^2.0.22:
+  version "2.0.22"
+  resolved "https://registry.yarnpkg.com/react-native-spring-scrollview/-/react-native-spring-scrollview-2.0.22.tgz#6d8dbaf485b68a30c330d25e7e22f70ce7574c4c"
+  integrity sha512-y1O/AMq1++AHOjQjT5Nse8GAQ7tOWnWTR67kO06FBHbgyu6EeZ0Ow5KK2EjtmFN0EAY8zFZmXtZyr0Sdht/wJA==
 
 react-native-sqlite-storage@^3.3.7:
   version "3.3.7"

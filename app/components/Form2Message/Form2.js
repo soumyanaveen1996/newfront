@@ -15,7 +15,8 @@ import {
     Image,
     Alert,
     KeyboardAvoidingView,
-    Keyboard
+    Keyboard,
+    ActivityIndicator
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -31,6 +32,8 @@ import { Settings, PollingStrategyTypes } from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
 import { connect } from 'react-redux';
 import { setCurrentForm } from '../../redux/actions/UserActions';
+import ChatModal from '../ChatBotScreen/ChatModal';
+import modalStyle from '../Cards/styles';
 
 class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -112,7 +115,9 @@ class Form2 extends React.Component {
             dropdownModalOptions: [],
             dropdownModalTitle: '',
             disabled: this.props.formStatus === formStatus.COMPLETED,
-            showInfoOfIndex: null
+            showInfoOfIndex: null,
+            lookupModalInfo: null,
+            showLookupModal: false
         };
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -127,6 +132,10 @@ class Form2 extends React.Component {
                 id: fieldData.id,
                 getResponse: () => {}
             };
+            if (fieldData.validation) {
+                answer.valid = fieldData.savedValidationResult;
+                answer.validationMessage = fieldData.savedValidationMessage;
+            }
             switch (fieldData.type) {
             case fieldType.textField:
                 answer.value = fieldData.value || '';
@@ -219,10 +228,10 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.lookup:
-                answer.value = fieldData.value || '';
+                answer.value = fieldData.value ? fieldData.value.text : '';
                 answer.search = '';
                 answer.getResponse = () => {
-                    return answer.value;
+                    return { text: answer.value };
                 };
                 break;
             default:
@@ -239,6 +248,8 @@ class Form2 extends React.Component {
         }
         if (this.props.change) {
             this.updateForm();
+        } else if (this.props.validation) {
+            this.validateField();
         }
     }
 
@@ -291,14 +302,19 @@ class Form2 extends React.Component {
             action: action,
             fields: _.map(this.answers, (answer, index) => {
                 const responseValue = answer.getResponse();
-                if (
-                    completed === true &&
-                    this.props.formData[index].mandatory
-                ) {
+                if (completed === true) {
+                    if (this.props.formData[index].mandatory) {
+                        if (
+                            !responseValue ||
+                            responseValue === '' ||
+                            responseValue === []
+                        ) {
+                            completed = false;
+                        }
+                    }
                     if (
-                        !responseValue ||
-                        responseValue === '' ||
-                        responseValue === []
+                        this.props.formData[index].validation &&
+                        !answer.valid
                     ) {
                         completed = false;
                     }
@@ -316,6 +332,14 @@ class Form2 extends React.Component {
     saveFormData() {
         const data = _.map(this.props.formData, (field, index) => {
             field.value = this.answers[index].getResponse();
+            if (field.validation) {
+                field.savedValidationResult = this.answers[index].valid;
+                if (this.answers[index].valid === false) {
+                    field.savedValidationMessage = this.answers[
+                        index
+                    ].validationMessage;
+                }
+            }
             return field;
         });
         return data;
@@ -394,10 +418,33 @@ class Form2 extends React.Component {
             formData: newFormData,
             formMessage: this.props.formMessage,
             currentResults: null,
-            change: null
+            change: null,
+            validation: null
         });
         this.initializeAnswers();
         this.setState({ answers: this.answers });
+    }
+
+    validateField() {
+        const fieldToValidate = this.answers.findIndex(answer => {
+            return answer.id === this.props.validation.field;
+        });
+        if (fieldToValidate >= 0) {
+            this.answers[
+                fieldToValidate
+            ].valid = this.props.validation.validationResult;
+            this.answers[
+                fieldToValidate
+            ].validationMessage = this.props.validation.validationMessage;
+            this.props.setCurrentForm({
+                formData: this.props.formData,
+                formMessage: this.props.formMessage,
+                currentResults: null,
+                change: null,
+                validation: null
+            });
+            this.setState({ answers: this.answers });
+        }
     }
 
     ////////////FIELDS RENDERER/////////////
@@ -409,6 +456,9 @@ class Form2 extends React.Component {
                 style={styles.textField}
                 onChangeText={text => {
                     this.answers[key].value = text;
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.setState({
                         answers: this.answers,
                         showInfoOfIndex: null
@@ -434,6 +484,9 @@ class Form2 extends React.Component {
                 editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textField}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -463,6 +516,9 @@ class Form2 extends React.Component {
                 editable={!(this.state.disabled || content.readOnly)}
                 style={styles.textArea}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -553,6 +609,9 @@ class Form2 extends React.Component {
             <TouchableOpacity
                 disabled={this.state.disabled || content.readOnly}
                 onPress={() => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.currentDropdownModalKey = key;
                     this.setState({
                         dropdownModalOptions: content.options,
@@ -684,6 +743,9 @@ class Form2 extends React.Component {
             <TouchableOpacity
                 disabled={this.state.disabled || content.readOnly}
                 onPress={async () => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     if (Platform.OS === 'android') {
                         DatePickerAndroid.open({
                             date: this.answers[key].value,
@@ -791,6 +853,9 @@ class Form2 extends React.Component {
         return (
             <TouchableOpacity
                 onPress={() => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     Actions.multiselection({
                         index: key,
                         options: content.options,
@@ -824,6 +889,9 @@ class Form2 extends React.Component {
             <TextInput
                 editable={!(this.state.disabled || content.readOnly)}
                 onChangeText={text => {
+                    if (this.props.formData[key].validation) {
+                        this.answers[key].valid = undefined;
+                    }
                     this.answers[key].value = text;
                     this.setState({
                         answers: this.answers,
@@ -848,6 +916,12 @@ class Form2 extends React.Component {
     }
 
     renderLookup(fieldData, key) {
+        if (
+            this.props.currentResults &&
+            this.props.currentResults.field === this.answers[key].id
+        ) {
+            this.answers[key].searching = false;
+        }
         return (
             <View>
                 <View
@@ -857,7 +931,9 @@ class Form2 extends React.Component {
                     ]}
                 >
                     {this.answers[key].value ? (
-                        <Text>{this.answers[key].value}</Text>
+                        <Text numberOfLines={1} ellipsizeMode={'tail'}>
+                            {this.answers[key].value}
+                        </Text>
                     ) : (
                         <TextInput
                             style={{ flex: 1 }}
@@ -882,30 +958,36 @@ class Form2 extends React.Component {
                             }}
                         />
                     )}
-                    {!(this.state.disabled || fieldData.readOnly)
-                        ? this.answers[key].value
-                            ? Icons.close({
+                    {!(this.state.disabled || fieldData.readOnly) ? (
+                        this.answers[key].value ? (
+                            Icons.close({
                                 size: 24,
                                 color: GlobalColors.frontmLightBlue,
                                 onPress: () => {
+                                    if (this.props.formData[key].validation) {
+                                        this.answers[key].valid = undefined;
+                                    }
                                     Keyboard.dismiss();
                                     this.answers[key].value = '';
                                     this.setState({ answers: this.answers });
-                                    this.onMoveAction(
-                                        this.answers[key].id,
-                                        ''
-                                    );
+                                    this.onMoveAction(this.answers[key].id, '');
                                 }
                             })
-                            : Icons.search({
+                        ) : this.answers[key].searching ? (
+                            <ActivityIndicator size={'small'} />
+                        ) : (
+                            Icons.search({
                                 onPress: () => {
                                     this.onSearchAction(
                                         this.answers[key].id,
                                         this.answers[key].search
                                     );
+                                    this.answers[key].searching = true;
+                                    this.setState({ answers: this.answers });
                                 }
                             })
-                        : null}
+                        )
+                    ) : null}
                 </View>
                 {this.props.currentResults &&
                 this.props.currentResults.field === this.answers[key].id ? (
@@ -914,31 +996,106 @@ class Form2 extends React.Component {
                             style={styles.resultList}
                             keyboardShouldPersistTaps="handled"
                             renderItem={({ item }) => (
-                                <Text
-                                    style={styles.resultText}
-                                    onPress={() => {
-                                        this.answers[key].value = item;
-                                        this.answers[key].search = '';
-                                        this.setState({ answers: this.answers });
-                                        this.props.setCurrentForm({
-                                            formData: this.props.formData,
-                                            formMessage: this.props.formMessage,
-                                            currentResults: null,
-                                            change: null
-                                        });
-                                        this.onMoveAction(
-                                            this.answers[key].id,
-                                            item
-                                        );
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between'
                                     }}
                                 >
-                                    {item}
-                                </Text>
+                                    <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode={'tail'}
+                                        style={styles.resultText}
+                                        onPress={() => {
+                                            this.answers[key].value = item.text;
+                                            this.answers[key].search = '';
+                                            this.setState({
+                                                answers: this.answers
+                                            });
+                                            this.props.setCurrentForm({
+                                                formData: this.props.formData,
+                                                formMessage: this.props.formMessage,
+                                                currentResults: null,
+                                                change: null
+                                            });
+                                            this.onMoveAction(
+                                                this.answers[key].id,
+                                                item
+                                            );
+                                        }}
+                                    >
+                                        {item.text}
+                                    </Text>
+                                    {item.info
+                                        ? Icons.info({
+                                            size: 24,
+                                            onPress: () => {
+                                                this.setState({
+                                                    showLookupModal: true,
+                                                    lookupModalInfo: item.info
+                                                });
+                                            }
+                                        })
+                                        : null}
+                                </View>
                             )}
                         />
                     ) : null}
             </View>
         );
+    }
+
+    renderLookupInfoModalContent(info) {
+        let fields;
+        if (info) {
+            let keys = Object.keys(info);
+            keys = keys.slice(1, keys.length);
+            fields = _.map(keys, key => {
+                return (
+                    <View style={modalStyle.fieldModal}>
+                        <Text style={modalStyle.fieldLabelModal}>
+                            {key + ': '}
+                        </Text>
+                        {this.renderModalInfoValue(info[key], true)}
+                    </View>
+                );
+            });
+        }
+        return (
+            <View style={[modalStyle.modalCard, { height: '65%' }]}>
+                <ScrollView>
+                    <View style={modalStyle.fieldsModal}>{fields}</View>
+                </ScrollView>
+            </View>
+        );
+    }
+
+    renderModalInfoValue(value, isModal) {
+        if (value === null || value === undefined) {
+            return <Text style={modalStyle.fieldText}>-</Text>;
+        } else if (typeof value === 'boolean') {
+            if (value) {
+                return Icons.cardsTrue();
+            } else {
+                return Icons.cardsFalse();
+            }
+        } else {
+            if (isModal) {
+                return (
+                    <Text style={modalStyle.fieldText}>{value.toString()}</Text>
+                );
+            } else {
+                return (
+                    <Text
+                        style={[modalStyle.fieldText, { textAlign: 'left' }]}
+                        numberOfLines={1}
+                        ellipsizeMode={'tail'}
+                    >
+                        {value.toString()}
+                    </Text>
+                );
+            }
+        }
     }
 
     renderField(fieldData, key) {
@@ -1013,6 +1170,12 @@ class Form2 extends React.Component {
                     </View>
                 </View>
                 {field}
+                {fieldData.validation && this.answers[key].valid === false
+                    ? this.renderValidationMessage(
+                        this.answers[key].validationMessage ||
+                              'Validation error'
+                    )
+                    : null}
             </View>
         );
     }
@@ -1032,6 +1195,14 @@ class Form2 extends React.Component {
         if (fieldData.mandatory) {
             return <Text style={{ color: 'red' }}> *</Text>;
         }
+    }
+
+    renderValidationMessage(message) {
+        return (
+            <View style={styles.validationMessage}>
+                <Text style={styles.validationMessageText}>{message}</Text>
+            </View>
+        );
     }
 
     renderFields() {
@@ -1071,6 +1242,30 @@ class Form2 extends React.Component {
                         </View>
                         {this.renderDateModalIOS()}
                         {this.renderDropdownModal()}
+                        <ChatModal
+                            content={this.renderLookupInfoModalContent(
+                                this.state.lookupModalInfo
+                            )}
+                            isVisible={this.state.showLookupModal}
+                            backdropOpacity={0.1}
+                            onBackButtonPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            onBackdropPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: 0
+                            }}
+                        />
                     </ScrollView>
                 </SafeAreaView>
             </KeyboardAvoidingView>
@@ -1083,7 +1278,8 @@ const mapStateToProps = state => {
         formData: state.user.currentForm.formData,
         formMessage: state.user.currentForm.formMessage,
         currentResults: state.user.currentForm.currentResults,
-        change: state.user.currentForm.change
+        change: state.user.currentForm.change,
+        validation: state.user.currentForm.validation
     };
 };
 
