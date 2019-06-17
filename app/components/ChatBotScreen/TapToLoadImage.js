@@ -12,6 +12,7 @@ import styles, {
 } from './styles';
 import I18n from '../../config/i18n/i18n';
 import ImageCache from '../../lib/image_cache';
+import { Network } from '../../lib/capability';
 
 const TapToLoadImageStates = {
     UNINITIALIZED: 'UNINITIALIZED',
@@ -57,15 +58,27 @@ export default class TapToLoadImage extends React.Component {
     async componentDidMount() {
         const { uri } = this.props.source;
         let path = await this.getImagePathFromCache(uri);
+        const connectionStatus = await Network.getNetworkInfo();
+        console.log('network connection ', connectionStatus);
         if (path) {
             this.setState({
                 state: TapToLoadImageStates.IMAGE_DOWNLOADED,
                 path: path
             });
         } else {
-            this.setState({
-                state: TapToLoadImageStates.TAP_TO_LOAD_IMAGE
-            });
+            // this.setState({
+            //     state: TapToLoadImageStates.TAP_TO_LOAD_IMAGE
+            // });
+            // console.log('images should get downloaded', connectionStatus);
+
+            if (
+                (connectionStatus.type === 'wifi' ||
+                    connectionStatus.type === 'cellular') &&
+                connectionStatus.type !== 'satellite'
+            ) {
+                console.log('download image');
+                this.onImageLoadTap();
+            }
         }
     }
 

@@ -152,7 +152,8 @@ class ContactsPicker extends React.Component {
             userInfo: {},
             userId: '',
             searchString: '',
-            refreshing: false
+            refreshing: false,
+            titleText: 'Selected'
         };
     }
 
@@ -356,7 +357,25 @@ class ContactsPicker extends React.Component {
         } else {
             contactsList = this.dataSource.getFilteredData(text);
         }
-        this.setState({ contactsData: contactsList, searchString: text });
+
+        this.setState(
+            {
+                contactsData: contactsList,
+                searchString: text,
+                titleText: 'Search results'
+            },
+            () => {
+                console.log('text ', this.state.searchString);
+                if (
+                    this.state.searchString === '' ||
+                    this.state.searchString.length === 0
+                ) {
+                    this.setState({
+                        titleText: 'Selected'
+                    });
+                }
+            }
+        );
     }
 
     onContactSelected(contact) {
@@ -592,6 +611,16 @@ class ContactsPicker extends React.Component {
                         </View>
                     )}
                 </View>
+                <View
+                    style={{
+                        paddingHorizontal: 10,
+                        paddingVertical: 4
+                    }}
+                >
+                    <Text style={{ fontSize: 14, color: 'rgba(74,74,74,1)' }}>
+                        {this.state.titleText}
+                    </Text>
+                </View>
             </View>
         );
     };
@@ -621,6 +650,7 @@ class ContactsPicker extends React.Component {
                     {/* {!this.props.appState.contactsLoaded ? (
                     <ActivityIndicator size="small" />
                 ) : null} */}
+
                     <SectionList
                         refreshControl={
                             this.props.appState.network === 'full' ? (
@@ -719,7 +749,6 @@ class ContactsPicker extends React.Component {
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
                     <NetworkStatusNotchBar />
-
                     {this.renderContactsList()}
                     <InviteModal
                         isVisible={this.state.inviteModalVisible}
