@@ -3,7 +3,7 @@ import {
     View,
     SafeAreaView,
     SectionList,
-    TextInput,
+    Text,
     KeyboardAvoidingView,
     ActivityIndicator,
     Platform

@@ -491,7 +491,7 @@ class ChannelsList extends React.Component {
                         />
                         <TextInput
                             style={styles.input}
-                            placeholder="Search Channel"
+                            placeholder="Type here to discover channels"
                             onChangeText={searchString => {
                                 this.setState({ searchString });
                             }}

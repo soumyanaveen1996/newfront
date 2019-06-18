@@ -160,7 +160,7 @@ export default class SearchUsers extends React.Component {
                     ref={el => (this.text = el)}
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
-                    placeholder="Search contact"
+                    placeholder="Search FrontM users by name or email"
                     autoFocus={true}
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}

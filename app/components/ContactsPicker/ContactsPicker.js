@@ -542,7 +542,7 @@ class ContactsPicker extends React.Component {
                 <TextInput
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
-                    placeholder="Search contact"
+                    placeholder="Filter my contacts"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
@@ -566,33 +566,41 @@ class ContactsPicker extends React.Component {
             <View>
                 {this.renderSearchBar()}
                 <View style={styles.myProfileContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.goToMyProfile();
-                        }}
-                    >
-                        <View style={styles.myProfileItemContainer}>
-                            <MyProfileImage
-                                accessibilityLabel="My Profile Image"
-                                testID="my-profile-image"
-                                uuid={this.state.userId}
-                                placeholder={images.user_image}
-                                style={styles.myProfileItemImage}
-                                placeholderStyle={
-                                    styles.myProfilePlaceholderImage
-                                }
-                                resizeMode="center"
-                            />
-                            <View style={styles.contactItemDetailsContainer}>
-                                <Text style={styles.myProfileName}>
-                                    {this.state.userInfo.userName}
-                                </Text>
-                                <Text style={styles.contactItemEmail}>
-                                    My Profile
-                                </Text>
-                            </View>
+                    <View style={styles.myProfileItemContainer}>
+                        <MyProfileImage
+                            accessibilityLabel="My Profile Image"
+                            testID="my-profile-image"
+                            uuid={this.state.userId}
+                            placeholder={images.user_image}
+                            style={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfilePlaceholderImage}
+                            resizeMode="center"
+                        />
+                        <View style={styles.contactItemDetailsContainer}>
+                            <Text style={styles.myProfileName}>
+                                {this.state.userInfo.userName}
+                            </Text>
+                            <Text style={styles.contactItemEmail}>
+                                My Profile
+                            </Text>
                         </View>
-                    </TouchableOpacity>
+                        <View style={{ position: 'absolute', right: 20 }}>
+                            <TouchableOpacity
+                                accessibilityLabel="More Button"
+                                onPress={() => {
+                                    this.goToMyProfile();
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                    source={images.edit_btn}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
                 <View>
                     {length > 0 ? null : (
@@ -611,7 +619,7 @@ class ContactsPicker extends React.Component {
                         </View>
                     )}
                 </View>
-                <View
+                {/* <View
                     style={{
                         paddingHorizontal: 10,
                         paddingVertical: 4
@@ -620,7 +628,7 @@ class ContactsPicker extends React.Component {
                     <Text style={{ fontSize: 14, color: 'rgba(74,74,74,1)' }}>
                         {this.state.titleText}
                     </Text>
-                </View>
+                </View> */}
             </View>
         );
     };

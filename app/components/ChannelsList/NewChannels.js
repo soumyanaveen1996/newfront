@@ -368,7 +368,7 @@ class NewChannels extends React.Component {
                                         onChangeText={this.onChangeDescriptionText.bind(
                                             this
                                         )}
-                                        placeholder="Description about your channel"
+                                        placeholder="Description of your channel"
                                         underlineColorAndroid={'transparent'}
                                         multiline={true}
                                         numberOfLines={4}
