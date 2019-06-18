@@ -135,6 +135,8 @@ const stylesheet = StyleSheet.create({
         height: 35,
         width: 35,
         borderRadius: 35 / 2,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginLeft: wp('2%'),
         marginRight: wp('3%')
     },

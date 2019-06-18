@@ -144,8 +144,20 @@ export default class ContactDetailsScreen extends React.Component {
     };
 
     addLocalConatcts = localContacts => {
-        console.log('we see', this.props.contact.emails);
+        // console.log('we see', this.props.contact.emails, localContacts);
         let emailToDisplay = this.props.contact.emails[0].email || '';
+
+        if (emailToDisplay.home) {
+            emailToDisplay = emailToDisplay.home;
+        }
+
+        if (emailToDisplay.work) {
+            emailToDisplay = emailToDisplay.work;
+        }
+        if (emailToDisplay.home && emailToDisplay.work) {
+            emailToDisplay = emailToDisplay.work;
+        }
+
         if (localContacts.length === 0) {
             // this.setState({ loading: false });
             return Alert.alert(
@@ -217,6 +229,7 @@ export default class ContactDetailsScreen extends React.Component {
                         this.addLocalConatcts(localContacts);
                     } else {
                         console.log('Cannot get permission for Contacts');
+                        // return Alert.alert('Please grant access for contacts');
                     }
                 })
                 .catch(err => {
@@ -224,13 +237,18 @@ export default class ContactDetailsScreen extends React.Component {
                 });
         } else {
             localContacts = await this.getLocalContacts();
-            // console.log('we will see ', localContacts);
+
+            // console.log(
+            //     'we will see ',
+            //     localContacts,
+            //     this.props.contact.emails
+            // );
 
             this.addLocalConatcts(localContacts);
         }
     };
     addToFavourite = () => {
-        // console.log('contacts details ', this.props.contact);
+        console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
         let data = {
             type: 'contacts',
@@ -360,7 +378,9 @@ export default class ContactDetailsScreen extends React.Component {
                                 style={{ width: 32, height: 32 }}
                             />
                         </View>
-                        <Text>Remove Favourite</Text>
+                        <Text style={{ textAlign: 'center' }}>
+                            Remove Favourite
+                        </Text>
                     </TouchableOpacity>
                 );
             } else {
@@ -743,7 +763,7 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
-        // console.log('thhhhhhhhhhhhhhhh', this.props.contact);
+        console.log('thhhhhhhhhhhhhhhh', this.props.contact);
         if (!this.props.contact) {
             return <View />;
         }

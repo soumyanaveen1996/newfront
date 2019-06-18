@@ -43,7 +43,7 @@ class ChannelsFilter extends React.Component {
         this.state = {
             filter: [],
             filterList: [
-                { checked: false, title: 'Created By me', value: 'created' },
+                { checked: false, title: 'Created by me', value: 'created' },
                 { checked: false, title: 'Subscribed', value: 'subscribed' },
                 {
                     checked: false,

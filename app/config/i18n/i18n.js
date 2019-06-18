@@ -154,7 +154,7 @@ I18n.translations = {
         Share_Contact: 'Share contact',
         SAVE: 'Save',
         Search_my_info_text:
-            'I want to appear in search results to enable networking',
+            'I want to appear in FrontM user directory search results',
         Share_my_info_text:
             'I want to share my profile information with my contacts',
         Add_phone: 'Add phone',
