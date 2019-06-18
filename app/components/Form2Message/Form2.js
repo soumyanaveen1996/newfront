@@ -257,10 +257,10 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.lookup:
-                answer.value = fieldData.value ? fieldData.value.text : '';
+                answer.value = fieldData.value;
                 answer.search = '';
                 answer.getResponse = () => {
-                    return { text: answer.value };
+                    return answer.value;
                 };
                 break;
             default:
@@ -1138,7 +1138,7 @@ class Form2 extends React.Component {
                 >
                     {this.answers[key].value ? (
                         <Text numberOfLines={1} ellipsizeMode={'tail'}>
-                            {this.answers[key].value}
+                            {this.answers[key].value.text}
                         </Text>
                     ) : (
                         <TextInput
@@ -1174,12 +1174,12 @@ class Form2 extends React.Component {
                                         this.answers[key].valid = undefined;
                                     }
                                     Keyboard.dismiss();
-                                    this.answers[key].value = '';
+                                    this.answers[key].value = null;
                                     this.setState({ answers: this.answers });
                                     this.onMoveAction(
                                         key,
                                         this.answers[key].id,
-                                        ''
+                                        null
                                     );
                                 }
                             })
@@ -1217,7 +1217,7 @@ class Form2 extends React.Component {
                                         ellipsizeMode={'tail'}
                                         style={styles.resultText}
                                         onPress={() => {
-                                            this.answers[key].value = item.text;
+                                            this.answers[key].value = item;
                                             this.answers[key].search = '';
                                             this.setState({
                                                 answers: this.answers
