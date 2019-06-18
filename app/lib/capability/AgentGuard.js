@@ -28,6 +28,28 @@ export class AgentGuardError extends Error {
  * A simple AgentGuard wrapper
  */
 export default class AgentGuard {
+    static heartBeat = async () => {
+        try {
+            const user = await Auth.getUser();
+            if (user) {
+                const options = {
+                    serviceName: 'AgentGuardServiceClient',
+                    action: 'execute',
+                    sessionId: user.creds.sessionId,
+                    params: { capability: 'PingAgentGuardCapability' }
+                };
+
+                const response = await Network(options, false);
+                console.log(
+                    'Sourav Logging:::: Connected to AgentGuard',
+                    response
+                );
+                // return convertResponse(response);
+            }
+        } catch (error) {
+            console.log('Sourav Logging:::: Error Calling AG Heartbeat', error);
+        }
+    };
     static execute = async params => {
         try {
             const user = await Auth.getUser();
