@@ -587,6 +587,7 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 20
     },
     myProfileItemContainer: {
+        position: 'relative',
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center'
