@@ -1,7 +1,7 @@
 // Centralized Android Back Button Handler
 
 import React, { Component } from 'react';
-import { BackAndroid } from 'react-native';
+import { BackHandler } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
@@ -18,7 +18,7 @@ class NavHandler extends Component {
 
     componentDidMount() {
         //listens to hardwareBackPress
-        BackAndroid.addEventListener('hardwareBackPress', () => {
+        BackHandler.addEventListener('hardwareBackPress', () => {
             try {
                 console.log(Actions.prevScene);
                 if (Actions.currentScene === 'resendCodeScreen') {

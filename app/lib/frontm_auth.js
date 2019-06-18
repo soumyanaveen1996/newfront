@@ -3,7 +3,7 @@ import AWS from 'aws-sdk/dist/aws-sdk-react-native';
 import Config from '../config/config';
 import { Network_http } from './capability';
 import { UUID } from '../lib/capability/Utils';
-import GoogleSignin from 'react-native-google-sign-in';
+import { GoogleSignin } from 'react-native-google-signin';
 import queryString from 'querystring';
 import AuthError from '../lib/capability/Auth';
 

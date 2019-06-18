@@ -14,16 +14,14 @@
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0116B5E424844EEDBAE2F774 /* SF-Pro-Display-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = C94A3E3421AD46F9987876BA /* SF-Pro-Display-Thin.otf */; };
 		01D5CFBE4B2341B59BA1B039 /* SF-Pro-Text-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3FEFB1C6C4704FD8B66D30B4 /* SF-Pro-Text-RegularItalic.otf */; };
-		0400FD7B20D4F73900AB3A78 /* RNGoogleSignInEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7620D4F73800AB3A78 /* RNGoogleSignInEvents.swift */; };
-		0400FD7C20D4F73900AB3A78 /* RNGoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7720D4F73800AB3A78 /* RNGoogleSignIn.swift */; };
-		0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */; };
-		0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */; };
 		040848DB21201EBD006C45E4 /* libRNTwilioVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040848DA21201EAC006C45E4 /* libRNTwilioVoice.a */; };
 		040AA78920034A790057C959 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 040AA75D20034A630057C959 /* libRCTPushNotification.a */; };
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
+		0442D7FD22B8D24C001C2A0E /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0442D7FC22B8D23E001C2A0E /* libRNGoogleSignin.a */; };
 		0445655F2248C5DE00996110 /* DomainChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445655E2248C5DE00996110 /* DomainChannels+frontm.m */; };
+		0449761322B8C558003DFC41 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 044975C522B8C558003DFC41 /* JavaScriptCore.framework */; };
 		0453E623212045DA0078059D /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0453E5DB212045DA0078059D /* CallKit.framework */; };
 		04541829210CA4C000A658A2 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0454180E210C987800A658A2 /* libRNDocumentPicker.a */; };
 		045633CD205FF1B600F1B290 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0456339D205FF18C00F1B290 /* libRCTImageResizer.a */; };
@@ -113,7 +111,6 @@
 		1927B1E35A474FEA9DABFE6C /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E9A07C22478D41E2B7907A62 /* SF-Pro-Text-Bold.otf */; };
 		1F5F715922F241099C363C04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4BF23652804675A540A09D /* libRCTFBSDK.a */; };
 		21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21149E0121930D9200F429AC /* libRNDefaultPreference.a */; };
-		2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2123A5C3216DFA9C00CDC29A /* libCodePush.a */; };
 		2125608E225B6F6800FFCEAF /* LocalContact+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 2125608D225B6F6800FFCEAF /* LocalContact+frontm.m */; };
 		21256091225B71EE00FFCEAF /* EmailAddresses+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 21256090225B71EE00FFCEAF /* EmailAddresses+frontm.m */; };
 		212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E0FB6621C3740A00C9B1E4 /* libBugsnagReactNative.a */; };
@@ -145,8 +142,6 @@
 		63168A88BFAA40ACB1DAF054 /* SF-Pro-Display-HeavyItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 74CD2B55BD4F4C88920F118D /* SF-Pro-Display-HeavyItalic.otf */; };
 		63A74F8EE08F4D42A8C0A871 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8379B8CA80E44F82A07D327F /* Foundation.ttf */; };
 		64A91D96634C4E60BA7E5FA0 /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94E823C8560D4D12994D59C2 /* Roboto-BoldItalic.ttf */; };
-		6B0F97D6220C70B000659F09 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BD220C709B00659F09 /* libRNBlur.a */; };
-		6B0F97D7220C70B000659F09 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BF220C709B00659F09 /* libRNBlur.a */; };
 		6B37D42521C2AB9B00E7A7FE /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */; };
 		6B37D42621C2AB9B00E7A7FE /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B37D42E21C2AD7A00E7A7FE /* libRCTMGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B37D42D21C2AD4900E7A7FE /* libRCTMGL.a */; };
@@ -308,20 +303,6 @@
 			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
 			remoteInfo = "double-conversion-tvOS";
 		};
-		040C5A5E1FFCF9A50071B62D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
-			remoteInfo = privatedata;
-		};
-		040C5A601FFCF9A50071B62D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
-			remoteInfo = "privatedata-tvOS";
-		};
 		040C5A6C1FFCF9A50071B62D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0148FD44A03F451D96DCF8FA /* RCTVideo.xcodeproj */;
@@ -447,6 +428,41 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNVersionCheck;
+		};
+		0442D7D122B8D1F9001C2A0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EDEBC6D6214B3E7000DD5AC8;
+			remoteInfo = jsi;
+		};
+		0442D7D322B8D1F9001C2A0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EDEBC73B214B45A300DD5AC8;
+			remoteInfo = jsiexecutor;
+		};
+		0442D7D522B8D1F9001C2A0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ED296FB6214C9A0900B7C4FE;
+			remoteInfo = "jsi-tvOS";
+		};
+		0442D7D722B8D1F9001C2A0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
+			remoteInfo = "jsiexecutor-tvOS";
+		};
+		0442D7FB22B8D23E001C2A0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0442D7F722B8D23E001C2A0E /* RNGoogleSignin.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9FD355121D3E4A2900D06170;
+			remoteInfo = RNGoogleSignin;
 		};
 		0454180D210C987800A658A2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -679,20 +695,6 @@
 			remoteGlobalIDString = 3D3CD9321DE5FBEE00167DC4;
 			remoteInfo = "cxxreact-tvOS";
 		};
-		3DAD3EAC1DF850E9000B6D8A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D3CD90B1DE5FBD600167DC4;
-			remoteInfo = jschelpers;
-		};
-		3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
-			remoteInfo = "jschelpers-tvOS";
-		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -806,19 +808,16 @@
 		0148FD44A03F451D96DCF8FA /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 		01D03719586D4D568C187485 /* SF-Pro-Display-SemiboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-SemiboldItalic.otf"; path = "../assets/fonts/SFPro/SF-Pro-Display-SemiboldItalic.otf"; sourceTree = "<group>"; };
 		02929EB314B1449DB6265DB1 /* SF-Pro-Text-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Text-LightItalic.otf"; path = "../assets/fonts/SFPro/SF-Pro-Text-LightItalic.otf"; sourceTree = "<group>"; };
-		0400FD7620D4F73800AB3A78 /* RNGoogleSignInEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNGoogleSignInEvents.swift; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignInEvents.swift"; sourceTree = "<group>"; };
-		0400FD7720D4F73800AB3A78 /* RNGoogleSignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNGoogleSignIn.swift; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignIn.swift"; sourceTree = "<group>"; };
-		0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInEventsBridge.m; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignInEventsBridge.m"; sourceTree = "<group>"; };
-		0400FD7920D4F73800AB3A78 /* RNGoogleSignIn-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RNGoogleSignIn-Bridging-Header.h"; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignIn-Bridging-Header.h"; sourceTree = "<group>"; };
-		0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGoogleSignInBridge.m; path = "../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn/RNGoogleSignInBridge.m"; sourceTree = "<group>"; };
 		040848D521201EAC006C45E4 /* RNTwilioVoice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNTwilioVoice.xcodeproj; path = "../node_modules/react-native-twilio-programmable-voice/ios/RNTwilioVoice.xcodeproj"; sourceTree = "<group>"; };
 		040AA74820034A630057C959 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignInDependencies.framework; sourceTree = "<group>"; };
 		040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleSignIn.bundle; sourceTree = "<group>"; };
 		040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSignIn.framework; sourceTree = "<group>"; };
 		04143D6020B30D08001DDCE3 /* RNVersionCheck.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVersionCheck.xcodeproj; path = "../node_modules/react-native-version-check/ios/RNVersionCheck.xcodeproj"; sourceTree = "<group>"; };
+		0442D7F722B8D23E001C2A0E /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
 		0445655D2248C5DE00996110 /* DomainChannels+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DomainChannels+frontm.h"; sourceTree = "<group>"; };
 		0445655E2248C5DE00996110 /* DomainChannels+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DomainChannels+frontm.m"; sourceTree = "<group>"; };
+		044975C522B8C558003DFC41 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		0453E5DB212045DA0078059D /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		0456338C205FF18C00F1B290 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
@@ -1093,11 +1092,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6B0F97D6220C70B000659F09 /* libRNBlur.a in Frameworks */,
-				6B0F97D7220C70B000659F09 /* libRNBlur.a in Frameworks */,
+				0442D7FD22B8D24C001C2A0E /* libRNGoogleSignin.a in Frameworks */,
+				0449761322B8C558003DFC41 /* JavaScriptCore.framework in Frameworks */,
 				6B37D42E21C2AD7A00E7A7FE /* libRCTMGL.a in Frameworks */,
 				0453E623212045DA0078059D /* CallKit.framework in Frameworks */,
-				2123A60B216DFABF00CDC29A /* libCodePush.a in Frameworks */,
 				21149E1821930DBF00F429AC /* libRNDefaultPreference.a in Frameworks */,
 				21D37F5F216CB937009C8922 /* libRNIap.a in Frameworks */,
 				212D1BA021C3E54A008BA035 /* libBugsnagReactNative.a in Frameworks */,
@@ -1419,6 +1417,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0442D7F822B8D23E001C2A0E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0442D7FC22B8D23E001C2A0E /* libRNGoogleSignin.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		045417D3210C987800A658A2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1628,16 +1634,16 @@
 				3DAD3EA71DF850E9000B6D8A /* libyoga.a */,
 				3DAD3EA91DF850E9000B6D8A /* libcxxreact.a */,
 				3DAD3EAB1DF850E9000B6D8A /* libcxxreact.a */,
-				3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */,
-				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
 				21A4F6A521798A2C0088AE9B /* libjsinspector.a */,
 				21A4F6A721798A2C0088AE9B /* libjsinspector-tvOS.a */,
 				040C5A571FFCF9A50071B62D /* libthird-party.a */,
 				040C5A591FFCF9A50071B62D /* libthird-party.a */,
 				040C5A5B1FFCF9A50071B62D /* libdouble-conversion.a */,
 				040C5A5D1FFCF9A50071B62D /* libdouble-conversion.a */,
-				040C5A5F1FFCF9A50071B62D /* libprivatedata.a */,
-				040C5A611FFCF9A50071B62D /* libprivatedata-tvOS.a */,
+				0442D7D222B8D1F9001C2A0E /* libjsi.a */,
+				0442D7D422B8D1F9001C2A0E /* libjsiexecutor.a */,
+				0442D7D622B8D1F9001C2A0E /* libjsi-tvOS.a */,
+				0442D7D822B8D1F9001C2A0E /* libjsiexecutor-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1737,6 +1743,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0442D7F722B8D23E001C2A0E /* RNGoogleSignin.xcodeproj */,
 				21EE4F6B22147A830079B8C3 /* RNFetchBlob.xcodeproj */,
 				6B0F977F220C709A00659F09 /* RNBlur.xcodeproj */,
 				6B37D42821C2AD4800E7A7FE /* RCTMGL.xcodeproj */,
@@ -1800,11 +1807,6 @@
 			isa = PBXGroup;
 			children = (
 				6B37D3D821C2AB9B00E7A7FE /* Mapbox.framework */,
-				0400FD7920D4F73800AB3A78 /* RNGoogleSignIn-Bridging-Header.h */,
-				0400FD7720D4F73800AB3A78 /* RNGoogleSignIn.swift */,
-				0400FD7A20D4F73800AB3A78 /* RNGoogleSignInBridge.m */,
-				0400FD7620D4F73800AB3A78 /* RNGoogleSignInEvents.swift */,
-				0400FD7820D4F73800AB3A78 /* RNGoogleSignInEventsBridge.m */,
 				045F0B741FFFE128005C0ACE /* frontm_mobile_prod.entitlements */,
 				04E2D8F022255F86004C1AC0 /* FrontM.crt */,
 				04FC94A3222CF71E00532F42 /* sectigoSHA2.ca-bundle */,
@@ -1932,6 +1934,7 @@
 		C012FAE9CECA450BAC1F14F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				044975C522B8C558003DFC41 /* JavaScriptCore.framework */,
 				21D37EDD216CB089009C8922 /* StoreKit.framework */,
 				0453E5DB212045DA0078059D /* CallKit.framework */,
 				040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */,
@@ -2023,6 +2026,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -2165,6 +2169,10 @@
 				{
 					ProductGroup = 040C5A8D1FFCF9A50071B62D /* Products */;
 					ProjectRef = E3AEFFA1E33344519167462F /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = 0442D7F822B8D23E001C2A0E /* Products */;
+					ProjectRef = 0442D7F722B8D23E001C2A0E /* RNGoogleSignin.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5A8F1FFCF9A50071B62D /* Products */;
@@ -2328,20 +2336,6 @@
 			remoteRef = 040C5A5C1FFCF9A50071B62D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		040C5A5F1FFCF9A50071B62D /* libprivatedata.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libprivatedata.a;
-			remoteRef = 040C5A5E1FFCF9A50071B62D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		040C5A611FFCF9A50071B62D /* libprivatedata-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libprivatedata-tvOS.a";
-			remoteRef = 040C5A601FFCF9A50071B62D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		040C5A6D1FFCF9A50071B62D /* libRCTVideo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2466,6 +2460,41 @@
 			fileType = archive.ar;
 			path = libRNVersionCheck.a;
 			remoteRef = 04143D9F20B30D08001DDCE3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0442D7D222B8D1F9001C2A0E /* libjsi.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjsi.a;
+			remoteRef = 0442D7D122B8D1F9001C2A0E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0442D7D422B8D1F9001C2A0E /* libjsiexecutor.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjsiexecutor.a;
+			remoteRef = 0442D7D322B8D1F9001C2A0E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0442D7D622B8D1F9001C2A0E /* libjsi-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libjsi-tvOS.a";
+			remoteRef = 0442D7D522B8D1F9001C2A0E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0442D7D822B8D1F9001C2A0E /* libjsiexecutor-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libjsiexecutor-tvOS.a";
+			remoteRef = 0442D7D722B8D1F9001C2A0E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0442D7FC22B8D23E001C2A0E /* libRNGoogleSignin.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGoogleSignin.a;
+			remoteRef = 0442D7FB22B8D23E001C2A0E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0454180E210C987800A658A2 /* libRNDocumentPicker.a */ = {
@@ -2697,20 +2726,6 @@
 			fileType = archive.ar;
 			path = libcxxreact.a;
 			remoteRef = 3DAD3EAA1DF850E9000B6D8A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjschelpers.a;
-			remoteRef = 3DAD3EAC1DF850E9000B6D8A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjschelpers.a;
-			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -2974,7 +2989,6 @@
 				04704B882237CB42003ABE94 /* Message+frontm.m in Sources */,
 				04905610223B61A4008FECC8 /* TimelineResponse+frontm.m in Sources */,
 				0490563A223B7CA1008FECC8 /* AgentGuardStringResponse+frontm.m in Sources */,
-				0400FD7D20D4F73900AB3A78 /* RNGoogleSignInEventsBridge.m in Sources */,
 				0490565B223BB8F3008FECC8 /* SubscribeBotResponse+frontm.m in Sources */,
 				6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */,
 				04905613223B61BB008FECC8 /* TimelineContent+frontm.m in Sources */,
@@ -3000,8 +3014,6 @@
 				04905616223B61D8008FECC8 /* TimelineConversation+frontm.m in Sources */,
 				04E0FF88223843F3004F19B1 /* CatalogDependencies+frontm.m in Sources */,
 				04905625223B731E008FECC8 /* UpdateFavouritesResponse+frontm.m in Sources */,
-				0400FD7C20D4F73900AB3A78 /* RNGoogleSignIn.swift in Sources */,
-				0400FD7B20D4F73900AB3A78 /* RNGoogleSignInEvents.swift in Sources */,
 				04905631223B75C3008FECC8 /* VoipStatusResponse+frontm.m in Sources */,
 				04704B6A2236C50D003ABE94 /* UserServiceClient.m in Sources */,
 				04704B7F2237C23D003ABE94 /* QueueServiceClient.m in Sources */,
@@ -3026,7 +3038,6 @@
 				04CAEDC1224E3F1900DD0CE0 /* GRPCMetadata.m in Sources */,
 				0458FAB42238E647002D37A3 /* GetConversationDetailsChannels+frontm.m in Sources */,
 				04905628223B7414008FECC8 /* FindResponse+frontm.m in Sources */,
-				0400FD7E20D4F73900AB3A78 /* RNGoogleSignInBridge.m in Sources */,
 				0490564C223B8C95008FECC8 /* CreateChannelResponse+frontm.m in Sources */,
 				04905655223BB6FB008FECC8 /* UpdateUserProfileResponse+frontm.m in Sources */,
 				04FC952E222D0A5100532F42 /* AuthServiceClient.m in Sources */,
