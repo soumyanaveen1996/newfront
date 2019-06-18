@@ -793,7 +793,7 @@ class ChatBotScreen extends React.Component {
         });
 
     tell = message => {
-        // console.log('>>>>>>>MSG', message)
+        // console.log('>>>>>>>MSG', message.getMessage())
         // Removing the waiting message.
         this.stopWaiting();
         this.countMessage(message);
