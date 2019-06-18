@@ -448,7 +448,7 @@ class BotStoreScreen extends React.Component {
     }
 
     render() {
-        if (this.props.appState.network === 'none') {
+        if (this.props.appState.network !== 'full') {
             return <EmptyInstalledBot noNetwork={true} />;
         }
 
