@@ -121,9 +121,22 @@ export default class ContactDetailsScreen extends React.Component {
         const { emailAddresses = [] } = contact;
         const phoneEmails = emailAddresses.map(email => email.email);
         const { emails } = this.props.contact;
-        // console.log('emails fo contacts ', emails);
+        // console.log('emails fo contacts ', phoneEmails);
 
-        const contactEmail = emails.map(email => email.email);
+        let contactEmail = emails.map(email => {
+            // console.log('email check ', email.email);
+
+            if (email.email.work && email.email.work !== '') {
+                return email.email.work;
+            }
+
+            if (email.email.home && email.email.home !== '') {
+                return email.email.home;
+            }
+
+            return email.email;
+        });
+
         return R.intersection(contactEmail, phoneEmails).length > 0;
     };
 
@@ -144,7 +157,6 @@ export default class ContactDetailsScreen extends React.Component {
     };
 
     addLocalConatcts = localContacts => {
-        // console.log('we see', this.props.contact.emails, localContacts);
         let emailToDisplay = this.props.contact.emails[0].email || '';
 
         if (emailToDisplay.home) {
@@ -157,6 +169,12 @@ export default class ContactDetailsScreen extends React.Component {
         if (emailToDisplay.home && emailToDisplay.work) {
             emailToDisplay = emailToDisplay.work;
         }
+
+        if (emailToDisplay.home === '' || emailToDisplay.work === '') {
+            emailToDisplay = '';
+        }
+
+        console.log('we see', localContacts);
 
         if (localContacts.length === 0) {
             // this.setState({ loading: false });
@@ -176,6 +194,7 @@ export default class ContactDetailsScreen extends React.Component {
                             'local'
                         ]);
                         elem = R.set(localPhonePath, localPhone, elem);
+
                         // elem.phoneNumbers.local = localPhone;
                     }
                     return elem;
@@ -192,21 +211,26 @@ export default class ContactDetailsScreen extends React.Component {
                                 contact =>
                                     contact.userId === this.props.contact.id
                             );
-                        const reloadContact = newContact.map(data => ({
-                            id: data.userId,
-                            name: data.userName,
-                            emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
-                            phoneNumbers: data.phoneNumbers,
-                            isWaitingForConfirmation:
-                                data.waitingForConfirmation || false,
-                            isFavourite: data.isFavourite || false
-                        }));
-                        Actions.refresh({
-                            key: Math.random(),
-                            contact: reloadContact[0],
-                            updateList: this.props.updateList,
-                            updateContactScreen: this.props.updateContactScreen
-                        });
+                        // console.log('lets see this one ', newContact);
+
+                        if (newContact && newContact.length > 0) {
+                            const reloadContact = newContact.map(data => ({
+                                id: data.userId,
+                                name: data.userName,
+                                emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
+                                phoneNumbers: data.phoneNumbers,
+                                isWaitingForConfirmation:
+                                    data.waitingForConfirmation || false,
+                                isFavourite: data.isFavourite || false
+                            }));
+                            Actions.refresh({
+                                key: Math.random(),
+                                contact: reloadContact[0],
+                                updateList: this.props.updateList,
+                                updateContactScreen: this.props
+                                    .updateContactScreen
+                            });
+                        }
                     }, 2000);
                     // this.setState({ isFavourite: true });
                 });
@@ -524,7 +548,7 @@ export default class ContactDetailsScreen extends React.Component {
             localContacts: [localContactObj]
         };
 
-        console.log('data to send ', bodyParse);
+        // console.log('data to send ', bodyParse);
         Conversation.deleteLocalContacts(bodyParse)
             .then(value => {
                 Contact.getAddedContacts().then(contactsData => {
@@ -695,7 +719,7 @@ export default class ContactDetailsScreen extends React.Component {
                         : null}
                     {this.props.contact.phoneNumbers.land
                         ? this.renderDetailRow(
-                            'local_phone',
+                            'phone',
                             'Land',
                             this.props.contact.phoneNumbers.land
                         )

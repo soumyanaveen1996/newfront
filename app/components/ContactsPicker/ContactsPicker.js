@@ -320,7 +320,7 @@ class ContactsPicker extends React.Component {
     };
 
     updateList = () => {
-        // console.log('clicked on fav');
+        // console.log('clicked on fav', this.dataSource.getData());
         this.setState({ contactsData: this.dataSource.getData() });
     };
 
@@ -329,10 +329,12 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
+        // console.log('data for contact ', info);
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
         }
+
         return (
             <ContactsPickerRow
                 key={contact.id}
@@ -647,8 +649,9 @@ class ContactsPicker extends React.Component {
         //     section => section.title
         // );
 
-        // console.log('contact list ', this.state.contactsData);
+        const allContacts = this.state.contactsData;
 
+        // console.log('contact list ', allContacts);
         if (this.state.contactsData) {
             return (
                 <KeyboardAvoidingView
@@ -692,7 +695,7 @@ class ContactsPicker extends React.Component {
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={this.sectionHeader.bind(this)}
-                        sections={this.state.contactsData}
+                        sections={allContacts}
                         keyExtractor={(item, index) => item.id}
                         ListHeaderComponent={this.renderButtons}
                         stickySectionHeadersEnabled={false}
