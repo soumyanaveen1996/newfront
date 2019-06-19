@@ -37,7 +37,7 @@ const stageConfig = {
         queuePath: '/queueLambda',
         pingPath: '/ping',
         user_details_path:
-            'https://u8rahrb2u6.execute-api.us-east-1.amazonaws.com/item/getusername',
+            'u8rahrb2u6.execute-api.us-east-1.amazonaws.com/item/getusername',
         catalogPath: '/catalog',
         authPath: '/auth',
         refreshPath: '/v2/refresh',

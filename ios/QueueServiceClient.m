@@ -142,7 +142,7 @@ RCT_REMAP_METHOD(startChatSSE, startChatSSEWithSessionId:(NSString *)sessionId) 
                              RCTLog(@"GRPC:::SSE done %@ %@", error, [response toJSON]);
                              [self sendEventWithName:@"sse_end" body:@{}];
                            } else {
-                             RCTLog(@"GRPC:::SSE message %@ %@", error, [response toJSON]);
+                             RCTLog(@"<<<<<<<<<<<<<<<GRPC>>>>>>>>>>>>:::SSE message %@ %@", error, [response toJSON]);
                              [self sendEventWithName:@"sse_message" body:[response toJSON]];
                            }
                          }];

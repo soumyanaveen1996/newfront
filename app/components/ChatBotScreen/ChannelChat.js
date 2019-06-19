@@ -9,6 +9,10 @@ import { HeaderBack, HeaderRightIcon } from '../Header';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import { Icons } from '../../config/icons';
 import images from '../../images';
+import { Platform } from 'react-native';
+
+var backTimer = null;
+const timeout = Platform.OS === 'android' ? 500 : 400;
 
 export default class ChannelChat extends ChatBotScreen {
     static navigationOptions({ navigation, screenProps }) {
@@ -27,10 +31,17 @@ export default class ChannelChat extends ChatBotScreen {
                         }
                         await state.params.deleteConversation();
                         if (state.params.onBack) {
-                            Actions.pop();
-                            state.params.onBack();
+                            clearTimeout(backTimer);
+                            backTimer = setTimeout(() => {
+                                Actions.pop();
+                                state.params.onBack();
+                            }, timeout);
                         } else {
-                            Actions.pop();
+                            clearTimeout(backTimer);
+                            backTimer = setTimeout(
+                                () => Actions.pop(),
+                                timeout
+                            );
                         }
                     }}
                 />
