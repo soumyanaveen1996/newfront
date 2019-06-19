@@ -72,7 +72,7 @@ export default class EmptyInstalledBot extends React.Component {
                                     fontSize: 16
                                 }}
                             >
-                                Install First Bot
+                                Install First Assistant
                             </Text>
                         </TouchableOpacity>
                     )}
