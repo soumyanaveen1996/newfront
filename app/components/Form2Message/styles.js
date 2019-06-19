@@ -71,8 +71,10 @@ export default (stylesheet = StyleSheet.create({
 
     //FORM
     f2Container: {
+        flex: 1,
         backgroundColor: GlobalColors.white
     },
+
     f2Title: {
         marginTop: 25,
         marginHorizontal: '8%',
