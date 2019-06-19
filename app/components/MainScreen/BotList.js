@@ -84,6 +84,14 @@ class BotList extends React.Component {
         let user = await Auth.getUser();
         // All
         let allChats = [];
+        conversations.forEach(conversation => {
+            allChats.push({
+                key: conversation.conversationId,
+                type: 'conversation',
+                bot: conversation
+            });
+        });
+        let favBotsArray = await DeviceStorage.get(FAVOURITE_BOTS);
         let allBots = bots.map(bot => {
             if (bot.botId) {
                 let botIndex = bot.botId;
@@ -100,15 +108,6 @@ class BotList extends React.Component {
         allBots.forEach(bot => {
             allChats.push({ key: bot.botId, type: 'bot', bot: bot });
         });
-        conversations.forEach(conversation => {
-            allChats.push({
-                key: conversation.conversationId,
-                type: 'conversation',
-                bot: conversation
-            });
-        });
-
-        let favBotsArray = await DeviceStorage.get(FAVOURITE_BOTS);
 
         let allChatsData = await Promise.all(
             _.map(allChats, async (conversation, index) => {
