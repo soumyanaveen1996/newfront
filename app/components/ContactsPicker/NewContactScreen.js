@@ -9,7 +9,8 @@ import {
     Keyboard,
     Alert,
     ScrollView,
-    Platform
+    Platform,
+    KeyboardAvoidingView
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
@@ -614,182 +615,199 @@ class NewContactScreen extends React.Component {
         // console.log('all the things ', this.state, this.props);
 
         return (
-            <SafeAreaView style={styles.safeAreaStyle}>
-                <ScrollView style={{ flex: 1 }}>
-                    <View style={styles.mainViewContainer}>
-                        <Loader loading={this.state.loading} />
-                        <PhoneTypeModal
-                            currentValue={
-                                this.state.phoneNumbers[this.state.currentIndex]
-                            }
-                            currentIndex={this.state.currentIndex}
-                            isVisible={this.state.inviteModalVisible}
-                            setVisible={this.setInviteVisible.bind(this)}
-                            settingType={this.setupType.bind(this)}
-                        />
-                        <View style={styles.profileImageContainer}>
-                            <View
-                                style={{
-                                    width: 120,
-                                    height: 120,
-                                    borderRadius: 60
-                                }}
-                            >
-                                {this.state.reloadProfileImage ? (
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={{ flex: 1 }}
+            >
+                <SafeAreaView style={styles.safeAreaStyle}>
+                    <ScrollView
+                        style={{ flex: 1 }}
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        <View style={styles.mainViewContainer}>
+                            <Loader loading={this.state.loading} />
+                            <PhoneTypeModal
+                                currentValue={
+                                    this.state.phoneNumbers[
+                                        this.state.currentIndex
+                                    ]
+                                }
+                                currentIndex={this.state.currentIndex}
+                                isVisible={this.state.inviteModalVisible}
+                                setVisible={this.setInviteVisible.bind(this)}
+                                settingType={this.setupType.bind(this)}
+                            />
+                            <View style={styles.profileImageContainer}>
+                                <View
+                                    style={{
+                                        width: 120,
+                                        height: 120,
+                                        borderRadius: 60
+                                    }}
+                                >
+                                    {this.state.reloadProfileImage ? (
+                                        <Image
+                                            source={{
+                                                uri: this.state
+                                                    .reloadProfileImage
+                                            }}
+                                            style={styles.profileImgStyle}
+                                        />
+                                    ) : (
+                                        <MyProfileImage
+                                            uuid={this.state.userId}
+                                            placeholder={images.user_image}
+                                            style={styles.profilePic}
+                                            placeholderStyle={
+                                                styles.profileImgStyle
+                                            }
+                                            resizeMode="cover"
+                                            changeProfileImageBack={() => {
+                                                this.changeProfileStatuBack.bind(
+                                                    this
+                                                );
+                                            }}
+                                        />
+                                    )}
+                                </View>
+                                <TouchableOpacity
+                                    style={{
+                                        position: 'absolute',
+                                        right: 20
+                                    }}
+                                    accessibilityLabel="More Button"
+                                    onPress={this.showOptions.bind(this)}
+                                >
                                     <Image
-                                        source={{
-                                            uri: this.state.reloadProfileImage
+                                        style={{
+                                            width: 45,
+                                            height: 45
                                         }}
-                                        style={styles.profileImgStyle}
+                                        source={images.edit_btn}
                                     />
-                                ) : (
-                                    <MyProfileImage
-                                        uuid={this.state.userId}
-                                        placeholder={images.user_image}
-                                        style={styles.profilePic}
-                                        placeholderStyle={
-                                            styles.profileImgStyle
-                                        }
-                                        resizeMode="cover"
-                                        changeProfileImageBack={() => {
-                                            this.changeProfileStatuBack.bind(
-                                                this
-                                            );
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.nameContainerStyle}>
+                                <View
+                                    style={{
+                                        width: 300,
+                                        alignItems: 'flex-start'
+                                    }}
+                                >
+                                    <Text style={styles.nameLabel}>
+                                        {I18n.t('Name')}
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        autoCorrect={false}
+                                        value={this.state.myName}
+                                        onChangeText={val => {
+                                            this.setState({ myName: val });
                                         }}
+                                        blurOnSubmit={false}
+                                        placeholder="Your Name"
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor="rgba(155,155,155,1)"
+                                        clearButtonMode="always"
                                     />
+                                </View>
+                            </View>
+                            <View style={styles.userInfoNumberContainer}>
+                                {this.infoRender(
+                                    'phNumber',
+                                    this.state.phoneNumbers
                                 )}
+                                <View style={styles.addContainer}>
+                                    <Image
+                                        source={images.btn_more}
+                                        style={styles.iconStyle}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.addNewNumber();
+                                        }}
+                                    >
+                                        <Text style={styles.addLabel}>
+                                            {I18n.t('Add_phone')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <TouchableOpacity
-                                style={{
-                                    position: 'absolute',
-                                    right: 20
-                                }}
-                                accessibilityLabel="More Button"
-                                onPress={this.showOptions.bind(this)}
-                            >
-                                <Image
-                                    style={{
-                                        width: 45,
-                                        height: 45
-                                    }}
-                                    source={images.edit_btn}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.nameContainerStyle}>
+                            <View style={styles.userInfoEmailContainer}>
+                                {this.infoRender(
+                                    'email',
+                                    this.state.emailAddress
+                                )}
+                                <View style={styles.addContainer}>
+                                    <Image
+                                        source={images.btn_more}
+                                        style={{
+                                            height: 8,
+                                            width: 8,
+                                            marginRight: 15
+                                        }}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.addNewEmail();
+                                        }}
+                                    >
+                                        <Text style={styles.addLabel}>
+                                            Add Email
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
                             <View
-                                style={{ width: 300, alignItems: 'flex-start' }}
+                                style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
                             >
-                                <Text style={styles.nameLabel}>
-                                    {I18n.t('Name')}
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    autoCorrect={false}
-                                    value={this.state.myName}
-                                    onChangeText={val => {
-                                        this.setState({ myName: val });
-                                    }}
-                                    blurOnSubmit={false}
-                                    placeholder="Your Name"
-                                    underlineColorAndroid={'transparent'}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                    clearButtonMode="always"
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.userInfoNumberContainer}>
-                            {this.infoRender(
-                                'phNumber',
-                                this.state.phoneNumbers
-                            )}
-                            <View style={styles.addContainer}>
-                                <Image
-                                    source={images.btn_more}
-                                    style={styles.iconStyle}
-                                />
                                 <TouchableOpacity
+                                    style={styles.import_btn}
                                     onPress={() => {
-                                        this.addNewNumber();
+                                        this.importPhoneBook();
                                     }}
                                 >
-                                    <Text style={styles.addLabel}>
-                                        {I18n.t('Add_phone')}
+                                    <Text style={styles.cancel_text}>
+                                        Import details from address book
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.btn_container}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Actions.pop();
+                                    }}
+                                    style={styles.cancel_btn}
+                                >
+                                    <Text style={styles.cancel_text}>
+                                        {I18n.t('Cancel')}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.saveProfile();
+                                    }}
+                                    style={styles.save_btn}
+                                >
+                                    <Text style={styles.save_btn_text}>
+                                        {I18n.t('SAVE')}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={styles.userInfoEmailContainer}>
-                            {this.infoRender('email', this.state.emailAddress)}
-                            <View style={styles.addContainer}>
-                                <Image
-                                    source={images.btn_more}
-                                    style={{
-                                        height: 8,
-                                        width: 8,
-                                        marginRight: 15
-                                    }}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.addNewEmail();
-                                    }}
-                                >
-                                    <Text style={styles.addLabel}>
-                                        Add Email
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View
-                            style={{
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={styles.import_btn}
-                                onPress={() => {
-                                    this.importPhoneBook();
-                                }}
-                            >
-                                <Text style={styles.cancel_text}>
-                                    Import details from address book
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.btn_container}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    Actions.pop();
-                                }}
-                                style={styles.cancel_btn}
-                            >
-                                <Text style={styles.cancel_text}>
-                                    {I18n.t('Cancel')}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.saveProfile();
-                                }}
-                                style={styles.save_btn}
-                            >
-                                <Text style={styles.save_btn_text}>
-                                    {I18n.t('SAVE')}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>
-                <LocalContactModal
-                    isVisible={this.state.modalVisible}
-                    setVisible={this.setModalVisible.bind(this)}
-                    selectedContact={this.importSelectedContact}
-                />
-            </SafeAreaView>
+                    </ScrollView>
+                    <LocalContactModal
+                        isVisible={this.state.modalVisible}
+                        setVisible={this.setModalVisible.bind(this)}
+                        selectedContact={this.importSelectedContact}
+                    />
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }
