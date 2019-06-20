@@ -11,6 +11,7 @@ import Message from '../capability/Message';
 import { MessageHandler, MessageQueue } from '../../lib/message';
 import Store from '../../lib/Store';
 import {} from '../../redux/actions/UserActions';
+import AgentGuard from '../capability/AgentGuard';
 
 import RStore from '../../redux/store/configureStore';
 import { setNetwork } from '../../redux/actions/UserActions';
@@ -37,6 +38,7 @@ var logoutSubscriptions = [];
 const poll = () => {
     InteractionManager.runAfterInteractions(() => {
         Auth.getUser().then(authUser => {
+            AgentGuard.heartBeat();
             processNetworkQueue();
             readRemoteLambdaQueue(authUser);
         });

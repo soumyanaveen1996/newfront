@@ -6,6 +6,7 @@ import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import { connect } from 'react-redux';
 import { setNetwork } from '../../redux/actions/UserActions';
+import AgentGuard from '../../lib/capability/AgentGuard';
 class NetworkStatusNotchBar extends React.Component {
     constructor(props) {
         super(props);
@@ -53,6 +54,7 @@ class NetworkStatusNotchBar extends React.Component {
             this.props.setNetwork('none');
         } else {
             this.props.setNetwork('full');
+            AgentGuard.heartBeat();
         }
     };
 

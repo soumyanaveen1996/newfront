@@ -36,15 +36,22 @@ export default class AgentGuard {
                     serviceName: 'AgentGuardServiceClient',
                     action: 'execute',
                     sessionId: user.creds.sessionId,
-                    params: { capability: 'PingAgentGuardCapability' }
+                    params: {
+                        parameters: JSON.stringify({
+                            test: 'test'
+                        }),
+                        capability: 'PingAgentGuardCapability',
+                        sync: true
+                    }
                 };
 
-                const response = await Network(options, false);
-                console.log(
-                    'Sourav Logging:::: Connected to AgentGuard',
-                    response
-                );
-                // return convertResponse(response);
+                console.log('Sourav Logging:::: Sending Heartbeat');
+                Network(options, false).then(response => {
+                    console.log(
+                        'Sourav Logging:::: Connected to AgentGuard',
+                        response
+                    );
+                });
             }
         } catch (error) {
             console.log('Sourav Logging:::: Error Calling AG Heartbeat', error);

@@ -270,7 +270,7 @@ export default class Splash extends React.Component {
 
     handleNotification = notification => {
         console.log('Sourav Logging:::: In handle Notifcaiton', notification);
-        NetworkHandler.readLambda();
+        NetworkHandler.poll();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             const conversationId =

@@ -162,7 +162,7 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging::::Sending Agent Guard Message", input.toString());
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).execute(input, new StreamObserver<AgentGuardStringResponse>() {
+        stub.withDeadlineAfter(5000, TimeUnit.MILLISECONDS).execute(input, new StreamObserver<AgentGuardStringResponse>() {
             @Override
             public void onNext(AgentGuardStringResponse value) {
                 Log.d("Received AG Response", value.toString());
