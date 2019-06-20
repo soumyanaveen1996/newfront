@@ -280,8 +280,9 @@ export default StyleSheet.create({
         fontFamily: 'SF Pro Text'
     },
     channelDescription: {
-        width: '100%',
-        height: 110
+        width: '95%',
+        height: 110,
+        paddingHorizontal: 10
     },
     channelType: {
         marginTop: 10
@@ -293,7 +294,8 @@ export default StyleSheet.create({
         color: 'rgba(47,199,111,1)'
     },
     channelDescriptionContainer: {
-        marginTop: 5
+        marginTop: 5,
+        paddingHorizontal: 5
     },
     subTitle: {
         color: ChannelsListItemColors.subTitleColor,

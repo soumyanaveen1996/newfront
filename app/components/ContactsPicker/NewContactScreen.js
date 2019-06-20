@@ -560,6 +560,7 @@ class NewContactScreen extends React.Component {
     };
 
     saveProfile = () => {
+        this.setState({ loading: true });
         let {
             emailAddressObj,
             phoneNumbersObj,
@@ -582,24 +583,25 @@ class NewContactScreen extends React.Component {
             ]
         };
 
-        console.log('save sata ', saveLocalContactData, this.state.userId);
+        // console.log('save sata ', saveLocalContactData, this.state.userId);
         AddLocalContacts(saveLocalContactData)
             .then(elem => {
-                console.log('data ', elem);
+                // console.log('data ', elem);
                 // Actions.newContactScreen({});
                 Store.dispatch(completeContactsLoad(false));
                 return Contact.fetchGrpcContacts(this.state.user);
             })
             .then(contactsData => {
-                console.log('all contact ', contactsData);
+                // console.log('all contact ', contactsData);
                 let frontmContact = [...contactsData.data.contacts];
                 let localContacts = [...contactsData.data.localContacts];
                 let updateContacts = frontmContact.concat(localContacts);
 
-                console.log('on adding contacts ', updateContacts);
+                // console.log('on adding contacts ', updateContacts);
+                this.setState({ loading: false });
 
                 // Contact.saveContacts(updateContacts);
-                Actions.pop();
+                setTimeout(() => Actions.pop(), 100);
                 // setTimeout(() => {
                 //     Actions.refresh({
                 //         key: Math.random()
@@ -608,6 +610,7 @@ class NewContactScreen extends React.Component {
             })
             .catch(err => {
                 console.log('error on saving local contact ', err);
+                this.setState({ loading: false });
             });
     };
 
