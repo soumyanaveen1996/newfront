@@ -42,13 +42,15 @@ export default StyleSheet.create({
 
     formContainer: Platform.select({
         ios: {
-            padding: 10,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
             marginBottom: 20,
             alignItems: 'center',
             justifyContent: 'center'
         },
         android: {
-            padding: 10,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
             marginBottom: 20,
             alignItems: 'center',
             justifyContent: 'center'
@@ -58,7 +60,8 @@ export default StyleSheet.create({
         fontWeight: '300',
         color: 'rgba(74,74,74,1)',
         width: 300,
-        padding: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
         letterSpacing: 1,
         lineHeight: 20,
         fontSize: 14,

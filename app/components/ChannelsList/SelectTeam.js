@@ -106,12 +106,18 @@ class SelectTeam extends React.Component {
         Auth.getUser()
             .then(user => {
                 const domains = user.info.domains;
-                const Teams = domains
-                    .filter(domain => domain.domain !== 'frontmai')
-                    .map(domain => ({
-                        label: domain.domain.toUpperCase(),
-                        value: domain.domain
-                    }));
+                let Teams;
+                console.log('domains ', user, domains);
+
+                Teams = domains
+                    ? domains
+                        .filter(domain => domain.domain !== 'frontmai')
+                        .map(domain => ({
+                            label: domain.domain.toUpperCase(),
+                            value: domain.domain
+                        }))
+                    : [];
+
                 this.setState({ teams: Teams, loading: false });
             })
             .catch(err => {
@@ -141,6 +147,8 @@ class SelectTeam extends React.Component {
             height,
             ...styleButton
         } = styles.filterButtonContainer;
+
+        // console.log('all teams data ', this.state.teams);
 
         if (this.state.loading) {
             return (
