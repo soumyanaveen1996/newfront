@@ -21,6 +21,7 @@ import RemoteBotInstall from '../RemoteBotInstall';
 import { NetworkDAO } from '../../lib/persistence';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
+import Bot from '../bot';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -254,7 +255,8 @@ class NetworkPoller {
                 console.log('Sourav Logging:::: App is in Active State Again');
                 InteractionManager.runAfterInteractions(() => {
                     RemoteBotInstall.syncronizeBots();
-                    setTimeout(() => NetworkHandler.readLambda(true), 6000);
+                    setTimeout(() => NetworkHandler.readLambda(true), 1000);
+                    setTimeout(() => Bot.grpcheartbeatCatalog(), 500);
                     setTimeout(() => this.subscribeToServerEvents(), 2000);
                     setTimeout(() => this.cleanupSubscriptions(), 5000);
                     setTimeout(() => synchronizePhoneBook(), 3000);
@@ -403,6 +405,7 @@ class NetworkPoller {
     };
 
     startAndroidGSMPolling = async () => {
+        console.log('Sourav Logging:::: In start GSM', this.appState);
         const pollingInterval =
             this.appState === 'active'
                 ? config.network.gsm.pollingInterval
@@ -492,10 +495,11 @@ class NetworkPoller {
     };
 
     process = () => {
-        setTimeout(() => NetworkHandler.poll(), 0);
-        InteractionManager.runAfterInteractions(() =>
-            BackgroundTaskProcessor.process()
-        );
+        console.log('Sourav Logging:::: In Process');
+        InteractionManager.runAfterInteractions(() => {
+            NetworkHandler.poll();
+            BackgroundTaskProcessor.process();
+        });
         // setTimeout(() => BackgroundTaskProcessor.process(), 5000);
     };
     clearQueue = () => {

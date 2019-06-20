@@ -32,6 +32,7 @@ import {
 import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
+import Bot from '../../lib/bot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -270,7 +271,8 @@ export default class Splash extends React.Component {
 
     handleNotification = notification => {
         console.log('Sourav Logging:::: In handle Notifcaiton', notification);
-        NetworkHandler.readLambda();
+        NetworkHandler.poll();
+        Bot.grpcheartbeatCatalog();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             const conversationId =
