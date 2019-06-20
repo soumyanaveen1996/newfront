@@ -32,6 +32,7 @@ import {
 import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
+import Bot from '../../lib/bot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import codePush from 'react-native-code-push';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -57,7 +58,7 @@ import PushNotification from 'react-native-push-notification';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 110; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 115; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -134,7 +135,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (false && forceUpdate) {
+        if (true && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -167,6 +168,11 @@ export default class Splash extends React.Component {
                     }`;
                     const ContactsBOT = SystemBot.contactsBot.botId;
                     DefaultPreference.set('SESSION', user.creds.sessionId);
+                    console.log('Sourav Logging:::: Contacts URL', ContactsURL);
+                    console.log(
+                        'Sourav Logging:::: Session ID',
+                        user.creds.sessionId
+                    );
                     DefaultPreference.set('URL', ContactsURL);
                     DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
                     if (user) {
@@ -185,9 +191,10 @@ export default class Splash extends React.Component {
                             return;
                         }
 
-                        InteractionManager.runAfterInteractions(() =>
-                            synchronizePhoneBook()
-                        );
+                        InteractionManager.runAfterInteractions(() => {
+                            synchronizePhoneBook();
+                            Notification.registeronLaunch();
+                        });
 
                         this.showMainScreen();
                     } else {
@@ -234,7 +241,7 @@ export default class Splash extends React.Component {
                 'notification',
                 notification => {
                     // NetworkHandler.readLambda();
-                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                    // notification.finish(PushNotificationIOS.FetchResult.NoData);
                 }
             );
 
@@ -258,14 +265,22 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
+        console.log('Sourav Logging:::: Register for Notifcaitons');
         this.configureNotifications();
     };
 
     handleNotification = notification => {
+        console.log('Sourav Logging:::: In handle Notifcaiton', notification);
+        NetworkHandler.poll();
+        Bot.grpcheartbeatCatalog();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
+            const conversationId =
+                Platform.OS === 'android'
+                    ? notification.conversationId
+                    : notification.data.conversationId;
             PushNotification.setApplicationIconBadgeNumber(0);
-            Conversation.getConversation(notification.conversationId)
+            Conversation.getConversation(conversationId)
                 .then(conv => {
                     conversation = conv;
                     return SystemBot.get(SystemBot.imBotManifestName);
@@ -322,7 +337,6 @@ export default class Splash extends React.Component {
                     }
                 });
         }
-        NetworkHandler.readLambda();
         if (Platform.OS === 'ios') {
             notification.finish(PushNotificationIOS.FetchResult.NoData);
         }

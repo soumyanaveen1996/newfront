@@ -320,7 +320,7 @@ class ContactsPicker extends React.Component {
     };
 
     updateList = () => {
-        // console.log('clicked on fav');
+        // console.log('clicked on fav', this.dataSource.getData());
         this.setState({ contactsData: this.dataSource.getData() });
     };
 
@@ -329,10 +329,12 @@ class ContactsPicker extends React.Component {
     }
 
     renderItem(info) {
+        // console.log('data for contact ', info);
         const contact = info.item;
         if (!contact.thumbnail && contact.imageAvailable) {
             this.dataSource.loadImage(contact.id);
         }
+
         return (
             <ContactsPickerRow
                 key={contact.id}
@@ -542,7 +544,7 @@ class ContactsPicker extends React.Component {
                 <TextInput
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
-                    placeholder="Search contact"
+                    placeholder="Filter my contacts"
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
@@ -566,33 +568,41 @@ class ContactsPicker extends React.Component {
             <View>
                 {this.renderSearchBar()}
                 <View style={styles.myProfileContainer}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.goToMyProfile();
-                        }}
-                    >
-                        <View style={styles.myProfileItemContainer}>
-                            <MyProfileImage
-                                accessibilityLabel="My Profile Image"
-                                testID="my-profile-image"
-                                uuid={this.state.userId}
-                                placeholder={images.user_image}
-                                style={styles.myProfileItemImage}
-                                placeholderStyle={
-                                    styles.myProfilePlaceholderImage
-                                }
-                                resizeMode="center"
-                            />
-                            <View style={styles.contactItemDetailsContainer}>
-                                <Text style={styles.myProfileName}>
-                                    {this.state.userInfo.userName}
-                                </Text>
-                                <Text style={styles.contactItemEmail}>
-                                    My Profile
-                                </Text>
-                            </View>
+                    <View style={styles.myProfileItemContainer}>
+                        <MyProfileImage
+                            accessibilityLabel="My Profile Image"
+                            testID="my-profile-image"
+                            uuid={this.state.userId}
+                            placeholder={images.user_image}
+                            style={styles.myProfileItemImage}
+                            placeholderStyle={styles.myProfilePlaceholderImage}
+                            resizeMode="center"
+                        />
+                        <View style={styles.contactItemDetailsContainer}>
+                            <Text style={styles.myProfileName}>
+                                {this.state.userInfo.userName}
+                            </Text>
+                            <Text style={styles.contactItemEmail}>
+                                My Profile
+                            </Text>
                         </View>
-                    </TouchableOpacity>
+                        <View style={{ position: 'absolute', right: 20 }}>
+                            <TouchableOpacity
+                                accessibilityLabel="More Button"
+                                onPress={() => {
+                                    this.goToMyProfile();
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                    source={images.edit_btn}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
                 <View>
                     {length > 0 ? null : (
@@ -611,7 +621,7 @@ class ContactsPicker extends React.Component {
                         </View>
                     )}
                 </View>
-                <View
+                {/* <View
                     style={{
                         paddingHorizontal: 10,
                         paddingVertical: 4
@@ -620,7 +630,7 @@ class ContactsPicker extends React.Component {
                     <Text style={{ fontSize: 14, color: 'rgba(74,74,74,1)' }}>
                         {this.state.titleText}
                     </Text>
-                </View>
+                </View> */}
             </View>
         );
     };
@@ -639,8 +649,9 @@ class ContactsPicker extends React.Component {
         //     section => section.title
         // );
 
-        // console.log('contact list ', this.state.contactsData);
+        const allContacts = this.state.contactsData;
 
+        // console.log('contact list ', allContacts);
         if (this.state.contactsData) {
             return (
                 <KeyboardAvoidingView
@@ -684,7 +695,7 @@ class ContactsPicker extends React.Component {
                         style={styles.addressBook}
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={this.sectionHeader.bind(this)}
-                        sections={this.state.contactsData}
+                        sections={allContacts}
                         keyExtractor={(item, index) => item.id}
                         ListHeaderComponent={this.renderButtons}
                         stickySectionHeadersEnabled={false}

@@ -4,7 +4,8 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Platform
 } from 'react-native';
 import styles from './styles';
 import { HeaderBack, HeaderRightIcon } from '../../Header';
@@ -20,6 +21,9 @@ import config from '../../../config/config';
 import { Auth, Network } from '../../../lib/capability';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 const UserServiceClient = NativeModules.UserServiceClient;
+const timeout = Platform.OS === 'android' ? 1000 : 400;
+
+var backTimer = null;
 
 const BotInstallListItemStates = {
     INSTALLING: 'installing',
@@ -40,7 +44,8 @@ export default class BotInfoScreen extends React.Component {
             navigationOptions.headerLeft = (
                 <HeaderBack
                     onPress={async () => {
-                        Actions.pop();
+                        clearTimeout(backTimer);
+                        backTimer = setTimeout(() => Actions.pop(), timeout);
                     }}
                 />
             );

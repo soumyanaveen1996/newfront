@@ -14,6 +14,8 @@ export const fieldType = {
     switch: 'switch',
     slider: 'slider',
     date: 'date',
+    time: 'time',
+    dateTime: 'datetime',
     multiselection: 'multi_selection',
     passwordField: 'password_field',
     lookup: 'lookup'

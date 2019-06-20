@@ -9,11 +9,31 @@ const NotificationKeys = {
 };
 
 export default class Notification {
+    static registeronLaunch = () => {
+        DeviceStorage.get(NotificationKeys.notification).then(value => {
+            if (value) {
+                value.isRegistered = true;
+                DeviceStorage.save(NotificationKeys.notification, value)
+                    .then(() => {
+                        EventEmitter.emit(
+                            NotificationEvents.registeredNotifications
+                        );
+
+                        clearTimeout(timer);
+                        resolve(value);
+                    })
+                    .catch(error => {
+                        clearTimeout(timer);
+                        reject(error);
+                    });
+            }
+        });
+    };
     static register = () =>
         new Promise((resolve, reject) => {
             let timer = setTimeout(function() {
                 reject('No Notifications');
-            }, 6000);
+            }, 10000);
 
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {

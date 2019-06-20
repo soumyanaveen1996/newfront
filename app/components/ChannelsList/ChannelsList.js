@@ -42,6 +42,7 @@ import {
 } from 'react-native-responsive-screen';
 import _ from 'lodash';
 import images from '../../images';
+import ChatModal from '../ChatBotScreen/ChatModal';
 
 const debounce = () => new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -134,7 +135,9 @@ class ChannelsList extends React.Component {
             user: null,
             wait: false,
             loaded: false,
-            refreshing: false
+            refreshing: false,
+            showModal: false,
+            modalContent: null
         };
     }
 
@@ -366,6 +369,10 @@ class ChannelsList extends React.Component {
         }
     };
 
+    onRequestToPrivateFailed(channel, message) {
+        this.toast.show('Subscription request failed', DURATION.LENGTH_LONG);
+    }
+
     onChannelTapped = channel => {
         // AlertIOS.alert('Hello')
 
@@ -391,6 +398,10 @@ class ChannelsList extends React.Component {
                 onSubscribeFailed={this.onChannelsubscribeFailed}
                 onChannelTapped={this.onChannelTapped.bind(this)}
                 onChannelEdit={this.editChannel.bind(this)}
+                onSubscribeRequest={this.toggleModal.bind(this)}
+                onRequestToPrivateFailed={this.onRequestToPrivateFailed.bind(
+                    this
+                )}
             />
         );
     };
@@ -431,6 +442,45 @@ class ChannelsList extends React.Component {
             title: 'Filter',
             onBack: this.onBack
         });
+    }
+
+    toggleModal(content) {
+        this.setState({
+            showModal: !this.state.showModal,
+            modalContent: content
+        });
+    }
+
+    renderModal() {
+        return (
+            <ChatModal
+                content={this.state.modalContent}
+                isVisible={this.state.showModal}
+                backdropOpacity={0.1}
+                onBackButtonPress={() =>
+                    this.setState({
+                        showModal: false
+                    })
+                }
+                onBackdropPress={() =>
+                    this.setState({
+                        showModal: false
+                    })
+                }
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            />
+        );
+    }
+
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
     }
 
     render() {
@@ -491,7 +541,7 @@ class ChannelsList extends React.Component {
                         />
                         <TextInput
                             style={styles.input}
-                            placeholder="Search Channel"
+                            placeholder="Type here to discover channels"
                             onChangeText={searchString => {
                                 this.setState({ searchString });
                             }}
@@ -587,7 +637,8 @@ class ChannelsList extends React.Component {
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 ) : null}
-                <Toast ref={elem => (this.toast = elem)} positionValue={250} />
+                {this.renderToast()}
+                {this.renderModal()}
             </BackgroundImage>
         );
     }

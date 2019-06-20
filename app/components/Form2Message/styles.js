@@ -71,8 +71,10 @@ export default (stylesheet = StyleSheet.create({
 
     //FORM
     f2Container: {
+        flex: 1,
         backgroundColor: GlobalColors.white
     },
+
     f2Title: {
         marginTop: 25,
         marginHorizontal: '8%',
@@ -166,7 +168,7 @@ export default (stylesheet = StyleSheet.create({
     },
     dateField: {
         height: 42,
-        width: '45%',
+        // width: '45%',
         paddingHorizontal: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
