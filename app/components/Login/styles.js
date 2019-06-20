@@ -3,7 +3,10 @@ import { GlobalColors } from '../../config/styles';
 import { Platform } from 'react-native';
 import { SCREEN_HEIGHT } from './config';
 import { SCREEN_WIDTH } from './config';
-
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 export default StyleSheet.create({
     container: {
         flex: 1,
@@ -65,6 +68,7 @@ export default StyleSheet.create({
         width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
+        marginLeft: wp('1%'),
         color: 'rgba(0,0,0,0.8)',
         fontSize: 16,
         borderTopRightRadius: 0,
@@ -79,6 +83,7 @@ export default StyleSheet.create({
         letterSpacing: 1,
         lineHeight: 20,
         color: 'rgba(0,167,214,1)',
+        marginLeft: wp('4%'),
         marginTop: 30,
         marginBottom: 25
     },
