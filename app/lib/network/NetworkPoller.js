@@ -146,10 +146,11 @@ class NetworkPoller {
                     message
                 );
 
-                const delay = (Math.floor(Math.random() * 5) + 1) * 1000;
+                const delay = (Math.floor(Math.random() * 2) + 1) * 1000;
+                console.log('Processing Message : in GRPC Push');
                 setTimeout(() => {
                     MessageQueue.push(message);
-                }, 0);
+                }, delay);
             })
         );
         this.grpcEndSubscription.push(

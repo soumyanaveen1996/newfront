@@ -22,6 +22,7 @@ import {
     InteractionManager
 } from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
+import BackgroundTimer from 'react-native-background-timer';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 
@@ -59,8 +60,9 @@ const handleLambdaResponse = (res, user) => {
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
+        console.log('Processing Message : in Lambda', messages.length);
         messages.forEach((message, index) => {
-            setTimeout(() => {
+            BackgroundTimer.setTimeout(() => {
                 MessageQueue.push(message);
             }, index * 10);
         });
@@ -84,8 +86,11 @@ const readRemoteLambdaQueue = (user, force = false) => {
     let logoutSubscribtion;
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
+            console.log(
+                'Processing Message : Received a message in readRemoteLambdaQueue'
+            );
             const rand = (Math.floor(Math.random() * 9) + 1) * 100;
-            setTimeout(() => {
+            BackgroundTimer.setTimeout(() => {
                 handleLambdaResponse(message, user);
             }, rand);
         })
@@ -112,6 +117,7 @@ const readRemoteLambdaQueue = (user, force = false) => {
     );
 
     if (Platform.OS === 'android') {
+        console.log('Processing Message: Read Rmote');
         QueueServiceClient.getAllQueueMessages(user.creds.sessionId, force);
     } else {
         QueueServiceClient.getAllQueueMessages(user.creds.sessionId);
