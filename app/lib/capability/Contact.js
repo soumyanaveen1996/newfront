@@ -46,7 +46,7 @@ const getPhoneContacts = () => {
             return;
         }
 
-        const PhoneContacts = contacts.map((contact, index) => {
+        const AllPhoneContacts = contacts.map((contact, index) => {
             return {
                 userId: index,
                 emails: [...contact.emailAddresses],
@@ -59,7 +59,7 @@ const getPhoneContacts = () => {
                 selected: false
             };
         });
-        Store.dispatch(setPhoneContacts(PhoneContacts));
+        Store.dispatch(setPhoneContacts(AllPhoneContacts));
     });
 };
 export default class Contact {
@@ -68,8 +68,6 @@ export default class Contact {
             DeviceStorage.get(CONTACT_STORAGE_KEY_CAPABILITY)
                 .then(function(contacts) {
                     contacts = contacts || [];
-                    // console.log('contacts ', contacts);
-
                     return resolve(contacts);
                 })
                 .catch(err => {
@@ -159,8 +157,6 @@ export default class Contact {
             Contact.getAddedContacts()
                 .then(data => {
                     let contactArray = data.map(elem => {
-                        // console.log('contact data ==========', elem);
-
                         if (elem.userId === contact.userId) {
                             elem.waitingForConfirmation =
                                 contact.waitingForConfirmation;
@@ -436,6 +432,11 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
+                        // console.log(
+                        //     'data===============================',
+                        //     response.data.contacts
+                        // );
+
                         //CONTACTS
                         var contacts = _.map(
                             response.data.contacts,
