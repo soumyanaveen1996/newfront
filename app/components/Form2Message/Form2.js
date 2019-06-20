@@ -17,7 +17,8 @@ import {
     Alert,
     KeyboardAvoidingView,
     Keyboard,
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableWithoutFeedback
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -257,10 +258,10 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.lookup:
-                answer.value = fieldData.value ? fieldData.value.text : '';
+                answer.value = fieldData.value;
                 answer.search = '';
                 answer.getResponse = () => {
-                    return { text: answer.value };
+                    return answer.value;
                 };
                 break;
             default:
@@ -1138,7 +1139,7 @@ class Form2 extends React.Component {
                 >
                     {this.answers[key].value ? (
                         <Text numberOfLines={1} ellipsizeMode={'tail'}>
-                            {this.answers[key].value}
+                            {this.answers[key].value.text}
                         </Text>
                     ) : (
                         <TextInput
@@ -1174,12 +1175,12 @@ class Form2 extends React.Component {
                                         this.answers[key].valid = undefined;
                                     }
                                     Keyboard.dismiss();
-                                    this.answers[key].value = '';
+                                    this.answers[key].value = null;
                                     this.setState({ answers: this.answers });
                                     this.onMoveAction(
                                         key,
                                         this.answers[key].id,
-                                        ''
+                                        null
                                     );
                                 }
                             })
@@ -1217,7 +1218,7 @@ class Form2 extends React.Component {
                                         ellipsizeMode={'tail'}
                                         style={styles.resultText}
                                         onPress={() => {
-                                            this.answers[key].value = item.text;
+                                            this.answers[key].value = item;
                                             this.answers[key].search = '';
                                             this.setState({
                                                 answers: this.answers
@@ -1434,73 +1435,85 @@ class Form2 extends React.Component {
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.f2Container}
             >
-                <SafeAreaView style={styles.f2Container}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <Text style={styles.f2Title}>{this.props.title}</Text>
-                        {this.renderFields()}
-                        <View style={styles.f2BottomArea}>
-                            <TouchableOpacity
-                                style={styles.f2CancelButton}
-                                onPress={
-                                    this.state.disabled
-                                        ? () => Actions.pop()
-                                        : this.onCancelForm.bind(this)
-                                }
-                            >
-                                <Text style={styles.f2CancelButtonText}>
-                                    {this.props.cancel || 'Cancel'}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                disabled={
-                                    this.state.disabled || !formIdCompleted
-                                }
-                                style={[
-                                    styles.f2DoneButton,
-                                    {
-                                        opacity:
-                                            this.state.disabled ||
-                                            !formIdCompleted
-                                                ? 0.2
-                                                : 1
+                <TouchableWithoutFeedback
+                    disabled={this.state.showInfoOfIndex === null}
+                    onPress={() => this.setState({ showInfoOfIndex: null })}
+                    style={{ flex: 1 }}
+                >
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <ScrollView
+                            keyboardShouldPersistTaps="handled"
+                            style={{ flex: 1 }}
+                        >
+                            <Text style={styles.f2Title}>
+                                {this.props.title}
+                            </Text>
+                            {this.renderFields()}
+                            <View style={styles.f2BottomArea}>
+                                <TouchableOpacity
+                                    style={styles.f2CancelButton}
+                                    onPress={
+                                        this.state.disabled
+                                            ? () => Actions.pop()
+                                            : this.onCancelForm.bind(this)
                                     }
-                                ]}
-                                onPress={this.onDone.bind(this)}
-                            >
-                                <Text style={styles.f2DoneButtonText}>
-                                    {this.props.confirm || 'Done'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        {this.renderDateModalIOS()}
-                        {this.renderDropdownModal()}
-                        <ChatModal
-                            content={this.renderLookupInfoModalContent(
-                                this.state.lookupModalInfo
-                            )}
-                            isVisible={this.state.showLookupModal}
-                            backdropOpacity={0.1}
-                            onBackButtonPress={() =>
-                                this.setState({
-                                    showLookupModal: false,
-                                    lookupModalInfo: null
-                                })
-                            }
-                            onBackdropPress={() =>
-                                this.setState({
-                                    showLookupModal: false,
-                                    lookupModalInfo: null
-                                })
-                            }
-                            style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                margin: 0
-                            }}
-                        />
-                    </ScrollView>
-                </SafeAreaView>
+                                >
+                                    <Text style={styles.f2CancelButtonText}>
+                                        {this.props.cancel || 'Cancel'}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    disabled={
+                                        this.state.disabled || !formIdCompleted
+                                    }
+                                    style={[
+                                        styles.f2DoneButton,
+                                        {
+                                            opacity:
+                                                this.state.disabled ||
+                                                !formIdCompleted
+                                                    ? 0.2
+                                                    : 1
+                                        }
+                                    ]}
+                                    onPress={this.onDone.bind(this)}
+                                >
+                                    <Text style={styles.f2DoneButtonText}>
+                                        {this.props.confirm || 'Done'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            {this.renderDateModalIOS()}
+                            {this.renderDropdownModal()}
+                            <ChatModal
+                                content={this.renderLookupInfoModalContent(
+                                    this.state.lookupModalInfo
+                                )}
+                                isVisible={this.state.showLookupModal}
+                                backdropOpacity={0.1}
+                                onBackButtonPress={() =>
+                                    this.setState({
+                                        showLookupModal: false,
+                                        lookupModalInfo: null
+                                    })
+                                }
+                                onBackdropPress={() =>
+                                    this.setState({
+                                        showLookupModal: false,
+                                        lookupModalInfo: null
+                                    })
+                                }
+                                style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    margin: 0
+                                }}
+                            />
+                        </ScrollView>
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         );
     }

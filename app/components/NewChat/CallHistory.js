@@ -155,8 +155,8 @@ class CallHistory extends React.Component {
                     : Icons.arrowBottomLeft();
         } else {
             id = item.toUserId;
-            name = item.toUserName ? item.toUserName : item.toNumber;
-            number = item.toNumber;
+            name = item.toUserName ? item.toUserName : '+' + item.toNumber;
+            number = '+' + item.toNumber;
             icon =
                 item.duration <= 0
                     ? Icons.arrowTopRight({ color: 'red' })
