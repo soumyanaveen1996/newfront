@@ -110,7 +110,8 @@ export class SearchBox extends React.Component {
             );
         } else if (
             this.props.data.results &&
-            this.props.data.results.length === 0
+            this.props.data.results.length === 0 &&
+            !this.state.searching
         ) {
             return (
                 <View>

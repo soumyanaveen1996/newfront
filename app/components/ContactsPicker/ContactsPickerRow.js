@@ -4,7 +4,7 @@ import styles from './styles';
 import { checkBoxConfig } from './config';
 import { CheckBox } from 'react-native-elements';
 import _ from 'lodash';
-import ProfileImage from '../ProfileImage';
+import ProfileImage, { MyProfileImage } from '../ProfileImage';
 import Images from '../../config/images';
 import { GlobalColors } from '../../config/styles';
 import Icon from 'react-native-vector-icons';
@@ -118,8 +118,8 @@ export default class ContactsPickerRow extends React.Component {
                             accessibilityLabel="Profile Picture"
                             testID="profile-picture"
                             uuid={uuid}
-                            placeholder={Images.user_image}
                             style={styles.contactItemImage}
+                            placeholder={Images.user_image}
                             placeholderStyle={styles.contactItemImage}
                             resizeMode="cover"
                         />

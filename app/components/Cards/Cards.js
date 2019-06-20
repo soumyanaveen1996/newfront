@@ -90,9 +90,9 @@ export default class Cards extends React.Component {
             return <Text style={styles.fieldText}>-</Text>;
         } else if (typeof value === 'boolean') {
             if (value) {
-                return Icons.cardsTrue();
+                return <Text style={styles.fieldText}>Yes</Text>;
             } else {
-                return Icons.cardsFalse();
+                return <Text style={styles.fieldText}>No</Text>;
             }
         } else {
             if (isModal) {
