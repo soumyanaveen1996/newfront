@@ -7,7 +7,8 @@ import { SCREEN_WIDTH } from './config';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 30,
         backgroundColor: GlobalColors.white
     },
     logoHeader: {
@@ -20,7 +21,8 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     keyboardConatiner: {
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -54,7 +56,8 @@ export default StyleSheet.create({
         fontWeight: '300',
         color: 'rgba(74,74,74,1)',
         width: 300,
-        padding: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
         letterSpacing: 1,
         lineHeight: 20,
         fontSize: 14,
@@ -64,7 +67,8 @@ export default StyleSheet.create({
         height: 40,
         width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         color: 'rgba(0,0,0,0.8)',
         fontSize: 16,
         borderTopRightRadius: 0,
