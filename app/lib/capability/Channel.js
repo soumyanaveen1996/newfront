@@ -108,6 +108,25 @@ export default class Channel {
             }
         });
 
+    static grpcRequestPrivateChannelAccess = (user, channel) =>
+        new Promise((resolve, reject) => {
+            if (user) {
+                ChannelsServiceClient.requestPrivateChannelAccess(
+                    user.creds.sessionId,
+                    channel,
+                    (err, result) => {
+                        if (err) {
+                            reject(new Error('Unknown error'));
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            } else {
+                reject(new Error('No Logged in user'));
+            }
+        });
+
     static grpcUnsubscribeChannels = (user, channels) =>
         new Promise((resolve, reject) => {
             if (user) {
@@ -338,6 +357,32 @@ export default class Channel {
                     }
                 })
                 .then(resolve)
+                .catch(reject);
+        });
+
+    static requestPrivateChannelAccess = (channelName, domain) =>
+        new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    if (user) {
+                        let domainChannel = {
+                            userDomain: domain,
+                            channelName: channelName
+                        };
+                        return Channel.grpcRequestPrivateChannelAccess(
+                            user,
+                            domainChannel
+                        );
+                    }
+                })
+                .then(response => {
+                    let err = _.get(response, 'data.error');
+                    if (err !== '0' && err !== 0) {
+                        reject(new ChannelError(+err));
+                    } else {
+                        resolve(true);
+                    }
+                })
                 .catch(reject);
         });
 

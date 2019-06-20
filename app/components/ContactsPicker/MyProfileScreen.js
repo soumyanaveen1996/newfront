@@ -9,7 +9,8 @@ import {
     Keyboard,
     Alert,
     ScrollView,
-    Platform
+    Platform,
+    KeyboardAvoidingView
 } from 'react-native';
 import _ from 'lodash';
 import styles from './styles';
@@ -31,6 +32,7 @@ import { MyProfileImage } from '../ProfileImage';
 import { HeaderBack } from '../Header';
 import { connect } from 'react-redux';
 import { uploadImage } from '../../redux/actions/UserActions';
+import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 
 const R = require('ramda');
 
@@ -283,6 +285,9 @@ class MyProfileScreen extends React.Component {
                         )}
                         {type === 'phNumber' ? (
                             <TouchableOpacity
+                                disabled={
+                                    this.props.appState.network !== 'full'
+                                }
                                 style={{
                                     width: 40,
                                     height: 40,
@@ -303,6 +308,9 @@ class MyProfileScreen extends React.Component {
                     <View style={styles.infoContainer}>
                         {type === 'phNumber' ? (
                             <TextInput
+                                editable={
+                                    this.props.appState.network === 'full'
+                                }
                                 style={styles.inputNumber}
                                 value={phValue}
                                 keyboardType="phone-pad"
@@ -320,6 +328,9 @@ class MyProfileScreen extends React.Component {
                         )}
                         {type === 'phNumber' ? (
                             <TouchableOpacity
+                                disabled={
+                                    this.props.appState.network !== 'full'
+                                }
                                 style={{
                                     width: 40,
                                     height: 40,
@@ -502,111 +513,137 @@ class MyProfileScreen extends React.Component {
         console.log('image url ', this.state.reloadProfileImage);
 
         return (
-            <SafeAreaView style={styles.safeAreaStyle}>
-                <ScrollView style={{ flex: 1 }}>
-                    <View style={styles.mainViewContainer}>
-                        <Loader loading={this.state.loading} />
-                        <PhoneTypeModal
-                            currentIndex={this.state.currentIndex}
-                            isVisible={this.state.inviteModalVisible}
-                            setVisible={this.setInviteVisible.bind(this)}
-                            settingType={this.setupType.bind(this)}
-                        />
-                        <View style={styles.profileImageContainer}>
-                            <View
-                                style={{
-                                    width: 120,
-                                    height: 120,
-                                    borderRadius: 60
-                                }}
-                            >
-                                {this.state.reloadProfileImage ? (
-                                    <Image
-                                        source={{
-                                            uri: this.state.reloadProfileImage
-                                        }}
-                                        style={styles.profileImgStyle}
-                                    />
-                                ) : (
-                                    <MyProfileImage
-                                        uuid={this.state.userId}
-                                        placeholder={images.user_image}
-                                        style={styles.profilePic}
-                                        placeholderStyle={
-                                            styles.profileImgStyle
-                                        }
-                                        resizeMode="cover"
-                                        changeProfileImageBack={() => {
-                                            this.changeProfileStatuBack.bind(
-                                                this
-                                            );
-                                        }}
-                                    />
-                                )}
-                            </View>
-                            <TouchableOpacity
-                                style={{
-                                    position: 'absolute',
-                                    right: 20
-                                }}
-                                accessibilityLabel="More Button"
-                                onPress={this.showOptions.bind(this)}
-                            >
-                                <Image
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : null}
+            >
+                <SafeAreaView
+                    style={styles.safeAreaStyle}
+                    keyboardShouldPersistTaps={'handled'}
+                >
+                    <NetworkStatusNotchBar />
+                    <ScrollView style={{ flex: 1 }}>
+                        <View style={styles.mainViewContainer}>
+                            <Loader loading={this.state.loading} />
+                            <PhoneTypeModal
+                                currentIndex={this.state.currentIndex}
+                                isVisible={this.state.inviteModalVisible}
+                                setVisible={this.setInviteVisible.bind(this)}
+                                settingType={this.setupType.bind(this)}
+                            />
+                            <View style={styles.profileImageContainer}>
+                                <View
                                     style={{
-                                        width: 45,
-                                        height: 45
-                                    }}
-                                    source={images.edit_btn}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.nameContainerStyle}>
-                            <View
-                                style={{ width: 300, alignItems: 'flex-start' }}
-                            >
-                                <Text style={styles.nameLabel}>
-                                    {I18n.t('Name')}
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    autoCorrect={false}
-                                    value={this.state.myName}
-                                    onChangeText={val => {
-                                        this.setState({ myName: val });
-                                    }}
-                                    blurOnSubmit={false}
-                                    placeholder="Your Name"
-                                    underlineColorAndroid={'transparent'}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                    clearButtonMode="always"
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.userInfoNumberContainer}>
-                            {this.infoRender(
-                                'phNumber',
-                                this.state.phoneNumbers
-                            )}
-                            <View style={styles.addContainer}>
-                                <Image
-                                    source={images.btn_more}
-                                    style={styles.iconStyle}
-                                />
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.addNewNumber();
+                                        width: 120,
+                                        height: 120,
+                                        borderRadius: 60
                                     }}
                                 >
-                                    <Text style={styles.addLabel}>
-                                        {I18n.t('Add_phone')}
-                                    </Text>
+                                    {this.state.reloadProfileImage ? (
+                                        <Image
+                                            source={{
+                                                uri: this.state
+                                                    .reloadProfileImage
+                                            }}
+                                            style={styles.profileImgStyle}
+                                        />
+                                    ) : (
+                                        <MyProfileImage
+                                            uuid={this.state.userId}
+                                            placeholder={images.user_image}
+                                            style={styles.profilePic}
+                                            placeholderStyle={
+                                                styles.profileImgStyle
+                                            }
+                                            resizeMode="cover"
+                                            changeProfileImageBack={() => {
+                                                this.changeProfileStatuBack.bind(
+                                                    this
+                                                );
+                                            }}
+                                        />
+                                    )}
+                                </View>
+                                <TouchableOpacity
+                                    disabled={
+                                        this.props.appState.network !== 'full'
+                                    }
+                                    style={{
+                                        position: 'absolute',
+                                        right: 20
+                                    }}
+                                    accessibilityLabel="More Button"
+                                    onPress={this.showOptions.bind(this)}
+                                >
+                                    <Image
+                                        style={{
+                                            width: 45,
+                                            height: 45
+                                        }}
+                                        source={images.edit_btn}
+                                    />
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                        <View style={styles.userInfoEmailContainer}>
-                            {this.infoRender('email', this.state.emailAddress)}
-                            {/* <View
+                            <View style={styles.nameContainerStyle}>
+                                <View
+                                    style={{
+                                        width: 300,
+                                        alignItems: 'flex-start'
+                                    }}
+                                >
+                                    <Text style={styles.nameLabel}>
+                                        {I18n.t('Name')}
+                                    </Text>
+                                    <TextInput
+                                        editable={
+                                            this.props.appState.network ===
+                                            'full'
+                                        }
+                                        style={styles.input}
+                                        autoCorrect={false}
+                                        value={this.state.myName}
+                                        onChangeText={val => {
+                                            this.setState({ myName: val });
+                                        }}
+                                        blurOnSubmit={false}
+                                        placeholder="Your Name"
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor="rgba(155,155,155,1)"
+                                        clearButtonMode="always"
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.userInfoNumberContainer}>
+                                {this.infoRender(
+                                    'phNumber',
+                                    this.state.phoneNumbers
+                                )}
+                                <View style={styles.addContainer}>
+                                    <Image
+                                        source={images.btn_more}
+                                        style={styles.iconStyle}
+                                    />
+                                    <TouchableOpacity
+                                        disabled={
+                                            this.props.appState.network !==
+                                            'full'
+                                        }
+                                        onPress={() => {
+                                            this.addNewNumber();
+                                        }}
+                                    >
+                                        <Text style={styles.addLabel}>
+                                            {I18n.t('Add_phone')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={styles.userInfoEmailContainer}>
+                                {this.infoRender(
+                                    'email',
+                                    this.state.emailAddress
+                                )}
+                                {/* <View
                                 style={styles.addContainer}
                             >
                                 <Image
@@ -627,91 +664,113 @@ class MyProfileScreen extends React.Component {
                                     Add Email
                                 </Text>
                             </View> */}
-                        </View>
-                        <View style={styles.bottomSettingContainer}>
-                            <View style={styles.switchContainer}>
-                                <Text style={styles.longTextStyle}>
-                                    {I18n.t('Search_my_info_text')}
-                                </Text>
-                                <Switch
-                                    style={styles.switchStyle}
-                                    value={this.state.searchable}
-                                    onValueChange={val => {
-                                        let stateTint = this.state.searchable;
-                                        stateTint = !stateTint;
-                                        this.setState({
-                                            searchable: stateTint
-                                        });
-                                    }}
-                                    trackColor="rgba(244,244,244,1)"
-                                    onTintColor="rgba(244,244,244,1)"
-                                    // tintColor="rgba(244,244,244,1)"
-                                    thumbColor={
-                                        this.state.searchable
-                                            ? 'rgba(0,189,242,1)'
-                                            : 'rgba(102,102,102,1)'
-                                    }
-                                />
                             </View>
-                            <View
-                                style={{
-                                    width: '100%',
-                                    height: 1,
-                                    backgroundColor: 'rgba(221,222,227,1)'
-                                }}
-                            />
-                            <View style={styles.switchContainer}>
-                                <Text style={styles.longTextStyle}>
-                                    {I18n.t('Share_my_info_text')}
-                                </Text>
-                                <Switch
-                                    style={styles.switchStyle}
-                                    value={this.state.visible}
-                                    onValueChange={val => {
-                                        let stateTint = this.state.visible;
-                                        stateTint = !stateTint;
-                                        this.setState({
-                                            visible: stateTint
-                                        });
+                            <View style={styles.bottomSettingContainer}>
+                                <View style={styles.switchContainer}>
+                                    <Text style={styles.longTextStyle}>
+                                        {I18n.t('Search_my_info_text')}
+                                    </Text>
+                                    <Switch
+                                        disabled={
+                                            this.props.appState.network !==
+                                            'full'
+                                        }
+                                        style={styles.switchStyle}
+                                        value={this.state.searchable}
+                                        onValueChange={val => {
+                                            let stateTint = this.state
+                                                .searchable;
+                                            stateTint = !stateTint;
+                                            this.setState({
+                                                searchable: stateTint
+                                            });
+                                        }}
+                                        trackColor="rgba(244,244,244,1)"
+                                        onTintColor="rgba(244,244,244,1)"
+                                        // tintColor="rgba(244,244,244,1)"
+                                        thumbColor={
+                                            this.state.searchable
+                                                ? 'rgba(0,189,242,1)'
+                                                : 'rgba(102,102,102,1)'
+                                        }
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        height: 1,
+                                        backgroundColor: 'rgba(221,222,227,1)'
                                     }}
-                                    trackColor="rgba(244,244,244,1)"
-                                    onTintColor="rgba(244,244,244,1)"
-                                    // tintColor="rgba(244,244,244,1)"
-                                    thumbColor={
-                                        this.state.visible
-                                            ? 'rgba(0,189,242,1)'
-                                            : 'rgba(102,102,102,1)'
-                                    }
                                 />
+                                <View style={styles.switchContainer}>
+                                    <Text style={styles.longTextStyle}>
+                                        {I18n.t('Share_my_info_text')}
+                                    </Text>
+                                    <Switch
+                                        disabled={
+                                            this.props.appState.network !==
+                                            'full'
+                                        }
+                                        style={styles.switchStyle}
+                                        value={this.state.visible}
+                                        onValueChange={val => {
+                                            let stateTint = this.state.visible;
+                                            stateTint = !stateTint;
+                                            this.setState({
+                                                visible: stateTint
+                                            });
+                                        }}
+                                        trackColor="rgba(244,244,244,1)"
+                                        onTintColor="rgba(244,244,244,1)"
+                                        // tintColor="rgba(244,244,244,1)"
+                                        thumbColor={
+                                            this.state.visible
+                                                ? 'rgba(0,189,242,1)'
+                                                : 'rgba(102,102,102,1)'
+                                        }
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.btn_container}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Actions.pop(
+                                            this.props.updateContactScreen()
+                                        );
+                                    }}
+                                    style={styles.cancel_btn}
+                                >
+                                    <Text style={styles.cancel_text}>
+                                        {I18n.t('Cancel')}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    disabled={
+                                        this.props.appState.network !== 'full'
+                                    }
+                                    onPress={() => {
+                                        this.saveProfile();
+                                    }}
+                                    style={[
+                                        styles.save_btn,
+                                        {
+                                            opacity:
+                                                this.props.appState.network ===
+                                                'full'
+                                                    ? 1
+                                                    : 0.2
+                                        }
+                                    ]}
+                                >
+                                    <Text style={styles.save_btn_text}>
+                                        {I18n.t('SAVE')}
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={styles.btn_container}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    Actions.pop(
-                                        this.props.updateContactScreen()
-                                    );
-                                }}
-                                style={styles.cancel_btn}
-                            >
-                                <Text style={styles.cancel_text}>
-                                    {I18n.t('Cancel')}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.saveProfile();
-                                }}
-                                style={styles.save_btn}
-                            >
-                                <Text style={styles.save_btn_text}>
-                                    {I18n.t('SAVE')}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
+                    </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }

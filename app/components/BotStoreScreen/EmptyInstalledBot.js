@@ -25,7 +25,11 @@ export default class EmptyInstalledBot extends React.Component {
                 >
                     <Image
                         style={{ marginBottom: 45, width: 200 }}
-                        source={images.empty_marketplace}
+                        source={
+                            this.props.noNetwork
+                                ? images.empty_state_connection
+                                : images.empty_marketplace
+                        }
                     />
                     <View
                         style={{
@@ -41,33 +45,37 @@ export default class EmptyInstalledBot extends React.Component {
                             style={{ textAlign: 'center', alignSelf: 'center' }}
                             numberOfLines={3}
                         >
-                            You don’t have any Assistant installed
+                            {this.props.noNetwork
+                                ? 'Slow or not internet connection. Please check your internet settings and try again.'
+                                : 'You don’t have any Assistant installed'}
                         </Text>
                     </View>
-                    <TouchableOpacity
-                        style={{
-                            marginTop: 20,
-                            height: 35,
-                            backgroundColor: 'rgba(0,189,242,1)',
-                            width: '80%',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: 8,
-                            borderWidth: 1,
-                            borderColor: 'white'
-                        }}
-                        onPress={this.props.goHome}
-                    >
-                        <Text
+                    {this.props.noNetwork ? null : (
+                        <TouchableOpacity
                             style={{
-                                display: 'flex',
-                                color: 'white',
-                                fontSize: 16
+                                marginTop: 20,
+                                height: 35,
+                                backgroundColor: 'rgba(0,189,242,1)',
+                                width: '80%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: 8,
+                                borderWidth: 1,
+                                borderColor: 'white'
                             }}
+                            onPress={this.props.goHome}
                         >
-                            Install First Bot
-                        </Text>
-                    </TouchableOpacity>
+                            <Text
+                                style={{
+                                    display: 'flex',
+                                    color: 'white',
+                                    fontSize: 16
+                                }}
+                            >
+                                Install First Assistant
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         );

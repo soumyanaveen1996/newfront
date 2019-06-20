@@ -1567,6 +1567,7 @@ class ChatBotScreen extends React.Component {
     };
 
     sendMessage = async message => {
+        // console.log('>>>>>>sendmessage', message)
         this.countMessage(message);
 
         GoogleAnalytics.logEvents(

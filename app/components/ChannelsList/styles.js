@@ -704,5 +704,33 @@ export default StyleSheet.create({
     },
     emptyComponent: {
         height: 40
+    },
+    requestModalContainer: {
+        width: '90%',
+        aspectRatio: 1,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        backgroundColor: GlobalColors.white,
+        borderRadius: 10
+    },
+    requestModalYesButton: {
+        width: '80%',
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: GlobalColors.frontmLightBlue,
+        borderColor: GlobalColors.frontmLightBlue,
+        borderWidth: 1,
+        borderRadius: 5
+    },
+    requestModalNoButton: {
+        width: '80%',
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: GlobalColors.white,
+        borderColor: GlobalColors.frontmLightBlue,
+        borderWidth: 1,
+        borderRadius: 5
     }
 });
