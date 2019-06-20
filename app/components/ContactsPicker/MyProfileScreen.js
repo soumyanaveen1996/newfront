@@ -510,7 +510,7 @@ class MyProfileScreen extends React.Component {
     }
 
     render() {
-        console.log('image url ', this.state.reloadProfileImage);
+        // console.log('image url ', this.state.reloadProfileImage);
 
         return (
             <KeyboardAvoidingView
