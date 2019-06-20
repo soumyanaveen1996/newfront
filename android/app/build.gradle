@@ -105,7 +105,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 331
+        versionCode 333
         versionName "4.5"
         multiDexEnabled true
         ndk {
@@ -243,7 +243,7 @@ dependencies {
     compile project(':react-native-fbsdk')
     compile project(':react-native-document-picker')
     compile(project(':react-native-device-info')){
-        exclude group: 'com.google.android.gms', module: 'play-services-gcm' 
+        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
     }
     compile project(':react-native-contacts')
     compile project(':react-native-code-push')

@@ -14,6 +14,7 @@ import com.frontm.agentguard.proto.AgentGuardServiceGrpc;
 import com.frontm.agentguard.proto.AgentGuardStringResponse;
 import com.frontm.agentguard.proto.Channel;
 import com.frontm.agentguard.proto.Conversation;
+import com.frontm.frontm.proto.ChannelFactory;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.AgentGuardStringResponseConverter;
 import com.squareup.okhttp.ConnectionSpec;
@@ -99,11 +100,11 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
         return "AgentGuardServiceClient";
     }
 
-
     @ReactMethod
     public void execute(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::execute", sessionId);
+
         AgentGuardServiceGrpc.AgentGuardServiceStub stub = AgentGuardServiceGrpc.newStub(getmChannel());
 
         AgentGuardInput.Builder builder = AgentGuardInput.newBuilder()
