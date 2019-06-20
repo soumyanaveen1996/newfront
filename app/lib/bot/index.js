@@ -8,7 +8,7 @@ import { NetworkError } from '../network';
 import SystemBot, { SYSTEM_BOT_MANIFEST } from './SystemBot';
 import { MessageHandler } from '../message';
 import FrontmUtils from '../../lib/utils';
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 const UserServiceClient = NativeModules.UserServiceClient;
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
 
@@ -192,9 +192,32 @@ class Bot extends events.EventEmitter {
         });
     }
 
+    // Android Sepcific Code-> Check connection of GRPC endpoint
+    static grpcheartbeatCatalog = () => {
+        if (Platform.OS !== 'android') {
+            return;
+        }
+        Auth.getUser()
+            .then(user => {
+                if (user) {
+                    ConversationServiceClient.heartBeatCatalog(
+                        user.creds.sessionId,
+                        (error, result) => {
+                            console.log('Heartbeat Catalog Done');
+                        }
+                    );
+                }
+            })
+            .catch(error => {
+                console.log(
+                    'Sourav Logging:::: Heartbeat catalog Error',
+                    error
+                );
+            });
+    };
+
     static grpcGetCatalog = user => {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {});
             ConversationServiceClient.getCatalog(
                 user.creds.sessionId,
                 (error, result) => {

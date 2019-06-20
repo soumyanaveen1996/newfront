@@ -7,6 +7,7 @@ import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import { connect } from 'react-redux';
 import { setNetwork } from '../../redux/actions/UserActions';
 import AgentGuard from '../../lib/capability/AgentGuard';
+import Bot from '../../lib/bot';
 class NetworkStatusNotchBar extends React.Component {
     constructor(props) {
         super(props);
@@ -55,6 +56,7 @@ class NetworkStatusNotchBar extends React.Component {
         } else {
             this.props.setNetwork('full');
             AgentGuard.heartBeat();
+            Bot.grpcheartbeatCatalog();
         }
     };
 

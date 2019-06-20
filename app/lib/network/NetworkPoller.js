@@ -21,6 +21,7 @@ import RemoteBotInstall from '../RemoteBotInstall';
 import { NetworkDAO } from '../../lib/persistence';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
+import Bot from '../bot';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -255,6 +256,7 @@ class NetworkPoller {
                 InteractionManager.runAfterInteractions(() => {
                     RemoteBotInstall.syncronizeBots();
                     setTimeout(() => NetworkHandler.readLambda(true), 1000);
+                    setTimeout(() => Bot.grpcheartbeatCatalog(), 500);
                     setTimeout(() => this.subscribeToServerEvents(), 2000);
                     setTimeout(() => this.cleanupSubscriptions(), 5000);
                     setTimeout(() => synchronizePhoneBook(), 3000);

@@ -129,6 +129,46 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
+    public void heartBeatCatalog(String sessionId, final Callback callback){
+
+        Log.d("GRPC:::getCatalog", sessionId);
+        ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        Log.d("Sourav Logging:::", "getCatalog: Heartbeat Catalog");
+
+        stub.withDeadlineAfter(5000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+            @Override
+            public void onNext(CatalogResponse value) {
+                Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Heartbeat Catalog");
+                callback.invoke(null, "success");
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.d("Sourav Logging:::", "getCatalog: Failed Heartbeat Catalog");
+                handleError();
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+                Log.d("Sourav Logging:::", "getCatalog: Done Heartbeat Catalog");
+
+            }
+        });
+
+
+    }
+
+
+    @ReactMethod
     public void getCatalog(String sessionId, final Callback callback)
     {
         Log.d("GRPC:::getCatalog", sessionId);
@@ -143,7 +183,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging:::", "getCatalog: Calling Catalog");
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+        stub.withDeadlineAfter(10000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
                 Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Catalog");
