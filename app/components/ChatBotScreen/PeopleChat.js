@@ -17,6 +17,8 @@ import images from '../../images';
 import chatStyles from './styles';
 import { PhoneState } from '../Phone';
 
+var backTimer = null;
+
 export default class PeopleChat extends ChatBotScreen {
     static connectionButton(params) {
         if (params.button) {
@@ -103,10 +105,14 @@ export default class PeopleChat extends ChatBotScreen {
                         }
                         await state.params.deleteConversation();
                         if (state.params.onBack) {
-                            Actions.pop();
-                            state.params.onBack();
+                            clearTimeout(backTimer);
+                            backTimer = setTimeout(() => {
+                                Actions.pop();
+                                state.params.onBack();
+                            }, 500);
                         } else {
-                            Actions.pop();
+                            clearTimeout(backTimer);
+                            backTimer = setTimeout(() => Actions.pop(), 500);
                         }
                     }}
                 />

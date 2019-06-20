@@ -273,7 +273,7 @@ class NewCallContacts extends React.Component {
                         } else if (contact.phoneNumbers.length > 0) {
                             name = contact.phoneNumbers[0].number;
                         } else {
-                            name = '';
+                            name = 'No Name';
                         }
 
                         return {
@@ -345,18 +345,24 @@ class NewCallContacts extends React.Component {
     renderItem(path) {
         const contact = this.state.contactsData[path.section].items[path.row];
 
-        const image_path = `file://${contact.profileImage}`;
+        console.log('Sourav Logging:::: Profile Image', contact.profileImage);
         const placeHolderImage = require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png');
-        const pholder = `file://${placeHolderImage}`;
+        // const testImage = (
+        //     <Image
+        //         source={{ uri: contact.profileImage }}
+        //         style={styles.avatarImage}
+        //         resizeMode="cover"
+        //     />
+        // );
         const ImageProf = (
             <ImageLoad
                 style={styles.avatarImage}
                 resizeMode="cover"
-                source={placeHolderImage}
+                source={{ uri: contact.profileImage }}
                 isShowActivity={false}
                 placeholderStyle={styles.avatarImage}
                 borderRadius={styles.avatarImage.width / 2}
-                placeholderSource={{ uri: pholder }}
+                placeholderSource={placeHolderImage}
             />
         );
         // const Image = (
@@ -663,7 +669,9 @@ class NewCallContacts extends React.Component {
                                                     )
                                                 }
                                             >
-                                                {Icons.greenCallOutline()}
+                                                {Icons.greenCallOutline({
+                                                    size: 16
+                                                })}
                                             </TouchableOpacity>
                                         </View>
                                     </View>

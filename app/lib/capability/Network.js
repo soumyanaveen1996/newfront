@@ -187,15 +187,15 @@ function Network(options, queue = false) {
             if (connected) {
                 RStore.dispatch(setNetwork('full'));
                 const grpcService = getGrpcService(serviceName);
-                const timerId = setTimeout(
-                    () =>
+                const timerId = setTimeout(() => {
+                    if (queue) {
                         queueMessage({
                             options,
                             resolve,
                             reject
-                        }),
-                    20000
-                );
+                        });
+                    }
+                }, 20000);
                 console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
                     clearTimeout(timerId);
@@ -288,7 +288,7 @@ Network.isConnected = () => {
 };
 
 Network.forcePoll = () => {
-    NetworkHandler.poll();
+    // NetworkHandler.poll();
 };
 
 export default Network;

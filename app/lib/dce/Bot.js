@@ -96,6 +96,9 @@ class Bot {
         });
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
         bots = bots.concat(defaultBots);
+        bots = bots.map(bot => ({
+            ...bot
+        }));
 
         return bots;
     }

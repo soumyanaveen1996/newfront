@@ -176,7 +176,7 @@ class BotStoreScreen extends React.Component {
             showConnectionMessage: this.showConnectionMessage
         });
         try {
-            setTimeout(() => this.updateCatalog(), 1000);
+            setTimeout(() => this.updateCatalog(), 200);
 
             EventEmitter.addListener(
                 AuthEvents.userChanged,
@@ -203,7 +203,6 @@ class BotStoreScreen extends React.Component {
                 });
             }
         }
-        this.checkPollingStrategy();
     }
 
     componentDidUpdate(prevProps) {
@@ -212,6 +211,7 @@ class BotStoreScreen extends React.Component {
             this.props.appState.catalogLoaded
         ) {
             this.updateCatalog();
+            this.checkPollingStrategy();
         }
     }
 
@@ -448,7 +448,7 @@ class BotStoreScreen extends React.Component {
     }
 
     render() {
-        if (this.props.appState.network === 'none') {
+        if (this.props.appState.network !== 'full') {
             return <EmptyInstalledBot noNetwork={true} />;
         }
 

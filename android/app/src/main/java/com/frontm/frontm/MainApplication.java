@@ -30,7 +30,7 @@ import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.dooboolab.RNIap.RNIapPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.rnfs.RNFSPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;

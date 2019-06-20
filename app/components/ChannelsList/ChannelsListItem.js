@@ -20,6 +20,7 @@ import moment from 'moment';
 import ActionSheet from '@yfuks/react-native-action-sheet';
 import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
+import GlobalColors from '../../config/styles';
 
 const subtitleNumberOfLines = 2;
 
@@ -96,25 +97,77 @@ export default class ChannelsListItem extends React.Component {
         });
 
     onsubscribeChannel = (channel, open = false) => {
-        console.log('subscribe', channel);
-        this.setState({ loading: true });
-        this.props.wait(true);
-        Channel.subscribeChannel(channel.channelName, channel.userDomain)
-            .then(data => {
-                this.props.onSubscribed();
-                this.setState({ loading: false });
-                this.props.wait(false);
-                if (open) {
-                    this.props.onChannelTapped(channel);
-                }
-            })
-            .catch(err => {
-                console.log('Failed Subscription', err);
-                this.props.onSubscribeFailed();
-                this.setState({ loading: false });
-                this.props.wait(false);
-            });
+        if (channel.discoverable === 'public') {
+            console.log('subscribe', channel);
+            this.setState({ loading: true });
+            this.props.wait(true);
+            Channel.subscribeChannel(channel.channelName, channel.userDomain)
+                .then(data => {
+                    this.props.onSubscribed();
+                    this.setState({ loading: false });
+                    this.props.wait(false);
+                    if (open) {
+                        this.props.onChannelTapped(channel);
+                    }
+                })
+                .catch(err => {
+                    console.log('Failed Subscription', err);
+                    this.props.onSubscribeFailed();
+                    this.setState({ loading: false });
+                    this.props.wait(false);
+                });
+        } else {
+            requestModalContent = (
+                <View style={styles.requestModalContainer}>
+                    <CachedImage
+                        imageTag="channelLogo"
+                        source={{ uri: Utils.channelLogoUrl(channel.logo) }}
+                        style={styles.image}
+                        resizeMode="contain"
+                    />
+                    <Text style={styles.title}>{channel.channelName}</Text>
+                    <Text style={styles.subTitle}>
+                        This is a private channel.{'/n'}Send request to
+                        subscribe
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.requestModalYesButton}
+                        onPress={() => {
+                            this.sendRequestToPrivateChannel(channel);
+                            this.props.onSubscribeRequest();
+                        }}
+                    >
+                        <Text style={[styles.title, { color: 'white' }]}>
+                            Send request to subscribe
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.requestModalNoButton}
+                        onPress={() => this.props.onSubscribeRequest()}
+                    >
+                        <Text
+                            style={[
+                                styles.title,
+                                { color: GlobalColors.frontmLightBlue }
+                            ]}
+                        >
+                            Cancel
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            );
+            this.props.onSubscribeRequest(requestModalContent);
+        }
     };
+
+    sendRequestToPrivateChannel(channel) {
+        Channel.requestPrivateChannelAccess(
+            channel.channelName,
+            channel.userDomain
+        ).catch(() => {
+            this.props.onRequestToPrivateFailed();
+        });
+    }
 
     subscriptionButton(channel, userId) {
         const isOwner = channel.ownerId === userId ? true : false;
@@ -221,7 +274,7 @@ export default class ChannelsListItem extends React.Component {
                                 options: ['Subscribe', 'Cancel'],
                                 cancelButtonIndex: 1,
                                 destructiveButtonIndex: 1,
-                                tintColor: 'blue'
+                                tintColor: GlobalColors.frontmLightBlue
                             },
                             buttonIndex => {
                                 if (

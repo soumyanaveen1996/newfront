@@ -30,10 +30,12 @@ import _ from 'lodash';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import { MainScreenStyles } from '../MainScreen/styles';
 import Icon from 'react-native-vector-icons/Feather';
-import { Auth, Network } from '../../lib/capability';
+import { Auth, Network, Contact } from '../../lib/capability';
 import { Loader } from '../Loader';
 
 import { NativeModules } from 'react-native';
+import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
+
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 export default class SearchUsers extends React.Component {
@@ -116,8 +118,14 @@ export default class SearchUsers extends React.Component {
     onDone() {
         this.setState({ loading: true });
         this.props.onDone(this.state.selectedContacts).then(() => {
+            Contact.refreshContacts();
             this.setState({ loading: false });
             Actions.pop();
+            setTimeout(() => {
+                Actions.refresh({
+                    key: Math.random()
+                });
+            }, 100);
         });
     }
 
@@ -160,7 +168,7 @@ export default class SearchUsers extends React.Component {
                     ref={el => (this.text = el)}
                     style={styles.searchTextInput}
                     underlineColorAndroid="transparent"
-                    placeholder="Search contact"
+                    placeholder="Search FrontM users by name or email"
                     autoFocus={true}
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}

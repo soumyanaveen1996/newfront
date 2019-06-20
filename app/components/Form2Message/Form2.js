@@ -9,6 +9,7 @@ import {
     Slider,
     DatePickerIOS,
     DatePickerAndroid,
+    TimePickerAndroid,
     FlatList,
     ScrollView,
     Platform,
@@ -16,7 +17,8 @@ import {
     Alert,
     KeyboardAvoidingView,
     Keyboard,
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableWithoutFeedback
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -117,7 +119,10 @@ class Form2 extends React.Component {
             disabled: this.props.formStatus === formStatus.COMPLETED,
             showInfoOfIndex: null,
             lookupModalInfo: null,
-            showLookupModal: false
+            showLookupModal: false,
+            currentDateModalFieldType: fieldType.date,
+            dateModalMode: 'date',
+            formIsCompleted: this.checkFormValidation()
         };
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -133,8 +138,17 @@ class Form2 extends React.Component {
                 getResponse: () => {}
             };
             if (fieldData.validation) {
-                answer.valid = fieldData.savedValidationResult;
+                answer.valid = fieldData.value
+                    ? true
+                    : fieldData.savedValidationResult;
                 answer.validationMessage = fieldData.savedValidationMessage;
+            } else {
+                answer.valid = true;
+            }
+            if (fieldData.mandatory) {
+                answer.filled = fieldData.value ? true : false;
+            } else {
+                answer.filled = true;
             }
             switch (fieldData.type) {
             case fieldType.textField:
@@ -199,9 +213,25 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.date:
-                answer.value = new Date(fieldData.value) || new Date(); //milliseconds. Use getTime() to get the milliseconds to send to backend
+                answer.value = fieldData.value
+                    ? new Date(fieldData.value)
+                    : null; //milliseconds. Use getTime() to get the milliseconds to send to backend
                 answer.getResponse = () => {
-                    return answer.value.getTime();
+                    return answer.value ? answer.value.getTime() : null;
+                };
+                break;
+            case fieldType.time:
+                answer.value = fieldData.value || null; //[hours, minutes]
+                answer.getResponse = () => {
+                    return answer.value || null;
+                };
+                break;
+            case fieldType.dateTime:
+                answer.value = fieldData.value
+                    ? new Date(fieldData.value)
+                    : null; //milliseconds. Use getTime() to get the milliseconds to send to backend
+                answer.getResponse = () => {
+                    return answer.value ? answer.value.getTime() : null;
                 };
                 break;
             case fieldType.multiselection:
@@ -228,10 +258,10 @@ class Form2 extends React.Component {
                 };
                 break;
             case fieldType.lookup:
-                answer.value = fieldData.value ? fieldData.value.text : '';
+                answer.value = fieldData.value;
                 answer.search = '';
                 answer.getResponse = () => {
-                    return { text: answer.value };
+                    return answer.value;
                 };
                 break;
             default:
@@ -329,6 +359,17 @@ class Form2 extends React.Component {
         return { responseData: response, completed: completed };
     }
 
+    checkFormValidation() {
+        const missingField = this.answers.find(answer => {
+            return !(answer.valid && answer.filled);
+        });
+        if (missingField) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     saveFormData() {
         const data = _.map(this.props.formData, (field, index) => {
             field.value = this.answers[index].getResponse();
@@ -375,7 +416,12 @@ class Form2 extends React.Component {
         Actions.pop();
     }
 
-    onMoveAction(fieldId, fieldValue) {
+    onMoveAction(key, fieldId, fieldValue) {
+        if (!fieldValue && this.props.formData[key].mandatory) {
+            this.answers[key].filled = false;
+        } else {
+            this.answers[key].filled = true;
+        }
         const response = {
             formId: this.props.id,
             action: formAction.MOVE,
@@ -422,7 +468,10 @@ class Form2 extends React.Component {
             validation: null
         });
         this.initializeAnswers();
-        this.setState({ answers: this.answers });
+        this.setState({
+            answers: this.answers,
+            formIsCompleted: this.checkFormValidation()
+        });
     }
 
     validateField() {
@@ -467,10 +516,15 @@ class Form2 extends React.Component {
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -497,10 +551,15 @@ class Form2 extends React.Component {
                 keyboardType="numeric"
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -528,10 +587,15 @@ class Form2 extends React.Component {
                 placeholderTextColor={GlobalColors.disabledGray}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -555,6 +619,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                             this.onMoveAction(
+                                key,
                                 this.answers[key].id,
                                 this.answers[key].getResponse()
                             );
@@ -587,7 +652,11 @@ class Form2 extends React.Component {
                                 answers: this.answers,
                                 showInfoOfIndex: null
                             });
-                            this.onMoveAction(this.answers[key].id, option);
+                            this.onMoveAction(
+                                key,
+                                this.answers[key].id,
+                                option
+                            );
                         }
                     }}
                     checked={this.state.answers[key].value === index}
@@ -685,6 +754,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                             this.onMoveAction(
+                                this.currentDropdownModalKey,
                                 this.answers[this.currentDropdownModalKey].id,
                                 this.answers[
                                     this.currentDropdownModalKey
@@ -709,7 +779,7 @@ class Form2 extends React.Component {
                         answers: this.answers,
                         showInfoOfIndex: null
                     });
-                    this.onMoveAction(this.answers[key].id, value);
+                    this.onMoveAction(key, this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
             />
@@ -728,7 +798,7 @@ class Form2 extends React.Component {
                         answers: this.answers,
                         showInfoOfIndex: null
                     });
-                    this.onMoveAction(this.answers[key].id, value);
+                    this.onMoveAction(key, this.answers[key].id, value);
                 }}
                 value={this.state.answers[key].value}
                 minimumTrackTintColor={GlobalColors.sideButtons}
@@ -747,54 +817,162 @@ class Form2 extends React.Component {
                         this.answers[key].valid = undefined;
                     }
                     if (Platform.OS === 'android') {
-                        DatePickerAndroid.open({
-                            date: this.answers[key].value,
-                            mode: 'calendar'
-                        })
-                            .then(date => {
-                                if (
-                                    date.action ===
-                                    DatePickerAndroid.dateSetAction
-                                ) {
-                                    this.answers[key].value = new Date(
-                                        date.year,
-                                        date.month,
-                                        date.day
-                                    );
-                                    this.setState({
-                                        answers: this.answers,
-                                        showInfoOfIndex: null
-                                    });
-                                    this.onMoveAction(
-                                        this.answers[key].id,
-                                        this.answers[key].getResponse()
-                                    );
-                                }
-                            })
-                            .then(() => {
-                                resolve();
-                            });
+                        this.openAndroidDateTimePicker(content, key);
                     } else {
-                        this.currentDateModalKey = key;
-                        this.setState({
-                            dateModalValue: this.answers[key].value,
-                            dateModalVisible: true,
-                            showInfoOfIndex: null
-                        });
+                        this.openIOSDateTimePicker(content, key);
                     }
                 }}
                 style={styles.dateField}
             >
-                <Text>
-                    {this.state.answers[key].value.getDate() +
-                        '/' +
-                        (this.state.answers[key].value.getMonth() + 1) +
-                        '/' +
-                        this.state.answers[key].value.getFullYear()}
-                </Text>
-                {Icons.formCalendar()}
+                {this.state.answers[key].value ? (
+                    <Text>
+                        {content.type === fieldType.dateTime ||
+                        content.type === fieldType.date
+                            ? this.state.answers[key].value.getDate() +
+                              '/' +
+                              (this.state.answers[key].value.getMonth() + 1) +
+                              '/' +
+                              this.state.answers[key].value.getFullYear()
+                            : null}
+                        {content.type === fieldType.dateTime
+                            ? '  ' +
+                              this.state.answers[key].value.getHours() +
+                              ':' +
+                              this.state.answers[key].value.getMinutes()
+                            : null}
+                        {content.type === fieldType.time
+                            ? this.state.answers[key].value[0] +
+                              ':' +
+                              this.state.answers[key].value[1]
+                            : null}
+                    </Text>
+                ) : null}
+                {content.type === fieldType.time
+                    ? Icons.time()
+                    : Icons.formCalendar()}
             </TouchableOpacity>
         );
+    }
+
+    openAndroidDateTimePicker(content, key) {
+        return new Promise((resolve, reject) => {
+            let tempDate;
+            let initialTime = new Date();
+            if (content.type === fieldType.time) {
+                if (this.answers[key].value) {
+                    initialTime.setHours(this.answers[key].value[0]);
+                    initialTime.setMinutes(this.answers[key].value[1]);
+                }
+                TimePickerAndroid.open({
+                    hour: this.answers[key].value[0],
+                    minute: this.answers[key].value[1],
+                    mode: 'default',
+                    is24Hour: true
+                }).then(time => {
+                    if (time.action !== TimePickerAndroid.dismissedAction) {
+                        this.answers[key].value = [time.hour, time.minute];
+                        this.setState({
+                            answers: this.answers,
+                            showInfoOfIndex: null
+                        });
+                        this.onMoveAction(
+                            key,
+                            this.answers[key].id,
+                            this.answers[key].getResponse()
+                        );
+                    }
+                    resolve();
+                });
+            } else if (content.type === fieldType.dateTime) {
+                DatePickerAndroid.open({
+                    date: this.answers[key].value || initialTime,
+                    mode: 'default'
+                })
+                    .then(date => {
+                        tempDate = date;
+                        if (date.action !== DatePickerAndroid.dismissedAction) {
+                            return TimePickerAndroid.open({
+                                hour: this.answers[key].value.getHours(),
+                                minute: this.answers[key].value.getMinutes(),
+                                mode: 'default',
+                                is24Hour: true
+                            });
+                        } else {
+                            resolve();
+                        }
+                    })
+                    .then(time => {
+                        if (time.action !== TimePickerAndroid.dismissedAction) {
+                            this.answers[key].value = new Date(
+                                tempDate.year,
+                                tempDate.month,
+                                tempDate.day,
+                                time.hour,
+                                time.minute
+                            );
+                            this.setState({
+                                answers: this.answers,
+                                showInfoOfIndex: null
+                            });
+                            this.onMoveAction(
+                                key,
+                                this.answers[key].id,
+                                this.answers[key].getResponse()
+                            );
+                        }
+                        resolve();
+                    });
+            } else if (content.type === fieldType.date) {
+                DatePickerAndroid.open({
+                    date: this.answers[key].value || initialTime,
+                    mode: 'default'
+                }).then(date => {
+                    if (date.action !== DatePickerAndroid.dismissedAction) {
+                        this.answers[key].value = new Date(
+                            date.year,
+                            date.month,
+                            date.day
+                        );
+                        this.setState({
+                            answers: this.answers,
+                            showInfoOfIndex: null
+                        });
+                        this.onMoveAction(
+                            key,
+                            this.answers[key].id,
+                            this.answers[key].getResponse()
+                        );
+                    }
+                    resolve();
+                });
+            }
+        });
+    }
+
+    openIOSDateTimePicker(content, key) {
+        this.currentDateModalKey = key;
+        let initialTime = new Date();
+        if (content.type === fieldType.time) {
+            if (this.answers[key].value) {
+                initialTime.setHours(this.answers[key].value[0]);
+                initialTime.setMinutes(this.answers[key].value[1]);
+            }
+            this.setState({
+                dateModalValue: initialTime,
+                dateModalVisible: true,
+                showInfoOfIndex: null,
+                currentDateModalFieldType: content.type,
+                dateModalMode: 'time'
+            });
+        } else {
+            this.setState({
+                dateModalValue: this.answers[key].value || initialTime,
+                dateModalVisible: true,
+                showInfoOfIndex: null,
+                currentDateModalFieldType: content.type,
+                dateModalMode: 'date'
+            });
+        }
     }
 
     renderDateModalIOS() {
@@ -819,21 +997,44 @@ class Form2 extends React.Component {
                             });
                         }}
                         date={this.state.dateModalValue}
-                        mode="date"
+                        mode={this.state.dateModalMode}
                     />
                     <View style={styles.dateModalButtonArea}>
                         <TouchableOpacity
                             style={styles.dateModalButton}
                             onPress={() => {
-                                this.answers[
-                                    this.currentDateModalKey
-                                ].value = this.state.dateModalValue;
+                                if (
+                                    this.state.currentDateModalFieldType ===
+                                    fieldType.time
+                                ) {
+                                    this.answers[
+                                        this.currentDateModalKey
+                                    ].value = [
+                                        this.state.dateModalValue.getHours(),
+                                        this.state.dateModalValue.getMinutes()
+                                    ];
+                                } else {
+                                    if (
+                                        this.state.currentDateModalFieldType ===
+                                            fieldType.dateTime &&
+                                        this.state.dateModalMode === 'date'
+                                    ) {
+                                        this.setState({
+                                            dateModalMode: 'time'
+                                        });
+                                        return;
+                                    }
+                                    this.answers[
+                                        this.currentDateModalKey
+                                    ].value = this.state.dateModalValue;
+                                }
                                 this.setState({
                                     dateModalVisible: false,
                                     answers: this.answers,
                                     showInfoOfIndex: null
                                 });
                                 this.onMoveAction(
+                                    this.currentDateModalKey,
                                     this.answers[this.currentDateModalKey].id,
                                     this.answers[
                                         this.currentDateModalKey
@@ -879,6 +1080,7 @@ class Form2 extends React.Component {
         this.answers[key].value = response;
         this.setState({ answers: this.answers, showInfoOfIndex: null });
         this.onMoveAction(
+            key,
             this.answers[key].id,
             this.answers[key].getResponse()
         );
@@ -903,10 +1105,15 @@ class Form2 extends React.Component {
                 style={styles.textField}
                 value={this.state.answers[key].value}
                 onSubmitEditing={e => {
-                    this.onMoveAction(this.answers[key].id, e.nativeEvent.text);
+                    this.onMoveAction(
+                        key,
+                        this.answers[key].id,
+                        e.nativeEvent.text
+                    );
                 }}
                 onBlur={() => {
                     this.onMoveAction(
+                        key,
                         this.answers[key].id,
                         this.answers[key].value
                     );
@@ -932,7 +1139,7 @@ class Form2 extends React.Component {
                 >
                     {this.answers[key].value ? (
                         <Text numberOfLines={1} ellipsizeMode={'tail'}>
-                            {this.answers[key].value}
+                            {this.answers[key].value.text}
                         </Text>
                     ) : (
                         <TextInput
@@ -968,9 +1175,13 @@ class Form2 extends React.Component {
                                         this.answers[key].valid = undefined;
                                     }
                                     Keyboard.dismiss();
-                                    this.answers[key].value = '';
+                                    this.answers[key].value = null;
                                     this.setState({ answers: this.answers });
-                                    this.onMoveAction(this.answers[key].id, '');
+                                    this.onMoveAction(
+                                        key,
+                                        this.answers[key].id,
+                                        null
+                                    );
                                 }
                             })
                         ) : this.answers[key].searching ? (
@@ -1007,7 +1218,7 @@ class Form2 extends React.Component {
                                         ellipsizeMode={'tail'}
                                         style={styles.resultText}
                                         onPress={() => {
-                                            this.answers[key].value = item.text;
+                                            this.answers[key].value = item;
                                             this.answers[key].search = '';
                                             this.setState({
                                                 answers: this.answers
@@ -1019,6 +1230,7 @@ class Form2 extends React.Component {
                                                 change: null
                                             });
                                             this.onMoveAction(
+                                                key,
                                                 this.answers[key].id,
                                                 item
                                             );
@@ -1128,6 +1340,12 @@ class Form2 extends React.Component {
         case fieldType.date:
             field = this.renderDate(fieldData, key);
             break;
+        case fieldType.time:
+            field = this.renderDate(fieldData, key);
+            break;
+        case fieldType.dateTime:
+            field = this.renderDate(fieldData, key);
+            break;
         case fieldType.multiselection:
             return this.renderMultiselection(
                 fieldData,
@@ -1213,61 +1431,89 @@ class Form2 extends React.Component {
     }
 
     render() {
+        const formIdCompleted = this.checkFormValidation();
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.f2Container}
             >
-                <SafeAreaView style={styles.f2Container}>
-                    <ScrollView keyboardShouldPersistTaps="handled">
-                        <Text style={styles.f2Title}>{this.props.title}</Text>
-                        {this.renderFields()}
-                        <View style={styles.f2BottomArea}>
-                            <TouchableOpacity
-                                style={styles.f2CancelButton}
-                                onPress={this.onCancelForm.bind(this)}
-                            >
-                                <Text style={styles.f2CancelButtonText}>
-                                    {this.props.cancel || 'Cancel'}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                disabled={this.state.disabled}
-                                style={styles.f2DoneButton}
-                                onPress={this.onDone.bind(this)}
-                            >
-                                <Text style={styles.f2DoneButtonText}>
-                                    {this.props.confirm || 'Done'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        {this.renderDateModalIOS()}
-                        {this.renderDropdownModal()}
-                        <ChatModal
-                            content={this.renderLookupInfoModalContent(
-                                this.state.lookupModalInfo
-                            )}
-                            isVisible={this.state.showLookupModal}
-                            backdropOpacity={0.1}
-                            onBackButtonPress={() =>
-                                this.setState({
-                                    showLookupModal: false,
-                                    lookupModalInfo: null
-                                })
-                            }
-                            onBackdropPress={() =>
-                                this.setState({
-                                    showLookupModal: false,
-                                    lookupModalInfo: null
-                                })
-                            }
-                            style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                margin: 0
-                            }}
-                        />
-                    </ScrollView>
-                </SafeAreaView>
+                <TouchableWithoutFeedback
+                    disabled={this.state.showInfoOfIndex === null}
+                    onPress={() => this.setState({ showInfoOfIndex: null })}
+                    style={{ flex: 1 }}
+                >
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <ScrollView
+                            keyboardShouldPersistTaps="handled"
+                            style={{ flex: 1 }}
+                        >
+                            <Text style={styles.f2Title}>
+                                {this.props.title}
+                            </Text>
+                            {this.renderFields()}
+                            <View style={styles.f2BottomArea}>
+                                <TouchableOpacity
+                                    style={styles.f2CancelButton}
+                                    onPress={
+                                        this.state.disabled
+                                            ? () => Actions.pop()
+                                            : this.onCancelForm.bind(this)
+                                    }
+                                >
+                                    <Text style={styles.f2CancelButtonText}>
+                                        {this.props.cancel || 'Cancel'}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    disabled={
+                                        this.state.disabled || !formIdCompleted
+                                    }
+                                    style={[
+                                        styles.f2DoneButton,
+                                        {
+                                            opacity:
+                                                this.state.disabled ||
+                                                !formIdCompleted
+                                                    ? 0.2
+                                                    : 1
+                                        }
+                                    ]}
+                                    onPress={this.onDone.bind(this)}
+                                >
+                                    <Text style={styles.f2DoneButtonText}>
+                                        {this.props.confirm || 'Done'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            {this.renderDateModalIOS()}
+                            {this.renderDropdownModal()}
+                            <ChatModal
+                                content={this.renderLookupInfoModalContent(
+                                    this.state.lookupModalInfo
+                                )}
+                                isVisible={this.state.showLookupModal}
+                                backdropOpacity={0.1}
+                                onBackButtonPress={() =>
+                                    this.setState({
+                                        showLookupModal: false,
+                                        lookupModalInfo: null
+                                    })
+                                }
+                                onBackdropPress={() =>
+                                    this.setState({
+                                        showLookupModal: false,
+                                        lookupModalInfo: null
+                                    })
+                                }
+                                style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    margin: 0
+                                }}
+                            />
+                        </ScrollView>
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         );
     }

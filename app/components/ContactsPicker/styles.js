@@ -130,7 +130,7 @@ const stylesheet = StyleSheet.create({
     contactItemImage: {
         height: 35,
         width: 35,
-        borderRadius: 17,
+        borderRadius: 35 / 2,
         marginRight: 17
     },
     contactItemDetailsContainer: {
@@ -587,6 +587,7 @@ const stylesheet = StyleSheet.create({
         paddingHorizontal: 20
     },
     myProfileItemContainer: {
+        position: 'relative',
         backgroundColor: GlobalColors.white,
         flexDirection: 'row',
         alignItems: 'center'

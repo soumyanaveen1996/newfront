@@ -31,7 +31,7 @@ const devConfig = {
     proxy: {
         enabled: true,
         host: 'deprecated',
-        resource_host_old: 'elbdev.frontm.ai',
+        // resource_host_old: 'elbdev.frontm.ai',
         resource_host: '3nf11ibj25.execute-api.us-east-1.amazonaws.com/dev',
         user_details_path:
             'ui33wrefvj.execute-api.us-east-1.amazonaws.com/item/getusername',

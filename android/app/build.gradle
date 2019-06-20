@@ -108,7 +108,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 324
+        versionCode 333
         versionName "4.5"
         multiDexEnabled true
         renderscriptTargetApi 23
@@ -147,8 +147,8 @@ android {
     }
     buildTypes {
         release {
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
-            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
@@ -156,9 +156,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
@@ -214,6 +214,7 @@ dependencies {
     compile project(':react-native-blur')
     compile project(':rn-fetch-blob')
     compile (project(':mapbox-react-native-mapbox-gl')) {
+        exclude group: 'com.google.android.gms'
         compile ('com.squareup.okhttp3:okhttp:3.6.0') {
             force = true
         }
@@ -228,20 +229,28 @@ dependencies {
     compile project(':react-native-tcp')
     compile project(':react-native-svg')
     compile project(':react-native-sound')
-    compile project(':react-native-push-notification')
+    compile(project(':react-native-push-notification')){
+        exclude group: 'com.google.android.gms'
+    }
     compile project(':react-native-keychain')
     compile project(':react-native-image-resizer')
     compile project(':react-native-image-picker')
     compile project(':react-native-iap')
     compile project(':react-native-i18n')
-    compile project(':react-native-google-sign-in')
+    compile(project(':react-native-google-signin')){
+        exclude group: 'com.google.android.gms', module: 'play-services-auth'
+    }
     compile project(':react-native-fs')
     compile project(':react-native-fbsdk')
     compile project(':react-native-document-picker')
-    compile project(':react-native-device-info')
+    compile(project(':react-native-device-info')){
+        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+    }
     compile project(':react-native-contacts')
     compile project(':react-native-code-push')
-    compile project(':react-native-camera')
+    compile(project(':react-native-camera')){
+        exclude group: 'com.google.android.gms'
+    }
     compile project(':react-native-background-timer')
     compile project(':react-native-background-task')
     compile project(':react-native-audio')
@@ -250,14 +259,16 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    compile 'com.google.android.gms:play-services-auth:15.0.0'
-    compile(project(':react-native-maps')){
+    compile 'com.google.android.gms:play-services-auth:16.0.1'
+    compile(project(':react-native-maps')) {
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    compile 'com.google.android.gms:play-services-base:15.0.0'
-    compile 'com.google.android.gms:play-services-maps:15.0.0'
-    compile 'com.google.android.gms:play-services-gcm:15.0.0'
+    compile 'com.google.android.gms:play-services-base:16.0.1'
+    compile 'com.google.android.gms:play-services-maps:16.0.0'
+    compile 'com.google.android.gms:play-services-gcm:16.1.0'
+    compile 'com.google.android.gms:play-services-basement:16.0.1'
+    compile 'com.google.android.gms:play-services-vision:16.2.0'
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:support-v4:27.1.1" // added this
     compile 'io.grpc:grpc-okhttp:1.19.0'
@@ -278,6 +289,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 apply plugin: 'com.google.protobuf'
 
 
@@ -287,7 +299,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
     }
 }
 
