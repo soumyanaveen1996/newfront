@@ -87,6 +87,7 @@ class ChannelsFilter extends React.Component {
         this.props.setFilter(this.state.filterList);
         Actions.pop();
     }
+
     clearFilters() {
         this.setState({
             filterList: this.state.filterList.map(filter => ({
