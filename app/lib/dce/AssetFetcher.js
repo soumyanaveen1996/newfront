@@ -190,6 +190,8 @@ class AssetFetcher {
                 config.proxy.resource_host
             }${config.proxy.uploadFilePath}/${bucketName}/${filename}`;
 
+            // console.log('url to upload imgae ', s3UrlToFile);
+
             const res = await RNFetchBlob.fetch(
                 'POST',
                 s3UrlToFile,
