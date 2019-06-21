@@ -24,7 +24,6 @@ import com.peel.react.TcpSocketsModule;
 import com.horcrux.svg.SvgPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.keychain.KeychainPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -86,8 +85,8 @@ public class MainApplication extends Application implements ReactApplication {
                                                                    // permissions
                                                                    // in your application
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
-          new MapsPackage(), new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
-          new RNIapPackage(), new RNI18nPackage(), new RNGoogleSignInPackage(), new RNFSPackage(),
+          new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
+          new RNIapPackage(), new RNI18nPackage(), new RNGoogleSigninPackage(), new RNFSPackage(),
           new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager), new DocumentPickerPackage(),
           new RNDeviceInfo(), new ReactNativeContacts(),
           new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),

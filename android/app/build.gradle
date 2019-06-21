@@ -213,12 +213,7 @@ dependencies {
     compile project(':react-native-spring-scrollview')
     compile project(':react-native-blur')
     compile project(':rn-fetch-blob')
-    compile (project(':mapbox-react-native-mapbox-gl')) {
-        exclude group: 'com.google.android.gms'
-        compile ('com.squareup.okhttp3:okhttp:3.6.0') {
-            force = true
-        }
-    }
+    implementation project(':@react-native-mapbox-gl_maps')
     compile project(':bugsnag-react-native')
     compile project(':@yfuks_react-native-action-sheet')
     compile project(':react-native-default-preference')
@@ -260,10 +255,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile 'com.google.android.gms:play-services-auth:16.0.1'
-    compile(project(':react-native-maps')) {
-        exclude group: 'com.google.android.gms', module: 'play-services-base'
-        exclude group: 'com.google.android.gms', module: 'play-services-maps'
-    }
     compile 'com.google.android.gms:play-services-base:16.0.1'
     compile 'com.google.android.gms:play-services-maps:16.0.0'
     compile 'com.google.android.gms:play-services-gcm:16.1.0'
@@ -289,7 +280,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
-// com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 apply plugin: 'com.google.protobuf'
 
 
