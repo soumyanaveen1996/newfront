@@ -16,12 +16,7 @@ import { styles, layerStyles } from './styles';
 import { Actions } from 'react-native-router-flux';
 import I18n from '../../config/i18n/i18n';
 import { HeaderRightIcon, HeaderBack } from '../Header';
-import {
-    NetworkHandler,
-    AsyncResultEventEmitter,
-    NETWORK_EVENTS_CONSTANTS,
-    Queue
-} from '../../lib/network';
+import { NetworkHandler } from '../../lib/network';
 import {
     EventEmitter,
     SatelliteConnectionEvents,
@@ -33,7 +28,7 @@ import Icons from '../../config/icons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../config/images';
 import _ from 'lodash';
-import Mapbox from '@mapbox/react-native-mapbox-gl';
+import Mapbox from '@react-native-mapbox-gl/maps';
 import ContextSlideshow from './ContextSlideshow';
 import ChatModal from '../ChatBotScreen/ChatModal';
 import turf_great_circle from '@turf/great-circle';

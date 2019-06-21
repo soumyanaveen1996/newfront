@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import Utils from '../../lib/utils';
-import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 const styles = StyleSheet.create({
     container: {

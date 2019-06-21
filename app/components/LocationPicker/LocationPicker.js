@@ -7,14 +7,13 @@ import {
     Alert,
     SafeAreaView
 } from 'react-native';
-import MapView from 'react-native-maps';
-import { HeaderRightIcon, HeaderBack } from '../Header';
+import { HeaderBack } from '../Header';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux';
 import Icons from '../../config/icons';
 import DeviceLocation from '../../lib/capability/DeviceLocation';
 import I18n from '../../config/i18n/i18n';
-import Mapbox from '@mapbox/react-native-mapbox-gl';
+import Mapbox from '@react-native-mapbox-gl/maps';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'

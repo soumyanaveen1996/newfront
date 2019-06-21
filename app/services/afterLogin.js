@@ -5,9 +5,7 @@ import { Auth, Notification } from '../lib/capability';
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
 import { Platform } from 'react-native';
-import Mapbox from '@mapbox/react-native-mapbox-gl';
-import Store from '../redux/store/configureStore';
-import { setFirstLogin } from '../redux/actions/UserActions';
+import Mapbox from '@react-native-mapbox-gl/maps';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
