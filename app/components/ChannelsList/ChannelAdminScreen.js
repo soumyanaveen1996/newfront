@@ -168,6 +168,40 @@ class ChannelAdminScreen extends React.Component {
         Actions.pop();
     }
 
+    refresh() {
+        let participants;
+        let pendingRequests;
+
+        this.setState({ isLoading: true, uiDisabled: true }, () => {
+            Channel.getParticipants(
+                this.channel.channelName,
+                this.channel.userDomain
+            )
+                .then(prt => {
+                    participants = prt;
+                    return Channel.getRequests(
+                        this.channel.channelName,
+                        this.channel.userDomain
+                    );
+                })
+                .then(pend => {
+                    pendingRequests = pend;
+                    return this.setState({
+                        participants: participants,
+                        pendingRequests: pendingRequests,
+                        uiDisabled: false,
+                        isLoading: false
+                    });
+                })
+                .catch(e => {
+                    this.setState({
+                        uiDisabled: false,
+                        isLoading: false
+                    });
+                });
+        });
+    }
+
     setFavourite() {
         this.setState({ isLoading: true });
         const data = {
@@ -189,6 +223,7 @@ class ChannelAdminScreen extends React.Component {
                 this.setState({ isLoading: false });
             });
     }
+
     removeFavourite() {
         this.setState({ isLoading: true });
         const data = {
@@ -240,13 +275,9 @@ class ChannelAdminScreen extends React.Component {
     manageRequests() {
         Actions.requestsScreen({
             pendingUsers: this.state.pendingRequests,
-            onDone: this.updateRequests.bind(this),
+            onDone: this.refresh.bind(this),
             channel: this.channel
         });
-    }
-
-    updateRequests(pendingRequests) {
-        this.setState({ pendingRequests: pendingRequests });
     }
 
     //ADMINS
