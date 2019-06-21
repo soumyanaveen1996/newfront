@@ -604,8 +604,7 @@ const stylesheet = StyleSheet.create({
         borderRadius: 30,
         marginRight: 17,
         borderWidth: 1,
-        borderColor: 'rgba(222,222,222,1)'
-        // backgroundColor: 'grey'
+        borderColor: 'rgba(224,224,224,1)'
     },
     myProfileName: {
         color: GlobalColors.headerBlack,
@@ -691,8 +690,7 @@ const stylesheet = StyleSheet.create({
         height: 120,
         borderRadius: 60,
         borderWidth: 1,
-        borderColor: 'rgba(222,222,222,1)'
-        // backgroundColor: 'grey'
+        borderColor: 'rgba(224,224,224,1)'
     },
     nameContainerStyle: {
         width: '100%',
