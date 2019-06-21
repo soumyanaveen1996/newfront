@@ -84,6 +84,7 @@ export default class RequestsScreen extends React.Component {
             [user.userId]
         )
             .then(() => {
+                this.props.onDone();
                 let newPendingUsers = _.differenceBy(
                     this.state.pendingUsers,
                     user,
@@ -104,9 +105,10 @@ export default class RequestsScreen extends React.Component {
             []
         )
             .then(() => {
+                this.props.onDone();
                 let newPendingUsers = _.differenceBy(
                     this.state.pendingUsers,
-                    user,
+                    [user],
                     'userId'
                 );
                 this.setState({ pendingUsers: newPendingUsers });
@@ -114,10 +116,6 @@ export default class RequestsScreen extends React.Component {
             .catch(e => {
                 console.log('accept request failed');
             });
-    }
-
-    updateParent() {
-        this.props.onDone(this.state.pendingUsers);
     }
 
     renderItem({ item }) {
