@@ -58,7 +58,7 @@ import PushNotification from 'react-native-push-notification';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 115; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 116; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
