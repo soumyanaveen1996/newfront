@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import images from '../../config/images';
-import Mapbox from '@react-native-mapbox-gl/maps';
 
 const styles = StyleSheet.create({
     container: {
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const layerStyles = Mapbox.StyleSheet.create({
+const layerStyles = {
     //POLYLINES for routes and great circle routes
     route: {
         lineCap: 'round',
@@ -381,7 +380,7 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconImage: images.moving_maps_plane,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: Mapbox.StyleSheet.identity('rotation')
+        iconRotate: ['rotation']
     },
     arrowMarker: {
         iconAllowOverlap: true,
@@ -389,8 +388,8 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconImage: images.maps_maritime_icon,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: Mapbox.StyleSheet.identity('rotation')
+        iconRotate: ['rotation']
     }
-});
+};
 
 export { styles, layerStyles };
