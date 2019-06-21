@@ -31,17 +31,14 @@ export default class ChannelChat extends ChatBotScreen {
                         }
                         await state.params.deleteConversation();
                         if (state.params.onBack) {
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(() => {
+                            if (Actions.currentScene === 'channelChat') {
                                 Actions.pop();
                                 state.params.onBack();
-                            }, timeout);
+                            }
                         } else {
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(
-                                () => Actions.pop(),
-                                timeout
-                            );
+                            if (Actions.currentScene === 'channelChat') {
+                                Actions.pop();
+                            }
                         }
                     }}
                 />

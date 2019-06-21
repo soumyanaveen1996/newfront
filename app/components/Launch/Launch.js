@@ -360,10 +360,11 @@ export default class Splash extends React.Component {
 
     showMainScreen = (moveToOnboarding = false) => {
         syncNoNetwork();
-        Actions.homeMain({
-            type: ActionConst.REPLACE,
-            moveToOnboarding: moveToOnboarding
-        });
+        Actions.replace('tabbar');
+        // Actions.homeMain({
+        //     type: ActionConst.REPLACE,
+        //     moveToOnboarding: moveToOnboarding
+        // });
         return;
     };
 

@@ -130,24 +130,14 @@ class ChatBotScreen extends React.Component {
                             state.params.botDone();
                         }
                         if (state.params.onBack) {
-                            if (backTimer) {
-                                console.log(
-                                    'Sourav Logging:::: Clearing timeout'
-                                );
-                                clearTimeout(backTimer);
-                            }
-                            backTimer = setTimeout(() => {
-                                console.log('Sourav Logging:::: Firing Back');
+                            if (Actions.currentScene === 'botChat') {
                                 Actions.pop();
                                 state.params.onBack();
-                            }, timeout);
+                            }
                         } else {
-                            console.log('Sourav Logging:::: Back Fire');
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(
-                                () => Actions.pop(),
-                                timeout
-                            );
+                            if (Actions.currentScene === 'botChat') {
+                                Actions.pop();
+                            }
                         }
                     }}
                 />

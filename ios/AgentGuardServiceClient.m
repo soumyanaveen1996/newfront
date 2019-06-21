@@ -1,11 +1,3 @@
-//
-//  AgentGuardServiceClient.m
-//  frontm_mobile
-//
-//  Created by Amal on 3/15/19.
-//  Copyright © 2019 Facebook. All rights reserved.
-//
-
 #import "AgentGuardServiceClient.h"
 #import "Agentguardservice.pbrpc.h"
 #import "Conversation+frontm.h"
@@ -16,7 +8,7 @@
 
 @interface AgentGuardServiceClient()
 
-@property (strong, atomic) AgentGuardService *serviceClient;
+@property (strong, nonatomic) AgentGuardService *serviceClient;
 
 @end
 
@@ -33,30 +25,45 @@
   return self;
 }
 
+- (AgentGuardService *) serviceClient {
+  if (_serviceClient == nil) {
+    _serviceClient = [[AgentGuardService alloc] initWithHost:GRPCMetadata.shared.uri];
+  }
+  return _serviceClient;
+}
+
 
 RCT_EXPORT_MODULE();
 
 RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC::::method:execute Params : %@", params);
-
+  
   AgentGuardInput *input = [AgentGuardInput new];
   input.parameters = params[@"parameters"];
   input.conversation = [Conversation conversationfromDictionary:params[@"conversation"]];
   input.capability = params[@"capability"];
   input.sync = [params[@"sync"] boolValue];
   input.requestUuid = params[@"requestUuid"];
-
+  
   GRPCProtoCall *call = [self.serviceClient RPCToExecuteWithRequest:input handler:^(AgentGuardStringResponse * _Nullable response, NSError * _Nullable error) {
-    RCTLog(@"GRPC::::method:execute Response : %@", error);
     if (error != nil) {
+      RCTLog(@"GRPC::::method:execute Response error : %@", [error description]);
       callback(@[@{}, [NSNull null]]);
+      self.serviceClient = nil;
       return;
     } else {
       RCTLog(@"GRPC::::method:execute Response : %@", [response toResponse]);
       callback(@[[NSNull null], [response toResponse]]);
     }
   }];
-
+  
+  NSInteger timeout = 15;
+  
+  if([input.capability isEqualToString:@"PingAgentGuardCapability"]){
+    timeout = 5;
+  }
+  
+  [call setTimeout:timeout];
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start];
 }

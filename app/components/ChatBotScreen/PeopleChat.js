@@ -104,15 +104,19 @@ export default class PeopleChat extends ChatBotScreen {
                             state.params.botDone();
                         }
                         await state.params.deleteConversation();
+                        console.log(
+                            'Sourav Logging:::: ',
+                            Actions.currentScene
+                        );
                         if (state.params.onBack) {
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(() => {
+                            if (Actions.currentScene === 'peopleChat') {
                                 Actions.pop();
-                                state.params.onBack();
-                            }, 500);
+                                // state.params.onBack();
+                            }
                         } else {
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(() => Actions.pop(), 500);
+                            if (Actions.currentScene === 'peopleChat') {
+                                Actions.pop();
+                            }
                         }
                     }}
                 />

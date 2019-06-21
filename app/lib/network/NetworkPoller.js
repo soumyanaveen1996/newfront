@@ -22,6 +22,7 @@ import { NetworkDAO } from '../../lib/persistence';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
 import Bot from '../bot';
+import AgentGuard from '../capability/AgentGuard';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -35,7 +36,7 @@ const NetworkPollerStates = {
 };
 
 BackgroundTask.define(async () => {
-    await NetworkHandler.poll();
+    // await NetworkHandler.poll();
     await BackgroundTaskProcessor.process();
     // await NetworkDAO.deleteAllRows();
     BackgroundTask.finish();
@@ -248,10 +249,16 @@ class NetworkPoller {
         this.restartPolling();
     };
 
+    appleBruteConnection = () => {
+        if (Platform.OS === 'ios') {
+        }
+    };
+
     handleAppStateChange = async nextAppState => {
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
+                this.appleBruteConnection();
                 console.log('Sourav Logging:::: App is in Active State Again');
                 InteractionManager.runAfterInteractions(() => {
                     RemoteBotInstall.syncronizeBots();
