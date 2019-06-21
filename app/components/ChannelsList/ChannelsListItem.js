@@ -127,7 +127,7 @@ export default class ChannelsListItem extends React.Component {
                     />
                     <Text style={styles.title}>{channel.channelName}</Text>
                     <Text style={styles.subTitle}>
-                        This is a private channel.{'/n'}Send request to
+                        This is a private channel.{'\n'}Send request to
                         subscribe
                     </Text>
                     <TouchableOpacity
