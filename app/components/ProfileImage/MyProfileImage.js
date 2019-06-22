@@ -56,7 +56,7 @@ class MyProfileImage extends React.Component {
                 } else {
                     if (this.mounted) {
                         this.setState({
-                            source: this.props.placeholder,
+                            source: { uri: uri },
                             style: this.props.placeholderStyle,
                             loaded: true
                         });
@@ -104,7 +104,7 @@ class MyProfileImage extends React.Component {
     }
 
     render() {
-        // console.log(this.state.source ? this.state.source.uri : 'Empty');
+        // console.log('profile image we will see', this.state.source);
         return (
             <View>
                 <Image

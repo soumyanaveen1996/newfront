@@ -65,6 +65,8 @@ import config from '../../config/config';
 import { blue } from 'ansi-colors';
 
 import { NativeModules } from 'react-native';
+import ImageCache from '../../lib/image_cache';
+import utils from '../../lib/utils';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 class ContactsPicker extends React.Component {
