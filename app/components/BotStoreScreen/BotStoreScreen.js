@@ -260,7 +260,7 @@ class BotStoreScreen extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }

@@ -116,12 +116,13 @@ I18n.translations = {
         No_Network: 'No network connection',
         Satellite_connection: 'Online over Satellite',
         Connection_Type: 'Connection Type',
+        Automatic_Network: 'Automatic Network Mode',
         Satellite_Message:
             'You are in Satellite Network Mode which ensures minimum data consumption with a near real time message exchange.',
         Gsm_Message:
             'You are in Terrestrial Network Mode which provides a real time messaging experience.',
         Auto_Message:
-            'Automatic Network Detection, seemly optimising performance across satellite, VSAT and GSM networks',
+            'Seamlessly optimises performance across satellite, VSAT and GSM networks',
         Ok: 'Ok',
         Password_error: 'Please enter a valid password value',
         Retry_Password_error: 'Password and retry password should match',
