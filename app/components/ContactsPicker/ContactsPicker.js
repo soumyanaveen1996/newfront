@@ -588,7 +588,7 @@ class ContactsPicker extends React.Component {
                                 My Profile
                             </Text>
                         </View>
-                        <View style={{ position: 'absolute', right: 20 }}>
+                        <View style={{ position: 'absolute', right: 10 }}>
                             <TouchableOpacity
                                 accessibilityLabel="More Button"
                                 onPress={() => {
