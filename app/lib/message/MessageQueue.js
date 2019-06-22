@@ -110,6 +110,7 @@ export default class MessageQueue {
         let user = await Auth.getUser();
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
         if (alreadyProcessed) {
+            console.log('Sourav Logging:::: Message is already processed');
             return true;
         }
 

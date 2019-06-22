@@ -57,6 +57,8 @@ const readLambda = (force = false) => {
 const handleLambdaResponse = (res, user) => {
     let resData = res.data.queueMsgs || [];
 
+    console.log('Sourav Logging:::: Reading queue Message', resData.length);
+
     if (resData.length > 0) {
         let messages = resData;
         messages = messages.reverse();
@@ -87,7 +89,8 @@ const readRemoteLambdaQueue = (user, force = false) => {
     messageSubscriptions.push(
         eventEmitter.addListener('message', message => {
             console.log(
-                'Processing Message : Received a message in readRemoteLambdaQueue'
+                'Sourav Logging ::: Received a message in readRemoteLambdaQueue',
+                message
             );
             const rand = (Math.floor(Math.random() * 9) + 1) * 100;
             BackgroundTimer.setTimeout(() => {

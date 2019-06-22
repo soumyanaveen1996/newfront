@@ -60,7 +60,7 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
   NSInteger timeout = 15;
   
   if([input.capability isEqualToString:@"PingAgentGuardCapability"]){
-    timeout = 5;
+    timeout = 1;
   }
   
   [call setTimeout:timeout];

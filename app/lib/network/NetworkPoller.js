@@ -147,8 +147,10 @@ class NetworkPoller {
                     message
                 );
 
-                console.log('Processing Message : in GRPC Push');
-                setTimeout(() => {
+                console.log(
+                    'Sourav Logging:::: Processing Message : in GRPC Push'
+                );
+                BackgroundTimer.setTimeout(() => {
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
             })
@@ -255,6 +257,10 @@ class NetworkPoller {
     };
 
     handleAppStateChange = async nextAppState => {
+        console.log(
+            'Sourav Logging:::: >>>>>>>>>>>APPP SATTE<<<<<<<<',
+            nextAppState
+        );
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {

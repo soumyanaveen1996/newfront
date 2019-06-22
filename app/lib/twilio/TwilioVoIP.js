@@ -233,17 +233,19 @@ export default class TwilioVoIP {
     };
 
     deviceDidReceiveIncomingHandler = async data => {
+        Store.updateStore(data);
+        // EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
+
         console.log('FrontM VoIP : in handle incoming call', data);
         const call_from = data.call_from;
         if (call_from.startsWith('client:')) {
             const name = await fetchContactsDetails(call_from);
             console.log('Sourav Logging:::: user name is', name);
             data = { ...data, call_from: name };
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
+        } else {
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
         }
-        console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
-        Store.updateStore(data);
-        this.handleIncomingCall(data);
-        EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
     };
 
     proximityHandler = data => {
