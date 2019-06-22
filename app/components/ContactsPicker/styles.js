@@ -602,9 +602,9 @@ const stylesheet = StyleSheet.create({
         height: 60,
         width: 60,
         borderRadius: 30,
-        marginRight: 17,
-        borderWidth: 1,
-        borderColor: 'rgba(224,224,224,1)'
+        marginRight: 17
+        // borderWidth: 1,
+        // borderColor: 'rgba(224,224,224,1)'
     },
     myProfileName: {
         color: GlobalColors.headerBlack,
@@ -688,9 +688,9 @@ const stylesheet = StyleSheet.create({
     profileImgStyle: {
         width: 120,
         height: 120,
-        borderRadius: 60,
-        borderWidth: 1,
-        borderColor: 'rgba(224,224,224,1)'
+        borderRadius: 60
+        // borderWidth: 1,
+        // borderColor: 'rgba(224,224,224,1)'
     },
     nameContainerStyle: {
         width: '100%',

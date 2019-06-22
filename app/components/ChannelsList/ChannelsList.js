@@ -458,7 +458,7 @@ class ChannelsList extends React.Component {
     }
 
     render() {
-        console.log('>>>>>>>>filt', this.props.channel.filters);
+        // console.log('>>>>>>>>filt', this.props.channel.filters);
         const filters = this.props.channel.filters.filter(
             filter => filter.checked === true
         );

@@ -214,6 +214,7 @@ export const BotListItemStyles = {
         height: 30,
         width: 30,
         borderRadius: 15,
+
         marginTop: 5
     },
     conversationImage: {
