@@ -39,7 +39,9 @@ import { GlobalColors } from '../../config/styles';
 
 const BUTTON_INNER = hp('1%');
 const BUTTON_OUTER = hp('2.5%');
+
 const DESC_LENGTH = 60;
+const DESC_LENGTH_FOR_NAME = 30;
 class NewChannels extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
         const { state } = navigation;
@@ -332,6 +334,7 @@ class NewChannels extends React.Component {
                                     onChangeText={this.onChangeChannelName.bind(
                                         this
                                     )}
+                                    maxLength={DESC_LENGTH_FOR_NAME}
                                     keyboardType="default"
                                     blurOnSubmit={false}
                                     returnKeyType={'next'}

@@ -82,6 +82,8 @@ export default class ProfileImage extends React.Component {
     }
 
     render() {
+        // console.log('image url timeline', this.state.source);
+
         return (
             <View>
                 <Image

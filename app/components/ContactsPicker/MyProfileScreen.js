@@ -12,6 +12,7 @@ import {
     Platform,
     KeyboardAvoidingView
 } from 'react-native';
+import ImageResizer from 'react-native-image-resizer';
 import _ from 'lodash';
 import styles from './styles';
 import { SafeAreaView } from 'react-navigation';
@@ -33,6 +34,8 @@ import { HeaderBack } from '../Header';
 import { connect } from 'react-redux';
 import { uploadImage } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import ImageCache from '../../lib/image_cache';
+import utils from '../../lib/utils';
 
 const R = require('ramda');
 
@@ -385,6 +388,10 @@ class MyProfileScreen extends React.Component {
         this.setState({ phoneNumbers: [...numbers] });
     }
 
+    getUri(userId) {
+        return utils.userProfileUrl(userId);
+    }
+
     async sendImage(imageUri, base64) {
         // console.log('images ', imageUri);
         this.props.uploadImage();
@@ -399,6 +406,7 @@ class MyProfileScreen extends React.Component {
             .then(user => {
                 // console.log('user ', user);
                 // Send the file to the S3/backend and then let the user know
+
                 return Resource.uploadFile(
                     base64,
                     toUri,
@@ -411,20 +419,27 @@ class MyProfileScreen extends React.Component {
                     true
                 );
             })
+
             .then(fileUrl => {
                 if (_.isNull(fileUrl)) {
                     console.log(
                         'You have disabled access to media library. Please enable access to upload a profile picture'
                     );
                 } else {
-                    // console.log('file url upload image ', fileUrl);
                     this.setState(
                         {
                             loading: false,
                             reloadProfileImage: imageUri
                         },
-                        () => {
+                        async () => {
                             this.props.updateContactScreen();
+                            let uriSrc = this.getUri(this.state.userId);
+                            if (uriSrc) {
+                                await ImageCache.imageCacheManager.removeFromCache(
+                                    uriSrc
+                                );
+                            }
+
                             setTimeout(() => {
                                 this.showAlert('Profile image updated');
                             }, 200);
