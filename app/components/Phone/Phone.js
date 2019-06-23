@@ -29,6 +29,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import Calls from '../../lib/calls';
+import BackgroundTimer from 'react-native-background-timer';
 
 export const PhoneState = {
     init: 'init',
@@ -157,7 +158,6 @@ export default class Phone extends React.Component {
                 Actions.pop();
                 return;
             }
-            console.log('Sourav Logging:::: VOIP Error', err);
             Alert.alert('Sorry, I am unable to call. Please try again.');
             Actions.pop();
         }
