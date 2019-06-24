@@ -6,10 +6,10 @@ const PROXY_HOST = 'localhost:3000';
 let pollingInterval;
 let clearQueue;
 if (Platform.OS === 'android') {
-    pollingInterval = 30000;
+    pollingInterval = 60000;
     clearQueue = 600000;
 } else {
-    pollingInterval = 10000;
+    pollingInterval = 60000;
     clearQueue = 18000000;
 }
 // TODO: Replace the facebook App ID. It belons to a Amal's personal account App.
