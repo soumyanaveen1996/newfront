@@ -9,6 +9,8 @@ import { PhoneState } from '../../components/Phone';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Store from '../../lib/Store';
 import Calls from '../calls';
+import { ContactsCache } from '../../lib/ContactsCache';
+import BackgroundTimer from 'react-native-background-timer';
 
 /*
 const _eventHandlers = {
@@ -20,6 +22,48 @@ const _eventHandlers = {
     //iOS specific
     callRejected: new Map(),
 }*/
+
+const debounce = () => {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(), 3000);
+    });
+};
+
+const fetchContactsDetails = async user => {
+    let userName = user;
+    try {
+        const clientId = user.substr(7);
+        const clientDetailsCache = await ContactsCache.getUserDetails(clientId);
+        if (clientDetailsCache) {
+            userName = clientDetailsCache.userName;
+        } else {
+            clientDetails = await ContactsCache.fetchContactDetailsForUser(
+                clientId
+            );
+            userName = clientDetails.userName;
+        }
+    } catch (error) {}
+
+    if (userName.startsWith('client:')) {
+        await debounce();
+
+        try {
+            const clientId = user.substr(7);
+            const clientDetailsCache = await ContactsCache.getUserDetails(
+                clientId
+            );
+            if (clientDetailsCache) {
+                userName = clientDetailsCache.userName;
+            } else {
+                clientDetails = await ContactsCache.fetchContactDetailsForUser(
+                    clientId
+                );
+                userName = clientDetails.userName;
+            }
+        } catch (error) {}
+    }
+    return userName;
+};
 
 export default class TwilioVoIP {
     init = async () => {
@@ -170,9 +214,17 @@ export default class TwilioVoIP {
         }
     };
 
-    handleIncomingCall = data => {
-        console.log('FrontM VoIP : in handle incoming call');
-        Actions.phone({ state: PhoneState.incomingcall, data: data });
+    handleIncomingCall = async data => {
+        console.log('FrontM VoIP : in handle incoming call', data);
+        const call_from = data.call_from;
+        if (call_from.startsWith('client:')) {
+            const name = await fetchContactsDetails(call_from);
+            console.log('Sourav Logging:::: user name is', name);
+            data = { ...data, call_from: name };
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
+        } else {
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
+        }
     };
 
     deviceReadyHandler = async data => {
@@ -206,11 +258,23 @@ export default class TwilioVoIP {
         Calls.fetchCallHistory();
     };
 
-    deviceDidReceiveIncomingHandler = data => {
-        console.log('FrontM VoIP : deviceDidReceiveIncomingHandler : ', data);
+    deviceDidReceiveIncomingHandler = async data => {
+        console.log(
+            'Sourav Logging:::: In Device Received Incomeing HNADLER>>>>>>>>>>>>'
+        );
         Store.updateStore(data);
-        this.handleIncomingCall(data);
-        EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
+        // EventEmitter.emit(TwilioEvents.deviceDidReceiveIncoming, data);
+
+        console.log('FrontM VoIP : in handle incoming call', data);
+        const call_from = data.call_from;
+        if (call_from.startsWith('client:')) {
+            const name = await fetchContactsDetails(call_from);
+            console.log('Sourav Logging:::: user name is', name);
+            data = { ...data, call_from: name };
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
+        } else {
+            Actions.phone({ state: PhoneState.incomingcall, data: data });
+        }
     };
 
     proximityHandler = data => {

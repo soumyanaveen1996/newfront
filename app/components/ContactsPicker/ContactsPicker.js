@@ -65,6 +65,8 @@ import config from '../../config/config';
 import { blue } from 'ansi-colors';
 
 import { NativeModules } from 'react-native';
+import ImageCache from '../../lib/image_cache';
+import utils from '../../lib/utils';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 class ContactsPicker extends React.Component {
@@ -264,7 +266,7 @@ class ContactsPicker extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }
@@ -586,7 +588,7 @@ class ContactsPicker extends React.Component {
                                 My Profile
                             </Text>
                         </View>
-                        <View style={{ position: 'absolute', right: 20 }}>
+                        <View style={{ position: 'absolute', right: 10 }}>
                             <TouchableOpacity
                                 accessibilityLabel="More Button"
                                 onPress={() => {

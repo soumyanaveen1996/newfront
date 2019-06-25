@@ -318,7 +318,7 @@ const stylesheet = StyleSheet.create({
     modal: Platform.select({
         ios: {
             width: wp('90%'),
-            height: hp('50%'),
+            height: hp('55%'),
             borderRadius: 10,
             flexDirection: 'column',
             backgroundColor: 'white',
@@ -603,6 +603,8 @@ const stylesheet = StyleSheet.create({
         width: 60,
         borderRadius: 30,
         marginRight: 17
+        // borderWidth: 1,
+        // borderColor: 'rgba(224,224,224,1)'
     },
     myProfileName: {
         color: GlobalColors.headerBlack,
@@ -687,6 +689,8 @@ const stylesheet = StyleSheet.create({
         width: 120,
         height: 120,
         borderRadius: 60
+        // borderWidth: 1,
+        // borderColor: 'rgba(224,224,224,1)'
     },
     nameContainerStyle: {
         width: '100%',

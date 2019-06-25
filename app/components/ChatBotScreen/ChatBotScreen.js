@@ -130,24 +130,14 @@ class ChatBotScreen extends React.Component {
                             state.params.botDone();
                         }
                         if (state.params.onBack) {
-                            if (backTimer) {
-                                console.log(
-                                    'Sourav Logging:::: Clearing timeout'
-                                );
-                                clearTimeout(backTimer);
-                            }
-                            backTimer = setTimeout(() => {
-                                console.log('Sourav Logging:::: Firing Back');
+                            if (Actions.currentScene === 'botChat') {
                                 Actions.pop();
                                 state.params.onBack();
-                            }, timeout);
+                            }
                         } else {
-                            console.log('Sourav Logging:::: Back Fire');
-                            clearTimeout(backTimer);
-                            backTimer = setTimeout(
-                                () => Actions.pop(),
-                                timeout
-                            );
+                            if (Actions.currentScene === 'botChat') {
+                                Actions.pop();
+                            }
                         }
                     }}
                 />
@@ -480,7 +470,7 @@ class ChatBotScreen extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }

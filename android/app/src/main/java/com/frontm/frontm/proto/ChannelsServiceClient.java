@@ -286,7 +286,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
                 DomainChannels.Builder dcBuilder = DomainChannels.newBuilder()
                         .setUserDomain(channelDict.getString("userDomain"));
 
-                if (channelDict.hasKey("domainChannels") && channelDict.getArray("channels") != null) {
+                if (channelDict.hasKey("channels") && channelDict.getArray("channels") != null) {
                     ReadableArray cArray = channelDict.getArray("channels");
                     for (int j = 0; j < cArray.size(); ++j) {
                         dcBuilder.addChannels(cArray.getString(j));

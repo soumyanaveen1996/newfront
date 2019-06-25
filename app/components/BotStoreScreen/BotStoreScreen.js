@@ -25,7 +25,7 @@ import CategoriesTab from './CategoriesTab/CategoriesTab';
 import FeaturedTab from './FeaturedTab/FeaturedTab';
 import { HeaderRightIcon } from '../Header';
 import { ErrorMessage } from '../Error';
-import { NetworkError } from '../../lib/network';
+import { NetworkError, NetworkHandler } from '../../lib/network';
 import { EventEmitter, AuthEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { Auth, Settings, PollingStrategyTypes } from '../../lib/capability';
@@ -173,6 +173,7 @@ class BotStoreScreen extends React.Component {
         }
 
         this.props.navigation.setParams({
+            refresh: NetworkHandler.readLambda,
             showConnectionMessage: this.showConnectionMessage
         });
         try {
@@ -259,7 +260,7 @@ class BotStoreScreen extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }

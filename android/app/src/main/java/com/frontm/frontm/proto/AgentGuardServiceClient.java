@@ -163,7 +163,14 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging::::Sending Agent Guard Message", input.toString());
 
-        stub.withDeadlineAfter(5000, TimeUnit.MILLISECONDS).execute(input, new StreamObserver<AgentGuardStringResponse>() {
+        Integer timeout = 15000;
+        if(params.getString("capability").equalsIgnoreCase("PingAgentGuardCapability")){
+            Log.d("Sourav Logging::", "TImeout for Heartbeat is 5 seconds");
+            timeout = 5000;
+
+        }
+
+        stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).execute(input, new StreamObserver<AgentGuardStringResponse>() {
             @Override
             public void onNext(AgentGuardStringResponse value) {
                 Log.d("Received AG Response", value.toString());

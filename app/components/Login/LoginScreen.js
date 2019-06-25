@@ -118,7 +118,7 @@ export default class LoginScreen extends React.Component {
     showMainScreen = async () => {
         // await Conversation.downloadRemoteConversations();
         // await RemoteBotInstall.syncronizeBots();
-        Actions.timeline({ type: ActionConst.REPLACE });
+        // Actions.timeline({ type: ActionConst.REPLACE });
         this.setState({ loading: false });
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
@@ -149,7 +149,8 @@ export default class LoginScreen extends React.Component {
             email: '',
             password: ''
         });
-        Actions.tabbar({ type: 'replace' });
+        Actions.replace('tabbar');
+        // Actions.tabbar({ type: 'replace' });
         this.formValuesArray.length = 0;
 
         return;

@@ -22,6 +22,7 @@ import { NetworkDAO } from '../../lib/persistence';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
 import Bot from '../bot';
+import AgentGuard from '../capability/AgentGuard';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -35,7 +36,7 @@ const NetworkPollerStates = {
 };
 
 BackgroundTask.define(async () => {
-    await NetworkHandler.poll();
+    // await NetworkHandler.poll();
     await BackgroundTaskProcessor.process();
     // await NetworkDAO.deleteAllRows();
     BackgroundTask.finish();
@@ -146,10 +147,12 @@ class NetworkPoller {
                     message
                 );
 
-                const delay = (Math.floor(Math.random() * 5) + 1) * 1000;
-                setTimeout(() => {
+                console.log(
+                    'Sourav Logging:::: Processing Message : in GRPC Push'
+                );
+                BackgroundTimer.setTimeout(() => {
                     MessageQueue.push(message);
-                }, 0);
+                }, (Math.floor(Math.random() * 2) + 1) * 1000);
             })
         );
         this.grpcEndSubscription.push(
@@ -248,10 +251,20 @@ class NetworkPoller {
         this.restartPolling();
     };
 
+    appleBruteConnection = () => {
+        if (Platform.OS === 'ios') {
+        }
+    };
+
     handleAppStateChange = async nextAppState => {
+        console.log(
+            'Sourav Logging:::: >>>>>>>>>>>APPP SATTE<<<<<<<<',
+            nextAppState
+        );
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
+                this.appleBruteConnection();
                 console.log('Sourav Logging:::: App is in Active State Again');
                 InteractionManager.runAfterInteractions(() => {
                     RemoteBotInstall.syncronizeBots();

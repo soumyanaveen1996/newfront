@@ -299,7 +299,7 @@ class Form2 extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }
@@ -508,6 +508,11 @@ class Form2 extends React.Component {
                     if (this.props.formData[key].validation) {
                         this.answers[key].valid = undefined;
                     }
+                    if (text === '' && content.mandatory) {
+                        this.answers[key].filled = false;
+                    } else {
+                        this.answers[key].filled = true;
+                    }
                     this.setState({
                         answers: this.answers,
                         showInfoOfIndex: null
@@ -540,6 +545,11 @@ class Form2 extends React.Component {
                 onChangeText={text => {
                     if (this.props.formData[key].validation) {
                         this.answers[key].valid = undefined;
+                    }
+                    if (text === '' && content.mandatory) {
+                        this.answers[key].filled = false;
+                    } else {
+                        this.answers[key].filled = true;
                     }
                     this.answers[key].value = text;
                     this.setState({
@@ -577,6 +587,11 @@ class Form2 extends React.Component {
                 onChangeText={text => {
                     if (this.props.formData[key].validation) {
                         this.answers[key].valid = undefined;
+                    }
+                    if (text === '' && content.mandatory) {
+                        this.answers[key].filled = false;
+                    } else {
+                        this.answers[key].filled = true;
                     }
                     this.answers[key].value = text;
                     this.setState({
@@ -1093,6 +1108,11 @@ class Form2 extends React.Component {
                 onChangeText={text => {
                     if (this.props.formData[key].validation) {
                         this.answers[key].valid = undefined;
+                    }
+                    if (text === '' && content.mandatory) {
+                        this.answers[key].filled = false;
+                    } else {
+                        this.answers[key].filled = true;
                     }
                     this.answers[key].value = text;
                     this.setState({

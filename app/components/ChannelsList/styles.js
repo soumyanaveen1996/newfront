@@ -280,8 +280,9 @@ export default StyleSheet.create({
         fontFamily: 'SF Pro Text'
     },
     channelDescription: {
-        width: '100%',
-        height: 110
+        width: '95%',
+        height: 110,
+        paddingHorizontal: 10
     },
     channelType: {
         marginTop: 10
@@ -293,7 +294,8 @@ export default StyleSheet.create({
         color: 'rgba(47,199,111,1)'
     },
     channelDescriptionContainer: {
-        marginTop: 5
+        marginTop: 5,
+        paddingHorizontal: 5
     },
     subTitle: {
         color: ChannelsListItemColors.subTitleColor,
@@ -579,16 +581,17 @@ export default StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'stretch',
         paddingBottom: 30,
-        paddingHorizontal: 15,
+        paddingLeft: 15,
         overflow: 'hidden',
         width: '100%'
     },
     adminLogo: {
-        height: 90,
-        width: 90
+        height: 80,
+        width: 80
     },
     adminTopRightArea: {
-        paddingHorizontal: 5,
+        width: wp('70%'),
+        paddingHorizontal: 10,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
@@ -597,13 +600,14 @@ export default StyleSheet.create({
     adminH1: {
         width: SCREEN_WIDTH - 120,
         flexWrap: 'wrap',
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
+        marginBottom: 10,
         color: GlobalColors.grey
     },
     adminH2: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '400',
         color: GlobalColors.grey
     },
     adminH3: {

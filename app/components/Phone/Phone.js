@@ -29,6 +29,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import Calls from '../../lib/calls';
+import BackgroundTimer from 'react-native-background-timer';
 
 export const PhoneState = {
     init: 'init',
@@ -39,34 +40,8 @@ export const PhoneState = {
 
 export default class Phone extends React.Component {
     constructor(props) {
-        let call_to, call_from;
         super(props);
-        if (Platform.OS === 'ios') {
-            call_to = props.data ? props.data.call_to : 'Unknown';
-            call_from = props.data ? props.data.call_from : 'Unknown';
-            if (call_from && call_from.startsWith('client:')) {
-                call_from = '';
-            }
-        }
-        if (Platform.OS === 'android') {
-            call_to = props.data ? props.data.call_to : 'Unknown';
-            call_from = props.data ? props.data.call_from : 'Unknown';
-            if (call_from && call_from.startsWith('client:')) {
-                call_from = '';
-            }
-        }
-        this.state = {
-            isModalDialPadVisible: false,
-            phoneState: props.state,
-            micOn: true,
-            speakerOn: false,
-            userId: null,
-            username:
-                props.state === PhoneState.calling ||
-                props.state === PhoneState.init
-                    ? call_to
-                    : call_from
-        };
+        this.setUpPhoneCall(props);
     }
 
     componentDidMount() {
@@ -104,6 +79,37 @@ export default class Phone extends React.Component {
             this.deviceDidReceiveIncomingListener.remove();
         }
         Calls.fetchCallHistory();
+    }
+
+    async setUpPhoneCall(props) {
+        let call_to, call_from;
+        if (Platform.OS === 'ios') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+            if (call_from && call_from.startsWith('client:')) {
+                this.findCallerName({ call_from });
+                call_from = '';
+            }
+        }
+        if (Platform.OS === 'android') {
+            call_to = props.data ? props.data.call_to : 'Unknown';
+            call_from = props.data ? props.data.call_from : 'Unknown';
+            if (call_from && call_from.startsWith('client:')) {
+                call_from = '';
+            }
+        }
+        this.state = {
+            isModalDialPadVisible: false,
+            phoneState: props.state,
+            micOn: true,
+            speakerOn: false,
+            userId: null,
+            username:
+                props.state === PhoneState.calling ||
+                props.state === PhoneState.init
+                    ? call_to
+                    : call_from
+        };
     }
 
     async findCallerName({ username }) {
@@ -152,7 +158,6 @@ export default class Phone extends React.Component {
                 Actions.pop();
                 return;
             }
-            console.log('Sourav Logging:::: VOIP Error', err);
             Alert.alert('Sorry, I am unable to call. Please try again.');
             Actions.pop();
         }

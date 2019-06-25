@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--uses-permission android:name="android.permission.WAKE_LOCK" />
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
@@ -39,12 +40,13 @@
 
         <activity
                 android:name=".MainActivity"
+                android:windowSoftInputMode="adjustResize"
                 android:screenOrientation="portrait"
                 android:label="@string/app_name"
                 android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-                android:windowSoftInputMode="adjustResize"
                 android:launchMode="singleTask">
-            <intent-filter>
+                 <!-- android:windowSoftInputMode="stateVisible|adjustResize" -->
+           <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
      <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>

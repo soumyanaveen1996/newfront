@@ -146,23 +146,6 @@ class ChannelsList extends React.Component {
             AuthEvents.tabSelected,
             this.tabSelected.bind(this)
         );
-        // const channels = await Channel.getSubscribedChannels()
-        // if (channels.length > 0) {
-        //     return this.refresh()
-        // }
-
-        // Channel.refreshChannels().then(async () => {
-        //     await this.wait()
-        //     return this.refresh()
-        // })
-        // if (!this.props.appState.allChannelsLoaded) {
-        //     if (__DEV__) {
-        //         console.tron('Channels Not Loaded ... Load Again!')
-        //     }
-
-        //     return Channel.refreshChannels()
-        // }
-        // this.refresh();
 
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -204,10 +187,6 @@ class ChannelsList extends React.Component {
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Channels'));
         Store.dispatch(refreshChannels(true));
-        // const user = Store.getState().user
-        // if (user.allChannelsLoaded === false) {
-        //     Channel.refreshChannels();
-        // }
     }
 
     tabSelected(scene) {
@@ -219,11 +198,6 @@ class ChannelsList extends React.Component {
     static onExit() {
         Store.dispatch(refreshChannels(false));
         Store.dispatch(setCurrentScene('none'));
-        // const reduxState = Store.getState();
-        // if (!reduxState.user.allChannelsLoaded) {
-        //     // setTimeout(() => Channel.refreshChannels(), 0);
-        //     // setTimeout(() => Channel.refreshUnsubscribedChannels(), 500);
-        // }
     }
 
     showConnectionMessage = connectionType => {
@@ -234,7 +208,7 @@ class ChannelsList extends React.Component {
             message = I18n.t('Satellite_Message');
         }
         Alert.alert(
-            I18n.t('Connection_Type'),
+            I18n.t('Automatic_Network'),
             message,
             [{ text: I18n.t('Ok'), style: 'cancel' }],
             { cancelable: false }
@@ -484,6 +458,7 @@ class ChannelsList extends React.Component {
     }
 
     render() {
+        // console.log('>>>>>>>>filt', this.props.channel.filters);
         const filters = this.props.channel.filters.filter(
             filter => filter.checked === true
         );
@@ -552,7 +527,7 @@ class ChannelsList extends React.Component {
 
                     <View style={styles.createNewChannelContainer} />
 
-                    <View style={styles.filterContainer}>
+                    {/* <View style={styles.filterContainer}>
                         <TouchableOpacity
                             style={styles.filterTextContainer}
                             onPress={this.onPressFilter.bind(this)}
@@ -591,7 +566,7 @@ class ChannelsList extends React.Component {
                                     : null}
                             </View>
                         </ScrollView>
-                    </View>
+                    </View> */}
                     {channels.length > 0 || !this.state.loaded ? (
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <FlatList
