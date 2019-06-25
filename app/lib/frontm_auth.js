@@ -39,7 +39,9 @@ if (Platform.OS === 'ios') {
     GoogleSignin.configure({
         scopes: Config.auth.ios.google.scopes,
         //iosClientId: Config.auth.ios.google.iosClientId,
-        //webClientId: __DEV__ ? Config.auth.android.google.dev.webClientId : Config.auth.android.google.prod.webClientId,
+        webClientId: __DEV__
+            ? Config.auth.android.google.dev.webClientId
+            : Config.auth.android.google.prod.webClientId,
         serverClientID: clientIdAndroid,
         offlineAccess: true,
         forceConsentPrompt: true,

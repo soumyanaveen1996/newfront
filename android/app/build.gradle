@@ -74,7 +74,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    nodeExecutableAndArgs: ["node", "--max_old_space_size=8192"]
+    nodeExecutableAndArgs: ["node", "--max_old_space_size=12288"]
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
