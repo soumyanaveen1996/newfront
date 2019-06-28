@@ -23,6 +23,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
 import Bot from '../bot';
 import AgentGuard from '../capability/AgentGuard';
+import { Contact } from '../../lib/capability';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -153,6 +154,9 @@ class NetworkPoller {
                 BackgroundTimer.setTimeout(() => {
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                BackgroundTimer.setTimeout(() => {
+                    Contact.refreshContacts();
+                }, 2000);
             })
         );
         this.grpcEndSubscription.push(
@@ -261,6 +265,7 @@ class NetworkPoller {
             'Sourav Logging:::: >>>>>>>>>>>APPP SATTE<<<<<<<<',
             nextAppState
         );
+        AgentGuard.heartBeat();
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
