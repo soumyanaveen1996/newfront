@@ -96,20 +96,10 @@ export default class Resource {
             contentType,
             user
         );
-        const reduxState = Store.getState();
-        console.log('Upload Number: ', reduxState.user.upload);
-        const uploadNumber = reduxState.user.upload;
+        // const reduxState = Store.getState();
+        // console.log('Upload Number: ', reduxState.user.upload);
+        // const uploadNumber = reduxState.user.upload;
         if (res && resourceType === ResourceTypes.Image) {
-            if (clearCache) {
-                let delImagePath =
-                    uploadNumber > 1 ? `${res}?u=${uploadNumber - 1}` : res;
-                await ImageCache.imageCacheManager.removeFromCache(
-                    delImagePath
-                );
-            }
-            if (forceReload) {
-                res = `${res}?u=${uploadNumber}`;
-            }
             await ImageCache.imageCacheManager.storeIncache(res, fileUri);
         }
         return res;
