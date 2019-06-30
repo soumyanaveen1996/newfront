@@ -108,6 +108,7 @@ import {
 } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
+import ChartMessage from '../ChartMessage';
 
 const R = require('ramda');
 
@@ -854,7 +855,8 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
-            this.openChart(message);
+            this.updateChat(message);
+            // this.openChart(message);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
@@ -1467,6 +1469,16 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
                         onSubmit={this.onFormDone.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CHART
+            ) {
+                return (
+                    <ChartMessage
+                        chartOptions={message.getMessageOptions()}
+                        chartData={message.getMessage()}
                     />
                 );
             } else {
@@ -2418,6 +2430,27 @@ class ChatBotScreen extends React.Component {
     };
 
     render() {
+        let messaggione = { message: new Message() };
+        messaggione.message.chartMessage(
+            [
+                { x: 'Student 1', y: 100 },
+                { x: 'Student 2', y: 52 },
+                { x: 'Student 3', y: 91 },
+                { x: 'Student 4', y: 74 },
+                { x: 'Student 5', y: 13 },
+                { x: 'Student 6', y: 65 }
+            ],
+            {
+                chartType: 'line',
+                xLabel: 'Name',
+                yLabel: 'Value',
+                title: 'Chart Title',
+                description: 'Chart Description',
+                chartId: '1111'
+            }
+        );
+        messaggione.message.messageByBot(true);
+
         if (!this.botLoaded) {
             return (
                 <View style={chatStyles.loading}>
@@ -2468,7 +2501,9 @@ class ChatBotScreen extends React.Component {
                                         this.chatList = list;
                                         // this.checkForScrolling();
                                     }}
-                                    data={this.state.messages}
+                                    data={this.state.messages.concat(
+                                        messaggione
+                                    )}
                                     renderItem={this.renderItem.bind(this)}
                                     onLayout={this.onChatListLayout.bind(this)}
                                     refreshControl={
