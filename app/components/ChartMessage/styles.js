@@ -13,7 +13,10 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        paddingVertical: 25
+        paddingVertical: 22,
+        borderBottomWidth: 1,
+        borderColor: GlobalColors.disabledGray,
+        marginBottom: 10
     },
     topBarTextContainer: {},
     topBarImage: {},
@@ -27,11 +30,13 @@ export default StyleSheet.create({
         fontWeight: '100'
     },
     chartContainer: {
-        aspectRatio: 1,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: GlobalColors.disabledGray
+        aspectRatio: 1
     },
-    bottomBarContiner: {},
+    bottomBarContiner: {
+        borderTopWidth: 1,
+        borderColor: GlobalColors.disabledGray,
+        marginTop: 5,
+        paddingVertical: 22
+    },
     keyContainer: {}
 });
