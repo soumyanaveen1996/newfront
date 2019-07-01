@@ -401,7 +401,8 @@ export const Icons = {
         20,
         GlobalColors.green
     ),
-    close: icon('ios-close', 'ionicon', 45)
+    close: icon('ios-close', 'ionicon', 45),
+    lineChart: icon('md-git-commit', 'ionicon', 28, GlobalColors.red)
 };
 
 export default Icons;

@@ -7,6 +7,7 @@ export default StyleSheet.create({
         alignItems: 'stretch',
         alignSelf: 'center',
         borderRadius: 15,
+        marginVertical: 20,
         backgroundColor: GlobalColors.white
     },
     topBarContainer: {
@@ -33,10 +34,19 @@ export default StyleSheet.create({
         aspectRatio: 1
     },
     bottomBarContiner: {
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         borderTopWidth: 1,
         borderColor: GlobalColors.disabledGray,
         marginTop: 5,
-        paddingVertical: 22
+        paddingVertical: 10,
+        paddingHorizontal: 20
     },
-    keyContainer: {}
+    keyContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 5
+    }
 });

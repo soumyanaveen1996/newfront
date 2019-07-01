@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text as Ttext } from 'react-native';
+import { View, Image, Text as ReactText } from 'react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -25,6 +25,7 @@ import Svg, {
 import styles from './styles';
 import GlobalColors from '../../config/styles';
 import _ from 'lodash';
+import Icons from '../../config/icons';
 
 export default class ChartMessage extends React.Component {
     constructor(props) {
@@ -126,17 +127,28 @@ export default class ChartMessage extends React.Component {
         );
     }
 
+    renderDataLabels() {
+        return (
+            <View style={styles.keyContainer}>
+                {Icons.lineChart()}
+                <ReactText style={[styles.description, { marginLeft: 5 }]}>
+                    {this.props.chartOptions.yLabel}
+                </ReactText>
+            </View>
+        );
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.topBarContainer}>
                     <View style={styles.topBarTextContainer}>
-                        <Ttext style={styles.title}>
+                        <ReactText style={styles.title}>
                             {this.props.chartOptions.title}
-                        </Ttext>
-                        <Ttext style={styles.description}>
+                        </ReactText>
+                        <ReactText style={styles.description}>
                             {this.props.chartOptions.description}
-                        </Ttext>
+                        </ReactText>
                     </View>
                     <Image />
                 </View>
@@ -149,7 +161,9 @@ export default class ChartMessage extends React.Component {
                         </G>
                     </Svg>
                 </View>
-                <View style={styles.bottomBarContiner} />
+                <View style={styles.bottomBarContiner}>
+                    {this.renderDataLabels()}
+                </View>
             </View>
         );
     }
