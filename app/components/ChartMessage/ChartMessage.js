@@ -30,14 +30,15 @@ import Icons from '../../config/icons';
 export default class ChartMessage extends React.Component {
     constructor(props) {
         super(props);
+        this.delta = this.props.chartOptions.delta || 10;
         this.minValue =
             this.props.chartOptions.minValue ||
             _.minBy(this.props.chartData, 'y');
         this.maxValue =
             this.props.chartOptions.maxValue ||
             _.maxBy(this.props.chartData, 'y');
-        this.minValue = this.minValue.y - this.props.chartOptions.delta;
-        this.maxValue = this.maxValue.y + this.props.chartOptions.delta;
+        this.minValue = this.minValue.y - this.delta;
+        this.maxValue = this.maxValue.y + this.delta;
     }
 
     componentDidMount() {}
@@ -47,7 +48,7 @@ export default class ChartMessage extends React.Component {
         for (
             let index = this.minValue;
             index < this.maxValue;
-            index = index + this.props.chartOptions.delta
+            index = index + this.delta
         ) {
             horizontalLines.push(index);
         }
