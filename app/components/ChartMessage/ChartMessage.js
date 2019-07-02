@@ -37,8 +37,13 @@ export default class ChartMessage extends React.Component {
         this.state = {
             minYValue: 0,
             maxYValue: 0,
+            minXValue: 0,
+            maxXValue: 0,
+            xDelta: 0,
             yDelta: 0,
             xLabels: [],
+            yLabels: [],
+            colorLabels: [],
             loading: true
         };
     }
@@ -52,90 +57,98 @@ export default class ChartMessage extends React.Component {
         let xDelta;
         let xLabels;
         let yLabels;
-        let barLabels;
+        let colorLabels;
+
+        // STACK
         if (this.props.chartOptions.chartType === chartTypes.STACK_BAR) {
-            minYValue = this.props.chartOptions.minYValue || 0;
-            maxYValue =
-                this.props.chartOptions.maxYValue ||
-                Math.max(
-                    ...this.props.chartData.map(stack => {
-                        return _.sumBy(stack, 'y');
-                    })
-                );
-            yDelta =
-                this.props.chartOptions.yDelta ||
-                Math.round((maxYValue - minYValue) / 8);
+            minYValue = 0;
+            maxYValue = Math.max(
+                ...this.props.chartData.map(stack => {
+                    return _.sumBy(stack, 'y');
+                })
+            );
+            yDelta = (maxYValue - minYValue) / 8;
             maxYValue += yDelta;
-            barLabels = _.union(
+            yLabels = [];
+            for (let key = 0; key <= 10; key++) {
+                yLabels.push(
+                    Math.round((minYValue + key * yDelta) * 100) / 100
+                );
+            }
+
+            xLabels = this.props.chartOptions.stackLabels.slice(
+                0,
+                this.props.chartData.length
+            );
+
+            colorLabels = _.union(
                 ...this.props.chartData.map(stack => {
                     return stack.map(bar => {
                         return bar.x;
                     });
                 })
             );
-            barLabels = barLabels.map((label, index) => {
+            colorLabels = colorLabels.map((label, index) => {
                 return {
                     label: label,
                     color: this.colorPalette[index]
                 };
             });
-            xLabels = this.props.chartOptions.xLabels.slice(
-                0,
-                this.props.chartData.length
-            );
-            yLabels = [];
-            for (let key = minYValue; key < maxYValue; key += yDelta) {
-                yLabels.push(key);
-            }
-            yLabels.reverse();
+
+            //LINE
         } else if (this.props.chartOptions.chartType === chartTypes.LINE) {
-            minYValue =
-                this.props.chartOptions.minYValue ||
-                _.minBy(this.props.chartData, 'y').y;
-            maxYValue =
-                this.props.chartOptions.maxYValue ||
-                _.maxBy(this.props.chartData, 'y').y;
-            yDelta =
-                this.props.chartOptions.yDelta ||
-                Math.round((maxYValue - minYValue) / 8);
-            minYValue = minYValue - yDelta;
-            maxYValue = maxYValue + yDelta;
-            yLabels = [];
-            for (let key = minYValue; key < maxYValue; key += yDelta) {
-                yLabels.push(key);
-            }
-            yLabels.reverse();
-        } else if (this.props.chartOptions.chartType === chartTypes.BUBBLE) {
-            minYValue =
-                this.props.chartOptions.minYValue ||
-                _.minBy(this.props.chartData, 'y').y;
-            maxYValue =
-                this.props.chartOptions.maxYValue ||
-                _.maxBy(this.props.chartData, 'y').y;
-            yDelta =
-                this.props.chartOptions.yDelta ||
-                Math.round(((maxYValue - minYValue) / 8) * 100) / 100;
+            minYValue = _.minBy(this.props.chartData, 'y').y;
+            maxYValue = _.maxBy(this.props.chartData, 'y').y;
+            yDelta = (maxYValue - minYValue) / 8;
             minYValue -= yDelta;
             maxYValue += yDelta;
             yLabels = [];
-            for (let key = minYValue; key < maxYValue; key += yDelta) {
-                yLabels.push(key);
+            for (let key = 0; key <= 10; key++) {
+                yLabels.push(
+                    Math.round((minYValue + key * yDelta) * 100) / 100
+                );
             }
-            yLabels.reverse();
+
+            xLabels = this.props.chartData.map(dot => {
+                return dot.x;
+            });
+
+            //BUBBLE
+        } else if (this.props.chartOptions.chartType === chartTypes.BUBBLE) {
+            minYValue = _.minBy(this.props.chartData, 'y').y;
+            maxYValue = _.maxBy(this.props.chartData, 'y').y;
+            yDelta = (maxYValue - minYValue) / 8;
+            minYValue -= yDelta;
+            maxYValue += yDelta;
+            yLabels = [];
+            for (let key = 0; key <= 10; key++) {
+                yLabels.push(
+                    Math.round((minYValue + key * yDelta) * 100) / 100
+                );
+            }
 
             minXValue = _.minBy(this.props.chartData, 'x').x;
             maxXValue = _.maxBy(this.props.chartData, 'x').x;
-            console.log('>>>>>>>max', maxXValue);
-            console.log('>>>>>>>min', minXValue);
-            xDelta = Math.round(((maxXValue - minXValue) / 8) * 100) / 100;
+            xDelta = (maxXValue - minXValue) / 8;
             minXValue -= xDelta;
             maxXValue += xDelta;
-            console.log('>>>>>>>maxnew', maxXValue);
-            console.log('>>>>>>>minnew', minXValue);
             xLabels = [];
-            for (let key = minXValue; key < maxXValue; key += xDelta) {
-                xLabels.push(key);
+            for (let key = 0; key <= 10; key++) {
+                xLabels.push(
+                    Math.round((minXValue + key * xDelta) * 100) / 100
+                );
             }
+
+            colorLabels = this.props.chartOptions.bubbleLabels.slice(
+                0,
+                this.props.chartData.length
+            );
+            colorLabels = colorLabels.map((label, index) => {
+                return {
+                    label: label,
+                    color: this.colorPalette[index]
+                };
+            });
         }
 
         this.setState({
@@ -147,15 +160,15 @@ export default class ChartMessage extends React.Component {
             xDelta,
             xLabels,
             yLabels,
-            barLabels,
+            colorLabels,
             loading: false
         });
     }
 
     renderHorizontalGrid() {
-        return this.state.yLabels.map(value => {
+        return this.state.yLabels.map((value, index) => {
             return (
-                <G y={100 - (value * 100) / this.state.maxYValue}>
+                <G y={100 - (index * 100) / (this.state.yLabels.length - 1)}>
                     <Text
                         fill={GlobalColors.textBlack}
                         fontSize="3"
@@ -181,73 +194,50 @@ export default class ChartMessage extends React.Component {
     }
 
     renderVerticalGrid() {
-        if (
-            this.props.chartOptions.chartType === chartTypes.STACK_BAR ||
-            this.props.chartOptions.chartType === chartTypes.BUBBLE
-        ) {
-            console.log('>>>>>>>>assa', this.state.xLabels);
-            return this.state.xLabels.map((label, index) => {
-                return (
-                    <G x={(100 / this.state.xLabels.length) * index}>
-                        <Text
-                            fill={GlobalColors.textBlack}
-                            fontSize="3"
-                            fontWeight="100"
-                            x="0"
-                            y="105"
-                            textAnchor="start"
-                        >
-                            {label}
-                        </Text>
-                        {this.props.chartOptions.chartType ===
+        const xLabelsLength =
+            this.props.chartOptions.chartType === chartTypes.STACK_BAR
+                ? this.state.xLabels.length
+                : this.state.xLabels.length - 1;
+        return this.state.xLabels.map((value, index) => {
+            return (
+                <G x={(index * 100) / xLabelsLength}>
+                    <Text
+                        fill={GlobalColors.textBlack}
+                        fontSize="3"
+                        fontWeight="100"
+                        x="0"
+                        y="105"
+                        textAnchor="middle"
+                    >
+                        {value}
+                    </Text>
+                    {this.props.chartOptions.chartType === chartTypes.LINE ||
+                    this.props.chartOptions.chartType ===
                         chartTypes.STACK_BAR ? null : (
-                                <Line
-                                    id="valueHorizontalLine"
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="100"
-                                    stroke={GlobalColors.disabledGray}
-                                    strokeWidth="0.2"
-                                />
-                            )}
-                    </G>
-                );
-            });
-        } else {
-            return this.props.chartData.map((value, index) => {
-                return (
-                    <G x={(index * 100) / (this.props.chartData.length - 1)}>
-                        <Text
-                            fill={GlobalColors.textBlack}
-                            fontSize="3"
-                            fontWeight="100"
-                            x="0"
-                            y="105"
-                            textAnchor="middle"
-                        >
-                            {value.x}
-                        </Text>
-                        <Line
-                            id="valueHorizontalLine"
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="100"
-                            stroke={GlobalColors.disabledGray}
-                            strokeWidth="0.2"
-                        />
-                    </G>
-                );
-            });
-        }
+                            <Line
+                                id="valueHorizontalLine"
+                                x1="0"
+                                y1="0"
+                                x2=""
+                                y2="100"
+                                stroke={GlobalColors.disabledGray}
+                                strokeWidth="0.2"
+                            />
+                        )}
+                </G>
+            );
+        });
     }
 
     renderLineChart() {
         let polylineVertices = [];
-        const dots = this.props.chartData.map((value, index) => {
-            yPosition = 100 - (value.y * 100) / this.state.maxYValue;
-            xPosition = (index * 100) / (this.props.chartData.length - 1);
+        const dots = this.props.chartData.map((dot, index) => {
+            yPosition =
+                100 -
+                ((dot.y - this.state.minYValue) * 100) /
+                    (this.state.yLabels[this.state.yLabels.length - 1] -
+                        this.state.minYValue);
+            xPosition = (index * 100) / (this.state.xLabels.length - 1);
             polylineVertices.push(xPosition);
             polylineVertices.push(yPosition);
             return (
@@ -258,6 +248,7 @@ export default class ChartMessage extends React.Component {
                     fill={GlobalColors.white}
                     strokeWidth="0.4"
                     stroke={GlobalColors.red}
+                    opacity={0.7}
                 />
             );
         });
@@ -268,6 +259,7 @@ export default class ChartMessage extends React.Component {
                     fill="none"
                     stroke={GlobalColors.red}
                     strokeWidth="0.5"
+                    opacity={0.7}
                 />
                 {dots}
             </G>
@@ -278,21 +270,26 @@ export default class ChartMessage extends React.Component {
         return _.flatten(
             this.props.chartData.map((stack, xValue) => {
                 let yPosition = 100;
+                const xPosition = (xValue * 100) / this.props.chartData.length;
                 return stack.map(bar => {
                     const width = 80 / this.props.chartData.length;
-                    const height = (bar.y * 100) / this.state.maxYValue;
-                    const color = this.state.barLabels.find(label => {
+                    const height =
+                        ((bar.y - this.state.minYValue) * 100) /
+                        (this.state.yLabels[this.state.yLabels.length - 1] -
+                            this.state.minYValue);
+                    const color = this.state.colorLabels.find(label => {
                         return label.label === bar.x;
                     }).color;
                     yPosition -= height;
                     return (
                         <Rect
-                            x={(xValue * 100) / this.props.chartData.length}
+                            x={xPosition}
                             y={yPosition}
                             width={width}
                             height={height}
                             fill={color}
                             strokeWidth="0"
+                            opacity={0.7}
                         />
                     );
                 });
@@ -301,17 +298,21 @@ export default class ChartMessage extends React.Component {
     }
 
     renderBubbleChart() {
-        let maxSize = _.maxBy(this.props.chartData, 'value').value;
+        let maxBubbleSize = _.maxBy(this.props.chartData, 'value').value;
         return this.props.chartData.map((bubble, index) => {
-            let yPosition = 100 - (bubble.y * 100) / this.state.maxYValue;
+            let yPosition =
+                ((bubble.y - this.state.minYValue) * 100) /
+                (this.state.yLabels[this.state.yLabels.length - 1] -
+                    this.state.minYValue);
             let xPosition =
-                (bubble.x * 100) /
-                (this.state.maxXValue - this.state.minXValue);
+                ((bubble.x - this.state.minXValue) * 100) /
+                (this.state.xLabels[this.state.xLabels.length - 1] -
+                    this.state.minXValue);
             return (
                 <Circle
                     cx={xPosition}
-                    cy={yPosition}
-                    r={(bubble.value * 17) / maxSize}
+                    cy={100 - yPosition}
+                    r={(bubble.value * 17) / maxBubbleSize}
                     fill={this.colorPalette[index]}
                     opacity={0.7}
                 />
@@ -320,8 +321,11 @@ export default class ChartMessage extends React.Component {
     }
 
     renderDataLabels() {
-        if (this.props.chartOptions.chartType === chartTypes.STACK_BAR) {
-            return this.state.barLabels.map(label => {
+        if (
+            this.props.chartOptions.chartType === chartTypes.STACK_BAR ||
+            this.props.chartOptions.chartType === chartTypes.BUBBLE
+        ) {
+            return this.state.colorLabels.map(label => {
                 return (
                     <View style={styles.keyContainer}>
                         {Icons.square({ color: label.color })}

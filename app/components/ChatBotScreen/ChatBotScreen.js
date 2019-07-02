@@ -2430,27 +2430,6 @@ class ChatBotScreen extends React.Component {
     };
 
     render() {
-        let messaggione = { message: new Message() };
-        messaggione.message.chartMessage(
-            [
-                { x: 1, y: 2, value: 3 },
-                { x: 2, y: 3, value: 40 },
-                { x: 3, y: 5, value: 25 },
-                { x: 4, y: 4, value: 10 },
-                { x: 5, y: 7, value: 45 }
-            ],
-            {
-                chartType: 'bubble',
-                xLabels: ['first', 'second', 'third', 'fourth'],
-                yLabel: 'Value',
-                title: 'Chart Title',
-                description: 'Chart Description',
-                chartId: '1111'
-                // delta: 10
-            }
-        );
-        messaggione.message.messageByBot(true);
-
         if (!this.botLoaded) {
             return (
                 <View style={chatStyles.loading}>
@@ -2501,9 +2480,7 @@ class ChatBotScreen extends React.Component {
                                         this.chatList = list;
                                         // this.checkForScrolling();
                                     }}
-                                    data={this.state.messages.concat(
-                                        messaggione
-                                    )}
+                                    data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}
                                     onLayout={this.onChatListLayout.bind(this)}
                                     refreshControl={
