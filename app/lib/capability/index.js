@@ -31,6 +31,8 @@ import RemoteBotInstall from '../RemoteBotInstall';
 import InAppPurchase from './InAppPurchase';
 import OfflineMap from './OfflineMap';
 import { Moment, MomentTimezone } from './Moment';
+import { Immutable } from './Immutable';
+import { R } from './Ramda';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
@@ -46,6 +48,7 @@ export {
     DeviceLocation,
     DeviceStorage,
     futureRequest,
+    Immutable,
     InAppPurchase,
     Media,
     Message,
@@ -62,6 +65,7 @@ export {
     OfflineMap,
     PollingStrategyTypes,
     Promise,
+    R,
     RemoteBotInstall,
     Resource,
     ResourceTypes,
