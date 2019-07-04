@@ -75,20 +75,37 @@ class FrontmAuth {
             if (user.refreshToken) {
                 resolve(user);
             } else {
-                const options = {
-                    method: 'post',
-                    url: 'https://www.googleapis.com/oauth2/v4/token',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data: queryString.stringify({
-                        code: user.serverAuthCode,
-                        grant_type: 'authorization_code',
-                        client_id: Config.auth.android.google.dev.webClientId,
-                        client_secret:
-                            Config.auth.android.google.dev.clientSecret
-                    })
-                };
+                let options;
+                if (Platform.OS === 'android') {
+                    options = {
+                        method: 'post',
+                        url: 'https://www.googleapis.com/oauth2/v4/token',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: queryString.stringify({
+                            code: user.serverAuthCode,
+                            grant_type: 'authorization_code',
+                            client_id:
+                                Config.auth.android.google.dev.webClientId,
+                            client_secret:
+                                Config.auth.android.google.dev.clientSecret
+                        })
+                    };
+                } else {
+                    options = {
+                        method: 'post',
+                        url: 'https://www.googleapis.com/oauth2/v4/token',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: queryString.stringify({
+                            code: user.serverAuthCode,
+                            grant_type: 'authorization_code',
+                            client_id: Config.auth.ios.google.iosClientId
+                        })
+                    };
+                }
                 return Network_http(options)
                     .then(res => {
                         // console.log('res : ', res);
@@ -110,8 +127,8 @@ class FrontmAuth {
         var self = this;
         console.log('Google sign in');
         return new Promise(function(resolve, reject) {
-            GoogleSignin.signOutPromise();
-            GoogleSignin.signInPromise()
+            GoogleSignin.signOut();
+            GoogleSignin.signIn()
                 .then(user => {
                     console.log('Google user : ', user);
                     //throw 'hello';
