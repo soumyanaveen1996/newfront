@@ -268,7 +268,10 @@ class MapView extends React.Component {
                 route.end.longitude,
                 route.end.latitude
             ]);
-            return turf_great_circle(start, end, { name: route.id });
+            return turf_great_circle(start, end, {
+                name: route.id,
+                color: route.color
+            });
         });
         //MARKERS and POI
         let markers = [];
@@ -342,7 +345,8 @@ class MapView extends React.Component {
                 properties: {
                     id: polyline.id,
                     title: polyline.title,
-                    description: polyline.description
+                    description: polyline.description,
+                    color: polyline.color
                 },
                 geometry: {
                     type: 'LineString',

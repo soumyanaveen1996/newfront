@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import images from '../../config/images';
+import Mapbox from '@react-native-mapbox-gl/maps';
 
 const styles = StyleSheet.create({
     container: {
@@ -334,14 +335,15 @@ const styles = StyleSheet.create({
     }
 });
 
-const layerStyles = {
+const layerStyles = Mapbox.StyleSheet.create({
     //POLYLINES for routes and great circle routes
     route: {
         lineCap: 'round',
         lineWidth: 6,
         lineJoin: 'round',
-        lineColor: GlobalColors.sideButtons,
-        lineBlur: 1
+        // lineColor: GlobalColors.sideButtons,
+        lineBlur: 1,
+        lineColor: MapboxGL.StyleSheet.identity('color')
     },
     //MARKERS
     blackCircleMarker: {
@@ -390,6 +392,6 @@ const layerStyles = {
         iconRotationAlignment: 'map',
         iconRotate: ['rotation']
     }
-};
+});
 
 export { styles, layerStyles };
