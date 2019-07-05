@@ -108,6 +108,7 @@ import {
 } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
+import ChartMessage from '../ChartMessage';
 
 const R = require('ramda');
 
@@ -854,7 +855,8 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
-            this.openChart(message);
+            this.updateChat(message);
+            // this.openChart(message);
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
@@ -1467,6 +1469,16 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
                         onSubmit={this.onFormDone.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CHART
+            ) {
+                return (
+                    <ChartMessage
+                        chartOptions={message.getMessageOptions()}
+                        chartData={message.getMessage()}
                     />
                 );
             } else {
