@@ -108,7 +108,10 @@ export default class Contact {
                 .then(function(contacts) {
                     // Filter for uuidArr
                     uuidArr = uuidArr || [];
-                    let filteredContacts = _.filter(contacts, contact => {
+                    const frontmContacts = contacts.filter(
+                        contact => contact.contactType !== 'Personal'
+                    );
+                    let filteredContacts = _.filter(frontmContacts, contact => {
                         return uuidArr.indexOf(contact.userId) > -1;
                     });
                     if (field) {

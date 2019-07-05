@@ -39,7 +39,9 @@ var logoutSubscriptions = [];
 const poll = () => {
     InteractionManager.runAfterInteractions(() => {
         Auth.getUser().then(authUser => {
-            AgentGuard.heartBeat();
+            if (Platform.OS === 'android') {
+                AgentGuard.heartBeat();
+            }
             processNetworkQueue();
             readRemoteLambdaQueue(authUser);
         });

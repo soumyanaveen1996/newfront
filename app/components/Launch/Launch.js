@@ -50,6 +50,7 @@ import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
 import RemoteLogger from '../../lib/utils/remoteDebugger';
 import PushNotification from 'react-native-push-notification';
+import { AgentGuard } from '../../lib/capability';
 
 //import jsonEncoder from 'serialize-json';
 
@@ -273,6 +274,7 @@ export default class Splash extends React.Component {
         console.log('Sourav Logging:::: In handle Notifcaiton', notification);
         NetworkHandler.poll();
         Bot.grpcheartbeatCatalog();
+        AgentGuard.heartBeat();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             const conversationId =

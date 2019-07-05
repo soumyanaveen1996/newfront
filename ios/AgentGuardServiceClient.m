@@ -26,9 +26,6 @@
 }
 
 - (AgentGuardService *) serviceClient {
-  if (_serviceClient == nil) {
-    _serviceClient = [[AgentGuardService alloc] initWithHost:GRPCMetadata.shared.uri];
-  }
   return _serviceClient;
 }
 
@@ -49,7 +46,6 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
     if (error != nil) {
       RCTLog(@"GRPC::::method:execute Response error : %@", [error description]);
       callback(@[@{}, [NSNull null]]);
-      self.serviceClient = nil;
       return;
     } else {
       RCTLog(@"GRPC::::method:execute Response : %@", [response toResponse]);
@@ -57,13 +53,6 @@ RCT_REMAP_METHOD(execute, execute:(NSString *)sessionId andParams:(NSDictionary*
     }
   }];
   
-  NSInteger timeout = 15;
-  
-  if([input.capability isEqualToString:@"PingAgentGuardCapability"]){
-    timeout = 1;
-  }
-  
-  [call setTimeout:timeout];
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start];
 }
