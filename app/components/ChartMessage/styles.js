@@ -16,8 +16,8 @@ export default StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 22,
         borderBottomWidth: 1,
-        borderColor: GlobalColors.disabledGray,
-        marginBottom: 10
+        borderColor: GlobalColors.disabledGray
+        // marginBottom: 10
     },
     topBarTextContainer: {},
     topBarImage: {},
@@ -48,5 +48,13 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 5
+    },
+    chartScreenContainer: {
+        width: '100%',
+        height: '100%',
+        alignItems: 'stretch',
+        justifyContent: 'space-between',
+        alignSelf: 'center',
+        backgroundColor: GlobalColors.white
     }
 });

@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Image, Text as ReactText, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Image,
+    Text as ReactText,
+    TouchableOpacity,
+    Dimensions
+} from 'react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -31,8 +37,9 @@ import { chartTypes } from './config';
 import ColorPalette from 'nice-color-palettes';
 import SvgPanZoom, { SvgPanZoomElement } from 'react-native-svg-pan-zoom';
 import { Actions } from 'react-native-router-flux';
+const { width, height } = Dimensions.get('window');
 
-export default class ChartMessage extends React.Component {
+export default class Chart extends React.Component {
     constructor(props) {
         super(props);
         this.colorPalette = [].concat.apply([], ColorPalette);
@@ -353,60 +360,29 @@ export default class ChartMessage extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={styles.topBarContainer}>
-                    <View style={styles.topBarTextContainer}>
-                        <ReactText
-                            style={styles.title}
-                            numberOfLines={1}
-                            lineBreakMode="tail"
-                        >
-                            {this.props.chartOptions.title}
-                        </ReactText>
-                        <ReactText
-                            style={styles.description}
-                            numberOfLines={1}
-                            lineBreakMode="tail"
-                        >
-                            {this.props.chartOptions.description}
-                        </ReactText>
-                    </View>
-                    <Image />
-                </View>
-                <TouchableOpacity
-                    style={styles.chartContainer}
-                    onPress={() =>
-                        Actions.chartScreen({
-                            chartOptions: this.props.chartOptions,
-                            chartData: this.props.chartData
-                        })
-                    }
-                >
-                    <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                        {this.state.loading ? null : (
-                            <G scale="0.85" x="9.5" y="3">
-                                {this.renderHorizontalGrid()}
-                                {this.renderVerticalGrid()}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.LINE
-                                    ? this.renderLineChart()
-                                    : null}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.STACK_BAR
-                                    ? this.renderStackedBarChart()
-                                    : null}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.BUBBLE
-                                    ? this.renderBubbleChart()
-                                    : null}
-                            </G>
-                        )}
-                    </Svg>
-                </TouchableOpacity>
-                <View style={styles.bottomBarContiner}>
-                    {this.state.loading ? null : this.renderDataLabels()}
-                </View>
-            </View>
+            <Svg height={height} width={width}>
+                {this.state.loading ? null : (
+                    <G
+                        scale="0.88"
+                        x="8"
+                        y="3"
+                        transform={this.props.transform}
+                    >
+                        {this.renderHorizontalGrid()}
+                        {this.renderVerticalGrid()}
+                        {this.props.chartOptions.chartType === chartTypes.LINE
+                            ? this.renderLineChart()
+                            : null}
+                        {this.props.chartOptions.chartType ===
+                        chartTypes.STACK_BAR
+                            ? this.renderStackedBarChart()
+                            : null}
+                        {this.props.chartOptions.chartType === chartTypes.BUBBLE
+                            ? this.renderBubbleChart()
+                            : null}
+                    </G>
+                )}
+            </Svg>
         );
     }
 }

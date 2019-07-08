@@ -78,6 +78,7 @@ import NewContactScreen from '../components/ContactsPicker/NewContactScreen';
 import ResetPassword from '../components/ResetPassword/ResetPassword';
 import SendCodePassword from '../components/ResetPassword/SendCodePassword';
 import CallHistory from '../components/NewChat/CallHistory';
+import ChartScreen from '../components/ChartMessage/ChartScreen';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -494,6 +495,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.mapView}
                                         component={MapView}
                                         title="Map"
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.chartScreen}
+                                        component={ChartScreen}
+                                        title="Chart"
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.botStore}

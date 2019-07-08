@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text as ReactText, TouchableOpacity } from 'react-native';
+import { View, Image, Text as ReactText, Dimensions } from 'react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -30,9 +30,11 @@ import Icons from '../../config/icons';
 import { chartTypes } from './config';
 import ColorPalette from 'nice-color-palettes';
 import SvgPanZoom, { SvgPanZoomElement } from 'react-native-svg-pan-zoom';
-import { Actions } from 'react-native-router-flux';
+import ZoomableSVG from './ZoomableSVG';
+import Chart from './Chart';
+const { width, height } = Dimensions.get('window');
 
-export default class ChartMessage extends React.Component {
+export default class ChartScreen extends React.Component {
     constructor(props) {
         super(props);
         this.colorPalette = [].concat.apply([], ColorPalette);
@@ -46,7 +48,13 @@ export default class ChartMessage extends React.Component {
             xLabels: [],
             yLabels: [],
             colorLabels: [],
-            loading: true
+            loading: true,
+            constrain: true,
+            constraints: {
+                combine: 'dynamic',
+                scaleExtent: [width / height, 5],
+                translateExtent: [[0, 0], [100, 100]]
+            }
         };
     }
 
@@ -351,9 +359,33 @@ export default class ChartMessage extends React.Component {
         }
     }
 
-    render() {
+    renderChart() {
         return (
-            <View style={styles.container}>
+            <Svg height="100%" width="100%" viewBox="0 0 100 100">
+                {this.state.loading ? null : (
+                    <G scale="0.88" x="8" y="3">
+                        {this.renderHorizontalGrid()}
+                        {this.renderVerticalGrid()}
+                        {this.props.chartOptions.chartType === chartTypes.LINE
+                            ? this.renderLineChart()
+                            : null}
+                        {this.props.chartOptions.chartType ===
+                        chartTypes.STACK_BAR
+                            ? this.renderStackedBarChart()
+                            : null}
+                        {this.props.chartOptions.chartType === chartTypes.BUBBLE
+                            ? this.renderBubbleChart()
+                            : null}
+                    </G>
+                )}
+            </Svg>
+        );
+    }
+
+    render() {
+        const { constrain, constraints } = this.state;
+        return (
+            <View style={styles.chartScreenContainer}>
                 <View style={styles.topBarContainer}>
                     <View style={styles.topBarTextContainer}>
                         <ReactText
@@ -373,36 +405,24 @@ export default class ChartMessage extends React.Component {
                     </View>
                     <Image />
                 </View>
-                <TouchableOpacity
-                    style={styles.chartContainer}
-                    onPress={() =>
-                        Actions.chartScreen({
-                            chartOptions: this.props.chartOptions,
-                            chartData: this.props.chartData
-                        })
-                    }
-                >
-                    <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                        {this.state.loading ? null : (
-                            <G scale="0.85" x="9.5" y="3">
-                                {this.renderHorizontalGrid()}
-                                {this.renderVerticalGrid()}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.LINE
-                                    ? this.renderLineChart()
-                                    : null}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.STACK_BAR
-                                    ? this.renderStackedBarChart()
-                                    : null}
-                                {this.props.chartOptions.chartType ===
-                                chartTypes.BUBBLE
-                                    ? this.renderBubbleChart()
-                                    : null}
-                            </G>
-                        )}
-                    </Svg>
-                </TouchableOpacity>
+                <View style={[styles.chartContainer, { width: '100%' }]}>
+                    <ZoomableSVG
+                        align="mid"
+                        vbWidth={110}
+                        vbHeight={110}
+                        width={width}
+                        height={width}
+                        meetOrSlice="slice"
+                        svgRoot={Chart}
+                        initialTop={10}
+                        initialLeft={35}
+                        childProps={{
+                            chartData: this.props.chartData,
+                            chartOptions: this.props.chartOptions
+                        }}
+                        constrain={constrain ? constraints : null}
+                    />
+                </View>
                 <View style={styles.bottomBarContiner}>
                     {this.state.loading ? null : this.renderDataLabels()}
                 </View>
