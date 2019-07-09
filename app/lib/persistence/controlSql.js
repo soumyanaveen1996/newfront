@@ -14,15 +14,17 @@ INSERT INTO controls (
         content,
         type,
         control_date,
-        original_message_id
-) VALUES (?, ?, ?, ?, ?);
+        original_message_id,
+        options
+) VALUES (?, ?, ?, ?, ?, ?);
 `;
 
 const updateControl = `
 UPDATE controls
 SET content = ?,
     type = ?,
-    control_date = ?
+    control_date = ?,
+    options = ?
 WHERE control_id = ?
 `;
 
@@ -32,7 +34,8 @@ const selectControlById = `
         content,
         type,
         control_date,
-        original_message_id
+        original_message_id,
+        options
     FROM controls
     WHERE control_id = ?
     ORDER BY control_date desc
@@ -48,10 +51,25 @@ const selectContentById = `
     LIMIT 1
 `;
 
+const selectOptionsById = `
+    SELECT
+        options
+    FROM controls
+    WHERE control_id = ?
+    ORDER BY control_date desc
+    LIMIT 1
+`;
+
+const addOptions = `
+ALTER TABLE controls ADD options text;
+`;
+
 export default {
     createControlTable: createControlTable,
     selectControlById: selectControlById,
     selectContentById: selectContentById,
     insertControl: insertControl,
-    updateControl: updateControl
+    updateControl: updateControl,
+    selectOptionsById: selectOptionsById,
+    addOptions: addOptions
 };

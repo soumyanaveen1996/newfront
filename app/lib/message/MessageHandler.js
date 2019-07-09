@@ -35,7 +35,9 @@ export default class MessageHandler extends events.EventEmitter {
             }
             if (
                 message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_MAP
+                    MessageTypeConstants.MESSAGE_TYPE_MAP ||
+                message.getMessageType() ===
+                    MessageTypeConstants.MESSAGE_TYPE_CHART
             ) {
                 let controlId;
                 if (
@@ -62,7 +64,8 @@ export default class MessageHandler extends events.EventEmitter {
                                 controlId,
                                 message.getMessage(),
                                 message.getMessageType(),
-                                message.getMessageDate()
+                                message.getMessageDate(),
+                                message.getMessageOptions()
                             );
                             resolve(false);
                         } else {
@@ -73,7 +76,8 @@ export default class MessageHandler extends events.EventEmitter {
                                     message.getMessage(),
                                     message.getMessageType(),
                                     message.getMessageDate(),
-                                    message.getMessageId()
+                                    message.getMessageId(),
+                                    message.getMessageOptions()
                                 )
                             );
                             message.setBotKey(botKey);

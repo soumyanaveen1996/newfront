@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text as ReactText, TouchableOpacity } from 'react-native';
+import { View, Image, Text as ReactText, Dimensions } from 'react-native';
 import Svg, {
     Circle,
     Ellipse,
@@ -30,12 +30,12 @@ import Icons from '../../config/icons';
 import { chartTypes } from './config';
 import ColorPalette from 'nice-color-palettes';
 import SvgPanZoom, { SvgPanZoomElement } from 'react-native-svg-pan-zoom';
-import { Actions } from 'react-native-router-flux';
+import ZoomableSVG from './ZoomableSVG';
+import Chart from './Chart';
 import { PieChart } from 'react-native-svg-charts';
-import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import { ControlDAO } from '../../lib/persistence';
+const { width, height } = Dimensions.get('window');
 
-export default class ChartMessage extends React.Component {
+export default class ChartScreen extends React.Component {
     constructor(props) {
         super(props);
         this.colorPalette = [].concat.apply([], ColorPalette);
@@ -50,44 +50,28 @@ export default class ChartMessage extends React.Component {
             yLabels: [],
             colorLabels: [],
             loading: true,
-            chartData: {},
-            chartOptions: {}
+            constrain: true,
+            constraints: {
+                combine: 'dynamic',
+                scaleExtent: [width / height, 5],
+                translateExtent: [[0, 0], [100, 100]]
+            },
+            chartOptions: this.props.chartOptions,
+            chartData: this.props.chartData
         };
     }
 
     componentDidMount() {
-        let chartData;
-        let chartOptions;
-        ControlDAO.getContentById(this.props.chartOptions.chartId)
-            .then(data => {
-                chartData = data;
-                return ControlDAO.getOptionsById(
-                    this.props.chartOptions.chartId
-                );
-            })
-            .then(options => {
-                chartOptions = options;
-                this.plotChart(chartData, chartOptions);
-            });
+        this.plotChart();
     }
 
     componentDidUpdate(prevProps) {
-        if (
-            this.props.chartOptions.update &&
-            this.state.chartData !== this.props.chartData
-        ) {
-            this.plotChart(this.props.chartData, this.props.chartOptions);
-            if (Actions.currentScene === ROUTER_SCENE_KEYS.chartScreen) {
-                Actions.refresh({
-                    chartOptions: this.props.chartOptions,
-                    chartData: this.props.chartData,
-                    title: this.props.chartOptions.title
-                });
-            }
+        if (prevProps !== this.props) {
+            this.plotChart();
         }
     }
 
-    plotChart(chartData, chartOptions) {
+    plotChart() {
         let minYValue;
         let maxYValue;
         let minXValue;
@@ -99,10 +83,10 @@ export default class ChartMessage extends React.Component {
         let colorLabels;
 
         // STACK
-        if (chartOptions.chartType === chartTypes.STACK_BAR) {
+        if (this.props.chartOptions.chartType === chartTypes.STACK_BAR) {
             minYValue = 0;
             maxYValue = Math.max(
-                ...chartData.map(stack => {
+                ...this.props.chartData.map(stack => {
                     return _.sumBy(stack, 'y');
                 })
             );
@@ -115,10 +99,13 @@ export default class ChartMessage extends React.Component {
                 );
             }
 
-            xLabels = chartOptions.stackLabels.slice(0, chartData.length);
+            xLabels = this.props.chartOptions.stackLabels.slice(
+                0,
+                this.props.chartData.length
+            );
 
             colorLabels = _.union(
-                ...chartData.map(stack => {
+                ...this.props.chartData.map(stack => {
                     return stack.map(bar => {
                         return bar.x;
                     });
@@ -132,9 +119,9 @@ export default class ChartMessage extends React.Component {
             });
 
             //LINE
-        } else if (chartOptions.chartType === chartTypes.LINE) {
-            minYValue = _.minBy(chartData, 'y').y;
-            maxYValue = _.maxBy(chartData, 'y').y;
+        } else if (this.props.chartOptions.chartType === chartTypes.LINE) {
+            minYValue = _.minBy(this.props.chartData, 'y').y;
+            maxYValue = _.maxBy(this.props.chartData, 'y').y;
             yDelta = (maxYValue - minYValue) / 8;
             minYValue -= yDelta;
             maxYValue += yDelta;
@@ -145,14 +132,14 @@ export default class ChartMessage extends React.Component {
                 );
             }
 
-            xLabels = chartData.map(dot => {
+            xLabels = this.props.chartData.map(dot => {
                 return dot.x;
             });
 
             //BUBBLE
-        } else if (chartOptions.chartType === chartTypes.BUBBLE) {
-            minYValue = _.minBy(chartData, 'y').y;
-            maxYValue = _.maxBy(chartData, 'y').y;
+        } else if (this.props.chartOptions.chartType === chartTypes.BUBBLE) {
+            minYValue = _.minBy(this.props.chartData, 'y').y;
+            maxYValue = _.maxBy(this.props.chartData, 'y').y;
             yDelta = (maxYValue - minYValue) / 8;
             minYValue -= yDelta;
             maxYValue += yDelta;
@@ -163,8 +150,8 @@ export default class ChartMessage extends React.Component {
                 );
             }
 
-            minXValue = _.minBy(chartData, 'x').x;
-            maxXValue = _.maxBy(chartData, 'x').x;
+            minXValue = _.minBy(this.props.chartData, 'x').x;
+            maxXValue = _.maxBy(this.props.chartData, 'x').x;
             xDelta = (maxXValue - minXValue) / 8;
             minXValue -= xDelta;
             maxXValue += xDelta;
@@ -175,7 +162,10 @@ export default class ChartMessage extends React.Component {
                 );
             }
 
-            colorLabels = chartOptions.bubbleLabels.slice(0, chartData.length);
+            colorLabels = this.props.chartOptions.bubbleLabels.slice(
+                0,
+                this.props.chartData.length
+            );
             colorLabels = colorLabels.map((label, index) => {
                 return {
                     label: label,
@@ -184,8 +174,8 @@ export default class ChartMessage extends React.Component {
             });
 
             //PIE CHART
-        } else if (chartOptions.chartType === chartTypes.PIE) {
-            colorLabels = chartData.map(slice => {
+        } else if (this.props.chartOptions.chartType === chartTypes.PIE) {
+            colorLabels = this.props.chartData.map(slice => {
                 return slice.label;
             });
             colorLabels = colorLabels.map((label, index) => {
@@ -207,8 +197,8 @@ export default class ChartMessage extends React.Component {
             yLabels,
             colorLabels,
             loading: false,
-            chartOptions: chartOptions,
-            chartData: chartData
+            chartOptions: this.props.chartOptions,
+            chartData: this.props.chartData
         });
     }
 
@@ -318,25 +308,22 @@ export default class ChartMessage extends React.Component {
             this.state.chartData.map((stack, xValue) => {
                 let yPosition = 100;
                 const xPosition = (xValue * 100) / this.state.chartData.length;
-                let filteredStack = stack.filter(bar => {
-                    return bar.y >= 0;
-                });
-                return filteredStack.map(bar => {
-                    const width = 80 / this.state.chartData.length;
-                    const height =
+                return stack.map(bar => {
+                    const barWidth = 80 / this.state.chartData.length;
+                    const barHeight =
                         ((bar.y - this.state.minYValue) * 100) /
                         (this.state.yLabels[this.state.yLabels.length - 1] -
                             this.state.minYValue);
                     const color = this.state.colorLabels.find(label => {
                         return label.label === bar.x;
                     }).color;
-                    yPosition -= height;
+                    yPosition -= barHeight;
                     return (
                         <Rect
                             x={xPosition}
                             y={yPosition}
-                            width={width}
-                            height={height}
+                            width={barWidth}
+                            height={barHeight}
                             fill={color}
                             strokeWidth="0"
                             opacity={0.7}
@@ -421,9 +408,34 @@ export default class ChartMessage extends React.Component {
         }
     }
 
-    render() {
+    renderChart({ transform }) {
         return (
-            <View style={styles.container}>
+            <Svg height={height} width={width}>
+                <G scale="0.88" x="8" y="3" transform={transform}>
+                    {this.state.chartOptions.chartType === chartTypes.PIE
+                        ? null
+                        : this.renderHorizontalGrid()}
+                    {this.state.chartOptions.chartType === chartTypes.PIE
+                        ? null
+                        : this.renderVerticalGrid()}
+                    {this.state.chartOptions.chartType === chartTypes.LINE
+                        ? this.renderLineChart()
+                        : null}
+                    {this.state.chartOptions.chartType === chartTypes.STACK_BAR
+                        ? this.renderStackedBarChart()
+                        : null}
+                    {this.state.chartOptions.chartType === chartTypes.BUBBLE
+                        ? this.renderBubbleChart()
+                        : null}
+                </G>
+            </Svg>
+        );
+    }
+
+    render() {
+        const { constrain, constraints } = this.state;
+        return (
+            <View style={styles.chartScreenContainer}>
                 <View style={styles.topBarContainer}>
                     <View style={styles.topBarTextContainer}>
                         <ReactText
@@ -443,47 +455,25 @@ export default class ChartMessage extends React.Component {
                     </View>
                     <Image />
                 </View>
-                <TouchableOpacity
-                    disabled={this.state.loading}
-                    style={styles.chartContainer}
-                    onPress={() =>
-                        Actions.chartScreen({
-                            chartOptions: this.state.chartOptions,
-                            chartData: this.state.chartData,
-                            title: this.state.chartOptions.title
-                        })
-                    }
-                >
+                <View style={[styles.chartContainer, { width: '100%' }]}>
                     {this.state.loading ? null : this.state.chartOptions
                         .chartType === chartTypes.PIE ? (
                             this.renderPieChart()
                         ) : (
-                            <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                                <G scale="0.85" x="9.5" y="3">
-                                    {this.state.chartOptions.chartType ===
-                                chartTypes.PIE
-                                        ? null
-                                        : this.renderHorizontalGrid()}
-                                    {this.state.chartOptions.chartType ===
-                                chartTypes.PIE
-                                        ? null
-                                        : this.renderVerticalGrid()}
-                                    {this.state.chartOptions.chartType ===
-                                chartTypes.LINE
-                                        ? this.renderLineChart()
-                                        : null}
-                                    {this.state.chartOptions.chartType ===
-                                chartTypes.STACK_BAR
-                                        ? this.renderStackedBarChart()
-                                        : null}
-                                    {this.state.chartOptions.chartType ===
-                                chartTypes.BUBBLE
-                                        ? this.renderBubbleChart()
-                                        : null}
-                                </G>
-                            </Svg>
+                            <ZoomableSVG
+                                align="mid"
+                                vbWidth={110}
+                                vbHeight={110}
+                                width={width}
+                                height={width}
+                                meetOrSlice="slice"
+                                svgRoot={this.renderChart.bind(this)}
+                                initialTop={10}
+                                initialLeft={35}
+                                constrain={constrain ? constraints : null}
+                            />
                         )}
-                </TouchableOpacity>
+                </View>
                 <View style={styles.bottomBarContiner}>
                     {this.state.loading ? null : this.renderDataLabels()}
                 </View>
