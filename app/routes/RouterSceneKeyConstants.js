@@ -72,7 +72,8 @@ const ROUTER_SCENE_KEYS = {
     tabBarChat: 'tabBarChat',
     timeline: 'timeline',
     videoRecorder: 'videoRecorder',
-    webview: 'webview'
+    webview: 'webview',
+    chartScreen: 'chartScreen'
 };
 
 export default ROUTER_SCENE_KEYS;
