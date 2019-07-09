@@ -463,6 +463,7 @@ export default class Message {
 
         if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_WEB_CARD ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_DATA_CARD ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||

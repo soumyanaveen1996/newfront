@@ -32,6 +32,7 @@ import ColorPalette from 'nice-color-palettes';
 import SvgPanZoom, { SvgPanZoomElement } from 'react-native-svg-pan-zoom';
 import ZoomableSVG from './ZoomableSVG';
 import Chart from './Chart';
+import { PieChart } from 'react-native-svg-charts';
 const { width, height } = Dimensions.get('window');
 
 export default class ChartScreen extends React.Component {
@@ -54,11 +55,23 @@ export default class ChartScreen extends React.Component {
                 combine: 'dynamic',
                 scaleExtent: [width / height, 5],
                 translateExtent: [[0, 0], [100, 100]]
-            }
+            },
+            chartOptions: this.props.chartOptions,
+            chartData: this.props.chartData
         };
     }
 
     componentDidMount() {
+        this.plotChart();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            this.plotChart();
+        }
+    }
+
+    plotChart() {
         let minYValue;
         let maxYValue;
         let minXValue;
@@ -159,6 +172,18 @@ export default class ChartScreen extends React.Component {
                     color: this.colorPalette[index]
                 };
             });
+
+            //PIE CHART
+        } else if (this.props.chartOptions.chartType === chartTypes.PIE) {
+            colorLabels = this.props.chartData.map(slice => {
+                return slice.label;
+            });
+            colorLabels = colorLabels.map((label, index) => {
+                return {
+                    label: label,
+                    color: this.colorPalette[index]
+                };
+            });
         }
 
         this.setState({
@@ -171,7 +196,9 @@ export default class ChartScreen extends React.Component {
             xLabels,
             yLabels,
             colorLabels,
-            loading: false
+            loading: false,
+            chartOptions: this.props.chartOptions,
+            chartData: this.props.chartData
         });
     }
 
@@ -205,7 +232,7 @@ export default class ChartScreen extends React.Component {
 
     renderVerticalGrid() {
         const xLabelsLength =
-            this.props.chartOptions.chartType === chartTypes.STACK_BAR
+            this.state.chartOptions.chartType === chartTypes.STACK_BAR
                 ? this.state.xLabels.length
                 : this.state.xLabels.length - 1;
         return this.state.xLabels.map((value, index) => {
@@ -221,8 +248,8 @@ export default class ChartScreen extends React.Component {
                     >
                         {value}
                     </Text>
-                    {this.props.chartOptions.chartType === chartTypes.LINE ||
-                    this.props.chartOptions.chartType ===
+                    {this.state.chartOptions.chartType === chartTypes.LINE ||
+                    this.state.chartOptions.chartType ===
                         chartTypes.STACK_BAR ? null : (
                             <Line
                                 id="valueHorizontalLine"
@@ -241,7 +268,7 @@ export default class ChartScreen extends React.Component {
 
     renderLineChart() {
         let polylineVertices = [];
-        const dots = this.props.chartData.map((dot, index) => {
+        const dots = this.state.chartData.map((dot, index) => {
             yPosition =
                 100 -
                 ((dot.y - this.state.minYValue) * 100) /
@@ -278,25 +305,25 @@ export default class ChartScreen extends React.Component {
 
     renderStackedBarChart() {
         return _.flatten(
-            this.props.chartData.map((stack, xValue) => {
+            this.state.chartData.map((stack, xValue) => {
                 let yPosition = 100;
-                const xPosition = (xValue * 100) / this.props.chartData.length;
+                const xPosition = (xValue * 100) / this.state.chartData.length;
                 return stack.map(bar => {
-                    const width = 80 / this.props.chartData.length;
-                    const height =
+                    const barWidth = 80 / this.state.chartData.length;
+                    const barHeight =
                         ((bar.y - this.state.minYValue) * 100) /
                         (this.state.yLabels[this.state.yLabels.length - 1] -
                             this.state.minYValue);
                     const color = this.state.colorLabels.find(label => {
                         return label.label === bar.x;
                     }).color;
-                    yPosition -= height;
+                    yPosition -= barHeight;
                     return (
                         <Rect
                             x={xPosition}
                             y={yPosition}
-                            width={width}
-                            height={height}
+                            width={barWidth}
+                            height={barHeight}
                             fill={color}
                             strokeWidth="0"
                             opacity={0.7}
@@ -308,8 +335,8 @@ export default class ChartScreen extends React.Component {
     }
 
     renderBubbleChart() {
-        let maxBubbleSize = _.maxBy(this.props.chartData, 'value').value;
-        return this.props.chartData.map((bubble, index) => {
+        let maxBubbleSize = _.maxBy(this.state.chartData, 'value').value;
+        return this.state.chartData.map((bubble, index) => {
             let yPosition =
                 ((bubble.y - this.state.minYValue) * 100) /
                 (this.state.yLabels[this.state.yLabels.length - 1] -
@@ -330,11 +357,33 @@ export default class ChartScreen extends React.Component {
         });
     }
 
+    renderPieChart() {
+        let filteredData = this.state.chartData
+            .filter(slice => {
+                return slice.value > 0;
+            })
+            .map((slice, index) => {
+                return {
+                    value: slice.value,
+                    svg: {
+                        fill: this.colorPalette[index]
+                    }
+                };
+            });
+        return (
+            <View style={{ justifyContent: 'center', flex: 1 }}>
+                <PieChart
+                    style={{ height: '80%' }}
+                    data={filteredData}
+                    innerRadius="0%"
+                    padAngle={0}
+                />
+            </View>
+        );
+    }
+
     renderDataLabels() {
-        if (
-            this.props.chartOptions.chartType === chartTypes.STACK_BAR ||
-            this.props.chartOptions.chartType === chartTypes.BUBBLE
-        ) {
+        if (this.state.chartOptions.chartType !== chartTypes.LINE) {
             return this.state.colorLabels.map(label => {
                 return (
                     <View style={styles.keyContainer}>
@@ -352,32 +401,33 @@ export default class ChartScreen extends React.Component {
                 <View style={styles.keyContainer}>
                     {Icons.lineChart()}
                     <ReactText style={[styles.description, { marginLeft: 5 }]}>
-                        {this.props.chartOptions.yLabel}
+                        {this.state.chartOptions.yLabel}
                     </ReactText>
                 </View>
             );
         }
     }
 
-    renderChart() {
+    renderChart({ transform }) {
         return (
-            <Svg height="100%" width="100%" viewBox="0 0 100 100">
-                {this.state.loading ? null : (
-                    <G scale="0.88" x="8" y="3">
-                        {this.renderHorizontalGrid()}
-                        {this.renderVerticalGrid()}
-                        {this.props.chartOptions.chartType === chartTypes.LINE
-                            ? this.renderLineChart()
-                            : null}
-                        {this.props.chartOptions.chartType ===
-                        chartTypes.STACK_BAR
-                            ? this.renderStackedBarChart()
-                            : null}
-                        {this.props.chartOptions.chartType === chartTypes.BUBBLE
-                            ? this.renderBubbleChart()
-                            : null}
-                    </G>
-                )}
+            <Svg height={height} width={width}>
+                <G scale="0.88" x="8" y="3" transform={transform}>
+                    {this.state.chartOptions.chartType === chartTypes.PIE
+                        ? null
+                        : this.renderHorizontalGrid()}
+                    {this.state.chartOptions.chartType === chartTypes.PIE
+                        ? null
+                        : this.renderVerticalGrid()}
+                    {this.state.chartOptions.chartType === chartTypes.LINE
+                        ? this.renderLineChart()
+                        : null}
+                    {this.state.chartOptions.chartType === chartTypes.STACK_BAR
+                        ? this.renderStackedBarChart()
+                        : null}
+                    {this.state.chartOptions.chartType === chartTypes.BUBBLE
+                        ? this.renderBubbleChart()
+                        : null}
+                </G>
             </Svg>
         );
     }
@@ -392,36 +442,38 @@ export default class ChartScreen extends React.Component {
                             style={styles.title}
                             numberOfLines={1}
                             lineBreakMode="tail"
+                            onPress={this.props.TEST}
                         >
-                            {this.props.chartOptions.title}
+                            {this.state.chartOptions.title || 'Chart'}
                         </ReactText>
                         <ReactText
                             style={styles.description}
                             numberOfLines={1}
                             lineBreakMode="tail"
                         >
-                            {this.props.chartOptions.description}
+                            {this.state.chartOptions.description || ''}
                         </ReactText>
                     </View>
                     <Image />
                 </View>
                 <View style={[styles.chartContainer, { width: '100%' }]}>
-                    <ZoomableSVG
-                        align="mid"
-                        vbWidth={110}
-                        vbHeight={110}
-                        width={width}
-                        height={width}
-                        meetOrSlice="slice"
-                        svgRoot={Chart}
-                        initialTop={10}
-                        initialLeft={35}
-                        childProps={{
-                            chartData: this.props.chartData,
-                            chartOptions: this.props.chartOptions
-                        }}
-                        constrain={constrain ? constraints : null}
-                    />
+                    {this.state.loading ? null : this.state.chartOptions
+                        .chartType === chartTypes.PIE ? (
+                            this.renderPieChart()
+                        ) : (
+                            <ZoomableSVG
+                                align="mid"
+                                vbWidth={110}
+                                vbHeight={110}
+                                width={width}
+                                height={width}
+                                meetOrSlice="slice"
+                                svgRoot={this.renderChart.bind(this)}
+                                initialTop={10}
+                                initialLeft={35}
+                                constrain={constrain ? constraints : null}
+                            />
+                        )}
                 </View>
                 <View style={styles.bottomBarContiner}>
                     {this.state.loading ? null : this.renderDataLabels()}

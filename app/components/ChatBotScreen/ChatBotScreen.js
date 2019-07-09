@@ -442,6 +442,31 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+        // this.sendTESTChart()
+    }
+
+    sendTESTChart() {
+        let messs = new Message();
+        messs.chartMessage(
+            [
+                { x: 1, y: 2, value: 3 },
+                { x: 2, y: 3, value: 40 },
+                { x: 3, y: 5, value: 25 },
+                { x: 4, y: 4, value: 10 },
+                { x: 5, y: 7, value: 45 }
+            ],
+            {
+                chartType: 'bubble',
+                bubbleLabels: ['uno', 'second', 'third', 'fourth'],
+                xLabel: 'Name',
+                yLabel: 'Value',
+                title: 'Chart Title',
+                description: 'Chart Description',
+                chartId: '2222'
+            }
+        );
+        messs.messageByBot(true);
+        this.tell(messs);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -855,8 +880,25 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
-            this.updateChat(message);
-            // this.openChart(message);
+            const foundIndex = this.state.messages.findIndex(element => {
+                const options = element.message.getMessageOptions();
+                return (
+                    options &&
+                    element.message.getMessageType() ===
+                        MessageTypeConstants.MESSAGE_TYPE_CHART &&
+                    options.chartId === message.getMessageOptions().chartId
+                );
+            });
+            if (foundIndex >= 0) {
+                this.state.messages[foundIndex].message.chartMessage(
+                    message.getMessage(),
+                    { ...message.getMessageOptions(), update: true }
+                );
+                this.setState({ messages: this.state.messages });
+                this.updateChat(message);
+            } else {
+                this.updateChat(message);
+            }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
@@ -1018,13 +1060,13 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    openChart(message) {
-        Keyboard.dismiss();
-        Actions.SNRChart({
-            chartData: message.getMessage(),
-            chartTitle: I18n.t('SNR_Chart_title')
-        });
-    }
+    // openChart(message) {
+    //     Keyboard.dismiss();
+    //     Actions.SNRChart({
+    //         chartData: message.getMessage(),
+    //         chartTitle: I18n.t('SNR_Chart_title')
+    //     });
+    // }
 
     // picked from Smart Suggestions
     sendSmartReply(selectedSuggestion) {
@@ -1479,6 +1521,7 @@ class ChatBotScreen extends React.Component {
                     <ChartMessage
                         chartOptions={message.getMessageOptions()}
                         chartData={message.getMessage()}
+                        TEST={this.sendTESTChart.bind(this)}
                     />
                 );
             } else {
@@ -2441,7 +2484,6 @@ class ChatBotScreen extends React.Component {
         if (this.props.call) {
             return <View />;
         }
-
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
@@ -2471,6 +2513,7 @@ class ChatBotScreen extends React.Component {
                                 }}
                             >
                                 <FlatList
+                                    extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"
                                     ListFooterComponent={this.renderSmartSuggestions()}

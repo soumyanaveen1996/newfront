@@ -58,6 +58,16 @@ export default class Chart extends React.Component {
     }
 
     componentDidMount() {
+        this.plotChart();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            this.plotChart();
+        }
+    }
+
+    plotChart() {
         let minYValue;
         let maxYValue;
         let minXValue;
@@ -152,6 +162,18 @@ export default class Chart extends React.Component {
                 0,
                 this.props.chartData.length
             );
+            colorLabels = colorLabels.map((label, index) => {
+                return {
+                    label: label,
+                    color: this.colorPalette[index]
+                };
+            });
+
+            //PIE CHART
+        } else if (this.props.chartOptions.chartType === chartTypes.PIE) {
+            colorLabels = this.props.chartData.map(slice => {
+                return slice.label;
+            });
             colorLabels = colorLabels.map((label, index) => {
                 return {
                     label: label,
