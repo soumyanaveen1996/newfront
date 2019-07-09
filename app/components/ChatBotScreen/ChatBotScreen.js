@@ -442,31 +442,6 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
-        // this.sendTESTChart()
-    }
-
-    sendTESTChart() {
-        let messs = new Message();
-        messs.chartMessage(
-            [
-                { x: 1, y: 2, value: 3 },
-                { x: 2, y: 3, value: 40 },
-                { x: 3, y: 5, value: 25 },
-                { x: 4, y: 4, value: 10 },
-                { x: 5, y: 7, value: 45 }
-            ],
-            {
-                chartType: 'bubble',
-                bubbleLabels: ['uno', 'second', 'third', 'fourth'],
-                xLabel: 'Name',
-                yLabel: 'Value',
-                title: 'Chart Title',
-                description: 'Chart Description',
-                chartId: '2222'
-            }
-        );
-        messs.messageByBot(true);
-        this.tell(messs);
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -1521,7 +1496,6 @@ class ChatBotScreen extends React.Component {
                     <ChartMessage
                         chartOptions={message.getMessageOptions()}
                         chartData={message.getMessage()}
-                        TEST={this.sendTESTChart.bind(this)}
                     />
                 );
             } else {

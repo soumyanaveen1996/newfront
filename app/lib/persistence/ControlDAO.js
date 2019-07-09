@@ -58,8 +58,8 @@ const updateControl = (controlId, content, type, controlDate, options) =>
             JSON.stringify(content),
             type,
             moment(controlDate).valueOf(),
-            controlId,
-            JSON.stringify(options)
+            JSON.stringify(options),
+            controlId
         ];
         db.transaction(transaction => {
             transaction.executeSql(

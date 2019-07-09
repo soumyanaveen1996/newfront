@@ -442,7 +442,6 @@ export default class ChartScreen extends React.Component {
                             style={styles.title}
                             numberOfLines={1}
                             lineBreakMode="tail"
-                            onPress={this.props.TEST}
                         >
                             {this.state.chartOptions.title || 'Chart'}
                         </ReactText>

@@ -72,7 +72,6 @@ export default class ChartMessage extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log('>>>>>>AAAA');
         if (
             this.props.chartOptions.update &&
             this.state.chartData !== this.props.chartData
@@ -80,7 +79,6 @@ export default class ChartMessage extends React.Component {
             this.plotChart(this.props.chartData, this.props.chartOptions);
             if (Actions.currentScene === ROUTER_SCENE_KEYS.chartScreen) {
                 Actions.refresh({
-                    TEST: this.props.TEST,
                     chartOptions: this.props.chartOptions,
                     chartData: this.props.chartData,
                     title: this.props.chartOptions.title
@@ -432,7 +430,6 @@ export default class ChartMessage extends React.Component {
                             style={styles.title}
                             numberOfLines={1}
                             lineBreakMode="tail"
-                            onPress={this.props.TEST}
                         >
                             {this.state.chartOptions.title || 'Chart'}
                         </ReactText>
@@ -451,7 +448,6 @@ export default class ChartMessage extends React.Component {
                     style={styles.chartContainer}
                     onPress={() =>
                         Actions.chartScreen({
-                            TEST: this.props.TEST,
                             chartOptions: this.state.chartOptions,
                             chartData: this.state.chartData,
                             title: this.state.chartOptions.title
