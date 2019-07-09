@@ -146,6 +146,11 @@ function TwentyOnetoTwentyTwo() {
         return DbVersionDAO.updateVersion(22);
     });
 }
+function TwentyTwotoTwentyThree() {
+    return ControlDAO.addOptions().then(() => {
+        return DbVersionDAO.updateVersion(23);
+    });
+}
 
 function runMigrations() {
     return new Promise((resolve, reject) => {
@@ -308,6 +313,13 @@ function runMigrations() {
             .then(version => {
                 if (version === 21) {
                     return TwentyOnetoTwentyTwo();
+                } else {
+                    return version;
+                }
+            })
+            .then(version => {
+                if (version === 22) {
+                    return TwentyTwotoTwentyThree();
                 } else {
                     return version;
                 }

@@ -108,6 +108,7 @@ import {
 } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
+import ChartMessage from '../ChartMessage';
 
 const R = require('ramda');
 
@@ -854,7 +855,25 @@ class ChatBotScreen extends React.Component {
         } else if (
             message.getMessageType() === MessageTypeConstants.MESSAGE_TYPE_CHART
         ) {
-            this.openChart(message);
+            const foundIndex = this.state.messages.findIndex(element => {
+                const options = element.message.getMessageOptions();
+                return (
+                    options &&
+                    element.message.getMessageType() ===
+                        MessageTypeConstants.MESSAGE_TYPE_CHART &&
+                    options.chartId === message.getMessageOptions().chartId
+                );
+            });
+            if (foundIndex >= 0) {
+                this.state.messages[foundIndex].message.chartMessage(
+                    message.getMessage(),
+                    { ...message.getMessageOptions(), update: true }
+                );
+                this.setState({ messages: this.state.messages });
+                this.updateChat(message);
+            } else {
+                this.updateChat(message);
+            }
         } else if (
             message.getMessageType() ===
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM
@@ -1016,13 +1035,13 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    openChart(message) {
-        Keyboard.dismiss();
-        Actions.SNRChart({
-            chartData: message.getMessage(),
-            chartTitle: I18n.t('SNR_Chart_title')
-        });
-    }
+    // openChart(message) {
+    //     Keyboard.dismiss();
+    //     Actions.SNRChart({
+    //         chartData: message.getMessage(),
+    //         chartTitle: I18n.t('SNR_Chart_title')
+    //     });
+    // }
 
     // picked from Smart Suggestions
     sendSmartReply(selectedSuggestion) {
@@ -1467,6 +1486,16 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
                         onSubmit={this.onFormDone.bind(this)}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_CHART
+            ) {
+                return (
+                    <ChartMessage
+                        chartOptions={message.getMessageOptions()}
+                        chartData={message.getMessage()}
                     />
                 );
             } else {
@@ -2429,7 +2458,6 @@ class ChatBotScreen extends React.Component {
         if (this.props.call) {
             return <View />;
         }
-
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
@@ -2459,6 +2487,7 @@ class ChatBotScreen extends React.Component {
                                 }}
                             >
                                 <FlatList
+                                    extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"
                                     ListFooterComponent={this.renderSmartSuggestions()}

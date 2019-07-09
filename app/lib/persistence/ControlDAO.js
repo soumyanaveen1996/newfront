@@ -26,7 +26,8 @@ const insertControl = (
     content,
     type,
     controlDate,
-    originalMessageId
+    originalMessageId,
+    options
 ) =>
     new Promise((resolve, reject) => {
         const args = [
@@ -34,7 +35,8 @@ const insertControl = (
             JSON.stringify(content),
             type,
             moment(controlDate).valueOf(),
-            originalMessageId
+            originalMessageId,
+            JSON.stringify(options)
         ];
         db.transaction(transaction => {
             transaction.executeSql(
@@ -50,12 +52,13 @@ const insertControl = (
         });
     });
 
-const updateControl = (controlId, content, type, controlDate) =>
+const updateControl = (controlId, content, type, controlDate, options) =>
     new Promise((resolve, reject) => {
         const args = [
             JSON.stringify(content),
             type,
             moment(controlDate).valueOf(),
+            JSON.stringify(options),
             controlId
         ];
         db.transaction(transaction => {
@@ -98,6 +101,32 @@ const getContentById = controlId =>
         });
     });
 
+const getOptionsById = controlId =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                controlSql.selectOptionsById,
+                [controlId],
+                function success(tx, res) {
+                    res = res || {};
+                    res = Utils.addArrayToSqlResults(res);
+                    let dbControl = res.rows
+                        ? res.rows._array
+                            ? res.rows._array
+                            : []
+                        : [];
+                    let options = _.map(dbControl, ctrl => {
+                        return JSON.parse(ctrl.options);
+                    });
+                    return resolve(options[0]);
+                },
+                function failure(tx, err) {
+                    return reject(err);
+                }
+            );
+        });
+    });
+
 const controlExist = controlId =>
     new Promise((resolve, reject) => {
         db.transaction(transaction => {
@@ -118,10 +147,28 @@ const controlExist = controlId =>
         });
     });
 
+const addOptions = () =>
+    new Promise((resolve, reject) => {
+        db.transaction(transaction => {
+            transaction.executeSql(
+                controlSql.addOptions,
+                [],
+                function success() {
+                    return resolve(true);
+                },
+                function failure(tx, err) {
+                    return reject(new Error('Unable to add options column'));
+                }
+            );
+        });
+    });
+
 export default {
     createControlTable: createControlTable,
     getContentById: getContentById,
     insertControl: insertControl,
     updateControl: updateControl,
-    controlExist: controlExist
+    controlExist: controlExist,
+    getOptionsById: getOptionsById,
+    addOptions: addOptions
 };
