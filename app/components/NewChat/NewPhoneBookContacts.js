@@ -60,6 +60,7 @@ import Bot from '../../lib/bot';
 import contactsStyles from '../ContactsPicker/styles';
 import GlobalColors from '../../config/styles';
 import { LargeList } from 'react-native-largelist-v3';
+import { NETWORK_STATE } from '../../lib/network';
 
 var EventListeners = [];
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
@@ -506,18 +507,25 @@ class NewCallContacts extends React.Component {
     };
 
     makePstnCall = number => {
-        const { contactSelected } = this.state;
-        if (!contactSelected) {
-            alert('Sorry, cannot make call!');
-            return;
+        console.log('>>>>>>>>>>aaaaa', this.props.appState);
+        if (this.props.appState.network !== NETWORK_STATE.none) {
+            const { contactSelected } = this.state;
+            if (!contactSelected) {
+                alert('Sorry, cannot make call!');
+                return;
+            }
+            this.setContactVisible(false, null);
+            Actions.dialler({
+                call: true,
+                number: number,
+                contact: this.state.contactSelected,
+                newCallScreen: true
+            });
+        } else {
+            Alert.alert('No netwrok connection', 'Cannot make the call', [
+                { text: 'OK' }
+            ]);
         }
-        this.setContactVisible(false, null);
-        Actions.dialler({
-            call: true,
-            number: number,
-            contact: this.state.contactSelected,
-            newCallScreen: true
-        });
     };
 
     phoneNumbers = () => {
