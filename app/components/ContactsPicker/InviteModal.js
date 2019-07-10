@@ -190,7 +190,7 @@ export default class InviteModal extends React.Component {
                                                 width: 15,
                                                 height: 15,
                                                 resizeMode: 'center',
-                                                padding: 5
+                                                padding: 10
                                             }}
                                             source={require('../../images/remove-icon/popup-close.png')}
                                         />

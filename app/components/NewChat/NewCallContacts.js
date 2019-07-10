@@ -363,6 +363,7 @@ class NewCallContacts extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={text => this.setState({ searchString: text })}
                     value={this.state.searchString}
+                    clearButtonMode="always"
                 />
             </View>
         );

@@ -433,6 +433,7 @@ class NewCallContacts extends React.Component {
                         })
                     }
                     value={this.state.searchString}
+                    clearButtonMode="always"
                 />
             </View>
         );

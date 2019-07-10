@@ -35,6 +35,7 @@ import { Loader } from '../Loader';
 
 import { NativeModules } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
+import Icons from '../../config/icons';
 
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
@@ -158,12 +159,11 @@ export default class SearchUsers extends React.Component {
     renderSearchBar() {
         return (
             <View style={styles.searchBar}>
-                <Icon
-                    style={styles.searchIcon}
-                    name="search"
-                    size={24}
-                    color={GlobalColors.sideButtons}
-                />
+                {this.state.loading ? (
+                    <ActivityIndicator size="small" />
+                ) : (
+                    Icons.search()
+                )}
                 <TextInput
                     ref={el => (this.text = el)}
                     style={styles.searchTextInput}
@@ -174,8 +174,9 @@ export default class SearchUsers extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     enablesReturnKeyAutomatically={true}
                     onSubmitEditing={this.search.bind(this)}
-                    // autoFocus={true}
                     onChangeText={text => this.setState({ userFilter: text })}
+                    clearButtonMode="always"
+                    returnKeyType="search"
                 />
             </View>
         );
@@ -227,9 +228,9 @@ export default class SearchUsers extends React.Component {
                     style={styles.addressBook}
                     renderItem={this.renderItem.bind(this)}
                     data={this.state.notSelectedContacts}
-                    extraData={this.state.selectedContacts}
+                    extraData={this.state}
                     keyExtractor={(item, index) => item.id}
-                    ListHeaderComponent={this.renderSelectedContacts.bind(this)}
+                    // ListHeaderComponent={this.renderSelectedContacts.bind(this)}
                 />
             </KeyboardAvoidingView>
         );
@@ -244,20 +245,25 @@ export default class SearchUsers extends React.Component {
                 }}
                 renderItem={this.renderItemGray.bind(this)}
                 data={this.state.selectedContacts}
-                extraData={this.state.notSelectedContacts}
+                extraData={this.state}
                 keyExtractor={(item, index) => item.id}
-                // style={styles.selectedContactsListSU}
             />
         );
     }
 
     renderButton() {
+        const disabled = this.state.selectedContacts.length <= 0;
         return (
             <View style={styles.buttonAreaSU}>
                 <TouchableOpacity
+                    disabled={disabled}
                     style={[
                         styles.doneButtonSU,
-                        { backgroundColor: GlobalColors.sideButtons }
+                        {
+                            backgroundColor: disabled
+                                ? GlobalColors.frontmLightBlueTransparent
+                                : GlobalColors.frontmLightBlue
+                        }
                     ]}
                     onPress={this.onDone.bind(this)}
                 >
@@ -273,7 +279,9 @@ export default class SearchUsers extends React.Component {
                 <View style={styles.searchContainerSU}>
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
-                    <Loader loading={this.state.loading} />
+                    <View style={styles.selectedContactsListSU}>
+                        {this.renderSelectedContacts()}
+                    </View>
                     {this.renderContactsList()}
                 </View>
                 {this.renderButton()}

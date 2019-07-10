@@ -250,6 +250,7 @@ class AddContacts extends React.Component {
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onSubmitEditing={this.searchUsers.bind(this)}
+                    clearButtonMode="always"
                     // onChangeText={this.onSearchQueryChange.bind(this)}
                 />
             </View>
