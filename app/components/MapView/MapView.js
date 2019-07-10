@@ -453,7 +453,9 @@ class MapView extends React.Component {
     }
 
     onPOISelected(id, index, feature) {
-        this.slideshow.scrollToCard(id);
+        if (this.slideshow) {
+            this.slideshow.scrollToCard(id);
+        }
         this.selectPOI(index);
     }
 
