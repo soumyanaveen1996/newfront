@@ -4,6 +4,9 @@ import EventEmitter, { PollingStrategyEvents } from '../events';
 import { SatelliteConnectionEvents } from '../events';
 import config from '../../config/config';
 import Settings, { PollingStrategyTypes } from '../capability/Settings';
+import { Platform } from 'react-native';
+import Store from '../../redux/store/configureStore';
+import { NETWORK_STATE } from '../network';
 
 export const GoogleAnalyticsCategories = {
     APP_LAUNCHED: 'App Launched',
@@ -76,7 +79,12 @@ export class GoogleAnalytics {
                     value,
                     experiment
                 );
-                this.ga.send(gaEvent);
+                if (
+                    !Platform.OS === 'android' ||
+                    !Store.getState().user.network === NETWORK_STATE.none
+                ) {
+                    this.ga.send(gaEvent);
+                }
             }
         } catch (err) {
             console.log('Error while logging google analytics data ', err);

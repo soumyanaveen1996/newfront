@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { setNetwork } from '../../redux/actions/UserActions';
 import AgentGuard from '../../lib/capability/AgentGuard';
 import Bot from '../../lib/bot';
+import { NETWORK_STATE } from '../../lib/network';
 class NetworkStatusNotchBar extends React.Component {
     constructor(props) {
         super(props);
@@ -52,9 +53,9 @@ class NetworkStatusNotchBar extends React.Component {
     handleConnectionChange = connection => {
         console.log('Sourav Logging::: Connection Change Event');
         if (connection.type === 'none') {
-            this.props.setNetwork('none');
+            this.props.setNetwork(NETWORK_STATE.none);
         } else {
-            this.props.setNetwork('full');
+            this.props.setNetwork(NETWORK_STATE.full);
             AgentGuard.heartBeat();
             Bot.grpcheartbeatCatalog();
         }
