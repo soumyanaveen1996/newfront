@@ -262,7 +262,7 @@ class AddContacts extends React.Component {
         const searchString = e.nativeEvent.text;
         Auth.getUser()
             .then(user => {
-                return this.grpcSearch(user, searchString);
+                return this.grpcSearch(user, searchString.trim());
             })
             .then(users => {
                 _.map(this.state.selectedContacts, contact => {

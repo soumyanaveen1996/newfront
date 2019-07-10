@@ -101,7 +101,7 @@ export default class SearchUsers extends React.Component {
         this.setState({ loading: true });
         Auth.getUser()
             .then(user => {
-                return this.grpcSearch(user, this.state.userFilter);
+                return this.grpcSearch(user, this.state.userFilter.trim());
             })
             .then(res => {
                 this.setState({
@@ -110,9 +110,10 @@ export default class SearchUsers extends React.Component {
                         res.data.content.slice(),
                         this.state.selectedContacts,
                         'userId'
-                    )
+                    ),
+                    loading: false,
+                    userFilter: this.state.userFilter.trim()
                 });
-                this.setState({ loading: false });
             });
     }
 
@@ -177,6 +178,7 @@ export default class SearchUsers extends React.Component {
                     onChangeText={text => this.setState({ userFilter: text })}
                     clearButtonMode="always"
                     returnKeyType="search"
+                    value={this.state.userFilter}
                 />
             </View>
         );

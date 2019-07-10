@@ -78,7 +78,8 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
     }
 
-    onChangeText = text => this.setState({ email: text });
+    onChangeText = text => this.setState({ email: text.trim() });
+
     sendInvite = () => {
         let reg = /\S+@\S+/;
         if (!reg.test(this.state.email)) {
