@@ -767,17 +767,28 @@ export default class ContactDetailsScreen extends React.Component {
     renderDetailRow(icon, label, content) {
         return (
             <View style={styles.detailRowCD} key={icon}>
-                <Icon
-                    name={icon}
-                    size={16}
-                    color={
-                        label === 'Phone*'
-                            ? GlobalColors.grey
-                            : GlobalColors.sideButtons
-                    }
-                />
-                <Text style={styles.labelCD}>{label}</Text>
-                <Text style={styles.rowContentCD}>{content}</Text>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        textAlign: 'left',
+                        flex: 1,
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Icon
+                        name={icon}
+                        size={16}
+                        color={
+                            label === 'Phone*'
+                                ? GlobalColors.grey
+                                : GlobalColors.sideButtons
+                        }
+                    />
+                    <Text style={styles.labelCD}>{label}</Text>
+                </View>
+                <View style={{ flex: 2 }}>
+                    <Text style={styles.rowContentCD}>{content}</Text>
+                </View>
             </View>
         );
     }
