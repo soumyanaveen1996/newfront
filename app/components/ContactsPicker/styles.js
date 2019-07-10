@@ -259,9 +259,9 @@ const stylesheet = StyleSheet.create({
     },
     detailRowCD: {
         height: 62,
-        paddingLeft: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
         borderBottomWidth: 1,
         borderColor: GlobalColors.translucentDark
@@ -272,8 +272,10 @@ const stylesheet = StyleSheet.create({
         color: GlobalColors.headerBlack
     },
     rowContentCD: {
+        minWidth: 200,
         fontSize: 16,
-        marginLeft: 64
+        textAlign: 'left',
+        paddingHorizontal: 40
     },
     footerCD: {
         backgroundColor: GlobalColors.white
