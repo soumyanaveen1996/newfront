@@ -507,7 +507,6 @@ class NewCallContacts extends React.Component {
     };
 
     makePstnCall = number => {
-        console.log('>>>>>>>>>>aaaaa', this.props.appState);
         if (this.props.appState.network !== NETWORK_STATE.none) {
             const { contactSelected } = this.state;
             if (!contactSelected) {
