@@ -35,7 +35,7 @@ import turf_great_circle from '@turf/great-circle';
 import turf_distance from '@turf/distance';
 import turf_helpers from '@turf/helpers';
 import GlobalColors from '../../config/styles';
-import { MarkerIconTypes } from './config';
+import { MarkerIconTypes, UserTrackingMode } from './config';
 import Store from '../../redux/store/configureStore';
 import { setOpenMap } from '../../redux/actions/UserActions';
 import { connect } from 'react-redux';
@@ -121,8 +121,9 @@ class MapView extends React.Component {
             this.region = this.props.mapData.region;
         }
         this.state = {
-            userTrackingMode:
-                Platform.OS === 'android' ? Mapbox.UserTrackingModes.Follow : 0,
+            currentTrackingMode: UserTrackingMode.NONE,
+            followUserLocation: false,
+            showUserLocation: true,
             locateUserButtonIcon: Icons.userPosition(),
             slideshowOpen: false,
             slideshowContext: [],
@@ -132,7 +133,9 @@ class MapView extends React.Component {
             routeTrackerClosed: false,
             trackerData: {},
             GEOJson: {},
-            POI: []
+            POI: [],
+            zoomLevel: this.region.zoom == undefined ? 11 : this.region.zoom,
+            centerCoordinate: [this.region.longitude, this.region.latitude]
         };
     }
 
@@ -270,7 +273,7 @@ class MapView extends React.Component {
             ]);
             return turf_great_circle(start, end, {
                 name: route.id,
-                color: route.color
+                color: route.color || GlobalColors.frontmLightBlue
             });
         });
         //MARKERS and POI
@@ -346,7 +349,7 @@ class MapView extends React.Component {
                     id: polyline.id,
                     title: polyline.title,
                     description: polyline.description,
-                    color: polyline.color
+                    color: polyline.color || GlobalColors.frontmLightBlue
                 },
                 geometry: {
                     type: 'LineString',
@@ -633,64 +636,46 @@ class MapView extends React.Component {
     }
 
     zoomIn() {
-        let cameraSetting = {};
-        cameraSetting.duration = 500;
-        this.map
-            .getZoom()
-            .then(zoom => {
-                cameraSetting.zoom = zoom + 1;
-                return this.map.getCenter();
-            })
-            .then(center => {
-                cameraSetting.centerCoordinate = center;
-                this.map.setCamera(cameraSetting);
-            });
+        this.map.getZoom().then(zoom => {
+            this.setState({ zoomLevel: zoom + 1 });
+        });
     }
 
     zoomOut() {
         // this.props.TEST()
-        let cameraSetting = {};
-        cameraSetting.duration = 500;
-        this.map
-            .getZoom()
-            .then(zoom => {
-                cameraSetting.zoom = zoom - 1;
-                return this.map.getCenter();
-            })
-            .then(center => {
-                cameraSetting.centerCoordinate = center;
-                this.map.setCamera(cameraSetting);
-            });
+        this.map.getZoom().then(zoom => {
+            this.setState({ zoomLevel: zoom - 1 });
+        });
     }
 
     locateUser() {
-        if (this.state.userTrackingMode === Mapbox.UserTrackingModes.Follow) {
+        if (this.state.currentTrackingMode === UserTrackingMode.NORMAL) {
             this.setState({
-                userTrackingMode: Mapbox.UserTrackingModes.FollowWithHeading
+                followUserLocation: true,
+                currentTrackingMode: UserTrackingMode.COMPASS
             });
         } else {
             this.setState({
-                userTrackingMode: Mapbox.UserTrackingModes.Follow
+                followUserLocation: true,
+                currentTrackingMode: UserTrackingMode.NORMAL
             });
         }
-        this.setState({ locateUserButtonIcon: Icons.userPositionActive });
+        this.setState({
+            locateUserButtonIcon: Icons.userPosition({
+                color: GlobalColors.frontmLightBlue
+            })
+        });
     }
 
     onUserTrackingModeChange(e) {
-        const mode = e.nativeEvent.payload.userTrackingMode;
-        this.setState({ userTrackingMode: mode });
-        if (mode === 0) {
-            this.setState({ locateUserButtonIcon: Icons.userPosition() });
-        } else {
-            this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
-        }
-    }
-
-    onMapRendered() {
-        if (Platform.OS === 'android') {
-            this.setState({ userTrackingMode: 0 });
-            this.map.moveTo([this.region.longitude, this.region.latitude]);
-        }
+        const { followUserMode, followUserLocation } = e.nativeEvent.payload;
+        this.setState({
+            followUserLocation: followUserLocation,
+            currentTrackingMode: followUserMode || UserTrackingMode.NONE,
+            locateUserButtonIcon: followUserLocation
+                ? Icons.userPosition({ color: GlobalColors.frontmLightBlue })
+                : Icons.userPosition()
+        });
     }
 
     renderMap() {
@@ -698,19 +683,27 @@ class MapView extends React.Component {
             <Mapbox.MapView
                 ref={map => (this.map = map)}
                 styleURL={Mapbox.StyleURL.Street}
-                zoomLevel={
-                    this.region.zoom == undefined ? 11 : this.region.zoom
-                } // == instead of === catch also null
-                centerCoordinate={[this.region.longitude, this.region.latitude]}
-                showsUserLocation={true}
-                userTrackingMode={this.state.userTrackingMode}
-                onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
-                    this
-                )}
-                onDidFinishRenderingMapFully={this.onMapRendered.bind(this)}
+                s
                 logoEnabled={false}
                 style={{ flex: 1 }}
             >
+                <Mapbox.UserLocation visible={this.state.showUserLocation} />
+                <Mapbox.Camera
+                    ref={camera => (this.camera = camera)}
+                    centerCoordinate={this.state.centerCoordinate}
+                    zoomLevel={this.state.zoomLevel}
+                    followUserLocation={this.state.followUserLocation}
+                    followUserMode={
+                        this.state.currentTrackingMode !== UserTrackingMode.NONE
+                            ? this.state.currentTrackingMode
+                            : UserTrackingMode.NORMAL
+                    }
+                    onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
+                        this
+                    )}
+                    animationMode={'flyTo'}
+                    animationDuration={2000}
+                />
                 {this.renderElements()}
                 {this.renderPointsOfInterest()}
             </Mapbox.MapView>
@@ -823,8 +816,7 @@ class MapView extends React.Component {
     }
 
     async flyTo(coordinate, time) {
-        await this.map.flyTo(coordinate, time);
-        this.map.zoomTo(16, 1000);
+        this.setState({ centerCoordinate: coordinate, zoomLevel: 16 });
     }
 
     render() {

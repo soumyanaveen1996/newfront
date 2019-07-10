@@ -335,15 +335,15 @@ const styles = StyleSheet.create({
     }
 });
 
-const layerStyles = Mapbox.StyleSheet.create({
+const layerStyles = {
     //POLYLINES for routes and great circle routes
     route: {
         lineCap: 'round',
         lineWidth: 6,
-        lineJoin: 'round',
+        // lineJoin: 'round',
         // lineColor: GlobalColors.sideButtons,
         lineBlur: 1,
-        lineColor: MapboxGL.StyleSheet.identity('color')
+        lineColor: ['get', 'color']
     },
     //MARKERS
     blackCircleMarker: {
@@ -382,7 +382,7 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconImage: images.moving_maps_plane,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: ['rotation']
+        iconRotate: ['get', 'rotation']
     },
     arrowMarker: {
         iconAllowOverlap: true,
@@ -390,8 +390,8 @@ const layerStyles = Mapbox.StyleSheet.create({
         iconImage: images.maps_maritime_icon,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: ['rotation']
+        iconRotate: ['get', 'rotation']
     }
-});
+};
 
 export { styles, layerStyles };

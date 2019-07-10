@@ -16,3 +16,10 @@ export const MarkerIconTypes = {
     BLACK_CIRCLE: 'black_circle',
     WHITE_CIRCLE: 'white_circle'
 };
+
+export const UserTrackingMode = {
+    NORMAL: 'normal',
+    COMPASS: 'compass',
+    COURSE: 'course',
+    NONE: 'none'
+};

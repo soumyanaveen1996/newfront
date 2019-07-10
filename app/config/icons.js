@@ -297,12 +297,6 @@ export const Icons = {
     zoomIn: icon('md-add', 'ionicon', 15, GlobalColors.headerBlack),
     zoomOut: icon('md-remove', 'ionicon', 15, GlobalColors.headerBlack),
     userPosition: icon('md-locate', 'ionicon', 15, GlobalColors.headerBlack),
-    userPositionActive: icon(
-        'md-locate',
-        'ionicon',
-        15,
-        GlobalColors.sideButtons
-    ),
     arrowUp: icon('ios-arrow-up', 'ionicon', 20, GlobalColors.headerBlack),
     closeRouteSlider: icon('md-close', 'ionicon', 18, GlobalColors.white),
     planeRSWhite: icon(
