@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "@react-native-mapbox-gl/maps": "^7.0.0-rc2",
+    "@react-native-mapbox-gl/maps": "^7.0.0-rc3",
     "@turf/distance": "^6.0.1",
     "@turf/great-circle": "4.6.0",
     "@turf/helpers": "4.6.0",
