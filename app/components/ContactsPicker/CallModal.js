@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import styles from './styles';
 import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
+import Store from '../../redux/store/configureStore';
+import { NETWORK_STATE } from '../../lib/network';
 
 export default class CallModal extends React.Component {
     constructor(props) {
@@ -18,14 +20,23 @@ export default class CallModal extends React.Component {
     }
 
     makePhoneCall = number => {
-        this.props.setVisible(false);
-        console.log('Sourav Logging:::: Calling Contact', this.props.contact);
-        Actions.dialler({
-            call: true,
-            number: number,
-            contact: this.props.contact,
-            newCallScreen: true
-        });
+        if (Store.getState().user.network !== NETWORK_STATE.none) {
+            this.props.setVisible(false);
+            console.log(
+                'Sourav Logging:::: Calling Contact',
+                this.props.contact
+            );
+            Actions.dialler({
+                call: true,
+                number: number,
+                contact: this.props.contact,
+                newCallScreen: true
+            });
+        } else {
+            Alert.alert('No netwrok connection', 'Cannot make the call', [
+                { text: 'OK' }
+            ]);
+        }
     };
 
     makeVoipCall() {

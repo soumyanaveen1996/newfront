@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 import images from '../../config/images';
+import Mapbox from '@react-native-mapbox-gl/maps';
 
 const styles = StyleSheet.create({
     container: {
@@ -339,9 +340,10 @@ const layerStyles = {
     route: {
         lineCap: 'round',
         lineWidth: 6,
-        lineJoin: 'round',
-        lineColor: GlobalColors.sideButtons,
-        lineBlur: 1
+        // lineJoin: 'round',
+        // lineColor: GlobalColors.sideButtons,
+        lineBlur: 1,
+        lineColor: ['get', 'color']
     },
     //MARKERS
     blackCircleMarker: {
@@ -380,7 +382,7 @@ const layerStyles = {
         iconImage: images.moving_maps_plane,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: ['rotation']
+        iconRotate: ['get', 'rotation']
     },
     arrowMarker: {
         iconAllowOverlap: true,
@@ -388,7 +390,7 @@ const layerStyles = {
         iconImage: images.maps_maritime_icon,
         iconSize: 1.5,
         iconRotationAlignment: 'map',
-        iconRotate: ['rotation']
+        iconRotate: ['get', 'rotation']
     }
 };
 

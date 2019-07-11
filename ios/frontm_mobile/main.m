@@ -30,7 +30,8 @@ int main(int argc, char * argv[]) {
     [GRPCCall setUserAgentPrefix:@"FrontM/1.0" forHost:GRPCMetadata.shared.uri];
     [GRPCCall setKeepaliveWithInterval:10000 timeout:10000 forHost:GRPCMetadata.shared.uri];
 
-    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+
+      return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
   }
 }
 

@@ -2,7 +2,7 @@
 // Support simple operations like GET, POST, PUT and DELETE for now
 
 import axios from 'axios';
-import { Queue } from '../network';
+import { Queue, NETWORK_STATE } from '../network';
 import { NetInfo, Platform } from 'react-native';
 import { Promise } from './index';
 import SHA1 from 'crypto-js/sha1';
@@ -185,7 +185,7 @@ function Network(options, queue = false) {
                 key = null
             } = options;
             if (connected) {
-                RStore.dispatch(setNetwork('full'));
+                RStore.dispatch(setNetwork(NETWORK_STATE.full));
                 const grpcService = getGrpcService(serviceName);
                 const timerId = setTimeout(() => {
                     if (queue) {
@@ -233,7 +233,7 @@ function Network(options, queue = false) {
                         futureRequest(deferredKey, new NetworkRequest(options))
                     );
                 } else {
-                    RStore.dispatch(setNetwork('none'));
+                    RStore.dispatch(setNetwork(NETWORK_STATE.none));
                     reject(new Error('No network connectivity'));
                 }
             }

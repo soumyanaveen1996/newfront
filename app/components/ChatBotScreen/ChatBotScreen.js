@@ -55,7 +55,8 @@ import {
     NetworkHandler,
     AsyncResultEventEmitter,
     NETWORK_EVENTS_CONSTANTS,
-    Queue
+    Queue,
+    NETWORK_STATE
 } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
 import appConfig from '../../config/config';
@@ -2383,7 +2384,8 @@ class ChatBotScreen extends React.Component {
         const { network, showNetworkStatusBar } = this.state;
         if (
             showNetworkStatusBar &&
-            (network === 'none' || network === 'satellite')
+            (network === NETWORK_STATE.none ||
+                network === NETWORK_STATE.satellite)
         ) {
             return (
                 <ChatStatusBar

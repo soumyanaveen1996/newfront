@@ -1,15 +1,14 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Dimensions } from 'react-native';
 import { GlobalColors } from '../../config/styles';
-import {
-    SECTION_HEADER_HEIGHT,
-    SCREEN_WIDTH,
-    scrollViewConfig
-} from './config';
+import { SECTION_HEADER_HEIGHT, scrollViewConfig } from './config';
 
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const stylesheet = StyleSheet.create({
     container: {
@@ -25,7 +24,8 @@ const stylesheet = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: GlobalColors.borderBottom,
         height: 40,
-        marginVertical: 3
+        marginVertical: 3,
+        paddingHorizontal: 15
     },
     searchIcon: {
         paddingHorizontal: 10
@@ -259,9 +259,9 @@ const stylesheet = StyleSheet.create({
     },
     detailRowCD: {
         height: 62,
-        paddingLeft: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
         borderBottomWidth: 1,
         borderColor: GlobalColors.translucentDark
@@ -272,8 +272,10 @@ const stylesheet = StyleSheet.create({
         color: GlobalColors.headerBlack
     },
     rowContentCD: {
+        minWidth: 200,
         fontSize: 16,
-        marginLeft: 64
+        textAlign: 'left',
+        paddingHorizontal: 40
     },
     footerCD: {
         backgroundColor: GlobalColors.white
@@ -287,7 +289,8 @@ const stylesheet = StyleSheet.create({
     searchContainerSU: {
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
         backgroundColor: GlobalColors.white
     },
     selectedContactsList: {
@@ -297,11 +300,11 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: GlobalColors.white,
-        paddingBottom: 5
+        paddingBottom: 25
     },
     doneButtonSU: {
-        width: 300,
-        height: 40,
+        width: '50%',
+        height: 50,
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -807,6 +810,10 @@ const stylesheet = StyleSheet.create({
         color: 'rgba(255,255,255,1)',
         fontFamily: 'SF Pro Text',
         fontSize: 16
+    },
+    selectedContactsListSU: {
+        maxHeight: (SCREEN_HEIGHT / 100) * 30,
+        overflow: 'scroll'
     }
 });
 

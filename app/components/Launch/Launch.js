@@ -120,13 +120,15 @@ export default class Splash extends React.Component {
         ContactsCache.init(); // after loging. Logout should clear it.
         await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
         GoogleAnalytics.init();
-        GoogleAnalytics.logEvents(
-            GoogleAnalyticsCategories.APP_LAUNCHED,
-            GoogleAnalyticsEvents.APP_OPENED,
-            null,
-            0,
-            null
-        );
+        if (Platform.OS !== 'android') {
+            GoogleAnalytics.logEvents(
+                GoogleAnalyticsCategories.APP_LAUNCHED,
+                GoogleAnalyticsEvents.APP_OPENED,
+                null,
+                0,
+                null
+            );
+        }
 
         Store.initStore({
             satelliteConnection: false
@@ -136,7 +138,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (true && forceUpdate) {
+        if (false && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);

@@ -9,6 +9,13 @@ const NETWORK_EVENTS_CONSTANTS = {
     result: 'result'
 };
 
+const NETWORK_STATE = {
+    satellite: 'satellite',
+    full: 'full',
+    manual: 'manual',
+    none: 'none'
+};
+
 export {
     Queue,
     NetworkHandler,
@@ -16,5 +23,6 @@ export {
     IMBotMessageHandler,
     NETWORK_EVENTS_CONSTANTS,
     NetworkError,
-    NetworkPoller
+    NetworkPoller,
+    NETWORK_STATE
 };

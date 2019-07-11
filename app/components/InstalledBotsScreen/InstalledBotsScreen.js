@@ -474,6 +474,7 @@ export default class InstalledBotsScreen extends React.Component {
                     selectionColor={GlobalColors.white}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
+                    clearButtonMode="always"
                 />
             </View>
         );

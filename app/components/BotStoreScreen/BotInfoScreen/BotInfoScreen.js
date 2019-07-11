@@ -45,7 +45,12 @@ export default class BotInfoScreen extends React.Component {
                 <HeaderBack
                     onPress={async () => {
                         clearTimeout(backTimer);
-                        backTimer = setTimeout(() => Actions.pop(), timeout);
+                        backTimer = setTimeout(() => {
+                            Actions.pop();
+                            Actions.refresh({
+                                key: Math.random()
+                            });
+                        }, timeout);
                     }}
                 />
             );
@@ -94,7 +99,7 @@ export default class BotInfoScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: props.installed
+            status: this.props.status
         };
     }
 
@@ -186,12 +191,16 @@ export default class BotInfoScreen extends React.Component {
         Actions.botChat({ bot: item });
     }
     renderRightArea = () => {
+        console.log('render status ', this.state.status);
+
         if (
-            this.props.status === BotInstallListItemStates.NOT_INSTALLED ||
-            this.props.status === BotInstallListItemStates.UPDATE
+            this.state.status === BotInstallListItemStates.NOT_INSTALLED ||
+            this.state.status === BotInstallListItemStates.UPDATE ||
+            !this.state.status
         ) {
             const status =
-                this.props.status === BotInstallListItemStates.NOT_INSTALLED
+                this.state.status === BotInstallListItemStates.NOT_INSTALLED ||
+                !this.state.status
                     ? I18n.t('Install')
                     : I18n.t('Update_Bot');
 
@@ -212,7 +221,7 @@ export default class BotInfoScreen extends React.Component {
                     </TouchableOpacity>
                 </View>
             );
-        } else if (this.props.status === BotInstallListItemStates.INSTALLING) {
+        } else if (this.state.status === BotInstallListItemStates.INSTALLING) {
             return (
                 <View style={styles.rightContainer}>
                     <ActivityIndicator size="small" />

@@ -419,7 +419,7 @@ class BotStoreScreen extends React.Component {
     // };
 
     async updateText() {
-        const searchBot = await Bot.searchBots(this.state.searchString);
+        const searchBot = await Bot.searchBots(this.state.searchString.trim());
 
         const filteredSearchBot = [];
 

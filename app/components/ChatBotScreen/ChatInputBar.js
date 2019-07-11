@@ -367,7 +367,7 @@ export default class ChatInputBar extends React.Component {
                             value={this.state.text}
                             style={styles.chatTextInput}
                             underlineColorAndroid="transparent"
-                            placeholder="Type something nice"
+                            placeholder="Aa"
                             multiline
                             onChangeText={this.onChangeText.bind(this)}
                         />

@@ -69,6 +69,7 @@ export default class BotInstallListItem extends React.Component {
                 (error, result) => {
                     console.log('GRPC:::subscribe bot : ', error, result);
                     if (error) {
+                        console.log('error on installing bot ', error);
                         return reject({
                             type: 'error',
                             error: error.code
@@ -92,6 +93,7 @@ export default class BotInstallListItem extends React.Component {
         }
         try {
             const dceBot = dce.bot(bot);
+            console.log('bot listing', dceBot, update);
             if (update) {
                 await Bot.update(dceBot);
             } else {
