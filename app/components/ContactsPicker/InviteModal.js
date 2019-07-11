@@ -78,7 +78,8 @@ export default class InviteModal extends React.Component {
         this.textInput.clear();
     }
 
-    onChangeText = text => this.setState({ email: text });
+    onChangeText = text => this.setState({ email: text.trim() });
+
     sendInvite = () => {
         let reg = /\S+@\S+/;
         if (!reg.test(this.state.email)) {
@@ -190,7 +191,7 @@ export default class InviteModal extends React.Component {
                                                 width: 15,
                                                 height: 15,
                                                 resizeMode: 'center',
-                                                padding: 5
+                                                padding: 10
                                             }}
                                             source={require('../../images/remove-icon/popup-close.png')}
                                         />

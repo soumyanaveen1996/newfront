@@ -262,6 +262,7 @@ class ManageContacts extends React.Component {
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={text => this.setState({ searchText: text })}
+                    clearButtonMode="always"
                 />
             </View>
         );

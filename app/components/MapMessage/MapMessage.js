@@ -36,12 +36,12 @@ export default class MapMessage extends React.Component {
         }
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const { width, height } = Dimensions.get('window');
         let content;
         if (this.props.mapData) {
             content = this.props.mapData;
-            Mapbox.snapshotManager
+            return Mapbox.snapshotManager
                 .takeSnap({
                     centerCoordinate: [
                         content.region.longitude,
@@ -55,6 +55,9 @@ export default class MapMessage extends React.Component {
                 })
                 .then(uri => {
                     this.setState({ mapSnapshotUri: uri });
+                })
+                .catch(e => {
+                    console.log('>>>>>>>e', e);
                 });
         } else {
             ControlDAO.getContentById(this.props.mapOptions.mapId)

@@ -1,9 +1,9 @@
 import { GlobalColors } from '../../config/styles';
 
 export const checkBoxConfig = {
-    uncheckedIcon: 'ios-radio-button-off-outline',
-    checkedIcon: 'ios-checkmark-circle',
-    checkedColor: 'rgb(255, 127, 80)',
+    uncheckedIcon: 'ios-square-outline',
+    checkedIcon: 'ios-checkbox-outline',
+    checkedColor: GlobalColors.frontmLightBlue,
     iconType: 'ionicon'
 };
 

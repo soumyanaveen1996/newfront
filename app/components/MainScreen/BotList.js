@@ -282,6 +282,7 @@ class BotList extends React.Component {
                     placeholder={I18n.t('Search_conv')}
                     onChangeText={searchString => onSearch(searchString)}
                     underlineColorAndroid="transparent"
+                    clearButtonMode="always"
                 />
             </View>
         );

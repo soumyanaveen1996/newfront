@@ -250,6 +250,7 @@ class AddContacts extends React.Component {
                     selectionColor={GlobalColors.darkGray}
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onSubmitEditing={this.searchUsers.bind(this)}
+                    clearButtonMode="always"
                     // onChangeText={this.onSearchQueryChange.bind(this)}
                 />
             </View>
@@ -261,7 +262,7 @@ class AddContacts extends React.Component {
         const searchString = e.nativeEvent.text;
         Auth.getUser()
             .then(user => {
-                return this.grpcSearch(user, searchString);
+                return this.grpcSearch(user, searchString.trim());
             })
             .then(users => {
                 _.map(this.state.selectedContacts, contact => {

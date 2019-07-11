@@ -551,6 +551,7 @@ class ContactsPicker extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
                     value={this.state.searchString}
+                    clearButtonMode="always"
                 />
             </View>
         );
