@@ -373,6 +373,10 @@ class ChatBotScreen extends React.Component {
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
+                        self.eventSubscription = EventEmitter.addListener(
+                            MessageEvents.messageSend,
+                            this.handleMessageEventsSend.bind(this)
+                        );
                         // 8. Mark new messages as read
                         MessageHandler.markUnreadMessagesAsRead(
                             this.getBotKey()
@@ -701,6 +705,22 @@ class ChatBotScreen extends React.Component {
             this.scrollToBottomIfNeeded()
         );
     };
+
+    handleMessageEventsSend(event) {
+        console.log(
+            'Sourav Logging:::: In Message Even Send...will try to send this message'
+        );
+        if (!event || event.botId !== this.getBotId()) {
+            return;
+        }
+        this.sendMessage(event.message);
+        // this.loadedBot.asyncResult(
+        //     event.message,
+        //     this.botState,
+        //     this.state.messages,
+        //     this.botContext
+        // );
+    }
 
     handleMessageEvents(event) {
         if (!event || event.botId !== this.getBotId()) {
@@ -1588,6 +1608,9 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         // console.log('>>>>>>sendmessage', message)
+        console.log(
+            'Sourav Logging:::: Sending Message in foreground Chatter!!!'
+        );
         this.countMessage(message);
 
         GoogleAnalytics.logEvents(
@@ -1608,6 +1631,9 @@ class ChatBotScreen extends React.Component {
             this.state.messages,
             this.botContext
         );
+        if (message.getMessageType() === 'background_event') {
+            return getNext;
+        }
         const isPromise = getNext instanceof Promise;
         if (isPromise) {
             getNext.then(response => {
