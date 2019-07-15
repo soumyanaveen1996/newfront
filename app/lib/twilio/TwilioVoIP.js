@@ -68,7 +68,7 @@ const fetchContactsDetails = async user => {
 export default class TwilioVoIP {
     init = async () => {
         try {
-            this.initTelephony();
+            await this.initTelephony();
             //this.showAlertMessage('VoIP initialized');
         } catch (err) {
             //this.showAlertMessage('VoIP initialization failed');
