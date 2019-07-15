@@ -25,6 +25,9 @@ import Bot from '../bot';
 import AgentGuard from '../capability/AgentGuard';
 import { Contact } from '../../lib/capability';
 import RemoteLogger from '../utils/remoteDebugger';
+import BackgroundGeolocation from 'react-native-background-geolocation';
+import moment from 'moment';
+import Device from 'react-native-device-info';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -37,12 +40,12 @@ const NetworkPollerStates = {
     none: 'none'
 };
 
-BackgroundTask.define(async () => {
-    // await NetworkHandler.poll();
-    RemoteLogger('Firing a Background Task now');
-    await BackgroundTaskProcessor.process();
-    BackgroundTask.finish();
-});
+// BackgroundTask.define(async () => {
+//     // await NetworkHandler.poll();
+//     RemoteLogger('Firing a Background Task now');
+//     await BackgroundTaskProcessor.process();
+//     BackgroundTask.finish();
+// });
 
 class NetworkPoller {
     grpcSubscription = [];
@@ -105,6 +108,7 @@ class NetworkPoller {
         console.log('Network Poller: Starting Polling on User Login');
         this.startPolling();
         this.subscribeToServerEvents();
+        this.configureGeoLocation();
     };
 
     listenToEvents = async () => {
@@ -309,6 +313,7 @@ class NetworkPoller {
         this.unsubscribeFromServerEvents(true);
         clearInterval(this.cleanupInterval);
         BackgroundTimer.stopBackgroundTimer();
+        BackgroundGeolocation.removeListeners();
     };
 
     restartPolling = async () => {
@@ -356,7 +361,7 @@ class NetworkPoller {
             //BackgroundTask.cancel();
         } else if (this.appState === 'background') {
             console.log('App is in background. Stopping polling');
-            BackgroundTask.cancel();
+            // BackgroundTask.cancel();
         }
         //BackgroundTimer.stopBackgroundTimer();
         //BackgroundTimer.stop();
@@ -374,9 +379,9 @@ class NetworkPoller {
             console.log(
                 '---------App is in background. So starting background task every 15 minutes-----------'
             );
-            BackgroundTask.schedule({
-                period: 900
-            });
+            // BackgroundTask.schedule({
+            //     period: 900
+            // });
         }
     };
 
@@ -409,9 +414,9 @@ class NetworkPoller {
             console.log(
                 'App is in background. So starting background task every 1 hour'
             );
-            BackgroundTask.schedule({
-                period: 900
-            });
+            // BackgroundTask.schedule({
+            //     period: 900
+            // });
         }
     };
 
@@ -517,7 +522,7 @@ class NetworkPoller {
         console.log('Sourav Logging:::: In Process');
         InteractionManager.runAfterInteractions(() => {
             NetworkHandler.poll();
-            BackgroundTaskProcessor.process();
+            // BackgroundTaskProcessor.process();
         });
         // setTimeout(() => BackgroundTaskProcessor.process(), 5000);
     };
@@ -526,6 +531,142 @@ class NetworkPoller {
         //     setTimeout(() => NetworkDAO.deleteAllRows(), 500);
         // });
     };
+
+    configureGeoLocation = () => {
+        ////
+        // 1.  Wire up event-listeners
+        //
+
+        // This handler fires whenever bgGeo receives a location update.
+        BackgroundGeolocation.onLocation(this.onLocation, this.onError);
+
+        // This handler fires when movement states changes (stationary->moving; moving->stationary)
+        BackgroundGeolocation.onMotionChange(this.onMotionChange);
+
+        // This event fires when a change in motion activity is detected
+        BackgroundGeolocation.onActivityChange(this.onActivityChange);
+
+        // This event fires when the user toggles location-services authorization
+        BackgroundGeolocation.onProviderChange(this.onProviderChange);
+
+        BackgroundGeolocation.onHeartbeat(event => {
+            console.log('Sourav Logging:::: Hearbeat event', event);
+            RemoteLogger(
+                `Heartbeat--------${moment().format('DD-MM hh:mm:ss')}`
+            );
+        });
+
+        ////
+        // 2.  Execute #ready method (required)
+        //
+        BackgroundGeolocation.ready(
+            {
+                reset: true,
+                // Geolocation Config
+                desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+
+                distanceFilter: 10,
+                heartbeatInterval: 120,
+                preventSuspend: true,
+                // Activity Recognition
+                stopTimeout: 1,
+                // Application config
+                debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+                logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
+                startOnBoot: true, // <-- Auto start tracking when device is powered-up.
+                disableLocationAuthorizationAlert: false,
+                // HTTP / SQLite config
+                url: 'http://tracker.transistorsoft.com/locations/frontm',
+                params: BackgroundGeolocation.transistorTrackerParams(Device),
+                batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+                autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
+
+                headers: {
+                    // <-- Optional HTTP headers
+                    // 'X-FOO': 'bar'
+                }
+                // params: {
+                //     // <-- Optional HTTP params
+                //     // auth_token: 'maybe_your_server_authenticates_via_token_YES?'
+                // }
+            },
+            async state => {
+                console.log(
+                    '- BackgroundGeolocation is configured and ready: ',
+                    state.enabled
+                );
+
+                if (!state.enabled) {
+                    ////
+                    // 3. Start tracking!
+                    //
+                    BackgroundGeolocation.start(function() {
+                        console.log('- Start success');
+                    });
+                }
+            }
+        );
+    };
+
+    onLocation(location) {
+        RemoteLogger(`Location Event ${moment().format('DD-MM hh:mm:ss')}`);
+        // RemoteLogger(`Triggered On Location: ${JSON.stringify(location)}`);
+    }
+    onError(error) {
+        // RemoteLogger(JSON.stringify(error));
+    }
+    onActivityChange(event) {
+        console.log('Sourav Logging:::: Activity Changed', event);
+        BackgroundGeolocation.startBackgroundTask()
+            .then(async taskId => {
+                await RemoteLogger(
+                    `${event.activity}----${
+                        event.confidence
+                    }--------${moment().format('DD-MM hh:mm:ss')}`
+                );
+                BackgroundGeolocation.stopBackgroundTask(taskId);
+            })
+            .catch(error => {
+                console.log(error);
+                BackgroundGeolocation.stopBackgroundTask();
+            });
+    }
+
+    onProviderChange(event) {
+        console.log('Sourav Logging:::: Provider Changed', event);
+
+        switch (event.status) {
+        case BackgroundGeolocation.AUTHORIZATION_STATUS_DENIED:
+            // Android & iOS
+            // BackgroundGeolocation.stop();
+            console.log('- Location authorization denied');
+            break;
+        case BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS:
+            // Android & iOS
+            console.log('- Location always granted');
+            break;
+        case BackgroundGeolocation.AUTHORIZATION_STATUS_WHEN_IN_USE:
+            // iOS only
+            console.log('- Location WhenInUse granted');
+            // BackgroundGeolocation.stop();
+            break;
+        }
+    }
+    onMotionChange(event) {
+        RemoteLogger('Motion Change Event');
+        // if (event.isMoving) {
+        //     BackgroundGeolocation.startBackgroundTask()
+        //         .then(async taskId => {
+        //             await BackgroundTaskProcessor.process();
+        //             BackgroundGeolocation.stopBackgroundTask(taskId);
+        //         })
+        //         .catch(error => {
+        //             console.log(error);
+        //             BackgroundGeolocation.stopBackgroundTask();
+        //         });
+        // }
+    }
 }
 
 export default new NetworkPoller();

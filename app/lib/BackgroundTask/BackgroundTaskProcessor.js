@@ -8,6 +8,7 @@ import { Message, ConversationContext, Auth } from '../capability';
 import { MessageHandler } from '../message';
 import EventEmitter, { MessageEvents } from '../events';
 import Store from '../../redux/store/configureStore';
+import RemoteLogger from '../utils/remoteDebugger';
 
 class BackgroundTaskBotScreen {
     constructor(botId, conversationId, message, options) {
@@ -66,6 +67,7 @@ const process = async () => {
     if (!user) {
         return;
     }
+    // RemoteLogger('Process Background Tasks');
     const tasks = await BackgroundTaskDAO.selectAllBackgroundTasks();
     _.forEach(tasks, task => {
         processTask(task, user);
@@ -94,9 +96,6 @@ const processTask = async (task, user) => {
     const activeBot = Store.getState().bots.id;
     const timeNow = moment().valueOf();
     const botManifest = await getBotManifest(task.botId);
-
-    console.log('Sourav Logging:::: Saved Bot', activeBot);
-    console.log('Sourav Logging:::: Current Bot', task.botId);
 
     if (!botManifest) {
         BackgroundTaskDAO.deleteBackgroundTask(
@@ -146,11 +145,14 @@ const processTask = async (task, user) => {
             console.log(
                 'Sourav Logging:::: The Chat is on Screen Send a message directly'
             );
+
+            RemoteLogger('Running Tasks Bot is Open');
             EventEmitter.emit(MessageEvents.messageSend, {
                 message,
                 botId: activeBot
             });
         } else {
+            RemoteLogger('Running Tasks Bot is Closed');
             await processMessage(message, botManifest, botContext, true);
         }
         await BackgroundTaskDAO.updateBackgroundTaskLastRun(
@@ -201,6 +203,7 @@ const processMessage = async (
             break;
         }
     }
+    RemoteLogger(`Sending message to boT ${JSON.stringify(message)}`);
     bot.next(message, {}, [], botContext);
 };
 

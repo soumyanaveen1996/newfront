@@ -6,6 +6,7 @@ import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
 import { Platform } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
+import EventEmitter, { AuthEvents } from '../lib/events';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
@@ -18,8 +19,9 @@ export default class AfterLogin {
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();
-            this.configureNotifications();
+            // this.configureNotifications();
             TwilioVoIP.init();
+            EventEmitter.emit(AuthEvents.userDataFetched);
         }
     };
 

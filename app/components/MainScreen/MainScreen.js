@@ -69,6 +69,8 @@ import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import PushNotification from 'react-native-push-notification';
 import Placeholder from 'rn-placeholder';
+// Import BackgroundGeolocation + any optional interfaces
+import RemoteLogger from '../../lib/utils/remoteDebugger';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',

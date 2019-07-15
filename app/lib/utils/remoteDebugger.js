@@ -14,7 +14,7 @@ const RemoteLogger = text => {
     //     return;
     // }
 
-    axios
+    return axios
         .request({
             method: 'post',
             url:
@@ -28,7 +28,6 @@ const RemoteLogger = text => {
             timeout: 10000
         })
         .catch(error => console.log('Cannot Log to Slack'));
-    return;
 };
 
 export default RemoteLogger;

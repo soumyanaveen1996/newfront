@@ -46,13 +46,17 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>279</string>
+	<string>292</string>
 	<key>CodePushDeploymentKey</key>
 	<string>yvzJ1O25Y_eEGExdv2HTossDvImU033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
 	<key>FacebookAppID</key>
 	<string>150576769074284</string>
 	<key>FacebookDisplayName</key>
 	<string>FrontM</string>
+	<key>GRPC_HOST</key>
+	<string>grpcdev.frontm.ai</string>
+	<key>GRPC_PORT</key>
+	<string>50051</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -90,8 +94,12 @@
 	<string>We need your consent to access your addressbook. We need it in case you wish to invite friends to FrontM</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your consent to access the location while the app is being used. We need it only in case we can not gather your precise location from the Satellite terminal</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your consent to access the location while the app is being used. We need it only in case we can not gather your precise location from the Satellite terminal</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your consent to access the location while the app is being used. We need it only in case we can not gather your precise location from the Satellite terminal</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need your consent to access your microphone. We need it in case you wish to perform a phone call or send an audio message in a conversation</string>
 	<key>NSMotionUsageDescription</key>
@@ -174,6 +182,7 @@
 	<array>
 		<string>audio</string>
 		<string>fetch</string>
+		<string>location</string>
 		<string>voip</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
@@ -189,9 +198,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>GRPC_HOST</key>
-	<string>grpcdev.frontm.ai</string>
-	<key>GRPC_PORT</key>
-	<string>50051</string>
 </dict>
 </plist>
