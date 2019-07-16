@@ -108,7 +108,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 360
+        versionCode 361
         versionName "5.1"
         multiDexEnabled true
         renderscriptTargetApi 23
@@ -268,6 +268,8 @@ dependencies {
     compile 'io.grpc:grpc-stub:1.19.0'
     compileOnly "javax.annotation:javax.annotation-api:1.2"
     compile 'org.conscrypt:conscrypt-android:2.0.0'
+		implementation project(':react-native-background-geolocation')
+    implementation project(':react-native-background-fetch')
 }
 
 
