@@ -108,7 +108,7 @@ class NetworkPoller {
         console.log('Network Poller: Starting Polling on User Login');
         this.startPolling();
         this.subscribeToServerEvents();
-        this.configureGeoLocation();
+        // this.configureGeoLocation();
     };
 
     listenToEvents = async () => {

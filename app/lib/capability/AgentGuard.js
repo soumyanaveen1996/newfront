@@ -63,6 +63,7 @@ export default class AgentGuard {
 
             const key = R.pathOr(null, ['conversation', 'bot'], params);
 
+            console.log('Sourav Logging:::: Executing Agent Guard', params);
             if (user) {
                 const options = {
                     serviceName: 'AgentGuardServiceClient',
