@@ -34,16 +34,26 @@ export default class ContactsPickerDataSource {
             return data.userId;
         });
         _.each(contactsData, data => {
+            // console.log('data to email ', data);
+
             this.idToContacts[data.userId] = {
                 id: data.userId,
                 name: data.userName,
-                emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
+                emails: [
+                    {
+                        email: data.emailAddresses
+                            ? { ...data.emailAddresses }
+                            : { ...data.emailAddress }
+                    }
+                ], // Format based on phone contact from expo
                 phoneNumbers: data.phoneNumbers,
                 isWaitingForConfirmation: data.waitingForConfirmation || false,
                 isFavourite: data.isFavourite || false,
                 contactType: data.contactType || 'frontm',
                 type: data.type || 'people'
             };
+
+            // console.log('saved contact ', this.idToContacts[data.userId]);
         });
         this.allContactIds = _.uniq(this.allContactIds.concat(contactIds));
         this.delegate.onDataUpdate();
