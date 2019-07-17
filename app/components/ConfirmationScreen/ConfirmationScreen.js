@@ -10,7 +10,8 @@ import {
     ScrollView,
     SafeAreaView,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Platform
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import styles from './styles';

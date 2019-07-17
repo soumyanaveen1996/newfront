@@ -396,10 +396,15 @@ export function newBotConversationId(userId, botId) {
     if (!userId || userId === '') {
         throw new Error('Cannot Create Conversation Id as there is no User');
     }
+    if (!botId || botId === '') {
+        throw new Error('Cannot Create Conversation Id as there is no BotId');
+    }
     console.log('Sourav Logging:::: Creating a New Conversation ID', userId);
     let ids = [userId, botId];
     const text = _.join(_.sortBy(ids), '-');
-    return userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+    const newConvId = userId.substr(0, 10) + '-' + sha1(text).substr(0, 12);
+    console.log('Sourav Logging:::: Created CONV ID', newConvId);
+    return newConvId;
 
     // if (SystemBot.isSystemBot(botId) || !userId) {
     //     return UUID();

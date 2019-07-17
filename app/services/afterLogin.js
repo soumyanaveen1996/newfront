@@ -20,8 +20,8 @@ export default class AfterLogin {
             MessageCounter.init();
             NetworkPoller.start();
             // this.configureNotifications();
-            TwilioVoIP.init();
-            EventEmitter.emit(AuthEvents.userDataFetched);
+            // TwilioVoIP.init();
+            // EventEmitter.emit(AuthEvents.userDataFetched);
         }
     };
 
