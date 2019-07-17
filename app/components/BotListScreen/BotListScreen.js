@@ -81,7 +81,8 @@ export default class BotListScreen extends React.Component {
     }
 
     async updateText() {
-        const searchBot = await Bot.searchBots(this.state.searchString);
+        const searchBot = await Bot.searchBots(this.state.searchString.trim());
+        this.setState({ searchString: this.state.searchString.trim() });
         const filteredSearchBot = [];
 
         for (var arr in this.props.allBotsData) {
@@ -129,6 +130,7 @@ export default class BotListScreen extends React.Component {
                         }}
                         underlineColorAndroid="transparent"
                         onSubmitEditing={() => this.updateText()}
+                        value={this.state.searchString}
                     />
                 </View>
             );

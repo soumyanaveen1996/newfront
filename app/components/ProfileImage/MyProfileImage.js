@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, Image } from 'react-native';
+import { View, ActivityIndicator, Image, Text } from 'react-native';
 import ImageCache from '../../lib/image_cache';
 import Auth from '../../lib/capability/Auth';
 import utils from '../../lib/utils';
@@ -21,7 +21,7 @@ class MyProfileImage extends React.Component {
 
     async componentDidMount() {
         // console.log('In Profile Image: ', this.props.user.upload);
-        const uploadNumber = this.props.user.upload;
+        // const uploadNumber = this.props.user.upload;
         this.mounted = true;
         const user = await Auth.getUser();
         if (!user) {
@@ -31,12 +31,16 @@ class MyProfileImage extends React.Component {
         let headers = utils.s3DownloadHeaders(uri, user) || undefined;
         if (uri && this.isRemoteUri(uri)) {
             let path = await this.getImagePathFromCache(
-                uploadNumber > 0 ? `${uri}?u=${uploadNumber}` : uri
+                uri
+                // uploadNumber > 0 ? `${uri}?u=${uploadNumber}` : uri
             );
             if (path) {
                 if (this.mounted) {
                     this.setState({
-                        source: { uri: path },
+                        source: {
+                            // We will call like this to invaidate image cache and reload if image has changed
+                            uri: `file://${path}?bust=${this.props.user.upload}`
+                        },
                         style: this.props.placeholderStyle,
                         loaded: true
                     });
@@ -56,7 +60,7 @@ class MyProfileImage extends React.Component {
                 } else {
                     if (this.mounted) {
                         this.setState({
-                            source: { uri: uri },
+                            source: this.props.placeholder,
                             style: this.props.placeholderStyle,
                             loaded: true
                         });
@@ -78,7 +82,9 @@ class MyProfileImage extends React.Component {
         }
         if (path) {
             this.setState({
-                source: { uri: path },
+                source: {
+                    uri: `file://${path}?bust=${this.props.user.upload}`
+                },
                 style: this.props.placeholderStyle,
                 loaded: true
             });
@@ -104,7 +110,7 @@ class MyProfileImage extends React.Component {
     }
 
     render() {
-        // console.log('profile image we will see', this.state.source);
+        console.log('profile image we will see', this.state.source);
         return (
             <View>
                 <Image
@@ -112,6 +118,7 @@ class MyProfileImage extends React.Component {
                     resizeMode={this.props.resizeMode}
                     style={this.state.style}
                     onLoad={this.onLoad}
+                    cache="reload"
                 />
                 {!this.state.loaded && !this.state.source && (
                     <View style={styles.loading}>

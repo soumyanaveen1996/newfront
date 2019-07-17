@@ -7,6 +7,7 @@ import { BotContext } from '../../lib/botcontext';
 import { Message, ConversationContext, Auth } from '../capability';
 import { MessageHandler } from '../message';
 import EventEmitter, { MessageEvents } from '../events';
+import Store from '../../redux/store/configureStore';
 
 class BackgroundTaskBotScreen {
     constructor(botId, conversationId, message, options) {
@@ -90,8 +91,12 @@ const getBotManifest = async botId => {
 
 const processTask = async (task, user) => {
     // console.log('BackgroundProcessor::poll::called at ', task);
+    const activeBot = Store.getState().bots.id;
     const timeNow = moment().valueOf();
     const botManifest = await getBotManifest(task.botId);
+
+    console.log('Sourav Logging:::: Saved Bot', activeBot);
+    console.log('Sourav Logging:::: Current Bot', task.botId);
 
     if (!botManifest) {
         BackgroundTaskDAO.deleteBackgroundTask(
@@ -136,7 +141,18 @@ const processTask = async (task, user) => {
             messageDate: moment().valueOf()
         });
         message.backgroundEventMessage(task.key, task.options);
-        await processMessage(message, botManifest, botContext, true);
+
+        if (activeBot == task.botId) {
+            console.log(
+                'Sourav Logging:::: The Chat is on Screen Send a message directly'
+            );
+            EventEmitter.emit(MessageEvents.messageSend, {
+                message,
+                botId: activeBot
+            });
+        } else {
+            await processMessage(message, botManifest, botContext, true);
+        }
         await BackgroundTaskDAO.updateBackgroundTaskLastRun(
             task.key,
             task.botId,

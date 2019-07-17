@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     Dimensions,
     Alert,
-    SafeAreaView
+    SafeAreaView,
+    Image
 } from 'react-native';
 import { HeaderBack } from '../Header';
 import styles from './styles';
@@ -14,6 +15,9 @@ import Icons from '../../config/icons';
 import DeviceLocation from '../../lib/capability/DeviceLocation';
 import I18n from '../../config/i18n/i18n';
 import Mapbox from '@react-native-mapbox-gl/maps';
+import GlobalColors from '../../config/styles';
+import { UserTrackingMode } from '../MapView/config';
+import images from '../../config/images';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
@@ -40,69 +44,81 @@ export default class LocationPicker extends React.Component {
 
     constructor(props) {
         super(props);
+        this.region = {
+            zoom: 11,
+            latitude: 0,
+            longitude: 0
+        };
         this.state = {
-            userTrackingMode: Mapbox.UserTrackingModes.Follow,
-            locateUserButtonIcon: Icons.userPosition()
+            currentTrackingMode: UserTrackingMode.NONE,
+            followUserLocation: false,
+            showUserLocation: true,
+            locateUserButtonIcon: Icons.userPosition(),
+            zoomLevel: this.region.zoom == undefined ? 11 : this.region.zoom,
+            centerCoordinate: [this.region.longitude, this.region.latitude],
+            selectedCoordinate: undefined
         };
     }
 
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(position => {
+            this.setState({
+                centerCoordinate: [
+                    position.coords.longitude,
+                    position.coords.latitude
+                ]
+            });
+        });
+    }
+
     close() {
-        if (this.props.onCancel) {
-            this.props.onCancel();
-        }
         Actions.pop();
     }
 
     done() {
-        if (this.props.onLocationPicked) {
-            this.props.onLocationPicked({ coordinate: this.state.coordinate });
-        }
+        this.props.onLocationPicked({
+            coordinate: this.state.selectedCoordinate
+        });
         Actions.pop();
     }
 
     sendCurrentLocation() {
-        let userPosition;
         navigator.geolocation.getCurrentPosition(position => {
-            userPosition = [
-                position.coords.longitude,
-                position.coords.latitude
-            ];
-            this.setState({ coordinate: userPosition });
-            if (this.props.onLocationPicked) {
-                this.props.onLocationPicked({
-                    coordinate: this.state.coordinate
-                });
-            }
+            this.props.onLocationPicked({
+                coordinate: [
+                    position.coords.longitude,
+                    position.coords.latitude
+                ]
+            });
             Actions.pop();
         });
     }
 
-    renderMarker(markers) {
-        if (!this.state || !this.state.coordinate) {
-            return;
-        }
-        // let marker = {
-        //     coordinate: this.state.coordinate,
-        //     draggable: false
-        // };
-        // return <MapView.Marker {...marker} key={'location_marker'} />;
-        return (
-            <Mapbox.PointAnnotation
-                id="marker"
-                coordinate={this.state.coordinate}
-            />
-        );
-    }
-
-    onPress(event) {
+    selectLocation(event) {
         this.setState({
-            // coordinate: event.nativeEvent.coordinate
-            coordinate: event.geometry.coordinates
+            selectedCoordinate: event.geometry.coordinates
         });
     }
 
+    renderMarker() {
+        if (this.state.selectedCoordinate) {
+            return (
+                <Mapbox.PointAnnotation
+                    id="marker"
+                    coordinate={this.state.selectedCoordinate}
+                >
+                    <Image
+                        resizeMode="cover"
+                        style={{ width: 30, height: 30, overflow: 'visible' }}
+                        source={images.map_pin}
+                    />
+                </Mapbox.PointAnnotation>
+            );
+        }
+    }
+
     renderDoneButton() {
-        if (this.state && this.state.coordinate) {
+        if (this.state && this.state.selectedCoordinate) {
             return (
                 <TouchableOpacity
                     style={styles.doneButton}
@@ -112,33 +128,6 @@ export default class LocationPicker extends React.Component {
                 </TouchableOpacity>
             );
         }
-    }
-
-    onMapReady() {
-        const { width, height } = Dimensions.get('window');
-        const aspectRatio = width / height;
-        //Setting latitudeDelta to 28 so that user's current country is displayed
-        const latitudeDelta = 28.0;
-        const longitudeDelta = latitudeDelta + aspectRatio;
-        DeviceLocation.getDeviceLocation()
-            .then(location => {
-                this.map.animateToRegion({
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                    latitudeDelta: latitudeDelta,
-                    longitudeDelta: longitudeDelta
-                });
-            })
-            .catch(error => {
-                if (error.code === 2) {
-                    Alert.alert(
-                        I18n.t('Enable_GPS_title'),
-                        I18n.t('Enable_GPS_to_view_currentLocation'),
-                        [{ text: 'OK', onPress: this.goBack }],
-                        { cancelable: false }
-                    );
-                }
-            });
     }
 
     goBack = () => {
@@ -151,7 +140,7 @@ export default class LocationPicker extends React.Component {
                 style={styles.bottomLayer}
                 onPress={this.sendCurrentLocation.bind(this)}
             >
-                {Icons.userPositionActive()}
+                {Icons.userPosition({ color: GlobalColors.frontmLightBlue })}
                 <Text style={styles.bottomLayerText}>Current Location</Text>
             </TouchableOpacity>
         );
@@ -184,81 +173,78 @@ export default class LocationPicker extends React.Component {
 
     zoomIn() {
         this.map.getZoom().then(zoom => {
-            this.map.getCenter().then(center => {
-                this.map.setCamera({
-                    centerCoordinate: center,
-                    zoom: zoom + 1,
-                    duration: 500
-                });
-            });
+            this.setState({ zoomLevel: zoom + 1 });
         });
     }
 
     zoomOut() {
+        // this.props.TEST()
         this.map.getZoom().then(zoom => {
-            this.map.getCenter().then(center => {
-                this.map.setCamera({
-                    centerCoordinate: center,
-                    zoom: zoom - 1,
-                    duration: 500
-                });
-            });
+            this.setState({ zoomLevel: zoom - 1 });
         });
     }
 
     locateUser() {
-        if (this.state.userTrackingMode === Mapbox.UserTrackingModes.Follow) {
+        if (this.state.currentTrackingMode === UserTrackingMode.NORMAL) {
             this.setState({
-                userTrackingMode: Mapbox.UserTrackingModes.FollowWithHeading
+                followUserLocation: true,
+                currentTrackingMode: UserTrackingMode.COMPASS
             });
         } else {
             this.setState({
-                userTrackingMode: Mapbox.UserTrackingModes.Follow
+                followUserLocation: true,
+                currentTrackingMode: UserTrackingMode.NORMAL
             });
         }
-        this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
+        this.setState({
+            locateUserButtonIcon: Icons.userPosition({
+                color: GlobalColors.frontmLightBlue
+            })
+        });
     }
 
     onUserTrackingModeChange(e) {
-        const mode = e.nativeEvent.payload.userTrackingMode;
-        this.setState({ userTrackingMode: mode });
-        if (mode === 0) {
-            this.setState({ locateUserButtonIcon: Icons.userPosition() });
-        } else {
-            this.setState({ locateUserButtonIcon: Icons.userPositionActive() });
-        }
+        const { followUserMode, followUserLocation } = e.nativeEvent.payload;
+        this.setState({
+            followUserLocation: followUserLocation,
+            currentTrackingMode: followUserMode || UserTrackingMode.NONE,
+            locateUserButtonIcon: followUserLocation
+                ? Icons.userPosition({ color: GlobalColors.frontmLightBlue })
+                : Icons.userPosition()
+        });
     }
 
     renderMap() {
-        let userPosition;
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                userPosition = [
-                    position.coords.longitude,
-                    position.coords.latitude
-                ];
-            },
-            () => {
-                userPosition = null;
-            }
-        );
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <Mapbox.MapView
                     ref={map => (this.map = map)}
                     styleURL={Mapbox.StyleURL.Street}
-                    zoomLevel={11}
-                    centerCoordinate={userPosition}
-                    showsUserLocation={true}
-                    userTrackingMode={this.state.userTrackingMode}
-                    onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
-                        this
-                    )}
+                    s
                     logoEnabled={false}
                     style={{ flex: 1 }}
-                    onLongPress={this.onPress.bind(this)}
-                    zoomEnabled={true}
+                    onLongPress={this.selectLocation.bind(this)}
                 >
+                    <Mapbox.UserLocation
+                        visible={this.state.showUserLocation}
+                    />
+                    <Mapbox.Camera
+                        ref={camera => (this.camera = camera)}
+                        centerCoordinate={this.state.centerCoordinate}
+                        zoomLevel={this.state.zoomLevel}
+                        followUserLocation={this.state.followUserLocation}
+                        followUserMode={
+                            this.state.currentTrackingMode !==
+                            UserTrackingMode.NONE
+                                ? this.state.currentTrackingMode
+                                : UserTrackingMode.NORMAL
+                        }
+                        onUserTrackingModeChange={this.onUserTrackingModeChange.bind(
+                            this
+                        )}
+                        animationMode={'flyTo'}
+                        animationDuration={2000}
+                    />
                     {this.renderMarker()}
                 </Mapbox.MapView>
                 {this.renderDoneButton()}

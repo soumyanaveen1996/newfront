@@ -414,9 +414,7 @@ class MyProfileScreen extends React.Component {
                     user.userId,
                     user,
                     ResourceTypes.Image,
-                    null,
-                    true,
-                    true
+                    null
                 );
             })
 
@@ -433,12 +431,12 @@ class MyProfileScreen extends React.Component {
                         },
                         async () => {
                             this.props.updateContactScreen();
-                            let uriSrc = this.getUri(this.state.userId);
-                            if (uriSrc) {
-                                await ImageCache.imageCacheManager.removeFromCache(
-                                    uriSrc
-                                );
-                            }
+                            // let uriSrc = this.getUri(this.state.userId);
+                            // if (uriSrc) {
+                            //     await ImageCache.imageCacheManager.removeFromCache(
+                            //         uriSrc
+                            //     );
+                            // }
 
                             setTimeout(() => {
                                 this.showAlert('Profile image updated');

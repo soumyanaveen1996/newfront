@@ -28,6 +28,9 @@ class ContactsCache {
 
     getUserDetails = async userId => {
         let contact;
+        if (userId.addedByBot) {
+            return;
+        }
         try {
             contact = this.contactsCache[userId];
             if (contact) {

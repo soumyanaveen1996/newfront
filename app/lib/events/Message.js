@@ -1,6 +1,7 @@
 export const MessageEvents = {
     messageProcessed: 'messageProcessed',
-    messagePersisted: 'messagePersisted'
+    messagePersisted: 'messagePersisted',
+    messageSend: 'messageSend'
 };
 
 export default MessageEvents;

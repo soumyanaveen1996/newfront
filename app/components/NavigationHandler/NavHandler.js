@@ -39,13 +39,13 @@ class NavHandler extends Component {
                     Actions.currentScene === 'timeline' ||
                     Actions.currentScene === 'swiperScreen'
                 ) {
-                    BackAndroid.exitApp();
+                    BackHandler.exitApp();
                 } else {
                     Actions.pop();
                 }
                 return true;
             } catch (err) {
-                BackAndroid.exitApp();
+                BackHandler.exitApp();
                 console.debug("Can't pop. Exiting the app...");
                 return false;
             }
@@ -54,7 +54,7 @@ class NavHandler extends Component {
 
     componentWillUnmount() {
         console.log('Unmounting app, removing listeners');
-        BackAndroid.removeEventListener('hardwareBackPress');
+        BackHandler.removeEventListener('hardwareBackPress');
     }
 
     render() {

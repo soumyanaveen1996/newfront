@@ -551,6 +551,7 @@ class ContactsPicker extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={this.onSearchQueryChange.bind(this)}
                     value={this.state.searchString}
+                    clearButtonMode="always"
                 />
             </View>
         );
@@ -578,7 +579,7 @@ class ContactsPicker extends React.Component {
                             placeholder={images.user_image}
                             style={styles.myProfileItemImage}
                             placeholderStyle={styles.myProfilePlaceholderImage}
-                            resizeMode="center"
+                            resizeMode="cover"
                         />
                         <View style={styles.contactItemDetailsContainer}>
                             <Text style={styles.myProfileName}>

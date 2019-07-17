@@ -21,6 +21,10 @@ import SignupScreen from '../Signup/SignupScreen';
 export default class SwiperScreen extends Component {
     constructor(props) {
         super(props);
+        BackHandler.addEventListener(
+            'hardwareBackPress',
+            this.handleBackButtonClick
+        );
         this.state = {
             lastIndex: 0,
             isLoginPage: true,
@@ -51,12 +55,6 @@ export default class SwiperScreen extends Component {
                 }
             ]
         };
-    }
-    componentWillMount() {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            this.handleBackButtonClick
-        );
     }
 
     handleBackButtonClick() {

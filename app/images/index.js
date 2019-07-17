@@ -108,7 +108,9 @@ const images = {
     // user_image: require('./chat/user_image.png'),
     user_image: require('./chat/user_image_big.png'),
     walkthrough_image: require('./walkthrough/image.png'),
-    empty_state_connection: require('./illus-empty-state-connection-lost/illus-empty-state-connection-lost.png')
+    empty_state_connection: require('./illus-empty-state-connection-lost/illus-empty-state-connection-lost.png'),
+    temp_map: require('./mapbox/tempMap.png'),
+    temp_map_ocean: require('./mapbox/tempMapOcean.png')
 };
 
 export default images;

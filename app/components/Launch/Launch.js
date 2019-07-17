@@ -50,6 +50,7 @@ import { IM_CHAT } from '../../lib/conversation/Conversation';
 import ReduxStore from '../../redux/store/configureStore';
 import RemoteLogger from '../../lib/utils/remoteDebugger';
 import PushNotification from 'react-native-push-notification';
+import { AgentGuard } from '../../lib/capability';
 
 //import jsonEncoder from 'serialize-json';
 
@@ -58,7 +59,7 @@ import PushNotification from 'react-native-push-notification';
 // Switch off During FINAL PROD RELEASE
 // const CODE_PUSH_ACTIVATE = true;
 const CODE_PUSH_ACTIVATE = false;
-const VERSION = 116; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
+const VERSION = 125; // Corresponding to 2.17.0 build 2. Update this number every time we update initial_bots
 const VERSION_KEY = 'version';
 
 import { NativeModules, NativeEventEmitter } from 'react-native';
@@ -119,13 +120,15 @@ export default class Splash extends React.Component {
         ContactsCache.init(); // after loging. Logout should clear it.
         await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
         GoogleAnalytics.init();
-        GoogleAnalytics.logEvents(
-            GoogleAnalyticsCategories.APP_LAUNCHED,
-            GoogleAnalyticsEvents.APP_OPENED,
-            null,
-            0,
-            null
-        );
+        if (Platform.OS !== 'android') {
+            GoogleAnalytics.logEvents(
+                GoogleAnalyticsCategories.APP_LAUNCHED,
+                GoogleAnalyticsEvents.APP_OPENED,
+                null,
+                0,
+                null
+            );
+        }
 
         Store.initStore({
             satelliteConnection: false
@@ -273,6 +276,7 @@ export default class Splash extends React.Component {
         console.log('Sourav Logging:::: In handle Notifcaiton', notification);
         NetworkHandler.poll();
         Bot.grpcheartbeatCatalog();
+        AgentGuard.heartBeat();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             const conversationId =

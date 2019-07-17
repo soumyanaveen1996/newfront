@@ -68,6 +68,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import { NETWORK_STATE } from '../../lib/network';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -134,11 +135,17 @@ class CallHistory extends React.Component {
     }
 
     makePstnCall(number) {
-        Actions.dialler({
-            call: true,
-            number: number,
-            newCallScreen: true
-        });
+        if (this.props.appState.network !== NETWORK_STATE.none) {
+            Actions.dialler({
+                call: true,
+                number: number,
+                newCallScreen: true
+            });
+        } else {
+            Alert.alert('No netwrok connection', 'Cannot make the call', [
+                { text: 'OK' }
+            ]);
+        }
     }
 
     renderRow({ item }) {

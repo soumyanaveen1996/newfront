@@ -66,6 +66,7 @@ import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import GlobalColors from '../../config/styles';
 import contactsStyles from '../ContactsPicker/styles';
+import { NETWORK_STATE } from '../../lib/network';
 
 const R = require('ramda');
 
@@ -362,6 +363,7 @@ class NewCallContacts extends React.Component {
                     placeholderTextColor={searchBarConfig.placeholderTextColor}
                     onChangeText={text => this.setState({ searchString: text })}
                     value={this.state.searchString}
+                    clearButtonMode="always"
                 />
             </View>
         );
@@ -605,18 +607,24 @@ class NewCallContacts extends React.Component {
     };
 
     makePstnCall = number => {
-        const { contactSelected } = this.state;
-        if (!contactSelected) {
-            alert('Sorry, cannot make call!');
-            return;
+        if (this.props.appState.network !== NETWORK_STATE.none) {
+            const { contactSelected } = this.state;
+            if (!contactSelected) {
+                alert('Sorry, cannot make call!');
+                return;
+            }
+            this.setContactVisible(false, null);
+            Actions.dialler({
+                call: true,
+                number: number,
+                contact: this.state.contactSelected,
+                newCallScreen: true
+            });
+        } else {
+            Alert.alert('No netwrok connection', 'Cannot make the call', [
+                { text: 'OK' }
+            ]);
         }
-        this.setContactVisible(false, null);
-        Actions.dialler({
-            call: true,
-            number: number,
-            contact: this.state.contactSelected,
-            newCallScreen: true
-        });
     };
 
     renderPSTNPhoneModal(contactSelected, phoneNumbers) {

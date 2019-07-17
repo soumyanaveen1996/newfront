@@ -23,6 +23,8 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 import { synchronizePhoneBook } from '../../lib/UserData/SyncData';
 import Bot from '../bot';
 import AgentGuard from '../capability/AgentGuard';
+import { Contact } from '../../lib/capability';
+import RemoteLogger from '../utils/remoteDebugger';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -37,8 +39,8 @@ const NetworkPollerStates = {
 
 BackgroundTask.define(async () => {
     // await NetworkHandler.poll();
+    RemoteLogger('Firing a Background Task now');
     await BackgroundTaskProcessor.process();
-    // await NetworkDAO.deleteAllRows();
     BackgroundTask.finish();
 });
 
@@ -153,6 +155,9 @@ class NetworkPoller {
                 BackgroundTimer.setTimeout(() => {
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                BackgroundTimer.setTimeout(() => {
+                    Contact.refreshContacts();
+                }, 2000);
             })
         );
         this.grpcEndSubscription.push(
@@ -261,6 +266,7 @@ class NetworkPoller {
             'Sourav Logging:::: >>>>>>>>>>>APPP SATTE<<<<<<<<',
             nextAppState
         );
+        AgentGuard.heartBeat();
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {
@@ -366,10 +372,10 @@ class NetworkPoller {
             }, config.network.gsm.pollingInterval);
         } else if (this.appState === 'background') {
             console.log(
-                'App is in background. So starting background task every 15 minutes'
+                '---------App is in background. So starting background task every 15 minutes-----------'
             );
             BackgroundTask.schedule({
-                period: 1200
+                period: 900
             });
         }
     };
@@ -404,7 +410,7 @@ class NetworkPoller {
                 'App is in background. So starting background task every 1 hour'
             );
             BackgroundTask.schedule({
-                period: 3600
+                period: 900
             });
         }
     };

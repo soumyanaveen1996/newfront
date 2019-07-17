@@ -5,7 +5,7 @@ const R = require('ramda');
 
 import { Network } from '../capability';
 
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 const AgentGuardServiceClient = NativeModules.AgentGuardServiceClient;
 
 export class AgentGuardError extends Error {

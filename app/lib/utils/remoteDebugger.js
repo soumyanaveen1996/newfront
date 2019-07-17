@@ -10,9 +10,9 @@ const RemoteLogger = text => {
     //     return;
     // }
 
-    if (__DEV__) {
-        return;
-    }
+    // if (__DEV__) {
+    //     return;
+    // }
 
     axios
         .request({

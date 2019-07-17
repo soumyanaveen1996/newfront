@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "@react-native-mapbox-gl/maps": "^7.0.0-rc2",
+    "@react-native-mapbox-gl/maps": "^7.0.0-rc3",
     "@turf/distance": "^6.0.1",
     "@turf/great-circle": "4.6.0",
     "@turf/helpers": "4.6.0",
@@ -71,7 +71,7 @@
     "react-native-fbsdk": "^0.8.0",
     "react-native-fs": "^2.5.1",
     "react-native-git-upgrade": "^0.2.7",
-    "react-native-google-analytics": "^1.3.2",
+    "react-native-google-analytics": "https://github.com/react-native-community/react-native-google-analytics",
     "react-native-google-signin": "^2.0.0",
     "react-native-hyperlink": "^0.0.14",
     "react-native-i18n": "^2.0.4",

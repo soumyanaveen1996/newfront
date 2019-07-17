@@ -23,6 +23,7 @@ import {
 } from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
 import BackgroundTimer from 'react-native-background-timer';
+import { NETWORK_STATE } from '.';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 
@@ -39,7 +40,9 @@ var logoutSubscriptions = [];
 const poll = () => {
     InteractionManager.runAfterInteractions(() => {
         Auth.getUser().then(authUser => {
-            AgentGuard.heartBeat();
+            if (Platform.OS === 'android') {
+                AgentGuard.heartBeat();
+            }
             processNetworkQueue();
             readRemoteLambdaQueue(authUser);
         });
@@ -223,7 +226,7 @@ const processNetworkQueue = () => {
                 SatelliteConnectionEvents.notConnectedToSatellite
             );
             Store.updateStore({ satelliteConnection: false });
-            RStore.dispatch(setNetwork('none'));
+            RStore.dispatch(setNetwork(NETWORK_STATE.none));
         }
     });
 };
@@ -283,11 +286,11 @@ const handleOnSatelliteResponse = res => {
     if (res.data.onSatellite) {
         EventEmitter.emit(SatelliteConnectionEvents.connectedToSatellite);
         Store.updateStore({ satelliteConnection: true });
-        RStore.dispatch(setNetwork('satellite'));
+        RStore.dispatch(setNetwork(NETWORK_STATE.satellite));
     } else {
         EventEmitter.emit(SatelliteConnectionEvents.notConnectedToSatellite);
         Store.updateStore({ satelliteConnection: false });
-        RStore.dispatch(setNetwork('full'));
+        RStore.dispatch(setNetwork(NETWORK_STATE.full));
     }
 };
 
