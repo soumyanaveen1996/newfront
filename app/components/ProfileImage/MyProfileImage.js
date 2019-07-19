@@ -110,7 +110,7 @@ class MyProfileImage extends React.Component {
     }
 
     render() {
-        console.log('profile image we will see', this.state.source);
+        // console.log('profile image we will see', this.state.source);
         return (
             <View>
                 <Image

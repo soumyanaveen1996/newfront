@@ -111,7 +111,7 @@ export default class CallModal extends React.Component {
                             </View>
                         </View>
                     ) : null}
-                    {phoneNumbers && phoneNumbers.local ? (
+                    {phoneNumbers && phoneNumbers.land ? (
                         <View style={styles.phoneContainer}>
                             <View style={styles.modalTextContainer}>
                                 <View>{Icons.greenCallLocal()}</View>
@@ -124,7 +124,7 @@ export default class CallModal extends React.Component {
                                     }}
                                 >
                                     {contactSelected.phoneNumbers
-                                        ? contactSelected.phoneNumbers.local
+                                        ? contactSelected.phoneNumbers.land
                                         : 'Not Available'}
                                 </Text>
                             </View>
@@ -138,11 +138,11 @@ export default class CallModal extends React.Component {
                                     disabled={
                                         !(
                                             contactSelected.phoneNumbers &&
-                                            contactSelected.phoneNumbers.local
+                                            contactSelected.phoneNumbers.land
                                         )
                                     }
                                     onPress={() =>
-                                        this.makePhoneCall(phoneNumbers.local)
+                                        this.makePhoneCall(phoneNumbers.land)
                                     }
                                 >
                                     {Icons.greenCallOutline({ size: 16 })}

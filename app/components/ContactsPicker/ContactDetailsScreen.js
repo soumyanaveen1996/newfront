@@ -141,6 +141,8 @@ export default class ContactDetailsScreen extends React.Component {
     };
 
     getLocalContacts = async () => {
+        console.log('going thos getLocalContact');
+
         return new Promise((resolve, reject) => {
             Contacts.getAllWithoutPhotos((error, contacts) => {
                 if (error) {
@@ -157,6 +159,8 @@ export default class ContactDetailsScreen extends React.Component {
     };
 
     addLocalConatcts = localContacts => {
+        console.log('checking local contact ', localContacts);
+
         let emailToDisplay = this.props.contact.emails[0].email || '';
 
         if (emailToDisplay.home) {
@@ -238,6 +242,8 @@ export default class ContactDetailsScreen extends React.Component {
         }
     };
     importLocalContacts = async () => {
+        console.log('import local contact');
+
         let localContacts;
         if (Platform.OS === 'android') {
             PermissionsAndroid.request(
@@ -248,12 +254,45 @@ export default class ContactDetailsScreen extends React.Component {
                 }
             )
                 .then(async granted => {
+                    // console.log(
+                    //     'granted =======',
+                    //     granted === PermissionsAndroid.RESULTS.GRANTED
+                    // );
+
                     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        localContacts = await this.getLocalContacts();
-                        this.addLocalConatcts(localContacts);
+                        // console.log('going in this condition');
+
+                        this.getLocalContacts().then(data => {
+                            // console.log('get all conatctcs', data);
+                            this.addLocalConatcts(data);
+                        });
+                        // localContacts = await this.getLocalContacts();
+                        // console.log('we will se th contact ', localContacts);
+
+                        // this.addLocalConatcts(localContacts);
                     } else {
                         console.log('Cannot get permission for Contacts');
-                        // return Alert.alert('Please grant access for contacts');
+                        return Alert.alert('Please grant access for contacts');
+                        // Alert.alert(
+                        //     'Please grant access for contacts',
+                        //     'Would you like to grant access for contacts to diaplay in FrontM?',
+                        //     [
+                        //         {
+                        //             text: 'No',
+                        //             onPress: () =>
+                        //                 console.log('Cancel Pressed'),
+                        //             style: 'cancel'
+                        //         },
+                        //         {
+                        //             text: 'Yes',
+                        //             onPress: () => {
+                        //                 this.importLocalContacts();
+                        //                 console.log('OK Pressed');
+                        //             }
+                        //         }
+                        //     ],
+                        //     { cancelable: false }
+                        // );
                     }
                 })
                 .catch(err => {
@@ -628,6 +667,8 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderFooterButtons() {
+        // console.log('checking in andorid', this.props);
+
         if (
             this.props.contact.isWaitingForConfirmation ||
             !this.props.contact.emails[0].email
@@ -657,7 +698,7 @@ export default class ContactDetailsScreen extends React.Component {
                     }}
                 >
                     <Text style={{ color: 'rgba(0,167,214,1)' }}>
-                        Import Phone from address book
+                        Import phone from address book
                     </Text>
                 </TouchableOpacity>
             </View>

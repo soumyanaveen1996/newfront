@@ -546,7 +546,8 @@ class NewContactScreen extends React.Component {
         console.log(
             'added contact  ',
             contactPhoneNumbersObj,
-            contactEmailsObj
+            contactEmailsObj,
+            contactEmails
         );
 
         this.setState({
@@ -583,7 +584,7 @@ class NewContactScreen extends React.Component {
             ]
         };
 
-        // console.log('save sata ', saveLocalContactData, this.state.userId);
+        // console.log('save sata ', saveLocalContactData);
         AddLocalContacts(saveLocalContactData)
             .then(elem => {
                 // console.log('data ', elem);

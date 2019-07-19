@@ -285,7 +285,7 @@ class NewCallContacts extends React.Component {
     getCredit() {
         Bot.getInstalledBots()
             .then(bots => {
-                // console.log(bots);
+                console.log(bots);
                 dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
                 if (dwIndex < 0) {
                     return Alert.alert(

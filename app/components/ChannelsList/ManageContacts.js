@@ -319,7 +319,8 @@ class ManageContacts extends React.Component {
                             style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                alignItems: 'flex-start'
+                                alignItems: 'flex-start',
+                                paddingHorizontal: 40
                             }}
                         >
                             {this.state.contacts.map((elem, index) => {

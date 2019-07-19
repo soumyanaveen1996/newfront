@@ -399,6 +399,8 @@ class ContactsPicker extends React.Component {
                 });
             }
         } else {
+            // console.log('contact details', contact);
+
             //OPEN contact details
             Actions.contactDetailsScreen({
                 contact: contact,
