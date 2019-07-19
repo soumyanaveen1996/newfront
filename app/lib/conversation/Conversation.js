@@ -263,15 +263,10 @@ export default class Conversation {
                     return Promise.all(promise);
                 })
                 .then(() => {
-                    console.log('Sourav Logging:::: Loaded All Conversations');
                     Store.dispatch(completeConversationsLoad(true));
                     return resolve();
                 })
                 .catch(error => {
-                    console.log(
-                        'Sourav Logging::::: Error logging Conversations',
-                        error
-                    );
                     return reject(error);
                 });
         });

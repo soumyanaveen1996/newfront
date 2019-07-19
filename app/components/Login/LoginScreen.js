@@ -122,6 +122,7 @@ export default class LoginScreen extends React.Component {
         this.setState({ loading: false });
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
+        console.log('Sourav Logging:::: 7');
         Auth.getUser().then(user => {
             if (Platform.OS === 'android') {
                 DefaultPreference.setName('NativeStorage');
@@ -129,8 +130,6 @@ export default class LoginScreen extends React.Component {
             const ContactsURL = `${Config.network.queueProtocol}${
                 Config.proxy.user_details_path
             }`;
-
-            console.log('Sourav Logging:::: Contacts URL', ContactsURL);
 
             const ContactsBOT = SystemBot.contactsBot.botId;
             DefaultPreference.set('SESSION', user.creds.sessionId);
@@ -140,7 +139,7 @@ export default class LoginScreen extends React.Component {
         Store.dispatch(setFirstLogin(true));
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
-        synchronizePhoneBook();
+        // synchronizePhoneBook();
         this.setState({
             loading: false,
             errorMessage: '',

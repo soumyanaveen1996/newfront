@@ -45,7 +45,6 @@ export default class AgentGuard {
                     }
                 };
 
-                console.log('Sourav Logging:::: Sending Heartbeat');
                 Network(options, false).then(response => {
                     console.log(
                         'Sourav Logging:::: Connected to AgentGuard',
@@ -63,10 +62,6 @@ export default class AgentGuard {
 
             const key = R.pathOr(null, ['conversation', 'bot'], params);
 
-            console.log(
-                'Sourav Logging:::: Executing Agent Guard',
-                JSON.stringify(params)
-            );
             if (user) {
                 const options = {
                     serviceName: 'AgentGuardServiceClient',
@@ -77,10 +72,6 @@ export default class AgentGuard {
                 };
 
                 const response = await Network(options, true);
-                console.log(
-                    'Sourav Logging:::: Sending Response Back to AG',
-                    response
-                );
                 return response;
                 // return convertResponse(response);
             }

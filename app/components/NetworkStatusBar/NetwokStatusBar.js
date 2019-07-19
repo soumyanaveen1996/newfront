@@ -51,7 +51,6 @@ class NetworkStatusNotchBar extends React.Component {
     };
 
     handleConnectionChange = connection => {
-        console.log('Sourav Logging::: Connection Change Event');
         if (connection.type === 'none') {
             this.props.setNetwork(NETWORK_STATE.none);
         } else {

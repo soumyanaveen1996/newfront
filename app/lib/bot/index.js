@@ -208,12 +208,7 @@ class Bot extends events.EventEmitter {
                     );
                 }
             })
-            .catch(error => {
-                console.log(
-                    'Sourav Logging:::: Heartbeat catalog Error',
-                    error
-                );
-            });
+            .catch(error => {});
     };
 
     static grpcGetCatalog = user => {

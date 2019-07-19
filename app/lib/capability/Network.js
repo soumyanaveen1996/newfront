@@ -161,9 +161,6 @@ const convertResponse = response => {
 };
 
 const queueMessage = ({ options, resolve, reject }) => {
-    console.log(
-        'Sourav Logging In Queue Message:::: Errro Sending the message, should we Quque it????'
-    );
     NetworkHandler.readLambda(true);
     const { params, key = null } = options;
     const deferredKey = key ? key : SHA1(JSON.stringify(params)).toString();
@@ -196,13 +193,9 @@ function Network(options, queue = false) {
                         });
                     }
                 }, 20000);
-                console.log('Sourav Logging:::: Sending a message');
                 grpcService[action](sessionId, params, (error, result) => {
                     clearTimeout(timerId);
                     if (error) {
-                        console.log(
-                            'Sourav Logging:::: Errro Sending the message, should we Quque it????'
-                        );
                         const deferredKey = key
                             ? key
                             : SHA1(JSON.stringify(params)).toString();
@@ -216,10 +209,6 @@ function Network(options, queue = false) {
 
                         // reject(error);
                     }
-                    console.log(
-                        'Sourav Logging::::Agent guard response : ',
-                        result
-                    );
                     const response = convertResponse(result);
                     resolve(response);
                 });

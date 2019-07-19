@@ -90,7 +90,6 @@ export default class ImageCacheManager {
         let pathComponents = PathParse(uriComponents.pathname);
         let extension = pathComponents.ext === '' ? '.img' : pathComponents.ext;
         const path = CACHE_DIR + '/' + SHA1(uri) + extension;
-        console.log('Sourav Logging:::: Image Path', path);
         return path;
     }
 

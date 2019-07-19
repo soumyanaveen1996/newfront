@@ -50,7 +50,6 @@ const poll = () => {
 };
 
 const readLambda = (force = false) => {
-    console.log('Sourav Logging:::: Reading Lambdaaaaaaaaaaaaaaa');
     Auth.getUser().then(authUser => {
         processNetworkQueue();
         readRemoteLambdaQueue(authUser, force);
@@ -173,8 +172,6 @@ const debounce = () => {
     });
 };
 
-console.log('Sourav Logging:::: Processing Network Request');
-
 const dequeueAndProcessQueueRequest = async () => {
     // Add Delay
     await debounce();
@@ -184,7 +181,6 @@ const dequeueAndProcessQueueRequest = async () => {
         let res = await Queue.dequeueNetworkRequest();
 
         if (!res) {
-            console.log('Sourav Logging:::: Nothing to PRocess now...');
             processingFutureRequest = false;
             return;
         }
@@ -192,7 +188,6 @@ const dequeueAndProcessQueueRequest = async () => {
         key = res.key;
         // let request = res.request;
         const options = res.request;
-        console.log('Sourav Logging:::: Processing Request', res.request);
 
         const response = await Network(options);
         // const response = await Network(request.getNetworkRequestOptions();

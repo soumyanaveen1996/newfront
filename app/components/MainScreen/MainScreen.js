@@ -285,7 +285,6 @@ class MainScreen extends React.Component {
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
         );
-        console.log('Sourav Logging:::: Is Login', this.props.login);
     }
 
     shouldComponentUpdate(nextProps) {

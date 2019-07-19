@@ -202,10 +202,6 @@ class NewCallContacts extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        console.log(
-            'Sourav Logging:::: Current Scene',
-            nextProps.appState.currentScene
-        );
         return nextProps.appState.currentScene === I18n.t('Contacts_call');
     }
 

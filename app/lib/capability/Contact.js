@@ -38,10 +38,6 @@ const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
 const getPhoneContacts = () => {
     PhoneContacts.getAll((error, contacts) => {
         if (error) {
-            console.log(
-                'Sourav Logging:::: Cannot Fetch Phone Contacts',
-                error
-            );
             Store.dispatch(setPhoneContacts([]));
             return;
         }
@@ -422,10 +418,6 @@ export default class Contact {
         new Promise((resolve, reject) => {
             Auth.getUser()
                 .then(user => {
-                    console.log(
-                        'Sourav Logging:::: Fetching COntacts Data from DB'
-                    );
-
                     if (user) {
                         Store.dispatch(completeContactsLoad(false));
                         return Contact.fetchGrpcContacts(user);

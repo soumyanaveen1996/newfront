@@ -242,7 +242,6 @@ class ChatBotScreen extends React.Component {
     };
 
     goBack = () => {
-        console.log('Sourav Logging:::: GOBACK');
         Actions.pop();
         if (this.props.onBack) {
             this.props.onBack();
@@ -707,9 +706,6 @@ class ChatBotScreen extends React.Component {
     };
 
     handleMessageEventsSend(event) {
-        console.log(
-            'Sourav Logging:::: In Message Even Send...will try to send this message'
-        );
         if (!event || event.botId !== this.getBotId()) {
             return;
         }
@@ -1608,9 +1604,6 @@ class ChatBotScreen extends React.Component {
 
     sendMessage = async message => {
         // console.log('>>>>>>sendmessage', message)
-        console.log(
-            'Sourav Logging:::: Sending Message in foreground Chatter!!!'
-        );
         this.countMessage(message);
 
         GoogleAnalytics.logEvents(

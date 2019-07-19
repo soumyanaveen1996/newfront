@@ -27,7 +27,6 @@ export const synchronizeUserData = async () => {
         let connection = await Network.isConnected();
         // connection = false;
         if (!connection) {
-            console.log('Sourav Logging ::::::: NO CONNECTION');
             syncNoNetwork();
             return;
         }

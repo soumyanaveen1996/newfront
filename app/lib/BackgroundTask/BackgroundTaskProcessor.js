@@ -142,10 +142,6 @@ const processTask = async (task, user) => {
         message.backgroundEventMessage(task.key, task.options);
 
         if (activeBot == task.botId) {
-            console.log(
-                'Sourav Logging:::: The Chat is on Screen Send a message directly'
-            );
-
             RemoteLogger('Running Tasks Bot is Open');
             EventEmitter.emit(MessageEvents.messageSend, {
                 message,

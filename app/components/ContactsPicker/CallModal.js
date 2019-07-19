@@ -22,10 +22,6 @@ export default class CallModal extends React.Component {
     makePhoneCall = number => {
         if (Store.getState().user.network !== NETWORK_STATE.none) {
             this.props.setVisible(false);
-            console.log(
-                'Sourav Logging:::: Calling Contact',
-                this.props.contact
-            );
             Actions.dialler({
                 call: true,
                 number: number,

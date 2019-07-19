@@ -96,15 +96,9 @@ class NewCallContacts extends React.Component {
             )
         );
 
-        // console.log(
-        //     'Sourav Logging:::: Phone Contacts',
-        //     this.props.appState.phoneContacts
-        // );
-
         this.refresh(this.props.appState.phoneContacts);
 
         // InteractionManager.runAfterInteractions(() => {
-        //     console.log('Sourav Logging:::: Loading Contacts');
         //     if (Platform.OS === 'android') {
         //         PermissionsAndroid.request(
         //             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
@@ -346,7 +340,6 @@ class NewCallContacts extends React.Component {
     renderItem(path) {
         const contact = this.state.contactsData[path.section].items[path.row];
 
-        console.log('Sourav Logging:::: Profile Image', contact.profileImage);
         const placeHolderImage = require('../../images/avatar-icon-placeholder/Default_Image_Thumbnail.png');
         // const testImage = (
         //     <Image

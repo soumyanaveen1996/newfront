@@ -138,7 +138,7 @@ export default class Splash extends React.Component {
         let version = parseInt(versionString, 10);
         let forceUpdate = isNaN(version) || version < VERSION || global.__DEV__;
 
-        if (true && forceUpdate) {
+        if (false && forceUpdate) {
             console.log('Copying Bots');
             await BotUtils.copyIntialBots(forceUpdate);
             await DeviceStorage.save(VERSION_KEY, VERSION);
@@ -171,11 +171,6 @@ export default class Splash extends React.Component {
                     }`;
                     const ContactsBOT = SystemBot.contactsBot.botId;
                     DefaultPreference.set('SESSION', user.creds.sessionId);
-                    console.log('Sourav Logging:::: Contacts URL', ContactsURL);
-                    console.log(
-                        'Sourav Logging:::: Session ID',
-                        user.creds.sessionId
-                    );
                     DefaultPreference.set('URL', ContactsURL);
                     DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
                     if (user) {
@@ -268,12 +263,10 @@ export default class Splash extends React.Component {
     };
 
     notificationRegistrationHandler = () => {
-        console.log('Sourav Logging:::: Register for Notifcaitons');
         this.configureNotifications();
     };
 
     handleNotification = notification => {
-        console.log('Sourav Logging:::: In handle Notifcaiton', notification);
         NetworkHandler.poll();
         Bot.grpcheartbeatCatalog();
         AgentGuard.heartBeat();

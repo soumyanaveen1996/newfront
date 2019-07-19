@@ -286,10 +286,6 @@ export default class Dialler extends React.Component {
             this.setState({ diallerState: DiallerState.connecting });
             await TwilioVoIP.initTelephony();
             if (this.mounted) {
-                console.log(
-                    'Sourav Logging:::: Number sent to Twilio',
-                    toNumber
-                );
                 TwilioVoice.connect({
                     CallerId: `${user.info.emailAddress}`,
                     To: `${toNumber}`

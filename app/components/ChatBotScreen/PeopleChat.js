@@ -104,10 +104,6 @@ export default class PeopleChat extends ChatBotScreen {
                             state.params.botDone();
                         }
                         await state.params.deleteConversation();
-                        console.log(
-                            'Sourav Logging:::: ',
-                            Actions.currentScene
-                        );
                         if (state.params.onBack) {
                             if (Actions.currentScene === 'peopleChat') {
                                 Actions.pop();
