@@ -504,7 +504,10 @@ export default StyleSheet.create({
         marginRight: 10
     },
     selectContactContainer: {
-        maxHeight: hp('20%'),
+        // position: 'absolute',
+        // top: 40,
+        width: wp('100%'),
+        maxHeight: hp('30%'),
         backgroundColor: '#f4f4f4',
         alignItems: 'stretch'
     },
@@ -518,7 +521,7 @@ export default StyleSheet.create({
         color: 'rgba(102,102,102,1)'
     },
     participantsContainer: {
-        maxHeight: hp('50%'),
+        maxHeight: hp('40%'),
         flexGrow: 1
     },
     teamContainer: {

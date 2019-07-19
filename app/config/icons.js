@@ -255,24 +255,24 @@ export const Icons = {
         '500'
     ),
     greenCallBlue: icon(
+        'smartphone',
         'ios-call-outline',
-        'ionicon',
         hp('3%'),
         'rgba(0,189,242,1)',
         'green',
         '500'
     ),
     greenCallLocal: icon(
+        'phone',
         'ios-call-outline',
-        'ionicon',
         hp('3%'),
-        GlobalColors.grey,
+        'rgba(0,189,242,1)',
         'green',
         '500'
     ),
     greenSatBlue: icon(
+        'satellite',
         'ios-phone-portrait',
-        'ionicon',
         hp('3%'),
         'rgba(0,189,242,1)',
         'green',

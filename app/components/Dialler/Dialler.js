@@ -660,7 +660,7 @@ export default class Dialler extends React.Component {
     getCredit() {
         Bot.getInstalledBots()
             .then(bots => {
-                // console.log(bots);
+                console.log('bot data ', bots);
                 dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
                 if (dwIndex < 0) {
                     return Alert.alert(
@@ -668,12 +668,15 @@ export default class Dialler extends React.Component {
                     );
                 }
                 const DWBot = bots[dwIndex];
-                // Actions.botChat({bot: DWBot})
+                // console.log('page to go ', DWBot);
+
+                // Actions.botChat({ bot: DWBot });
                 Actions.pop();
-                setTimeout(
-                    () => Actions.refresh({ bot: DWBot, key: Math.random() }),
-                    0
-                );
+                Actions.botChat({ bot: DWBot });
+                // setTimeout(
+                //     () => Actions.refresh({ bot: DWBot, key: Math.random() }),
+                //     0
+                // );
             })
             .catch(err => {
                 console.log(err);
