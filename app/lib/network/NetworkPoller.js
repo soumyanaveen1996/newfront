@@ -156,7 +156,7 @@ class NetworkPoller {
                 console.log(
                     'Sourav Logging:::: Processing Message : in GRPC Push'
                 );
-                BackgroundTimer.setTimeout(() => {
+                setTimeout(() => {
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
                 BackgroundTimer.setTimeout(() => {
