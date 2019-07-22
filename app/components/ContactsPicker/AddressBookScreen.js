@@ -42,7 +42,8 @@ export default class AddressBookScreen extends React.Component {
             searchText: '',
             email: [],
             keyboard: false,
-            loading: false
+            loading: false,
+            upperHeight: 0
         };
     }
 

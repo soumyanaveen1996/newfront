@@ -32,25 +32,25 @@ export default class SwiperScreen extends Component {
                 {
                     header: 'Keep conversations going no matter where you are',
                     description:
-                        'The safest and lowest data consuming smart messenger, voice calling and engaging chatbot assistants.',
+                        'The communication & collaboration app designed for satellite WiFi users. For personal or professional use.',
                     imageSource: images.preview_slider_1
                 },
                 {
                     header: 'Say Goodbye to isolation',
                     description:
-                        "Tracking, situational awareness and easy collaboration. Keep in touch with your friends, colleagues and companies while you're at sea.",
+                        'Easily top up built-in Digital Wallet and make phone calls to anywhere in the world. Even to Satellite Phone numbers.',
                     imageSource: images.preview_slider_2
                 },
                 {
                     header: 'Making flying fun again',
                     description:
-                        'Discover the world below you, chat with others on the flight, book hotels, cabs, shop duty free and much more',
+                        'Message your loved ones and your teams, on a Cruise ship or an Aeroplane. Or even from Timbuktu.',
                     imageSource: images.preview_slider_3
                 },
                 {
                     header: "Let's get you going",
                     description:
-                        'No matter where you, we are making it easier for you to connect, communicate and operate.',
+                        'Built-in Virtual Assistants ensure your work and access to information, remain uninterrupted. Even without internet.',
                     imageSource: images.preview_slider_4
                 }
             ]

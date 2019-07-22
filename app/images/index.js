@@ -45,7 +45,7 @@ const images = {
     empty_marketplace: require('./empty-state-marketplace/illus-empty-state-marketplace.png'),
     front_bot_logo: require('./bots/FrontBotLogo.png'),
     frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png'),
-    frontm_logo: require('./frontm-logo/frontm-logo.png'),
+    frontm_logo: require('./frontm-header-logo/frontm-header-logo3x.png'),
     gsm: require('./icons/gsm.png'),
     home_gray_arrow: require('./home-gray-arrow/home-gray-arrow.png'),
     icn_alerts: require('./botcategories/icn_alerts.png'),

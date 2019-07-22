@@ -158,6 +158,7 @@ export default StyleSheet.create({
     logoStyle: {
         width: 160,
         height: 65,
-        marginBottom: 20
+        marginBottom: 20,
+        resizeMode: 'contain'
     }
 });

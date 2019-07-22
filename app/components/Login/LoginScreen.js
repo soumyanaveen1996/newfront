@@ -139,7 +139,7 @@ export default class LoginScreen extends React.Component {
         Store.dispatch(setFirstLogin(true));
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
-        // synchronizePhoneBook();
+        synchronizePhoneBook();
         this.setState({
             loading: false,
             errorMessage: '',
