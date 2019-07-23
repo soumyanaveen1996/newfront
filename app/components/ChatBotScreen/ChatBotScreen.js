@@ -372,7 +372,7 @@ class ChatBotScreen extends React.Component {
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
-                        self.eventSubscription = EventEmitter.addListener(
+                        self.eventSendSubscription = EventEmitter.addListener(
                             MessageEvents.messageSend,
                             this.handleMessageEventsSend.bind(this)
                         );
@@ -585,6 +585,9 @@ class ChatBotScreen extends React.Component {
         // Remove the event listener - CRITICAL to do to avoid leaks and bugs
         if (this.eventSubscription) {
             this.eventSubscription.remove();
+        }
+        if (this.eventSendSubscription) {
+            this.eventSendSubscription.remove();
         }
         if (this.keyboardWillShowListener) {
             this.keyboardWillShowListener.remove();
