@@ -722,6 +722,9 @@ class ChatBotScreen extends React.Component {
         if (!event || event.botId !== this.getBotId()) {
             return;
         }
+        console.log(
+            'Sourav Logging:::: Message Event-------------> Message Received'
+        );
         this.loadedBot.asyncResult(
             event.message,
             this.botState,
