@@ -162,20 +162,24 @@ export default class ContactDetailsScreen extends React.Component {
         console.log('checking local contact ', localContacts);
 
         let emailToDisplay = this.props.contact.emails[0].email || '';
+        let contactEmail = '';
 
-        if (emailToDisplay.home) {
-            emailToDisplay = emailToDisplay.home;
+        if (emailToDisplay && emailToDisplay.home) {
+            contactEmail = emailToDisplay.home;
         }
 
-        if (emailToDisplay.work) {
-            emailToDisplay = emailToDisplay.work;
+        if (emailToDisplay && emailToDisplay.work) {
+            contactEmail = emailToDisplay.work;
         }
-        if (emailToDisplay.home && emailToDisplay.work) {
-            emailToDisplay = emailToDisplay.work;
+        if (emailToDisplay && emailToDisplay.home && emailToDisplay.work) {
+            contactEmail = emailToDisplay.work;
         }
 
-        if (emailToDisplay.home === '' || emailToDisplay.work === '') {
-            emailToDisplay = '';
+        if (
+            emailToDisplay &&
+            (emailToDisplay.home === '' || emailToDisplay.work === '')
+        ) {
+            contactEmail = '';
         }
 
         console.log('we see', localContacts);
@@ -184,7 +188,7 @@ export default class ContactDetailsScreen extends React.Component {
             // this.setState({ loading: false });
             return Alert.alert(
                 'No phone contact found for email address ',
-                emailToDisplay
+                contactEmail
             );
         }
         const localPhone = localContacts[0].phoneNumbers[0].number;
