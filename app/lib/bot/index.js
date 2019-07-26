@@ -274,7 +274,16 @@ class Bot extends events.EventEmitter {
                 'slug'
             );
             const developerBots = _.omit(
-                _.groupBy(catalog, 'developer'),
+                _.groupBy(
+                    catalog.filter(bot => {
+                        return (
+                            bot.systemBot === false ||
+                            bot.systemBot === 'false' ||
+                            bot.systemBot === undefined
+                        );
+                    }),
+                    'developer'
+                ),
                 'undefined'
             );
             catalogData.developer = _.map(_.keys(developerBots), developer => {
