@@ -36,6 +36,7 @@ import { uploadImage } from '../../redux/actions/UserActions';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import ImageCache from '../../lib/image_cache';
 import utils from '../../lib/utils';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 const R = require('ramda');
 
@@ -143,72 +144,80 @@ class MyProfileScreen extends React.Component {
     };
 
     saveProfile = async () => {
-        this.setState({ loading: true });
-        let detailObj = {
-            emailAddress: this.state.emailAddress[0],
-            searchable: this.state.searchable,
-            visible: this.state.visible,
-            userName: this.state.myName
-        };
+        try {
+            this.setState({ loading: true });
+            let detailObj = {
+                emailAddress: this.state.emailAddress[0],
+                searchable: this.state.searchable,
+                visible: this.state.visible,
+                userName: this.state.myName
+            };
 
-        let userDetails = {
-            userName: this.state.myName,
-            searchable: this.state.searchable,
-            visible: this.state.visible
-        };
+            let userDetails = {
+                userName: this.state.myName,
+                searchable: this.state.searchable,
+                visible: this.state.visible
+            };
 
-        if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
-            let phoneNum = {};
-            this.state.phoneNumbers.forEach(elem => {
-                let key;
-                let phValue;
+            if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
+                let phoneNum = {};
+                this.state.phoneNumbers.forEach(elem => {
+                    let key;
+                    let phValue;
 
-                key = Object.keys(elem)[0];
-                phValue = elem[key];
-                if (elem.number === '') {
-                    console.log('its empty');
-                } else {
-                    phoneNum[key] = phValue;
-                }
-            });
-            userDetails.phoneNumbers = { ...phoneNum };
-            detailObj.phoneNumbers = { ...phoneNum };
-        }
-
-        if (
-            userDetails.phoneNumbers &&
-            Object.keys(userDetails.phoneNumbers).length === 0
-        ) {
-            delete detailObj.phoneNumbers;
-        }
-
-        console.log('beforeing saving profile ', detailObj, userDetails);
-
-        const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
-
-        if (!updatedUserInfo) {
-            this.setState({ loading: false });
-            console.log('error');
-        }
-        if (updatedUserInfo && !updatedUserInfo[0]) {
-            this.setState({ loading: false });
-            console.log('error');
-        } else {
-            Auth.updateUserDetails(userDetails)
-                .then(data => {
-                    // console.log('saved data ', data);
-
-                    this.setState({ loading: false });
-                    setTimeout(() => {
-                        this.showAlert('Profile updated');
-                    }, 200);
-                })
-                .catch(err => {
-                    this.setState({ loading: false });
-                    console.log('error ', err);
+                    key = Object.keys(elem)[0];
+                    phValue = elem[key];
+                    if (elem.number === '') {
+                        console.log('its empty');
+                    } else {
+                        phoneNum[key] = phValue;
+                    }
                 });
+                userDetails.phoneNumbers = { ...phoneNum };
+                detailObj.phoneNumbers = { ...phoneNum };
+            }
+
+            if (
+                userDetails.phoneNumbers &&
+                Object.keys(userDetails.phoneNumbers).length === 0
+            ) {
+                delete detailObj.phoneNumbers;
+            }
+
+            console.log('beforeing saving profile ', detailObj, userDetails);
+
+            const updatedUserInfo = await Auth.updatingUserProfile(detailObj);
+
+            if (!updatedUserInfo) {
+                this.setState({ loading: false });
+                console.log('error');
+            }
+            if (updatedUserInfo && !updatedUserInfo[0]) {
+                this.setState({ loading: false });
+                console.log('error');
+            } else {
+                Auth.updateUserDetails(userDetails)
+                    .then(data => {
+                        // console.log('saved data ', data);
+
+                        this.setState({ loading: false });
+                        setTimeout(() => {
+                            this.showAlert('Profile updated');
+                        }, 200);
+                    })
+                    .catch(err => {
+                        this.setState({ loading: false });
+                        console.log('error ', err);
+                    });
+            }
+            Actions.pop();
+        } catch (e) {
+            this.setState({ loading: false });
+            this.refs.toast.show(
+                'Could not update profile',
+                DURATION.LENGTH_SHORT
+            );
         }
-        Actions.pop();
     };
 
     selectNumberType = index => {
@@ -522,6 +531,14 @@ class MyProfileScreen extends React.Component {
         );
     }
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         // console.log('image url ', this.state.reloadProfileImage);
 
@@ -782,6 +799,7 @@ class MyProfileScreen extends React.Component {
                             </View>
                         </View>
                     </ScrollView>
+                    {this.renderToast()}
                 </SafeAreaView>
             </KeyboardAvoidingView>
         );
