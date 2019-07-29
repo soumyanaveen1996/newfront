@@ -108,7 +108,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 373
+        versionCode 374
         versionName "5.2"
         multiDexEnabled true
         renderscriptTargetApi 23
