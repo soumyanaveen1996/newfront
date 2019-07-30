@@ -168,6 +168,10 @@ const selectMessageById = messageId =>
 
 const insertOrUpdateMessage = message =>
     new Promise((resolve, reject) => {
+        console.log(
+            'Sourav Logging:::: Inserting Message inDB',
+            message.getMessageId()
+        );
         selectMessage(message).then(dbMessage => {
             if (dbMessage) {
                 updateMessage(message)

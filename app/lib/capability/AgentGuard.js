@@ -58,6 +58,10 @@ export default class AgentGuard {
     };
     static execute = async params => {
         try {
+            console.log(
+                'Sourav Logging:::: Executing Agent Guard',
+                params.parameters
+            );
             const user = await Auth.getUser();
 
             const key = R.pathOr(null, ['conversation', 'bot'], params);

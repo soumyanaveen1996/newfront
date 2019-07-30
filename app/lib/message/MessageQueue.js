@@ -64,12 +64,13 @@ export default class MessageQueue {
     }
 
     async isMessageAlreadyProcessed(message) {
-        // console.log('Message  : ', message);
+        console.log('Sourav Logging:::: Processing Message', message);
         if (
             message.messageId === '' ||
             message.messageId == null ||
             !message.messageId
         ) {
+            console.log('Sourav Logging:::: No message id', message);
             return false;
         }
         try {
@@ -79,7 +80,12 @@ export default class MessageQueue {
             const dbMessage = await MessageDAO.selectMessageById(
                 message.messageId
             );
+            console.log('Sourav Logging:::: Message in Database', dbMessage);
             if (dbMessage || networkItem) {
+                console.log(
+                    'Sourav Logging:::: Message Already processed',
+                    message
+                );
                 return true;
             }
         } catch (error) {
@@ -108,6 +114,10 @@ export default class MessageQueue {
 
     async handleMessage(message) {
         let user = await Auth.getUser();
+        console.log(
+            'Sourav Logging:::: Processing Message:::',
+            message.messageId
+        );
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
         if (alreadyProcessed) {
             return true;
@@ -133,6 +143,7 @@ export default class MessageQueue {
                     botId: messageBot
                 });
             } else {
+                console.log('Sourav Logging:::: Bot in Background Handle it!!');
                 await BackgroundTaskProcessor.sendBackgroundAsyncMessage(
                     message,
                     message.bot,

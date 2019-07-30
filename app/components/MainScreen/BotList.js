@@ -14,7 +14,7 @@ import { BotListStyles, MainScreenStyles } from './styles';
 import BotListItem from './BotListItem';
 import ConversationListItem from './ConversationListItem';
 import { Conversation } from '../../lib/conversation';
-import { Auth, DeviceStorage } from '../../lib/capability';
+import { Auth, DeviceStorage, Contact } from '../../lib/capability';
 import Utils from './Utils';
 import _ from 'lodash';
 import { Promise } from '../../lib/capability';
@@ -82,6 +82,11 @@ class BotList extends React.Component {
         let conversations =
             (await Promise.resolve(Conversation.getLocalConversations())) || [];
         let user = await Auth.getUser();
+        const AllContacts = await Contact.getAddedContacts();
+        const VesselDirectory = AllContacts.filter(
+            contact => contact.type === 'Vessels'
+        ).map(vessel => vessel.userId);
+        console.log('Sourav Logging:::: Vessel Directory', VesselDirectory);
         // All
         let allChats = [];
         conversations.forEach(conversation => {
@@ -135,6 +140,14 @@ class BotList extends React.Component {
 
         // console.log('getting all chat data ', allChatsData);
 
+        // Remove All Vessels from the List
+        allChatsData = allChatsData.filter(chat => {
+            return (
+                VesselDirectory.findIndex(
+                    vessel => vessel === chat.chatData.otherUserId
+                ) < 0
+            );
+        });
         // Sort with the most recent date at top
         allChatsData = _.orderBy(
             allChatsData,

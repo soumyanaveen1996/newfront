@@ -432,6 +432,11 @@ export default class Contact {
                         //     response.data.contacts
                         // );
 
+                        console.log(
+                            'Sourav Logging:::: Cntacts Data --------->',
+                            response.data.contacts
+                        );
+
                         //CONTACTS
                         var contacts = _.map(
                             response.data.contacts,

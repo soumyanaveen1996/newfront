@@ -372,7 +372,7 @@ class ChatBotScreen extends React.Component {
                             MessageEvents.messageProcessed,
                             this.handleMessageEvents.bind(this)
                         );
-                        self.eventSubscription = EventEmitter.addListener(
+                        self.eventSendSubscription = EventEmitter.addListener(
                             MessageEvents.messageSend,
                             this.handleMessageEventsSend.bind(this)
                         );
@@ -586,6 +586,9 @@ class ChatBotScreen extends React.Component {
         if (this.eventSubscription) {
             this.eventSubscription.remove();
         }
+        if (this.eventSendSubscription) {
+            this.eventSendSubscription.remove();
+        }
         if (this.keyboardWillShowListener) {
             this.keyboardWillShowListener.remove();
         }
@@ -722,6 +725,9 @@ class ChatBotScreen extends React.Component {
         if (!event || event.botId !== this.getBotId()) {
             return;
         }
+        console.log(
+            'Sourav Logging:::: Message Event-------------> Message Received'
+        );
         this.loadedBot.asyncResult(
             event.message,
             this.botState,
