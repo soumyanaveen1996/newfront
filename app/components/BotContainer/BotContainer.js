@@ -43,6 +43,14 @@ export default class BotContainer extends React.Component {
         this.mounted = true;
     }
 
+    componentDidUpdate() {
+        Bot.getTimeLineBots().then(bots => {
+            if (bots !== this.state.installedBots) {
+                this.setState({ installedBots: bots });
+            }
+        });
+    }
+
     // componentWillReceiveProps(nextProps) {
     //     console.log(nextProps.clickedIndex, this.props.currentIndex);
 
@@ -109,7 +117,8 @@ export default class BotContainer extends React.Component {
         Actions.botListScreen({
             data: selectedBots,
             count: count,
-            title: title
+            title: title,
+            refresh: this.props.refresh
         });
     };
 

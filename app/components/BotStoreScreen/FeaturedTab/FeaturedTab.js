@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, FlatList, ScrollView, Platform } from 'react-native';
+import {
+    View,
+    FlatList,
+    ScrollView,
+    Platform,
+    RefreshControl
+} from 'react-native';
 import styles from './styles';
 import BotInstallListItem from '../../BotInstallListItem';
 import Bot from '../../../lib/bot';
@@ -7,6 +13,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../../config/i18n/i18n';
 import utils from '../../../lib/utils';
 import { Actions } from 'react-native-router-flux';
+import Store from '../../../redux/store/configureStore';
 
 export default class FeaturedTab extends React.Component {
     constructor(props) {
@@ -82,6 +89,30 @@ export default class FeaturedTab extends React.Component {
             <ScrollView style={{ flex: 1 }}>
                 <View style={{ flex: 1, alignItems: 'center' }}>
                     <FlatList
+                        refreshControl={
+                            Store.getState().user.network === 'full' ? (
+                                <RefreshControl
+                                    onRefresh={() => {
+                                        this.setState(
+                                            { refreshing: true },
+                                            async () => {
+                                                try {
+                                                    await this.props.refresh();
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                } catch (e) {
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                }
+                                            }
+                                        );
+                                    }}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
+                        }
                         style={styles.flatList}
                         keyExtractor={(item, index) => item.botId}
                         data={this.state.botsData}
