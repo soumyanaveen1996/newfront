@@ -74,7 +74,7 @@ const process = async () => {
     });
 };
 
-const getBotManifest = async botId => {
+export const getBotManifest = async botId => {
     const installedBots = await Bot.allInstalledBots();
     const botManifest = _.find(installedBots, bot => {
         return bot.botId === botId;
@@ -89,6 +89,55 @@ const getBotManifest = async botId => {
         return bot.botId === botId;
     });
     return systemBotManifest;
+};
+
+export const reportLocationBG = async (task, user) => {
+    // console.log('BackgroundProcessor::poll::called at ', task);
+    const activeBot = Store.getState().bots.id;
+    const botManifest = await getBotManifest(task.botId);
+
+    if (!botManifest) {
+        console.log('Sourav Logging:::: No Bot Manifest Found');
+        return;
+    }
+
+    const botScreen = new BackgroundTaskBotScreen(
+        task.botId,
+        task.conversationId,
+        undefined,
+        task.options
+    );
+    const botContext = new BotContext(botScreen, botManifest);
+
+    let conversationContext = await getConversationContext(
+        task.botId,
+        user,
+        botContext,
+        botScreen
+    );
+
+    if (!conversationContext) {
+        console.log('Sourav Logging:::: No Conversation COntext Found');
+        return;
+    }
+    let message = new Message();
+    message.setCreatedBy({
+        addedByBot: true,
+        messageDate: moment().valueOf()
+    });
+    message.backgroundEventMessage(task.key, task.options);
+
+    if (activeBot == task.botId) {
+        RemoteLogger('Running Tasks Bot is Open');
+        EventEmitter.emit(MessageEvents.messageSend, {
+            message,
+            botId: activeBot
+        });
+    } else {
+        RemoteLogger('Running Tasks Bot is Closed');
+        await processMessage(message, botManifest, botContext, true);
+    }
+    return;
 };
 
 const processTask = async (task, user) => {

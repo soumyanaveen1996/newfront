@@ -3,6 +3,14 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import moment from 'moment';
 import Device from 'react-native-device-info';
 import DeviceStorage from './DeviceStorage';
+import { Auth, Message, ConversationContext } from '../capability';
+import Store from '../../redux/store/configureStore';
+import backgroundTaskSql from '../persistence/backgroundTaskSql';
+import EventEmitter, { MessageEvents } from '../events';
+import {
+    getBotManifest,
+    reportLocationBG
+} from '../BackgroundTask/BackgroundTaskProcessor';
 
 export default class LocationTracker {
     static start_tracking = async data => {
@@ -46,8 +54,8 @@ export default class LocationTracker {
                 startOnBoot: true, // <-- Auto start tracking when device is powered-up.
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
-                url: 'http://tracker.transistorsoft.com/locations/frontm',
-                params: BackgroundGeolocation.transistorTrackerParams(Device),
+                // url: 'http://tracker.transistorsoft.com/locations/frontm',
+                // params: BackgroundGeolocation.transistorTrackerParams(Device),
                 batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
                 autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
@@ -77,31 +85,59 @@ export default class LocationTracker {
         );
     };
 
+    static report_location = async location => {
+        console.log(
+            'Sourav Logging:::: Got a Location, Proceed with Reporting'
+        );
+        const user = await Auth.getUser();
+        if (!user) {
+            console.log('Sourav Logging:::: Could not get User ----> Exit');
+            return;
+        }
+
+        const data = await DeviceStorage.get('location_bot');
+        const task = {
+            botId: data.botId,
+            conversationId: data.conversationId,
+            key: JSON.stringify(location),
+            options: {}
+        };
+        await reportLocationBG(task, user);
+    };
+
     static onLocation = async location => {
+        const taskId = await BackgroundGeolocation.startBackgroundTask();
         try {
-            const taskId = await BackgroundGeolocation.startBackgroundTask();
-            const data = await DeviceStorage.get('location_bot');
+            console.log('Sourav Logging:::: ON Location');
+            // const taskId = await BackgroundGeolocation.startBackgroundTask();
+            // const data = await DeviceStorage.get('location_bot');
 
             await RemoteLogger(
                 `Location ${JSON.stringify(location)} --- ${moment().format(
                     'DD-MM hh:mm:ss'
                 )} with DATA ---> ${JSON.stringify(data)}`
             );
+            console.log('Sourav Logging:::: Remote Logged');
+            await LocationTracker.report_location(location.coords);
+            console.log('Sourav Logging:::: Reported to Bot');
             BackgroundGeolocation.stopBackgroundTask(taskId);
         } catch (error) {
-            BackgroundGeolocation.stopBackgroundTask();
+            BackgroundGeolocation.stopBackgroundTask(taskId);
         }
     };
 
     static handleHeartBeat = async event => {
         const taskId = await BackgroundGeolocation.startBackgroundTask();
-        const data = await DeviceStorage.get('location_bot');
+        // const data = await DeviceStorage.get('location_bot');
+        console.log('Sourav Logging:::: In heartbeat');
 
         await RemoteLogger(`Received Heartbeat ${JSON.stringify(event)}`);
         const location = await BackgroundGeolocation.getCurrentPosition({
             samples: 1,
             persist: true
         });
+        console.log('Sourav Logging:::: Will Report Location to Bot');
+        await LocationTracker.report_location(location.coords);
         console.log('Sourav Logging:::: Heartbeat Event', location);
         BackgroundGeolocation.stopBackgroundTask(taskId);
     };
