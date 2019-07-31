@@ -106,17 +106,13 @@ export default class LocationTracker {
     };
 
     static onLocation = async location => {
-        const taskId = await BackgroundGeolocation.startBackgroundTask();
         try {
             console.log('Sourav Logging:::: ON Location');
             // const taskId = await BackgroundGeolocation.startBackgroundTask();
             // const data = await DeviceStorage.get('location_bot');
+            const taskId = await BackgroundGeolocation.startBackgroundTask();
 
-            await RemoteLogger(
-                `Location ${JSON.stringify(location)} --- ${moment().format(
-                    'DD-MM hh:mm:ss'
-                )} with DATA ---> ${JSON.stringify(data)}`
-            );
+            await RemoteLogger('Got Location Data');
             console.log('Sourav Logging:::: Remote Logged');
             await LocationTracker.report_location(location.coords);
             console.log('Sourav Logging:::: Reported to Bot');
