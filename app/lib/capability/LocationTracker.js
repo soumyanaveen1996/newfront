@@ -42,7 +42,7 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 10,
+                distanceFilter: 100,
                 heartbeatInterval: 180,
                 preventSuspend: true,
                 // Activity Recognition
