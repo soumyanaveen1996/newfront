@@ -86,8 +86,8 @@ public class MainApplication extends Application implements ReactApplication {
                                                                    // handle microphone
                                                                    // permissions
                                                                    // in your application
-					// new RNBackgroundGeolocation(),
-          // new RNBackgroundFetchPackage(),
+					new RNBackgroundGeolocation(),
+          new RNBackgroundFetchPackage(),
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
           new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
           new RNIapPackage(), new RNI18nPackage(), new RNGoogleSigninPackage(), new RNFSPackage(),
