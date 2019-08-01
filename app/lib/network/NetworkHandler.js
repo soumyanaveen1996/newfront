@@ -27,6 +27,7 @@ import { NETWORK_STATE } from '.';
 // TODO(amal): This is a hack to see only one call of the function is processing the enqueued future requests
 let processingFutureRequest = false;
 
+const ConversationServiceClient = NativeModules.ConversationServiceClient;
 const QueueServiceClient = NativeModules.QueueServiceClient;
 eventEmitter = new NativeEventEmitter(QueueServiceClient);
 var messageSubscriptions = [];
@@ -323,7 +324,12 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.content;
     let messages = [];
     _.each(prevMessagesData, mData => {
-        if (mData.contentType !== '470' && mData.contentType !== '460') {
+        if (
+            mData.contentType !== '470' &&
+            mData.contentType !== '460' &&
+            mData.contentType !== '1000' &&
+            mData.contentType !== '1001'
+        ) {
             let message = Message.from(mData, user, conversationId);
             MessageHandler.persistOnDevice(conversationId, message);
             messages.push(message.toBotDisplay());
@@ -370,6 +376,39 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
         });
     });
 
+const getArchivedMessages = (botId, conversationId) => {
+    return new Promise((resolve, reject) => {
+        Auth.getUser().then(user => {
+            ConversationServiceClient.getArchivedMessages(
+                user.creds.sessionId,
+                { conversationId: conversationId, botId: botId },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::grpcGetArchivedMessages : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        const messages = handlePreviousMessages(
+                            result,
+                            conversationId,
+                            botId,
+                            null,
+                            user
+                        );
+                        resolve(messages);
+                    }
+                }
+            );
+        });
+    });
+};
+
 const ping = user => {
     let options = {
         method: 'get',
@@ -389,5 +428,6 @@ export default {
     poll: poll,
     readLambda: readLambda,
     keepAlive: keepAlive,
-    fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
+    fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate,
+    getArchivedMessages: getArchivedMessages
 };
