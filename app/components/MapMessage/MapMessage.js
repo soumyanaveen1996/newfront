@@ -65,7 +65,7 @@ export default class MapMessage extends React.Component {
                         this.setState({ mapSnapshotUri: uri });
                     })
                     .catch(e => {
-                        console.log('>>>>>>>e', e);
+                        console.log('ERROR: ', e);
                     });
             } else {
                 ControlDAO.getContentById(this.props.mapOptions.mapId)

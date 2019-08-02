@@ -12,7 +12,7 @@ export const CameraOptions = {
 
 export const ChatMessageOptions = {
     messageTransitionTime: 1000,
-    pageSize: 10
+    pageSize: 20
 };
 
 export const ChatImageOptions = {

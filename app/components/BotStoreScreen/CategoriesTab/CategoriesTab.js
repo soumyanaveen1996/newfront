@@ -5,7 +5,8 @@ import {
     Image,
     TouchableHighlight,
     ScrollView,
-    Platform
+    Platform,
+    RefreshControl
 } from 'react-native';
 import styles from './styles';
 import images from '../../../config/images';
@@ -16,6 +17,7 @@ import GridView from 'react-native-super-grid';
 import BotContainer from '../../BotContainer';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../../config/i18n/i18n';
+import Store from '../../../redux/store/configureStore';
 
 export default class CategoriesTab extends React.Component {
     constructor(props) {
@@ -102,6 +104,7 @@ export default class CategoriesTab extends React.Component {
                     clickedIndex={this.state.collapseIndex}
                     handleCollapse={this.onCollapse}
                     onBotInstallFailed={this.onBotInstallFailed}
+                    refresh={this.props.refresh.bind(this)}
                 />
             );
         });
@@ -124,7 +127,33 @@ export default class CategoriesTab extends React.Component {
 
     render() {
         return (
-            <ScrollView style={{ flex: 1, padding: 10 }}>
+            <ScrollView
+                style={{ flex: 1, padding: 10 }}
+                refreshControl={
+                    Store.getState().user.network === 'full' ? (
+                        <RefreshControl
+                            onRefresh={() => {
+                                this.setState(
+                                    { refreshing: true },
+                                    async () => {
+                                        try {
+                                            await this.props.refresh();
+                                            this.setState({
+                                                refreshing: false
+                                            });
+                                        } catch (e) {
+                                            this.setState({
+                                                refreshing: false
+                                            });
+                                        }
+                                    }
+                                );
+                            }}
+                            refreshing={this.state.refreshing}
+                        />
+                    ) : null
+                }
+            >
                 {this.renderCategoryBots()}
                 {this.renderToast()}
             </ScrollView>

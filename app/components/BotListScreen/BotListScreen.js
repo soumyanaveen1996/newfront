@@ -1,5 +1,12 @@
 import React from 'react';
-import { Text, View, FlatList, TextInput, Platform } from 'react-native';
+import {
+    Text,
+    View,
+    FlatList,
+    TextInput,
+    Platform,
+    RefreshControl
+} from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import styles from './styles';
 import { headerConfig } from './config';
@@ -10,6 +17,7 @@ import Bot from '../../lib/bot';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import utils from '../../lib/utils';
+import Store from '../../redux/store/configureStore';
 
 var backTimer = null;
 
@@ -168,6 +176,30 @@ export default class BotListScreen extends React.Component {
                     </View>
                 )}
                 <FlatList
+                    refreshControl={
+                        Store.getState().user.network === 'full' ? (
+                            <RefreshControl
+                                onRefresh={() => {
+                                    this.setState(
+                                        { refreshing: true },
+                                        async () => {
+                                            try {
+                                                await this.props.refresh();
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            } catch (e) {
+                                                this.setState({
+                                                    refreshing: false
+                                                });
+                                            }
+                                        }
+                                    );
+                                }}
+                                refreshing={this.state.refreshing}
+                            />
+                        ) : null
+                    }
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.botId}
                     data={this.state.botsData}

@@ -16,7 +16,8 @@ import {
     Platform,
     PermissionsAndroid,
     LayoutAnimation,
-    UIManager
+    UIManager,
+    NativeModules
 } from 'react-native';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -110,7 +111,9 @@ import {
 import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
 import ChartMessage from '../ChartMessage';
+import { Conversation } from '../../lib/conversation';
 
+const ConversationServiceClient = NativeModules.ConversationServiceClient;
 const R = require('ramda');
 
 var backTimer = null;
@@ -339,16 +342,15 @@ class ChatBotScreen extends React.Component {
             }
 
             let serverMessages = [];
-            if (false && messages.length < 3) {
-                serverMessages = await Promise.resolve(
-                    this.loadOldMessagesFromServer()
-                );
+            if (messages.length < 20) {
+                serverMessages = await this.loadOldMessagesFromServer();
             }
 
-            const allMessages = R.uniqWith(R.eqProps('key'), [
+            let allMessages = R.uniqWith(R.eqProps('key'), [
                 ...serverMessages,
                 ...messages
             ]);
+            allMessages = allMessages.slice(0, pageSize);
             // 4. Update the state of the bot with the messages we have
             this.setState(
                 {
@@ -2176,12 +2178,17 @@ class ChatBotScreen extends React.Component {
     }
 
     async loadOldMessagesFromServer() {
-        return [];
-        let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
-            this.conversationContext.conversationId,
+        // return [];
+        const messages = await NetworkHandler.getArchivedMessages(
             this.getBotId(),
-            this.oldestLoadedDate()
+            this.conversationContext.conversationId
         );
+
+        // let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
+        //     this.conversationContext.conversationId,
+        //     this.getBotId(),
+        //     this.oldestLoadedDate()
+        // );
 
         return messages;
     }
