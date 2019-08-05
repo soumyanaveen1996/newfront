@@ -246,7 +246,7 @@ class BotStoreScreen extends React.Component {
     async refresh() {
         const isUserLoggedIn = await Auth.isUserLoggedIn();
         if (this.state && isUserLoggedIn) {
-            this.updateCatalog();
+            await this.updateCatalog();
         }
     }
 
@@ -350,6 +350,7 @@ class BotStoreScreen extends React.Component {
                     botsData={this.state.catalogData.bots}
                     onBack={this.onBack.bind(this)}
                     onChange={this.changeHandler}
+                    refresh={this.refresh.bind(this)}
                 />
             );
         }
@@ -360,6 +361,7 @@ class BotStoreScreen extends React.Component {
                     categoriesData={this.state.catalogData.categories}
                     botsData={this.state.catalogData.bots}
                     onBack={this.onBack.bind(this)}
+                    refresh={this.refresh.bind(this)}
                 />
             );
         }
@@ -372,6 +374,7 @@ class BotStoreScreen extends React.Component {
                     style={{ flex: 1 }}
                     featuredBots={featuredBots}
                     onBack={this.onBack.bind(this)}
+                    refresh={this.refresh.bind(this)}
                 />
             );
         }
@@ -381,6 +384,7 @@ class BotStoreScreen extends React.Component {
                     goHome={() => {
                         this.onIndexChange(0);
                     }}
+                    refresh={this.refresh.bind(this)}
                 />
             );
         }
