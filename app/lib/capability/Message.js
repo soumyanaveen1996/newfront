@@ -710,7 +710,7 @@ export default class Message {
             msg:
                 typeof json.content[0] === 'string'
                     ? json.content[0]
-                    : JSON.stringify(json.content[0]),
+                    : JSON.stringify(json.content),
             isRead: true,
             isFavorite: false,
             createdBy: json.createdBy,
