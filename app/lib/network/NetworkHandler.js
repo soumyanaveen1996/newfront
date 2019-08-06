@@ -325,6 +325,7 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     let messages = [];
     _.each(prevMessagesData, mData => {
         if (
+            mData.contentType &&
             mData.contentType !== '470' &&
             mData.contentType !== '460' &&
             mData.contentType !== '1000' &&
