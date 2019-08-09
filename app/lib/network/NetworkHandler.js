@@ -323,19 +323,23 @@ const requestMessagesBeforeDateFromLambda = (
 const handlePreviousMessages = (res, conversationId, botId, date, user) => {
     const prevMessagesData = res.data.content;
     let messages = [];
-    _.each(prevMessagesData, mData => {
-        if (
-            mData.contentType &&
-            mData.contentType !== '470' &&
-            mData.contentType !== '460' &&
-            mData.contentType !== '1000' &&
-            mData.contentType !== '1001'
-        ) {
-            let message = Message.from(mData, user, conversationId);
-            MessageHandler.persistOnDevice(conversationId, message);
-            messages.push(message.toBotDisplay());
-        }
-    });
+    if (prevMessagesData && prevMessagesData.length > 0) {
+        prevMessagesData.map(mData => {
+            if (
+                mData &&
+                mData.contentType &&
+                mData.contentType !== '470' &&
+                mData.contentType !== '250' &&
+                mData.contentType !== '460' &&
+                mData.contentType !== '1000' &&
+                mData.contentType !== '1001'
+            ) {
+                let message = Message.from(mData, user, conversationId);
+                MessageHandler.persistOnDevice(conversationId, message);
+                messages.push(message.toBotDisplay());
+            }
+        });
+    }
     return messages.reverse();
 };
 

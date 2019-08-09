@@ -708,7 +708,7 @@ export default class Message {
             addedByBot: user && user.userId === json.createdBy ? 0 : 1,
             botKey: json.conversation || conversationId,
             msg:
-                typeof json.content[0] === 'string'
+                json.content[0] && typeof json.content[0] === 'string'
                     ? json.content[0]
                     : JSON.stringify(json.content),
             isRead: true,
