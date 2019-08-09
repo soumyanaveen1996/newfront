@@ -221,15 +221,16 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.confirmPasswordReset(user, new StreamObserver<SignupResponse>() {
+        stub.changePassword(user, new StreamObserver<SignupResponse>() {
             @Override
             public void onNext(SignupResponse value) {
-                Log.d("GRPC:::confirmPasswordReset", new SignupResponseConverter().toResponse(value).toString());
+                Log.d("GRPC:::ChangePassw", new SignupResponseConverter().toResponse(value).toString());
                 callback.invoke(null, new SignupResponseConverter().toResponse(value));
             }
 
             @Override
             public void onError(Throwable t) {
+                Log.d("GRPC:::ChangePassw err", t.toString());
                 callback.invoke(Arguments.createMap());
             }
 
