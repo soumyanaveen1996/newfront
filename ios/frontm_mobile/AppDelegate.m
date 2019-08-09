@@ -75,10 +75,9 @@
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
 
-/*
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   [FBSDKAppEvents activateApp];
-} */
+}
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url

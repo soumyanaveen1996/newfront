@@ -1,7 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.frontm.frontm"
-          android:versionCode="1"
-          android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.frontm.frontm" android:versionCode="1" android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,61 +16,34 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--uses-permission android:name="android.permission.WAKE_LOCK" />
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" /-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 
-    <application
-            android:name=".MainApplication"
-            android:allowBackup="false"
-            android:allowClearUserData="true"
-            android:usesCleartextTraffic="true"
-            android:label="@string/app_name"
-            android:fullBackupContent="false"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:theme="@style/AppTheme">
+    <application android:name=".MainApplication" android:allowBackup="false" android:allowClearUserData="true" android:usesCleartextTraffic="true" android:label="@string/app_name" android:fullBackupContent="false" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:theme="@style/AppTheme">
 
-        <activity
-                android:name=".MainActivity"
-                android:windowSoftInputMode="adjustResize"
-                android:screenOrientation="portrait"
-                android:label="@string/app_name"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-                android:launchMode="singleTask">
-                 <!-- android:windowSoftInputMode="stateVisible|adjustResize" -->
-           <intent-filter>
+        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustResize" android:screenOrientation="portrait" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" android:launchMode="singleTask">
+            <!-- android:windowSoftInputMode="stateVisible|adjustResize" -->
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-     <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
             </intent-filter>
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-        <activity android:name="com.facebook.FacebookActivity"
-                  android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-                  android:label="@string/app_name" />
+        <activity android:name="com.facebook.FacebookActivity" android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="@string/app_name" />
 
-        <meta-data
-                android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyCZXPvPsmWNbAEu-xNhdTeFFlsUXnrilYk" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCZXPvPsmWNbAEu-xNhdTeFFlsUXnrilYk" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
-            android:value="FrontM"/>
-        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-            android:value="FrontM notifications"/>
+        <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_name" android:value="FrontM"/>
+        <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_description" android:value="FrontM notifications"/>
         <!-- Change the resource name to your App's accent color - or any other color you want -->
-        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
-            android:resource="@android:color/white"/>
+        <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@android:color/white"/>
 
-        <!--receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+        <!--receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="${applicationId}" />
@@ -89,32 +59,32 @@
             </intent-filter>
         </receiver>
         <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-        <!--service
-            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
-            android:exported="false" >
+        <!--service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService">
+        <service android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service-->
-        <service
-            android:name="com.frontm.frontm.FrontmFirebaseMessagingService">
+        <service android:name="com.frontm.frontm.FrontmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseInstanceIDService"
-            android:exported="false">
+        <service android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseInstanceIDService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
+
+        <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="false"/>
+        <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
+           android:value="false"/>
+           <meta-data android:name="com.facebook.sdk.AutoInitEnabled"
+           android:value="false"/>
 
     </application>
 
