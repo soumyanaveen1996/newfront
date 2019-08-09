@@ -6,7 +6,12 @@ import { UUID } from '../lib/capability/Utils';
 import { GoogleSignin } from 'react-native-google-signin';
 import queryString from 'querystring';
 import AuthError from '../lib/capability/Auth';
-import { LoginManager } from 'react-native-fbsdk';
+import {
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager,
+    AccessToken
+} from 'react-native-fbsdk';
 
 const axios = require('axios');
 
@@ -69,9 +74,36 @@ class FrontmAuth {
         result
     ) {}
 
+    getInfoFromFacebook(accessToken) {
+        return new Promise((resolve, reject) => {
+            const infoRequest = new GraphRequest(
+                '/me',
+                {
+                    httpMethod: 'GET',
+                    parameters: {
+                        fields: {
+                            string: 'email,name'
+                        }
+                    },
+                    accessToken: accessToken
+                },
+                (err, res) => {
+                    if (err) {
+                        reject();
+                    } else {
+                        resolve(res);
+                    }
+                }
+            );
+            let graphManager = new GraphRequestManager();
+            graphManager.addRequest(infoRequest).start();
+        });
+    }
+
     loginWithFacebook(conversationId, botName) {
+        let accessToken;
         var self = this;
-        console.log('Google sign in');
+        console.log('Facebook sign in');
         return new Promise(function(resolve, reject) {
             LoginManager.logInWithPermissions(['email'])
                 .then(user => {
@@ -80,11 +112,18 @@ class FrontmAuth {
                         console.log('Facebook login cancelled');
                         reject();
                     }
+                    return AccessToken.getCurrentAccessToken();
+                })
+                .then(data => {
+                    accessToken = data.accessToken.toString();
+                    return self.getInfoFromFacebook(accessToken);
+                })
+                .then(info => {
                     AuthServiceClient.facebookSignin(
                         {
-                            email: user.email,
-                            authToken: user.authThoken,
-                            name: user.name
+                            email: info.email,
+                            authToken: accessToken,
+                            name: info.name
                         },
                         (error, result) => {
                             if (error) {
@@ -100,7 +139,7 @@ class FrontmAuth {
                                     errorMessage: result.message
                                 });
                             } else {
-                                self.credentials.google = self.credentialsFromSigninResponse(
+                                self.credentials.facebook = self.credentialsFromSigninResponse(
                                     result
                                 );
                                 console.log('Credentials ', self.credentials);
