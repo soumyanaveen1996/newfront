@@ -201,6 +201,27 @@ typedef GPB_ENUM(SignInUser_FieldNumber) {
 
 @end
 
+#pragma mark - FacebookSigninInput
+
+typedef GPB_ENUM(FacebookSigninInput_FieldNumber) {
+  FacebookSigninInput_FieldNumber_Token = 1,
+  FacebookSigninInput_FieldNumber_Platform = 2,
+  FacebookSigninInput_FieldNumber_UserName = 3,
+  FacebookSigninInput_FieldNumber_EmailAddress = 4,
+};
+
+@interface FacebookSigninInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *token;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *platform;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *emailAddress;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END
