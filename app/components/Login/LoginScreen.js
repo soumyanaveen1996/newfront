@@ -120,7 +120,6 @@ export default class LoginScreen extends React.Component {
         // await Conversation.downloadRemoteConversations();
         // await RemoteBotInstall.syncronizeBots();
         // Actions.timeline({ type: ActionConst.REPLACE });
-        this.setState({ loading: false });
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
         console.log('Sourav Logging:::: 7');
