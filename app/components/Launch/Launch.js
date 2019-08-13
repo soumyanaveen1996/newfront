@@ -160,7 +160,11 @@ export default class Splash extends React.Component {
         const checkStatus = await AsyncStorage.getItem('signupStage');
 
         if (isUserLoggedIn) {
-            await TwilioVoIP.init();
+            try {
+                await TwilioVoIP.init();
+            } catch (error) {
+                console.error('Could Not Initialise VOIP');
+            }
             Auth.getUser()
                 .then(user => {
                     if (Platform.OS === 'android') {

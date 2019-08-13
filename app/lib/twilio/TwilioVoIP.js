@@ -145,7 +145,8 @@ export default class TwilioVoIP {
                 return true;
             } catch (err) {
                 console.log('initTelephony error : ', err);
-                throw err;
+                return true;
+                // throw err;
             }
         }
     };
