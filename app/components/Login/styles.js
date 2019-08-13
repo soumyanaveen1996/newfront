@@ -121,7 +121,7 @@ export default StyleSheet.create({
         width: 300,
         flexDirection: 'row',
         marginBottom: 40,
-        justifyContent: 'center'
+        justifyContent: 'space-evenly'
     },
     goToSignup: {
         color: 'rgba(0,189,242,1)',

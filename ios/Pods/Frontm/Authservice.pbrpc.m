@@ -139,5 +139,17 @@
              responseClass:[SigninResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark FacebookSignin(FacebookSigninInput) returns (SigninResponse)
+
+- (void)facebookSigninWithRequest:(FacebookSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToFacebookSigninWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToFacebookSigninWithRequest:(FacebookSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"FacebookSignin"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[SigninResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

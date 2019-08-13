@@ -7,9 +7,9 @@ target 'frontm_mobile' do
   # use_frameworks!
 
   # Pods for frontm_mobile
-  pod 'FBSDKCoreKit', :inhibit_warnings => true
-  pod 'FBSDKLoginKit', :inhibit_warnings => true
-  pod 'FBSDKShareKit', :inhibit_warnings => true
+  # pod 'FBSDKCoreKit', :inhibit_warnings => true
+  # pod 'FBSDKLoginKit', :inhibit_warnings => true
+  # pod 'FBSDKShareKit', :inhibit_warnings => true
   pod 'TwilioVoice', '~> 2.0.0', :inhibit_warnings => true
   #pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
   #pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'

@@ -6,6 +6,12 @@ import { UUID } from '../lib/capability/Utils';
 import { GoogleSignin } from 'react-native-google-signin';
 import queryString from 'querystring';
 import AuthError from '../lib/capability/Auth';
+import {
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager,
+    AccessToken
+} from 'react-native-fbsdk';
 
 const axios = require('axios');
 
@@ -68,7 +74,101 @@ class FrontmAuth {
         result
     ) {}
 
-    loginWithFacebook(conversationId, botName) {}
+    getInfoFromFacebook(accessToken) {
+        return new Promise((resolve, reject) => {
+            const infoRequest = new GraphRequest(
+                '/me',
+                {
+                    httpMethod: 'GET',
+                    parameters: {
+                        fields: {
+                            string: 'email,name'
+                        }
+                    },
+                    accessToken: accessToken
+                },
+                (err, res) => {
+                    if (err) {
+                        reject();
+                    } else {
+                        resolve(res);
+                    }
+                }
+            );
+            let graphManager = new GraphRequestManager();
+            graphManager.addRequest(infoRequest).start();
+        });
+    }
+
+    loginWithFacebook(conversationId, botName) {
+        let accessToken;
+        var self = this;
+        console.log('Facebook sign in');
+        return new Promise(function(resolve, reject) {
+            LoginManager.logInWithPermissions(['email'])
+                .then(user => {
+                    console.log('Facebook user: ', user);
+                    if (user.isCancelled) {
+                        console.log('Facebook login cancelled');
+                        reject();
+                    }
+                    return AccessToken.getCurrentAccessToken();
+                })
+                .then(data => {
+                    accessToken = data.accessToken.toString();
+                    return self.getInfoFromFacebook(accessToken);
+                })
+                .then(info => {
+                    AuthServiceClient.facebookSignin(
+                        {
+                            email: info.email,
+                            authToken: accessToken,
+                            name: info.name
+                        },
+                        (error, result) => {
+                            if (error) {
+                                return reject({
+                                    type: 'error',
+                                    error: error.code
+                                });
+                            }
+                            if (result.data.success !== true) {
+                                return reject({
+                                    type: 'error',
+                                    error: result.message,
+                                    errorMessage: result.message
+                                });
+                            } else {
+                                self.credentials.facebook = self.credentialsFromSigninResponse(
+                                    result
+                                );
+                                console.log('Credentials ', self.credentials);
+                                return resolve({
+                                    type: 'success',
+                                    credentials: self.credentials
+                                });
+                            }
+                        }
+                    );
+                })
+                .catch(err => {
+                    console.log('Facebook signin error : ', err);
+                    // if (
+                    //     err.code === -5 ||
+                    //     err.code === 12501 ||
+                    //     (err.description &&
+                    //         err.description.indexOf('cancel') !== -1)
+                    // ) {
+                    //     return resolve({
+                    //         type: 'cancel',
+                    //         msg: 'login canceled'
+                    //     });
+                    // } else {
+                    reject({ type: 'error', error: err.code });
+                    // }
+                });
+        });
+    }
 
     fetchRefreshToken(user) {
         return new Promise((resolve, reject) => {

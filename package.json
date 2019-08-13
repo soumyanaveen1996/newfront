@@ -70,7 +70,7 @@
     "react-native-easy-toast": "^1.0.6",
     "react-native-elements": "^0.18.0",
     "react-native-event-source": "https://github.com/chattes/react-native-event-source.git",
-    "react-native-fbsdk": "^0.8.0",
+    "react-native-fbsdk": "0.10.1",
     "react-native-fs": "^2.5.1",
     "react-native-git-upgrade": "^0.2.7",
     "react-native-google-analytics": "https://github.com/react-native-community/react-native-google-analytics",
