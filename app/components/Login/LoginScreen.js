@@ -37,6 +37,7 @@ import CenterComponent from './header/CenterComponent';
 import DefaultPreference from 'react-native-default-preference';
 import Store from '../../redux/store/configureStore';
 import { setFirstLogin } from '../../redux/actions/UserActions';
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -119,7 +120,6 @@ export default class LoginScreen extends React.Component {
         // await Conversation.downloadRemoteConversations();
         // await RemoteBotInstall.syncronizeBots();
         // Actions.timeline({ type: ActionConst.REPLACE });
-        this.setState({ loading: false });
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
         console.log('Sourav Logging:::: 7');
@@ -219,7 +219,6 @@ export default class LoginScreen extends React.Component {
     };
 
     renderFacebookBtn = () => {
-        return <View />;
         let imgSource = this.state.pressedFbBtn
             ? images.btn_pressed_facebook
             : images.btn_facebook;
@@ -384,11 +383,11 @@ export default class LoginScreen extends React.Component {
                             Or log in with social media
                         </Text>
                         <View style={styles.socialMediaButtons}>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 onPress={() => this.loginWithFacebook()}
                             >
                                 {this.renderFacebookBtn()}
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
 
                             <TouchableOpacity
                                 onPress={() => this.loginWithGoogle()}

@@ -11,6 +11,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.frontm.auth.proto.AuthServiceGrpc;
 import com.frontm.auth.proto.FrontmSigninInput;
 import com.frontm.auth.proto.GoogleSigninInput;
+import com.frontm.auth.proto.FacebookSigninInput;
 import com.frontm.auth.proto.SigninResponse;
 import com.frontm.auth.proto.SignupResponse;
 import com.frontm.auth.proto.SignupUser;
@@ -221,15 +222,16 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.confirmPasswordReset(user, new StreamObserver<SignupResponse>() {
+        stub.changePassword(user, new StreamObserver<SignupResponse>() {
             @Override
             public void onNext(SignupResponse value) {
-                Log.d("GRPC:::confirmPasswordReset", new SignupResponseConverter().toResponse(value).toString());
+                Log.d("GRPC:::ChangePassw", new SignupResponseConverter().toResponse(value).toString());
                 callback.invoke(null, new SignupResponseConverter().toResponse(value));
             }
 
             @Override
             public void onError(Throwable t) {
+                Log.d("GRPC:::ChangePassw err", t.toString());
                 callback.invoke(Arguments.createMap());
             }
 
@@ -330,6 +332,45 @@ public class AuthServiceClient extends ReactContextBaseJavaModule {
             @Override
             public void onNext(SigninResponse value) {
                 Log.d("GRPC:::googleSignin", new SigninResponseConverter().toResponse(value).toString());
+                callback.invoke(null, new SigninResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
+    @ReactMethod
+    public void facebookSignin(ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::facebookSignin", params.toString());
+        AuthServiceGrpc.AuthServiceStub stub = AuthServiceGrpc.newStub(mChannel);
+        FacebookSigninInput.Builder inputBuilder = FacebookSigninInput.newBuilder()
+                .setPlatform("android");
+        if (params.hasKey("email")) {
+            inputBuilder.setEmailAddress(params.getString("email"));
+        }
+
+        if (params.hasKey("authToken")) {
+            inputBuilder.setToken(params.getString("authToken"));
+        }
+
+        if (params.hasKey("name")) {
+            inputBuilder.setUserName(params.getString("name"));
+        }
+
+        stub.facebookSignin(inputBuilder.build(), new StreamObserver<SigninResponse>() {
+            @Override
+            public void onNext(SigninResponse value) {
+                Log.d("GRPC:::facebookSignin", new SigninResponseConverter().toResponse(value).toString());
                 callback.invoke(null, new SigninResponseConverter().toResponse(value));
             }
 

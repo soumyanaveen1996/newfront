@@ -589,6 +589,87 @@ typedef struct SignInUser__storage_ {
 
 @end
 
+#pragma mark - FacebookSigninInput
+
+@implementation FacebookSigninInput
+
+@dynamic token;
+@dynamic platform;
+@dynamic userName;
+@dynamic emailAddress;
+
+typedef struct FacebookSigninInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *token;
+  NSString *platform;
+  NSString *userName;
+  NSString *emailAddress;
+} FacebookSigninInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "token",
+        .dataTypeSpecific.className = NULL,
+        .number = FacebookSigninInput_FieldNumber_Token,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FacebookSigninInput__storage_, token),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "platform",
+        .dataTypeSpecific.className = NULL,
+        .number = FacebookSigninInput_FieldNumber_Platform,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(FacebookSigninInput__storage_, platform),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userName",
+        .dataTypeSpecific.className = NULL,
+        .number = FacebookSigninInput_FieldNumber_UserName,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(FacebookSigninInput__storage_, userName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "emailAddress",
+        .dataTypeSpecific.className = NULL,
+        .number = FacebookSigninInput_FieldNumber_EmailAddress,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(FacebookSigninInput__storage_, emailAddress),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FacebookSigninInput class]
+                                     rootClass:[AuthserviceRoot class]
+                                          file:AuthserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FacebookSigninInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\003\010\000\004\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

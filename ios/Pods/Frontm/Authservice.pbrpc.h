@@ -10,6 +10,7 @@
 #endif
 
 @class Empty;
+@class FacebookSigninInput;
 @class FrontmSigninInput;
 @class GoogleSigninInput;
 @class SigninResponse;
@@ -88,6 +89,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)googleSigninWithRequest:(GoogleSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToGoogleSigninWithRequest:(GoogleSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark FacebookSignin(FacebookSigninInput) returns (SigninResponse)
+
+- (void)facebookSigninWithRequest:(FacebookSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToFacebookSigninWithRequest:(FacebookSigninInput *)request handler:(void(^)(SigninResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

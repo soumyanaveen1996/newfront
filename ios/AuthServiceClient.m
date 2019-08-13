@@ -208,6 +208,36 @@ RCT_REMAP_METHOD(googleSignin, googleSigninWithParams:(NSDictionary *)params and
 
 }
 
+RCT_REMAP_METHOD(facebookSignin, facebookSigninWithParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:signup Params : %@", params);
+  FacebookSigninInput *input = [FacebookSigninInput new];
+  if (params[@"email"]) {
+    input.emailAddress = params[@"email"];
+  }
+  
+  if (params[@"authToken"]) {
+    input.token = params[@"authToken"];
+  }
+  
+  if (params[@"name"]) {
+    input.userName = params[@"name"];
+  }
+  
+  input.platform = @"ios";
+  
+  [self.serviceClient facebookSigninWithRequest:input
+                                      handler:^(SigninResponse * _Nullable response, NSError * _Nullable error) {
+                                        if (error != nil) {
+                                          callback(@[@{}, [NSNull null]]);
+                                          return;
+                                        } else {
+                                          callback(@[[NSNull null], [response toResponse]]);
+                                        }
+                                      }];
+  
+  
+}
+
 
 
 @end
