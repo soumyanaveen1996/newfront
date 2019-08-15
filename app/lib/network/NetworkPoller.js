@@ -28,6 +28,7 @@ import RemoteLogger from '../utils/remoteDebugger';
 // import BackgroundGeolocation from 'react-native-background-geolocation';
 import moment from 'moment';
 import Device from 'react-native-device-info';
+import BackgroundGeolocation from 'react-native-background-geolocation';
 
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
@@ -313,7 +314,7 @@ class NetworkPoller {
         this.unsubscribeFromServerEvents(true);
         clearInterval(this.cleanupInterval);
         BackgroundTimer.stopBackgroundTimer();
-        BackgroundGeolocation.removeListeners();
+        BackgroundGeolocation.removeAllListeners();
     };
 
     restartPolling = async () => {

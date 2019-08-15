@@ -22,6 +22,7 @@ import Settings, { PollingStrategyTypes } from './Settings';
 import Resource, { ResourceTypes } from './Resource';
 import { AUTH_PROVIDERS } from './Auth';
 import DeviceLocation from './DeviceLocation';
+import LocationTracker from './LocationTracker';
 import Telnet from './Telnet';
 import BotState from './BotState';
 import BackgroundTaskQueue from './BackgroundTaskQueue';
@@ -73,5 +74,6 @@ export {
     Telnet,
     UpdateCallQuota,
     Utils,
-    version
+    version,
+    LocationTracker
 };

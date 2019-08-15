@@ -17,6 +17,7 @@ service AuthService {
     rpc DeleteUser (commonmessages.Empty) returns (SignupResponse) {}
     rpc FrontmSignin (FrontmSigninInput) returns (SigninResponse) {}
     rpc GoogleSignin (GoogleSigninInput) returns (SigninResponse) {}
+    rpc FacebookSignin (FacebookSigninInput) returns (SigninResponse) {}
 }
 
 message SignupUser {
@@ -66,4 +67,11 @@ message SignInUser {
     repeated commonmessages.DomainRoles domains = 7;
     bool archiveMessages = 8;
     bool tncAccept = 9;
+}
+
+message FacebookSigninInput {
+    string token = 1;
+    string platform = 2;
+    string userName = 3;
+    string emailAddress = 4;
 }
