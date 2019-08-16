@@ -100,15 +100,22 @@ class FrontmAuth {
         });
     }
 
+    facebookLogout() {
+        LoginManager.logOut();
+    }
+
     loginWithFacebook(conversationId, botName) {
         let accessToken;
         var self = this;
         console.log('Facebook sign in');
         return new Promise(function(resolve, reject) {
+            LoginManager.setLoginBehavior(
+                Platform.OS === 'android' ? 'web_only' : 'browser'
+            );
             LoginManager.logInWithPermissions(['email'])
-                .then(user => {
-                    console.log('Facebook user: ', user);
-                    if (user.isCancelled) {
+                .then(result => {
+                    console.log('Facebook user: ', result);
+                    if (result.isCancelled) {
                         console.log('Facebook login cancelled');
                         reject();
                     }
