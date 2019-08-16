@@ -407,6 +407,7 @@ export default class Auth {
         console.log(res);
 
         return new Promise((resolve, reject) => {
+            FrontmAuth.facebookLogout();
             DeviceStorage.delete(USER_SESSION)
                 .then(() => {
                     return Bot.unInstallBots();
