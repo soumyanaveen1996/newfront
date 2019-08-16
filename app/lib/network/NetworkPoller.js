@@ -271,7 +271,7 @@ class NetworkPoller {
             'Sourav Logging:::: >>>>>>>>>>>APPP SATTE<<<<<<<<',
             nextAppState
         );
-        AgentGuard.heartBeat();
+        // AgentGuard.heartBeat();
         let user = await Auth.getUser();
         if (user.userId !== 'default_user_uuid') {
             if (nextAppState === 'active') {

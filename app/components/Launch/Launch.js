@@ -273,7 +273,7 @@ export default class Splash extends React.Component {
     handleNotification = notification => {
         NetworkHandler.poll();
         Bot.grpcheartbeatCatalog();
-        AgentGuard.heartBeat();
+        // AgentGuard.heartBeat();
         let conversation;
         if (!notification.foreground && notification.userInteraction) {
             const conversationId =

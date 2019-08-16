@@ -86,6 +86,9 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             try {
                 mChannel = OkHttpChannelBuilder.forAddress(host, port)
                         .connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .keepAliveTime(30000, TimeUnit.MILLISECONDS)
+                        .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                        .keepAliveWithoutCalls(true)
                         .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
                         .build();
             } catch (Exception e) {
@@ -141,7 +144,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getBotSubscriptions(Empty.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(Empty.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
             @Override
             public void onNext(BotSubscriptionsResponse value) {
                 callback.invoke(null, new BotSubscriptionsResponseConverter().toResponse(value));
@@ -172,7 +175,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getContacts(Empty.newBuilder().build(), new StreamObserver<ContactsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(Empty.newBuilder().build(), new StreamObserver<ContactsResponse>() {
             @Override
             public void onNext(ContactsResponse value) {
                 callback.invoke(null, new ContactsResponseConverter().toResponse(value));

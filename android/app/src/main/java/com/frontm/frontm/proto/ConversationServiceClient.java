@@ -85,6 +85,9 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
             try {
                 mChannel = OkHttpChannelBuilder.forAddress(host, port)
                         .connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .keepAliveTime(30000, TimeUnit.MILLISECONDS)
+                        .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                        .keepAliveWithoutCalls(true)
                         .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
                         .build();
             } catch (Exception e) {
@@ -143,7 +146,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging:::", "getCatalog: Heartbeat Catalog");
 
-        stub.withDeadlineAfter(5000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
                 Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Heartbeat Catalog");
@@ -183,7 +186,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging:::", "getCatalog: Calling Catalog");
 
-        stub.withDeadlineAfter(10000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+        stub.withDeadlineAfter(20000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
                 Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Catalog");
@@ -226,7 +229,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getConversationDetails(input, new StreamObserver<GetConversationDetailsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getConversationDetails(input, new StreamObserver<GetConversationDetailsResponse>() {
             @Override
             public void onNext(GetConversationDetailsResponse value) {
                 callback.invoke(null, new GetConversationDetailsResponseConverter().toResponse(value));
@@ -317,7 +320,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getTimeline(Empty.newBuilder().build(), new StreamObserver<TimelineResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getTimeline(Empty.newBuilder().build(), new StreamObserver<TimelineResponse>() {
             @Override
             public void onNext(TimelineResponse value) {
                 callback.invoke(null, new TimelineResponseConverter().toResponse(value));

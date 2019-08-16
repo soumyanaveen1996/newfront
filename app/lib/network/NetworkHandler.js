@@ -42,7 +42,7 @@ const poll = () => {
     InteractionManager.runAfterInteractions(() => {
         Auth.getUser().then(authUser => {
             if (Platform.OS === 'android') {
-                AgentGuard.heartBeat();
+                // AgentGuard.heartBeat();
             }
             processNetworkQueue();
             readRemoteLambdaQueue(authUser);

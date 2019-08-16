@@ -2179,18 +2179,22 @@ class ChatBotScreen extends React.Component {
 
     async loadOldMessagesFromServer() {
         // return [];
-        const messages = await NetworkHandler.getArchivedMessages(
-            this.getBotId(),
-            this.conversationContext.conversationId
-        );
+        try {
+            const messages = await NetworkHandler.getArchivedMessages(
+                this.getBotId(),
+                this.conversationContext.conversationId
+            );
 
-        // let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
-        //     this.conversationContext.conversationId,
-        //     this.getBotId(),
-        //     this.oldestLoadedDate()
-        // );
+            // let messages = await NetworkHandler.fetchOldMessagesBeforeDate(
+            //     this.conversationContext.conversationId,
+            //     this.getBotId(),
+            //     this.oldestLoadedDate()
+            // );
 
-        return messages;
+            return messages;
+        } catch (error) {
+            return [];
+        }
     }
 
     onSliderResize() {

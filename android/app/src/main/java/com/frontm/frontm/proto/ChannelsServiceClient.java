@@ -131,7 +131,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
@@ -165,7 +165,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
