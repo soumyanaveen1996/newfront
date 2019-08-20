@@ -7,7 +7,7 @@
 //
 
 #import "SubscribeDomainResponse+frontm.h"
-#import "DomainRoles+frontm.h"
+#import "UserDomain+frontm.h"
 #import "NSArray+Map.h"
 
 @implementation SubscribeDomainResponse (frontm)

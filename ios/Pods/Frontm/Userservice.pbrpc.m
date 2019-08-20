@@ -55,25 +55,25 @@
              responseClass:[User class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark GetBotSubscriptions(Empty) returns (BotSubscriptionsResponse)
+#pragma mark GetBotSubscriptions(SelectedDomainInput) returns (BotSubscriptionsResponse)
 
-- (void)getBotSubscriptionsWithRequest:(Empty *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)getBotSubscriptionsWithRequest:(SelectedDomainInput *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToGetBotSubscriptionsWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToGetBotSubscriptionsWithRequest:(Empty *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToGetBotSubscriptionsWithRequest:(SelectedDomainInput *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"GetBotSubscriptions"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[BotSubscriptionsResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark GetContacts(Empty) returns (ContactsResponse)
+#pragma mark GetContacts(SelectedDomainInput) returns (ContactsResponse)
 
-- (void)getContactsWithRequest:(Empty *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)getContactsWithRequest:(SelectedDomainInput *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToGetContactsWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToGetContactsWithRequest:(Empty *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToGetContactsWithRequest:(SelectedDomainInput *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"GetContacts"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[ContactsResponse class]
@@ -209,6 +209,42 @@
   return [self RPCToMethod:@"GetCallHistory"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[CallHistoryResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse)
+
+- (void)getCallHistoryForContactWithRequest:(CallHistoryInput *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetCallHistoryForContactWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetCallHistoryForContactWithRequest:(CallHistoryInput *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetCallHistoryForContact"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[CallHistoryResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark GetUserDomains(Empty) returns (UserDomainsResponse)
+
+- (void)getUserDomainsWithRequest:(Empty *)request handler:(void(^)(UserDomainsResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetUserDomainsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetUserDomainsWithRequest:(Empty *)request handler:(void(^)(UserDomainsResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetUserDomains"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[UserDomainsResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (Empty)
+
+- (void)updateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToUpdateLastLoggedInDomainWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToUpdateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"UpdateLastLoggedInDomain"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[Empty class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
 @end
