@@ -44,7 +44,6 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     componentDidMount() {
-        console.log('>>>>>>>>>>', this.props.contact);
         // this.props.contact = this.props.contact;
     }
 
