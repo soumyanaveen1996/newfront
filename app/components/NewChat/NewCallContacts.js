@@ -67,6 +67,7 @@ import Calls from '../../lib/calls';
 import GlobalColors from '../../config/styles';
 import contactsStyles from '../ContactsPicker/styles';
 import { NETWORK_STATE } from '../../lib/network';
+import GetCredit from '../GetCredit';
 
 const R = require('ramda');
 
@@ -278,24 +279,31 @@ class NewCallContacts extends React.Component {
         this.setState({ contactsData: newAddressBook });
     };
 
+    onCreditModalClose(credit) {
+        this.setState({ creditModalVisible: false });
+    }
+
     getCredit() {
-        Bot.getInstalledBots()
-            .then(bots => {
-                console.log(bots);
-                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
-                if (dwIndex < 0) {
-                    return Alert.alert(
-                        'You have to download DigitalWallet Bot to buy Credits'
-                    );
-                }
-                const DWBot = bots[dwIndex];
-                this.setContactVisible(false, null);
-                Actions.botChat({ bot: DWBot });
-            })
-            .catch(err => {
-                console.log(err);
-                Alert.alert('An error occured');
-            });
+        this.setState({ contactVisible: false }, () =>
+            Actions.getCredit({ currentBalance: this.state.callQuota })
+        );
+        // Bot.getInstalledBots()
+        //     .then(bots => {
+        //         console.log(bots);
+        //         dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+        //         if (dwIndex < 0) {
+        //             return Alert.alert(
+        //                 'You have to download DigitalWallet Bot to buy Credits'
+        //             );
+        //         }
+        //         const DWBot = bots[dwIndex];
+        //         this.setContactVisible(false, null);
+        //         Actions.botChat({ bot: DWBot });
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         Alert.alert('An error occured');
+        //     });
     }
 
     renderItem(info) {

@@ -148,6 +148,9 @@ export default class Dialler extends React.Component {
     }
 
     componentWillUnmount() {
+        this.mounted = false;
+        EventListeners.forEach(listener => listener.remove());
+        EventListeners = [];
         Calls.fetchCallHistory();
     }
 
@@ -346,12 +349,6 @@ export default class Dialler extends React.Component {
             callQuotaUpdateError: true
         });
     };
-
-    componentWillUnmount() {
-        this.mounted = false;
-        EventListeners.forEach(listener => listener.remove());
-        EventListeners = [];
-    }
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'CONNECTED' && this.state.satCall) {
