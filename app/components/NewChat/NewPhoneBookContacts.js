@@ -150,28 +150,29 @@ class NewCallContacts extends React.Component {
     };
 
     getCredit() {
-        console.log('In Get Credit');
+        Actions.getCredit({ currentBalance: this.state.callQuota });
+        // console.log('In Get Credit');
 
         this.setContactVisible(false, null);
 
-        Bot.getInstalledBots()
-            .then(bots => {
-                // console.log(bots);
-                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
-                if (dwIndex < 0) {
-                    return Alert.alert(
-                        'You have to download DigitalWallet Bot to buy Credits'
-                    );
-                }
-                const DWBot = bots[dwIndex];
-                // Actions.botChat({bot: DWBot})
-                // Actions.pop();
-                setTimeout(() => Actions.botChat({ bot: DWBot }), 0);
-            })
-            .catch(err => {
-                console.log(err);
-                Alert.alert('An error occured');
-            });
+        // Bot.getInstalledBots()
+        //     .then(bots => {
+        //         // console.log(bots);
+        //         dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+        //         if (dwIndex < 0) {
+        //             return Alert.alert(
+        //                 'You have to download DigitalWallet Bot to buy Credits'
+        //             );
+        //         }
+        //         const DWBot = bots[dwIndex];
+        //         // Actions.botChat({bot: DWBot})
+        //         // Actions.pop();
+        //         setTimeout(() => Actions.botChat({ bot: DWBot }), 0);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         Alert.alert('An error occured');
+        //     });
     }
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         this.setState({

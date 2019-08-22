@@ -284,9 +284,8 @@ class NewCallContacts extends React.Component {
     }
 
     getCredit() {
-        this.setState({ contactVisible: false }, () =>
-            Actions.getCredit({ currentBalance: this.state.callQuota })
-        );
+        this.setContactVisible(false, null);
+        Actions.getCredit({ currentBalance: this.state.callQuota });
         // Bot.getInstalledBots()
         //     .then(bots => {
         //         console.log(bots);

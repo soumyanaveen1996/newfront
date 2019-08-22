@@ -45,7 +45,6 @@ export default class GetCredit extends React.Component {
                 this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
-                console.log('>>>>>>>error buy', error);
                 this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
             }
         });
