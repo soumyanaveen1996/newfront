@@ -57,20 +57,28 @@ const buyProduct = async ({
                 });
             }
 
+            console.log('>>>>>>>1', itemSkus);
             const Products = await RNIap.getProducts(itemSkus);
             // throw new Error("Debugging")
-
+            console.log('>>>>>>>2', Products);
             const sku = Products[0].productId;
             let purchase;
             if (Platform.OS === 'ios') {
+                console.log('>>>>>>>3', sku);
                 purchase = await RNIap.buyProductWithoutFinishTransaction(sku);
+                console.log('>>>>>>>4', purchase);
                 RNIap.finishTransaction();
+                console.log('>>>>>>>5');
             } else {
+                console.log('>>>>>>>3', sku);
                 purchase = await RNIap.buyProduct(sku);
+                console.log('>>>>>>>4', purchase);
                 await RNIap.consumePurchase(purchase.purchaseToken);
+                console.log('>>>>>>>5');
             }
             return purchase;
         } catch (err) {
+            console.log('>>>>>>>rrorint', err);
             console.error(err.code, err.message);
             throw new Error('Cannot buy product');
         }

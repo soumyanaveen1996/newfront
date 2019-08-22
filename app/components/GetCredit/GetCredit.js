@@ -46,10 +46,7 @@ export default class GetCredit extends React.Component {
             } catch (error) {
                 this.setState({ updatingBalance: false });
                 console.log('>>>>>>>error buy', error);
-                this.refs.toast.show(
-                    I18n.t('Bot_installed'),
-                    DURATION.LENGTH_SHORT
-                );
+                this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
             }
         });
     }

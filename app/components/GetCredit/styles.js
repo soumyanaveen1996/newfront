@@ -89,6 +89,7 @@ export default (stylesheet = StyleSheet.create({
     buyButton: {
         alignSelf: 'center',
         width: '75%',
+        height: 40,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
@@ -99,6 +100,7 @@ export default (stylesheet = StyleSheet.create({
     buyButtonDisabled: {
         alignSelf: 'center',
         width: '75%',
+        height: 40,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
