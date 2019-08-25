@@ -96,10 +96,14 @@ export default class LocationTracker {
         }
 
         const data = await DeviceStorage.get('location_bot');
+        const currentLocation = {
+            latitude: parseFloat(location.latitude),
+            longitude: parseFloat(location.longitude)
+        };
         const task = {
             botId: data.botId,
             conversationId: data.conversationId,
-            key: JSON.stringify(location),
+            key: JSON.stringify(currentLocation),
             options: {}
         };
         await reportLocationBG(task, user);

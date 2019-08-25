@@ -57,6 +57,9 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
             int port = BuildConfig.GRPC_PORT;
             try {
                 mChannel = OkHttpChannelBuilder.forAddress(host, port)
+                        .keepAliveTime(30000, TimeUnit.MILLISECONDS)
+                        .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                        .keepAliveWithoutCalls(true)
                         .connectionSpec(ConnectionSpec.MODERN_TLS)
                         .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
                         .build();
@@ -163,7 +166,7 @@ public class AgentGuardServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging::::Sending Agent Guard Message", input.toString());
 
-        Integer timeout = 15000;
+        Integer timeout = 60000;
         if(params.getString("capability").equalsIgnoreCase("PingAgentGuardCapability")){
             Log.d("Sourav Logging::", "TImeout for Heartbeat is 5 seconds");
             timeout = 5000;

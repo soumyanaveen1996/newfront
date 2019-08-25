@@ -108,8 +108,8 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 374
-        versionName "5.2"
+        versionCode 383
+        versionName "5.3"
         multiDexEnabled true
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
@@ -210,6 +210,7 @@ sourceSets {
 
 
 dependencies {
+    implementation project(':react-native-fbsdk')
     compile project(':react-native-spring-scrollview')
     compile project(':react-native-blur')
     compile project(':rn-fetch-blob')
@@ -236,7 +237,6 @@ dependencies {
         exclude group: 'com.google.android.gms', module: 'play-services-auth'
     }
     compile project(':react-native-fs')
-    compile project(':react-native-fbsdk')
     compile project(':react-native-document-picker')
     compile(project(':react-native-device-info')){
         exclude group: 'com.google.android.gms', module: 'play-services-gcm'
@@ -270,7 +270,7 @@ dependencies {
     compile 'org.conscrypt:conscrypt-android:2.0.0'
 	implementation project(':react-native-background-geolocation')
     implementation project(':react-native-background-fetch')
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)' 
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 }
 
 

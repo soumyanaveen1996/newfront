@@ -8,6 +8,7 @@ import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.bolan9999.SpringScrollViewPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -31,7 +32,6 @@ import com.dooboolab.RNIap.RNIapPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.rnfs.RNFSPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
@@ -78,6 +78,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            // new FBSDKPackage(),
             new SpringScrollViewPackage(),
             new BlurViewPackage(),
             BugsnagReactNative.getPackage(),
@@ -91,7 +92,9 @@ public class MainApplication extends Application implements ReactApplication {
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),
           new KeychainPackage(), new ImageResizerPackage(), new ImagePickerPackage(),
           new RNIapPackage(), new RNI18nPackage(), new RNGoogleSigninPackage(), new RNFSPackage(),
-          new RNFetchBlobPackage(), new FBSDKPackage(mCallbackManager), new DocumentPickerPackage(),
+          new RNFetchBlobPackage(), 
+          new FBSDKPackage(mCallbackManager), 
+          new DocumentPickerPackage(),
           new RNDeviceInfo(), new ReactNativeContacts(),
           new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey),
               getApplicationContext(), BuildConfig.DEBUG),

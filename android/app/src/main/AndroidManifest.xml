@@ -41,7 +41,9 @@
         <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_name" android:value="FrontM"/>
         <meta-data android:name="com.dieam.reactnativepushnotification.notification_channel_description" android:value="FrontM notifications"/>
         <!-- Change the resource name to your App's accent color - or any other color you want -->
-        <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@android:color/white"/>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
+            android:resource="@android:color/white"/>
+        <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="bb110b4d3e3ba9eb4a804b0509e9688088d177e79c4be1988169b9029b9a67fa" />
 
         <!--receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
