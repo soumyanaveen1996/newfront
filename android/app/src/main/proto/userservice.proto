@@ -19,6 +19,7 @@ service UserService {
     rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
     rpc GetCompanies(commonmessages.Empty) returns (CompaniesResponse) {}
     rpc GetCallHistory(commonmessages.Empty) returns (CallHistoryResponse) {}
+    rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
 }
 message User {
     string userName = 1;
@@ -114,4 +115,13 @@ message CallHistoryObject {
     string toNumber = 10;
     string toUserId = 11;
     string toUserName = 12;
+}
+message TopupBalanceInput {
+    string paymentCode = 1;
+    double amount = 2;
+    string token = 3;
+    string platform = 4;
+}
+message TopupBalanceResponse {
+    int32 error = 1;
 }

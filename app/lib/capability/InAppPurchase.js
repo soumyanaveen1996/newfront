@@ -1,6 +1,8 @@
 import * as RNIap from 'react-native-iap';
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
+import Auth from './Auth';
 
+const UserServiceClient = NativeModules.UserServiceClient;
 const PRODUCT_NAMES = {
     VOIP: 'voip',
     BOT: 'bot'
@@ -36,6 +38,37 @@ const connection = async () => {
     }
 };
 
+const grpcTopupUserBalance = (paymentCode, amount, token) =>
+    new Promise((resolve, reject) => {
+        Auth.getUser().then(user => {
+            console.log('GRPC ::::: MONEY FOR FRONTM $_$');
+            const platform = Platform.OS;
+            return UserServiceClient.topupUserBalance(
+                user.creds.sessionId,
+                {
+                    paymentCode,
+                    amount,
+                    token,
+                    platform
+                },
+                (error, result) => {
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        if (result.data.error === 0) {
+                            resolve(result);
+                        } else {
+                            reject(result.data.error);
+                        }
+                    }
+                }
+            );
+        });
+    });
+
 const buyProduct = async ({
     productCode,
     productName = PRODUCT_NAMES.VOIP,
@@ -56,16 +89,19 @@ const buyProduct = async ({
                     android: [productCode]
                 });
             }
-
-            const Products = await RNIap.getProducts(itemSkus);
+            const products = await RNIap.getProducts(itemSkus);
+            const price = parseFloat(products[0].price);
             // throw new Error("Debugging")
-            const sku = Products[0].productId;
+            const sku = products[0].productId;
             let purchase;
+
             if (Platform.OS === 'ios') {
                 purchase = await RNIap.buyProductWithoutFinishTransaction(sku);
+                grpcTopupUserBalance('100', price, 'sampleToken');
                 RNIap.finishTransaction();
             } else {
                 purchase = await RNIap.buyProduct(sku);
+                grpcTopupUserBalance('100', price, 'sampleToken');
                 await RNIap.consumePurchase(purchase.purchaseToken);
             }
             return purchase;

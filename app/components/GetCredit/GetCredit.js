@@ -32,7 +32,11 @@ export default class GetCredit extends React.Component {
 
     componentDidMount() {}
 
-    componentDidUpdate() {}
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentBalance !== this.props.currentBalance) {
+            this.setState({ updatingBalance: false });
+        }
+    }
 
     close() {
         Actions.pop();
@@ -42,7 +46,7 @@ export default class GetCredit extends React.Component {
         this.setState({ updatingBalance: true }, async () => {
             try {
                 await InAppPurchase.buyProduct({ productCode: 'balance_4_99' });
-                this.setState({ updatingBalance: false });
+                // this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
                 this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
@@ -93,24 +97,32 @@ export default class GetCredit extends React.Component {
                 <View style={styles.topContainer}>
                     <View>
                         <Text style={styles.title}>Your balance:</Text>
-                        <Text style={styles.balance}>
-                            {this.props.currentBalance}
-                            <Text style={[styles.currency, { fontSize: 16 }]}>
-                                {' '}
-                                $
+                        {this.state.updatingBalance ? (
+                            <ActivityIndicator
+                                size="large"
+                                color={GlobalColors.frontmLightBlue}
+                            />
+                        ) : (
+                            <Text style={styles.balance}>
+                                {this.props.currentBalance.toFixed(2)}
+                                <Text
+                                    style={[styles.currency, { fontSize: 16 }]}
+                                >
+                                    {' '}
+                                    $
+                                </Text>
                             </Text>
-                        </Text>
+                        )}
                     </View>
                     <View>
                         <Text style={styles.title}>Get credit</Text>
                         <View style={styles.creditRow}>
                             {this.renderTopUpButton('4.99')}
                             {this.renderTopUpButton('9.99')}
-                        </View>
-                        <View style={styles.creditRow}>
                             {this.renderTopUpButton('49.99')}
                             {this.renderTopUpButton('99.99')}
                         </View>
+                        <View style={styles.creditRow} />
                     </View>
                 </View>
                 <TouchableOpacity

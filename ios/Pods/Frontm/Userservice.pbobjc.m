@@ -1342,6 +1342,130 @@ typedef struct CallHistoryObject__storage_ {
 
 @end
 
+#pragma mark - TopupBalanceInput
+
+@implementation TopupBalanceInput
+
+@dynamic paymentCode;
+@dynamic amount;
+@dynamic token;
+@dynamic platform;
+
+typedef struct TopupBalanceInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *paymentCode;
+  NSString *token;
+  NSString *platform;
+  double amount;
+} TopupBalanceInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "paymentCode",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceInput_FieldNumber_PaymentCode,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, paymentCode),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "amount",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceInput_FieldNumber_Amount,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, amount),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeDouble,
+      },
+      {
+        .name = "token",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceInput_FieldNumber_Token,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, token),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "platform",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceInput_FieldNumber_Platform,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, platform),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TopupBalanceInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TopupBalanceInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\013\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TopupBalanceResponse
+
+@implementation TopupBalanceResponse
+
+@dynamic error;
+
+typedef struct TopupBalanceResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t error;
+} TopupBalanceResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceResponse_FieldNumber_Error,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TopupBalanceResponse__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[TopupBalanceResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(TopupBalanceResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 
 #pragma clang diagnostic pop
 

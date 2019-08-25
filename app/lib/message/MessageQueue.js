@@ -1,4 +1,4 @@
-import { Auth } from '../capability';
+import { Auth, Message, UpdateCallQuota } from '../capability';
 import { Queue, IMBotMessageHandler } from '../network';
 import { MessageDAO, NetworkDAO } from '../persistence';
 import EventEmitter, { AuthEvents, MessageEvents } from '../events';
@@ -143,7 +143,25 @@ export default class MessageQueue {
                     botId: messageBot
                 });
             } else {
-                console.log('Sourav Logging:::: Bot in Background Handle it!!');
+                console.log(
+                    'Sourav Logging:::: Bot in Background Handle it!!',
+                    message
+                );
+                if (
+                    message.contentType === 11000 ||
+                    message.contentType === '11000'
+                ) {
+                    if (
+                        message.details.length > 0 &&
+                        message.details[0].message['pstn-balance']
+                    ) {
+                        UpdateCallQuota({
+                            error: message.error,
+                            callQuota:
+                                message.details[0].message['pstn-balance']
+                        });
+                    }
+                }
                 await BackgroundTaskProcessor.sendBackgroundAsyncMessage(
                     message,
                     message.bot,

@@ -167,8 +167,13 @@ class NewCallContacts extends React.Component {
     };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+        if (Actions.currentScene === ROUTER_SCENE_KEYS.getCredit) {
+            setTimeout(() => {
+                Actions.refresh({ currentBalance: this.state.callQuota });
+            }, 3000);
+        }
         this.setState({
-            callQuota,
+            callQuota: callQuota,
             updatingCallQuota: false,
             callQuotaUpdateError: false
         });
@@ -852,7 +857,7 @@ class NewCallContacts extends React.Component {
                                 Current Balance:{' '}
                                 <Text style={{ color: 'black' }}>
                                     {' '}
-                                    ${this.state.callQuota}
+                                    ${this.state.callQuota.toFixed(2)}
                                 </Text>
                             </Text>
                             <TouchableOpacity
