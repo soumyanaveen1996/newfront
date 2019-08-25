@@ -44,8 +44,23 @@ export default class GetCredit extends React.Component {
 
     buyCredit() {
         this.setState({ updatingBalance: true }, async () => {
+            let productCode;
+            switch (this.state.selectedCredit) {
+            case '4.99':
+                productCode = 'balance_4_99';
+                break;
+            case '9.99':
+                productCode = 'balance_9_99';
+                break;
+            case '49.99':
+                productCode = 'balance_49_99';
+                break;
+            case '99.99':
+                productCode = 'balance_99_99';
+                break;
+            }
             try {
-                await InAppPurchase.buyProduct({ productCode: 'balance_4_99' });
+                await InAppPurchase.buyProduct({ productCode: productCode });
                 // this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
@@ -119,10 +134,11 @@ export default class GetCredit extends React.Component {
                         <View style={styles.creditRow}>
                             {this.renderTopUpButton('4.99')}
                             {this.renderTopUpButton('9.99')}
+                        </View>
+                        <View style={styles.creditRow}>
                             {this.renderTopUpButton('49.99')}
                             {this.renderTopUpButton('99.99')}
                         </View>
-                        <View style={styles.creditRow} />
                     </View>
                 </View>
                 <TouchableOpacity
