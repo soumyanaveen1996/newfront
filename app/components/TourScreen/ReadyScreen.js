@@ -13,7 +13,7 @@ export default class ReadyScreen extends Component {
                 <View style={styles.readyContainer}>
                     <Text style={styles.welcomeHeader}>Ready to go!</Text>
                     <Text style={styles.welcomeSubHeader}>
-                        Let’s configure your account with FrontM Assistant.
+                        Let’s configure your account with FrontM App.
                     </Text>
                     <TouchableOpacity
                         style={styles.buttonContainer}

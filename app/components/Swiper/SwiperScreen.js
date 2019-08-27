@@ -50,7 +50,7 @@ export default class SwiperScreen extends Component {
                 {
                     header: "Let's get you going",
                     description:
-                        'Built-in Virtual Assistants ensure your work and access to information, remain uninterrupted. Even without internet.',
+                        'Built-in Apps ensure your work and access to information, remain uninterrupted. Even without internet.',
                     imageSource: images.preview_slider_4
                 }
             ]

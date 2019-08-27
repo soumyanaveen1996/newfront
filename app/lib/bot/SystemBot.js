@@ -74,7 +74,7 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         },
         description:
-            'I am FrontM Assistant and will help you to start using FrontM. Open this conversation to set you up',
+            'I am FrontM App and will help you to start using FrontM. Open this conversation to set you up',
         logoUrl: botLogoUrl('AuthenticationLogo.png'),
         slug: 'onboarding-bot',
         systemBot: true,
