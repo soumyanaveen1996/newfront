@@ -110,7 +110,7 @@ export default (stylesheet = StyleSheet.create({
         opacity: 0.2
     },
     buyButtonText: {
-        fontSize: 20,
+        fontSize: 18,
         color: GlobalColors.white
     }
 }));
