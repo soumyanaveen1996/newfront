@@ -20,8 +20,6 @@ export default class ContactsPickerDataSource {
     loadData() {
         Contact.getAddedContacts().then(contacts => {
             if (contacts.length > 0) {
-                // console.log('load data ', contacts);
-
                 this.updateData(contacts);
             }
             this.pageLoaded += 1;

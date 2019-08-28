@@ -155,18 +155,17 @@ export default class Contact {
         new Promise((resolve, reject) => {
             Contact.getAddedContacts()
                 .then(data => {
-                    let contactArray = data.map(elem => {
-                        if (elem.userId === contact.userId) {
-                            elem.waitingForConfirmation =
-                                contact.waitingForConfirmation;
-                            elem.userName = contact.userName;
-                            elem.emailAddress = contact.emailAddress;
-                            elem.phoneNumbers = contact.phoneNumbers;
-                        }
-                        return elem;
+                    const elemIndex = data.findIndex(elem => {
+                        return elem.userId === contact.userId;
                     });
-
-                    return Contact.saveContacts(contactArray);
+                    if (elemIndex >= 0) {
+                        data[elemIndex].waitingForConfirmation =
+                            contact.waitingForConfirmation;
+                        data[elemIndex].userName = contact.userName;
+                        data[elemIndex].emailAddress = contact.emailAddress;
+                        data[elemIndex].phoneNumbers = contact.phoneNumbers;
+                    }
+                    return Contact.saveContacts(data);
                 })
                 .then(function(cts) {
                     return resolve(cts);
@@ -261,16 +260,16 @@ export default class Contact {
                 const localContact = R.find(R.propEq('userId', contact.userId))(
                     localContactsAccepted
                 );
-                const mergedContact = R.mergeDeepWithKey(
-                    mergeValues,
-                    localContact,
-                    contact
-                );
+                // const mergedContact = R.mergeDeepWithKey(
+                //     mergeValues,
+                //     localContact,
+                //     contact
+                // );
                 // console.log('save contcats **************** ', mergedContact);
-
-                AllContacts.push(mergedContact);
+                if (localContact) {
+                    AllContacts.push(contact);
+                }
             }
-
             DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
                     return resolve(AllContacts);
@@ -433,7 +432,7 @@ export default class Contact {
                         // );
 
                         console.log(
-                            'Sourav Logging:::: Cntacts Data --------->',
+                            'Sourav Logging:::: Contacts Data --------->',
                             response.data
                         );
 

@@ -2528,9 +2528,7 @@ class ChatBotScreen extends React.Component {
                             >
                                 <FlatList
                                     onEndReached={() => {
-                                        QueueServiceClient.getAllQueueMessages(
-                                            this.user.creds.sessionId
-                                        );
+                                        this.readLambdaQueue();
                                     }}
                                     onEndReachedThreshold={-0.2}
                                     extraData={this.state.messages}
