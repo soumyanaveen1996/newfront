@@ -114,6 +114,7 @@ import ChartMessage from '../ChartMessage';
 import { Conversation } from '../../lib/conversation';
 
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
+const QueueServiceClient = NativeModules.QueueServiceClient;
 const R = require('ramda');
 
 var backTimer = null;
@@ -217,7 +218,8 @@ class ChatBotScreen extends React.Component {
             searchBoxData: null,
             currentMap: null,
             currentUser: null,
-            allContacts: []
+            allContacts: [],
+            bottomRefresh: false
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -2525,6 +2527,12 @@ class ChatBotScreen extends React.Component {
                                 }}
                             >
                                 <FlatList
+                                    onEndReached={() => {
+                                        QueueServiceClient.getAllQueueMessages(
+                                            this.user.creds.sessionId
+                                        );
+                                    }}
+                                    onEndReachedThreshold={-0.2}
                                     extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"
