@@ -21,7 +21,7 @@ const UserServiceClient = NativeModules.UserServiceClient;
 
 const R = require('ramda');
 
-const mergeValues = (k, l, r) => (k === 'some array' ? R.concat(l, r) : r);
+const mergeValues = (k, l, r) => r;
 
 /**
  * Expected format per contact:
@@ -256,20 +256,23 @@ export default class Contact {
                 return false;
             });
             let AllContacts = [];
+            console.log('>>>>>>1', remoteContacts, localContactsAccepted);
             for (let contact of remoteContacts) {
                 const localContact = R.find(R.propEq('userId', contact.userId))(
                     localContactsAccepted
                 );
-                // const mergedContact = R.mergeDeepWithKey(
-                //     mergeValues,
+                if (localContact && localContact.ignored === true) {
+                    contact.ignored = true;
+                }
+                // const mergedContact = R.mergeRight(
                 //     localContact,
                 //     contact
                 // );
                 // console.log('save contcats **************** ', mergedContact);
-                if (localContact) {
-                    AllContacts.push(contact);
-                }
+
+                AllContacts.push(contact);
             }
+            console.log('>>>>>>merged', AllContacts);
             DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
                     return resolve(AllContacts);
