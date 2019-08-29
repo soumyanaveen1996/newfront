@@ -27,7 +27,8 @@ export default class GetCredit extends React.Component {
         super(props);
         this.state = {
             selectedCredit: undefined,
-            updatingBalance: false
+            updatingBalance: false,
+            purchaseExecuted: false
         };
     }
 
@@ -35,18 +36,25 @@ export default class GetCredit extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.currentBalance !== this.props.currentBalance) {
-            this.setState({ updatingBalance: false });
+            this.setState({
+                updatingBalance: false,
+                purchaseExecuted: true,
+                selectedCredit: undefined
+            });
         }
     }
 
-    onExit() {
-        this.close();
-    }
+    // onExit() {
+    //     this.close();
+    // }
 
     close() {
-        if (this.props.wasDialler) {
-            Actions.dialler({ phoneNumber: this.props.wasDialler });
+        if (this.state.purchaseExecuted) {
+            Actions.pop();
         }
+        // if (this.props.wasDialler) {
+        //     Actions.dialler({ phoneNumber: this.props.wasDialler });
+        // }
     }
 
     buyCredit() {
@@ -80,6 +88,7 @@ export default class GetCredit extends React.Component {
         const isSelected = credit === this.state.selectedCredit;
         return (
             <TouchableOpacity
+                disabled={this.state.purchaseExecuted}
                 style={
                     isSelected
                         ? styles.creditButtonSelected
@@ -146,18 +155,32 @@ export default class GetCredit extends React.Component {
                             {this.renderTopUpButton('49.99')}
                             {this.renderTopUpButton('99.99')}
                         </View>
+                        <Text
+                            style={[styles.currency, { alignSelf: 'center' }]}
+                        >
+                            The prices above are in US dollars.
+                        </Text>
+                        <Text
+                            style={[styles.currency, { alignSelf: 'center' }]}
+                        >
+                            You will be charge in your local currency.
+                        </Text>
                     </View>
                 </View>
                 <TouchableOpacity
                     style={
-                        this.state.selectedCredit
+                        this.state.selectedCredit || this.state.purchaseExecuted
                             ? styles.buyButton
                             : styles.buyButtonDisabled
                     }
                     disabled={
                         !this.state.selectedCredit || this.state.updatingBalance
                     }
-                    onPress={this.buyCredit.bind(this)}
+                    onPress={
+                        this.state.purchaseExecuted
+                            ? this.close.bind(this)
+                            : this.buyCredit.bind(this)
+                    }
                 >
                     {this.state.updatingBalance ? (
                         <ActivityIndicator
@@ -165,7 +188,9 @@ export default class GetCredit extends React.Component {
                             color={GlobalColors.white}
                         />
                     ) : (
-                        <Text style={styles.buyButtonText}>Buy</Text>
+                        <Text style={styles.buyButtonText}>
+                            {this.state.purchaseExecuted ? 'Done' : 'Buy'}
+                        </Text>
                     )}
                 </TouchableOpacity>
                 {this.renderToast()}
