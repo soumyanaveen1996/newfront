@@ -655,7 +655,10 @@ export default class Dialler extends React.Component {
     hideCodes = () => this.setState({ showCodes: false });
 
     getCredit() {
-        Actions.getCredit({ currentBalance: this.state.callQuota });
+        Actions.replace(ROUTER_SCENE_KEYS.getCredit, {
+            currentBalance: this.state.callQuota,
+            wasDialler: this.state.dialledNumber
+        });
         // Bot.getInstalledBots()
         //     .then(bots => {
         //         console.log('bot data ', bots);
