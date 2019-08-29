@@ -21,7 +21,8 @@
 
   return @{
            @"error": @(self.error),
-           @"content": content
+           @"content": content,
+           @"errorMessage": self.errorMessage
            };
 }
 
