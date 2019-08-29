@@ -18,6 +18,7 @@ import EventEmitter from '../../lib/events';
 import { InAppPurchase } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 
 const EventListeners = [];
 
@@ -38,8 +39,14 @@ export default class GetCredit extends React.Component {
         }
     }
 
+    onExit() {
+        this.close();
+    }
+
     close() {
-        Actions.pop();
+        if (this.props.wasDialler) {
+            Actions.dialler({ phoneNumber: this.props.wasDialler });
+        }
     }
 
     buyCredit() {
