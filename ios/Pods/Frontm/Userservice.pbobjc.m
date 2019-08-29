@@ -699,11 +699,13 @@ typedef struct SubscribeDomainInput__storage_ {
 
 @dynamic contentArray, contentArray_Count;
 @dynamic error;
+@dynamic errorMessage;
 
 typedef struct SubscribeDomainResponse__storage_ {
   uint32_t _has_storage_[1];
   int32_t error;
   NSMutableArray *contentArray;
+  NSString *errorMessage;
 } SubscribeDomainResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -730,6 +732,15 @@ typedef struct SubscribeDomainResponse__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
+      {
+        .name = "errorMessage",
+        .dataTypeSpecific.className = NULL,
+        .number = SubscribeDomainResponse_FieldNumber_ErrorMessage,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(SubscribeDomainResponse__storage_, errorMessage),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[SubscribeDomainResponse class]
@@ -739,6 +750,11 @@ typedef struct SubscribeDomainResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(SubscribeDomainResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\003\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -1406,22 +1422,6 @@ typedef struct UserDomainsResponse__storage_ {
   uint32_t _has_storage_[1];
   NSMutableArray *domainsArray;
 } UserDomainsResponse__storage_;
-#pragma mark - TopupBalanceInput
-
-@implementation TopupBalanceInput
-
-@dynamic paymentCode;
-@dynamic amount;
-@dynamic token;
-@dynamic platform;
-
-typedef struct TopupBalanceInput__storage_ {
-  uint32_t _has_storage_[1];
-  NSString *paymentCode;
-  NSString *token;
-  NSString *platform;
-  double amount;
-} TopupBalanceInput__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -1485,11 +1485,6 @@ typedef struct UserDomain__storage_ {
         .number = UserDomain_FieldNumber_UserDomain,
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(UserDomain__storage_, userDomain),
-        .name = "paymentCode",
-        .dataTypeSpecific.className = NULL,
-        .number = TopupBalanceInput_FieldNumber_PaymentCode,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, paymentCode),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
@@ -1647,6 +1642,111 @@ typedef struct CallHistoryInput__storage_ {
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(CallHistoryInput__storage_, contactId),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - LastLoggedInDomainInput
+
+@implementation LastLoggedInDomainInput
+
+@dynamic userDomain;
+
+typedef struct LastLoggedInDomainInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *userDomain;
+} LastLoggedInDomainInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = LastLoggedInDomainInput_FieldNumber_UserDomain,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(LastLoggedInDomainInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[LastLoggedInDomainInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(LastLoggedInDomainInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - TopupBalanceInput
+
+@implementation TopupBalanceInput
+
+@dynamic paymentCode;
+@dynamic amount;
+@dynamic token;
+@dynamic platform;
+
+typedef struct TopupBalanceInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *paymentCode;
+  NSString *token;
+  NSString *platform;
+  double amount;
+} TopupBalanceInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "paymentCode",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceInput_FieldNumber_PaymentCode,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(TopupBalanceInput__storage_, paymentCode),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
         .name = "amount",
         .dataTypeSpecific.className = NULL,
         .number = TopupBalanceInput_FieldNumber_Amount,
@@ -1675,17 +1775,11 @@ typedef struct CallHistoryInput__storage_ {
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[CallHistoryInput class]
         [GPBDescriptor allocDescriptorForClass:[TopupBalanceInput class]
                                      rootClass:[UserserviceRoot class]
                                           file:UserserviceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(CallHistoryInput__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\001\001\t\000";
                                    storageSize:sizeof(TopupBalanceInput__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
@@ -1701,16 +1795,6 @@ typedef struct CallHistoryInput__storage_ {
 
 @end
 
-#pragma mark - LastLoggedInDomainInput
-
-@implementation LastLoggedInDomainInput
-
-@dynamic userDomain;
-
-typedef struct LastLoggedInDomainInput__storage_ {
-  uint32_t _has_storage_[1];
-  NSString *userDomain;
-} LastLoggedInDomainInput__storage_;
 #pragma mark - TopupBalanceResponse
 
 @implementation TopupBalanceResponse
@@ -1729,17 +1813,6 @@ typedef struct TopupBalanceResponse__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "userDomain",
-        .dataTypeSpecific.className = NULL,
-        .number = LastLoggedInDomainInput_FieldNumber_UserDomain,
-        .hasIndex = 0,
-        .offset = (uint32_t)offsetof(LastLoggedInDomainInput__storage_, userDomain),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeString,
-      },
-    };
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[LastLoggedInDomainInput class]
         .name = "error",
         .dataTypeSpecific.className = NULL,
         .number = TopupBalanceResponse_FieldNumber_Error,
@@ -1755,13 +1828,6 @@ typedef struct TopupBalanceResponse__storage_ {
                                           file:UserserviceRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(LastLoggedInDomainInput__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\001\001\n\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
                                    storageSize:sizeof(TopupBalanceResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");

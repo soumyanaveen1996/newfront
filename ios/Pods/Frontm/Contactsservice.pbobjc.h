@@ -29,6 +29,7 @@ CF_EXTERN_C_BEGIN
 
 @class LocalContact;
 @class MatchedUser;
+@class UserAddress;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -51,11 +52,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef GPB_ENUM(SearchQuery_FieldNumber) {
   SearchQuery_FieldNumber_QueryString = 1,
+  SearchQuery_FieldNumber_SelectedDomain = 2,
 };
 
 @interface SearchQuery : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *queryString;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *selectedDomain;
 
 @end
 
@@ -134,6 +138,8 @@ typedef GPB_ENUM(FindResponse_FieldNumber) {
 typedef GPB_ENUM(MatchedUser_FieldNumber) {
   MatchedUser_FieldNumber_UserName = 1,
   MatchedUser_FieldNumber_UserId = 2,
+  MatchedUser_FieldNumber_UserCompanyName = 3,
+  MatchedUser_FieldNumber_Address = 4,
 };
 
 @interface MatchedUser : GPBMessage
@@ -141,6 +147,12 @@ typedef GPB_ENUM(MatchedUser_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
 
 @end
 

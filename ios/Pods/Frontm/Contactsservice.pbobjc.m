@@ -48,10 +48,12 @@ static GPBFileDescriptor *ContactsserviceRoot_FileDescriptor(void) {
 @implementation SearchQuery
 
 @dynamic queryString;
+@dynamic selectedDomain;
 
 typedef struct SearchQuery__storage_ {
   uint32_t _has_storage_[1];
   NSString *queryString;
+  NSString *selectedDomain;
 } SearchQuery__storage_;
 
 // This method is threadsafe because it is initially called
@@ -69,6 +71,15 @@ typedef struct SearchQuery__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "selectedDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = SearchQuery_FieldNumber_SelectedDomain,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(SearchQuery__storage_, selectedDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[SearchQuery class]
@@ -80,7 +91,7 @@ typedef struct SearchQuery__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\001\001\013\000";
+        "\002\001\013\000\002\016\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -328,11 +339,15 @@ typedef struct FindResponse__storage_ {
 
 @dynamic userName;
 @dynamic userId;
+@dynamic userCompanyName;
+@dynamic hasAddress, address;
 
 typedef struct MatchedUser__storage_ {
   uint32_t _has_storage_[1];
   NSString *userName;
   NSString *userId;
+  NSString *userCompanyName;
+  UserAddress *address;
 } MatchedUser__storage_;
 
 // This method is threadsafe because it is initially called
@@ -359,6 +374,24 @@ typedef struct MatchedUser__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "userCompanyName",
+        .dataTypeSpecific.className = NULL,
+        .number = MatchedUser_FieldNumber_UserCompanyName,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(MatchedUser__storage_, userCompanyName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "address",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserAddress),
+        .number = MatchedUser_FieldNumber_Address,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(MatchedUser__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[MatchedUser class]
@@ -370,7 +403,7 @@ typedef struct MatchedUser__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\002\001\010\000\002\006\000";
+        "\003\001\010\000\002\006\000\003\017\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

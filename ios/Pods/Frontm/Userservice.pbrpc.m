@@ -245,6 +245,8 @@
   return [self RPCToMethod:@"UpdateLastLoggedInDomain"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[Empty class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 #pragma mark TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse)
 
 - (void)topupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler{

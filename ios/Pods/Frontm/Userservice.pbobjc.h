@@ -257,6 +257,7 @@ typedef GPB_ENUM(SubscribeDomainInput_FieldNumber) {
 typedef GPB_ENUM(SubscribeDomainResponse_FieldNumber) {
   SubscribeDomainResponse_FieldNumber_ContentArray = 1,
   SubscribeDomainResponse_FieldNumber_Error = 2,
+  SubscribeDomainResponse_FieldNumber_ErrorMessage = 3,
 };
 
 @interface SubscribeDomainResponse : GPBMessage
@@ -266,6 +267,8 @@ typedef GPB_ENUM(SubscribeDomainResponse_FieldNumber) {
 @property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *errorMessage;
 
 @end
 
@@ -531,6 +534,9 @@ typedef GPB_ENUM(LastLoggedInDomainInput_FieldNumber) {
 @interface LastLoggedInDomainInput : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@end
+
 #pragma mark - TopupBalanceInput
 
 typedef GPB_ENUM(TopupBalanceInput_FieldNumber) {
