@@ -58,7 +58,7 @@ export default class BotTutorial extends Component {
                         />
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>FrontM Assistant</Text>
+                        <Text style={styles.title}>FrontM App</Text>
                         <Text numberOfLines={2} style={styles.subTitle}>
                             Welcome to FrontM. I’m here to guide
                         </Text>
@@ -76,8 +76,8 @@ export default class BotTutorial extends Component {
                     <View style={styles.topTriangle} />
                     <View style={styles.topTutorialContainerForBotTab}>
                         <Text style={styles.welcomeSubHeader}>
-                            Chat with FrontM Assistant to configure your
-                            account. Feel free to ask him whatever you want.
+                            Chat with FrontM App to configure your account. Feel
+                            free to ask him whatever you want.
                         </Text>
                         <View style={styles.dotSider}>
                             <View style={styles.innerWidth}>

@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.9.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.10.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,7 +46,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.9.0'
+        version: '1.10.0'
     },
 
     'onboarding-bot': {
@@ -74,7 +74,7 @@ export const SYSTEM_BOT_MANIFEST = {
             }
         },
         description:
-            'I am FrontM Assistant and will help you to start using FrontM. Open this conversation to set you up',
+            'I am FrontM App and will help you to start using FrontM. Open this conversation to set you up',
         logoUrl: botLogoUrl('AuthenticationLogo.png'),
         slug: 'onboarding-bot',
         systemBot: true,

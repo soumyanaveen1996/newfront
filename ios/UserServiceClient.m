@@ -20,6 +20,7 @@
 #import "ContactsResponse+frontm.h"
 #import "PhoneNumbers+frontm.h"
 #import "CallHistoryResponse+frontm.h"
+#import "TopupBalanceResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -283,5 +284,29 @@ RCT_REMAP_METHOD(getCallHistory, getCallHistoryWithSessionId:(NSString *)session
   [call start];
 }
 
+RCT_REMAP_METHOD(topupUserBalance, topupUserBalanceWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:topupUserBalance Params : %@", sessionId);
+
+  TopupBalanceInput *request = [TopupBalanceInput new];
+  request.paymentCode = params[@"paymentCode"];
+  request.amount = [params[@"amount"]doubleValue];
+  request.token = params[@"token"];
+  request.platform = @"ios";
+
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToTopupUserBalanceWithRequest:request handler:^(TopupBalanceResponse * _Nullable response, NSError * _Nullable error) {
+                           {
+                             if (error != nil) {
+                               callback(@[@{}, [NSNull null]]);
+                               return;
+                             } else {
+                               callback(@[[NSNull null], [response toResponse]]);
+                             }
+                           }
+                         }];
+
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
 
 @end

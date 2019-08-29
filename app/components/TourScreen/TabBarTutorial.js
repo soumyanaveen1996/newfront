@@ -41,7 +41,7 @@ export default class TabBarTutorial extends Component {
                         <View style={styles.topTutorialContainer}>
                             <Text style={styles.welcomeSubHeader}>
                                 Manage contacts, create or join group chat
-                                channels and install conversational assistants.
+                                channels and install conversational apps.
                             </Text>
                             <View style={styles.dotSider}>
                                 <View style={styles.innerWidth}>

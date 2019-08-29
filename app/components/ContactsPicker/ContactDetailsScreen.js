@@ -843,7 +843,6 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     render() {
-        // console.log('thhhhhhhhhhhhhhhh', this.props.contact);
         if (!this.props.contact) {
             return <View />;
         }

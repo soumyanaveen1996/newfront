@@ -1,14 +1,4 @@
 import React from 'react';
-import {
-    FlatList,
-    Text,
-    View,
-    TouchableOpacity,
-    ScrollView
-} from 'react-native';
-import styles from './styles';
-import _ from 'lodash';
-import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 
 export default class ChatModal extends React.Component {

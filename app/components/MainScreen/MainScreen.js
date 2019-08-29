@@ -146,7 +146,7 @@ class MainScreen extends React.Component {
                     })
                 ]}
             >
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     accessibilityLabel="Chat Button"
                     testID="chat-button"
                     style={MainScreenStyles.headerRightChat}
@@ -162,7 +162,7 @@ class MainScreen extends React.Component {
                         style={{ width: 25, height: 25 }}
                         source={require('../../images/tabbar-contacts/chat-good.png')}
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                     accessibilityLabel="Call Button"
                     testID="call-button"

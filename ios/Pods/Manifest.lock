@@ -10,14 +10,14 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.2):
     - BoringSSL-GRPC/Interface (= 0.0.2)
   - BoringSSL-GRPC/Interface (0.0.2)
-  - Frontm (0.0.22):
+  - Frontm (0.0.23):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
-    - Frontm/Messages (= 0.0.22)
-    - Frontm/Services (= 0.0.22)
-  - Frontm/Messages (0.0.22):
+    - Frontm/Messages (= 0.0.23)
+    - Frontm/Services (= 0.0.23)
+  - Frontm/Messages (0.0.23):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Protobuf
-  - Frontm/Services (0.0.22):
+  - Frontm/Services (0.0.23):
     - "!ProtoCompiler-gRPCPlugin (~> 1.0)"
     - Frontm/Messages
     - gRPC-ProtoRPC
@@ -76,7 +76,7 @@ SPEC CHECKSUMS:
   "!ProtoCompiler": c9526df99fafd398a393def617ae18d3774b7232
   "!ProtoCompiler-gRPCPlugin": 93f91aef21d112abda50a5c592d8716254ec44dc
   BoringSSL-GRPC: 2a230d9cd93e7ce39916044f645cebb31f37dde6
-  Frontm: 389189657919670eed265aa27156cbb806f7acd0
+  Frontm: 530894d03d305d1b39954ff56bc404aad4bc6d23
   gRPC: f0d45d7bfd5f220e405df5a9f672315ab963440c
   gRPC-Core: 901572a0099a453a79eb58bdb29e381ede0787bd
   gRPC-ProtoRPC: 8e49c501c166d221cf9e44076b20580171f8ecd0

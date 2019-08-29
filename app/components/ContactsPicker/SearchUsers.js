@@ -216,12 +216,37 @@ export default class SearchUsers extends React.Component {
         return this.renderRow(item, GlobalColors.disabledGray);
     }
 
+    renderSelectedContacts() {
+        return (
+            <View style={styles.selectedContactsListSU}>
+                {this.state.selectedContacts.length > 0 ? (
+                    <Text style={styles.searchUsersTitle}>
+                        Selected contacts::
+                    </Text>
+                ) : null}
+                <FlatList
+                    ItemSeparatorComponent={ContactsPickerItemSeparator}
+                    ref={flatlist => {
+                        this.selectedContactList = flatlist;
+                    }}
+                    renderItem={this.renderItemGray.bind(this)}
+                    data={this.state.selectedContacts}
+                    extraData={this.state}
+                    keyExtractor={(item, index) => item.id}
+                />
+            </View>
+        );
+    }
+
     renderContactsList() {
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : null}
                 style={styles.addressBookContainer}
             >
+                {this.state.notSelectedContacts.length > 0 ? (
+                    <Text style={styles.searchUsersTitle}>Search results:</Text>
+                ) : null}
                 <FlatList
                     ItemSeparatorComponent={ContactsPickerItemSeparator}
                     ref={sectionList => {
@@ -238,40 +263,23 @@ export default class SearchUsers extends React.Component {
         );
     }
 
-    renderSelectedContacts() {
-        return (
-            <FlatList
-                ItemSeparatorComponent={ContactsPickerItemSeparator}
-                ref={flatlist => {
-                    this.selectedContactList = flatlist;
-                }}
-                renderItem={this.renderItemGray.bind(this)}
-                data={this.state.selectedContacts}
-                extraData={this.state}
-                keyExtractor={(item, index) => item.id}
-            />
-        );
-    }
-
     renderButton() {
         const disabled = this.state.selectedContacts.length <= 0;
         return (
-            <View style={styles.buttonAreaSU}>
-                <TouchableOpacity
-                    disabled={disabled}
-                    style={[
-                        styles.doneButtonSU,
-                        {
-                            backgroundColor: disabled
-                                ? GlobalColors.frontmLightBlueTransparent
-                                : GlobalColors.frontmLightBlue
-                        }
-                    ]}
-                    onPress={this.onDone.bind(this)}
-                >
-                    <Text style={styles.buttonText}>Done</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                disabled={disabled}
+                style={[
+                    styles.doneButtonSU,
+                    {
+                        backgroundColor: disabled
+                            ? GlobalColors.frontmLightBlueTransparent
+                            : GlobalColors.frontmLightBlue
+                    }
+                ]}
+                onPress={this.onDone.bind(this)}
+            >
+                <Text style={styles.buttonText}>Done</Text>
+            </TouchableOpacity>
         );
     }
 
@@ -281,9 +289,7 @@ export default class SearchUsers extends React.Component {
                 <View style={styles.searchContainerSU}>
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
-                    <View style={styles.selectedContactsListSU}>
-                        {this.renderSelectedContacts()}
-                    </View>
+                    {this.renderSelectedContacts()}
                     {this.renderContactsList()}
                 </View>
                 {this.renderButton()}
