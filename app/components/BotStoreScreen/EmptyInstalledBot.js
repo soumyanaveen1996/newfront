@@ -47,7 +47,7 @@ export default class EmptyInstalledBot extends React.Component {
                         >
                             {this.props.noNetwork
                                 ? 'Slow or not internet connection. Please check your internet settings and try again.'
-                                : 'You don’t have any Assistant installed'}
+                                : 'You don’t have any App installed'}
                         </Text>
                     </View>
                     {this.props.noNetwork ? null : (
@@ -72,7 +72,7 @@ export default class EmptyInstalledBot extends React.Component {
                                     fontSize: 16
                                 }}
                             >
-                                Install First Assistant
+                                Install First App
                             </Text>
                         </TouchableOpacity>
                     )}

@@ -531,6 +531,36 @@ typedef GPB_ENUM(LastLoggedInDomainInput_FieldNumber) {
 @interface LastLoggedInDomainInput : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+#pragma mark - TopupBalanceInput
+
+typedef GPB_ENUM(TopupBalanceInput_FieldNumber) {
+  TopupBalanceInput_FieldNumber_PaymentCode = 1,
+  TopupBalanceInput_FieldNumber_Amount = 2,
+  TopupBalanceInput_FieldNumber_Token = 3,
+  TopupBalanceInput_FieldNumber_Platform = 4,
+};
+
+@interface TopupBalanceInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *paymentCode;
+
+@property(nonatomic, readwrite) double amount;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *token;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *platform;
+
+@end
+
+#pragma mark - TopupBalanceResponse
+
+typedef GPB_ENUM(TopupBalanceResponse_FieldNumber) {
+  TopupBalanceResponse_FieldNumber_Error = 1,
+};
+
+@interface TopupBalanceResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
 
 @end
 

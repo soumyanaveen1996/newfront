@@ -41,6 +41,8 @@ import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
 import com.squareup.okhttp.ConnectionSpec;
 
+import java.util.concurrent.TimeUnit;
+
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.okhttp.OkHttpChannelBuilder;
@@ -58,6 +60,9 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
         int port = BuildConfig.GRPC_PORT;
         try {
             mChannel = OkHttpChannelBuilder.forAddress(host, port)
+                    .keepAliveTime(30000, TimeUnit.MILLISECONDS)
+                    .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                    .keepAliveWithoutCalls(true)
                     .connectionSpec(ConnectionSpec.MODERN_TLS)
                     .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
                     .build();

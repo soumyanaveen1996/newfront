@@ -79,6 +79,7 @@ import ResetPassword from '../components/ResetPassword/ResetPassword';
 import SendCodePassword from '../components/ResetPassword/SendCodePassword';
 import CallHistory from '../components/NewChat/CallHistory';
 import ChartScreen from '../components/ChartMessage/ChartScreen';
+import GetCredit from '../components/GetCredit';
 
 StatusBar.setBarStyle('light-content', true);
 
@@ -500,6 +501,11 @@ class MainRouter extends React.Component {
                                         key={ROUTER_SCENE_KEYS.chartScreen}
                                         component={ChartScreen}
                                         title="Chart"
+                                    />
+                                    <Scene
+                                        key={ROUTER_SCENE_KEYS.getCredit}
+                                        component={GetCredit}
+                                        title="Top up"
                                     />
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.botStore}

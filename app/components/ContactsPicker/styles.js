@@ -61,8 +61,7 @@ const stylesheet = StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontSize: 16,
-        fontWeight: '500'
+        fontSize: 18
     },
     addressBookContainer: {
         flex: 1,
@@ -299,12 +298,14 @@ const stylesheet = StyleSheet.create({
     buttonAreaSU: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: GlobalColors.white,
         paddingBottom: 25
     },
     doneButtonSU: {
-        width: '50%',
-        height: 50,
+        position: 'absolute',
+        bottom: 25,
+        alignSelf: 'center',
+        width: '75%',
+        height: 40,
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center',
@@ -816,6 +817,11 @@ const stylesheet = StyleSheet.create({
     selectedContactsListSU: {
         maxHeight: (SCREEN_HEIGHT / 100) * 30,
         overflow: 'scroll'
+    },
+    searchUsersTitle: {
+        color: GlobalColors.grey,
+        margin: 14,
+        marginBottom: 7
     }
 });
 

@@ -73,7 +73,8 @@ const ROUTER_SCENE_KEYS = {
     timeline: 'timeline',
     videoRecorder: 'videoRecorder',
     webview: 'webview',
-    chartScreen: 'chartScreen'
+    chartScreen: 'chartScreen',
+    getCredit: 'getCredit'
 };
 
 export default ROUTER_SCENE_KEYS;

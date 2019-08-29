@@ -23,6 +23,8 @@
 @class SubscribeBotResponse;
 @class SubscribeDomainInput;
 @class SubscribeDomainResponse;
+@class TopupBalanceInput;
+@class TopupBalanceResponse;
 @class TwilioTokenInput;
 @class TwilioTokenResponse;
 @class UpdateUserProfileResponse;
@@ -167,6 +169,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToUpdateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
+#pragma mark TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse)
+
+- (void)topupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToTopupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

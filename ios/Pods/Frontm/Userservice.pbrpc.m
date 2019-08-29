@@ -245,6 +245,16 @@
   return [self RPCToMethod:@"UpdateLastLoggedInDomain"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[Empty class]
+#pragma mark TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse)
+
+- (void)topupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToTopupUserBalanceWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToTopupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"TopupUserBalance"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[TopupBalanceResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
 @end

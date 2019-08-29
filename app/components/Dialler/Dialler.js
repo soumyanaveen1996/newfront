@@ -148,6 +148,9 @@ export default class Dialler extends React.Component {
     }
 
     componentWillUnmount() {
+        this.mounted = false;
+        EventListeners.forEach(listener => listener.remove());
+        EventListeners = [];
         Calls.fetchCallHistory();
     }
 
@@ -346,12 +349,6 @@ export default class Dialler extends React.Component {
             callQuotaUpdateError: true
         });
     };
-
-    componentWillUnmount() {
-        this.mounted = false;
-        EventListeners.forEach(listener => listener.remove());
-        EventListeners = [];
-    }
 
     connectionDidConnectHandler(data) {
         if (data.call_state === 'CONNECTED' && this.state.satCall) {
@@ -658,30 +655,31 @@ export default class Dialler extends React.Component {
     hideCodes = () => this.setState({ showCodes: false });
 
     getCredit() {
-        Bot.getInstalledBots()
-            .then(bots => {
-                console.log('bot data ', bots);
-                dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
-                if (dwIndex < 0) {
-                    return Alert.alert(
-                        'You have to download DigitalWallet Bot to buy Credits'
-                    );
-                }
-                const DWBot = bots[dwIndex];
-                // console.log('page to go ', DWBot);
+        Actions.getCredit({ currentBalance: this.state.callQuota });
+        // Bot.getInstalledBots()
+        //     .then(bots => {
+        //         console.log('bot data ', bots);
+        //         dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
+        //         if (dwIndex < 0) {
+        //             return Alert.alert(
+        //                 'You have to download DigitalWallet Bot to buy Credits'
+        //             );
+        //         }
+        //         const DWBot = bots[dwIndex];
+        //         // console.log('page to go ', DWBot);
 
-                // Actions.botChat({ bot: DWBot });
-                Actions.pop();
-                Actions.botChat({ bot: DWBot });
-                // setTimeout(
-                //     () => Actions.refresh({ bot: DWBot, key: Math.random() }),
-                //     0
-                // );
-            })
-            .catch(err => {
-                console.log(err);
-                Alert.alert('An error occured');
-            });
+        //         // Actions.botChat({ bot: DWBot });
+        //         Actions.pop();
+        //         Actions.botChat({ bot: DWBot });
+        //         // setTimeout(
+        //         //     () => Actions.refresh({ bot: DWBot, key: Math.random() }),
+        //         //     0
+        //         // );
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //         Alert.alert('An error occured');
+        //     });
     }
 
     renderCountryCode = () => {

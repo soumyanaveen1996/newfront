@@ -24,6 +24,7 @@ import com.frontm.frontm.proto.converters.SigninResponseConverter;
 import com.frontm.frontm.proto.converters.SignupResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
+import com.frontm.frontm.proto.converters.TopupBalanceResponseConverter;
 import com.frontm.frontm.proto.converters.TwilioTokenResponseConverter;
 import com.frontm.frontm.proto.converters.UpdateUserProfileResponseConverter;
 import com.frontm.frontm.proto.converters.UserConverter;
@@ -37,6 +38,7 @@ import com.frontm.user.proto.SubscribeBotInput;
 import com.frontm.user.proto.SubscribeBotResponse;
 import com.frontm.user.proto.SubscribeDomainInput;
 import com.frontm.user.proto.SubscribeDomainResponse;
+import com.frontm.user.proto.TopupBalanceResponse;
 import com.frontm.user.proto.TwilioTokenInput;
 import com.frontm.user.proto.TwilioTokenResponse;
 import com.frontm.user.proto.UpdateUserProfileResponse;
@@ -54,6 +56,8 @@ import io.grpc.Metadata;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
+import com.frontm.user.proto.TopupBalanceInput;
+import com.frontm.user.proto.TopupBalanceResponse;
 
 
 public class UserServiceClient extends ReactContextBaseJavaModule {
@@ -87,6 +91,9 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             try {
                 mChannel = OkHttpChannelBuilder.forAddress(host, port)
                         .connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .keepAliveTime(30000, TimeUnit.MILLISECONDS)
+                        .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                        .keepAliveWithoutCalls(true)
                         .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
                         .build();
             } catch (Exception e) {
@@ -142,7 +149,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getBotSubscriptions(SelectedDomainInput.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(SelectedDomainInput.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
             @Override
             public void onNext(BotSubscriptionsResponse value) {
                 callback.invoke(null, new BotSubscriptionsResponseConverter().toResponse(value));
@@ -173,7 +180,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getContacts(SelectedDomainInput.newBuilder().build(), new StreamObserver<ContactsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(SelectedDomainInput.newBuilder().build(), new StreamObserver<ContactsResponse>() {
             @Override
             public void onNext(ContactsResponse value) {
                 callback.invoke(null, new ContactsResponseConverter().toResponse(value));
@@ -558,4 +565,39 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             }
         });
     }
+
+    @ReactMethod
+    public void topupUserBalance(String sessionId, ReadableMap param, final Callback callback)
+    {
+        Log.d("GRPC:::topupUserBalance", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        TopupBalanceInput input = TopupBalanceInput.newBuilder()
+                .setPaymentCode(param.getString("paymentCode"))
+                .setAmount(param.getDouble("amount"))
+                .setToken(param.getString("token"))
+                .setPlatform("android")
+                .build();
+        stub.topupUserBalance(input, new StreamObserver<TopupBalanceResponse>() {
+            @Override
+            public void onNext(TopupBalanceResponse value) {
+                callback.invoke(null, new TopupBalanceResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
 }

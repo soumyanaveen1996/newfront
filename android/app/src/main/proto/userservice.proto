@@ -22,6 +22,7 @@ service UserService {
     rpc GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse) {}
     rpc GetUserDomains(commonmessages.Empty) returns (UserDomainsResponse) {}
     rpc UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (commonmessages.Empty) {}
+    rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
 }
 message User {
     string userName = 1;
@@ -144,4 +145,13 @@ message CallHistoryInput {
 }
 message LastLoggedInDomainInput {
     string userDomain = 1;
+}
+message TopupBalanceInput {
+    string paymentCode = 1;
+    double amount = 2;
+    string token = 3;
+    string platform = 4;
+}
+message TopupBalanceResponse {
+    int32 error = 1;
 }
