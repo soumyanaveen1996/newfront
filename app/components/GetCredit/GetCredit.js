@@ -75,7 +75,10 @@ export default class GetCredit extends React.Component {
                 break;
             }
             try {
-                await InAppPurchase.buyProduct({ productCode: productCode });
+                await InAppPurchase.buyProduct({
+                    productCode: productCode,
+                    price: parseFloat(this.state.selectedCredit)
+                });
                 // this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
