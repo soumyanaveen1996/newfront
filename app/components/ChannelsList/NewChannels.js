@@ -167,13 +167,13 @@ class NewChannels extends React.Component {
             'All data will be lost. Are you sure?',
             [
                 {
-                    text: 'Yes, I will create later',
-                    onPress: () => setTimeout(() => Actions.pop(), 0)
+                    text: 'Yes',
+                    onPress: () => setTimeout(() => Actions.pop(), 0),
+                    style: 'destructive'
                 },
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel'
+                    text: 'No',
+                    onPress: () => console.log('Cancel Pressed')
                 }
             ],
             { cancelable: true }
