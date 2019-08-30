@@ -2527,10 +2527,10 @@ class ChatBotScreen extends React.Component {
                                 }}
                             >
                                 <FlatList
-                                    onEndReached={() => {
-                                        this.readLambdaQueue();
-                                    }}
-                                    onEndReachedThreshold={-0.2}
+                                    // onEndReached={() => {
+                                    //     this.readLambdaQueue();
+                                    // }}
+                                    // onEndReachedThreshold={-0.2}
                                     extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"

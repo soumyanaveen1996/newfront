@@ -340,7 +340,7 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
             }
         });
     }
-    return messages.reverse();
+    return messages;
 };
 
 const fetchMessagesBeforeDateFromLambda = (user, conversationId, botId, date) =>
