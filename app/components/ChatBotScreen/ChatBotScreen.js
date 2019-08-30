@@ -984,27 +984,33 @@ class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.chatState.updatingChat = true;
-        this.persistMessage(message)
-            .then(queue => {
-                if (queue) {
-                    return this.queueMessage(message);
-                } else {
-                    return;
-                }
-            })
-            .then(res => {
-                if (!res) {
-                    this.chatState.updatingChat = false;
-                    if (this.chatState.nextSmartSuggestion) {
-                        this.updateSmartSuggestions(
-                            this.chatState.nextSmartSuggestion
-                        );
-                        this.chatState.nextSmartSuggestion = undefined;
+        return new Promise((resolve, reject) => {
+            this.chatState.updatingChat = true;
+            this.persistMessage(message)
+                .then(queue => {
+                    if (queue) {
+                        return this.queueMessage(message);
+                    } else {
+                        return;
                     }
-                }
-            });
-        // Has to be Immutable for react
+                })
+                .then(res => {
+                    if (!res) {
+                        this.chatState.updatingChat = false;
+                        if (this.chatState.nextSmartSuggestion) {
+                            this.updateSmartSuggestions(
+                                this.chatState.nextSmartSuggestion
+                            );
+                            this.chatState.nextSmartSuggestion = undefined;
+                        }
+                    }
+                    resolve();
+                })
+                .catch(e => {
+                    resolve();
+                });
+            // Has to be Immutable for react
+        });
     }
 
     updateSmartSuggestions(message) {
@@ -1624,7 +1630,7 @@ class ChatBotScreen extends React.Component {
             null
         );
 
-        this.updateChat(message);
+        await this.updateChat(message);
         this.scrollToBottom = true;
 
         await this.waitForQueueProcessing();
@@ -1702,10 +1708,12 @@ class ChatBotScreen extends React.Component {
     }
 
     async sendImage(imageUri, base64) {
+        console.log('>>>>>>>>1');
         const toUri = await Utils.copyFileAsync(
             imageUri,
             Constants.IMAGES_DIRECTORY
         );
+        console.log('>>>>>>>>2');
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
@@ -1718,6 +1726,7 @@ class ChatBotScreen extends React.Component {
             this.user,
             ResourceTypes.Image
         );
+        console.log('>>>>>>>>3');
         message.imageMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     }
