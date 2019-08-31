@@ -70,6 +70,7 @@ import {
 } from 'react-native-responsive-screen';
 import { NETWORK_STATE } from '../../lib/network';
 import GlobalColors from '../../config/styles';
+import images from '../../config/images';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -232,11 +233,19 @@ class CallHistory extends React.Component {
 
     renderEmptyScreen() {
         return (
-            <View style={{ height: '100%', justifyContent: 'center' }}>
+            <View
+                style={{
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
+                <Image
+                    style={{ marginBottom: 45, width: 200 }}
+                    source={images.empty_contact}
+                />
                 <Text
                     style={{
-                        textAlign: 'center',
-                        alignSelf: 'center',
                         color: GlobalColors.textBlack
                     }}
                     numberOfLines={2}
