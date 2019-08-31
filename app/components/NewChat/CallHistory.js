@@ -69,6 +69,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import { NETWORK_STATE } from '../../lib/network';
+import GlobalColors from '../../config/styles';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -229,16 +230,37 @@ class CallHistory extends React.Component {
         );
     }
 
+    renderEmptyScreen() {
+        return (
+            <View style={{ height: '100%', justifyContent: 'center' }}>
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        alignSelf: 'center',
+                        color: GlobalColors.textBlack
+                    }}
+                    numberOfLines={2}
+                >
+                    You haven’t performed any calls yet.
+                </Text>
+            </View>
+        );
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>
-                    <FlatList
-                        data={this.state.callHistory}
-                        extraData={this.state.callHistory}
-                        renderItem={this.renderRow.bind(this)}
-                        ItemSeparatorComponent={NewChatItemSeparator}
-                    />
+                    {this.state.callHistory.length > 0 ? (
+                        <FlatList
+                            data={this.state.callHistory}
+                            extraData={this.state.callHistory}
+                            renderItem={this.renderRow.bind(this)}
+                            ItemSeparatorComponent={NewChatItemSeparator}
+                        />
+                    ) : (
+                        this.renderEmptyScreen()
+                    )}
                 </BackgroundImage>
             </SafeAreaView>
         );
