@@ -17,7 +17,7 @@ export default class ModalDialPad extends React.Component {
             ['1', '2', '3'],
             ['4', '5', '6'],
             ['7', '8', '9'],
-            ['*', '0', '+']
+            ['*', '0', '#']
         ];
         return digits.map((row, index) => {
             return (
@@ -29,14 +29,16 @@ export default class ModalDialPad extends React.Component {
     }
 
     renderButtonForChar(char) {
-        if (char === '+') {
+        if (char === '#') {
             return (
                 <TouchableOpacity
                     key={char}
                     style={Styles.roundButton}
-                    // onPress={this.buttonPressed.bind(this, char)}
+                    onPress={this.buttonPressed.bind(this, char)}
                 >
-                    {/* {Icons.backSpace({ color: 'white' })} */}
+                    <Text style={[Styles.roundButtonStar, { color: 'white' }]}>
+                        {char}
+                    </Text>
                 </TouchableOpacity>
             );
         }
