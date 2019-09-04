@@ -112,6 +112,8 @@ import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
 import ChartMessage from '../ChartMessage';
 import { Conversation } from '../../lib/conversation';
+import ImageResizer from 'react-native-image-resizer';
+import ImageMessage from '../ImageMessage/ImageMessage';
 
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
 const QueueServiceClient = NativeModules.QueueServiceClient;
@@ -1453,6 +1455,17 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_IMAGE
+            ) {
+                return (
+                    <ImageMessage
+                        fileName={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={false}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_LOCATION
             ) {
                 return (
@@ -1562,6 +1575,17 @@ class ChatBotScreen extends React.Component {
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
                         mapOptions={message.getMessageOptions()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_IMAGE
+            ) {
+                return (
+                    <ImageMessage
+                        fileName={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={true}
                     />
                 );
             } else if (
@@ -1708,25 +1732,30 @@ class ChatBotScreen extends React.Component {
     }
 
     async sendImage(imageUri, base64) {
-        console.log('>>>>>>>>1');
-        const toUri = await Utils.copyFileAsync(
-            imageUri,
-            Constants.IMAGES_DIRECTORY
-        );
-        console.log('>>>>>>>>2');
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
+        let imageResizeResponse = await ImageResizer.createResizedImage(
+            imageUri,
+            800,
+            800,
+            'PNG',
+            50,
+            0,
+            'images'
+        );
+        const newUri =
+            Constants.IMAGES_DIRECTORY + '/' + message.getMessageId() + '.png';
+        await RNFS.moveFile(imageResizeResponse.uri, newUri);
+
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(
-            base64,
-            toUri,
+            newUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
             this.user,
             ResourceTypes.Image
         );
-        console.log('>>>>>>>>3');
         message.imageMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     }
@@ -1754,7 +1783,6 @@ class ChatBotScreen extends React.Component {
 
         // UPLOAD THE FILE
         const uploadedUrl = await Resource.uploadFile(
-            null, //base64 will be created in Resource.uploadFile()
             newFileUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
@@ -1776,9 +1804,11 @@ class ChatBotScreen extends React.Component {
     };
 
     sendAudio = async audioURI => {
+        let rename = message.getMessageId() + '.aac';
         const toUri = await Utils.copyFileAsync(
             audioURI,
-            Constants.AUDIO_DIRECTORY
+            Constants.AUDIO_DIRECTORY,
+            rename
         );
 
         // TODO(amal): Upload Audio file
@@ -1808,7 +1838,6 @@ class ChatBotScreen extends React.Component {
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(
-            null,
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),

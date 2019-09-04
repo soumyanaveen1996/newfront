@@ -368,7 +368,6 @@ class NewContactScreen extends React.Component {
                 // console.log('user ', user);
                 // Send the file to the S3/backend and then let the user know
                 return Resource.uploadFile(
-                    base64,
                     toUri,
                     PROFILE_PIC_BUCKET,
                     user.userId,
