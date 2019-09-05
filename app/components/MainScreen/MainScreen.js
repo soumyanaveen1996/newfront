@@ -71,6 +71,7 @@ import PushNotification from 'react-native-push-notification';
 import Placeholder from 'rn-placeholder';
 // Import BackgroundGeolocation + any optional interfaces
 import RemoteLogger from '../../lib/utils/remoteDebugger';
+import NetworkButton from '../Header/NetworkButton';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -86,102 +87,86 @@ class MainScreen extends React.Component {
         let ret = {
             headerTitle: <CenterComponent />
         };
-        if (appConfig.app.hideFilter !== true) {
-            ret.headerRight = (
-                <HeaderLeftIcon
-                    config={Config.filterButtonConfig}
-                    onPress={state.params.openBotFilter}
-                />
-            );
-        }
+        // if (appConfig.app.hideFilter !== true) {
+        //     ret.headerRight = (
+        //         <HeaderLeftIcon
+        //             config={Config.filterButtonConfig}
+        //             onPress={state.params.openBotFilter}
+        //         />
+        //     );
+        // }
 
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        ret.headerLeft = (
+            <View style={{ marginLeft: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
+        // if (state.params.button) {
+        //     if (state.params.button === 'manual') {
+        //         ret.headerLeft = (
+        //             <HeaderRightIcon
+        //                 onPress={() => {
+        //                     state.params.refresh();
+        //                 }}
+        //                 icon={Icons.refresh()}
+        //             />
+        //         );
+        //     } else if (state.params.button === 'gsm') {
+        //         ret.headerLeft = (
+        //             <HeaderRightIcon
+        //                 image={images.gsm}
+        //                 onPress={() => {
+        //                     state.params.showConnectionMessage('gsm');
+        //                 }}
+        //             />
+        //         );
+        //     } else if (state.params.button === 'satellite') {
+        //         ret.headerLeft = (
+        //             <HeaderRightIcon
+        //                 image={images.satellite}
+        //                 onPress={() => {
+        //                     state.params.showConnectionMessage('satellite');
+        //                 }}
+        //             />
+        //         );
+        //     } else {
+        //         ret.headerLeft = (
+        //             <HeaderRightIcon
+        //                 icon={Icons.automatic()}
+        //                 onPress={() => {
+        //                     state.params.showConnectionMessage('automatic');
+        //                 }}
+        //             />
+        //         );
+        //     }
+        // }
 
         ret.headerRight = (
-            <View
-                style={[
-                    { display: 'flex', flexDirection: 'row' },
-                    Platform.select({
-                        android: {
-                            marginTop: 2
-                        }
+            <TouchableOpacity
+                style={MainScreenStyles.headerRightCall}
+                accessibilityLabel="Call Icon"
+                testID="call-icon"
+                accessibilityLabel="Call Button"
+                testID="call-button"
+                onPress={() =>
+                    Actions.tabBarCall({
+                        type: 'push'
                     })
-                ]}
+                }
             >
-                {/* <TouchableOpacity
-                    accessibilityLabel="Chat Button"
-                    testID="chat-button"
-                    style={MainScreenStyles.headerRightChat}
-                    onPress={() =>
-                        Actions.tabBarChat({
-                            type: 'push'
-                        })
-                    }
-                >
-                    <Image
-                        accessibilityLabel="Chat Icon"
-                        testID="chat-icon"
-                        style={{ width: 25, height: 25 }}
-                        source={require('../../images/tabbar-contacts/chat-good.png')}
-                    />
-                </TouchableOpacity> */}
-                <TouchableOpacity
-                    accessibilityLabel="Call Button"
-                    testID="call-button"
-                    style={{ width: 35, height: 35, marginRight: 10 }}
-                    onPress={() =>
-                        Actions.tabBarCall({
-                            type: 'push'
-                        })
-                    }
-                >
-                    <View
-                        style={MainScreenStyles.headerRightCall}
-                        accessibilityLabel="Call Icon"
-                        testID="call-icon"
-                    >
-                        {Icons.callW()}
-                    </View>
-                </TouchableOpacity>
-            </View>
+                {Icons.greenCall({ size: 30 })}
+            </TouchableOpacity>
         );
 
         return ret;

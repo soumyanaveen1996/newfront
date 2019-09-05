@@ -124,14 +124,13 @@ export const MainScreenStyles = StyleSheet.create({
     },
     headerRightCall: {
         display: 'flex',
-        width: 26,
-        height: 26,
-        borderRadius: 15,
-        backgroundColor: 'rgba(47,199,111,1)',
+        width: 35,
+        height: 35,
+        borderRadius: 35 / 2,
+        backgroundColor: GlobalColors.green,
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: 10,
-        marginBottom: 5
+        marginRight: 17
     }
 });
 
