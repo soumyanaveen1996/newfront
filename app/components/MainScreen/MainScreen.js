@@ -97,7 +97,7 @@ class MainScreen extends React.Component {
                     })
                 }
             >
-                {Icons.greenCall({ size: 30 })}
+                {Icons.greenCall({ size: 25 })}
             </TouchableOpacity>
         );
 
