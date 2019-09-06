@@ -40,7 +40,8 @@ import {
     Resource,
     ResourceTypes,
     Settings,
-    PollingStrategyTypes
+    PollingStrategyTypes,
+    Notification
 } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
@@ -240,6 +241,9 @@ class ChatBotScreen extends React.Component {
         this.mounted = true;
         let self = this;
 
+        //Ask to activate push notifications
+        this.askNotificationPermission();
+
         // 0. load the bot
         for (let i = 0; i < BOT_LOAD_RETRIES; i++) {
             try {
@@ -430,6 +434,13 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+    }
+
+    async askNotificationPermission() {
+        const notificationInfo = await Notification.deviceInfo();
+        if (!(notificationInfo && notificationInfo.isRegistered)) {
+            Notification.register();
+        }
     }
 
     static onEnter({ navigation, screenProps }) {

@@ -125,6 +125,8 @@ class NewCallContacts extends React.Component {
             });
             return;
         }
+
+        this.askNotificationPermission();
     }
 
     componentDidUpdate(prevProps) {
@@ -144,6 +146,13 @@ class NewCallContacts extends React.Component {
             Contact.getAddedContacts().then(contacts => {
                 this.refresh(contacts);
             });
+        }
+    }
+
+    async askNotificationPermission() {
+        const notificationInfo = await Notification.deviceInfo();
+        if (!(notificationInfo && notificationInfo.isRegistered)) {
+            Notification.register();
         }
     }
 

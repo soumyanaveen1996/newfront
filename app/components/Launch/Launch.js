@@ -195,7 +195,7 @@ export default class Splash extends React.Component {
 
                         InteractionManager.runAfterInteractions(() => {
                             synchronizePhoneBook();
-                            Notification.registeronLaunch();
+                            Notification.registerOnLaunch();
                         });
 
                         this.showMainScreen();
