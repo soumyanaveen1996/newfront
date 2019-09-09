@@ -54,6 +54,8 @@ static GPBFileDescriptor *UserserviceRoot_FileDescriptor(void) {
 @dynamic visible;
 @dynamic userId;
 @dynamic companyId;
+@dynamic userCompanyName;
+@dynamic hasAddress, address;
 
 typedef struct User__storage_ {
   uint32_t _has_storage_[1];
@@ -62,6 +64,8 @@ typedef struct User__storage_ {
   PhoneNumbers *phoneNumbers;
   NSString *userId;
   NSString *companyId;
+  NSString *userCompanyName;
+  UserAddress *address;
 } User__storage_;
 
 // This method is threadsafe because it is initially called
@@ -133,6 +137,24 @@ typedef struct User__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "userCompanyName",
+        .dataTypeSpecific.className = NULL,
+        .number = User_FieldNumber_UserCompanyName,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(User__storage_, userCompanyName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "address",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserAddress),
+        .number = User_FieldNumber_Address,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(User__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[User class]
@@ -144,7 +166,7 @@ typedef struct User__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\005\001\010\000\002\014\000\003\014\000\006\006\000\007\t\000";
+        "\006\001\010\000\002\014\000\003\014\000\006\006\000\007\t\000\010\017\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -407,6 +429,9 @@ typedef struct ContactsResponse__storage_ {
 @dynamic hasPhoneNumbers, phoneNumbers;
 @dynamic userId;
 @dynamic waitingForConfirmation;
+@dynamic userCompanyName;
+@dynamic hasAddress, address;
+@dynamic showAcceptIgnoreMsg;
 
 typedef struct Contact__storage_ {
   uint32_t _has_storage_[1];
@@ -414,6 +439,8 @@ typedef struct Contact__storage_ {
   NSString *emailAddress;
   PhoneNumbers *phoneNumbers;
   NSString *userId;
+  NSString *userCompanyName;
+  UserAddress *address;
 } Contact__storage_;
 
 // This method is threadsafe because it is initially called
@@ -467,6 +494,33 @@ typedef struct Contact__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "userCompanyName",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_UserCompanyName,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(Contact__storage_, userCompanyName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "address",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserAddress),
+        .number = Contact_FieldNumber_Address,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(Contact__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "showAcceptIgnoreMsg",
+        .dataTypeSpecific.className = NULL,
+        .number = Contact_FieldNumber_ShowAcceptIgnoreMsg,
+        .hasIndex = 8,
+        .offset = 9,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[Contact class]
@@ -478,7 +532,7 @@ typedef struct Contact__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\005\001\010\000\002\014\000\003\014\000\004\006\000\005\026\000";
+        "\007\001\010\000\002\014\000\003\014\000\004\006\000\005\026\000\006\017\000\010\023\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -645,11 +699,13 @@ typedef struct SubscribeDomainInput__storage_ {
 
 @dynamic contentArray, contentArray_Count;
 @dynamic error;
+@dynamic errorMessage;
 
 typedef struct SubscribeDomainResponse__storage_ {
   uint32_t _has_storage_[1];
   int32_t error;
   NSMutableArray *contentArray;
+  NSString *errorMessage;
 } SubscribeDomainResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -660,7 +716,7 @@ typedef struct SubscribeDomainResponse__storage_ {
     static GPBMessageFieldDescription fields[] = {
       {
         .name = "contentArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(DomainRoles),
+        .dataTypeSpecific.className = GPBStringifySymbol(UserDomain),
         .number = SubscribeDomainResponse_FieldNumber_ContentArray,
         .hasIndex = GPBNoHasBit,
         .offset = (uint32_t)offsetof(SubscribeDomainResponse__storage_, contentArray),
@@ -676,6 +732,15 @@ typedef struct SubscribeDomainResponse__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
+      {
+        .name = "errorMessage",
+        .dataTypeSpecific.className = NULL,
+        .number = SubscribeDomainResponse_FieldNumber_ErrorMessage,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(SubscribeDomainResponse__storage_, errorMessage),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[SubscribeDomainResponse class]
@@ -685,6 +750,11 @@ typedef struct SubscribeDomainResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(SubscribeDomainResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\003\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -1192,7 +1262,6 @@ typedef struct CallHistoryResponse__storage_ {
 
 typedef struct CallHistoryObject__storage_ {
   uint32_t _has_storage_[1];
-  int32_t callCharge;
   float currentBalance;
   int32_t duration;
   NSString *userId;
@@ -1203,6 +1272,7 @@ typedef struct CallHistoryObject__storage_ {
   NSString *toNumber;
   NSString *toUserId;
   NSString *toUserName;
+  double callCharge;
   int64_t callTimestamp;
 } CallHistoryObject__storage_;
 
@@ -1219,7 +1289,7 @@ typedef struct CallHistoryObject__storage_ {
         .hasIndex = 0,
         .offset = (uint32_t)offsetof(CallHistoryObject__storage_, callCharge),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeDouble,
       },
       {
         .name = "callTimestamp",
@@ -1332,6 +1402,308 @@ typedef struct CallHistoryObject__storage_ {
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
         "\013\001\n\000\002\r\000\003\016\000\005\006\000\006\010\000\007\r\000\010\n\000\t\014\000\n\010\000\013\010\000\014\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UserDomainsResponse
+
+@implementation UserDomainsResponse
+
+@dynamic domainsArray, domainsArray_Count;
+
+typedef struct UserDomainsResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *domainsArray;
+} UserDomainsResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "domainsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserDomain),
+        .number = UserDomainsResponse_FieldNumber_DomainsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(UserDomainsResponse__storage_, domainsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserDomainsResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserDomainsResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UserDomain
+
+@implementation UserDomain
+
+@dynamic userDomain;
+@dynamic name;
+@dynamic hasViewModes, viewModes;
+@dynamic logoURL;
+@dynamic lastLoggedIn;
+
+typedef struct UserDomain__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *userDomain;
+  NSString *name;
+  DomainViewMode *viewModes;
+  NSString *logoURL;
+} UserDomain__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = UserDomain_FieldNumber_UserDomain,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(UserDomain__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "name",
+        .dataTypeSpecific.className = NULL,
+        .number = UserDomain_FieldNumber_Name,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(UserDomain__storage_, name),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "viewModes",
+        .dataTypeSpecific.className = GPBStringifySymbol(DomainViewMode),
+        .number = UserDomain_FieldNumber_ViewModes,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(UserDomain__storage_, viewModes),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "logoURL",
+        .dataTypeSpecific.className = NULL,
+        .number = UserDomain_FieldNumber_LogoURL,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(UserDomain__storage_, logoURL),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "lastLoggedIn",
+        .dataTypeSpecific.className = NULL,
+        .number = UserDomain_FieldNumber_LastLoggedIn,
+        .hasIndex = 4,
+        .offset = 5,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserDomain class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserDomain__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\004\001\n\000\003\t\000\004\005!!\000\005\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - DomainViewMode
+
+@implementation DomainViewMode
+
+@dynamic apps;
+@dynamic channels;
+@dynamic chat;
+@dynamic voip;
+
+typedef struct DomainViewMode__storage_ {
+  uint32_t _has_storage_[1];
+} DomainViewMode__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "apps",
+        .dataTypeSpecific.className = NULL,
+        .number = DomainViewMode_FieldNumber_Apps,
+        .hasIndex = 0,
+        .offset = 1,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "channels",
+        .dataTypeSpecific.className = NULL,
+        .number = DomainViewMode_FieldNumber_Channels,
+        .hasIndex = 2,
+        .offset = 3,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "chat",
+        .dataTypeSpecific.className = NULL,
+        .number = DomainViewMode_FieldNumber_Chat,
+        .hasIndex = 4,
+        .offset = 5,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+      {
+        .name = "voip",
+        .dataTypeSpecific.className = NULL,
+        .number = DomainViewMode_FieldNumber_Voip,
+        .hasIndex = 6,
+        .offset = 7,  // Stored in _has_storage_ to save space.
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[DomainViewMode class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(DomainViewMode__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - CallHistoryInput
+
+@implementation CallHistoryInput
+
+@dynamic contactId;
+
+typedef struct CallHistoryInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *contactId;
+} CallHistoryInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "contactId",
+        .dataTypeSpecific.className = NULL,
+        .number = CallHistoryInput_FieldNumber_ContactId,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(CallHistoryInput__storage_, contactId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[CallHistoryInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(CallHistoryInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - LastLoggedInDomainInput
+
+@implementation LastLoggedInDomainInput
+
+@dynamic userDomain;
+
+typedef struct LastLoggedInDomainInput__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *userDomain;
+} LastLoggedInDomainInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "userDomain",
+        .dataTypeSpecific.className = NULL,
+        .number = LastLoggedInDomainInput_FieldNumber_UserDomain,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(LastLoggedInDomainInput__storage_, userDomain),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[LastLoggedInDomainInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(LastLoggedInDomainInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\n\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");

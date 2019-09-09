@@ -157,6 +157,7 @@
 		6B22598C232281CA00DA143F /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B225989232281A000DA143F /* libART.a */; };
 		6B2D929D2310237800639CD2 /* TopupBalanceResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D929C2310237800639CD2 /* TopupBalanceResponse+frontm.m */; };
 		6B3FBBE52BEA41AFB7EA118A /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 515AD2D5FDDC4884A04D87B3 /* SF-Pro-Text-Semibold.otf */; };
+		6B4C3C4B2305A02300B86BC2 /* UserDomain+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */; };
 		6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */; };
 		6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */; };
 		6B9829B722CF5C64008E00AD /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BD220C709B00659F09 /* libRNBlur.a */; };
@@ -1051,6 +1052,8 @@
 		6B225983232281A000DA143F /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		6B2D929C2310237800639CD2 /* TopupBalanceResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TopupBalanceResponse+frontm.m"; sourceTree = "<group>"; };
 		6B2D92F02310238D00639CD2 /* TopupBalanceResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopupBalanceResponse+frontm.h"; sourceTree = "<group>"; };
+		6B4C3BF723059FD900B86BC2 /* UserDomain+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UserDomain+frontm.h"; sourceTree = "<group>"; };
+		6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UserDomain+frontm.m"; sourceTree = "<group>"; };
 		6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryResponse+frontm.m"; sourceTree = "<group>"; };
 		6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryResponse+frontm.h"; sourceTree = "<group>"; };
 		6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryObject+frontm.m"; sourceTree = "<group>"; };
@@ -1481,6 +1484,8 @@
 				04704B2922368C3B003ABE94 /* PhoneNumbers+frontm.h */,
 				04704B2A22368C3B003ABE94 /* PhoneNumbers+frontm.m */,
 				04704B652236A39B003ABE94 /* DomainRoles+frontm.h */,
+				6B4C3BF723059FD900B86BC2 /* UserDomain+frontm.h */,
+				6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */,
 				04704B662236A39B003ABE94 /* DomainRoles+frontm.m */,
 				04704B6B2236C673003ABE94 /* BotSubscriptionsResponse+frontm.h */,
 				04704B6C2236C673003ABE94 /* BotSubscriptionsResponse+frontm.m */,
@@ -3004,7 +3009,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -3013,7 +3018,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6B37D42F21C2AF1200E7A7FE /* ShellScript */ = {
@@ -3039,7 +3044,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh",
 				"${PODS_ROOT}/TwilioVoice/TwilioVoice.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -3048,7 +3053,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3097,6 +3102,7 @@
 				04704B7F2237C23D003ABE94 /* QueueServiceClient.m in Sources */,
 				04905640223B8533008FECC8 /* ChannelListResponse+frontm.m in Sources */,
 				0490562E223B7535008FECC8 /* TwilioTokenResponse+frontm.m in Sources */,
+				6B4C3C4B2305A02300B86BC2 /* UserDomain+frontm.m in Sources */,
 				04704B2222366922003ABE94 /* SignupResponse+frontm.m in Sources */,
 				049055BA223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m in Sources */,
 				04E0FF8B22384414004F19B1 /* CatalogDependency+frontm.m in Sources */,

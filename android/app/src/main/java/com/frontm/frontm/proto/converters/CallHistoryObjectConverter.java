@@ -12,7 +12,7 @@ public class CallHistoryObjectConverter {
     public WritableMap toJson(CallHistoryObject response) {
         WritableMap map = Arguments.createMap();
 
-        map.putInt("callCharge", response.getCallCharge());
+        map.putDouble("callCharge", response.getCallCharge());
         map.putDouble("callTimestamp", response.getCallTimestamp());
         map.putDouble("currentBalance", response.getCurrentBalance());
         map.putInt("duration", response.getDuration());

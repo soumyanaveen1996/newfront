@@ -30,3 +30,16 @@ message LocalContact {
     commonmessages.PhoneNumbers phoneNumbers = 3;
     string userId = 4;
 }
+
+message UserAddress {
+    string addressLine1 = 1;
+    string addressLine2 = 2;
+    string city = 3;
+    string state = 4;
+    string country = 5;
+    string postCode = 6;
+}
+
+message SelectedDomainInput {
+    string selectedDomain = 1;
+}
