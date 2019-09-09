@@ -66,6 +66,7 @@ typedef GPB_ENUM(User_FieldNumber) {
   User_FieldNumber_CompanyId = 7,
   User_FieldNumber_UserCompanyName = 8,
   User_FieldNumber_Address = 9,
+  User_FieldNumber_UserTimezone = 10,
 };
 
 @interface User : GPBMessage
@@ -91,6 +92,8 @@ typedef GPB_ENUM(User_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
 /** Test to see if @c address has been set. */
 @property(nonatomic, readwrite) BOOL hasAddress;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userTimezone;
 
 @end
 
@@ -474,6 +477,7 @@ typedef GPB_ENUM(UserDomain_FieldNumber) {
   UserDomain_FieldNumber_ViewModes = 3,
   UserDomain_FieldNumber_LogoURL = 4,
   UserDomain_FieldNumber_LastLoggedIn = 5,
+  UserDomain_FieldNumber_LockInUsers = 6,
 };
 
 @interface UserDomain : GPBMessage
@@ -489,6 +493,8 @@ typedef GPB_ENUM(UserDomain_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *logoURL;
 
 @property(nonatomic, readwrite) BOOL lastLoggedIn;
+
+@property(nonatomic, readwrite) BOOL lockInUsers;
 
 @end
 
@@ -567,6 +573,38 @@ typedef GPB_ENUM(TopupBalanceResponse_FieldNumber) {
 @interface TopupBalanceResponse : GPBMessage
 
 @property(nonatomic, readwrite) int32_t error;
+
+@end
+
+#pragma mark - DeviceInfo
+
+typedef GPB_ENUM(DeviceInfo_FieldNumber) {
+  DeviceInfo_FieldNumber_DeviceToken = 1,
+  DeviceInfo_FieldNumber_DeviceType = 2,
+};
+
+@interface DeviceInfo : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceToken;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceType;
+
+@end
+
+#pragma mark - DeviceBoolResponse
+
+typedef GPB_ENUM(DeviceBoolResponse_FieldNumber) {
+  DeviceBoolResponse_FieldNumber_Error = 1,
+  DeviceBoolResponse_FieldNumber_ContentArray = 2,
+};
+
+@interface DeviceBoolResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBBoolArray *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @end
 

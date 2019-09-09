@@ -56,6 +56,7 @@ static GPBFileDescriptor *UserserviceRoot_FileDescriptor(void) {
 @dynamic companyId;
 @dynamic userCompanyName;
 @dynamic hasAddress, address;
+@dynamic userTimezone;
 
 typedef struct User__storage_ {
   uint32_t _has_storage_[1];
@@ -66,6 +67,7 @@ typedef struct User__storage_ {
   NSString *companyId;
   NSString *userCompanyName;
   UserAddress *address;
+  NSString *userTimezone;
 } User__storage_;
 
 // This method is threadsafe because it is initially called
@@ -155,6 +157,15 @@ typedef struct User__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "userTimezone",
+        .dataTypeSpecific.className = NULL,
+        .number = User_FieldNumber_UserTimezone,
+        .hasIndex = 11,
+        .offset = (uint32_t)offsetof(User__storage_, userTimezone),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[User class]
@@ -166,7 +177,7 @@ typedef struct User__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\006\001\010\000\002\014\000\003\014\000\006\006\000\007\t\000\010\017\000";
+        "\007\001\010\000\002\014\000\003\014\000\006\006\000\007\t\000\010\017\000\n\014\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -1464,6 +1475,7 @@ typedef struct UserDomainsResponse__storage_ {
 @dynamic hasViewModes, viewModes;
 @dynamic logoURL;
 @dynamic lastLoggedIn;
+@dynamic lockInUsers;
 
 typedef struct UserDomain__storage_ {
   uint32_t _has_storage_[1];
@@ -1524,6 +1536,15 @@ typedef struct UserDomain__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "lockInUsers",
+        .dataTypeSpecific.className = NULL,
+        .number = UserDomain_FieldNumber_LockInUsers,
+        .hasIndex = 6,
+        .offset = 7,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[UserDomain class]
@@ -1535,7 +1556,7 @@ typedef struct UserDomain__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\004\001\n\000\003\t\000\004\005!!\000\005\014\000";
+        "\005\001\n\000\003\t\000\004\005!!\000\005\014\000\006\013\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
@@ -1829,6 +1850,119 @@ typedef struct TopupBalanceResponse__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TopupBalanceResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - DeviceInfo
+
+@implementation DeviceInfo
+
+@dynamic deviceToken;
+@dynamic deviceType;
+
+typedef struct DeviceInfo__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *deviceToken;
+  NSString *deviceType;
+} DeviceInfo__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "deviceToken",
+        .dataTypeSpecific.className = NULL,
+        .number = DeviceInfo_FieldNumber_DeviceToken,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(DeviceInfo__storage_, deviceToken),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "deviceType",
+        .dataTypeSpecific.className = NULL,
+        .number = DeviceInfo_FieldNumber_DeviceType,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(DeviceInfo__storage_, deviceType),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[DeviceInfo class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(DeviceInfo__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\002\001\013\000\002\n\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - DeviceBoolResponse
+
+@implementation DeviceBoolResponse
+
+@dynamic error;
+@dynamic contentArray, contentArray_Count;
+
+typedef struct DeviceBoolResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t error;
+  GPBBoolArray *contentArray;
+} DeviceBoolResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = DeviceBoolResponse_FieldNumber_Error,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(DeviceBoolResponse__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "contentArray",
+        .dataTypeSpecific.className = NULL,
+        .number = DeviceBoolResponse_FieldNumber_ContentArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(DeviceBoolResponse__storage_, contentArray),
+        .flags = (GPBFieldFlags)(GPBFieldRepeated | GPBFieldPacked),
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[DeviceBoolResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(DeviceBoolResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;

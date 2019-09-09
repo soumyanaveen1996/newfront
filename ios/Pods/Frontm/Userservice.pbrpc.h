@@ -14,6 +14,8 @@
 @class CallHistoryResponse;
 @class CompaniesResponse;
 @class ContactsResponse;
+@class DeviceBoolResponse;
+@class DeviceInfo;
 @class Empty;
 @class LastLoggedInDomainInput;
 @class ManageTncInput;
@@ -176,6 +178,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)topupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToTopupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark RegisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)registerDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToRegisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)deregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToDeregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

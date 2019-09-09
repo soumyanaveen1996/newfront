@@ -27,6 +27,8 @@ service UserService {
     rpc GetUserDomains(commonmessages.Empty) returns (UserDomainsResponse) {}
     rpc UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (commonmessages.Empty) {}
     rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
+    rpc RegisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
 }
 
 message User {
@@ -39,6 +41,7 @@ message User {
     string companyId = 7;
     string userCompanyName = 8;
     commonmessages.UserAddress address = 9;
+    string userTimezone = 10;
 }
 
 message UpdateUserProfileResponse {
@@ -162,6 +165,7 @@ message UserDomain {
     DomainViewMode viewModes = 3;
     string logoUrl = 4;
     bool lastLoggedIn = 5;
+    bool lockInUsers = 6;
 }
 
 message DomainViewMode {
@@ -188,4 +192,14 @@ message TopupBalanceInput {
 
 message TopupBalanceResponse {
     int32 error = 1;
+}
+
+message DeviceInfo {
+    string deviceToken = 1;
+    string deviceType = 2;
+}
+
+message DeviceBoolResponse {
+    int32 error = 1;
+    repeated bool content = 2;
 }

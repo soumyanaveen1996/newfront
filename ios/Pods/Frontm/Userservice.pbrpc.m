@@ -259,5 +259,29 @@
              responseClass:[TopupBalanceResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark RegisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)registerDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToRegisterDeviceWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToRegisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"RegisterDevice"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[DeviceBoolResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)deregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToDeregisterDeviceWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToDeregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"DeregisterDevice"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[DeviceBoolResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif
