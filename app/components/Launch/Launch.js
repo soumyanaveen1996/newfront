@@ -195,9 +195,7 @@ export default class Splash extends React.Component {
 
                         InteractionManager.runAfterInteractions(() => {
                             synchronizePhoneBook();
-                            Notification.registerOnLaunch();
                         });
-
                         this.showMainScreen();
                     } else {
                         this.goToLoginPage();
@@ -237,112 +235,6 @@ export default class Splash extends React.Component {
         bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
     };
 
-    configureNotifications = () => {
-        if (Platform.OS === 'ios') {
-            PushNotificationIOS.addEventListener(
-                'notification',
-                notification => {
-                    // NetworkHandler.readLambda();
-                    // notification.finish(PushNotificationIOS.FetchResult.NoData);
-                }
-            );
-
-            PushNotificationIOS.addEventListener(
-                'localNotification',
-                notification => {
-                    // NetworkHandler.readLambda(true);
-                    notification.finish(PushNotificationIOS.FetchResult.NoData);
-                }
-            );
-        }
-        Notification.deviceInfo()
-            .then(info => {
-                if (info) {
-                    Notification.configure(this.handleNotification);
-                }
-            })
-            .catch(err => {
-                console.log('error from launch ', err);
-            });
-    };
-
-    notificationRegistrationHandler = () => {
-        this.configureNotifications();
-    };
-
-    handleNotification = notification => {
-        NetworkHandler.poll();
-        Bot.grpcheartbeatCatalog();
-        // AgentGuard.heartBeat();
-        let conversation;
-        if (!notification.foreground && notification.userInteraction) {
-            const conversationId =
-                Platform.OS === 'android'
-                    ? notification.conversationId
-                    : notification.data.conversationId;
-            PushNotification.setApplicationIconBadgeNumber(0);
-            Conversation.getConversation(conversationId)
-                .then(conv => {
-                    conversation = conv;
-                    return SystemBot.get(SystemBot.imBotManifestName);
-                })
-                .then(imBot => {
-                    if (conversation.type === IM_CHAT) {
-                        if (
-                            Actions.currentScene ===
-                            ROUTER_SCENE_KEYS.peopleChat
-                        ) {
-                            if (
-                                ReduxStore.getState().user
-                                    .currentConversationId !==
-                                conversation.conversationId
-                            ) {
-                                Actions.refresh({
-                                    key: Math.random(),
-                                    bot: imBot,
-                                    conversation: conversation
-                                    // onBack: this.props.onBack
-                                });
-                            }
-                        } else {
-                            Actions.peopleChat({
-                                bot: imBot,
-                                conversation: conversation
-                                // onBack: this.props.onBack
-                            });
-                        }
-                    } else {
-                        if (
-                            Actions.currentScene ===
-                            ROUTER_SCENE_KEYS.channelChat
-                        ) {
-                            if (
-                                ReduxStore.getState().user
-                                    .currentConversationId !==
-                                conversation.conversationId
-                            ) {
-                                Actions.refresh({
-                                    key: Math.random(),
-                                    bot: imBot,
-                                    conversation: conversation
-                                    // onBack: this.props.onBack
-                                });
-                            }
-                        } else {
-                            Actions.channelChat({
-                                bot: imBot,
-                                conversation: conversation
-                                // onBack: this.props.onBack
-                            });
-                        }
-                    }
-                });
-        }
-        if (Platform.OS === 'ios') {
-            notification.finish(PushNotificationIOS.FetchResult.NoData);
-        }
-    };
-
     userLoggedInHandler = async () => {
         TwilioVoIP.init();
     };
@@ -379,24 +271,12 @@ export default class Splash extends React.Component {
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
         );
-        EventEmitter.addListener(
-            NotificationEvents.registeredNotifications,
-            this.notificationRegistrationHandler
-        );
-
-        if (Platform.OS === 'ios') {
-            this.configureNotifications();
-        }
     };
 
     removeListeners = () => {
         EventEmitter.removeListener(
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
-        );
-        EventEmitter.removeListener(
-            NotificationEvents.registeredNotifications,
-            this.notificationRegistrationHandler
         );
     };
 

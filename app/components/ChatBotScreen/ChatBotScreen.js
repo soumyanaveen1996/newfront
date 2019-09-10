@@ -437,9 +437,10 @@ class ChatBotScreen extends React.Component {
     }
 
     async askNotificationPermission() {
-        const notificationInfo = await Notification.deviceInfo();
-        if (!(notificationInfo && notificationInfo.isRegistered)) {
-            Notification.register();
+        try {
+            Notification.requestPermission();
+        } catch (e) {
+            console.log('error', e);
         }
     }
 

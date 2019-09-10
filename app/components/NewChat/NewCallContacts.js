@@ -27,7 +27,8 @@ import {
     Auth,
     Network,
     Message,
-    MessageTypeConstants
+    MessageTypeConstants,
+    Notification
 } from '../../lib/capability';
 import {
     EventEmitter,
@@ -113,6 +114,8 @@ class NewCallContacts extends React.Component {
             )
         );
 
+        this.askNotificationPermission();
+
         this.gettingAllContactData();
         if (
             Actions.prevScene === ROUTER_SCENE_KEYS.dialler &&
@@ -125,8 +128,6 @@ class NewCallContacts extends React.Component {
             });
             return;
         }
-
-        this.askNotificationPermission();
     }
 
     componentDidUpdate(prevProps) {
@@ -150,9 +151,10 @@ class NewCallContacts extends React.Component {
     }
 
     async askNotificationPermission() {
-        const notificationInfo = await Notification.deviceInfo();
-        if (!(notificationInfo && notificationInfo.isRegistered)) {
-            Notification.register();
+        try {
+            Notification.requestPermission();
+        } catch (e) {
+            console.log('error', e);
         }
     }
 
