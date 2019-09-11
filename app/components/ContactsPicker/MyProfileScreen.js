@@ -37,6 +37,7 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import ImageCache from '../../lib/image_cache';
 import utils from '../../lib/utils';
 import Toast, { DURATION } from 'react-native-easy-toast';
+import RNFS from 'react-native-fs';
 
 const R = require('ramda');
 
@@ -406,19 +407,33 @@ class MyProfileScreen extends React.Component {
         this.props.uploadImage();
         this.setState({ loading: true });
         const PROFILE_PIC_BUCKET = 'profile-pics';
-        const toUri = await Utils.copyFileAsync(
-            imageUri,
-            Constants.IMAGES_DIRECTORY
-        );
-
+        let newUri;
+        let user;
         Auth.getUser()
-            .then(user => {
+            .then(res => {
+                user = res;
                 // console.log('user ', user);
                 // Send the file to the S3/backend and then let the user know
-
+                return ImageResizer.createResizedImage(
+                    imageUri,
+                    800,
+                    800,
+                    'PNG',
+                    50,
+                    0,
+                    'images'
+                );
+            })
+            .then(imageResizeResponse => {
+                newUri =
+                    Constants.IMAGES_DIRECTORY +
+                    '/' +
+                    imageUri.split('/').pop();
+                return RNFS.moveFile(imageResizeResponse.uri, newUri);
+            })
+            .then(() => {
                 return Resource.uploadFile(
-                    base64,
-                    toUri,
+                    newUri,
                     PROFILE_PIC_BUCKET,
                     user.userId,
                     user,
@@ -428,6 +443,9 @@ class MyProfileScreen extends React.Component {
             })
 
             .then(fileUrl => {
+                if (fileUrl) {
+                    ImageCache.imageCacheManager.storeIncache(fileUrl, newUri);
+                }
                 if (_.isNull(fileUrl)) {
                     console.log(
                         'You have disabled access to media library. Please enable access to upload a profile picture'

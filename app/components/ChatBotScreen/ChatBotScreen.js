@@ -40,7 +40,8 @@ import {
     Resource,
     ResourceTypes,
     Settings,
-    PollingStrategyTypes
+    PollingStrategyTypes,
+    Notification
 } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
@@ -112,6 +113,9 @@ import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
 import ChartMessage from '../ChartMessage';
 import { Conversation } from '../../lib/conversation';
+import ImageResizer from 'react-native-image-resizer';
+import ImageMessage from '../ImageMessage/ImageMessage';
+import NetworkButton from '../Header/NetworkButton';
 
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
 const QueueServiceClient = NativeModules.QueueServiceClient;
@@ -150,45 +154,22 @@ class ChatBotScreen extends React.Component {
             );
         }
 
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerRight = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
         return navigationOptions;
     }
 
@@ -259,6 +240,9 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(setFirstLogin(false));
         this.mounted = true;
         let self = this;
+
+        //Ask to activate push notifications
+        this.askNotificationPermission();
 
         // 0. load the bot
         for (let i = 0; i < BOT_LOAD_RETRIES; i++) {
@@ -450,6 +434,13 @@ class ChatBotScreen extends React.Component {
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
+    }
+
+    async askNotificationPermission() {
+        const notificationInfo = await Notification.deviceInfo();
+        if (!(notificationInfo && notificationInfo.isRegistered)) {
+            Notification.register();
+        }
     }
 
     static onEnter({ navigation, screenProps }) {
@@ -984,27 +975,33 @@ class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        this.chatState.updatingChat = true;
-        this.persistMessage(message)
-            .then(queue => {
-                if (queue) {
-                    return this.queueMessage(message);
-                } else {
-                    return;
-                }
-            })
-            .then(res => {
-                if (!res) {
-                    this.chatState.updatingChat = false;
-                    if (this.chatState.nextSmartSuggestion) {
-                        this.updateSmartSuggestions(
-                            this.chatState.nextSmartSuggestion
-                        );
-                        this.chatState.nextSmartSuggestion = undefined;
+        return new Promise((resolve, reject) => {
+            this.chatState.updatingChat = true;
+            this.persistMessage(message)
+                .then(queue => {
+                    if (queue) {
+                        return this.queueMessage(message);
+                    } else {
+                        return;
                     }
-                }
-            });
-        // Has to be Immutable for react
+                })
+                .then(res => {
+                    if (!res) {
+                        this.chatState.updatingChat = false;
+                        if (this.chatState.nextSmartSuggestion) {
+                            this.updateSmartSuggestions(
+                                this.chatState.nextSmartSuggestion
+                            );
+                            this.chatState.nextSmartSuggestion = undefined;
+                        }
+                    }
+                    resolve();
+                })
+                .catch(e => {
+                    resolve();
+                });
+            // Has to be Immutable for react
+        });
     }
 
     updateSmartSuggestions(message) {
@@ -1447,6 +1444,17 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_IMAGE
+            ) {
+                return (
+                    <ImageMessage
+                        fileName={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={false}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_LOCATION
             ) {
                 return (
@@ -1560,6 +1568,17 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_IMAGE
+            ) {
+                return (
+                    <ImageMessage
+                        fileName={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={true}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_LOCATION
             ) {
                 return (
@@ -1624,7 +1643,7 @@ class ChatBotScreen extends React.Component {
             null
         );
 
-        this.updateChat(message);
+        await this.updateChat(message);
         this.scrollToBottom = true;
 
         await this.waitForQueueProcessing();
@@ -1702,17 +1721,25 @@ class ChatBotScreen extends React.Component {
     }
 
     async sendImage(imageUri, base64) {
-        const toUri = await Utils.copyFileAsync(
-            imageUri,
-            Constants.IMAGES_DIRECTORY
-        );
         let message = new Message();
         message.setCreatedBy(this.getUserId());
 
+        let imageResizeResponse = await ImageResizer.createResizedImage(
+            imageUri,
+            800,
+            800,
+            'PNG',
+            50,
+            0,
+            'images'
+        );
+        const newUri =
+            Constants.IMAGES_DIRECTORY + '/' + message.getMessageId() + '.png';
+        await RNFS.moveFile(imageResizeResponse.uri, newUri);
+
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(
-            base64,
-            toUri,
+            newUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
             this.user,
@@ -1745,7 +1772,6 @@ class ChatBotScreen extends React.Component {
 
         // UPLOAD THE FILE
         const uploadedUrl = await Resource.uploadFile(
-            null, //base64 will be created in Resource.uploadFile()
             newFileUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
@@ -1767,9 +1793,11 @@ class ChatBotScreen extends React.Component {
     };
 
     sendAudio = async audioURI => {
+        let rename = message.getMessageId() + '.aac';
         const toUri = await Utils.copyFileAsync(
             audioURI,
-            Constants.AUDIO_DIRECTORY
+            Constants.AUDIO_DIRECTORY,
+            rename
         );
 
         // TODO(amal): Upload Audio file
@@ -1799,7 +1827,6 @@ class ChatBotScreen extends React.Component {
 
         // Send the file to the S3/backend and then let the user know
         const uploadedUrl = await Resource.uploadFile(
-            null,
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
@@ -2527,10 +2554,10 @@ class ChatBotScreen extends React.Component {
                                 }}
                             >
                                 <FlatList
-                                    onEndReached={() => {
-                                        this.readLambdaQueue();
-                                    }}
-                                    onEndReachedThreshold={-0.2}
+                                    // onEndReached={() => {
+                                    //     this.readLambdaQueue();
+                                    // }}
+                                    // onEndReachedThreshold={-0.2}
                                     extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"

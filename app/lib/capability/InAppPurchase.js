@@ -72,7 +72,8 @@ const grpcTopupUserBalance = (paymentCode, amount, token) =>
 const buyProduct = async ({
     productCode,
     productName = PRODUCT_NAMES.VOIP,
-    botId = null
+    botId = null,
+    price = null
 }) => {
     const isConnected = await connection();
     if (isConnected) {
@@ -90,7 +91,9 @@ const buyProduct = async ({
                 });
             }
             const products = await RNIap.getProducts(itemSkus);
-            const price = parseFloat(products[0].price);
+            if (!price) {
+                price = parseFloat(products[0].price);
+            }
             // throw new Error("Debugging")
             const sku = products[0].productId;
             let purchase;

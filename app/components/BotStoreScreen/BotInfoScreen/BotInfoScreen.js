@@ -20,6 +20,7 @@ import Bot from '../../../lib/bot/index';
 import config from '../../../config/config';
 import { Auth, Network } from '../../../lib/capability';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import NetworkButton from '../../Header/NetworkButton';
 const UserServiceClient = NativeModules.UserServiceClient;
 const timeout = Platform.OS === 'android' ? 1000 : 400;
 
@@ -55,45 +56,23 @@ export default class BotInfoScreen extends React.Component {
                 />
             );
         }
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerRight = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
+
         return navigationOptions;
     }
     constructor(props) {

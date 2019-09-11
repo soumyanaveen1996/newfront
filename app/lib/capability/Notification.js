@@ -9,7 +9,7 @@ const NotificationKeys = {
 };
 
 export default class Notification {
-    static registeronLaunch = () => {
+    static registerOnLaunch = () => {
         DeviceStorage.get(NotificationKeys.notification).then(value => {
             if (value) {
                 value.isRegistered = true;
@@ -29,6 +29,7 @@ export default class Notification {
             }
         });
     };
+
     static register = () =>
         new Promise((resolve, reject) => {
             let timer = setTimeout(function() {

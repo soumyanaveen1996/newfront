@@ -10,12 +10,17 @@
 #endif
 
 @class BotSubscriptionsResponse;
+@class CallHistoryInput;
 @class CallHistoryResponse;
 @class CompaniesResponse;
 @class ContactsResponse;
+@class DeviceBoolResponse;
+@class DeviceInfo;
 @class Empty;
+@class LastLoggedInDomainInput;
 @class ManageTncInput;
 @class ManageTncResponse;
+@class SelectedDomainInput;
 @class SubscribeBotInput;
 @class SubscribeBotResponse;
 @class SubscribeDomainInput;
@@ -26,6 +31,7 @@
 @class TwilioTokenResponse;
 @class UpdateUserProfileResponse;
 @class User;
+@class UserDomainsResponse;
 @class VoipStatusInput;
 @class VoipStatusResponse;
 @class VoipToggleResponse;
@@ -55,18 +61,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToGetUserDetailsWithRequest:(User *)request handler:(void(^)(User *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetBotSubscriptions(Empty) returns (BotSubscriptionsResponse)
+#pragma mark GetBotSubscriptions(SelectedDomainInput) returns (BotSubscriptionsResponse)
 
-- (void)getBotSubscriptionsWithRequest:(Empty *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getBotSubscriptionsWithRequest:(SelectedDomainInput *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetBotSubscriptionsWithRequest:(Empty *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetBotSubscriptionsWithRequest:(SelectedDomainInput *)request handler:(void(^)(BotSubscriptionsResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetContacts(Empty) returns (ContactsResponse)
+#pragma mark GetContacts(SelectedDomainInput) returns (ContactsResponse)
 
-- (void)getContactsWithRequest:(Empty *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getContactsWithRequest:(SelectedDomainInput *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetContactsWithRequest:(Empty *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetContactsWithRequest:(SelectedDomainInput *)request handler:(void(^)(ContactsResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark SubscribeBot(SubscribeBotInput) returns (SubscribeBotResponse)
@@ -146,11 +152,46 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToGetCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
+#pragma mark GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse)
+
+- (void)getCallHistoryForContactWithRequest:(CallHistoryInput *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetCallHistoryForContactWithRequest:(CallHistoryInput *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetUserDomains(Empty) returns (UserDomainsResponse)
+
+- (void)getUserDomainsWithRequest:(Empty *)request handler:(void(^)(UserDomainsResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetUserDomainsWithRequest:(Empty *)request handler:(void(^)(UserDomainsResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (Empty)
+
+- (void)updateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToUpdateLastLoggedInDomainWithRequest:(LastLoggedInDomainInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
+
+
 #pragma mark TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse)
 
 - (void)topupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToTopupUserBalanceWithRequest:(TopupBalanceInput *)request handler:(void(^)(TopupBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark RegisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)registerDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToRegisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse)
+
+- (void)deregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToDeregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

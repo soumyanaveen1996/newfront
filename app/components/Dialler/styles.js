@@ -6,6 +6,8 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
+export const diameter = hp('24%');
+
 const Styles = StyleSheet.create({
     container: {
         position: 'absolute',

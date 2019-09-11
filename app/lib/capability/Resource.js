@@ -1,7 +1,6 @@
 import { AssetFetcher } from '../dce';
 import Auth from './Auth';
 import ImageCache from '../../lib/image_cache';
-import ImageResizer from 'react-native-image-resizer';
 import { lastDayOfISOWeek } from 'date-fns';
 import moment from 'moment';
 import Store from '../../redux/store/configureStore';
@@ -31,77 +30,62 @@ export default class Resource {
      * @return S3 URL of the file uploaded
      */
     static async uploadFile(
-        base64Data,
         fileUri,
         bucketName,
         filenameWithoutExtension,
-        user = undefined,
+        userx = undefined,
         resourceType,
         fileMIMEType,
         clearCache = false,
         forceReload = false
     ) {
-        if (!user) {
-            user = await Auth.getUser();
-        }
-        if (!user) {
-            throw new Error('Auth Failure: No Authenticated user');
-        }
-
-        // Resizing the image
-        if (resourceType === ResourceTypes.Image) {
-            try {
-                let imageResizeResponse = await ImageResizer.createResizedImage(
-                    fileUri,
-                    800,
-                    800,
-                    'PNG',
-                    50,
-                    0,
-                    null
-                );
-                fileUri = imageResizeResponse.uri;
-                base64Data = null;
-            } catch (error) {
-                throw error;
+        try {
+            const user = await Auth.getUser();
+            if (!user) {
+                throw new Error('Auth Failure: No Authenticated user');
             }
-        }
 
-        let contentType = 'image/png';
-        let extension = 'png';
-        if (resourceType === ResourceTypes.Image) {
-            contentType = 'image/png';
-            extension = 'png';
-        } else if (resourceType === ResourceTypes.Audio) {
-            contentType = 'audio/aac';
-            extension = 'aac';
-        } else if (resourceType === ResourceTypes.Video) {
-            contentType = 'video/mp4';
-            extension = 'mp4';
-        } else {
-            contentType = fileMIMEType || contentType;
-            extension = mime.extension(contentType);
-        }
-        if (!base64Data) {
+            let contentType = 'image/png';
+            let extension = 'png';
+            if (resourceType === ResourceTypes.Image) {
+                contentType = 'image/png';
+                extension = 'png';
+            } else if (resourceType === ResourceTypes.Audio) {
+                contentType = 'audio/aac';
+                extension = 'aac';
+            } else if (resourceType === ResourceTypes.Video) {
+                contentType = 'video/mp4';
+                extension = 'mp4';
+            } else {
+                contentType = fileMIMEType || contentType;
+                extension = mime.extension(contentType);
+            }
+
+            // if (!base64Data) {
             fileUri = decodeURI(fileUri);
-            base64Data = await AssetFetcher.getFile(fileUri, 'base64');
-        }
-        const filename = filenameWithoutExtension + '.' + extension;
+            const base64Data = await AssetFetcher.getFile(fileUri, 'base64');
+            // }
 
-        let res = await AssetFetcher.uploadFileToFileGateway(
-            base64Data,
-            fileUri,
-            bucketName,
-            filename,
-            contentType,
-            user
-        );
-        // const reduxState = Store.getState();
-        // console.log('Upload Number: ', reduxState.user.upload);
-        // const uploadNumber = reduxState.user.upload;
-        if (res && resourceType === ResourceTypes.Image) {
-            await ImageCache.imageCacheManager.storeIncache(res, fileUri);
+            const filename = filenameWithoutExtension + '.' + extension;
+
+            let res = await AssetFetcher.uploadFileToFileGateway(
+                base64Data,
+                fileUri,
+                bucketName,
+                filename,
+                contentType,
+                user
+            );
+            // const reduxState = Store.getState();
+            // console.log('Upload Number: ', reduxState.user.upload);
+            // const uploadNumber = reduxState.user.upload;
+            // if (res && resourceType === ResourceTypes.Image) {
+            //     await ImageCache.imageCacheManager.storeIncache(res, fileUri);
+            // }
+            return res;
+        } catch (e) {
+            console.log('Error: ', e);
+            throw new Error(e);
         }
-        return res;
     }
 }

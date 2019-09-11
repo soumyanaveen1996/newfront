@@ -19,22 +19,12 @@ export default class ImageViewer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            saveDisabled: false
+            saveDisabled: false,
+            uri: this.props.uri
         };
     }
 
-    async componentDidMount() {
-        const path = await this.getImagePathFromCache(this.props.uri);
-        if (path) {
-            this.setState({
-                uri: path
-            });
-        } else {
-            this.setState({
-                uri: this.props.uri
-            });
-        }
-    }
+    async componentDidMount() {}
 
     onImageSave() {
         this.setState({ saveDisabled: true });
@@ -63,7 +53,7 @@ export default class ImageViewer extends React.Component {
             <View style={styles.container}>
                 <Image
                     style={styles.image}
-                    source={{ uri: this.state.uri }}
+                    source={{ uri: this.props.uri }}
                     pixels={{ width: 1920, height: 1080 }}
                 />
                 <View style={styles.toolbar}>

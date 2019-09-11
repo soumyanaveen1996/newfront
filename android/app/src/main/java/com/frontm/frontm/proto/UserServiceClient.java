@@ -16,6 +16,7 @@ import com.frontm.auth.proto.SignupResponse;
 import com.frontm.auth.proto.SignupUser;
 import com.frontm.commonmessages.proto.Empty;
 import com.frontm.commonmessages.proto.PhoneNumbers;
+import com.frontm.commonmessages.proto.SelectedDomainInput;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BotSubscriptionsResponseConverter;
 import com.frontm.frontm.proto.converters.ContactsResponseConverter;
@@ -148,7 +149,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(Empty.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(SelectedDomainInput.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
             @Override
             public void onNext(BotSubscriptionsResponse value) {
                 callback.invoke(null, new BotSubscriptionsResponseConverter().toResponse(value));
@@ -179,7 +180,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(Empty.newBuilder().build(), new StreamObserver<ContactsResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(SelectedDomainInput.newBuilder().build(), new StreamObserver<ContactsResponse>() {
             @Override
             public void onNext(ContactsResponse value) {
                 callback.invoke(null, new ContactsResponseConverter().toResponse(value));

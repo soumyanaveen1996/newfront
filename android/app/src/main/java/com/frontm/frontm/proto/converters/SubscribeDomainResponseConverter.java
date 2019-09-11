@@ -4,7 +4,6 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.frontm.user.proto.SubscribeDomainResponse;
-import com.frontm.user.proto.VoipToggleResponse;
 
 public class SubscribeDomainResponseConverter {
 
@@ -15,7 +14,7 @@ public class SubscribeDomainResponseConverter {
         if (response.getContentCount() > 0) {
             WritableArray array = Arguments.createArray();
             for (int i = 0; i < response.getContentCount(); ++i) {
-                array.pushMap(new DomainRolesConverter().toJson(response.getContent(i)));
+                array.pushMap(new UserDomainConverter().toJson(response.getContent(i)));
             }
             map.putArray("content", array);
         } else {

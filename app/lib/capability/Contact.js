@@ -256,7 +256,6 @@ export default class Contact {
                 return false;
             });
             let AllContacts = [];
-            console.log('>>>>>>1', remoteContacts, localContactsAccepted);
             for (let contact of remoteContacts) {
                 const localContact = R.find(R.propEq('userId', contact.userId))(
                     localContactsAccepted
@@ -272,7 +271,6 @@ export default class Contact {
 
                 AllContacts.push(contact);
             }
-            console.log('>>>>>>merged', AllContacts);
             DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
                 .then(() => {
                     return resolve(AllContacts);

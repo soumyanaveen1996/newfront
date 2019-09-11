@@ -1,40 +1,23 @@
 import React from 'react';
 import {
-    ActivityIndicator,
     View,
-    BackHandler,
     Alert,
-    StatusBar,
     AsyncStorage,
-    TextInput,
-    Text,
     TouchableOpacity,
-    Keyboard,
-    Image,
-    Platform
+    Image
 } from 'react-native';
-import Icon from 'react-native-vector-icons/EvilIcons';
 import BotList from './BotList';
 import { SafeAreaView } from 'react-navigation';
-import FloatingButton from '../FloatingButton';
 import { MainScreenStyles } from './styles';
 import images from '../../config/images';
 import I18n from '../../config/i18n/i18n';
 import { Actions, ActionConst } from 'react-native-router-flux';
 import CenterComponent from './header/CenterComponent';
-import { HeaderLeftIcon } from '../Header';
-import Config from './config';
-import appConfig from '../../config/config';
 import {
     AsyncResultEventEmitter,
-    NETWORK_EVENTS_CONSTANTS,
-    NetworkHandler
+    NETWORK_EVENTS_CONSTANTS
 } from '../../lib/network';
-import EventEmitter, {
-    MessageEvents,
-    AuthEvents,
-    TwilioEvents
-} from '../../lib/events';
+import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import {
     PollingStrategyTypes,
@@ -43,34 +26,25 @@ import {
     Contact
 } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
-import RemoteBotInstall from '../../lib/RemoteBotInstall';
 import Bot from '../../lib/bot';
 import SystemBot from '../../lib/bot/SystemBot';
-import { HeaderRightIcon } from '../Header';
 import { Icons } from '../../config/icons';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
-import AfterLogin from '../../services/afterLogin';
 import { DataManager } from '../../lib/DataManager';
 import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import { BackgroundImage } from '../../components/BackgroundImage';
 import { TourScreen } from '../TourScreen';
-import { TwilioVoIP } from '../../lib/twilio';
 import { connect } from 'react-redux';
 import {
     logout,
     refreshTimeline,
-    setCurrentScene,
-    setFirstLogin
+    setCurrentScene
 } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
-import PushNotification from 'react-native-push-notification';
-import Placeholder from 'rn-placeholder';
-// Import BackgroundGeolocation + any optional interfaces
-import RemoteLogger from '../../lib/utils/remoteDebugger';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -81,107 +55,50 @@ const MainScreenStates = {
 let firstTimer = false;
 
 class MainScreen extends React.Component {
-    static navigationOptions({ navigation, screenProps }) {
-        const { state } = navigation;
+    static navigationOptions({ navigation }) {
         let ret = {
             headerTitle: <CenterComponent />
         };
-        if (appConfig.app.hideFilter !== true) {
-            ret.headerRight = (
-                <HeaderLeftIcon
-                    config={Config.filterButtonConfig}
-                    onPress={state.params.openBotFilter}
-                />
-            );
-        }
+        // if (appConfig.app.hideFilter !== true) {
+        //     ret.headerRight = (
+        //         <HeaderLeftIcon
+        //             config={Config.filterButtonConfig}
+        //             onPress={state.params.openBotFilter}
+        //         />
+        //     );
+        // }
 
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                ret.headerLeft = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        ret.headerLeft = (
+            <TouchableOpacity
+                onPress={navigation.state.params.openFrontMAssistant}
+            >
+                <Image
+                    style={{
+                        height: 35,
+                        aspectRatio: 1,
+                        marginHorizontal: 17,
+                        resizeMode: 'contain'
+                    }}
+                    source={images.bot_icon_assistant}
+                />
+            </TouchableOpacity>
+        );
 
         ret.headerRight = (
-            <View
-                style={[
-                    { display: 'flex', flexDirection: 'row' },
-                    Platform.select({
-                        android: {
-                            marginTop: 2
-                        }
+            <TouchableOpacity
+                style={MainScreenStyles.headerRightCall}
+                accessibilityLabel="Call Icon"
+                testID="call-icon"
+                accessibilityLabel="Call Button"
+                testID="call-button"
+                onPress={() =>
+                    Actions.tabBarCall({
+                        type: 'push'
                     })
-                ]}
+                }
             >
-                {/* <TouchableOpacity
-                    accessibilityLabel="Chat Button"
-                    testID="chat-button"
-                    style={MainScreenStyles.headerRightChat}
-                    onPress={() =>
-                        Actions.tabBarChat({
-                            type: 'push'
-                        })
-                    }
-                >
-                    <Image
-                        accessibilityLabel="Chat Icon"
-                        testID="chat-icon"
-                        style={{ width: 25, height: 25 }}
-                        source={require('../../images/tabbar-contacts/chat-good.png')}
-                    />
-                </TouchableOpacity> */}
-                <TouchableOpacity
-                    accessibilityLabel="Call Button"
-                    testID="call-button"
-                    style={{ width: 35, height: 35, marginRight: 10 }}
-                    onPress={() =>
-                        Actions.tabBarCall({
-                            type: 'push'
-                        })
-                    }
-                >
-                    <View
-                        style={MainScreenStyles.headerRightCall}
-                        accessibilityLabel="Call Icon"
-                        testID="call-icon"
-                    >
-                        {Icons.callW()}
-                    </View>
-                </TouchableOpacity>
-            </View>
+                {Icons.greenCall({ size: 25 })}
+            </TouchableOpacity>
         );
 
         return ret;
@@ -222,6 +139,12 @@ class MainScreen extends React.Component {
     }
 
     async componentDidMount() {
+        this.props.navigation.setParams({
+            openFrontMAssistant: () => {
+                this.openOnboaringBot();
+            }
+        });
+
         let getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime === null) {
             getFirstTime = true;
@@ -274,13 +197,6 @@ class MainScreen extends React.Component {
             SatelliteConnectionEvents.notConnectedToSatellite,
             this.satelliteDisconnectHandler
         );
-    }
-
-    async componentWillMount() {
-        // AfterLogin.executeAfterLogin();
-        if (this.props.moveToOnboarding) {
-            this.openOnboaringBot();
-        }
         EventEmitter.addListener(
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
@@ -443,7 +359,7 @@ class MainScreen extends React.Component {
     openOnboaringBot() {
         SystemBot.get(SystemBot.onboardingBotManifestName).then(
             onboardingBot => {
-                Actions.onboarding({
+                Actions.botChat({
                     bot: onboardingBot,
                     onBack: this.onBack.bind(this)
                 });
@@ -627,9 +543,6 @@ class MainScreen extends React.Component {
     onSearch = searchString => this.setState({ searchString });
 
     renderMain() {
-        // console.log('list of bots ', this.state.bots);
-
-        const { network, showNetworkStatusBar } = this.state;
         return (
             <View style={{ height: '100%' }}>
                 <BotList
