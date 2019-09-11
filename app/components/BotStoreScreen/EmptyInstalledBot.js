@@ -46,7 +46,7 @@ export default class EmptyInstalledBot extends React.Component {
                             numberOfLines={3}
                         >
                             {this.props.noNetwork
-                                ? 'Slow or not internet connection. Please check your internet settings and try again.'
+                                ? 'Slow or no internet connection. Please check your internet settings and try again.'
                                 : 'You don’t have any App installed'}
                         </Text>
                     </View>
