@@ -22,7 +22,6 @@ const NotificationKeys = {
 export default class Notification {
     static requestPermission = () => {
         PushNotification.checkPermissions(permissions => {
-            console.log('>>>>>>>>>perm', permissions);
             if (!permissions.alert) {
                 Notification.configure();
                 PushNotification.requestPermissions([1, 1, 1]);

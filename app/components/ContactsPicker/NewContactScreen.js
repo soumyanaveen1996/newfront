@@ -614,6 +614,152 @@ class NewContactScreen extends React.Component {
             });
     };
 
+    renderTopArea() {
+        return (
+            <View style={styles.profileImageContainer}>
+                <View
+                    style={{
+                        width: 120,
+                        height: 120,
+                        borderRadius: 60
+                    }}
+                >
+                    {this.state.reloadProfileImage ? (
+                        <Image
+                            source={{
+                                uri: this.state.reloadProfileImage
+                            }}
+                            style={styles.profileImgStyle}
+                        />
+                    ) : (
+                        <MyProfileImage
+                            uuid={this.state.userId}
+                            placeholder={images.user_image}
+                            style={styles.profilePic}
+                            placeholderStyle={styles.profileImgStyle}
+                            resizeMode="cover"
+                            changeProfileImageBack={() => {
+                                this.changeProfileStatuBack.bind(this);
+                            }}
+                        />
+                    )}
+                </View>
+                <TouchableOpacity
+                    style={{
+                        position: 'absolute',
+                        right: 20
+                    }}
+                    accessibilityLabel="More Button"
+                    onPress={this.showOptions.bind(this)}
+                >
+                    <Image
+                        style={{
+                            width: 45,
+                            height: 45
+                        }}
+                        source={images.edit_btn}
+                    />
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    renderNameBar() {
+        return (
+            <View style={styles.nameContainerStyle}>
+                <View
+                    style={{
+                        width: 300,
+                        alignItems: 'flex-start'
+                    }}
+                >
+                    <Text style={styles.nameLabel}>{I18n.t('Name')}</Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        value={this.state.myName}
+                        onChangeText={val => {
+                            this.setState({ myName: val });
+                        }}
+                        blurOnSubmit={false}
+                        placeholder="Your Name"
+                        underlineColorAndroid={'transparent'}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    renderNumbers() {
+        return (
+            <View style={styles.userInfoNumberContainer}>
+                {this.infoRender('phNumber', this.state.phoneNumbers)}
+                <View style={styles.addContainer}>
+                    <Image source={images.btn_more} style={styles.iconStyle} />
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.addNewNumber();
+                        }}
+                    >
+                        <Text style={styles.addLabel}>
+                            {I18n.t('Add_phone')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    renderEmails() {
+        return (
+            <View style={styles.userInfoEmailContainer}>
+                {this.infoRender('email', this.state.emailAddress)}
+                <View style={styles.addContainer}>
+                    <Image
+                        source={images.btn_more}
+                        style={{
+                            height: 8,
+                            width: 8,
+                            marginRight: 15
+                        }}
+                    />
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.addNewEmail();
+                        }}
+                    >
+                        <Text style={styles.addLabel}>Add Email</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    renderBottomArea() {
+        return (
+            <View style={styles.btn_container}>
+                <TouchableOpacity
+                    onPress={() => {
+                        Actions.pop();
+                    }}
+                    style={styles.cancel_btn}
+                >
+                    <Text style={styles.cancel_text}>{I18n.t('Cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.saveProfile();
+                    }}
+                    style={styles.save_btn}
+                >
+                    <Text style={styles.save_btn_text}>{I18n.t('SAVE')}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     render() {
         // console.log('all the things ', this.state, this.props);
 
@@ -640,128 +786,10 @@ class NewContactScreen extends React.Component {
                                 setVisible={this.setInviteVisible.bind(this)}
                                 settingType={this.setupType.bind(this)}
                             />
-                            <View style={styles.profileImageContainer}>
-                                <View
-                                    style={{
-                                        width: 120,
-                                        height: 120,
-                                        borderRadius: 60
-                                    }}
-                                >
-                                    {this.state.reloadProfileImage ? (
-                                        <Image
-                                            source={{
-                                                uri: this.state
-                                                    .reloadProfileImage
-                                            }}
-                                            style={styles.profileImgStyle}
-                                        />
-                                    ) : (
-                                        <MyProfileImage
-                                            uuid={this.state.userId}
-                                            placeholder={images.user_image}
-                                            style={styles.profilePic}
-                                            placeholderStyle={
-                                                styles.profileImgStyle
-                                            }
-                                            resizeMode="cover"
-                                            changeProfileImageBack={() => {
-                                                this.changeProfileStatuBack.bind(
-                                                    this
-                                                );
-                                            }}
-                                        />
-                                    )}
-                                </View>
-                                <TouchableOpacity
-                                    style={{
-                                        position: 'absolute',
-                                        right: 20
-                                    }}
-                                    accessibilityLabel="More Button"
-                                    onPress={this.showOptions.bind(this)}
-                                >
-                                    <Image
-                                        style={{
-                                            width: 45,
-                                            height: 45
-                                        }}
-                                        source={images.edit_btn}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.nameContainerStyle}>
-                                <View
-                                    style={{
-                                        width: 300,
-                                        alignItems: 'flex-start'
-                                    }}
-                                >
-                                    <Text style={styles.nameLabel}>
-                                        {I18n.t('Name')}
-                                    </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        autoCorrect={false}
-                                        value={this.state.myName}
-                                        onChangeText={val => {
-                                            this.setState({ myName: val });
-                                        }}
-                                        blurOnSubmit={false}
-                                        placeholder="Your Name"
-                                        underlineColorAndroid={'transparent'}
-                                        placeholderTextColor="rgba(155,155,155,1)"
-                                        clearButtonMode="always"
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.userInfoNumberContainer}>
-                                {this.infoRender(
-                                    'phNumber',
-                                    this.state.phoneNumbers
-                                )}
-                                <View style={styles.addContainer}>
-                                    <Image
-                                        source={images.btn_more}
-                                        style={styles.iconStyle}
-                                    />
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.addNewNumber();
-                                        }}
-                                    >
-                                        <Text style={styles.addLabel}>
-                                            {I18n.t('Add_phone')}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={styles.userInfoEmailContainer}>
-                                {this.infoRender(
-                                    'email',
-                                    this.state.emailAddress
-                                )}
-                                <View style={styles.addContainer}>
-                                    <Image
-                                        source={images.btn_more}
-                                        style={{
-                                            height: 8,
-                                            width: 8,
-                                            marginRight: 15
-                                        }}
-                                    />
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            this.addNewEmail();
-                                        }}
-                                    >
-                                        <Text style={styles.addLabel}>
-                                            Add Email
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
+                            {this.renderTopArea()}
+                            {this.renderNameBar()}
+                            {this.renderNumbers()}
+                            {this.renderEmails()}
                             <View
                                 style={{
                                     justifyContent: 'center',
@@ -779,29 +807,7 @@ class NewContactScreen extends React.Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-
-                            <View style={styles.btn_container}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Actions.pop();
-                                    }}
-                                    style={styles.cancel_btn}
-                                >
-                                    <Text style={styles.cancel_text}>
-                                        {I18n.t('Cancel')}
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.saveProfile();
-                                    }}
-                                    style={styles.save_btn}
-                                >
-                                    <Text style={styles.save_btn_text}>
-                                        {I18n.t('SAVE')}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                            {this.renderBottomArea()}
                         </View>
                     </ScrollView>
                     <LocalContactModal

@@ -434,7 +434,6 @@ export default class Auth {
                     return BackgroundTaskDAO.deleteAllTasks();
                 })
                 .then(() => {
-                    Notification.deregister();
                     EventEmitter.emit(AuthEvents.userLoggedOut);
                     // Logging in as Default user for Onboarding bot
                     // resolve(Auth.saveUser(DefaultUser));

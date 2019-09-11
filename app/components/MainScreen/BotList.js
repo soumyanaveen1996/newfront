@@ -37,6 +37,7 @@ const isEqual = require('react-fast-compare');
 import { GlobalColors } from '../../config/styles';
 const hiddenItemWidth = wp('25%');
 import CustomPlaceholder from './CustomPlaceholder';
+import images from '../../config/images';
 
 export const FAVOURITE_BOTS = 'favourite_bots';
 class BotList extends React.Component {
@@ -49,7 +50,8 @@ class BotList extends React.Component {
             rowMap: null,
             rowKey: null,
             stopFaker: false,
-            refreshing: false
+            refreshing: false,
+            emptyScreen: false
         };
     }
 
@@ -164,7 +166,6 @@ class BotList extends React.Component {
             },
             'desc'
         );
-
         if (
             this.props.user.remoteBotsInstalled &&
             this.props.user.allConversationsLoaded
@@ -237,7 +238,8 @@ class BotList extends React.Component {
                     ...newRecentData
                 ];
         this.setState({
-            data: AllTimelineData
+            data: AllTimelineData,
+            emptyScreen: !(favData.length > 0 || newRecentData.length > 0)
         });
 
         // const prevTimeline = this.props.timeline.allChats
@@ -404,143 +406,164 @@ class BotList extends React.Component {
                     animate="fade"
                     // header={this.renderSearchBar}
                 >
-                    <SwipeListView
-                        refreshControl={
-                            this.props.user.network === 'full' ? (
-                                <RefreshControl
-                                    onRefresh={() => {
-                                        this.setState(
-                                            { refreshing: true },
-                                            async () => {
-                                                try {
-                                                    await RemoteBotInstall.syncronizeBots();
-                                                    await Conversation.downloadRemoteConversations();
-                                                    await this.props.updateTimeline();
-                                                    this.setState({
-                                                        refreshing: false
-                                                    });
-                                                } catch (error) {
-                                                    this.setState({
-                                                        refreshing: false
-                                                    });
+                    {this.state.emptyScreen ? (
+                        <View
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Image source={images.empty_contact} />
+                            <Text style={{ marginTop: 35 }}>
+                                You have no conversations yet.
+                            </Text>
+                            <Text>Invite contacts, subscribe to channels</Text>
+                            <Text>
+                                or install FrontM Apps from the buttons below.
+                            </Text>
+                        </View>
+                    ) : (
+                        <SwipeListView
+                            refreshControl={
+                                this.props.user.network === 'full' ? (
+                                    <RefreshControl
+                                        onRefresh={() => {
+                                            this.setState(
+                                                { refreshing: true },
+                                                async () => {
+                                                    try {
+                                                        await RemoteBotInstall.syncronizeBots();
+                                                        await Conversation.downloadRemoteConversations();
+                                                        await this.props.updateTimeline();
+                                                        this.setState({
+                                                            refreshing: false
+                                                        });
+                                                    } catch (error) {
+                                                        this.setState({
+                                                            refreshing: false
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        );
-                                    }}
-                                    refreshing={this.state.refreshing}
-                                />
-                            ) : null
-                        }
-                        useFlatList
-                        style={{ height: '100%' }}
-                        data={allData}
-                        closeOnScroll={true}
-                        closeOnRowPress={true}
-                        closeOnRowBeginSwipe={true}
-                        recalculateHiddenLayout={true}
-                        renderItem={(chat, rowMap) => {
-                            const { item = null, index, separators } = chat;
-                            let rowItem = <View />;
-                            // return <View />
-                            if (item.elemType === 'search') {
-                                rowItem = this.renderSearchBar({
-                                    onSearch: this.props.onSearch
-                                });
+                                            );
+                                        }}
+                                        refreshing={this.state.refreshing}
+                                    />
+                                ) : null
                             }
-                            if (item.elemType === 'buttons') {
-                                rowItem = this.renderButtonBar();
-                            }
-                            if (item.elemType === 'header') {
-                                rowItem = this.renderHeader({
-                                    headerText: item.headerText
-                                });
-                            }
-
-                            if (
-                                item.elemType === 'favorite' ||
-                                item.elemType === 'recents'
-                            ) {
-                                rowItem =
-                                    item.type === 'bot' ? (
-                                        <BotListItem
-                                            bot={item.bot}
-                                            chatData={item.chatData}
-                                            onBack={this.props.onBack}
-                                        />
-                                    ) : (
-                                        <ConversationListItem
-                                            conversation={item.bot}
-                                            chatData={item.chatData}
-                                            onBack={this.props.onBack}
-                                        />
-                                    );
-                            }
-                            return rowItem;
-                        }}
-                        renderHiddenItem={(hdata, rowMap) => {
-                            const {
-                                item: {
-                                    type = null,
-                                    elemType,
-                                    bot = null,
-                                    chatData = null,
-                                    key
+                            useFlatList
+                            style={{ height: '100%' }}
+                            data={allData}
+                            closeOnScroll={true}
+                            closeOnRowPress={true}
+                            closeOnRowBeginSwipe={true}
+                            recalculateHiddenLayout={true}
+                            renderItem={(chat, rowMap) => {
+                                const { item = null, index, separators } = chat;
+                                let rowItem = <View />;
+                                // return <View />
+                                if (item.elemType === 'search') {
+                                    rowItem = this.renderSearchBar({
+                                        onSearch: this.props.onSearch
+                                    });
                                 }
-                            } = hdata;
+                                if (item.elemType === 'buttons') {
+                                    rowItem = this.renderButtonBar();
+                                }
+                                if (item.elemType === 'header') {
+                                    rowItem = this.renderHeader({
+                                        headerText: item.headerText
+                                    });
+                                }
 
-                            const Favorite =
-                                type &&
-                                (type === 'conversation' || type === 'bot') ? (
-                                        <FavoriteView
-                                            conversationId={bot.conversationId}
-                                            botId={bot.botId}
-                                            onClick={
-                                                elemType === 'favorite'
-                                                    ? (
-                                                        conversationId,
-                                                        botId,
-                                                        chatData
-                                                    ) =>
-                                                        this.unsetFavorite(
-                                                            key,
-                                                            rowMap,
+                                if (
+                                    item.elemType === 'favorite' ||
+                                    item.elemType === 'recents'
+                                ) {
+                                    rowItem =
+                                        item.type === 'bot' ? (
+                                            <BotListItem
+                                                bot={item.bot}
+                                                chatData={item.chatData}
+                                                onBack={this.props.onBack}
+                                            />
+                                        ) : (
+                                            <ConversationListItem
+                                                conversation={item.bot}
+                                                chatData={item.chatData}
+                                                onBack={this.props.onBack}
+                                            />
+                                        );
+                                }
+                                return rowItem;
+                            }}
+                            renderHiddenItem={(hdata, rowMap) => {
+                                const {
+                                    item: {
+                                        type = null,
+                                        elemType,
+                                        bot = null,
+                                        chatData = null,
+                                        key
+                                    }
+                                } = hdata;
+
+                                const Favorite =
+                                    type &&
+                                    (type === 'conversation' ||
+                                        type === 'bot') ? (
+                                            <FavoriteView
+                                                conversationId={bot.conversationId}
+                                                botId={bot.botId}
+                                                onClick={
+                                                    elemType === 'favorite'
+                                                        ? (
                                                             conversationId,
                                                             botId,
-                                                            chatData,
-                                                            type
-                                                        )
-                                                    : (
-                                                        conversationId,
-                                                        botId,
-                                                        chatData
-                                                    ) =>
-                                                        this.setFavorite(
-                                                            key,
-                                                            rowMap,
+                                                            chatData
+                                                        ) =>
+                                                            this.unsetFavorite(
+                                                                key,
+                                                                rowMap,
+                                                                conversationId,
+                                                                botId,
+                                                                chatData,
+                                                                type
+                                                            )
+                                                        : (
                                                             conversationId,
                                                             botId,
-                                                            chatData,
-                                                            type
-                                                        )
-                                            }
-                                            chatData={chatData}
-                                            chatType={type}
-                                            unfavorite={elemType === 'favorite'}
-                                        />
-                                    ) : null;
-                            return Favorite;
-                        }}
-                        leftOpenValue={hiddenItemWidth}
-                        previewRowKey={'0'}
-                        previewOpenValue={-40}
-                        previewOpenDelay={3000}
-                        // Performance settings
-                        removeClippedSubviews={clipped} // Unmount components when outside of window
-                        initialNumToRender={2} // Reduce initial render amount
-                        maxToRenderPerBatch={1} // Reduce number in each render batch
-                        maxToRenderPerBatch={100} // Increase time between renders
-                        windowSize={7} // Reduce the window size
-                    />
+                                                            chatData
+                                                        ) =>
+                                                            this.setFavorite(
+                                                                key,
+                                                                rowMap,
+                                                                conversationId,
+                                                                botId,
+                                                                chatData,
+                                                                type
+                                                            )
+                                                }
+                                                chatData={chatData}
+                                                chatType={type}
+                                                unfavorite={elemType === 'favorite'}
+                                            />
+                                        ) : null;
+                                return Favorite;
+                            }}
+                            leftOpenValue={hiddenItemWidth}
+                            previewRowKey={'0'}
+                            previewOpenValue={-40}
+                            previewOpenDelay={3000}
+                            // Performance settings
+                            removeClippedSubviews={clipped} // Unmount components when outside of window
+                            initialNumToRender={2} // Reduce initial render amount
+                            maxToRenderPerBatch={1} // Reduce number in each render batch
+                            maxToRenderPerBatch={100} // Increase time between renders
+                            windowSize={7} // Reduce the window size
+                        />
+                    )}
                 </CustomPlaceholder>
             </View>
         );
