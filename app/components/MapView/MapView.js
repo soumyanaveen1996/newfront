@@ -39,6 +39,7 @@ import { MarkerIconTypes, UserTrackingMode } from './config';
 import Store from '../../redux/store/configureStore';
 import { setOpenMap } from '../../redux/actions/UserActions';
 import { connect } from 'react-redux';
+import NetworkButton from '../Header/NetworkButton';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
@@ -64,45 +65,22 @@ class MapView extends React.Component {
             );
         }
 
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerRight = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
         return navigationOptions;
     }
 

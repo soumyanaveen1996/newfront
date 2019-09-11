@@ -10,7 +10,7 @@ import {
     SafeAreaView
 } from 'react-native';
 import TwilioVoice from 'react-native-twilio-programmable-voice';
-import Styles from './styles';
+import Styles, { diameter } from './styles';
 import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
 import { EventEmitter, TwilioEvents, CallQuotaEvents } from '../../lib/events';
@@ -37,6 +37,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 import Calls from '../../lib/calls';
+import * as Progress from 'react-native-progress';
 
 const R = require('ramda');
 
@@ -89,7 +90,8 @@ export default class Dialler extends React.Component {
             codes: countryCodes,
             showCodes: false,
             countryElements: [],
-            isModalDialPadVisible: false
+            isModalDialPadVisible: false,
+            satCall: false
         };
     }
 
@@ -848,17 +850,15 @@ export default class Dialler extends React.Component {
                         resizeMode="cover"
                     />
                 );
+            } else {
+                return (
+                    <Image
+                        style={Styles.avatar}
+                        source={require('../../images/contact/calling-emptyavatar.png')}
+                    />
+                );
             }
-
-            return (
-                <Image
-                    style={Styles.avatar}
-                    source={require('../../images/contact/calling-emptyavatar.png')}
-                />
-            );
-        }
-
-        if (this.state.diallerState === DiallerState.incall) {
+        } else if (this.state.diallerState === DiallerState.incall) {
             if (this.props.contact) {
                 return (
                     <ProfileImage
@@ -869,14 +869,36 @@ export default class Dialler extends React.Component {
                         resizeMode="cover"
                     />
                 );
+            } else {
+                if (this.state.satCall) {
+                    return (
+                        <Progress.Pie
+                            size={diameter}
+                            progress={this.state.callTime / 40}
+                            color={GlobalColors.green}
+                            style={{
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Image
+                                style={[
+                                    Styles.avatar,
+                                    { position: 'absolute' }
+                                ]}
+                                source={require('../../images/contact/GreenGoblin.png')}
+                            />
+                        </Progress.Pie>
+                    );
+                } else {
+                    return (
+                        <Image
+                            style={Styles.avatar}
+                            source={require('../../images/contact/GreenGoblin.png')}
+                        />
+                    );
+                }
             }
-
-            return (
-                <Image
-                    style={Styles.avatar}
-                    source={require('../../images/contact/GreenGoblin.png')}
-                />
-            );
         }
     };
 

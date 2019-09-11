@@ -111,7 +111,9 @@ class BotList extends React.Component {
         // console.log('all fav array ===============', favBotsArray);
 
         allBots.forEach(bot => {
-            allChats.push({ key: bot.botId, type: 'bot', bot: bot });
+            if (bot.botId !== 'onboarding-bot') {
+                allChats.push({ key: bot.botId, type: 'bot', bot: bot });
+            }
         });
 
         let allChatsData = await Promise.all(

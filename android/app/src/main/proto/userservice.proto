@@ -1,13 +1,17 @@
 syntax = "proto3";
+
 import "commonmessages.proto";
+
 option java_multiple_files = true;
 option java_package = "com.frontm.user.proto";
+
 package user;
+
 service UserService {
     rpc UpdateUserProfile (User) returns (UpdateUserProfileResponse) {}
     rpc GetUserDetails (User) returns (User) {}
-    rpc GetBotSubscriptions(commonmessages.Empty) returns (BotSubscriptionsResponse) {}
-    rpc GetContacts(commonmessages.Empty) returns (ContactsResponse) {}
+    rpc GetBotSubscriptions(commonmessages.SelectedDomainInput) returns (BotSubscriptionsResponse) {}
+    rpc GetContacts(commonmessages.SelectedDomainInput) returns (ContactsResponse) {}
     rpc SubscribeBot(SubscribeBotInput) returns (SubscribeBotResponse) {}
     rpc UnsubscribeBot(SubscribeBotInput) returns (SubscribeBotResponse) {}
     rpc SubscribeDomain(SubscribeDomainInput) returns (SubscribeDomainResponse) {}
@@ -19,8 +23,14 @@ service UserService {
     rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
     rpc GetCompanies(commonmessages.Empty) returns (CompaniesResponse) {}
     rpc GetCallHistory(commonmessages.Empty) returns (CallHistoryResponse) {}
+    rpc GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse) {}
+    rpc GetUserDomains(commonmessages.Empty) returns (UserDomainsResponse) {}
+    rpc UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (commonmessages.Empty) {}
     rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
+    rpc RegisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
 }
+
 message User {
     string userName = 1;
     string emailAddress = 2;
@@ -29,81 +39,109 @@ message User {
     bool visible = 5;
     string userId = 6;
     string companyId = 7;
+    string userCompanyName = 8;
+    commonmessages.UserAddress address = 9;
+    string userTimezone = 10;
 }
+
 message UpdateUserProfileResponse {
     int32 error = 1;
     repeated bool content = 2;
 }
+
 message BotSubscriptionsResponse {
     int32 error = 1;
     SubscribedBotsContent content = 2;
 }
+
 message SubscribedBotsContent {
     repeated string subscribed = 1;
     repeated string favourites = 2;
 }
+
 message ContactsResponse {
     repeated Contact contacts = 1;
     repeated Contact ignored = 2;
     repeated commonmessages.LocalContact localContacts = 3;
     string sites = 4;
 }
+
 message Contact {
     string userName = 1;
     string emailAddress = 2;
     commonmessages.PhoneNumbers phoneNumbers = 3;
     string userId = 4;
     bool waitingForConfirmation = 5;
+    string userCompanyName = 6;
+    commonmessages.UserAddress address = 7;
+    bool showAcceptIgnoreMsg = 8;
 }
+
 message SubscribeBotInput {
     string botId = 1;
 }
+
 message SubscribeBotResponse {
     int32 error = 1;
     repeated bool content = 2;
 }
+
 message SubscribeDomainInput {
     string verificationCode = 1;
 }
+
 message SubscribeDomainResponse {
-    repeated commonmessages.DomainRoles content = 1;
+    repeated UserDomain content = 1;
     int32 error = 2;
+    string errorMessage = 3;
 }
+
 message VoipToggleResponse {
     bool success = 1;
 }
+
 message VoipStatusInput {
     string userId = 1;
 }
+
 message VoipStatusResponse {
     bool voipEnabled = 1;
     int32 error = 2;
 }
+
 message TwilioTokenInput {
     string platform = 1;
     string env = 2;
 }
+
 message TwilioTokenResponse {
     string accessToken = 1;
 }
+
 message ManageTncInput {
     string action = 1;
 }
+
 message ManageTncResponse {
     int32 error = 1;
     repeated ManageTncObject content = 2;
 }
+
 message ManageTncObject {
     bool tncAccept = 1;
 }
+
 message CompaniesResponse {
     repeated string companies = 1;
 }
+
+
 message CallHistoryResponse {
     repeated CallHistoryObject content = 1;
 }
+
 message CallHistoryObject {
-    int32 callCharge= 1;
+    double callCharge= 1;
     int64 callTimestamp = 2;
     float currentBalance = 3;
     int32 duration = 4;
@@ -116,12 +154,52 @@ message CallHistoryObject {
     string toUserId = 11;
     string toUserName = 12;
 }
+
+message UserDomainsResponse {
+    repeated UserDomain domains = 1;
+}
+
+message UserDomain {
+    string userDomain = 1;
+    string name = 2;
+    DomainViewMode viewModes = 3;
+    string logoUrl = 4;
+    bool lastLoggedIn = 5;
+    bool lockInUsers = 6;
+}
+
+message DomainViewMode {
+    bool apps = 1;
+    bool channels = 2;
+    bool chat = 3;
+    bool voip = 4;
+}
+
+message CallHistoryInput {
+    string contactId = 1;
+}
+
+message LastLoggedInDomainInput {
+    string userDomain = 1;
+}
+
 message TopupBalanceInput {
     string paymentCode = 1;
     double amount = 2;
     string token = 3;
     string platform = 4;
 }
+
 message TopupBalanceResponse {
     int32 error = 1;
+}
+
+message DeviceInfo {
+    string deviceToken = 1;
+    string deviceType = 2;
+}
+
+message DeviceBoolResponse {
+    int32 error = 1;
+    repeated bool content = 2;
 }

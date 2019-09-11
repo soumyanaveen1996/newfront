@@ -67,6 +67,7 @@ import { blue } from 'ansi-colors';
 import { NativeModules } from 'react-native';
 import ImageCache from '../../lib/image_cache';
 import utils from '../../lib/utils';
+import NetworkButton from '../Header/NetworkButton';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 class ContactsPicker extends React.Component {
@@ -86,45 +87,22 @@ class ContactsPicker extends React.Component {
                 </Text>
             )
         };
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerLeft = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerLeft = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerLeft = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerLeft = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
 
         navigationOptions.headerRight = (
             <TouchableOpacity

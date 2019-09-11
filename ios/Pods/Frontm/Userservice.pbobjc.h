@@ -29,11 +29,13 @@ CF_EXTERN_C_BEGIN
 
 @class CallHistoryObject;
 @class Contact;
-@class DomainRoles;
+@class DomainViewMode;
 @class LocalContact;
 @class ManageTncObject;
 @class PhoneNumbers;
 @class SubscribedBotsContent;
+@class UserAddress;
+@class UserDomain;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -62,6 +64,9 @@ typedef GPB_ENUM(User_FieldNumber) {
   User_FieldNumber_Visible = 5,
   User_FieldNumber_UserId = 6,
   User_FieldNumber_CompanyId = 7,
+  User_FieldNumber_UserCompanyName = 8,
+  User_FieldNumber_Address = 9,
+  User_FieldNumber_UserTimezone = 10,
 };
 
 @interface User : GPBMessage
@@ -81,6 +86,14 @@ typedef GPB_ENUM(User_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *companyId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userTimezone;
 
 @end
 
@@ -172,6 +185,9 @@ typedef GPB_ENUM(Contact_FieldNumber) {
   Contact_FieldNumber_PhoneNumbers = 3,
   Contact_FieldNumber_UserId = 4,
   Contact_FieldNumber_WaitingForConfirmation = 5,
+  Contact_FieldNumber_UserCompanyName = 6,
+  Contact_FieldNumber_Address = 7,
+  Contact_FieldNumber_ShowAcceptIgnoreMsg = 8,
 };
 
 @interface Contact : GPBMessage
@@ -187,6 +203,14 @@ typedef GPB_ENUM(Contact_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
 @property(nonatomic, readwrite) BOOL waitingForConfirmation;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
+
+@property(nonatomic, readwrite) BOOL showAcceptIgnoreMsg;
 
 @end
 
@@ -236,15 +260,18 @@ typedef GPB_ENUM(SubscribeDomainInput_FieldNumber) {
 typedef GPB_ENUM(SubscribeDomainResponse_FieldNumber) {
   SubscribeDomainResponse_FieldNumber_ContentArray = 1,
   SubscribeDomainResponse_FieldNumber_Error = 2,
+  SubscribeDomainResponse_FieldNumber_ErrorMessage = 3,
 };
 
 @interface SubscribeDomainResponse : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<DomainRoles*> *contentArray;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserDomain*> *contentArray;
 /** The number of items in @c contentArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *errorMessage;
 
 @end
 
@@ -402,7 +429,7 @@ typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
 
 @interface CallHistoryObject : GPBMessage
 
-@property(nonatomic, readwrite) int32_t callCharge;
+@property(nonatomic, readwrite) double callCharge;
 
 @property(nonatomic, readwrite) int64_t callTimestamp;
 
@@ -425,6 +452,94 @@ typedef GPB_ENUM(CallHistoryObject_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *toUserId;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *toUserName;
+
+@end
+
+#pragma mark - UserDomainsResponse
+
+typedef GPB_ENUM(UserDomainsResponse_FieldNumber) {
+  UserDomainsResponse_FieldNumber_DomainsArray = 1,
+};
+
+@interface UserDomainsResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserDomain*> *domainsArray;
+/** The number of items in @c domainsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger domainsArray_Count;
+
+@end
+
+#pragma mark - UserDomain
+
+typedef GPB_ENUM(UserDomain_FieldNumber) {
+  UserDomain_FieldNumber_UserDomain = 1,
+  UserDomain_FieldNumber_Name = 2,
+  UserDomain_FieldNumber_ViewModes = 3,
+  UserDomain_FieldNumber_LogoURL = 4,
+  UserDomain_FieldNumber_LastLoggedIn = 5,
+  UserDomain_FieldNumber_LockInUsers = 6,
+};
+
+@interface UserDomain : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *name;
+
+@property(nonatomic, readwrite, strong, null_resettable) DomainViewMode *viewModes;
+/** Test to see if @c viewModes has been set. */
+@property(nonatomic, readwrite) BOOL hasViewModes;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *logoURL;
+
+@property(nonatomic, readwrite) BOOL lastLoggedIn;
+
+@property(nonatomic, readwrite) BOOL lockInUsers;
+
+@end
+
+#pragma mark - DomainViewMode
+
+typedef GPB_ENUM(DomainViewMode_FieldNumber) {
+  DomainViewMode_FieldNumber_Apps = 1,
+  DomainViewMode_FieldNumber_Channels = 2,
+  DomainViewMode_FieldNumber_Chat = 3,
+  DomainViewMode_FieldNumber_Voip = 4,
+};
+
+@interface DomainViewMode : GPBMessage
+
+@property(nonatomic, readwrite) BOOL apps;
+
+@property(nonatomic, readwrite) BOOL channels;
+
+@property(nonatomic, readwrite) BOOL chat;
+
+@property(nonatomic, readwrite) BOOL voip;
+
+@end
+
+#pragma mark - CallHistoryInput
+
+typedef GPB_ENUM(CallHistoryInput_FieldNumber) {
+  CallHistoryInput_FieldNumber_ContactId = 1,
+};
+
+@interface CallHistoryInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *contactId;
+
+@end
+
+#pragma mark - LastLoggedInDomainInput
+
+typedef GPB_ENUM(LastLoggedInDomainInput_FieldNumber) {
+  LastLoggedInDomainInput_FieldNumber_UserDomain = 1,
+};
+
+@interface LastLoggedInDomainInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
 
 @end
 
@@ -458,6 +573,38 @@ typedef GPB_ENUM(TopupBalanceResponse_FieldNumber) {
 @interface TopupBalanceResponse : GPBMessage
 
 @property(nonatomic, readwrite) int32_t error;
+
+@end
+
+#pragma mark - DeviceInfo
+
+typedef GPB_ENUM(DeviceInfo_FieldNumber) {
+  DeviceInfo_FieldNumber_DeviceToken = 1,
+  DeviceInfo_FieldNumber_DeviceType = 2,
+};
+
+@interface DeviceInfo : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceToken;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceType;
+
+@end
+
+#pragma mark - DeviceBoolResponse
+
+typedef GPB_ENUM(DeviceBoolResponse_FieldNumber) {
+  DeviceBoolResponse_FieldNumber_Error = 1,
+  DeviceBoolResponse_FieldNumber_ContentArray = 2,
+};
+
+@interface DeviceBoolResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) GPBBoolArray *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
 
 @end
 

@@ -53,18 +53,18 @@ class AssetFetcher {
 
     static async downloadFile(
         filepath,
-        url,
+        remoteUrl,
         headers,
         background,
         readFile = true
     ) {
         try {
             console.log(
-                `AssetFetcher::Downloading file via RNFS: ${filepath} from ${url}`
+                `AssetFetcher::Downloading file via RNFS: ${filepath} from ${remoteUrl}`
             );
 
             let downloadFileOptions = {
-                fromUrl: url,
+                fromUrl: remoteUrl,
                 toFile: filepath,
                 headers: headers || false,
                 background: background || true,
@@ -88,7 +88,7 @@ class AssetFetcher {
                 }
                 return;
             } else {
-                throw new Error(`Unable to fetch URL : ${url}`);
+                throw new Error(`Unable to fetch URL : ${remoteUrl}`);
             }
         } catch (e) {
             console.log('Failed downloading', JSON.stringify(e, undefined, 2));

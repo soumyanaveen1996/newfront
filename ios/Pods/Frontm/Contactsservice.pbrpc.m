@@ -67,6 +67,18 @@
              responseClass:[AgentGuardBoolResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark Ignore(ContactsInput) returns (AgentGuardBoolResponse)
+
+- (void)ignoreWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToIgnoreWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToIgnoreWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"Ignore"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[AgentGuardBoolResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 #pragma mark Remove(ContactsInput) returns (AgentGuardBoolResponse)
 
 - (void)removeWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{

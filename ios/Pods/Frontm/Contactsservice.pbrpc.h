@@ -47,6 +47,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToAcceptWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
+#pragma mark Ignore(ContactsInput) returns (AgentGuardBoolResponse)
+
+- (void)ignoreWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToIgnoreWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
 #pragma mark Remove(ContactsInput) returns (AgentGuardBoolResponse)
 
 - (void)removeWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler;

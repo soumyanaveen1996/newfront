@@ -14,7 +14,8 @@
 - (NSDictionary *) toJSON {
   return @{
            @"userName": self.userName,
-           @"userId": self.userId
+           @"userId": self.userId,
+           @"userCompanyName": self.userCompanyName,
            };
 }
 

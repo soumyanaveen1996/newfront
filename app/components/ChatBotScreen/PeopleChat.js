@@ -16,63 +16,20 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 import chatStyles from './styles';
 import { PhoneState } from '../Phone';
+import NetworkButton from '../Header/NetworkButton';
 
 var backTimer = null;
 
 export default class PeopleChat extends ChatBotScreen {
-    static connectionButton(params) {
-        if (params.button) {
-            if (params.button === 'manual') {
-                return (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (params.button === 'gsm') {
-                return (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (params.button === 'satellite') {
-                return (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                return (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        } else {
-            return null;
-        }
-    }
-
     static rightHeaderView({ params }) {
         const callButton = params.callDisabled ? (
             <HeaderRightIcon
-                icon={Icons.callDisabled()}
+                icon={Icons.callDisabled({ size: 35 })}
                 style={{ marginRight: 0, paddingHorizontal: 0 }}
             />
         ) : (
             <HeaderRightIcon
-                icon={Icons.call()}
+                icon={Icons.call({ size: 35 })}
                 onPress={() => {
                     if (params.showCallMessage) {
                         params.showCallMessage();
@@ -84,7 +41,20 @@ export default class PeopleChat extends ChatBotScreen {
         return (
             <View style={chatStyles.headerRightView}>
                 {callButton}
-                {PeopleChat.connectionButton(params)}
+                <View style={{ marginHorizontal: 17 }}>
+                    <NetworkButton
+                        manualAction={() => {
+                            state.params.refresh();
+                        }}
+                        gsmAction={() => {
+                            state.params.showConnectionMessage('gsm');
+                        }}
+                        satelliteAction={() => {
+                            state.params.showConnectionMessage('satellite');
+                        }}
+                        disconnectedAction={() => {}}
+                    />
+                </View>
             </View>
         );
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, View } from 'react-native';
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext, Promise, Contact } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
@@ -10,6 +10,7 @@ import ChannelDAO from '../../lib/persistence/ChannelDAO';
 import { Icons } from '../../config/icons';
 import images from '../../images';
 import { Platform } from 'react-native';
+import NetworkButton from '../Header/NetworkButton';
 
 var backTimer = null;
 const timeout = Platform.OS === 'android' ? 500 : 400;
@@ -44,45 +45,22 @@ export default class ChannelChat extends ChatBotScreen {
                 />
             );
         }
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerRight = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
         return navigationOptions;
     }
 

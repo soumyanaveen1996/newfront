@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux';
 import { HeaderBack, HeaderRightIcon } from '../Header';
 import ContactStyles from '../ContactsPicker/styles';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import NetworkButton from '../Header/NetworkButton';
 
 export default class SetChannelOwner extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -31,45 +32,22 @@ export default class SetChannelOwner extends React.Component {
                 />
             );
         }
-        if (state.params.button) {
-            if (state.params.button === 'manual') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        onPress={() => {
-                            state.params.refresh();
-                        }}
-                        icon={Icons.refresh()}
-                    />
-                );
-            } else if (state.params.button === 'gsm') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.gsm}
-                        onPress={() => {
-                            state.params.showConnectionMessage('gsm');
-                        }}
-                    />
-                );
-            } else if (state.params.button === 'satellite') {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        image={images.satellite}
-                        onPress={() => {
-                            state.params.showConnectionMessage('satellite');
-                        }}
-                    />
-                );
-            } else {
-                navigationOptions.headerRight = (
-                    <HeaderRightIcon
-                        icon={Icons.automatic()}
-                        onPress={() => {
-                            state.params.showConnectionMessage('automatic');
-                        }}
-                    />
-                );
-            }
-        }
+        navigationOptions.headerRight = (
+            <View style={{ marginHorizontal: 17 }}>
+                <NetworkButton
+                    manualAction={() => {
+                        state.params.refresh();
+                    }}
+                    gsmAction={() => {
+                        state.params.showConnectionMessage('gsm');
+                    }}
+                    satelliteAction={() => {
+                        state.params.showConnectionMessage('satellite');
+                    }}
+                    disconnectedAction={() => {}}
+                />
+            </View>
+        );
         return navigationOptions;
     }
 

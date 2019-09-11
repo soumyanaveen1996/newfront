@@ -128,6 +128,45 @@ typedef GPB_ENUM(LocalContact_FieldNumber) {
 
 @end
 
+#pragma mark - UserAddress
+
+typedef GPB_ENUM(UserAddress_FieldNumber) {
+  UserAddress_FieldNumber_AddressLine1 = 1,
+  UserAddress_FieldNumber_AddressLine2 = 2,
+  UserAddress_FieldNumber_City = 3,
+  UserAddress_FieldNumber_State = 4,
+  UserAddress_FieldNumber_Country = 5,
+  UserAddress_FieldNumber_PostCode = 6,
+};
+
+@interface UserAddress : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *addressLine1;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *addressLine2;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *city;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *state;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *country;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *postCode;
+
+@end
+
+#pragma mark - SelectedDomainInput
+
+typedef GPB_ENUM(SelectedDomainInput_FieldNumber) {
+  SelectedDomainInput_FieldNumber_SelectedDomain = 1,
+};
+
+@interface SelectedDomainInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *selectedDomain;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END
