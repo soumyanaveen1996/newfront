@@ -72,8 +72,7 @@ const grpcTopupUserBalance = (paymentCode, amount, token) =>
 const buyProduct = async ({
     productCode,
     productName = PRODUCT_NAMES.VOIP,
-    botId = null,
-    price = null
+    botId = null
 }) => {
     const isConnected = await connection();
     if (isConnected) {
@@ -91,22 +90,9 @@ const buyProduct = async ({
                 });
             }
             const products = await RNIap.getProducts(itemSkus);
-            if (!price) {
-                price = parseFloat(products[0].price);
-            }
-            // throw new Error("Debugging")
             const sku = products[0].productId;
-            let purchase;
 
-            if (Platform.OS === 'ios') {
-                purchase = await RNIap.buyProductWithoutFinishTransaction(sku);
-                grpcTopupUserBalance('100', price, 'sampleToken');
-                RNIap.finishTransaction();
-            } else {
-                purchase = await RNIap.buyProduct(sku);
-                grpcTopupUserBalance('100', price, 'sampleToken');
-                await RNIap.consumePurchase(purchase.purchaseToken);
-            }
+            const purchase = await RNIap.requestPurchase(sku, false);
             return purchase;
         } catch (err) {
             console.error(err.code, err.message);
@@ -120,7 +106,8 @@ const buyProduct = async ({
 const InAppPurchase = {
     PRODUCT_NAMES,
     InAppPurchaseErrorCodes,
-    buyProduct
+    buyProduct,
+    grpcTopupUserBalance
 };
 
 export default InAppPurchase;

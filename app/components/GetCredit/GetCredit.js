@@ -22,6 +22,7 @@ import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Bot from '../../lib/bot';
+import * as RNIap from 'react-native-iap';
 
 const EventListeners = [];
 
@@ -38,7 +39,15 @@ export default class GetCredit extends React.Component {
         };
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
+            this.purchaseHandler.bind(this)
+        );
+        this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
+            console.warn('purchaseErrorListener', error);
+            this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+        });
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.currentBalance !== this.props.currentBalance) {
@@ -47,6 +56,43 @@ export default class GetCredit extends React.Component {
                 purchaseExecuted: true,
                 selectedCredit: undefined
             });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.purchaseUpdateSubscription) {
+            this.purchaseUpdateSubscription.remove();
+            this.purchaseUpdateSubscription = null;
+        }
+        if (this.purchaseErrorSubscription) {
+            this.purchaseErrorSubscription.remove();
+            this.purchaseErrorSubscription = null;
+        }
+    }
+
+    purchaseHandler(purchase) {
+        console.log('>>>>purchaseUpdatedListener', purchase);
+        const receipt = purchase.transactionReceipt;
+        if (receipt) {
+            InAppPurchase.grpcTopupUserBalance(
+                '100',
+                parseFloat(this.state.selectedCredit),
+                'sampleToken'
+            )
+                .then(deliveryResult => {
+                    if (Platform.OS === 'ios') {
+                        RNIap.finishTransactionIOS(purchase.transactionId);
+                    } else if (Platform.OS === 'android') {
+                        RNIap.acknowledgePurchaseAndroid(
+                            purchase.purchaseToken
+                        );
+                    }
+                    this.setState({ updatingBalance: false });
+                })
+                .catch(e => {
+                    this.setState({ updatingBalance: false });
+                    this.refs.toast.show(e.toString(), DURATION.LENGTH_SHORT);
+                });
         }
     }
 
@@ -82,10 +128,8 @@ export default class GetCredit extends React.Component {
             }
             try {
                 await InAppPurchase.buyProduct({
-                    productCode: productCode,
-                    price: parseFloat(this.state.selectedCredit)
+                    productCode: productCode
                 });
-                // this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
                 this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
@@ -107,7 +151,9 @@ export default class GetCredit extends React.Component {
         const isSelected = credit === this.state.selectedCredit;
         return (
             <TouchableOpacity
-                disabled={this.state.purchaseExecuted}
+                disabled={
+                    this.state.purchaseExecuted || this.state.updatingBalance
+                }
                 style={
                     isSelected
                         ? styles.creditButtonSelected
@@ -168,7 +214,9 @@ export default class GetCredit extends React.Component {
         return (
             <ScrollView
                 style={{ height: '100%' }}
-                contentContainerStyle={{ height: '100%' }}
+                contentContainerStyle={
+                    Platform.OS === 'ios' ? { height: '100%' } : null
+                }
                 bounces={false}
             >
                 <KeyboardAvoidingView
@@ -227,7 +275,7 @@ export default class GetCredit extends React.Component {
                             </Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: '10%' }}>
+                    <View style={{ marginTop: '15%' }}>
                         <View style={styles.codeArea}>
                             {/* <Text style={styles.codeText}>{this.state.codeApplied ? 'Your code has been applied.' : null}</Text> */}
                             <View style={styles.rightCodeArea}>

@@ -4094,12 +4094,10 @@ domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-dooboolab-welcome@^1.0.5:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.1.0.tgz#4a0aa9d2cbc4e2b1008bf7683bc056b41caa3d0d"
-  integrity sha512-K9TKEeefzDXZiUyLZG+bIr8cy9UoYIfFMseowp/o3czVl7TfkVm3gQpeB85w+TO8xeqzWHiIcEelZbBgt5WUwQ==
-  dependencies:
-    chalk "^2.4.1"
+dooboolab-welcome@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.1.1.tgz#ca2184f6e1f568865d707a6ce3bda7e003550f54"
+  integrity sha512-tQ/9NBCGnalHwKOBjDqTD4t4wQpDfSSbxQGctzkzaLHR3AhN0wCBkIs05JciVtvl/jfLZ+DgAndktAMk3Bu7Vw==
 
 dot-prop@^4.1.0:
   version "4.2.0"
@@ -9317,12 +9315,12 @@ react-native-i18n@^2.0.4:
   dependencies:
     i18n-js "3.0.11"
 
-react-native-iap@^2.3.1:
-  version "2.3.18"
-  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-2.3.18.tgz#7da8419ec9974c9d67b8ab7a3ff09084b5ff8fa2"
-  integrity sha512-oLpPK+qBzP3zDSIkU7D3BPoJR1dvArciKdjKQD7DYcTR0LlrkP3s0DWhY0p8EomOJvzJZWcqikntBbLtHrP/Gw==
+react-native-iap@^3.4.6:
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-3.4.6.tgz#68d94e1d5a9d4d65439869e440792204697b1825"
+  integrity sha512-1GaeglPA+PGILUPYiEGZ+0HcSssmwHmt3e1gjkkLtMN/DgGxOcxMMraQIE3IwAT56hk2h0rEuNLT0Xw3XYs+Og==
   dependencies:
-    dooboolab-welcome "^1.0.5"
+    dooboolab-welcome "^1.1.0"
 
 react-native-image-picker@^0.26.7:
   version "0.26.10"
