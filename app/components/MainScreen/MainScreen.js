@@ -578,11 +578,7 @@ class MainScreen extends React.Component {
                 <BackgroundImage
                     style={{ display: 'flex', flexDirection: 'column' }}
                 >
-                    {this.state.noChats && this.state.firstTimer && (
-                        <TourScreen
-                            showNetwork={this.displayButton.bind(this)}
-                        />
-                    )}
+                    {<TourScreen showNetwork={this.displayButton.bind(this)} />}
                     {/* <StatusBar
                         hidden={false}
                         backgroundColor="grey"

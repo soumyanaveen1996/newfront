@@ -27,13 +27,19 @@ export default class NetworkTutorial extends Component {
                 <View style={styles.satelliteCircle}>
                     <Image
                         style={styles.imageSatellite}
-                        source={images.network_icon_automatic}
+                        source={images.bot_icon_assistant}
                     />
                 </View>
                 <View style={styles.topTutorialContainer}>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>FrontM App</Text>
+                        <Text numberOfLines={2} style={styles.subTitle}>
+                            Welcome to FrontM. I’m here to guide
+                        </Text>
+                    </View>
                     <Text style={styles.welcomeSubHeader}>
-                        This icon indicates if your connection mode is
-                        Automatic, Terrestrial or Satellite.
+                        Chat with FrontM App to configure your account. Feel
+                        free to ask him whatever you want.
                     </Text>
                     <View style={styles.dotSider}>
                         <View style={styles.innerWidth}>
