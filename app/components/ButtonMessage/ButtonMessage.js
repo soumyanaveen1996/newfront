@@ -11,8 +11,8 @@ export default class ButtonMessage extends React.Component {
     button = ({ item }) => (
         <Button
             title={item.title}
+            titleStyle={{ color: fontColor(item.style) }}
             buttonStyle={buttonStyle(item.style)}
-            color={fontColor(item.style)}
             fontSize={FONT_SIZE}
             onPress={() => this.props.onButtonClick(item)}
         />

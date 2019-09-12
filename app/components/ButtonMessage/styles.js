@@ -26,12 +26,15 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingVertical: 7,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginHorizontal: 8
     },
     buttonBright: {
+        color: GlobalColors.white,
         backgroundColor: GlobalColors.tabBackground
     },
     buttonLight: {
+        color: GlobalColors.tabBackground,
         backgroundColor: GlobalColors.white
     },
     buttons: {
