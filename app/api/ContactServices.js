@@ -56,6 +56,37 @@ const AddLocalContacts = async contactsInput => {
     }
 };
 
+const UpdateLocalContacts = async contactsInput => {
+    try {
+        const user = await Auth.getUser();
+        if (user) {
+            const response = await new Promise((resolve, reject) => {
+                ContactsServiceClient.update(
+                    user.creds.sessionId,
+                    contactsInput,
+                    (error, result) => {
+                        if (error) {
+                            reject({
+                                type: 'error',
+                                error: error.code
+                            });
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            });
+
+            return response;
+        } else {
+            throw new Error('No user Found');
+        }
+    } catch (error) {
+        console.log('Error Occured Adding Local Contact', error);
+        throw new Error('Cannot Add Local Contacts');
+    }
+};
+
 const grpcInvite = (user, emailIds) => {
     return new Promise((resolve, reject) => {
         ContactsServiceClient.invite(
@@ -80,4 +111,4 @@ const grpcInvite = (user, emailIds) => {
     });
 };
 
-export { AddLocalContacts, grpcInvite };
+export { AddLocalContacts, UpdateLocalContacts, grpcInvite };

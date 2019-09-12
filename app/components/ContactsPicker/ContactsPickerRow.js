@@ -147,7 +147,7 @@ export default class ContactsPickerRow extends React.Component {
                             </Text>
                         </View>
                     ) : null}
-                    {contact.contactType === 'Personal' && (
+                    {contact.contactType === 'local' && (
                         <View
                             style={{
                                 width: 90,

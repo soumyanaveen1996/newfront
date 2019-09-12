@@ -14,6 +14,7 @@ service ContactsService {
     rpc Ignore (ContactsInput) returns (AgentGuardBoolResponse) {}
     rpc Remove (ContactsInput) returns (AgentGuardBoolResponse) {}
     rpc Invite (EmailIdList) returns (AgentGuardBoolResponse) {}
+    rpc Update (ContactsInput) returns (AgentGuardBoolResponse) {}
 }
 
 message SearchQuery {

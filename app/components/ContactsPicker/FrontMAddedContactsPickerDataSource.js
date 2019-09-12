@@ -37,13 +37,10 @@ export default class ContactsPickerDataSource {
             this.idToContacts[data.userId] = {
                 id: data.userId,
                 name: data.userName,
-                emails: [
-                    {
-                        email: data.emailAddresses
-                            ? { ...data.emailAddresses }
-                            : { ...data.emailAddress }
-                    }
-                ], // Format based on phone contact from expo
+                emailAddress:
+                    data.contactType === 'frontm' ? data.emailAddress : null,
+                emailAddresses:
+                    data.contactType === 'local' ? data.emailAddresses : null,
                 phoneNumbers: data.phoneNumbers,
                 isWaitingForConfirmation: data.waitingForConfirmation || false,
                 isFavourite: data.isFavourite || false,

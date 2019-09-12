@@ -82,19 +82,87 @@ export default class LocalContactModal extends React.Component {
                 } else if (data.familyName) {
                     contactName = data.familyName;
                     userName = data.familyName;
-                } else if (data.emails && data.emails[0]) {
-                    userName = data.emails[0];
+                } else if (data.emailAddresses && data.emailAddresses[0]) {
+                    userName = data.emailAddresses[0].email;
                 }
                 if (userName) {
                     let contactObj = {
                         idTemp: index,
-                        emails: [...data.emailAddresses],
+                        phoneNumbers: {
+                            mobile: '',
+                            land: '',
+                            satellite: ''
+                        },
                         profileImage: data.thumbnailPath,
                         userName: userName,
                         name: contactName,
-                        phoneNumbers: [...data.phoneNumbers],
+                        emails: {
+                            home: '',
+                            work: ''
+                        },
                         selected: false
                     };
+
+                    if (data.phoneNumbers && data.phoneNumbers.length > 0) {
+                        let land = data.phoneNumbers.find(element => {
+                            return element.label === 'land';
+                        });
+                        if (land) {
+                            contactObj.phoneNumbers.land = land.number;
+                        } else {
+                            if (data.phoneNumbers[1]) {
+                                contactObj.phoneNumbers.land =
+                                    data.phoneNumbers[1].number;
+                            }
+                        }
+                        let mobile = data.phoneNumbers.find(element => {
+                            return element.label === 'mobile';
+                        });
+                        if (mobile) {
+                            contactObj.phoneNumbers.mobile = mobile.number;
+                        } else {
+                            if (data.phoneNumbers[0]) {
+                                contactObj.phoneNumbers.mobile =
+                                    data.phoneNumbers[0].number;
+                            }
+                        }
+                        let satellite = data.phoneNumbers.find(element => {
+                            return element.label === 'satellite';
+                        });
+                        if (satellite) {
+                            contactObj.phoneNumbers.satellite =
+                                satellite.number;
+                        } else {
+                            if (data.phoneNumbers[2]) {
+                                contactObj.phoneNumbers.satellite =
+                                    data.phoneNumbers[2].number;
+                            }
+                        }
+                    }
+                    if (data.emailAddresses && data.emailAddresses.length > 0) {
+                        let home = data.emailAddresses.find(element => {
+                            return element.label === 'home';
+                        });
+                        if (home) {
+                            contactObj.emails.home = home.email;
+                        } else {
+                            if (data.emailAddresses[0]) {
+                                contactObj.emails.home =
+                                    data.emailAddresses[0].email;
+                            }
+                        }
+                        let work = data.emailAddresses.find(element => {
+                            return element.label === 'work';
+                        });
+                        if (work) {
+                            contactObj.emails.work = work.email;
+                        } else {
+                            if (data.emailAddresses[1]) {
+                                contactObj.emails.work =
+                                    data.emailAddresses[1].email;
+                            }
+                        }
+                    }
                     contactArray.push(contactObj);
                 }
             });
@@ -205,14 +273,9 @@ export default class LocalContactModal extends React.Component {
     importSelectedContact = () => {
         let selectedContact = { ...this.state.selectedContact };
 
-        // console.log('mapping contact labels ', selectedContact);
+        console.log('mapping contact labels ', selectedContact);
 
         if (selectedContact && Object.keys(selectedContact).length > 0) {
-            selectedContact.phoneNumbers.map(elem => {
-                if (elem.label === 'home') {
-                    elem.label = 'land';
-                }
-            });
             this.props.selectedContact(selectedContact);
         }
         this.props.setVisible(false);

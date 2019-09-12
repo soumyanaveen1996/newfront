@@ -240,8 +240,8 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
         borderColor: GlobalColors.translucentDark,
-        borderBottomWidth: 1,
-        borderTopWidth: 1
+        borderBottomWidth: 0.5,
+        borderTopWidth: 0.5
     },
     actionButtonCD: {
         justifyContent: 'center',
@@ -262,7 +262,7 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.5,
         borderColor: GlobalColors.translucentDark
     },
     labelCD: {
@@ -648,8 +648,6 @@ const stylesheet = StyleSheet.create({
     labelContainer: {
         flex: 2,
         flexDirection: 'row',
-        borderRightColor: 'rgba(221,222,227,1)',
-        borderRightWidth: 1,
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },

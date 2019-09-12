@@ -21,7 +21,7 @@ export const SYSTEM_BOT_MANIFEST = {
         allowResetConversation: 'false',
         botId: 'im-bot',
         botName: 'IMBot',
-        botUrl: 'botfarm/frontmai/imBot/1.10.0/imBot.js',
+        botUrl: 'botfarm/frontmai/imBot/1.11.0/imBot.js',
         category: [],
         dependencies: {
             agentGuardService: {
@@ -46,7 +46,7 @@ export const SYSTEM_BOT_MANIFEST = {
         slug: 'im-bot',
         systemBot: true,
         userDomain: 'frontmai',
-        version: '1.10.0'
+        version: '1.11.0'
     },
 
     'onboarding-bot': {
