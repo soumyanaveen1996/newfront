@@ -20,17 +20,15 @@ class RemoteBotInstall {
             UserServiceClient.getBotSubscriptions(
                 user.creds.sessionId,
                 (err, result) => {
-                    if (err) {
+                    if (err || result.data.error !== 0) {
                         return reject(new Error('Unknown Error'));
-                    }
-                    if (result.data) {
-                        resolve(result);
                     } else {
-                        reject(null);
+                        resolve(result.data);
                     }
                 }
             );
         });
+
     /**
      * Return all the bots the user is subscribed to.
      * @returns {Promise} Array of Bot IDs
@@ -50,7 +48,7 @@ class RemoteBotInstall {
                     //     'list of bots installed ========== ',
                     //     subscribedBots
                     // );
-                    resolve(subscribedBots.data.content);
+                    resolve(subscribedBots.content);
                 })
                 .catch(reject);
         });
@@ -111,14 +109,17 @@ class RemoteBotInstall {
                     }
                 })
                 .then(() => {
-                    Store.dispatch(completeBotInstall(false));
                     return RemoteBotInstall.getSubscribedBots();
                 })
                 .then(async subscribedBotsIds => {
-                    // console.log(
-                    //     'all installed bot from api =========> ',
-                    //     subscribedBotsIds
-                    // );
+                    console.log(
+                        'all installed bot from api =========> ',
+                        subscribedBotsIds
+                    );
+                    if (!subscribedBotsIds) {
+                        Store.dispatch(completeBotInstall(true));
+                        resolve();
+                    }
 
                     if (
                         subscribedBotsIds.favourites === undefined ||

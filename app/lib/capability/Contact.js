@@ -105,7 +105,7 @@ export default class Contact {
                     // Filter for uuidArr
                     uuidArr = uuidArr || [];
                     const frontmContacts = contacts.filter(
-                        contact => contact.contactType !== 'Personal'
+                        contact => contact.contactType !== 'local'
                     );
                     let filteredContacts = _.filter(frontmContacts, contact => {
                         return uuidArr.indexOf(contact.userId) > -1;
@@ -405,15 +405,6 @@ export default class Contact {
         return result;
     };
 
-    static addUniqueUserId(arr) {
-        arr.map(elem => {
-            // console.log('local contacts ', elem);
-            elem.contactType = 'Personal';
-        });
-
-        return arr;
-    }
-
     static refreshContacts = () =>
         new Promise((resolve, reject) => {
             Auth.getUser()
@@ -427,10 +418,10 @@ export default class Contact {
                 })
                 .then(response => {
                     if (response.data) {
-                        // console.log(
-                        //     'data===============================',
-                        //     response.data.contacts
-                        // );
+                        console.log(
+                            'data===============================',
+                            response.data
+                        );
 
                         console.log(
                             'Sourav Logging:::: Contacts Data --------->',
@@ -442,6 +433,7 @@ export default class Contact {
                             response.data.contacts,
                             contact => {
                                 return _.extend({}, contact, {
+                                    contactType: 'frontm',
                                     ignored: false,
                                     type: 'People'
                                 });
@@ -449,15 +441,16 @@ export default class Contact {
                         );
                         // var localContacts = [...response.data.localContacts];
                         //LOCAL CONTACTS
-                        var localContacts = Contact.addUniqueUserId(
-                            response.data.localContacts
+
+                        var localContacts = response.data.localContacts.map(
+                            contact => {
+                                return {
+                                    ...contact,
+                                    type: 'People',
+                                    contactType: 'local'
+                                };
+                            }
                         );
-                        localContacts = localContacts.map(contact => {
-                            return {
-                                ...contact,
-                                type: 'People'
-                            };
-                        });
                         //IGNORED CONTACTS
                         var ignored = _.map(response.data.contacts, contact => {
                             return _.extend({}, contact, { ignored: true });

@@ -13,7 +13,7 @@ import {
     ArrayStorageDAO
 } from '../../lib/persistence';
 import Bot from '../../lib/bot/index';
-import { Network } from '../capability';
+import { Network, Notification } from '../capability';
 import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
 import { Twilio } from '../twilio';

@@ -166,7 +166,7 @@ export default class GetCredit extends React.Component {
                         <Text
                             style={[styles.currency, { alignSelf: 'center' }]}
                         >
-                            You will be charge in your local currency.
+                            You will be charged in your local currency.
                         </Text>
                     </View>
                 </View>

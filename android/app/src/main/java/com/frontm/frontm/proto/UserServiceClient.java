@@ -20,6 +20,7 @@ import com.frontm.commonmessages.proto.SelectedDomainInput;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BotSubscriptionsResponseConverter;
 import com.frontm.frontm.proto.converters.ContactsResponseConverter;
+import com.frontm.frontm.proto.converters.DeviceBoolResponseConverter;
 import com.frontm.frontm.proto.converters.SigninResponseConverter;
 import com.frontm.frontm.proto.converters.SignupResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
@@ -58,6 +59,8 @@ import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
 import com.frontm.user.proto.TopupBalanceInput;
 import com.frontm.user.proto.TopupBalanceResponse;
+import com.frontm.user.proto.DeviceInfo;
+import com.frontm.user.proto.DeviceBoolResponse;
 
 
 public class UserServiceClient extends ReactContextBaseJavaModule {
@@ -586,6 +589,70 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             @Override
             public void onNext(TopupBalanceResponse value) {
                 callback.invoke(null, new TopupBalanceResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void registerDevice(String sessionId, ReadableMap param, final Callback callback)
+    {
+        Log.d("GRPC:::RegisterDevice", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        DeviceInfo input = DeviceInfo.newBuilder()
+                .setDeviceToken(param.getString("deviceToken"))
+                .setDeviceType("android")
+                .build();
+        stub.registerDevice(input, new StreamObserver<DeviceBoolResponse>() {
+            @Override
+            public void onNext(DeviceBoolResponse value) {
+                callback.invoke(null, new DeviceBoolResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void deregisterDevice(String sessionId, ReadableMap param, final Callback callback)
+    {
+        Log.d("GRPC:::deregisterDevice", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        DeviceInfo input = DeviceInfo.newBuilder()
+                .setDeviceToken(param.getString("deviceToken"))
+                .setDeviceType("android")
+                .build();
+        stub.deregisterDevice(input, new StreamObserver<DeviceBoolResponse>() {
+            @Override
+            public void onNext(DeviceBoolResponse value) {
+                callback.invoke(null, new DeviceBoolResponseConverter().toResponse(value));
             }
 
             @Override

@@ -240,8 +240,8 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
         borderColor: GlobalColors.translucentDark,
-        borderBottomWidth: 1,
-        borderTopWidth: 1
+        borderBottomWidth: 0.5,
+        borderTopWidth: 0.5
     },
     actionButtonCD: {
         justifyContent: 'center',
@@ -262,7 +262,7 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: GlobalColors.white,
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.5,
         borderColor: GlobalColors.translucentDark
     },
     labelCD: {
@@ -636,20 +636,36 @@ const stylesheet = StyleSheet.create({
         backgroundColor: 'transparent',
         color: 'rgba(102, 102, 102, 1)',
         fontFamily: 'SF Pro Text',
-        fontSize: 12
+        fontSize: 12,
+        paddingHorizontal: 10,
+        alignSelf: 'center'
+    },
+    inputPrefix: {
+        width: '25%',
+        height: '100%',
+        backgroundColor: 'transparent',
+        color: 'rgba(102, 102, 102, 1)',
+        fontFamily: 'SF Pro Text',
+        fontSize: 12,
+        borderRightWidth: 1,
+        borderRightColor: 'rgba(221,222,227,1)',
+        borderLeftWidth: 1,
+        borderLeftColor: 'rgba(221,222,227,1)',
+        textAlign: 'center',
+        alignItems: 'center',
+        alignSelf: 'center'
     },
     mainInfoRenderContainer: {
         width: '100%',
         height: 50,
         flexDirection: 'row',
         borderBottomColor: 'rgba(221,222,227,1)',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        alignItems: 'stretch'
     },
     labelContainer: {
         flex: 2,
         flexDirection: 'row',
-        borderRightColor: 'rgba(221,222,227,1)',
-        borderRightWidth: 1,
         alignItems: 'center',
         justifyContent: 'space-evenly'
     },
@@ -666,8 +682,8 @@ const stylesheet = StyleSheet.create({
         flex: 3,
         paddingHorizontal: 20,
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        alignItems: 'stretch',
+        justifyContent: 'flex-start'
     },
     infoLabelStyle: {
         color: 'rgba(102, 102, 102, 1)',

@@ -103,5 +103,17 @@
              responseClass:[AgentGuardBoolResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark Update(ContactsInput) returns (AgentGuardBoolResponse)
+
+- (void)updateWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToUpdateWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToUpdateWithRequest:(ContactsInput *)request handler:(void(^)(AgentGuardBoolResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"Update"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[AgentGuardBoolResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

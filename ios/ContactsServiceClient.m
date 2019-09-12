@@ -109,6 +109,60 @@ RCT_REMAP_METHOD(add, addWithSessionId:(NSString *)sessionId andParams:(NSDictio
   [call start];
 }
 
+RCT_REMAP_METHOD(update, updateWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::ContactService  method:update Params : %@", sessionId);
+  
+  
+  ContactsInput *idList = [ContactsInput new];
+  
+  
+  //  UserIdList *idList = [UserIdList new];
+  if (params[@"userIds"] != nil) {
+    idList.userIdsArray = params[@"userIds"];
+  }
+  if(params[@"localContacts"] != nil){
+    NSArray *localContactsArray = params[@"localContacts"];
+    for (int i=0; i < [localContactsArray count]; i++) {
+      NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userName = lContactsDict[@"userName"];
+      NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
+      NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
+      
+      EmailAddresses *emailAddresses = [EmailAddresses new];
+      emailAddresses.home = emailAddressesDict[@"home"];
+      emailAddresses.work = emailAddressesDict[@"work"];
+      
+      PhoneNumbers *phoneNumbers = [PhoneNumbers new];
+      phoneNumbers.satellite = phoneNumbersDict[@"satellite"];
+      phoneNumbers.land = phoneNumbersDict[@"land"];
+      phoneNumbers.mobile = phoneNumbersDict[@"mobile"];
+      
+      LocalContact *localContact = [LocalContact new];
+      localContact.userName = userName;
+      localContact.phoneNumbers = phoneNumbers;
+      localContact.emailAddresses = emailAddresses;
+      
+      [idList.localContactsArray addObject:localContact];
+      
+    }
+  }
+  
+  
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToUpdateWithRequest:idList handler:^(AgentGuardBoolResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
 
 RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::ContactService method:accept Params : %@", sessionId);

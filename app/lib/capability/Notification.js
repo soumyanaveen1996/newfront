@@ -3,131 +3,264 @@ import DeviceStorage from './DeviceStorage';
 import EventEmitter, { NotificationEvents } from '../../lib/events';
 import config from '../../config/config';
 import RL from '../../lib/utils/remoteDebugger';
+import { NativeModules, Platform, PushNotificationIOS } from 'react-native';
+import { Auth } from '.';
+import { NetworkHandler } from '../network';
+import Bot from '../bot';
+import { Conversation } from '../conversation';
+import SystemBot from '../bot/SystemBot';
+import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import ReduxStore from '../../redux/store/configureStore';
+import { Actions } from 'react-native-router-flux';
+
+const UserServiceClient = NativeModules.UserServiceClient;
 
 const NotificationKeys = {
     notification: 'notification'
 };
 
 export default class Notification {
-    static registerOnLaunch = () => {
-        DeviceStorage.get(NotificationKeys.notification).then(value => {
-            if (value) {
-                value.isRegistered = true;
-                DeviceStorage.save(NotificationKeys.notification, value)
-                    .then(() => {
-                        EventEmitter.emit(
-                            NotificationEvents.registeredNotifications
-                        );
-
-                        clearTimeout(timer);
-                        resolve(value);
-                    })
-                    .catch(error => {
-                        clearTimeout(timer);
-                        reject(error);
-                    });
+    static requestPermission = () => {
+        PushNotification.checkPermissions(permissions => {
+            if (!permissions.alert) {
+                Notification.configure();
+                PushNotification.requestPermissions([1, 1, 1]);
             }
         });
     };
 
-    static register = () =>
-        new Promise((resolve, reject) => {
-            let timer = setTimeout(function() {
-                reject('No Notifications');
-            }, 10000);
+    static configure = () => {
+        console.log('Configuring notifications');
+        PushNotification.configure({
+            onRegister: Notification.handleRegister,
+            onNotification: Notification.handleNotification,
+            senderID: config.gcm.senderID,
+            requestPermissions: false,
+            onError: error => {
+                console.log('onError', error);
+                reject(error);
+            }
+        });
 
-            DeviceStorage.get(NotificationKeys.notification)
-                .then(value => {
-                    if (value) {
-                        value.isRegistered = true;
-                        DeviceStorage.save(NotificationKeys.notification, value)
-                            .then(() => {
-                                EventEmitter.emit(
-                                    NotificationEvents.registeredNotifications
+        if (Platform.OS === 'ios') {
+            PushNotificationIOS.addEventListener(
+                'notification',
+                notification => {
+                    // NetworkHandler.readLambda();
+                    // notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+            PushNotificationIOS.addEventListener(
+                'localNotification',
+                notification => {
+                    // NetworkHandler.readLambda(true);
+                    notification.finish(PushNotificationIOS.FetchResult.NoData);
+                }
+            );
+        }
+    };
+
+    static grpcRegisterDevice(deviceToken) {
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    UserServiceClient.registerDevice(
+                        user.creds.sessionId,
+                        {
+                            deviceToken: deviceToken
+                        },
+                        (error, result) => {
+                            console.log(
+                                'GRPC:::register device for notifications : ',
+                                error,
+                                result
+                            );
+                            if (error) {
+                                console.log(
+                                    'error on registering device ',
+                                    error
                                 );
-
-                                clearTimeout(timer);
-                                resolve(value);
-                            })
-                            .catch(error => {
-                                clearTimeout(timer);
                                 reject(error);
-                            });
-                    } else {
-                        PushNotification.configure({
-                            onRegister: function(response) {
-                                console.log('onRegister', response);
-                                if (response) {
-                                    var notificationDeviceInfo = {
-                                        deviceType:
-                                            response.os === 'ios'
-                                                ? 'iphone'
-                                                : 'android',
-                                        deviceId: response.token,
-                                        isRegistered: true
-                                    };
-                                    console.log(
-                                        'Notification device info : ',
-                                        notificationDeviceInfo
-                                    );
-
-                                    DeviceStorage.save(
-                                        NotificationKeys.notification,
-                                        notificationDeviceInfo
-                                    )
-                                        .then(() => {
-                                            EventEmitter.emit(
-                                                NotificationEvents.registeredNotifications
-                                            );
-                                            clearTimeout(timer);
-                                            resolve(notificationDeviceInfo);
-                                        })
-                                        .catch(error => {
-                                            clearTimeout(timer);
-                                            reject(error);
-                                        });
+                            } else {
+                                if (result.data.error === 0) {
+                                    resolve();
                                 } else {
-                                    clearTimeout(timer);
-                                    reject(new Error('User cancelled'));
+                                    reject(result.data.error);
                                 }
-                            },
-                            senderID: config.gcm.senderID,
-                            requestPermissions: true,
-                            onError: error => {
-                                RL(`Error occured getting Device token 
-
-                                > ${JSON.stringify(error)}
-                                
-                                `);
-                                console.log('onError', error);
-                                clearTimeout(timer);
-                                reject(error);
                             }
-                        });
-                    }
+                        }
+                    );
                 })
                 .catch(error => {
                     reject(error);
                 });
         });
+    }
+
+    static grpcDeregisterDevice(deviceToken) {
+        return new Promise((resolve, reject) => {
+            Auth.getUser()
+                .then(user => {
+                    UserServiceClient.deregisterDevice(
+                        user.creds.sessionId,
+                        {
+                            deviceToken: deviceToken
+                        },
+                        (error, result) => {
+                            console.log(
+                                'GRPC:::deregister device for notifications : ',
+                                error,
+                                result
+                            );
+                            if (error) {
+                                console.log(
+                                    'error on deregistering device ',
+                                    error
+                                );
+                                reject(error);
+                            } else {
+                                if (result.data.error === 0) {
+                                    resolve();
+                                } else {
+                                    reject(result.data.error);
+                                }
+                            }
+                        }
+                    );
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
+    static handleRegister = token =>
+        new Promise((resolve, reject) => {
+            console.log('onRegister', token);
+            if (token) {
+                var notificationDeviceInfo = {
+                    deviceType: token.os === 'ios' ? 'iphone' : 'android',
+                    deviceId: token.token,
+                    isRegistered: true
+                };
+                console.log(
+                    'Notification device info : ',
+                    notificationDeviceInfo
+                );
+                Notification.grpcRegisterDevice(token.token)
+                    .then(() => {
+                        return DeviceStorage.save(
+                            NotificationKeys.notification,
+                            notificationDeviceInfo
+                        );
+                    })
+                    .then(obj => {
+                        resolve();
+                    })
+                    .catch(e => {
+                        reject(new Error('Could not register'));
+                    });
+            } else {
+                reject(new Error('User cancelled'));
+            }
+        });
+
+    static handleNotification = notification => {
+        NetworkHandler.poll();
+        Bot.grpcheartbeatCatalog();
+        // AgentGuard.heartBeat();
+        let conversation;
+        if (!notification.foreground && notification.userInteraction) {
+            const conversationId =
+                Platform.OS === 'android'
+                    ? notification.conversationId
+                    : notification.data.conversationId;
+            PushNotification.setApplicationIconBadgeNumber(0);
+            Conversation.getConversation(conversationId)
+                .then(conv => {
+                    conversation = conv;
+                    return SystemBot.get(SystemBot.imBotManifestName);
+                })
+                .then(imBot => {
+                    if (conversation.type === IM_CHAT) {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.peopleChat
+                        ) {
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
+                        } else {
+                            Actions.peopleChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    } else {
+                        if (
+                            Actions.currentScene ===
+                            ROUTER_SCENE_KEYS.channelChat
+                        ) {
+                            if (
+                                ReduxStore.getState().user
+                                    .currentConversationId !==
+                                conversation.conversationId
+                            ) {
+                                Actions.refresh({
+                                    key: Math.random(),
+                                    bot: imBot,
+                                    conversation: conversation
+                                    // onBack: this.props.onBack
+                                });
+                            }
+                        } else {
+                            Actions.channelChat({
+                                bot: imBot,
+                                conversation: conversation
+                                // onBack: this.props.onBack
+                            });
+                        }
+                    }
+                });
+        }
+        if (Platform.OS === 'ios') {
+            notification.finish(PushNotificationIOS.FetchResult.NoData);
+        }
+    };
 
     static deregister = () =>
         new Promise((resolve, reject) => {
+            let device;
+            PushNotification.unregister();
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {
                     if (value) {
-                        value.isRegistered = false;
-                        return DeviceStorage.save(
-                            NotificationKeys.notification,
-                            value
+                        device = value;
+                        return Notification.grpcDeregisterDevice(
+                            value.deviceId
                         );
                     } else {
                         reject(new Error('Device not registered'));
                     }
                 })
-                .then(value => {
-                    resolve(value);
+                .then(() => {
+                    device.isRegistered = false;
+                    return DeviceStorage.save(
+                        NotificationKeys.notification,
+                        device
+                    );
                 })
+                .then(resolve)
                 .catch(error => {
                     reject(error);
                 });
@@ -143,16 +276,6 @@ export default class Notification {
                     reject(error);
                 });
         });
-
-    static configure = (notificationHandler = undefined) => {
-        console.log('Configuring notifications');
-        if (notificationHandler) {
-            PushNotification.configure({
-                onRegister: () => {},
-                onNotification: notificationHandler
-            });
-        }
-    };
 
     static sendLocalNotification(message, details = {}) {
         PushNotification.localNotification({

@@ -45,6 +45,7 @@ export default class ContactDetailsScreen extends React.Component {
 
     componentDidMount() {
         // this.props.contact = this.props.contact;
+        console.log('>>>>>>>s', this.props.contact);
     }
 
     startChat() {
@@ -78,13 +79,6 @@ export default class ContactDetailsScreen extends React.Component {
         return (
             <View style={styles.topContainerCD}>
                 <View style={styles.topAreaCD}>
-                    {/* <TouchableOpacity style={styles.topButtonCD}>
-                        <Icon
-                            name="share"
-                            size={16}
-                            color={GlobalColors.sideButtons}
-                        />
-                    </TouchableOpacity> */}
                     <ProfileImage
                         uuid={this.props.contact.id}
                         placeholder={Images.user_image}
@@ -92,13 +86,28 @@ export default class ContactDetailsScreen extends React.Component {
                         placeholderStyle={styles.propicCD}
                         resizeMode="cover"
                     />
-                    {/* <TouchableOpacity style={styles.topButtonCD}>
-                        <Icon
-                            name="edit"
-                            size={16}
-                            color={GlobalColors.sideButtons}
-                        />
-                    </TouchableOpacity> */}
+                    {this.props.contact.contactType === 'local' ? (
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute',
+                                right: 20
+                            }}
+                            accessibilityLabel="More Button"
+                            onPress={() => {
+                                Actions.newContactScreen({
+                                    contact: this.props.contact
+                                });
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: 60,
+                                    height: 60
+                                }}
+                                source={images.edit_btn}
+                            />
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
                 <Text style={styles.nameCD}>{this.props.contact.name}</Text>
                 {this.props.contact.isWaitingForConfirmation ? (
@@ -120,24 +129,22 @@ export default class ContactDetailsScreen extends React.Component {
     compareEmail = contact => {
         const { emailAddresses = [] } = contact;
         const phoneEmails = emailAddresses.map(email => email.email);
-        const { emails } = this.props.contact;
         // console.log('emails fo contacts ', phoneEmails);
-
-        let contactEmail = emails.map(email => {
-            // console.log('email check ', email.email);
-
-            if (email.email.work && email.email.work !== '') {
-                return email.email.work;
+        if (this.props.contact.contactType === 'local') {
+            const localEmails = Object.values(
+                this.props.contact.emailAddresses
+            );
+            return R.intersection(localEmails, phoneEmails).length > 0;
+        } else {
+            const found = phoneEmails.find(email => {
+                email === this.props.contact.emailAddress;
+            });
+            if (found) {
+                return true;
+            } else {
+                return false;
             }
-
-            if (email.email.home && email.email.home !== '') {
-                return email.email.home;
-            }
-
-            return email.email;
-        });
-
-        return R.intersection(contactEmail, phoneEmails).length > 0;
+        }
     };
 
     getLocalContacts = async () => {
@@ -424,7 +431,7 @@ export default class ContactDetailsScreen extends React.Component {
     checkFavourite = () => {
         if (
             this.props.contact.contactType &&
-            this.props.contact.contactType !== 'Personal'
+            this.props.contact.contactType !== 'local'
         ) {
             if (this.state.isFavourite) {
                 return (
@@ -481,7 +488,7 @@ export default class ContactDetailsScreen extends React.Component {
             return (
                 <View style={styles.actionAreaCD}>
                     {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' &&
+                    this.props.contact.contactType !== 'local' &&
                     this.props.contact.type !== 'Vessels' ? (
                             <TouchableOpacity
                                 style={styles.actionButtonCD}
@@ -501,21 +508,29 @@ export default class ContactDetailsScreen extends React.Component {
                                 <Text>Chat</Text>
                             </TouchableOpacity>
                         ) : null}
+                    {this.props.contact.contactType === 'local' &&
+                    (!this.props.contact.phoneNumbers ||
+                        !Object.values(this.props.contact.phoneNumbers).find(
+                            number => {
+                                return number;
+                            }
+                        )) ? null : (
+                            <TouchableOpacity
+                                style={styles.actionButtonCD}
+                                onPress={this.callContact.bind(this)}
+                            >
+                                <View
+                                    style={[
+                                        styles.actionIconCD,
+                                        { backgroundColor: GlobalColors.green }
+                                    ]}
+                                >
+                                    <Icon name="call" size={16} color={'white'} />
+                                </View>
+                                <Text>Call</Text>
+                            </TouchableOpacity>
+                        )}
 
-                    <TouchableOpacity
-                        style={styles.actionButtonCD}
-                        onPress={this.callContact.bind(this)}
-                    >
-                        <View
-                            style={[
-                                styles.actionIconCD,
-                                { backgroundColor: GlobalColors.green }
-                            ]}
-                        >
-                            <Icon name="call" size={16} color={'white'} />
-                        </View>
-                        <Text>Call</Text>
-                    </TouchableOpacity>
                     {this.checkFavourite()}
                 </View>
             );
@@ -558,9 +573,7 @@ export default class ContactDetailsScreen extends React.Component {
         if (!this.props.contact.isWaitingForConfirmation) {
             return (
                 <View>
-                    {this.props.contact.phoneNumbers
-                        ? this.renderNumbers()
-                        : null}
+                    {this.renderNumbers()}
                     {this.renderEmails()}
                 </View>
             );
@@ -568,6 +581,7 @@ export default class ContactDetailsScreen extends React.Component {
             return null;
         }
     }
+
     deletePersonalContact = () => {
         this.setState({ loading: true });
         let { name, phoneNumbers, emails, id } = this.props.contact;
@@ -675,7 +689,8 @@ export default class ContactDetailsScreen extends React.Component {
 
         if (
             this.props.contact.isWaitingForConfirmation ||
-            !this.props.contact.emails[0].email
+            (!this.props.contact.emailAddress &&
+                !this.props.contact.emailAddresses)
         ) {
             return <View />;
         }
@@ -690,18 +705,9 @@ export default class ContactDetailsScreen extends React.Component {
             >
                 <TouchableOpacity
                     onPress={this.importLocalContacts}
-                    style={{
-                        borderWidth: 0.5,
-                        borderColor: 'rgba(0,167,214,1)',
-                        borderRadius: 6,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 40,
-                        width: wp('70%')
-                    }}
+                    style={styles.import_btn}
                 >
-                    <Text style={{ color: 'rgba(0,167,214,1)' }}>
+                    <Text style={styles.cancel_text}>
                         Import phone from address book
                     </Text>
                 </TouchableOpacity>
@@ -710,49 +716,52 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderEmails() {
-        if (
-            !this.props.contact.isWaitingForConfirmation &&
-            this.props.contact.emails[0].email &&
-            this.props.contact.emails[0].email.home &&
-            this.props.contact.emails[0].email.home !== ''
-        ) {
-            return _.map(this.props.contact.emails, () =>
-                this.renderDetailRow(
-                    'email',
-                    'Email',
-                    this.props.contact.emails[0].email.home
-                )
-            );
-        } else if (
-            !this.props.contact.isWaitingForConfirmation &&
-            this.props.contact.emails[0].email &&
-            this.props.contact.emails[0].email.work &&
-            this.props.contact.emails[0].email.work !== ''
-        ) {
-            return _.map(this.props.contact.emails, () =>
-                this.renderDetailRow(
-                    'email',
-                    'Email',
-                    this.props.contact.emails[0].email.work
-                )
-            );
-        } else if (
-            !this.props.contact.isWaitingForConfirmation &&
-            this.props.contact.emails[0].email &&
-            typeof this.props.contact.emails[0].email === 'string'
-        ) {
-            return _.map(this.props.contact.emails, () =>
-                this.renderDetailRow(
-                    'email',
-                    'Email',
-                    this.props.contact.emails[0].email
-                )
-            );
+        if (!this.props.contact.isWaitingForConfirmation) {
+            if (
+                this.props.contact.contactType === 'local' &&
+                this.props.contact.emailAddresses
+            ) {
+                return (
+                    <View>
+                        {this.props.contact.emailAddresses.home
+                            ? this.renderDetailRow(
+                                'email',
+                                'Home',
+                                this.props.contact.emailAddresses.home
+                            )
+                            : null}
+                        {this.props.contact.emailAddresses.work
+                            ? this.renderDetailRow(
+                                'email',
+                                'Work',
+                                this.props.contact.emailAddresses.work
+                            )
+                            : null}
+                    </View>
+                );
+            } else {
+                return (
+                    <View>
+                        {this.props.contact.emailAddress
+                            ? this.renderDetailRow(
+                                'email',
+                                'Email',
+                                this.props.contact.emailAddress
+                            )
+                            : null}
+                    </View>
+                );
+            }
+        } else {
+            return null;
         }
     }
 
     renderNumbers() {
-        if (!this.props.contact.isWaitingForConfirmation) {
+        if (
+            !this.props.contact.isWaitingForConfirmation &&
+            this.props.contact.phoneNumbers
+        ) {
             return (
                 <View>
                     {this.props.contact.phoneNumbers.mobile
@@ -774,14 +783,6 @@ export default class ContactDetailsScreen extends React.Component {
                             'satellite',
                             'Satellite',
                             this.props.contact.phoneNumbers.satellite
-                            // 'Unavailable'
-                        )
-                        : null}
-                    {this.props.contact.phoneNumbers.local
-                        ? this.renderDetailRow(
-                            'smartphone',
-                            'Phone*',
-                            this.props.contact.phoneNumbers.local
                             // 'Unavailable'
                         )
                         : null}
@@ -810,29 +811,28 @@ export default class ContactDetailsScreen extends React.Component {
     }
 
     renderDetailRow(icon, label, content) {
+        let iconImage;
+        if (icon === 'smartphone' || icon === 'phone') {
+            iconImage = (
+                <Image source={images.phone_icon} style={styles.phoneIcon} />
+            );
+        } else if (icon === 'satellite') {
+            iconImage = (
+                <Image source={images.satellite} style={styles.satelliteIcon} />
+            );
+        } else if (icon === 'email') {
+            iconImage = (
+                <Image source={images.email_icon} style={styles.emailIcon} />
+            );
+        }
         return (
-            <View style={styles.detailRowCD} key={icon}>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        textAlign: 'left',
-                        flex: 1,
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Icon
-                        name={icon}
-                        size={16}
-                        color={
-                            label === 'Phone*'
-                                ? GlobalColors.grey
-                                : GlobalColors.sideButtons
-                        }
-                    />
-                    <Text style={styles.labelCD}>{label}</Text>
+            <View style={styles.mainInfoRenderContainer}>
+                <View style={styles.labelContainer}>
+                    {iconImage}
+                    <Text style={styles.labelStyle}>{label}</Text>
                 </View>
-                <View style={{ flex: 2 }}>
-                    <Text style={styles.rowContentCD}>{content}</Text>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.inputNumber}>{content}</Text>
                 </View>
             </View>
         );
@@ -852,9 +852,9 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}
-                {this.renderFooterButtons()}
+                {/* {this.renderFooterButtons()} */}
                 {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'Personal' &&
+                    this.props.contact.contactType !== 'local' &&
                     this.props.contact.type !== 'Vessels' && (
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
@@ -880,7 +880,7 @@ export default class ContactDetailsScreen extends React.Component {
                 )}
 
                 {this.props.contact.contactType &&
-                    this.props.contact.contactType === 'Personal' && (
+                    this.props.contact.contactType === 'local' && (
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{

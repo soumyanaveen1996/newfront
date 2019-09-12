@@ -21,6 +21,7 @@
 #import "PhoneNumbers+frontm.h"
 #import "CallHistoryResponse+frontm.h"
 #import "TopupBalanceResponse+frontm.h"
+#import "DeviceBoolResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -305,6 +306,52 @@ RCT_REMAP_METHOD(topupUserBalance, topupUserBalanceWithSessionId:(NSString *)ses
                            }
                          }];
 
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(registerDevice, registerDeviceWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:registerDevice Params : %@", sessionId);
+  
+  DeviceInfo *request = [DeviceInfo new];
+  request.deviceToken = params[@"deviceToken"];
+  request.deviceType = @"iphone";
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToRegisterDeviceWithRequest:request handler:^(DeviceBoolResponse * _Nullable response, NSError * _Nullable error) {
+                           {
+                             if (error != nil) {
+                               callback(@[@{}, [NSNull null]]);
+                               return;
+                             } else {
+                               callback(@[[NSNull null], [response toResponse]]);
+                             }
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(deregisterDevice, deregisterDeviceWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:deregisterDevice Params : %@", sessionId);
+  
+  DeviceInfo *request = [DeviceInfo new];
+  request.deviceToken = params[@"deviceToken"];
+  request.deviceType = @"iphone";
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToDeregisterDeviceWithRequest:request handler:^(DeviceBoolResponse * _Nullable response, NSError * _Nullable error) {
+                           {
+                             if (error != nil) {
+                               callback(@[@{}, [NSNull null]]);
+                               return;
+                             } else {
+                               callback(@[[NSNull null], [response toResponse]]);
+                             }
+                           }
+                         }];
+  
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start];
 }
