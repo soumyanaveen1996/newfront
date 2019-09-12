@@ -360,7 +360,7 @@ export const Icons = {
         'red',
         '500'
     ),
-    speakerOn: icon('unmute', 'octicon', 50, Colors.darkGray, 'red', '500'),
+    speakerOn: icon('unmute', 'octicon', 10, Colors.darkGray, 'red'),
     square: icon('md-square', 'ionicon', 28, GlobalColors.red),
     //FORM
     time: icon('ios-time-outline', 'ionicon', 20, GlobalColors.frontmLightBlue),
