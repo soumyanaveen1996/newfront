@@ -380,7 +380,10 @@ export default class Dialler extends React.Component {
                         filler.release();
                     }
                 });
-                setTimeout(() => this.state.filler.stop(), 43000);
+                setTimeout(() => {
+                    const { filler } = this.state;
+                    filler.stop();
+                }, 42000);
             }
         }
     }
