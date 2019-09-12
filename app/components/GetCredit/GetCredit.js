@@ -7,7 +7,8 @@ import {
     ScrollView,
     SafeAreaView,
     ActivityIndicator,
-    Platform
+    Platform,
+    TextInput
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -19,6 +20,7 @@ import { InAppPurchase } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Bot from '../../lib/bot';
 
 const EventListeners = [];
 
@@ -28,7 +30,10 @@ export default class GetCredit extends React.Component {
         this.state = {
             selectedCredit: undefined,
             updatingBalance: false,
-            purchaseExecuted: false
+            purchaseExecuted: false,
+            codeApplied: false,
+            code: '',
+            showInfo: false
         };
     }
 
@@ -87,6 +92,16 @@ export default class GetCredit extends React.Component {
         });
     }
 
+    applyCode() {
+        Bot.addNewProvider(this.state.code)
+            .then(() => {
+                this.setState({ codeApplied: true });
+            })
+            .catch(error => {
+                this.refs.toast.show(error, DURATION.LENGTH_SHORT);
+            });
+    }
+
     renderTopUpButton(credit) {
         const isSelected = credit === this.state.selectedCredit;
         return (
@@ -122,6 +137,29 @@ export default class GetCredit extends React.Component {
             return <Toast ref="toast" position="bottom" positionValue={350} />;
         } else {
             return <Toast ref="toast" position="center" />;
+        }
+    }
+
+    renderInfoBubble() {
+        if (this.state.showInfo) {
+            return (
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        position: 'absolute',
+                        left: 0,
+                        bottom: 47
+                    }}
+                >
+                    <View style={styles.infoBubble}>
+                        <Text style={styles.infoText}>
+                            Here you can use your code to activate discounted
+                            minutes when you call to satellite numbers.
+                        </Text>
+                    </View>
+                    <View style={styles.infoTip} />
+                </View>
+            );
         }
     }
 
@@ -170,32 +208,88 @@ export default class GetCredit extends React.Component {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity
-                    style={
-                        this.state.selectedCredit || this.state.purchaseExecuted
-                            ? styles.buyButton
-                            : styles.buyButtonDisabled
-                    }
-                    disabled={
-                        !this.state.selectedCredit || this.state.updatingBalance
-                    }
-                    onPress={
-                        this.state.purchaseExecuted
-                            ? this.close.bind(this)
-                            : this.buyCredit.bind(this)
-                    }
-                >
-                    {this.state.updatingBalance ? (
-                        <ActivityIndicator
-                            size="small"
-                            color={GlobalColors.white}
-                        />
-                    ) : (
-                        <Text style={styles.buyButtonText}>
-                            {this.state.purchaseExecuted ? 'Done' : 'Buy'}
+                <View>
+                    <View style={styles.codeArea}>
+                        {/* <Text style={styles.codeText}>{this.state.codeApplied ? 'Your code has been applied.' : null}</Text> */}
+                        <View style={styles.rightCodeArea}>
+                            {this.renderInfoBubble()}
+                            {Icons.info({
+                                size: 27,
+                                color: GlobalColors.frontmLightBlue,
+                                onPress: () => {
+                                    this.setState({
+                                        showInfo: !this.state.showInfo
+                                    });
+                                }
+                            })}
+                            <TextInput
+                                numberOfLines={1}
+                                maxLength={30}
+                                editable={!this.state.codeApplied}
+                                style={
+                                    this.state.codeApplied
+                                        ? styles.codeInputApplied
+                                        : styles.codeInput
+                                }
+                                placeholder={'Partner code'}
+                                placeholderTextColor={GlobalColors.darkGray}
+                                value={this.state.code}
+                                onChangeText={text => {
+                                    this.setState({ code: text });
+                                }}
+                            />
+                            <TouchableOpacity
+                                style={
+                                    this.state.code.length < 2 ||
+                                    this.state.codeApplied
+                                        ? styles.codeButtonDisabled
+                                        : styles.codeButton
+                                }
+                                onPress={this.applyCode.bind(this)}
+                                disabled={
+                                    this.state.code.length < 2 ||
+                                    this.state.codeApplied
+                                }
+                            >
+                                <Text style={styles.codeButtonText}>Apply</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.codeText}>
+                            {this.state.codeApplied
+                                ? 'Your code has been applied.'
+                                : ' '}
                         </Text>
-                    )}
-                </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity
+                        style={
+                            this.state.selectedCredit ||
+                            this.state.purchaseExecuted
+                                ? styles.buyButton
+                                : styles.buyButtonDisabled
+                        }
+                        disabled={
+                            !this.state.selectedCredit ||
+                            this.state.updatingBalance
+                        }
+                        onPress={
+                            this.state.purchaseExecuted
+                                ? this.close.bind(this)
+                                : this.buyCredit.bind(this)
+                        }
+                    >
+                        {this.state.updatingBalance ? (
+                            <ActivityIndicator
+                                size="small"
+                                color={GlobalColors.white}
+                            />
+                        ) : (
+                            <Text style={styles.buyButtonText}>
+                                {this.state.purchaseExecuted ? 'Done' : 'Buy'}
+                            </Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
                 {this.renderToast()}
             </SafeAreaView>
         );
