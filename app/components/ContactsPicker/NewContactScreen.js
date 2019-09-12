@@ -58,16 +58,27 @@ class NewContactScreen extends React.Component {
             user: {},
             profileImage: '',
             reloadProfileImage: '',
-            name: this.props.contact.name || '',
-            phoneNumbers: this.props.contact.phoneNumbers || {
+            name:
+                this.props.contact && this.props.contact.name
+                    ? this.props.contact.name
+                    : '',
+            phoneNumbers: {
                 mobile: '',
                 land: '',
                 satellite: ''
             },
-            emailAddresses: this.props.contact.emailAddresses || {
-                home: '',
-                work: ''
+            prefixes: {
+                mobile: '',
+                land: '',
+                satellite: ''
             },
+            emailAddresses:
+                this.props.contact && this.props.contact.emailAddresses
+                    ? this.props.contact.emailAddresses
+                    : {
+                        home: '',
+                        work: ''
+                    },
             currentIndex: null,
             loading: false,
             modalVisible: false
@@ -76,6 +87,40 @@ class NewContactScreen extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.contact && this.props.contact.phoneNumbers) {
+            if (this.props.contact.phoneNumbers.mobile) {
+                const mobile = this.props.contact.phoneNumbers.mobile.split(
+                    ' '
+                );
+                if (mobile.length > 1) {
+                    this.state.phoneNumbers.mobile = mobile[1];
+                    this.state.prefixes.mobile = mobile[0];
+                } else {
+                    this.state.phoneNumbers.mobile = mobile[0];
+                }
+            }
+            if (this.props.contact.phoneNumbers.land) {
+                const land = this.props.contact.phoneNumbers.land.split(' ');
+                if (land.length > 1) {
+                    this.state.phoneNumbers.land = land[1];
+                    this.state.prefixes.land = land[0];
+                } else {
+                    this.state.phoneNumbers.land = land[0];
+                }
+            }
+            if (this.props.contact.phoneNumbers.satellite) {
+                const satellite = this.props.contact.phoneNumbers.satellite.split(
+                    ' '
+                );
+                if (satellite.length > 1) {
+                    this.state.phoneNumbers.satellite = satellite[1];
+                    this.state.prefixes.satellite = satellite[0];
+                } else {
+                    this.state.phoneNumbers.satellite = satellite[0];
+                }
+            }
+            this.setState({ phoneNumbers: this.state.phoneNumbers });
+        }
         Auth.getUser().then(data => {
             console.log('all data for user', data);
             this.setState({ user: { ...data } });
@@ -116,21 +161,38 @@ class NewContactScreen extends React.Component {
                     {type === 'land' ||
                     type === 'mobile' ||
                     type === 'satellite' ? (
-                            <TextInput
-                                style={styles.inputNumber}
-                                value={this.state.phoneNumbers[type]}
-                                keyboardType="phone-pad"
-                                autoCorrect={false}
-                                maxLength={15}
-                                blurOnSubmit={false}
-                                onChangeText={text => {
-                                    let numbers = this.state.phoneNumbers;
-                                    numbers[type] = text;
-                                    this.setState({ phoneNumbers: numbers });
-                                }}
-                                underlineColorAndroid={'transparent'}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                            />
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <TextInput
+                                    style={styles.inputPrefix}
+                                    value={this.state.prefixes[type]}
+                                    keyboardType="phone-pad"
+                                    autoCorrect={false}
+                                    maxLength={6}
+                                    blurOnSubmit={false}
+                                    onChangeText={text => {
+                                        let numbers = this.state.prefixes;
+                                        numbers[type] = text;
+                                        this.setState({ prefixes: numbers });
+                                    }}
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                />
+                                <TextInput
+                                    style={styles.inputNumber}
+                                    value={this.state.phoneNumbers[type]}
+                                    keyboardType="phone-pad"
+                                    autoCorrect={false}
+                                    maxLength={15}
+                                    blurOnSubmit={false}
+                                    onChangeText={text => {
+                                        let numbers = this.state.phoneNumbers;
+                                        numbers[type] = text;
+                                        this.setState({ phoneNumbers: numbers });
+                                    }}
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                />
+                            </View>
                         ) : (
                             <TextInput
                                 style={styles.inputNumber}
@@ -250,9 +312,22 @@ class NewContactScreen extends React.Component {
         let saveLocalContactData = {
             localContacts: [
                 {
-                    userName: name,
+                    userName: this.state.name,
                     emailAddresses: this.state.emailAddresses,
-                    phoneNumbers: this.state.phoneNumbers
+                    phoneNumbers: {
+                        mobile:
+                            this.state.prefixes.mobile +
+                            ' ' +
+                            this.state.phoneNumbers.mobile,
+                        land:
+                            this.state.prefixes.land +
+                            ' ' +
+                            this.state.phoneNumbers.land,
+                        satellite:
+                            this.state.prefixes.satellite +
+                            ' ' +
+                            this.state.phoneNumbers.satellite
+                    }
                 }
             ]
         };

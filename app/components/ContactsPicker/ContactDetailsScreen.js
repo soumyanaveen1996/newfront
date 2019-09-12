@@ -45,6 +45,7 @@ export default class ContactDetailsScreen extends React.Component {
 
     componentDidMount() {
         // this.props.contact = this.props.contact;
+        console.log('>>>>>>>s', this.props.contact);
     }
 
     startChat() {
