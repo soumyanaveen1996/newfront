@@ -242,7 +242,6 @@ class NewCallContacts extends React.Component {
                     .join(' ')
                 : ''
         }));
-
         const PhoneContacts = Alphabets.map(letter => {
             let contactBook = [];
             if (letter !== '#') {
@@ -287,7 +286,9 @@ class NewCallContacts extends React.Component {
         if (!contacts) {
             return;
         }
-        const FrontMContacts = contacts.filter(contact => !contact.contactType);
+        const FrontMContacts = contacts.filter(contact => {
+            return !contact.contactType || contact.contactType === 'frontm';
+        });
         const AddressBook = this.createAddressBook(FrontMContacts);
         let newAddressBook = AddressBook.filter(elem => {
             return elem.data.length > 0;
