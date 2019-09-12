@@ -18,7 +18,7 @@ export default (stylesheet = StyleSheet.create({
         height: '100%',
         width: '100%',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'stretch',
         paddingTop: '10%',
         backgroundColor: GlobalColors.white
