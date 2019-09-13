@@ -175,32 +175,34 @@ export default class CallModal extends React.Component {
                             </View>
                         </View>
                     ) : null}
-                    <View style={styles.phoneContainer}>
-                        <View style={styles.modalTextContainerImg}>
-                            <Image
-                                style={styles.modalImage}
-                                source={require('../../images/tabbar-marketplace/tabbar-marketplace.png')}
-                            />
-                            <Text style={styles.modalText}>FrontM</Text>
+                    {contactSelected.contactType !== 'local' ? (
+                        <View style={styles.phoneContainer}>
+                            <View style={styles.modalTextContainerImg}>
+                                <Image
+                                    style={styles.modalImage}
+                                    source={require('../../images/tabbar-marketplace/tabbar-marketplace.png')}
+                                />
+                                <Text style={styles.modalText}>FrontM</Text>
+                            </View>
+                            <View style={styles.modalNumberContainer}>
+                                <Text
+                                    style={{
+                                        color: 'rgba(155,155,155,1)'
+                                    }}
+                                >
+                                    Free
+                                </Text>
+                            </View>
+                            <View style={styles.modalCallButContainer}>
+                                <TouchableOpacity
+                                    style={styles.callButton}
+                                    onPress={this.makeVoipCall.bind(this)}
+                                >
+                                    {Icons.greenCallOutline({ size: 16 })}
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={styles.modalNumberContainer}>
-                            <Text
-                                style={{
-                                    color: 'rgba(155,155,155,1)'
-                                }}
-                            >
-                                Free
-                            </Text>
-                        </View>
-                        <View style={styles.modalCallButContainer}>
-                            <TouchableOpacity
-                                style={styles.callButton}
-                                onPress={this.makeVoipCall.bind(this)}
-                            >
-                                {Icons.greenCallOutline({ size: 16 })}
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    ) : null}
                 </View>
             </Modal>
         );

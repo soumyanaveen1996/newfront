@@ -301,7 +301,6 @@ const stylesheet = StyleSheet.create({
         paddingBottom: 25
     },
     doneButtonSU: {
-        position: 'absolute',
         bottom: 25,
         alignSelf: 'center',
         width: '75%',
@@ -447,7 +446,6 @@ const stylesheet = StyleSheet.create({
         fontSize: 16,
         color: 'rgba(102,102,102,1)',
         textAlign: 'center',
-        marginVertical: 15,
         marginLeft: 15
     },
     inviteInput: {
