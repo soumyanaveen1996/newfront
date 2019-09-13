@@ -5,7 +5,8 @@ export const PollingStrategyTypes = {
     manual: 'manual',
     satellite: 'satellite',
     gsm: 'gsm',
-    automatic: 'automatic'
+    automatic: 'automatic',
+    none: 'none'
 };
 
 const POLLING_STRATEGY_SETTING_KEY = 'polling_strategy';

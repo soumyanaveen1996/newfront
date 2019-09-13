@@ -35,12 +35,6 @@ const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
 const R = require('ramda');
 
-const NetworkPollerStates = {
-    gsm: 'gsm',
-    satellite: 'satelite',
-    none: 'none'
-};
-
 // BackgroundTask.define(async () => {
 //     // await NetworkHandler.poll();
 //     RemoteLogger('Firing a Background Task now');
@@ -232,7 +226,7 @@ class NetworkPoller {
             this.connectedToSatellite = true;
             const pollingStrategy = await Settings.getPollingStrategy();
             if (pollingStrategy === PollingStrategyTypes.automatic) {
-                if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
+                if (this.currentPollingStrategy === PollingStrategyTypes.gsm) {
                     await this.stopGSMPolling();
                     await this.startSatellitePolling();
                 }
@@ -247,7 +241,7 @@ class NetworkPoller {
             if (pollingStrategy === PollingStrategyTypes.automatic) {
                 if (
                     this.currentPollingStrategy ===
-                    NetworkPollerStates.satellite
+                    PollingStrategyTypes.satellite
                 ) {
                     await this.stopSatellitePolling();
                     await this.startGSMPolling();
@@ -343,10 +337,10 @@ class NetworkPoller {
 
     stopPolling = async () => {
         console.log('Stop polling');
-        if (this.currentPollingStrategy === NetworkPollerStates.gsm) {
+        if (this.currentPollingStrategy === PollingStrategyTypes.gsm) {
             this.stopGSMPolling();
         } else if (
-            this.currentPollingStrategy === NetworkPollerStates.satellite
+            this.currentPollingStrategy === PollingStrategyTypes.satellite
         ) {
             this.stopSatellitePolling();
         }
@@ -484,7 +478,7 @@ class NetworkPoller {
     };
 
     stopGSMPolling = () => {
-        this.currentPollingStrategy = NetworkPollerStates.none;
+        this.currentPollingStrategy = PollingStrategyTypes.none;
         const pollingFunction =
             Platform.OS === 'ios'
                 ? this.stopAppleGSMPolling
@@ -493,7 +487,7 @@ class NetworkPoller {
     };
 
     startGSMPolling = () => {
-        this.currentPollingStrategy = NetworkPollerStates.gsm;
+        this.currentPollingStrategy = PollingStrategyTypes.gsm;
         const pollingFunction =
             Platform.OS === 'ios'
                 ? this.startAppleGSMPolling
@@ -502,7 +496,7 @@ class NetworkPoller {
     };
 
     stopSatellitePolling = () => {
-        this.currentPollingStrategy = NetworkPollerStates.none;
+        this.currentPollingStrategy = PollingStrategyTypes.none;
         const pollingFunction =
             Platform.OS === 'ios'
                 ? this.stopAppleSatellitePolling
@@ -511,7 +505,7 @@ class NetworkPoller {
     };
 
     startSatellitePolling = () => {
-        this.currentPollingStrategy = NetworkPollerStates.satellite;
+        this.currentPollingStrategy = PollingStrategyTypes.satellite;
         const pollingFunction =
             Platform.OS === 'ios'
                 ? this.startAppleSatellitePolling
