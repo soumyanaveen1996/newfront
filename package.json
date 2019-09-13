@@ -77,7 +77,7 @@
     "react-native-google-signin": "^2.0.0",
     "react-native-hyperlink": "^0.0.14",
     "react-native-i18n": "^2.0.4",
-    "react-native-iap": "^2.3.1",
+    "react-native-iap": "^3.4.6",
     "react-native-image-picker": "^0.26.7",
     "react-native-image-placeholder": "^1.0.14",
     "react-native-image-resizer": "^1.0.0",

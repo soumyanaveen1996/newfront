@@ -7,7 +7,9 @@ import {
     ScrollView,
     SafeAreaView,
     ActivityIndicator,
-    Platform
+    Platform,
+    TextInput,
+    KeyboardAvoidingView
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -19,6 +21,8 @@ import { InAppPurchase } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
+import Bot from '../../lib/bot';
+import * as RNIap from 'react-native-iap';
 
 const EventListeners = [];
 
@@ -28,11 +32,22 @@ export default class GetCredit extends React.Component {
         this.state = {
             selectedCredit: undefined,
             updatingBalance: false,
-            purchaseExecuted: false
+            purchaseExecuted: false,
+            codeApplied: false,
+            code: '',
+            showInfo: false
         };
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
+            this.purchaseHandler.bind(this)
+        );
+        this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
+            console.warn('purchaseErrorListener', error);
+            this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+        });
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.currentBalance !== this.props.currentBalance) {
@@ -41,6 +56,43 @@ export default class GetCredit extends React.Component {
                 purchaseExecuted: true,
                 selectedCredit: undefined
             });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.purchaseUpdateSubscription) {
+            this.purchaseUpdateSubscription.remove();
+            this.purchaseUpdateSubscription = null;
+        }
+        if (this.purchaseErrorSubscription) {
+            this.purchaseErrorSubscription.remove();
+            this.purchaseErrorSubscription = null;
+        }
+    }
+
+    purchaseHandler(purchase) {
+        console.log('>>>>purchaseUpdatedListener', purchase);
+        const receipt = purchase.transactionReceipt;
+        if (receipt) {
+            InAppPurchase.grpcTopupUserBalance(
+                '100',
+                parseFloat(this.state.selectedCredit),
+                'sampleToken'
+            )
+                .then(deliveryResult => {
+                    if (Platform.OS === 'ios') {
+                        RNIap.finishTransactionIOS(purchase.transactionId);
+                    } else if (Platform.OS === 'android') {
+                        RNIap.acknowledgePurchaseAndroid(
+                            purchase.purchaseToken
+                        );
+                    }
+                    this.setState({ updatingBalance: false });
+                })
+                .catch(e => {
+                    this.setState({ updatingBalance: false });
+                    this.refs.toast.show(e.toString(), DURATION.LENGTH_SHORT);
+                });
         }
     }
 
@@ -76,10 +128,8 @@ export default class GetCredit extends React.Component {
             }
             try {
                 await InAppPurchase.buyProduct({
-                    productCode: productCode,
-                    price: parseFloat(this.state.selectedCredit)
+                    productCode: productCode
                 });
-                // this.setState({ updatingBalance: false });
             } catch (error) {
                 this.setState({ updatingBalance: false });
                 this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
@@ -87,11 +137,23 @@ export default class GetCredit extends React.Component {
         });
     }
 
+    applyCode() {
+        Bot.addNewProvider(this.state.code)
+            .then(() => {
+                this.setState({ codeApplied: true });
+            })
+            .catch(error => {
+                this.refs.toast.show(error, DURATION.LENGTH_SHORT);
+            });
+    }
+
     renderTopUpButton(credit) {
         const isSelected = credit === this.state.selectedCredit;
         return (
             <TouchableOpacity
-                disabled={this.state.purchaseExecuted}
+                disabled={
+                    this.state.purchaseExecuted || this.state.updatingBalance
+                }
                 style={
                     isSelected
                         ? styles.creditButtonSelected
@@ -125,79 +187,182 @@ export default class GetCredit extends React.Component {
         }
     }
 
+    renderInfoBubble() {
+        if (this.state.showInfo) {
+            return (
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        position: 'absolute',
+                        left: 0,
+                        bottom: 47
+                    }}
+                >
+                    <View style={styles.infoBubble}>
+                        <Text style={styles.infoText}>
+                            Here you can use your code to activate discounted
+                            minutes when you call to satellite numbers.
+                        </Text>
+                    </View>
+                    <View style={styles.infoTip} />
+                </View>
+            );
+        }
+    }
+
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.topContainer}>
-                    <View>
-                        <Text style={styles.title}>Your balance:</Text>
-                        {this.state.updatingBalance ? (
-                            <ActivityIndicator
-                                size="large"
-                                color={GlobalColors.frontmLightBlue}
-                            />
-                        ) : (
-                            <Text style={styles.balance}>
-                                {this.props.currentBalance.toFixed(2)}
-                                <Text
-                                    style={[styles.currency, { fontSize: 16 }]}
-                                >
-                                    {' '}
-                                    $
-                                </Text>
-                            </Text>
-                        )}
-                    </View>
-                    <View>
-                        <Text style={styles.title}>Get credit</Text>
-                        <View style={styles.creditRow}>
-                            {this.renderTopUpButton('4.99')}
-                            {this.renderTopUpButton('9.99')}
-                        </View>
-                        <View style={styles.creditRow}>
-                            {this.renderTopUpButton('49.99')}
-                            {this.renderTopUpButton('99.99')}
-                        </View>
-                        <Text
-                            style={[styles.currency, { alignSelf: 'center' }]}
-                        >
-                            The prices above are in US dollars.
-                        </Text>
-                        <Text
-                            style={[styles.currency, { alignSelf: 'center' }]}
-                        >
-                            You will be charged in your local currency.
-                        </Text>
-                    </View>
-                </View>
-                <TouchableOpacity
-                    style={
-                        this.state.selectedCredit || this.state.purchaseExecuted
-                            ? styles.buyButton
-                            : styles.buyButtonDisabled
-                    }
-                    disabled={
-                        !this.state.selectedCredit || this.state.updatingBalance
-                    }
-                    onPress={
-                        this.state.purchaseExecuted
-                            ? this.close.bind(this)
-                            : this.buyCredit.bind(this)
-                    }
+            <ScrollView
+                style={{ height: '100%' }}
+                contentContainerStyle={
+                    Platform.OS === 'ios' ? { height: '100%' } : null
+                }
+                bounces={false}
+            >
+                <KeyboardAvoidingView
+                    style={styles.container}
+                    behavior={Platform.OS === 'ios' ? 'position' : null}
                 >
-                    {this.state.updatingBalance ? (
-                        <ActivityIndicator
-                            size="small"
-                            color={GlobalColors.white}
-                        />
-                    ) : (
-                        <Text style={styles.buyButtonText}>
-                            {this.state.purchaseExecuted ? 'Done' : 'Buy'}
-                        </Text>
-                    )}
-                </TouchableOpacity>
-                {this.renderToast()}
-            </SafeAreaView>
+                    {this.renderToast()}
+                    <View style={styles.topContainer}>
+                        <View>
+                            <Text style={styles.title}>Your balance:</Text>
+                            {this.state.updatingBalance ? (
+                                <ActivityIndicator
+                                    size="large"
+                                    color={GlobalColors.frontmLightBlue}
+                                />
+                            ) : (
+                                <Text style={styles.balance}>
+                                    {this.props.currentBalance.toFixed(2)}
+                                    <Text
+                                        style={[
+                                            styles.currency,
+                                            { fontSize: 16 }
+                                        ]}
+                                    >
+                                        {' '}
+                                        $
+                                    </Text>
+                                </Text>
+                            )}
+                        </View>
+                        <View>
+                            <Text style={styles.title}>Get credit</Text>
+                            <View style={styles.creditRow}>
+                                {this.renderTopUpButton('4.99')}
+                                {this.renderTopUpButton('9.99')}
+                            </View>
+                            <View style={styles.creditRow}>
+                                {this.renderTopUpButton('49.99')}
+                                {this.renderTopUpButton('99.99')}
+                            </View>
+                            <Text
+                                style={[
+                                    styles.currency,
+                                    { alignSelf: 'center' }
+                                ]}
+                            >
+                                The prices above are in US dollars.
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.currency,
+                                    { alignSelf: 'center' }
+                                ]}
+                            >
+                                You will be charged in your local currency.
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={{ marginTop: '15%' }}>
+                        <View style={styles.codeArea}>
+                            {/* <Text style={styles.codeText}>{this.state.codeApplied ? 'Your code has been applied.' : null}</Text> */}
+                            <View style={styles.rightCodeArea}>
+                                {this.renderInfoBubble()}
+                                {Icons.info({
+                                    size: 27,
+                                    color: GlobalColors.frontmLightBlue,
+                                    onPress: () => {
+                                        this.setState({
+                                            showInfo: !this.state.showInfo
+                                        });
+                                    }
+                                })}
+                                <TextInput
+                                    numberOfLines={1}
+                                    maxLength={30}
+                                    editable={!this.state.codeApplied}
+                                    style={
+                                        this.state.codeApplied
+                                            ? styles.codeInputApplied
+                                            : styles.codeInput
+                                    }
+                                    placeholder={'Partner code'}
+                                    placeholderTextColor={GlobalColors.darkGray}
+                                    value={this.state.code}
+                                    onChangeText={text => {
+                                        this.setState({ code: text });
+                                    }}
+                                />
+                                <TouchableOpacity
+                                    style={
+                                        this.state.code.length < 2 ||
+                                        this.state.codeApplied
+                                            ? styles.codeButtonDisabled
+                                            : styles.codeButton
+                                    }
+                                    onPress={this.applyCode.bind(this)}
+                                    disabled={
+                                        this.state.code.length < 2 ||
+                                        this.state.codeApplied
+                                    }
+                                >
+                                    <Text style={styles.codeButtonText}>
+                                        Apply
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.codeText}>
+                                {this.state.codeApplied
+                                    ? 'Your code has been applied.'
+                                    : ' '}
+                            </Text>
+                        </View>
+
+                        <TouchableOpacity
+                            style={
+                                this.state.selectedCredit ||
+                                this.state.purchaseExecuted
+                                    ? styles.buyButton
+                                    : styles.buyButtonDisabled
+                            }
+                            disabled={
+                                !this.state.selectedCredit ||
+                                this.state.updatingBalance
+                            }
+                            onPress={
+                                this.state.purchaseExecuted
+                                    ? this.close.bind(this)
+                                    : this.buyCredit.bind(this)
+                            }
+                        >
+                            {this.state.updatingBalance ? (
+                                <ActivityIndicator
+                                    size="small"
+                                    color={GlobalColors.white}
+                                />
+                            ) : (
+                                <Text style={styles.buyButtonText}>
+                                    {this.state.purchaseExecuted
+                                        ? 'Done'
+                                        : 'Buy'}
+                                </Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </ScrollView>
         );
     }
 }
