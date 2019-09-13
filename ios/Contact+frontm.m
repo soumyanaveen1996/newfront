@@ -8,6 +8,7 @@
 
 #import "Contact+frontm.h"
 #import "PhoneNumbers+frontm.h"
+#import "UserAddress+frontm.h"
 #import "NSArray+Map.h"
 
 @implementation Contact (frontm)
@@ -21,6 +22,9 @@
            @"userId": self.userId,
            @"waitingForConfirmation": @(self.waitingForConfirmation),
            @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
+           @"userCompanyName": self.userCompanyName,
+           @"showAcceptIgnoreMsg": @(self.showAcceptIgnoreMsg),
+           @"address": self.hasAddress ? [self.address toJSON] : [NSNull null],
            };
 }
 

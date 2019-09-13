@@ -18,13 +18,11 @@ export default class TourScreen extends Component {
             showScreenOne: true,
             showScreenTwo: false,
             showScreenThree: false,
-            showScreenFour: false,
-            showScreenFive: false
+            showScreenFour: false
         };
         this.handler = this.handler.bind(this);
         this.networkScreen = this.networkScreen.bind(this);
         this.tabBarScreen = this.tabBarScreen.bind(this);
-        this.botScreen = this.botScreen.bind(this);
         this.readyScreen = this.readyScreen.bind(this);
     }
 
@@ -49,16 +47,10 @@ export default class TourScreen extends Component {
             showScreenThree: true
         });
     }
-    botScreen() {
+    readyScreen() {
         this.setState({
             showScreenThree: false,
             showScreenFour: true
-        });
-    }
-    readyScreen() {
-        this.setState({
-            showScreenFour: false,
-            showScreenFive: true
         });
         AsyncStorage.setItem('firstTimeUser', 'false');
     }
@@ -89,17 +81,11 @@ export default class TourScreen extends Component {
                         )}
                         {this.state.showScreenThree && (
                             <TabBarTutorial
-                                botScreen={this.botScreen}
+                                botScreen={this.readyScreen}
                                 action={this.handler}
                             />
                         )}
                         {this.state.showScreenFour && (
-                            <BotTutorial
-                                readyScreen={this.readyScreen}
-                                action={this.handler}
-                            />
-                        )}
-                        {this.state.showScreenFive && (
                             <ReadyScreen action={this.handler} />
                         )}
                     </View>

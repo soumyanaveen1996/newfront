@@ -90,10 +90,10 @@ export default StyleSheet.create({
     },
     networkTutorial: {
         position: 'absolute',
-        top: '1.8%',
+        top: '1.5%',
         left: '15%',
         backgroundColor: '#ffffff',
-        height: 165,
+        height: 170,
         width: 300,
         borderRadius: 10,
         display: 'flex',
@@ -170,10 +170,10 @@ export default StyleSheet.create({
     satelliteCircle: Platform.select({
         ios: {
             position: 'absolute',
-            left: -44,
+            left: -48,
             top: -8,
-            width: 35,
-            height: 35,
+            width: 40,
+            height: 40,
             borderRadius: 20,
             backgroundColor: '#ffffff',
             alignItems: 'center',
@@ -181,7 +181,7 @@ export default StyleSheet.create({
         },
         android: {
             position: 'absolute',
-            left: -44,
+            left: -48,
             top: -4,
             width: 35,
             height: 35,
@@ -193,8 +193,9 @@ export default StyleSheet.create({
     }),
 
     imageSatellite: {
-        width: 25,
-        height: 25
+        width: 35,
+        height: 35,
+        resizeMode: 'contain'
     },
     triangle: Platform.select({
         ios: {
@@ -384,13 +385,15 @@ export default StyleSheet.create({
         fontSize: 14,
         fontFamily: 'Roboto',
         fontWeight: '300',
-        marginTop: 5
+        marginTop: 5,
+        marginBottom: 5
     },
     title: {
         color: 'rgba(74, 74, 74, 1)',
         fontFamily: 'SF Pro Text',
         fontSize: 18,
-        fontWeight: '300'
+        fontWeight: '300',
+        alignSelf: 'center'
     },
     rightContainer: {
         width: 60,

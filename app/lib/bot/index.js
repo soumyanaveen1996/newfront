@@ -160,33 +160,23 @@ class Bot extends events.EventEmitter {
                         user.creds.sessionId,
                         params,
                         (error, result) => {
-                            console.log(
-                                'GRPC:::subscribe domain : ',
-                                error,
-                                result
-                            );
+                            console.log('GRPC:::apply code : ', error, result);
                             if (error) {
-                                return reject({
-                                    type: 'error',
-                                    error: error.code
-                                });
+                                reject('ERROR');
                             }
-                            if (
-                                result.data.content &&
-                                result.data.content.length > 0
-                            ) {
+                            if (result.data.error !== 0) {
+                                reject(result.data.errorMessage);
+                            } else {
                                 console.log(
                                     'GRPC:::subscribing domain ',
                                     result.data
                                 );
                                 resolve(result.data.content);
-                            } else {
-                                reject(null);
                             }
                         }
                     );
                 } else {
-                    reject(new Error('No logged in user'));
+                    reject('No logged in user');
                 }
             });
         });

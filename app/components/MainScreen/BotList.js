@@ -176,7 +176,7 @@ class BotList extends React.Component {
         if (
             this.props.user.remoteBotsInstalled &&
             this.props.user.allConversationsLoaded &&
-            allChatsData.length == 1
+            allChatsData.length == 0
         ) {
             this.props.setNoChats(true);
         }
