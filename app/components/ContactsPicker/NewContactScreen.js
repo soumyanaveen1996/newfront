@@ -164,7 +164,7 @@ class NewContactScreen extends React.Component {
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <TextInput
                                     style={styles.inputPrefix}
-                                    value={this.state.prefixes[type]}
+                                    value={'+' + this.state.prefixes[type]}
                                     keyboardType="phone-pad"
                                     autoCorrect={false}
                                     maxLength={6}
