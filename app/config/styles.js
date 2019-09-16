@@ -17,7 +17,7 @@ export const GlobalColors = {
     disabledButton: 'rgba(255, 255, 255, 0.2)',
     disabledGray: 'rgb(228, 228, 228)',
     frontmLightBlue: 'rgba(0,189,242,1)',
-    frontmLightBlueTransparent: 'rgba(0,189,242,0.06)',
+    frontmLightBlueTransparent: 'rgba(0,189,242,0.2)',
     green: 'rgba(47, 199, 111, 1)',
     //header: 'rgb(79,41,191)',
     grey: 'rgba(102,102,102,1)',

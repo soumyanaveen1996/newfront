@@ -298,10 +298,12 @@ const stylesheet = StyleSheet.create({
     buttonAreaSU: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 25
+        paddingVertical: 20,
+        backgroundColor: GlobalColors.white,
+        borderTopWidth: 0.3,
+        borderTopColor: GlobalColors.grey
     },
     doneButtonSU: {
-        bottom: 25,
         alignSelf: 'center',
         width: '75%',
         height: 40,

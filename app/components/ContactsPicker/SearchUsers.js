@@ -266,20 +266,22 @@ export default class SearchUsers extends React.Component {
     renderButton() {
         const disabled = this.state.selectedContacts.length <= 0;
         return (
-            <TouchableOpacity
-                disabled={disabled}
-                style={[
-                    styles.doneButtonSU,
-                    {
-                        backgroundColor: disabled
-                            ? GlobalColors.frontmLightBlueTransparent
-                            : GlobalColors.frontmLightBlue
-                    }
-                ]}
-                onPress={this.onDone.bind(this)}
-            >
-                <Text style={styles.buttonText}>Done</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonAreaSU}>
+                <TouchableOpacity
+                    disabled={disabled}
+                    style={[
+                        styles.doneButtonSU,
+                        {
+                            backgroundColor: disabled
+                                ? GlobalColors.frontmLightBlueTransparent
+                                : GlobalColors.frontmLightBlue
+                        }
+                    ]}
+                    onPress={this.onDone.bind(this)}
+                >
+                    <Text style={styles.buttonText}>Done</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
