@@ -117,13 +117,14 @@ RCT_REMAP_METHOD(update, updateWithSessionId:(NSString *)sessionId andParams:(NS
   
   
   //  UserIdList *idList = [UserIdList new];
-  if (params[@"userIds"] != nil) {
-    idList.userIdsArray = params[@"userIds"];
-  }
+  NSMutableArray *userIdsArray = params[@"userIds"];
+    idList.userIdsArray = userIdsArray;
+  
   if(params[@"localContacts"] != nil){
     NSArray *localContactsArray = params[@"localContacts"];
     for (int i=0; i < [localContactsArray count]; i++) {
       NSDictionary *lContactsDict = localContactsArray[i];
+      NSString *userId = lContactsDict[@"userId"];
       NSString *userName = lContactsDict[@"userName"];
       NSDictionary *emailAddressesDict = lContactsDict[@"emailAddresses"];
       NSDictionary *phoneNumbersDict = lContactsDict[@"phoneNumbers"];
@@ -141,13 +142,14 @@ RCT_REMAP_METHOD(update, updateWithSessionId:(NSString *)sessionId andParams:(NS
       localContact.userName = userName;
       localContact.phoneNumbers = phoneNumbers;
       localContact.emailAddresses = emailAddresses;
+      localContact.userId = userId;
       
       [idList.localContactsArray addObject:localContact];
       
     }
   }
   
-  
+  RCTLog(@">>>>>>>>>>idlist : %@", idList);
   
   GRPCProtoCall *call = [self.serviceClient
                          RPCToUpdateWithRequest:idList handler:^(AgentGuardBoolResponse * _Nullable response, NSError * _Nullable error) {
@@ -200,7 +202,6 @@ RCT_REMAP_METHOD(accept, acceptWithSessionId:(NSString *)sessionId andParams:(NS
       [idList.localContactsArray addObject:localContact];
     }
   }
-  
 
 
   GRPCProtoCall *call = [self.serviceClient
