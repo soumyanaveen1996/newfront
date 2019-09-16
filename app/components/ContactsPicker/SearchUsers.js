@@ -221,7 +221,7 @@ export default class SearchUsers extends React.Component {
             <View style={styles.selectedContactsListSU}>
                 {this.state.selectedContacts.length > 0 ? (
                     <Text style={styles.searchUsersTitle}>
-                        Selected contacts::
+                        Selected contacts:
                     </Text>
                 ) : null}
                 <FlatList
