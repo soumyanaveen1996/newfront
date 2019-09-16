@@ -641,7 +641,7 @@ const stylesheet = StyleSheet.create({
         alignSelf: 'center'
     },
     inputPrefix: {
-        width: '25%',
+        width: '30%',
         height: '100%',
         backgroundColor: 'transparent',
         color: 'rgba(102, 102, 102, 1)',

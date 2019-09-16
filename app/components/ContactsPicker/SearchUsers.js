@@ -47,7 +47,8 @@ export default class SearchUsers extends React.Component {
             notSelectedContacts: [],
             selectedContacts: [],
             loading: false,
-            userFilter: ''
+            userFilter: '',
+            searchExecuted: false
         };
     }
 
@@ -112,7 +113,8 @@ export default class SearchUsers extends React.Component {
                         'userId'
                     ),
                     loading: false,
-                    userFilter: this.state.userFilter.trim()
+                    userFilter: this.state.userFilter.trim(),
+                    searchExecuted: true
                 });
             });
     }
@@ -292,7 +294,21 @@ export default class SearchUsers extends React.Component {
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
                     {this.renderSelectedContacts()}
-                    {this.renderContactsList()}
+                    {this.state.searchExecuted &&
+                    (!this.state.notSelectedContacts ||
+                        this.state.notSelectedContacts.length < 1) ? (
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    marginTop: 50,
+                                    fontSize: 16
+                                }}
+                            >
+                            No contacts found.
+                            </Text>
+                        ) : (
+                            this.renderContactsList()
+                        )}
                 </View>
                 {this.renderButton()}
             </SafeAreaView>
