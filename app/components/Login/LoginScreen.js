@@ -292,7 +292,7 @@ export default class LoginScreen extends React.Component {
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
         );
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, alignItems: 'stretch' }}>
                 <View style={styles.logoHeader}>
                     <Image source={images.frontm_header_logo} />
                 </View>
@@ -301,7 +301,7 @@ export default class LoginScreen extends React.Component {
                     keyboardShouldPersistTaps="always"
                 >
                     <Loader loading={this.state.loading} />
-                    <KeyboardAvoidingView style={styles.keyboardConatiner}>
+                    <View style={styles.keyboardConatiner}>
                         <View style={styles.headerContainer}>
                             <Text style={styles.loginHeader}> Welcome! </Text>
                             <Text style={styles.loginSubHeader}>
@@ -309,10 +309,7 @@ export default class LoginScreen extends React.Component {
                                 Log in to FrontM{' '}
                             </Text>
                         </View>
-                        <View
-                            style={styles.formContainer}
-                            behavior={Platform.OS === 'ios' ? 'position' : null}
-                        >
+                        <View style={styles.formContainer}>
                             <View style={styles.entryFields}>
                                 <Text style={styles.placeholderText}>
                                     {' '}
@@ -395,7 +392,7 @@ export default class LoginScreen extends React.Component {
                                 {this.renderGoogleBtn()}
                             </TouchableOpacity>
                         </View>
-                    </KeyboardAvoidingView>
+                    </View>
                 </ScrollView>
             </SafeAreaView>
         );

@@ -11,7 +11,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         paddingVertical: 20,
-        paddingHorizontal: 30,
+        // paddingHorizontal: 30,
         backgroundColor: GlobalColors.white
     },
     logoHeader: {
@@ -24,8 +24,8 @@ export default StyleSheet.create({
         justifyContent: 'center'
     },
     keyboardConatiner: {
+        width: '100%',
         paddingVertical: 10,
-        paddingHorizontal: 20,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -44,17 +44,12 @@ export default StyleSheet.create({
         color: 'rgba(74,74,74,1)',
         fontWeight: '300'
     },
-    formContainer: Platform.select({
-        ios: {
-            marginBottom: 20,
-            justifyContent: 'center',
-            alignItems: 'flex-end'
-        },
-        android: {
-            marginBottom: 20,
-            justifyContent: 'center'
-        }
-    }),
+    formContainer: {
+        marginBottom: 20,
+        width: '75%',
+        justifyContent: 'center',
+        alignItems: 'stretch'
+    },
     placeholderText: {
         fontWeight: '300',
         color: 'rgba(74,74,74,1)',
@@ -68,9 +63,9 @@ export default StyleSheet.create({
     },
     input: {
         height: 40,
-        width: 300,
+        width: '100%',
         backgroundColor: 'rgba(244,244,244,1)',
-        marginLeft: wp('1%'),
+        // marginLeft: wp('1%'),
         paddingVertical: 10,
         paddingHorizontal: 15,
         color: 'rgba(0,0,0,0.8)',
@@ -81,24 +76,24 @@ export default StyleSheet.create({
         borderTopLeftRadius: 10
     },
     forgotPassowrd: {
-        width: 290,
         height: 20,
         fontSize: 14,
         letterSpacing: 1,
         lineHeight: 20,
         color: 'rgba(0,167,214,1)',
-        marginLeft: wp('4%'),
         marginTop: 30,
-        marginBottom: 25
+        marginBottom: 25,
+        alignSelf: 'flex-start'
     },
     buttonContainer: {
         height: 40,
-        width: 300,
+        width: '100%',
         backgroundColor: 'rgba(0,189,242,1)',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 25
+        marginBottom: 25,
+        alignSelf: 'center'
     },
     buttonText: {
         color: '#fff',
@@ -132,17 +127,9 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
 
-    entryFields: Platform.select({
-        ios: {
-            position: 'relative',
-            width: 300,
-            backgroundColor: 'transparent'
-        },
-        android: {
-            width: 300,
-            backgroundColor: 'transparent'
-        }
-    }),
+    entryFields: {
+        width: '100%'
+    },
     errorContainer: Platform.select({
         ios: {
             position: 'absolute',
