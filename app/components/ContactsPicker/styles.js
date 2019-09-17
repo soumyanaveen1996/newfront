@@ -298,10 +298,12 @@ const stylesheet = StyleSheet.create({
     buttonAreaSU: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 25
+        paddingVertical: 20,
+        backgroundColor: GlobalColors.white,
+        borderTopWidth: 0.3,
+        borderTopColor: GlobalColors.grey
     },
     doneButtonSU: {
-        bottom: 25,
         alignSelf: 'center',
         width: '75%',
         height: 40,
@@ -639,7 +641,7 @@ const stylesheet = StyleSheet.create({
         alignSelf: 'center'
     },
     inputPrefix: {
-        width: '25%',
+        width: '30%',
         height: '100%',
         backgroundColor: 'transparent',
         color: 'rgba(102, 102, 102, 1)',

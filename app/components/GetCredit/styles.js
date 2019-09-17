@@ -15,7 +15,6 @@ export default (stylesheet = StyleSheet.create({
         margin: 0
     },
     container: {
-        height: '100%',
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'flex-start',
@@ -24,7 +23,6 @@ export default (stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.white
     },
     topContainer: {
-        height: '70%',
         width: '100%',
         flexDirection: 'column',
         justifyContent: 'space-between',

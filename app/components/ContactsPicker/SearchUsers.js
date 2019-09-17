@@ -47,7 +47,8 @@ export default class SearchUsers extends React.Component {
             notSelectedContacts: [],
             selectedContacts: [],
             loading: false,
-            userFilter: ''
+            userFilter: '',
+            searchExecuted: false
         };
     }
 
@@ -112,7 +113,8 @@ export default class SearchUsers extends React.Component {
                         'userId'
                     ),
                     loading: false,
-                    userFilter: this.state.userFilter.trim()
+                    userFilter: this.state.userFilter.trim(),
+                    searchExecuted: true
                 });
             });
     }
@@ -221,7 +223,7 @@ export default class SearchUsers extends React.Component {
             <View style={styles.selectedContactsListSU}>
                 {this.state.selectedContacts.length > 0 ? (
                     <Text style={styles.searchUsersTitle}>
-                        Selected contacts::
+                        Selected contacts:
                     </Text>
                 ) : null}
                 <FlatList
@@ -266,20 +268,22 @@ export default class SearchUsers extends React.Component {
     renderButton() {
         const disabled = this.state.selectedContacts.length <= 0;
         return (
-            <TouchableOpacity
-                disabled={disabled}
-                style={[
-                    styles.doneButtonSU,
-                    {
-                        backgroundColor: disabled
-                            ? GlobalColors.frontmLightBlueTransparent
-                            : GlobalColors.frontmLightBlue
-                    }
-                ]}
-                onPress={this.onDone.bind(this)}
-            >
-                <Text style={styles.buttonText}>Done</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonAreaSU}>
+                <TouchableOpacity
+                    disabled={disabled}
+                    style={[
+                        styles.doneButtonSU,
+                        {
+                            backgroundColor: disabled
+                                ? GlobalColors.frontmLightBlueTransparent
+                                : GlobalColors.frontmLightBlue
+                        }
+                    ]}
+                    onPress={this.onDone.bind(this)}
+                >
+                    <Text style={styles.buttonText}>Done</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
@@ -290,7 +294,21 @@ export default class SearchUsers extends React.Component {
                     <NetworkStatusNotchBar />
                     {this.renderSearchBar()}
                     {this.renderSelectedContacts()}
-                    {this.renderContactsList()}
+                    {this.state.searchExecuted &&
+                    (!this.state.notSelectedContacts ||
+                        this.state.notSelectedContacts.length < 1) ? (
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    marginTop: 50,
+                                    fontSize: 16
+                                }}
+                            >
+                            No contacts found.
+                            </Text>
+                        ) : (
+                            this.renderContactsList()
+                        )}
                 </View>
                 {this.renderButton()}
             </SafeAreaView>

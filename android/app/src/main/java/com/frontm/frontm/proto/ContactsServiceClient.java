@@ -182,6 +182,78 @@ public class ContactsServiceClient extends ReactContextBaseJavaModule {
 
     }
 
+    @ReactMethod
+    public void update(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::update", sessionId);
+        ContactsServiceGrpc.ContactsServiceStub stub = ContactsServiceGrpc.newStub(mChannel);
+
+        ContactsInput.Builder input = ContactsInput.newBuilder();
+        if (params.hasKey("userIds")) {
+            ReadableArray userIds = params.getArray("userIds");
+            for(int i = 0; i < userIds.size(); ++i) {
+                input.addUserIds(userIds.getString(i));
+            }
+        }
+
+        if (params.hasKey("localContacts")) {
+
+            ReadableArray localContacts = params.getArray("localContacts");
+            for (int i = 0; i < localContacts.size(); ++i) {
+
+                ReadableMap lContactDict = localContacts.getMap(i);
+                String userName = lContactDict.getString("userName");
+                String userId = lContactDict.getString("userId");
+                ReadableMap emailAddressesDict = lContactDict.getMap("emailAddresses");
+                ReadableMap phoneNumbersDict = lContactDict.getMap("phoneNumbers");
+
+                EmailAddresses emailAddresses = EmailAddresses.newBuilder().
+                        setHome(emailAddressesDict.hasKey("home") ? emailAddressesDict.getString("home") : "").
+                        setWork(emailAddressesDict.hasKey("work") ? emailAddressesDict.getString("work") : "").build();
+
+
+                PhoneNumbers phoneNumbers = PhoneNumbers.newBuilder().
+                        setLand(phoneNumbersDict.hasKey("land") ? phoneNumbersDict.getString("land") : "").
+                        setMobile(phoneNumbersDict.hasKey("mobile") ? phoneNumbersDict.getString("mobile") : "").
+                        setSatellite(phoneNumbersDict.hasKey("satellite") ? phoneNumbersDict.getString("satellite") : "").build();
+
+                LocalContact localContact = LocalContact.newBuilder().setUserName(userName)
+                        .setEmailAddresses(emailAddresses)
+                        .setUserId(userId)
+                        .setPhoneNumbers(phoneNumbers).build();
+                input.addLocalContacts(localContact);
+
+            }
+        }
+
+
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.update(input.build(), new StreamObserver<AgentGuardBoolResponse>() {
+            @Override
+            public void onNext(AgentGuardBoolResponse value) {
+                callback.invoke(null, new AgentGuardBoolResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
+
 
     @ReactMethod
     public void accept(String sessionId, ReadableMap params, final Callback callback)
