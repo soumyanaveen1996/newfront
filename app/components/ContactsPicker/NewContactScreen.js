@@ -415,7 +415,6 @@ class NewContactScreen extends React.Component {
                             this.setState({ name: val });
                         }}
                         blurOnSubmit={false}
-                        placeholder="Your Name"
                         underlineColorAndroid={'transparent'}
                         placeholderTextColor="rgba(155,155,155,1)"
                         clearButtonMode="always"

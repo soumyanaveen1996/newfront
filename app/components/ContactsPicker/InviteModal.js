@@ -259,61 +259,64 @@ export default class InviteModal extends React.Component {
                                         }}
                                     />
                                 </View>
-
-                                <TouchableOpacity
+                                <View
                                     style={{
-                                        width: wp('80%'),
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        marginTop: 10,
-                                        marginBottom: 5
-                                    }}
-                                    onPress={() => {
-                                        this.createNewContact();
+                                        width: '100%',
+                                        justifyContent: 'space-evenly',
+                                        flex: 1
                                     }}
                                 >
-                                    <Image
+                                    <TouchableOpacity
                                         style={{
-                                            width: 25,
-                                            height: 25,
-                                            resizeMode: 'contain',
-                                            marginLeft: 10
+                                            width: wp('80%'),
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
                                         }}
-                                        source={require('../../images/email-icon/create-new-contact-icon3x.png')}
-                                    />
+                                        onPress={() => {
+                                            this.createNewContact();
+                                        }}
+                                    >
+                                        <Image
+                                            style={{
+                                                width: 25,
+                                                height: 25,
+                                                resizeMode: 'contain',
+                                                marginLeft: 10
+                                            }}
+                                            source={require('../../images/email-icon/create-new-contact-icon3x.png')}
+                                        />
 
-                                    <Text style={styles.inviteEmail}>
-                                        Create New Contact
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{
-                                        width: wp('80%'),
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        marginVertical: 10
-                                    }}
-                                    onPress={() => {
-                                        this.setInviteVisible();
-                                    }}
-                                >
-                                    <Image
+                                        <Text style={styles.inviteEmail}>
+                                            Create New Contact
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
                                         style={{
-                                            width: 25,
-                                            height: 25,
-                                            resizeMode: 'contain',
-                                            marginLeft: 10
+                                            width: wp('80%'),
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center'
                                         }}
-                                        source={require('../../images/email-icon/send-invitation-icon3x.png')}
-                                    />
+                                        onPress={() => {
+                                            this.setInviteVisible();
+                                        }}
+                                    >
+                                        <Image
+                                            style={{
+                                                width: 25,
+                                                height: 25,
+                                                resizeMode: 'contain',
+                                                marginLeft: 10
+                                            }}
+                                            source={require('../../images/email-icon/send-invitation-icon3x.png')}
+                                        />
 
-                                    <Text style={styles.inviteEmail}>
-                                        Invite Friends to FrontM
-                                    </Text>
-                                </TouchableOpacity>
-                                {/* <TouchableOpacity
+                                        <Text style={styles.inviteEmail}>
+                                            Invite Friends to FrontM
+                                        </Text>
+                                    </TouchableOpacity>
+                                    {/* <TouchableOpacity
                                     style={{
                                         width: wp('80%'),
                                         display: 'flex',
@@ -340,6 +343,7 @@ export default class InviteModal extends React.Component {
                                         THIS!!!)
                                     </Text>
                                 </TouchableOpacity> */}
+                                </View>
                             </View>
                         </TouchableWithoutFeedback>
                     ) : (
