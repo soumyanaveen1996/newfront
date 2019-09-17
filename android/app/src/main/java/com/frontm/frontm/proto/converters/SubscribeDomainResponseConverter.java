@@ -10,7 +10,7 @@ public class SubscribeDomainResponseConverter {
     public WritableMap toJson(SubscribeDomainResponse response) {
         WritableMap map = Arguments.createMap();
         map.putInt("error", response.getError());
-
+        map.putString("errorMessage", response.getErrorMessage());
         if (response.getContentCount() > 0) {
             WritableArray array = Arguments.createArray();
             for (int i = 0; i < response.getContentCount(); ++i) {
