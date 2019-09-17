@@ -68,6 +68,7 @@ class NetworkButton extends React.Component {
             );
             return (
                 <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => this.showConnectionMessage('gsm')}
                 >
                     <Image
@@ -90,7 +91,10 @@ class NetworkButton extends React.Component {
                 />
             );
             return (
-                <TouchableOpacity onPress={() => this.props.manualAction}>
+                <TouchableOpacity
+                    onPress={() => this.props.manualAction}
+                    activeOpacity={1}
+                >
                     <Image
                         source={images.refresh}
                         resizeMode="contain"
@@ -113,6 +117,7 @@ class NetworkButton extends React.Component {
             return (
                 <TouchableOpacity
                     onPress={() => this.showConnectionMessage('satellite')}
+                    activeOpacity={1}
                 >
                     <Image
                         source={images.satellite}

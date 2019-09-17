@@ -633,7 +633,6 @@ class ContactsPicker extends React.Component {
         // );
 
         const allContacts = this.state.contactsData;
-
         // console.log('contact list ', allContacts);
         if (this.state.contactsData) {
             return (
@@ -739,7 +738,6 @@ class ContactsPicker extends React.Component {
     };
     render() {
         // console.log('all contact data', this.state.contactsData);
-
         return (
             <SafeAreaView style={styles.container}>
                 <BackgroundImage>

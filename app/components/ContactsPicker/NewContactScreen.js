@@ -164,7 +164,7 @@ class NewContactScreen extends React.Component {
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <TextInput
                                     style={styles.inputPrefix}
-                                    value={this.state.prefixes[type]}
+                                    value={'+' + this.state.prefixes[type]}
                                     keyboardType="phone-pad"
                                     autoCorrect={false}
                                     maxLength={6}
@@ -333,6 +333,8 @@ class NewContactScreen extends React.Component {
         };
 
         if (this.props.contact) {
+            saveLocalContactData.userIds = [this.props.contact.id];
+            saveLocalContactData.localContacts[0].userId = this.props.contact.id;
             UpdateLocalContacts(saveLocalContactData)
                 .then(() => {
                     Store.dispatch(completeContactsLoad(false));
