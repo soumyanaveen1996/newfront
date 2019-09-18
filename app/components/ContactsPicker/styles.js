@@ -653,7 +653,9 @@ const stylesheet = StyleSheet.create({
         borderLeftColor: 'rgba(221,222,227,1)',
         textAlign: 'center',
         alignItems: 'center',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        flexDirection: 'row',
+        paddingHorizontal: 5
     },
     mainInfoRenderContainer: {
         width: '100%',
@@ -688,7 +690,8 @@ const stylesheet = StyleSheet.create({
     infoLabelStyle: {
         color: 'rgba(102, 102, 102, 1)',
         fontFamily: 'SF Pro Text',
-        fontSize: 12
+        fontSize: 12,
+        alignSelf: 'center'
     },
     safeAreaStyle: { flex: 1, backgroundColor: GlobalColors.white },
     mainViewContainer: {

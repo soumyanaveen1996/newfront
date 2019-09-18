@@ -282,7 +282,11 @@ class MyProfileScreen extends React.Component {
                 >
                     <View style={styles.labelContainer}>
                         {type === 'phNumber' ? (
-                            this.getTheIcon(key)
+                            <View
+                                style={{ width: '30%', alignItems: 'center' }}
+                            >
+                                {this.getTheIcon(key)}
+                            </View>
                         ) : (
                             <Image
                                 source={images.email_icon}
@@ -290,7 +294,9 @@ class MyProfileScreen extends React.Component {
                             />
                         )}
                         {type === 'phNumber' ? (
-                            <Text style={styles.labelStyle}>{key}</Text>
+                            <Text style={[styles.labelStyle, { width: '40%' }]}>
+                                {key}
+                            </Text>
                         ) : (
                             <Text style={styles.labelStyle}>
                                 {I18n.t('Email')}
