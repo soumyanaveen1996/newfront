@@ -482,11 +482,9 @@ const stylesheet = StyleSheet.create({
     },
     headerRightView: {
         flexDirection: 'row',
-        width: 85,
-        height: 40,
+        flex: 1,
         justifyContent: 'space-between',
-        paddingTop: 3,
-        marginRight: 5
+        alignItems: 'center'
     },
     callModal: {
         justifyContent: 'center',
