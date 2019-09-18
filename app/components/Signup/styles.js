@@ -17,7 +17,8 @@ export default StyleSheet.create({
         borderBottomColor: 'rgb(192, 192, 192)',
         borderBottomWidth: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
     keyboardConatiner: {
         flex: 1

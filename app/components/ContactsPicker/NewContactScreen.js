@@ -162,21 +162,27 @@ class NewContactScreen extends React.Component {
                     type === 'mobile' ||
                     type === 'satellite' ? (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <TextInput
-                                    style={styles.inputPrefix}
-                                    value={'+' + this.state.prefixes[type]}
-                                    keyboardType="phone-pad"
-                                    autoCorrect={false}
-                                    maxLength={6}
-                                    blurOnSubmit={false}
-                                    onChangeText={text => {
-                                        let numbers = this.state.prefixes;
-                                        numbers[type] = text;
-                                        this.setState({ prefixes: numbers });
-                                    }}
-                                    underlineColorAndroid={'transparent'}
-                                    placeholderTextColor="rgba(155,155,155,1)"
-                                />
+                                <View style={styles.inputPrefix}>
+                                    <Text>+</Text>
+                                    <TextInput
+                                        style={{ flex: 1 }}
+                                        value={this.state.prefixes[type]}
+                                        keyboardType="number-pad"
+                                        autoCorrect={false}
+                                        maxLength={6}
+                                        blurOnSubmit={false}
+                                        onChangeText={text => {
+                                            let numbers = this.state.prefixes;
+                                            numbers[type] = text.replace(
+                                                /[^0-9]/,
+                                                ''
+                                            );
+                                            this.setState({ prefixes: numbers });
+                                        }}
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor="rgba(155,155,155,1)"
+                                    />
+                                </View>
                                 <TextInput
                                     style={styles.inputNumber}
                                     value={this.state.phoneNumbers[type]}

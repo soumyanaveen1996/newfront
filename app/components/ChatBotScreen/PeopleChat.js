@@ -41,7 +41,7 @@ export default class PeopleChat extends ChatBotScreen {
         return (
             <View style={chatStyles.headerRightView}>
                 {callButton}
-                <View style={{ marginHorizontal: 17 }}>
+                <View>
                     <NetworkButton
                         manualAction={() => {
                             state.params.refresh();

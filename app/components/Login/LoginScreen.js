@@ -38,6 +38,7 @@ import DefaultPreference from 'react-native-default-preference';
 import Store from '../../redux/store/configureStore';
 import { setFirstLogin } from '../../redux/actions/UserActions';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
+import swiperStyle from '../Swiper/styles';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -287,6 +288,13 @@ export default class LoginScreen extends React.Component {
         // Actions.resetPassword({ email: 'sidhemu09@gmail.com' });
     };
 
+    goToSignupPage = () => {
+        Actions.signupScreen({
+            type: ActionConst.PUSH,
+            key: Math.random()
+        });
+    };
+
     render() {
         const B = props => (
             <Text style={{ fontWeight: '900' }}>{props.children}</Text>
@@ -394,6 +402,21 @@ export default class LoginScreen extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
+                <View style={swiperStyle.bottomBox}>
+                    <TouchableOpacity
+                        onPress={this.goToSignupPage}
+                        style={{ alignItems: 'center', zIndex: 1 }}
+                    >
+                        <Text style={swiperStyle.goToLine}>
+                            You don’t have an account?
+                            <Text style={swiperStyle.bolder}> Sign up </Text>
+                            <Image
+                                style={swiperStyle.arrow}
+                                source={images.blue_arrow}
+                            />
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </SafeAreaView>
         );
     }

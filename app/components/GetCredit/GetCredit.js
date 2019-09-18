@@ -41,6 +41,7 @@ export default class GetCredit extends React.Component {
     }
 
     componentDidMount() {
+        RNIap.consumeAllItemsAndroid();
         this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
             this.purchaseHandler.bind(this)
         );
@@ -74,6 +75,7 @@ export default class GetCredit extends React.Component {
     purchaseHandler(purchase) {
         console.log('purchaseUpdatedListener', purchase);
         const receipt = purchase.transactionReceipt;
+        RNIap.consumeAllItemsAndroid();
         if (receipt) {
             InAppPurchase.grpcTopupUserBalance(
                 '100',
@@ -88,7 +90,6 @@ export default class GetCredit extends React.Component {
                             purchase.purchaseToken
                         );
                     }
-                    this.setState({ updatingBalance: false });
                 })
                 .catch(e => {
                     this.setState({ updatingBalance: false });
@@ -348,7 +349,8 @@ export default class GetCredit extends React.Component {
                                         : styles.buyButtonDisabled
                                 }
                                 disabled={
-                                    !this.state.selectedCredit ||
+                                    (!this.state.selectedCredit &&
+                                        !this.state.purchaseExecuted) ||
                                     this.state.updatingBalance
                                 }
                                 onPress={

@@ -48,7 +48,8 @@ export default class SearchUsers extends React.Component {
             selectedContacts: [],
             loading: false,
             userFilter: '',
-            searchExecuted: false
+            searchExecuted: false,
+            justSearched: false
         };
     }
 
@@ -114,7 +115,8 @@ export default class SearchUsers extends React.Component {
                     ),
                     loading: false,
                     userFilter: this.state.userFilter.trim(),
-                    searchExecuted: true
+                    searchExecuted: true,
+                    justSearched: true
                 });
             });
     }
@@ -154,7 +156,8 @@ export default class SearchUsers extends React.Component {
             this.state.selectedContacts.push(user);
             this.setState({
                 notSelectedContacts: this.state.notSelectedContacts,
-                selectedContacts: this.state.selectedContacts
+                selectedContacts: this.state.selectedContacts,
+                justSearched: false
             });
         }
     }
@@ -296,7 +299,8 @@ export default class SearchUsers extends React.Component {
                     {this.renderSelectedContacts()}
                     {this.state.searchExecuted &&
                     (!this.state.notSelectedContacts ||
-                        this.state.notSelectedContacts.length < 1) ? (
+                        this.state.notSelectedContacts.length < 1) &&
+                    this.state.justSearched ? (
                             <Text
                                 style={{
                                     textAlign: 'center',
