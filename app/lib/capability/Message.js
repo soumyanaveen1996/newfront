@@ -504,6 +504,7 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
         ) {
             let item = this.getMessage();
+            console.log('>>>>>>>>item', item);
             return I18n.t('Slider_Response_Message', { lines: item.title });
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML

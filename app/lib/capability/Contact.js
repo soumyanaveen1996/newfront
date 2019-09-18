@@ -159,8 +159,7 @@ export default class Contact {
                         return elem.userId === contact.userId;
                     });
                     if (elemIndex >= 0) {
-                        data[elemIndex].waitingForConfirmation =
-                            contact.waitingForConfirmation;
+                        data[elemIndex].waitingForConfirmation = false;
                         data[elemIndex].userName = contact.userName;
                         data[elemIndex].emailAddress = contact.emailAddress;
                         data[elemIndex].phoneNumbers = contact.phoneNumbers;
@@ -432,11 +431,13 @@ export default class Contact {
                         var contacts = _.map(
                             response.data.contacts,
                             contact => {
-                                return _.extend({}, contact, {
-                                    contactType: 'frontm',
-                                    ignored: false,
-                                    type: 'People'
-                                });
+                                if (!contact.showAcceptIgnoreMsg) {
+                                    return _.extend({}, contact, {
+                                        contactType: 'frontm',
+                                        ignored: false,
+                                        type: 'People'
+                                    });
+                                }
                             }
                         );
                         // var localContacts = [...response.data.localContacts];
@@ -453,7 +454,9 @@ export default class Contact {
                         );
                         //IGNORED CONTACTS
                         var ignored = _.map(response.data.contacts, contact => {
-                            return _.extend({}, contact, { ignored: true });
+                            if (!contact.showAcceptIgnoreMsg) {
+                                return _.extend({}, contact, { ignored: true });
+                            }
                         });
                         //SITES
                         var sites = JSON.parse(response.data.sites);

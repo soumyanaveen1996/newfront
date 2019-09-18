@@ -242,7 +242,7 @@ export default class SwiperScreen extends Component {
                     </View>
                     <View style={styles.login}>
                         <LoginScreen email={this.props.email || ''} />
-                        <View style={styles.bottomBox}>
+                        {/* <View style={styles.bottomBox}>
                             <TouchableOpacity
                                 onPress={this.goToSignupPage}
                                 style={{ alignItems: 'center', zIndex: 1 }}
@@ -256,7 +256,7 @@ export default class SwiperScreen extends Component {
                                     />
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                     </View>
                 </Swiper>
             </View>

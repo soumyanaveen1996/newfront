@@ -37,7 +37,8 @@ export default class ConfirmationScreen extends Component {
             loading: false,
             errorMessage: '',
             passwordErrorMessage: '',
-            signupStatus: ''
+            signupStatus: '',
+            disable: false
         };
         this.textInput = null;
     }
@@ -68,6 +69,7 @@ export default class ConfirmationScreen extends Component {
     }
 
     async onFormSubmit() {
+        this.setState({ loading: true });
         const getStatus = await AsyncStorage.getItem('signupStage');
 
         if (getStatus && getStatus === 'done') {
@@ -121,11 +123,11 @@ export default class ConfirmationScreen extends Component {
         )
             .then(async () => {
                 this.setState({
-                    loading: false,
                     code: '',
                     password: '',
                     signupStatus: '',
-                    errorMessage: ''
+                    errorMessage: '',
+                    disable: true
                 });
                 await TwilioVoIP.init();
                 // RemoteBotInstall.syncronizeBots()
@@ -144,6 +146,7 @@ export default class ConfirmationScreen extends Component {
                 AfterLogin.executeAfterLogin();
                 synchronizeUserData();
                 synchronizePhoneBook();
+                this.setState({ loading: false });
                 setTimeout(
                     () =>
                         Actions.timeline({
@@ -155,7 +158,7 @@ export default class ConfirmationScreen extends Component {
             .catch(err => {
                 console.log('error on incorrect password ', err);
                 this.setState({ errorMessage: 'Incorrect Password' });
-                this.setState({ loading: false });
+                this.setState({ loading: false, disable: false });
             });
 
         return;
@@ -289,6 +292,7 @@ export default class ConfirmationScreen extends Component {
                         blurOnSubmit={true}
                         returnKeyType={'done'}
                         maxLength={6} //setting limit of input
+                        editable={!this.state.disable}
                     />
                 </View>
             );
@@ -349,7 +353,10 @@ export default class ConfirmationScreen extends Component {
                         {this.displayPasswordField()}
                         <View style={styles.codeButton}>
                             <TouchableOpacity
-                                disabled={!this.checkFieldEmpty()}
+                                disabled={
+                                    !this.checkFieldEmpty() ||
+                                    this.state.disable
+                                }
                                 style={
                                     this.checkFieldEmpty()
                                         ? styles.buttonContainer

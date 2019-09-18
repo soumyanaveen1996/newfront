@@ -19,6 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import images from '../../images';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
+import { HeaderBack } from '../Header';
 
 export default class SignupScreen extends React.Component {
     constructor(props) {
@@ -364,6 +365,12 @@ export default class SignupScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 <View style={styles.logoHeader}>
+                    <HeaderBack
+                        onPress={() => {
+                            Actions.pop();
+                        }}
+                        style={{ position: 'absolute', left: 20 }}
+                    />
                     <Image source={images.frontm_header_logo} />
                 </View>
                 <ScrollView
