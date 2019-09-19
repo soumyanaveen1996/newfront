@@ -21,27 +21,21 @@ const NotificationKeys = {
 
 export default class Notification {
     static requestPermission = () => {
-        PushNotification.checkPermissions(permissions => {
-            if (!permissions.alert) {
-                Notification.configure();
-                PushNotification.requestPermissions([1, 1, 1]);
-            }
-        });
+        Notification.configure();
+        PushNotification.requestPermissions([1, 1, 1]);
     };
 
     static configure = () => {
-        console.log('Configuring notifications');
         PushNotification.configure({
             onRegister: Notification.handleRegister,
             onNotification: Notification.handleNotification,
             senderID: config.gcm.senderID,
-            requestPermissions: false,
+            requestPermissions: true,
             onError: error => {
                 console.log('onError', error);
                 reject(error);
             }
         });
-
         if (Platform.OS === 'ios') {
             PushNotificationIOS.addEventListener(
                 'notification',
@@ -136,17 +130,12 @@ export default class Notification {
 
     static handleRegister = token =>
         new Promise((resolve, reject) => {
-            console.log('onRegister', token);
             if (token) {
                 var notificationDeviceInfo = {
                     deviceType: token.os === 'ios' ? 'iphone' : 'android',
                     deviceId: token.token,
                     isRegistered: true
                 };
-                console.log(
-                    'Notification device info : ',
-                    notificationDeviceInfo
-                );
                 Notification.grpcRegisterDevice(token.token)
                     .then(() => {
                         return DeviceStorage.save(
@@ -241,7 +230,7 @@ export default class Notification {
     static deregister = () =>
         new Promise((resolve, reject) => {
             let device;
-            PushNotification.unregister();
+            PushNotification.abandonPermissions();
             DeviceStorage.get(NotificationKeys.notification)
                 .then(value => {
                     if (value) {
@@ -276,6 +265,17 @@ export default class Notification {
                     reject(error);
                 });
         });
+
+    static checkPermissions = callback => {
+        PushNotification.checkPermissions(permissions => {
+            DeviceStorage.get(NotificationKeys.notification).then(res => {
+                callback({
+                    permissions: permissions,
+                    registered: res
+                });
+            });
+        });
+    };
 
     static sendLocalNotification(message, details = {}) {
         PushNotification.localNotification({
