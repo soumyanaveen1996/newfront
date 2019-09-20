@@ -438,7 +438,11 @@ class ChatBotScreen extends React.Component {
 
     async askNotificationPermission() {
         try {
-            Notification.requestPermission();
+            Notification.checkPermissions(res => {
+                if (!(res && res.registered && res.registered.isRegistered)) {
+                    Notification.requestPermission();
+                }
+            });
         } catch (e) {
             console.log('error', e);
         }
