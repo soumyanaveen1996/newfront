@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>5.3</string>
+	<string>5.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,13 +46,21 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>314</string>
+	<string>337</string>
 	<key>CodePushDeploymentKey</key>
 	<string>yvzJ1O25Y_eEGExdv2HTossDvImU033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<false/>
 	<key>FacebookAppID</key>
 	<string>150576769074284</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<false/>
 	<key>FacebookDisplayName</key>
 	<string>FrontM</string>
+	<key>GRPC_HOST</key>
+	<string>prod.frontm.ai</string>
+	<key>GRPC_PORT</key>
+	<string>50051</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -79,10 +87,12 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Frontm requires Apple Music access</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need your consent to access your bluetooth. We need it in case you wish to use bluetooth connection during making phone calls.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Frontm requires Bluetooth access</string>
+	<string>We need your consent to access your bluetooth. We need it in case you wish to use bluetooth connection during making phone calls.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Frontm requires Calendar access</string>
+	<string>We need your consent to access your camera. We need it in case you wish to add you contacts to Calendar for meetings.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need your consent to access your camera. We need it in case you wish to send a picture or video during a conversation</string>
 	<key>NSContactsUsageDescription</key>
@@ -94,13 +104,13 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need your consent to access your microphone. We need it in case you wish to perform a phone call or send an audio message in a conversation</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Frontm requires Motion access</string>
+	<string>We require motion access to detect if you phone is moving and send updates to subscribers who have subscribed to track your location.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need your consent to access your photos. We need it in case you wish to send a picture or video during a conversation</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need your consent to access your photos. We need it in case you wish to send a picture or video during a conversation</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Frontm requires Speech recognition access</string>
+	<string>We require Speech recognition access for Phone Calls and automated voice dialling.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.frontm.frontm</key>
@@ -187,14 +197,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>GRPC_HOST</key>
-	<string>prod.frontm.ai</string>
-	<key>GRPC_PORT</key>
-	<string>50051</string>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-	<false/>
-	<key>FacebookAdvertiserIDCollectionEnabled</key>
 	<false/>
 </dict>
 </plist>
