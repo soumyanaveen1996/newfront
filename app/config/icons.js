@@ -110,7 +110,7 @@ export const Icons = {
         'ios-call',
         'ionicon',
         30,
-        Colors.disabledButton,
+        Colors.sideButtons,
         Colors.transparent,
         '500'
     ),

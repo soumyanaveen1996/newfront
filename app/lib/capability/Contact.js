@@ -230,26 +230,28 @@ export default class Contact {
     static saveContacts = contacts =>
         new Promise(async (resolve, reject) => {
             const incomingContacts = contacts.map(contact => {
-                if (!contact.waitingForConfirmation) {
-                    contact.waitingForConfirmation = false;
+                if (contact) {
+                    if (!contact.waitingForConfirmation) {
+                        contact.waitingForConfirmation = false;
+                    }
+                    return contact;
                 }
-                return contact;
             });
             const localContacts = await Contact.getAddedContacts();
             const localContactsAccepted = localContacts.filter(contact => {
-                if (contact.ignored === undefined) {
+                if (contact && contact.ignored === undefined) {
                     return true;
                 }
-                if (contact.ignored === false) {
+                if (contact && contact.ignored === false) {
                     return true;
                 }
                 return false;
             });
             const remoteContacts = incomingContacts.filter(contact => {
-                if (contact.ignored === undefined) {
+                if (contact && contact.ignored === undefined) {
                     return true;
                 }
-                if (contact.ignored === false) {
+                if (contact && contact.ignored === false) {
                     return true;
                 }
                 return false;

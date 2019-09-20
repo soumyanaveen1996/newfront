@@ -635,8 +635,7 @@ const stylesheet = StyleSheet.create({
         flex: 1,
         backgroundColor: 'transparent',
         color: 'rgba(102, 102, 102, 1)',
-        fontFamily: 'SF Pro Text',
-        fontSize: 12,
+        fontSize: 14,
         paddingHorizontal: 10,
         alignSelf: 'center'
     },

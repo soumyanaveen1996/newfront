@@ -163,9 +163,20 @@ class NewContactScreen extends React.Component {
                     type === 'satellite' ? (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <View style={styles.inputPrefix}>
-                                    <Text>+</Text>
+                                    <Text
+                                        style={{
+                                            color: 'rgba(102, 102, 102, 1)',
+                                            fontSize: 14
+                                        }}
+                                    >
+                                    +
+                                    </Text>
                                     <TextInput
-                                        style={{ flex: 1 }}
+                                        style={{
+                                            flex: 1,
+                                            color: 'rgba(102, 102, 102, 1)',
+                                            fontSize: 14
+                                        }}
                                         value={this.state.prefixes[type]}
                                         keyboardType="number-pad"
                                         autoCorrect={false}
@@ -348,6 +359,11 @@ class NewContactScreen extends React.Component {
                 })
                 .then(() => {
                     this.setState({ loading: false });
+                    this.props.contact.name = this.state.name;
+                    this.props.contact.emailAddresses = this.state.emailAddresses;
+                    this.props.contact.phoneNumbers =
+                        saveLocalContactData.localContacts[0].phoneNumbers;
+                    this.props.updateContact();
                     setTimeout(() => Actions.pop(), 100);
                 })
                 .catch(err => {

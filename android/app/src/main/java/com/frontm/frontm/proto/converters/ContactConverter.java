@@ -18,6 +18,11 @@ public class ContactConverter {
         if (contact.hasPhoneNumbers()) {
             map.putMap("phoneNumbers", new PhoneNumbersConverter().toJson(contact.getPhoneNumbers()));
         }
+        map.putBoolean("showAcceptIgnoreMsg", contact.getShowAcceptIgnoreMsg());
+        map.putString("userCompanyName", contact.getUserCompanyName());
+        if (contact.hasAddress()){
+            map.putMap("address", new UserAddressConverter().toJson(contact.getAddress()));
+        }
 
         return map;
     }
