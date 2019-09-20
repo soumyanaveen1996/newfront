@@ -13,7 +13,8 @@ import {
     PermissionsAndroid,
     Alert,
     FlatList,
-    NativeModules
+    NativeModules,
+    RefreshControl
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -79,7 +80,8 @@ class CallHistory extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            callHistory: []
+            callHistory: [],
+            refreshing: false
         };
     }
 
@@ -106,6 +108,7 @@ class CallHistory extends React.Component {
             I18n.t('Call_History'),
             I18n.t('Call_History')
         );
+        Calls.fetchCallHistory();
     }
 
     static onExit() {
@@ -118,6 +121,7 @@ class CallHistory extends React.Component {
 
     getCallHistory() {
         Calls.getCallHistory().then(res => {
+            console.log('>>>>>>>get', res);
             this.setState({ callHistory: res });
         });
     }
@@ -264,6 +268,30 @@ class CallHistory extends React.Component {
                 <BackgroundImage>
                     {this.state.callHistory.length > 0 ? (
                         <FlatList
+                            refreshControl={
+                                this.props.appState.network === 'full' ? (
+                                    <RefreshControl
+                                        onRefresh={() => {
+                                            this.setState(
+                                                { refreshing: true },
+                                                async () => {
+                                                    try {
+                                                        await Calls.fetchCallHistory();
+                                                        this.setState({
+                                                            refreshing: false
+                                                        });
+                                                    } catch (e) {
+                                                        this.setState({
+                                                            refreshing: false
+                                                        });
+                                                    }
+                                                }
+                                            );
+                                        }}
+                                        refreshing={this.state.refreshing}
+                                    />
+                                ) : null
+                            }
                             data={this.state.callHistory}
                             extraData={this.state.callHistory}
                             renderItem={this.renderRow.bind(this)}

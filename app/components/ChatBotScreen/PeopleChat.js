@@ -17,6 +17,7 @@ import images from '../../images';
 import chatStyles from './styles';
 import { PhoneState } from '../Phone';
 import NetworkButton from '../Header/NetworkButton';
+import GlobalColors from '../../config/styles';
 
 var backTimer = null;
 
@@ -24,7 +25,10 @@ export default class PeopleChat extends ChatBotScreen {
     static rightHeaderView({ params }) {
         const callButton = params.callDisabled ? (
             <HeaderRightIcon
-                icon={Icons.callDisabled({ size: 35 })}
+                icon={Icons.callDisabled({
+                    size: 35,
+                    color: GlobalColors.frontmLightBlueTransparent
+                })}
                 style={{ marginRight: 0, paddingHorizontal: 0 }}
             />
         ) : (
