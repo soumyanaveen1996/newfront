@@ -477,6 +477,10 @@ export default class Contact {
                             sites
                         );
 
+                        allContacts = allContacts.filter(
+                            contact => contact !== undefined
+                        );
+
                         console.log(
                             'all conatcts ======================= >',
                             allContacts
