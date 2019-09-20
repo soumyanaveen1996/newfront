@@ -32,6 +32,8 @@ import {
 } from 'react-native-responsive-screen';
 const R = require('ramda');
 import { Loader } from '../Loader';
+import Store from '../../redux/store/configureStore';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class ContactDetailsScreen extends React.Component {
     constructor(props) {
@@ -45,6 +47,15 @@ export default class ContactDetailsScreen extends React.Component {
 
     componentDidMount() {
         // this.props.contact = this.props.contact;
+    }
+
+    static onEnter() {
+        const user = Store.getState().user;
+        if (user.contactsLoaded === false) {
+            Contact.refreshContacts();
+        }
+        EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Contacts'));
+        Store.dispatch(refreshContacts(true));
     }
 
     startChat() {
@@ -63,6 +74,10 @@ export default class ContactDetailsScreen extends React.Component {
                 onBack: this.props.onBack
             });
         });
+    }
+
+    updateContact() {
+        this.forceUpdate();
     }
 
     callContact() {
@@ -94,7 +109,8 @@ export default class ContactDetailsScreen extends React.Component {
                             accessibilityLabel="More Button"
                             onPress={() => {
                                 Actions.newContactScreen({
-                                    contact: this.props.contact
+                                    contact: this.props.contact,
+                                    updateContact: this.updateContact.bind(this)
                                 });
                             }}
                         >
@@ -831,7 +847,11 @@ export default class ContactDetailsScreen extends React.Component {
                     <Text style={styles.labelStyle}>{label}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.inputNumber}>{content}</Text>
+                    <Text style={styles.inputNumber}>
+                        {content.slice(1).includes(' ')
+                            ? '+' + content
+                            : content}
+                    </Text>
                 </View>
             </View>
         );
