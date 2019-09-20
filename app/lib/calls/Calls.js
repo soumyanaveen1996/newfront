@@ -6,21 +6,23 @@ import { CallsEvents } from '../events';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
+export const CallDirection = {
+    OUTGOING: 'outgoing',
+    INCOMING: 'incoming'
+};
+
+export const CallType = {
+    PSTN: 'PSTN',
+    VOIP: 'VOIP',
+    SAT: 'SATELLITE'
+};
+
+export const CALLS_STORAGE_KEY = 'CALLS_STORAGE_KEY_CAPABILITY';
+
 export default class Calls {
-    static callDirection = {
-        OUTGOING: 'outgoing',
-        INCOMING: 'incoming'
-    };
-
-    static callType = {
-        PSTN: 'PSTN',
-        VOIP: 'VOIP'
-    };
-    static CALLS_STORAGE_KEY_CAPABILITY = 'CALLS_STORAGE_KEY_CAPABILITY';
-
     static getCallHistory() {
         return new Promise((resolve, reject) => {
-            DeviceStorage.get(Calls.CALLS_STORAGE_KEY_CAPABILITY)
+            DeviceStorage.get(CALLS_STORAGE_KEY)
                 .then(calls => {
                     callHistory = calls || [];
                     resolve(callHistory);
@@ -63,7 +65,7 @@ export default class Calls {
 
     static saveCallHistory(callHistory) {
         return new Promise((resolve, reject) => {
-            DeviceStorage.save(Calls.CALLS_STORAGE_KEY_CAPABILITY, callHistory)
+            DeviceStorage.save(CALLS_STORAGE_KEY, callHistory)
                 .then(() => {
                     eventEmitter.emit(CallsEvents.callHistoryUpdated);
                     resolve();

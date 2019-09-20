@@ -318,7 +318,7 @@ class ContactsPicker extends React.Component {
         return (
             <ContactsPickerRow
                 key={contact.id}
-                contact={contact}
+                contact={info.item}
                 selected={this.findSelectedContact(contact) !== undefined}
                 checkBoxEnabled={!!this.props.multiSelect}
                 onContactSelected={this.onContactSelected.bind(this)}
@@ -678,6 +678,7 @@ class ContactsPicker extends React.Component {
                         renderItem={this.renderItem.bind(this)}
                         renderSectionHeader={this.sectionHeader.bind(this)}
                         sections={allContacts}
+                        extraData={this.state.contactsData}
                         keyExtractor={(item, index) => item.id}
                         ListHeaderComponent={this.renderButtons}
                         stickySectionHeadersEnabled={false}
