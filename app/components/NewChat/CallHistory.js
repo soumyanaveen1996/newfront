@@ -71,6 +71,7 @@ import {
 import { NETWORK_STATE } from '../../lib/network';
 import GlobalColors from '../../config/styles';
 import images from '../../config/images';
+import { CallDirection, CallType } from '../../lib/calls/Calls';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -87,8 +88,9 @@ class CallHistory extends React.Component {
             CallsEvents.callHistoryUpdated,
             this.getCallHistory.bind(this)
         );
-        Calls.fetchCallHistory();
-        this.getCallHistory();
+        Calls.fetchCallHistory().then(() => {
+            this.getCallHistory();
+        });
     }
 
     componentWillUnmount() {
@@ -155,7 +157,7 @@ class CallHistory extends React.Component {
         let name;
         let number;
         let icon;
-        if (item.callDirection === Calls.callDirection.INCOMING) {
+        if (item.callDirection === CallDirection.INCOMING) {
             id = item.fromUserId;
             name = item.fromUserName;
             icon =
@@ -210,7 +212,7 @@ class CallHistory extends React.Component {
                             </View>
                             <View style={styles.verticalSeparator} />
                             <Text style={styles.contactItemEmail}>
-                                {item.callType === Calls.callType.PSTN
+                                {item.callType === CallType.PSTN || CallType.SAT
                                     ? number
                                     : 'Voip call'}
                             </Text>
@@ -220,7 +222,7 @@ class CallHistory extends React.Component {
                 <TouchableOpacity
                     style={styles.recallButton}
                     onPress={
-                        item.callType === Calls.callType.PSTN
+                        item.callType === CallType.PSTN || CallType.SAT
                             ? this.makePstnCall.bind(this, number)
                             : this.makeVoipCall.bind(this, id, name)
                     }
