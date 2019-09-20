@@ -22,7 +22,7 @@ const NotificationKeys = {
 export default class Notification {
     static requestPermission = () => {
         Notification.configure();
-        PushNotification.requestPermissions([1, 1, 1]);
+        // PushNotification.requestPermissions([1, 1, 1]);
     };
 
     static configure = () => {
