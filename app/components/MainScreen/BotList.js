@@ -417,11 +417,10 @@ class BotList extends React.Component {
                         >
                             <Image source={images.empty_contact} />
                             <Text style={{ marginTop: 35 }}>
-                                You have no conversations yet.
+                                Use the buttons below to add contacts,
                             </Text>
-                            <Text>Invite contacts, subscribe to channels</Text>
                             <Text>
-                                or install FrontM Apps from the buttons below.
+                                subscribe to channels and install FrontM apps
                             </Text>
                         </View>
                     ) : (

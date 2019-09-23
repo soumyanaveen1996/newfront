@@ -38,8 +38,8 @@ export default class NetworkTutorial extends Component {
                         </Text>
                     </View>
                     <Text style={styles.welcomeSubHeader}>
-                        Chat with FrontM App to configure your account. Feel
-                        free to ask him whatever you want.
+                        Assistant can display call costs and answer your
+                        questions about using FrontM.
                     </Text>
                     <View style={styles.dotSider}>
                         <View style={styles.innerWidth}>
