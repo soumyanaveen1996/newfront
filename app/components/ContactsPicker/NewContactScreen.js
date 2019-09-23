@@ -32,6 +32,7 @@ import {
 } from '../../api/ContactServices';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
+import PhoneInput from 'react-native-phone-input';
 
 class NewContactScreen extends React.Component {
     static navigationOptions({ navigation }) {
@@ -88,35 +89,63 @@ class NewContactScreen extends React.Component {
 
     componentDidMount() {
         if (this.props.contact && this.props.contact.phoneNumbers) {
-            if (this.props.contact.phoneNumbers.mobile) {
-                const mobile = this.props.contact.phoneNumbers.mobile.split(
-                    ' '
-                );
-                if (mobile.length > 1) {
-                    this.state.phoneNumbers.mobile = mobile[1];
-                    this.state.prefixes.mobile = mobile[0];
+            const mobileNumber = this.props.contact.phoneNumbers.mobile;
+            const landNumber = this.props.contact.phoneNumbers.land;
+            const satelliteNumber = this.props.contact.phoneNumbers.satellite;
+            if (mobileNumber) {
+                if (mobileNumber.charAt(0) === '+') {
+                    const spaceIndex = mobileNumber.indexOf(' ');
+                    if (spaceIndex > 0) {
+                        this.state.prefixes.mobile = mobileNumber.slice(
+                            1,
+                            spaceIndex
+                        );
+                        this.state.phoneNumbers.mobile = mobileNumber.slice(
+                            spaceIndex + 1
+                        );
+                    } else {
+                        this.state.prefixes.mobile = mobileNumber.slice(1);
+                    }
                 } else {
-                    this.state.phoneNumbers.mobile = mobile[0];
+                    this.state.phoneNumbers.mobile = mobileNumber;
                 }
             }
-            if (this.props.contact.phoneNumbers.land) {
-                const land = this.props.contact.phoneNumbers.land.split(' ');
-                if (land.length > 1) {
-                    this.state.phoneNumbers.land = land[1];
-                    this.state.prefixes.land = land[0];
+            if (landNumber) {
+                if (landNumber.charAt(0) === '+') {
+                    const spaceIndex = landNumber.indexOf(' ');
+                    if (spaceIndex > 0) {
+                        this.state.prefixes.land = landNumber.slice(
+                            1,
+                            spaceIndex
+                        );
+                        this.state.phoneNumbers.land = landNumber.slice(
+                            spaceIndex + 1
+                        );
+                    } else {
+                        this.state.prefixes.land = landNumber.slice(1);
+                    }
                 } else {
-                    this.state.phoneNumbers.land = land[0];
+                    this.state.phoneNumbers.land = landNumber;
                 }
             }
-            if (this.props.contact.phoneNumbers.satellite) {
-                const satellite = this.props.contact.phoneNumbers.satellite.split(
-                    ' '
-                );
-                if (satellite.length > 1) {
-                    this.state.phoneNumbers.satellite = satellite[1];
-                    this.state.prefixes.satellite = satellite[0];
+            if (satelliteNumber) {
+                if (satelliteNumber.charAt(0) === '+') {
+                    const spaceIndex = satelliteNumber.indexOf(' ');
+                    if (spaceIndex > 0) {
+                        this.state.prefixes.satellite = satelliteNumber.slice(
+                            1,
+                            spaceIndex
+                        );
+                        this.state.phoneNumbers.satellite = satelliteNumber.slice(
+                            spaceIndex + 1
+                        );
+                    } else {
+                        this.state.prefixes.satellite = satelliteNumber.slice(
+                            1
+                        );
+                    }
                 } else {
-                    this.state.phoneNumbers.satellite = satellite[0];
+                    this.state.phoneNumbers.satellite = satelliteNumber;
                 }
             }
             this.setState({ phoneNumbers: this.state.phoneNumbers });
@@ -163,6 +192,7 @@ class NewContactScreen extends React.Component {
                     type === 'satellite' ? (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <View style={styles.inputPrefix}>
+                                    {/* prefix */}
                                     <Text
                                         style={{
                                             color: 'rgba(102, 102, 102, 1)',
@@ -180,30 +210,28 @@ class NewContactScreen extends React.Component {
                                         value={this.state.prefixes[type]}
                                         keyboardType="number-pad"
                                         autoCorrect={false}
-                                        maxLength={6}
+                                        maxLength={4}
                                         blurOnSubmit={false}
                                         onChangeText={text => {
                                             let numbers = this.state.prefixes;
-                                            numbers[type] = text.replace(
-                                                /[^0-9]/,
-                                                ''
-                                            );
+                                            numbers[type] = text;
                                             this.setState({ prefixes: numbers });
                                         }}
                                         underlineColorAndroid={'transparent'}
                                         placeholderTextColor="rgba(155,155,155,1)"
                                     />
                                 </View>
+                                {/* number */}
                                 <TextInput
                                     style={styles.inputNumber}
                                     value={this.state.phoneNumbers[type]}
                                     keyboardType="phone-pad"
                                     autoCorrect={false}
-                                    maxLength={15}
+                                    maxLength={20}
                                     blurOnSubmit={false}
                                     onChangeText={text => {
                                         let numbers = this.state.phoneNumbers;
-                                        numbers[type] = text.replace(/[^0-9]/, '');
+                                        numbers[type] = text;
                                         this.setState({ phoneNumbers: numbers });
                                     }}
                                     underlineColorAndroid={'transparent'}
@@ -211,6 +239,7 @@ class NewContactScreen extends React.Component {
                                 />
                             </View>
                         ) : (
+                        // email
                             <TextInput
                                 style={styles.inputNumber}
                                 value={this.state.emailAddresses[type]}
@@ -328,6 +357,18 @@ class NewContactScreen extends React.Component {
 
     saveProfile = () => {
         this.setState({ loading: true });
+        let mobilePrefix = this.state.prefixes.mobile.replace(/\s/g, '');
+        if (mobilePrefix) {
+            mobilePrefix = '+' + mobilePrefix + ' ';
+        }
+        let landPrefix = this.state.prefixes.land.replace(/\s/g, '');
+        if (landPrefix) {
+            landPrefix = '+' + landPrefix + ' ';
+        }
+        let satellitePrefix = this.state.prefixes.satellite.replace(/\s/g, '');
+        if (satellitePrefix) {
+            satellitePrefix = '+' + satellitePrefix + ' ';
+        }
         let saveLocalContactData = {
             localContacts: [
                 {
@@ -335,17 +376,14 @@ class NewContactScreen extends React.Component {
                     emailAddresses: this.state.emailAddresses,
                     phoneNumbers: {
                         mobile:
-                            this.state.prefixes.mobile +
-                            ' ' +
-                            this.state.phoneNumbers.mobile,
+                            mobilePrefix +
+                            this.state.phoneNumbers.mobile.replace(/\s/g, ''),
                         land:
-                            this.state.prefixes.land +
-                            ' ' +
-                            this.state.phoneNumbers.land,
+                            landPrefix +
+                            this.state.phoneNumbers.land.replace(/\s/g, ''),
                         satellite:
-                            this.state.prefixes.satellite +
-                            ' ' +
-                            this.state.phoneNumbers.satellite
+                            satellitePrefix +
+                            this.state.phoneNumbers.satellite.replace(/\s/g, '')
                     }
                 }
             ]
@@ -373,6 +411,7 @@ class NewContactScreen extends React.Component {
                     this.setState({ loading: false });
                 });
         } else {
+            console.log('>>>>>>>>1', saveLocalContactData);
             AddLocalContacts(saveLocalContactData)
                 .then(() => {
                     Store.dispatch(completeContactsLoad(false));
