@@ -203,7 +203,7 @@ class NewContactScreen extends React.Component {
                                     blurOnSubmit={false}
                                     onChangeText={text => {
                                         let numbers = this.state.phoneNumbers;
-                                        numbers[type] = text;
+                                        numbers[type] = text.replace(/[^0-9]/, '');
                                         this.setState({ phoneNumbers: numbers });
                                     }}
                                     underlineColorAndroid={'transparent'}
@@ -320,7 +320,9 @@ class NewContactScreen extends React.Component {
         this.setState({
             emailAddresses: data.emails,
             phoneNumbers: data.phoneNumbers,
-            reloadProfileImage: data.profileImage
+            reloadProfileImage: data.profileImage,
+            name: data.name,
+            prefixes: data.prefixes
         });
     };
 
