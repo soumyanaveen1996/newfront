@@ -110,9 +110,13 @@ export default class LocalContactModal extends React.Component {
 
                     if (data.phoneNumbers && data.phoneNumbers.length > 0) {
                         let landNumber = data.phoneNumbers.find(element => {
-                            return element.label === 'land';
+                            return (
+                                element.label === 'land' ||
+                                element.label === 'home'
+                            );
                         });
                         if (landNumber) {
+                            landNumber = landNumber.number;
                             if (landNumber.charAt(0) === '+') {
                                 const spaceIndex = landNumber.indexOf(' ');
                                 if (spaceIndex > 0) {
@@ -136,6 +140,7 @@ export default class LocalContactModal extends React.Component {
                             return element.label === 'mobile';
                         });
                         if (mobileNumber) {
+                            mobileNumber = mobileNumber.number;
                             if (mobileNumber.charAt(0) === '+') {
                                 const spaceIndex = mobileNumber.indexOf(' ');
                                 if (spaceIndex > 0) {
@@ -161,6 +166,7 @@ export default class LocalContactModal extends React.Component {
                             }
                         );
                         if (satelliteNumber) {
+                            satelliteNumber = satelliteNumber.number;
                             if (satelliteNumber.charAt(0) === '+') {
                                 const spaceIndex = satelliteNumber.indexOf(' ');
                                 if (spaceIndex > 0) {

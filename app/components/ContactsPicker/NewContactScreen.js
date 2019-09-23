@@ -341,7 +341,7 @@ class NewContactScreen extends React.Component {
     };
 
     importSelectedContact = data => {
-        console.log('selected contact data ', data);
+        console.log('>>>>>selected contact data ', data);
         if (Object.keys(data).length <= 0) {
             this.setState({ modalVisible: false });
             return;
