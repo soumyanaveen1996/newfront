@@ -93,6 +93,11 @@ export default class LocalContactModal extends React.Component {
                             land: '',
                             satellite: ''
                         },
+                        prefixes: {
+                            mobile: '',
+                            land: '',
+                            satellite: ''
+                        },
                         profileImage: data.thumbnailPath,
                         userName: userName,
                         name: contactName,
@@ -108,34 +113,81 @@ export default class LocalContactModal extends React.Component {
                             return element.label === 'land';
                         });
                         if (land) {
-                            contactObj.phoneNumbers.land = land.number;
+                            if (land.number.charAt(0) === '+') {
+                                contactObj.prefixes.land = land.number
+                                    .split(' ')[0]
+                                    .replace(/[^0-9]/, '');
+                                contactObj.phoneNumbers.land = land.number
+                                    .split(' ')
+                                    .splice(1)
+                                    .join(' ')
+                                    .replace(/[^0-9]/, '');
+                            } else {
+                                contactObj.phoneNumbers.land = land.number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
+                            }
                         } else {
                             if (data.phoneNumbers[1]) {
-                                contactObj.phoneNumbers.land =
-                                    data.phoneNumbers[1].number;
+                                contactObj.phoneNumbers.land = data.phoneNumbers[1].number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
                             }
                         }
                         let mobile = data.phoneNumbers.find(element => {
                             return element.label === 'mobile';
                         });
                         if (mobile) {
-                            contactObj.phoneNumbers.mobile = mobile.number;
+                            if (mobile.number.charAt(0) === '+') {
+                                contactObj.prefixes.mobile = mobile.number
+                                    .split(' ')[0]
+                                    .replace(/[^0-9]/, '');
+                                contactObj.phoneNumbers.mobile = mobile.number
+                                    .split(' ')
+                                    .splice(1)
+                                    .join(' ')
+                                    .replace(/[^0-9]/, '');
+                            } else {
+                                contactObj.phoneNumbers.mobile = mobile.number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
+                            }
                         } else {
                             if (data.phoneNumbers[0]) {
-                                contactObj.phoneNumbers.mobile =
-                                    data.phoneNumbers[0].number;
+                                contactObj.phoneNumbers.mobile = data.phoneNumbers[0].number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
                             }
                         }
                         let satellite = data.phoneNumbers.find(element => {
                             return element.label === 'satellite';
                         });
                         if (satellite) {
-                            contactObj.phoneNumbers.satellite =
-                                satellite.number;
+                            if (satellite.number.charAt(0) === '+') {
+                                contactObj.prefixes.satellite = satellite.number
+                                    .split(' ')[0]
+                                    .replace(/[^0-9]/, '');
+                                contactObj.phoneNumbers.satellite = satellite.number
+                                    .split(' ')
+                                    .splice(1)
+                                    .join(' ')
+                                    .replace(/[^0-9]/, '');
+                            } else {
+                                contactObj.phoneNumbers.satellite = satellite.number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
+                            }
                         } else {
                             if (data.phoneNumbers[2]) {
-                                contactObj.phoneNumbers.satellite =
-                                    data.phoneNumbers[2].number;
+                                contactObj.phoneNumbers.satellite = data.phoneNumbers[2].number.replace(
+                                    /[^0-9]/,
+                                    ''
+                                );
                             }
                         }
                     }
