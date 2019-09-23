@@ -26,6 +26,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { GlobalColors } from '../../config/styles';
 import _ from 'lodash';
 import NetworkButton from '../Header/NetworkButton';
+import searchUserStyles from '../ContactsPicker/styles';
 
 const R = require('ramda');
 const cancelImg = require('../../images/channels/cross-deselect-participant.png');
@@ -281,7 +282,12 @@ class ManageContacts extends React.Component {
         return (
             <SafeAreaView style={styles.addContactsContainer}>
                 {this.renderSearchBar()}
-                <View style={styles.selectContactContainer}>
+                <View
+                    style={[
+                        searchUserStyles.selectedContactsListSU,
+                        { backgroundColor: GlobalColors.disabledGray }
+                    ]}
+                >
                     <Text
                         style={{
                             paddingHorizontal: 10,
@@ -407,9 +413,11 @@ class ManageContacts extends React.Component {
                                                     ? this.renderEmailAddress(
                                                         elem.emailAddress
                                                     )
-                                                    : this.renderEmailAddress(
-                                                        elem.emailAddresses
-                                                    )}
+                                                    : elem.emailAddresses
+                                                        ? this.renderEmailAddress(
+                                                            elem.emailAddresses
+                                                        )
+                                                        : null}
                                             </Text>
                                         </View>
                                     </TouchableOpacity>
