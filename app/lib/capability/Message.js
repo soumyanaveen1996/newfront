@@ -174,9 +174,12 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_OTHER_FILE;
     };
 
-    videoMessage = videoUrl => {
+    videoMessage = (videoUrl, options) => {
         // TODO: validate a valid url? - string for now
         this._msg = videoUrl;
+        if (options) {
+            this._options = JSON.stringify(options);
+        }
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_VIDEO;
     };
 
@@ -504,7 +507,6 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_BUTTON_RESPONSE
         ) {
             let item = this.getMessage();
-            console.log('>>>>>>>>item', item);
             return I18n.t('Slider_Response_Message', { lines: item.title });
         } else if (
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_HTML
@@ -601,7 +603,8 @@ export default class Message {
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_MAP ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_LOCATION ||
             this._messageType === MessageTypeConstants.MESSAGE_TYPE_CARDS ||
-            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_CHART ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_VIDEO
         ) {
             try {
                 return JSON.parse(this._options);
