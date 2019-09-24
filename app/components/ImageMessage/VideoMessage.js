@@ -159,7 +159,15 @@ export default class VideoMessage extends React.Component {
                     {this.state.ready ? null : (
                         <Image
                             source={images.play_button}
-                            style={[styles.image, { position: 'absolute' }]}
+                            resizeMode={'contain'}
+                            style={[
+                                styles.image,
+                                {
+                                    position: 'absolute',
+                                    width: '50%',
+                                    height: '50%'
+                                }
+                            ]}
                         />
                     )}
                 </TouchableOpacity>
