@@ -847,11 +847,7 @@ export default class ContactDetailsScreen extends React.Component {
                     <Text style={styles.labelStyle}>{label}</Text>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.inputNumber}>
-                        {content.slice(1).includes(' ')
-                            ? '+' + content
-                            : content}
-                    </Text>
+                    <Text style={styles.inputNumber}>{content}</Text>
                 </View>
             </View>
         );
