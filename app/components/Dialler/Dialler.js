@@ -81,7 +81,7 @@ export default class Dialler extends React.Component {
             speakerOn: false,
             callQuota: 0,
             callQuotaUpdateError: false,
-            updatingCallQuota: false,
+            updatingCallQuota: true,
             timerId: null,
             callTime: 0,
             intervalId: null,
