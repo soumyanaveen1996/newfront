@@ -833,7 +833,10 @@ export default class ContactDetailsScreen extends React.Component {
             );
         } else if (icon === 'satellite') {
             iconImage = (
-                <Image source={images.satellite} style={styles.satelliteIcon} />
+                <Image
+                    source={images.satellite_icon}
+                    style={styles.phoneIcon}
+                />
             );
         } else if (icon === 'email') {
             iconImage = (

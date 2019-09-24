@@ -67,8 +67,12 @@ class MyProfileScreen extends React.Component {
             reloadProfileImage: '',
             userId: this.props.userId,
             myName: '',
-            phoneNumbers: [],
-            emailAddress: [],
+            phoneNumbers: {
+                mobile: '',
+                land: '',
+                satellite: ''
+            },
+            emailAddress: '',
             searchable: true,
             visible: false,
             inviteModalVisible: false,
@@ -96,34 +100,34 @@ class MyProfileScreen extends React.Component {
                 this.setState({ profileImage: imageUrl });
 
                 const info = { ...userDetails.info };
-                const emailArray = [];
-                let phoneArray = [];
-                if (info.phoneNumbers) {
-                    if (Array.isArray(info.phoneNumbers)) {
-                        phoneArray = [...info.phoneNumbers];
-                    } else {
-                        let phoneObject = { ...info.phoneNumbers };
+                // const emailArray = [];
+                // let phoneArray = [];
+                // if (info.phoneNumbers) {
+                //     if (Array.isArray(info.phoneNumbers)) {
+                //         phoneArray = [...info.phoneNumbers];
+                //     } else {
+                //         let phoneObject = { ...info.phoneNumbers };
 
-                        for (var key in phoneObject) {
-                            let tempObj = {};
-                            if (phoneObject.hasOwnProperty(key)) {
-                                const keyName = key;
-                                tempObj = {
-                                    [keyName]: phoneObject[key]
-                                };
-                            }
+                //         for (var key in phoneObject) {
+                //             let tempObj = {};
+                //             if (phoneObject.hasOwnProperty(key)) {
+                //                 const keyName = key;
+                //                 tempObj = {
+                //                     [keyName]: phoneObject[key]
+                //                 };
+                //             }
 
-                            phoneArray.push(tempObj);
-                        }
-                    }
-                }
+                //             phoneArray.push(tempObj);
+                //         }
+                //     }
+                // }
 
-                emailArray.push(info.emailAddress);
+                // emailArray.push(info.emailAddress);
                 if (this.mounted) {
                     this.setState({
                         myName: info.userName,
-                        emailAddress: [...emailArray],
-                        phoneNumbers: info.phoneNumbers ? [...phoneArray] : [],
+                        emailAddress: info.emailAddress,
+                        phoneNumbers: info.phoneNumbers,
                         searchable: info.searchable || false,
                         visible: info.visible || false
                     });
@@ -148,42 +152,44 @@ class MyProfileScreen extends React.Component {
         try {
             this.setState({ loading: true });
             let detailObj = {
-                emailAddress: this.state.emailAddress[0],
+                emailAddress: this.state.emailAddress,
                 searchable: this.state.searchable,
                 visible: this.state.visible,
-                userName: this.state.myName
+                userName: this.state.myName,
+                phoneNumbers: this.state.phoneNumbers
             };
 
             let userDetails = {
                 userName: this.state.myName,
                 searchable: this.state.searchable,
-                visible: this.state.visible
+                visible: this.state.visible,
+                phoneNumbers: this.state.phoneNumbers
             };
 
-            if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
-                let phoneNum = {};
-                this.state.phoneNumbers.forEach(elem => {
-                    let key;
-                    let phValue;
+            // if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
+            //     let phoneNum = {};
+            //     this.state.phoneNumbers.forEach(elem => {
+            //         let key;
+            //         let phValue;
 
-                    key = Object.keys(elem)[0];
-                    phValue = elem[key];
-                    if (elem.number === '') {
-                        console.log('its empty');
-                    } else {
-                        phoneNum[key] = phValue;
-                    }
-                });
-                userDetails.phoneNumbers = { ...phoneNum };
-                detailObj.phoneNumbers = { ...phoneNum };
-            }
+            //         key = Object.keys(elem)[0];
+            //         phValue = elem[key];
+            //         if (elem.number === '') {
+            //             console.log('its empty');
+            //         } else {
+            //             phoneNum[key] = phValue;
+            //         }
+            //     });
+            //     userDetails.phoneNumbers = { ...phoneNum };
+            //     detailObj.phoneNumbers = { ...phoneNum };
+            // }
 
-            if (
-                userDetails.phoneNumbers &&
-                Object.keys(userDetails.phoneNumbers).length === 0
-            ) {
-                delete detailObj.phoneNumbers;
-            }
+            // if (
+            //     userDetails.phoneNumbers &&
+            //     Object.keys(userDetails.phoneNumbers).length === 0
+            // ) {
+            //     delete detailObj.phoneNumbers;
+            // }
 
             console.log('beforeing saving profile ', detailObj, userDetails);
 
@@ -260,116 +266,6 @@ class MyProfileScreen extends React.Component {
                 <Image source={images.satellite} style={styles.satelliteIcon} />
             );
         }
-    };
-
-    infoRender = (type, myInfoData) => {
-        return myInfoData.map((info, index) => {
-            // console.log('all th data ', info);
-
-            let key;
-            let phValue;
-
-            if (type === 'phNumber') {
-                key = Object.keys(info)[0];
-                phValue = info[key];
-            }
-
-            return (
-                <View
-                    key={index}
-                    indexData={index}
-                    style={styles.mainInfoRenderContainer}
-                >
-                    <View style={styles.labelContainer}>
-                        {type === 'phNumber' ? (
-                            <View
-                                style={{ width: '30%', alignItems: 'center' }}
-                            >
-                                {this.getTheIcon(key)}
-                            </View>
-                        ) : (
-                            <Image
-                                source={images.email_icon}
-                                style={styles.emailIcon}
-                            />
-                        )}
-                        {type === 'phNumber' ? (
-                            <Text style={[styles.labelStyle, { width: '40%' }]}>
-                                {key}
-                            </Text>
-                        ) : (
-                            <Text style={styles.labelStyle}>
-                                {I18n.t('Email')}
-                            </Text>
-                        )}
-                        {type === 'phNumber' ? (
-                            <TouchableOpacity
-                                disabled={
-                                    this.props.appState.network !== 'full'
-                                }
-                                style={{
-                                    width: 40,
-                                    height: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                                onPress={() => {
-                                    this.selectNumberType(index);
-                                }}
-                            >
-                                <Image
-                                    source={images.collapse_gray_arrow_down}
-                                    style={styles.arrowStyle}
-                                />
-                            </TouchableOpacity>
-                        ) : null}
-                    </View>
-                    <View style={styles.infoContainer}>
-                        {type === 'phNumber' ? (
-                            <TextInput
-                                editable={
-                                    this.props.appState.network === 'full'
-                                }
-                                style={styles.inputNumber}
-                                value={phValue}
-                                keyboardType="phone-pad"
-                                autoCorrect={false}
-                                maxLength={15}
-                                blurOnSubmit={false}
-                                onChangeText={value => {
-                                    this.setPhoneNumber(value, index, key);
-                                }}
-                                underlineColorAndroid={'transparent'}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                            />
-                        ) : (
-                            <Text style={styles.infoLabelStyle}>{info}</Text>
-                        )}
-                        {type === 'phNumber' ? (
-                            <TouchableOpacity
-                                disabled={
-                                    this.props.appState.network !== 'full'
-                                }
-                                style={{
-                                    width: 40,
-                                    height: 40,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                                onPress={() => {
-                                    this.removephone(index);
-                                }}
-                            >
-                                <Image
-                                    style={{ width: 10, height: 10 }}
-                                    source={images.remove_icon}
-                                />
-                            </TouchableOpacity>
-                        ) : null}
-                    </View>
-                </View>
-            );
-        });
     };
 
     setInviteVisible(value) {
@@ -563,6 +459,322 @@ class MyProfileScreen extends React.Component {
         }
     }
 
+    renderTopArea() {
+        return (
+            <View style={styles.profileImageContainer}>
+                <View
+                    style={{
+                        width: 120,
+                        height: 120,
+                        borderRadius: 60
+                    }}
+                >
+                    {this.state.reloadProfileImage ? (
+                        <Image
+                            source={{
+                                uri: this.state.reloadProfileImage
+                            }}
+                            style={styles.profileImgStyle}
+                        />
+                    ) : (
+                        <MyProfileImage
+                            uuid={this.state.userId}
+                            placeholder={images.user_image}
+                            style={styles.profilePic}
+                            placeholderStyle={styles.profileImgStyle}
+                            resizeMode="cover"
+                            changeProfileImageBack={() => {
+                                this.changeProfileStatuBack.bind(this);
+                            }}
+                        />
+                    )}
+                </View>
+                <TouchableOpacity
+                    disabled={this.props.appState.network !== 'full'}
+                    style={{
+                        position: 'absolute',
+                        right: 20
+                    }}
+                    accessibilityLabel="More Button"
+                    onPress={this.showOptions.bind(this)}
+                >
+                    <Image
+                        style={{
+                            width: 45,
+                            height: 45
+                        }}
+                        source={images.edit_btn}
+                    />
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    renderNameArea() {
+        return (
+            <View style={styles.nameContainerStyle}>
+                <View
+                    style={{
+                        width: 300,
+                        alignItems: 'flex-start'
+                    }}
+                >
+                    <Text style={styles.nameLabel}>{I18n.t('Name')}</Text>
+                    <TextInput
+                        editable={this.props.appState.network === 'full'}
+                        style={styles.input}
+                        autoCorrect={false}
+                        value={this.state.myName}
+                        onChangeText={val => {
+                            this.setState({ myName: val });
+                        }}
+                        blurOnSubmit={false}
+                        placeholder="Your Name"
+                        underlineColorAndroid={'transparent'}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    renderNumbersOLD() {
+        return (
+            <View style={styles.userInfoNumberContainer}>
+                {this.infoRender('phNumber', this.state.phoneNumbers)}
+                <View style={styles.addContainer}>
+                    <Image source={images.btn_more} style={styles.iconStyle} />
+                    <TouchableOpacity
+                        disabled={this.props.appState.network !== 'full'}
+                        onPress={() => {
+                            this.addNewNumber();
+                        }}
+                    >
+                        <Text style={styles.addLabel}>
+                            {I18n.t('Add_phone')}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    renderEmailsOLD() {
+        return (
+            <View style={styles.userInfoEmailContainer}>
+                {this.infoRender('email', this.state.emailAddress)}
+                <View style={styles.addContainer}>
+                    <Image
+                        source={images.btn_more}
+                        style={{
+                            height: 8,
+                            width: 8,
+                            marginRight: 15
+                        }}
+                    />
+                    <Text
+                        style={{
+                            color: 'rgba(0, 189, 242, 1)',
+                            fontFamily: 'SF Pro Text',
+                            fontSize: 12
+                        }}
+                    >
+                        Add Email
+                    </Text>
+                </View>
+            </View>
+        );
+    }
+
+    renderNumbers() {
+        return (
+            <View style={styles.userInfoNumberContainer}>
+                {this.infoRender('mobile')}
+                {this.infoRender('land')}
+                {this.infoRender('satellite')}
+            </View>
+        );
+    }
+
+    renderEmails() {
+        return (
+            <View style={styles.userInfoEmailContainer}>
+                {this.infoRender('email')}
+            </View>
+        );
+    }
+
+    infoRender = type => {
+        let icon;
+        if (type === 'land' || type === 'mobile') {
+            icon = (
+                <Image
+                    source={images.phone_icon}
+                    style={styles.phoneIcon}
+                    resizeMode={'contain'}
+                />
+            );
+        } else if (type === 'satellite') {
+            icon = (
+                <Image
+                    source={images.satellite_icon}
+                    style={styles.phoneIcon}
+                    resizeMode={'contain'}
+                />
+            );
+        } else if (type === 'email') {
+            icon = (
+                <Image
+                    source={images.email_icon}
+                    style={styles.emailIcon}
+                    resizeMode={'contain'}
+                />
+            );
+        }
+
+        return (
+            <View style={styles.mainInfoRenderContainer}>
+                <View
+                    style={[
+                        styles.labelContainer,
+                        {
+                            borderRightColor: 'rgba(221,222,227,1)',
+                            borderRightWidth: 1
+                        }
+                    ]}
+                >
+                    {icon}
+                    <Text style={styles.labelStyle}>{type}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    {type === 'land' ||
+                    type === 'mobile' ||
+                    type === 'satellite' ? (
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                {/* number */}
+                                <TextInput
+                                    style={styles.inputNumber}
+                                    value={this.state.phoneNumbers[type]}
+                                    keyboardType="phone-pad"
+                                    autoCorrect={false}
+                                    maxLength={20}
+                                    blurOnSubmit={false}
+                                    onChangeText={text => {
+                                        let numbers = this.state.phoneNumbers;
+                                        numbers[type] = text;
+                                        this.setState({ phoneNumbers: numbers });
+                                    }}
+                                    underlineColorAndroid={'transparent'}
+                                    placeholderTextColor="rgba(155,155,155,1)"
+                                    clearButtonMode="always"
+                                />
+                            </View>
+                        ) : (
+                        // email
+                            <Text style={styles.inputNumber}>
+                                {this.state.emailAddress}
+                            </Text>
+                        )}
+                </View>
+            </View>
+        );
+    };
+
+    renderBottomSettings() {
+        return (
+            <View style={styles.bottomSettingContainer}>
+                <View style={styles.switchContainer}>
+                    <Text style={styles.longTextStyle}>
+                        {I18n.t('Search_my_info_text')}
+                    </Text>
+                    <Switch
+                        disabled={this.props.appState.network !== 'full'}
+                        style={styles.switchStyle}
+                        value={this.state.searchable}
+                        onValueChange={val => {
+                            let stateTint = this.state.searchable;
+                            stateTint = !stateTint;
+                            this.setState({
+                                searchable: stateTint
+                            });
+                        }}
+                        trackColor="rgba(244,244,244,1)"
+                        onTintColor="rgba(244,244,244,1)"
+                        // tintColor="rgba(244,244,244,1)"
+                        thumbColor={
+                            this.state.searchable
+                                ? 'rgba(0,189,242,1)'
+                                : 'rgba(102,102,102,1)'
+                        }
+                    />
+                </View>
+                <View
+                    style={{
+                        width: '100%',
+                        height: 1,
+                        backgroundColor: 'rgba(221,222,227,1)'
+                    }}
+                />
+                <View style={styles.switchContainer}>
+                    <Text style={styles.longTextStyle}>
+                        {I18n.t('Share_my_info_text')}
+                    </Text>
+                    <Switch
+                        disabled={this.props.appState.network !== 'full'}
+                        style={styles.switchStyle}
+                        value={this.state.visible}
+                        onValueChange={val => {
+                            let stateTint = this.state.visible;
+                            stateTint = !stateTint;
+                            this.setState({
+                                visible: stateTint
+                            });
+                        }}
+                        trackColor="rgba(244,244,244,1)"
+                        onTintColor="rgba(244,244,244,1)"
+                        // tintColor="rgba(244,244,244,1)"
+                        thumbColor={
+                            this.state.visible
+                                ? 'rgba(0,189,242,1)'
+                                : 'rgba(102,102,102,1)'
+                        }
+                    />
+                </View>
+            </View>
+        );
+    }
+
+    renderBottomButtons() {
+        return (
+            <View style={styles.btn_container}>
+                <TouchableOpacity
+                    onPress={() => {
+                        Actions.pop(this.props.updateContactScreen());
+                    }}
+                    style={styles.cancel_btn}
+                >
+                    <Text style={styles.cancel_text}>{I18n.t('Cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    disabled={this.props.appState.network !== 'full'}
+                    onPress={() => {
+                        this.saveProfile();
+                    }}
+                    style={[
+                        styles.save_btn,
+                        {
+                            opacity:
+                                this.props.appState.network === 'full' ? 1 : 0.2
+                        }
+                    ]}
+                >
+                    <Text style={styles.save_btn_text}>{I18n.t('SAVE')}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     render() {
         // console.log('image url ', this.state.reloadProfileImage);
 
@@ -585,242 +797,14 @@ class MyProfileScreen extends React.Component {
                                 setVisible={this.setInviteVisible.bind(this)}
                                 settingType={this.setupType.bind(this)}
                             />
-                            <View style={styles.profileImageContainer}>
-                                <View
-                                    style={{
-                                        width: 120,
-                                        height: 120,
-                                        borderRadius: 60
-                                    }}
-                                >
-                                    {this.state.reloadProfileImage ? (
-                                        <Image
-                                            source={{
-                                                uri: this.state
-                                                    .reloadProfileImage
-                                            }}
-                                            style={styles.profileImgStyle}
-                                        />
-                                    ) : (
-                                        <MyProfileImage
-                                            uuid={this.state.userId}
-                                            placeholder={images.user_image}
-                                            style={styles.profilePic}
-                                            placeholderStyle={
-                                                styles.profileImgStyle
-                                            }
-                                            resizeMode="cover"
-                                            changeProfileImageBack={() => {
-                                                this.changeProfileStatuBack.bind(
-                                                    this
-                                                );
-                                            }}
-                                        />
-                                    )}
-                                </View>
-                                <TouchableOpacity
-                                    disabled={
-                                        this.props.appState.network !== 'full'
-                                    }
-                                    style={{
-                                        position: 'absolute',
-                                        right: 20
-                                    }}
-                                    accessibilityLabel="More Button"
-                                    onPress={this.showOptions.bind(this)}
-                                >
-                                    <Image
-                                        style={{
-                                            width: 45,
-                                            height: 45
-                                        }}
-                                        source={images.edit_btn}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.nameContainerStyle}>
-                                <View
-                                    style={{
-                                        width: 300,
-                                        alignItems: 'flex-start'
-                                    }}
-                                >
-                                    <Text style={styles.nameLabel}>
-                                        {I18n.t('Name')}
-                                    </Text>
-                                    <TextInput
-                                        editable={
-                                            this.props.appState.network ===
-                                            'full'
-                                        }
-                                        style={styles.input}
-                                        autoCorrect={false}
-                                        value={this.state.myName}
-                                        onChangeText={val => {
-                                            this.setState({ myName: val });
-                                        }}
-                                        blurOnSubmit={false}
-                                        placeholder="Your Name"
-                                        underlineColorAndroid={'transparent'}
-                                        placeholderTextColor="rgba(155,155,155,1)"
-                                        clearButtonMode="always"
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.userInfoNumberContainer}>
-                                {this.infoRender(
-                                    'phNumber',
-                                    this.state.phoneNumbers
-                                )}
-                                <View style={styles.addContainer}>
-                                    <Image
-                                        source={images.btn_more}
-                                        style={styles.iconStyle}
-                                    />
-                                    <TouchableOpacity
-                                        disabled={
-                                            this.props.appState.network !==
-                                            'full'
-                                        }
-                                        onPress={() => {
-                                            this.addNewNumber();
-                                        }}
-                                    >
-                                        <Text style={styles.addLabel}>
-                                            {I18n.t('Add_phone')}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={styles.userInfoEmailContainer}>
-                                {this.infoRender(
-                                    'email',
-                                    this.state.emailAddress
-                                )}
-                                {/* <View
-                                style={styles.addContainer}
-                            >
-                                <Image
-                                    source={images.btn_more}
-                                    style={{
-                                        height: 8,
-                                        width: 8,
-                                        marginRight: 15
-                                    }}
-                                />
-                                <Text
-                                    style={{
-                                        color: 'rgba(0, 189, 242, 1)',
-                                        fontFamily: 'SF Pro Text',
-                                        fontSize: 12
-                                    }}
-                                >
-                                    Add Email
-                                </Text>
-                            </View> */}
-                            </View>
-                            <View style={styles.bottomSettingContainer}>
-                                <View style={styles.switchContainer}>
-                                    <Text style={styles.longTextStyle}>
-                                        {I18n.t('Search_my_info_text')}
-                                    </Text>
-                                    <Switch
-                                        disabled={
-                                            this.props.appState.network !==
-                                            'full'
-                                        }
-                                        style={styles.switchStyle}
-                                        value={this.state.searchable}
-                                        onValueChange={val => {
-                                            let stateTint = this.state
-                                                .searchable;
-                                            stateTint = !stateTint;
-                                            this.setState({
-                                                searchable: stateTint
-                                            });
-                                        }}
-                                        trackColor="rgba(244,244,244,1)"
-                                        onTintColor="rgba(244,244,244,1)"
-                                        // tintColor="rgba(244,244,244,1)"
-                                        thumbColor={
-                                            this.state.searchable
-                                                ? 'rgba(0,189,242,1)'
-                                                : 'rgba(102,102,102,1)'
-                                        }
-                                    />
-                                </View>
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        height: 1,
-                                        backgroundColor: 'rgba(221,222,227,1)'
-                                    }}
-                                />
-                                <View style={styles.switchContainer}>
-                                    <Text style={styles.longTextStyle}>
-                                        {I18n.t('Share_my_info_text')}
-                                    </Text>
-                                    <Switch
-                                        disabled={
-                                            this.props.appState.network !==
-                                            'full'
-                                        }
-                                        style={styles.switchStyle}
-                                        value={this.state.visible}
-                                        onValueChange={val => {
-                                            let stateTint = this.state.visible;
-                                            stateTint = !stateTint;
-                                            this.setState({
-                                                visible: stateTint
-                                            });
-                                        }}
-                                        trackColor="rgba(244,244,244,1)"
-                                        onTintColor="rgba(244,244,244,1)"
-                                        // tintColor="rgba(244,244,244,1)"
-                                        thumbColor={
-                                            this.state.visible
-                                                ? 'rgba(0,189,242,1)'
-                                                : 'rgba(102,102,102,1)'
-                                        }
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.btn_container}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Actions.pop(
-                                            this.props.updateContactScreen()
-                                        );
-                                    }}
-                                    style={styles.cancel_btn}
-                                >
-                                    <Text style={styles.cancel_text}>
-                                        {I18n.t('Cancel')}
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    disabled={
-                                        this.props.appState.network !== 'full'
-                                    }
-                                    onPress={() => {
-                                        this.saveProfile();
-                                    }}
-                                    style={[
-                                        styles.save_btn,
-                                        {
-                                            opacity:
-                                                this.props.appState.network ===
-                                                'full'
-                                                    ? 1
-                                                    : 0.2
-                                        }
-                                    ]}
-                                >
-                                    <Text style={styles.save_btn_text}>
-                                        {I18n.t('SAVE')}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                            {this.renderTopArea()}
+                            {this.renderNameArea()}
+                            {/* {this.renderNumbersOLD()}
+                            {this.renderEmailsOLD()} */}
+                            {this.renderNumbers()}
+                            {this.renderEmails()}
+                            {this.renderBottomSettings()}
+                            {this.renderBottomButtons()}
                         </View>
                     </ScrollView>
                     {this.renderToast()}
