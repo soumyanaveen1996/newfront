@@ -184,18 +184,8 @@ export const Icons = {
         GlobalColors.sideButtons
     ),
     //FILES
-    fileIcon: icon(
-        'ios-document-outline',
-        'ionicon',
-        70,
-        GlobalColors.disabledGray
-    ),
-    fileIconSmall: icon(
-        'ios-document-outline',
-        'ionicon',
-        30,
-        GlobalColors.darkGray
-    ),
+    fileIcon: icon('ios-document', 'ionicon', 70, GlobalColors.disabledGray),
+    fileIconSmall: icon('ios-document', 'ionicon', 30, GlobalColors.darkGray),
     formCalendar: icon(
         'ios-calendar-outline',
         'ionicon',

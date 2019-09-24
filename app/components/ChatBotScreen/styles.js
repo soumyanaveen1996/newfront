@@ -578,7 +578,7 @@ const stylesheet = StyleSheet.create({
     fileType: {
         position: 'absolute',
         alignSelf: 'center',
-        color: GlobalColors.disabledGray,
+        color: GlobalColors.white,
         fontWeight: 'bold'
     },
     downloadIcon: {
