@@ -116,6 +116,7 @@ import { Conversation } from '../../lib/conversation';
 import ImageResizer from 'react-native-image-resizer';
 import ImageMessage from '../ImageMessage/ImageMessage';
 import NetworkButton from '../Header/NetworkButton';
+import VideoMessage from '../ImageMessage/VideoMessage';
 
 const ConversationServiceClient = NativeModules.ConversationServiceClient;
 const QueueServiceClient = NativeModules.QueueServiceClient;
@@ -1460,6 +1461,18 @@ class ChatBotScreen extends React.Component {
                 );
             } else if (
                 message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_VIDEO
+            ) {
+                return (
+                    <VideoMessage
+                        url={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={false}
+                        options={message.getMessageOptions()}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_LOCATION
             ) {
                 return (
@@ -1580,6 +1593,18 @@ class ChatBotScreen extends React.Component {
                         fileName={message.getMessage()}
                         conversationContext={this.conversationContext}
                         isFromUser={true}
+                    />
+                );
+            } else if (
+                message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_VIDEO
+            ) {
+                return (
+                    <VideoMessage
+                        url={message.getMessage()}
+                        conversationContext={this.conversationContext}
+                        isFromUser={true}
+                        options={message.getMessageOptions()}
                     />
                 );
             } else if (

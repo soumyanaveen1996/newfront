@@ -110,7 +110,8 @@ const images = {
     walkthrough_image: require('./walkthrough/image.png'),
     empty_state_connection: require('./illus-empty-state-connection-lost/illus-empty-state-connection-lost.png'),
     temp_map: require('./mapbox/tempMap.png'),
-    temp_map_ocean: require('./mapbox/tempMapOcean.png')
+    temp_map_ocean: require('./mapbox/tempMapOcean.png'),
+    play_button: require('./video-controls/video-placeholder-icon.png')
 };
 
 export default images;
