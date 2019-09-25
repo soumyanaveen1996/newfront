@@ -126,6 +126,7 @@ export default class Dialler extends React.Component {
                 this.handleCallQuotaUpdateFailure
             )
         );
+        TwilioVoice.setSpeakerPhone(this.state.speakerOn);
         this.setState({ callTime: 0 });
         if (this.props.phoneNumber) {
             this.setState({ dialledNumber: this.props.phoneNumber });
