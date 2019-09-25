@@ -668,7 +668,8 @@ const stylesheet = StyleSheet.create({
         flex: 2,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'flex-start',
+        marginHorizontal: '5%'
     },
     phoneIcon: { width: 16, height: 16 },
     satelliteIcon: { width: 24, height: 24 },
@@ -676,11 +677,12 @@ const stylesheet = StyleSheet.create({
     labelStyle: {
         color: 'rgba(155, 155, 155, 1)',
         fontFamily: 'SF Pro Text',
-        fontSize: 12
+        fontSize: 12,
+        marginLeft: 20
     },
     arrowStyle: { width: 12, height: 7 },
     infoContainer: {
-        flex: 3,
+        flex: 4,
         paddingHorizontal: 20,
         flexDirection: 'row',
         alignItems: 'stretch',

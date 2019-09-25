@@ -121,7 +121,6 @@ class CallHistory extends React.Component {
 
     getCallHistory() {
         Calls.getCallHistory().then(res => {
-            console.log('>>>>>>>get', res);
             this.setState({ callHistory: res });
         });
     }
@@ -216,7 +215,8 @@ class CallHistory extends React.Component {
                             </View>
                             <View style={styles.verticalSeparator} />
                             <Text style={styles.contactItemEmail}>
-                                {item.callType === CallType.PSTN || CallType.SAT
+                                {item.callType === CallType.PSTN ||
+                                item.callType === CallType.SAT
                                     ? number
                                     : 'Voip call'}
                             </Text>
@@ -226,7 +226,8 @@ class CallHistory extends React.Component {
                 <TouchableOpacity
                     style={styles.recallButton}
                     onPress={
-                        item.callType === CallType.PSTN || CallType.SAT
+                        item.callType === CallType.PSTN ||
+                        item.callType === CallType.SAT
                             ? this.makePstnCall.bind(this, number)
                             : this.makeVoipCall.bind(this, id, name)
                     }

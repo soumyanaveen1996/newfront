@@ -171,7 +171,10 @@ class NewContactScreen extends React.Component {
             );
         } else if (type === 'satellite') {
             icon = (
-                <Image source={images.satellite} style={styles.satelliteIcon} />
+                <Image
+                    source={images.satellite_icon}
+                    style={styles.phoneIcon}
+                />
             );
         } else if (type === 'home' || type === 'work') {
             icon = (
@@ -235,6 +238,7 @@ class NewContactScreen extends React.Component {
                                     }}
                                     underlineColorAndroid={'transparent'}
                                     placeholderTextColor="rgba(155,155,155,1)"
+                                    clearButtonMode="always"
                                 />
                             </View>
                         ) : (
@@ -252,6 +256,7 @@ class NewContactScreen extends React.Component {
                                 }}
                                 underlineColorAndroid={'transparent'}
                                 placeholderTextColor="rgba(155,155,155,1)"
+                                clearButtonMode="always"
                             />
                         )}
                 </View>
@@ -410,7 +415,6 @@ class NewContactScreen extends React.Component {
                     this.setState({ loading: false });
                 });
         } else {
-            console.log('>>>>>>>>1', saveLocalContactData);
             AddLocalContacts(saveLocalContactData)
                 .then(() => {
                     Store.dispatch(completeContactsLoad(false));
