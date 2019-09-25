@@ -43,6 +43,7 @@ const images = {
     empty_channel: require('./empty-state-channels/illus-empty-state-channels.png'),
     empty_contact: require('./empty-state-contacts/illus-empty-state-contact.png'),
     empty_marketplace: require('./empty-state-marketplace/illus-empty-state-marketplace.png'),
+    empty_state_connection: require('./illus-empty-state-connection-lost/illus-empty-state-connection-lost.png'),
     front_bot_logo: require('./bots/FrontBotLogo.png'),
     frontm_header_logo: require('./frontm-header-logo/frontm-header-logo.png'),
     frontm_logo: require('./frontm-header-logo/frontm-header-logo3x.png'),
@@ -77,6 +78,7 @@ const images = {
     pass_checkbox_checked: require('./pass-checkbox-checked/pass-checkbox-checked.png'),
     pass_checkbox_empty: require('./pass-checkbox-empty/pass-checkbox-empty.png'),
     phone_icon: require('./phone-icon-copy/phone_icon_copy.png'),
+    play_button: require('./video-controls/video-placeholder-icon.png'),
     preview_slider_1: require('./preview-slide-1/preview-slide-1.png'),
     preview_slider_2: require('./preview-slide-2/preview-slide-2.png'),
     preview_slider_3: require('./preview-slide-3/preview-slide-3.png'),
@@ -86,6 +88,7 @@ const images = {
     refresh: require('./icons/network-icon-refresh.png'),
     remove_icon: require('./remove-icon/remove-icon.png'),
     satellite: require('./icons/satellite.png'),
+    satellite_icon: require('./satellite-icon/satellite-icon.png'),
     share_camera: require('./share-camera/share-camera.png'),
     share_code: require('./share-code/share-code.png'),
     share_contact: require('./share-contact/share-contact.png'),
@@ -104,14 +107,12 @@ const images = {
     tabbar_home_active: require('./tabbar-home-active/tabbar-home-active.png'),
     tabbar_marketplace: require('./tabbar-marketplace/tabbar-marketplace.png'),
     tabbar_marketplace_active: require('./tabbar-marketplace-active/tabbar-marketplace-active.png'),
+    temp_map: require('./mapbox/tempMap.png'),
+    temp_map_ocean: require('./mapbox/tempMapOcean.png'),
     trail_arrow: require('./map/trail_arrow.png'),
     // user_image: require('./chat/user_image.png'),
     user_image: require('./chat/user_image_big.png'),
-    walkthrough_image: require('./walkthrough/image.png'),
-    empty_state_connection: require('./illus-empty-state-connection-lost/illus-empty-state-connection-lost.png'),
-    temp_map: require('./mapbox/tempMap.png'),
-    temp_map_ocean: require('./mapbox/tempMapOcean.png'),
-    play_button: require('./video-controls/video-placeholder-icon.png')
+    walkthrough_image: require('./walkthrough/image.png')
 };
 
 export default images;
