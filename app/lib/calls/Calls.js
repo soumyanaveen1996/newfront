@@ -14,7 +14,7 @@ export const CallDirection = {
 export const CallType = {
     PSTN: 'PSTN',
     VOIP: 'VOIP',
-    SAT: 'SATELLITE'
+    SAT: 'SAT'
 };
 
 export const CALLS_STORAGE_KEY = 'CALLS_STORAGE_KEY_CAPABILITY';
