@@ -308,7 +308,6 @@ class ChatBotScreen extends React.Component {
 
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
-
             // Find the first non-read message and use scrollToIndex.
             let index = -1;
             for (let i = 0; i < messages.length; i++) {
@@ -367,7 +366,7 @@ class ChatBotScreen extends React.Component {
                         );
                         // 8. Mark new messages as read
                         MessageHandler.markUnreadMessagesAsRead(
-                            this.getBotKey()
+                            this.conversationContext.conversationId
                         );
                         // 9. Stash the bot for nav back for on exit
                         this.props.navigation.setParams({
@@ -739,7 +738,7 @@ class ChatBotScreen extends React.Component {
 
     handleAsyncMessageResult(event) {
         // Don't handle events that are not for this bot
-        if (!event || event.key !== this.getBotKey()) {
+        if (!event || event.key !== this.conversationContext.conversationId) {
             return;
         }
         this.loadedBot.asyncResult(
@@ -756,14 +755,14 @@ class ChatBotScreen extends React.Component {
     async flushPendingAsyncResults() {
         let self = this;
 
-        Queue.selectCompletedNetworkRequests(this.getBotKey()).then(
-            pendingAsyncResults => {
-                pendingAsyncResults = pendingAsyncResults || [];
-                pendingAsyncResults.forEach(pendingAsyncResult => {
-                    self.handleAsyncMessageResult(pendingAsyncResult);
-                });
-            }
-        );
+        Queue.selectCompletedNetworkRequests(
+            this.conversationContext.conversationId
+        ).then(pendingAsyncResults => {
+            pendingAsyncResults = pendingAsyncResults || [];
+            pendingAsyncResults.forEach(pendingAsyncResult => {
+                self.handleAsyncMessageResult(pendingAsyncResult);
+            });
+        });
     }
 
     invokeWait = () => {
@@ -976,7 +975,10 @@ class ChatBotScreen extends React.Component {
 
     /** Retrun when the message has been persisted*/
     persistMessage = message => {
-        return MessageHandler.persistOnDevice(this.getBotKey(), message);
+        return MessageHandler.persistOnDevice(
+            this.conversationContext.conversationId,
+            message
+        );
     };
 
     // Promise based since setState is async
@@ -1275,7 +1277,7 @@ class ChatBotScreen extends React.Component {
 
         //PERSISTENCE
         MessageHandler.fetchDeviceMessagesOfType(
-            this.getBotKey(),
+            this.conversationContext.conversationId,
             MessageTypeConstants.MESSAGE_TYPE_FORM2
         ).then(messages => {
             let forms = _.filter(messages, msg => {
@@ -2200,7 +2202,7 @@ class ChatBotScreen extends React.Component {
 
     async loadMessages() {
         let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
-            this.getBotKey(),
+            this.conversationContext.conversationId,
             pageSize,
             this.oldestLoadedDate()
         );
