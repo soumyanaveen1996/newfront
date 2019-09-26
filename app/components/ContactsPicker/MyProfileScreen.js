@@ -338,7 +338,6 @@ class MyProfileScreen extends React.Component {
                     newUri,
                     PROFILE_PIC_BUCKET,
                     user.userId,
-                    user,
                     ResourceTypes.Image,
                     null
                 );

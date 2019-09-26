@@ -1753,6 +1753,8 @@ class ChatBotScreen extends React.Component {
     async sendImage(imageUri, base64) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
+        message.imageMessage(message.getMessageId() + '.png');
+        this.queueMessage(message);
 
         let imageResizeResponse = await ImageResizer.createResizedImage(
             imageUri,
@@ -1768,14 +1770,12 @@ class ChatBotScreen extends React.Component {
         await RNFS.moveFile(imageResizeResponse.uri, newUri);
 
         // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(
+        await Resource.uploadFile(
             newUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            this.user,
             ResourceTypes.Image
         );
-        message.imageMessage(uploadedUrl.split('/').pop());
         return this.sendMessage(message);
     }
 
@@ -1805,7 +1805,6 @@ class ChatBotScreen extends React.Component {
             newFileUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            this.user,
             ResourceTypes.OtherFile,
             fileMIMEType
         );
@@ -1840,7 +1839,6 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            this.user,
             ResourceTypes.Audio
         );
         message.audioMessage(uploadedUrl.split('/').pop());
@@ -1860,7 +1858,6 @@ class ChatBotScreen extends React.Component {
             toUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
-            this.user,
             ResourceTypes.Video
         );
         message.videoMessage(uploadedUrl.split('/').pop());

@@ -33,7 +33,6 @@ export default class Resource {
         fileUri,
         bucketName,
         filenameWithoutExtension,
-        userx = undefined,
         resourceType,
         fileMIMEType,
         clearCache = false,
