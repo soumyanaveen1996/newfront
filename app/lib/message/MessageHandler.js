@@ -44,17 +44,17 @@ export default class MessageHandler extends events.EventEmitter {
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_MAP
                 ) {
-                    controlId = message.getMessageOptions().mapId;
+                    controlId = message.getMessageOptions().mapId + botKey;
                 } else if (
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_FORM2
                 ) {
-                    controlId = message.getMessageOptions().formId;
+                    controlId = message.getMessageOptions().formId + botKey;
                 } else if (
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_CHART
                 ) {
-                    controlId = message.getMessageOptions().chartId;
+                    controlId = message.getMessageOptions().chartId + botKey;
                 }
 
                 ControlDAO.controlExist(controlId)
