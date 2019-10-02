@@ -21,7 +21,7 @@ const stylesheet = StyleSheet.create({
     },
     messagesList: {
         // height: hp('80%'),
-        flexGrow: 0,
+        flex: 1,
         overflow: 'visible'
         // flexDirection: 'column-reverse'
     },

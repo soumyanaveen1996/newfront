@@ -2,11 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import {
     ActivityIndicator,
-    FlatList,
     Keyboard,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    RefreshControl,
     View,
     Alert,
     Image,
@@ -14,12 +12,11 @@ import {
     Text,
     SafeAreaView,
     Platform,
-    PermissionsAndroid,
     LayoutAnimation,
     UIManager,
     NativeModules
 } from 'react-native';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
 import chatStyles from './styles';
 import ChatInputBar from './ChatInputBar';
@@ -51,17 +48,10 @@ import Utils from '../../lib/utils';
 import moment from 'moment';
 import Permissions from 'react-native-permissions';
 import { BotInputBarCapabilities, SLIDER_HEIGHT } from './BotConstants';
-import { HeaderBack, HeaderRightIcon } from '../Header';
+import { HeaderBack } from '../Header';
 import { MessageHandler } from '../../lib/message';
-import {
-    NetworkHandler,
-    AsyncResultEventEmitter,
-    NETWORK_EVENTS_CONSTANTS,
-    Queue,
-    NETWORK_STATE
-} from '../../lib/network';
+import { NetworkHandler, Queue, NETWORK_STATE } from '../../lib/network';
 var pageSize = Config.ChatMessageOptions.pageSize;
-import appConfig from '../../config/config';
 import { MessageCounter } from '../../lib/MessageCounter';
 import {
     EventEmitter,
@@ -69,7 +59,6 @@ import {
     PollingStrategyEvents,
     MessageEvents
 } from '../../lib/events';
-import { Icons } from '../../config/icons';
 import images from '../../images';
 import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
@@ -86,7 +75,6 @@ import { BackgroundImage } from '../BackgroundImage';
 import { setLoadedBot } from '../../redux/actions/BotActions';
 import { setFirstLogin, setCurrentForm } from '../../redux/actions/UserActions';
 import Store from '../../redux/store/configureStore';
-import { connect } from 'react-redux';
 import { ButtonMessage } from '../ButtonMessage';
 import { Form2Message } from '../Form2Message';
 import {
@@ -95,7 +83,6 @@ import {
     formUpdateAction
 } from '../Form2Message/config';
 import { Datacard } from '../Datacard';
-import PushNotification from 'react-native-push-notification';
 import {
     setCurrentConversationId,
     setCurrentMap
@@ -103,30 +90,22 @@ import {
 import RNFS from 'react-native-fs';
 import mime from 'react-native-mime-types';
 import { MarkerIconTypes } from '../MapView/config';
-import ReduxStore from '../../redux/store/configureStore';
-import {
-    SearchBox,
-    SearchBoxUserAction,
-    SearchBoxBotAction
-} from './SearchBox';
+import { SearchBox, SearchBoxBotAction } from './SearchBox';
 import { ControlDAO } from '../../lib/persistence';
 import Cards from '../Cards/Cards';
 import ChartMessage from '../ChartMessage';
-import { Conversation } from '../../lib/conversation';
 import ImageResizer from 'react-native-image-resizer';
 import ImageMessage from '../ImageMessage/ImageMessage';
 import NetworkButton from '../Header/NetworkButton';
 import VideoMessage from '../ImageMessage/VideoMessage';
+import { SpringScrollView } from 'react-native-spring-scrollview';
+import { PullToRefreshHeader, PullToLoadFooter } from './Loaders';
+import { NormalFooter } from 'react-native-spring-scrollview/NormalFooter';
 
-const ConversationServiceClient = NativeModules.ConversationServiceClient;
-const QueueServiceClient = NativeModules.QueueServiceClient;
 const R = require('ramda');
 
-var backTimer = null;
-const timeout = Platform.OS === 'android' ? 500 : 400;
-
 class ChatBotScreen extends React.Component {
-    static navigationOptions({ navigation, screenProps }) {
+    static navigationOptions({ navigation }) {
         const { state } = navigation;
         let navigationOptions = {
             headerTitle: state.params.bot.botName
@@ -201,7 +180,7 @@ class ChatBotScreen extends React.Component {
             currentMap: null,
             currentUser: null,
             allContacts: [],
-            bottomRefresh: false
+            bottomLoaded: true
         };
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
@@ -344,7 +323,7 @@ class ChatBotScreen extends React.Component {
                     typing: '',
                     showSlider: false
                 },
-                function(err, res) {
+                function(err) {
                     if (!err) {
                         self.botLoaded = true;
                         // 5. Kick things off by calling init on the bot
@@ -448,7 +427,7 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    static onEnter({ navigation, screenProps }) {
+    static onEnter() {
         const shouldPop =
             Actions.refs.peopleChat &&
             Actions.refs.peopleChat.props.call &&
@@ -816,7 +795,7 @@ class ChatBotScreen extends React.Component {
                         this.queueMessage(sMessage);
                         resolve();
                     })
-                    .catch(err => {
+                    .catch(() => {
                         resolve();
                     });
             } else {
@@ -983,7 +962,7 @@ class ChatBotScreen extends React.Component {
 
     // Promise based since setState is async
     updateChat(message) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             this.chatState.updatingChat = true;
             this.persistMessage(message)
                 .then(queue => {
@@ -1005,7 +984,7 @@ class ChatBotScreen extends React.Component {
                     }
                     resolve();
                 })
-                .catch(e => {
+                .catch(() => {
                     resolve();
                 });
             // Has to be Immutable for react
@@ -1076,7 +1055,7 @@ class ChatBotScreen extends React.Component {
     // }
 
     // picked from Smart Suggestions
-    sendSmartReply(selectedSuggestion) {
+    sendSmartReply() {
         let message = new Message({ addedByBot: false });
         message.setCreatedBy(this.getUserId());
         // message.sliderResponseMessage(selectedRows);
@@ -1101,7 +1080,7 @@ class ChatBotScreen extends React.Component {
     // optionalCb is passed by slider if it needs to run some cleanup
     onSliderClose = (optionalCb, scroll = true) => {
         this.sliderPreviousState = false;
-        this.setState({ showSlider: false }, function(err, res) {
+        this.setState({ showSlider: false }, function(err) {
             if (!err && _.isFunction(optionalCb)) {
                 return optionalCb();
             }
@@ -1118,37 +1097,32 @@ class ChatBotScreen extends React.Component {
 
     onScrollToIndexFailed() {
         if (this.chatList) {
-            this.chatList.scrollToEnd({ animated: true });
+            this.chatList.scrollToEnd(true);
         }
     }
 
     checkForScrolling() {
         setTimeout(() => {
-            //if (!this.initialScrollDone) {
-            //    return;
-            //}
-            if (this.firstUnreadIndex !== -1) {
-                if (this.chatList) {
-                    this.chatList.scrollToIndex({
-                        index: this.firstUnreadIndex,
-                        animated: true
-                    });
-                }
-                this.firstUnreadIndex = -1;
-            } else {
-                if (this.chatList) {
-                    this.chatList.scrollToEnd({ animated: true });
-                }
+            // if (this.firstUnreadIndex !== -1) {
+            //     if (this.chatList) {
+            //         this.chatList.scrollToIndex({
+            //             index: this.firstUnreadIndex,
+            //             animated: true
+            //         });
+            //     }
+            //     this.firstUnreadIndex = -1;
+            // } else {
+            if (this.chatList) {
+                this.chatList.scrollToEnd(true);
             }
+            // }
             this.initialScrollDone = true;
         }, 300);
     }
 
     scrollToBottomIfNeeded() {
         if (this.chatList) {
-            if (this.chatList) {
-                this.chatList.scrollToEnd({ animated: true });
-            }
+            this.chatList.scrollToEnd(true);
             this.initialScrollDone = true;
         }
     }
@@ -1312,7 +1286,7 @@ class ChatBotScreen extends React.Component {
     };
 
     /** Update message list and screen */
-    appendMessageToChat(message, immediate = false) {
+    appendMessageToChat(message) {
         return new Promise(resolve => {
             if (this.addMessage && this.setState) {
                 let updatedMessageList = this.addMessage(message);
@@ -1385,7 +1359,6 @@ class ChatBotScreen extends React.Component {
 
     /**Add the new message to message list and return the updated messagelist */
     addMessage(message) {
-        const { messages } = this.state;
         const incomingMessage = message.toBotDisplay();
         const messageIndex = R.findIndex(R.propEq('key', incomingMessage.key))(
             this.state.messages
@@ -1646,7 +1619,7 @@ class ChatBotScreen extends React.Component {
     }
 
     waitForQueueProcessing() {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             var self = this;
             let interval = setInterval(function() {
                 if (self.processingMessageQueue === false) {
@@ -1739,7 +1712,7 @@ class ChatBotScreen extends React.Component {
         let result = await Media.pickMediaFromLibrary(Config.CameraOptions);
         // Have to filter out videos ?
         if (!result.cancelled) {
-            this.sendImage(result.uri, result.base64);
+            this.sendImage(result.uri);
         }
     }
 
@@ -1752,7 +1725,7 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    async sendImage(imageUri, base64) {
+    async sendImage(imageUri) {
         let message = new Message();
         message.setCreatedBy(this.getUserId());
         message.imageMessage(message.getMessageId() + '.png');
@@ -1870,7 +1843,7 @@ class ChatBotScreen extends React.Component {
         Keyboard.dismiss();
         let result = await Media.takePicture(Config.CameraOptions);
         if (!result.cancelled) {
-            this.sendImage(result.uri, result.base64);
+            this.sendImage(result.uri);
         }
     }
 
@@ -2010,7 +1983,7 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    async updateConversationContextId(newConversationId) {}
+    async updateConversationContextId() {}
 
     resetConversation() {
         Keyboard.dismiss();
@@ -2034,7 +2007,7 @@ class ChatBotScreen extends React.Component {
                     this.botContext
                 );
             })
-            .catch(err => {});
+            .catch(() => {});
     }
 
     addSelectedContactsToBot = selectedRows => {
@@ -2206,20 +2179,25 @@ class ChatBotScreen extends React.Component {
             pageSize,
             this.oldestLoadedDate()
         );
-
         return messages;
     }
 
     async onRefresh() {
-        this.setState({
-            refreshing: true
-        });
         let messages = await this.loadMessages();
         let combinedMsgs = messages.concat(this.state.messages);
         if (this.mounted) {
             this.setState({
-                messages: this.addSessionStartMessages(combinedMsgs),
-                refreshing: false
+                messages: this.addSessionStartMessages(combinedMsgs)
+            });
+        }
+    }
+
+    async onRefreshx() {
+        let messages = await this.loadMessages();
+        let combinedMsgs = messages.concat(this.state.messages);
+        if (this.mounted) {
+            this.setState({
+                messages: this.addSessionStartMessages(combinedMsgs)
             });
         }
     }
@@ -2528,7 +2506,7 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    onFormOpen = formMessage => {
+    onFormOpen = () => {
         let message = new Message({ addedByBot: false });
         message.formOpenMessage();
         message.setCreatedBy(this.getUserId());
@@ -2582,12 +2560,29 @@ class ChatBotScreen extends React.Component {
                                     justifyContent: 'flex-end'
                                 }}
                             >
-                                <FlatList
-                                    // onEndReached={() => {
-                                    //     this.readLambdaQueue();
-                                    // }}
-                                    // onEndReachedThreshold={-0.2}
-                                    extraData={this.state.messages}
+                                <SpringScrollView
+                                    accessibilityLabel="Messages List"
+                                    testID="messages-list"
+                                    ref={list => {
+                                        this.chatList = list;
+                                    }}
+                                    loadingFooter={PullToLoadFooter}
+                                    onLoading={() => {
+                                        this.readLambdaQueue();
+                                        setTimeout(() => {
+                                            this.chatList.endLoading();
+                                        }, 3000);
+                                    }}
+                                    refreshHeader={PullToRefreshHeader}
+                                    onRefresh={() => {
+                                        this.onRefreshx();
+                                        setTimeout(() => {
+                                            this.chatList.endRefresh();
+                                        }, 3000);
+                                    }}
+                                    tapToHideKeyboard={false}
+                                >
+                                    {/* extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"
                                     ListFooterComponent={this.renderSmartSuggestions()}
@@ -2611,8 +2606,12 @@ class ChatBotScreen extends React.Component {
                                     }
                                     onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
                                         this
-                                    )}
-                                />
+                                    )} */}
+                                    {this.state.messages.map((item, index) => {
+                                        return this.renderItem({ item, index });
+                                    })}
+                                    {this.renderSmartSuggestions()}
+                                </SpringScrollView>
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}
@@ -2630,14 +2629,5 @@ class ChatBotScreen extends React.Component {
         );
     }
 }
-
-const mapStateToProps = state => ({
-    botState: state.bots
-});
-const mapDispatchToProps = dispatch => {
-    return {
-        setLoadedBot: bot => dispatch(setLoadedBot(bot))
-    };
-};
 
 export default ChatBotScreen;
