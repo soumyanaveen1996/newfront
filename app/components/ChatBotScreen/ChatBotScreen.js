@@ -14,7 +14,9 @@ import {
     Platform,
     LayoutAnimation,
     UIManager,
-    NativeModules
+    NativeModules,
+    FlatList,
+    RefreshControl
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Promise from '../../lib/Promise';
@@ -98,9 +100,6 @@ import ImageResizer from 'react-native-image-resizer';
 import ImageMessage from '../ImageMessage/ImageMessage';
 import NetworkButton from '../Header/NetworkButton';
 import VideoMessage from '../ImageMessage/VideoMessage';
-import { SpringScrollView } from 'react-native-spring-scrollview';
-import { PullToRefreshHeader, PullToLoadFooter } from './Loaders';
-import { NormalFooter } from 'react-native-spring-scrollview/NormalFooter';
 
 const R = require('ramda');
 
@@ -170,7 +169,7 @@ class ChatBotScreen extends React.Component {
             messages: [],
             typing: '',
             showSlider: false,
-            refreshing: false,
+            fetchingNewMessages: false,
             sliderClosed: false,
             chatModalContent: {},
             isModalVisible: false,
@@ -307,7 +306,7 @@ class ChatBotScreen extends React.Component {
             }
 
             let serverMessages = [];
-            if (messages.length < 20) {
+            if (messages.length < pageSize) {
                 serverMessages = await this.loadOldMessagesFromServer();
             }
 
@@ -488,7 +487,7 @@ class ChatBotScreen extends React.Component {
                     const nextDate = moment(nextMessage.getMessageDate());
                     if (
                         !(
-                            (nextDate.valueOf() - currentDate.valueOf()) /
+                            (currentDate.valueOf() - nextDate.valueOf()) /
                                 1000 <
                             60
                         ) ||
@@ -509,7 +508,12 @@ class ChatBotScreen extends React.Component {
             let currentDate = moment(
                 filteredMessages[0].message.getMessageDate()
             );
-            resultMessages.push(this.sessionStartMessageForDate(currentDate));
+            if (
+                currentDate.dayOfYear() !== moment().dayOfYear() &&
+                moment().year() !== currentDate.year()
+            ) {
+                resultMessages.push(this.sessionStartMessageForDate(moment()));
+            }
             for (var i = 0; i < filteredMessages.length; i++) {
                 const botMessage = filteredMessages[i];
                 const message = botMessage.message;
@@ -518,17 +522,14 @@ class ChatBotScreen extends React.Component {
                     date.dayOfYear() !== currentDate.dayOfYear() ||
                     date.year() !== currentDate.year()
                 ) {
-                    resultMessages.push(this.sessionStartMessageForDate(date));
+                    resultMessages.push(
+                        this.sessionStartMessageForDate(currentDate)
+                    );
                     currentDate = date;
                 }
                 resultMessages.push(botMessage);
             }
-            if (
-                currentDate.dayOfYear() !== moment().dayOfYear() &&
-                moment().year() !== currentDate.year()
-            ) {
-                resultMessages.push(this.sessionStartMessageForDate(moment()));
-            }
+            resultMessages.push(this.sessionStartMessageForDate(currentDate));
         } else {
             let currentDate = moment();
             resultMessages.push(this.sessionStartMessageForDate(currentDate));
@@ -1097,7 +1098,7 @@ class ChatBotScreen extends React.Component {
 
     onScrollToIndexFailed() {
         if (this.chatList) {
-            this.chatList.scrollToEnd(true);
+            this.chatList.scrollToOffset({ offset: 0 });
         }
     }
 
@@ -1113,7 +1114,7 @@ class ChatBotScreen extends React.Component {
             //     this.firstUnreadIndex = -1;
             // } else {
             if (this.chatList) {
-                this.chatList.scrollToEnd(true);
+                this.chatList.scrollToOffset({ offset: 0 });
             }
             // }
             this.initialScrollDone = true;
@@ -1122,7 +1123,7 @@ class ChatBotScreen extends React.Component {
 
     scrollToBottomIfNeeded() {
         if (this.chatList) {
-            this.chatList.scrollToEnd(true);
+            this.chatList.scrollToOffset({ offset: 0 });
             this.initialScrollDone = true;
         }
     }
@@ -1363,7 +1364,7 @@ class ChatBotScreen extends React.Component {
         const messageIndex = R.findIndex(R.propEq('key', incomingMessage.key))(
             this.state.messages
         );
-        if (messageIndex > 0) {
+        if (messageIndex >= 0) {
             const updatedMessages = R.update(
                 messageIndex,
                 incomingMessage,
@@ -1371,7 +1372,7 @@ class ChatBotScreen extends React.Component {
             );
             return updatedMessages;
         } else {
-            return [...this.state.messages, incomingMessage];
+            return [incomingMessage, ...this.state.messages];
         }
         // let msgs = this.state.messages.slice();
         // msgs.push(message.toBotDisplay());
@@ -2184,7 +2185,7 @@ class ChatBotScreen extends React.Component {
 
     async onRefresh() {
         let messages = await this.loadMessages();
-        let combinedMsgs = messages.concat(this.state.messages);
+        let combinedMsgs = this.state.messages.concat(messages);
         if (this.mounted) {
             this.setState({
                 messages: this.addSessionStartMessages(combinedMsgs)
@@ -2192,9 +2193,9 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    async onRefreshx() {
+    async loadOlderMessages() {
         let messages = await this.loadMessages();
-        let combinedMsgs = messages.concat(this.state.messages);
+        let combinedMsgs = this.state.messages.concat(messages);
         if (this.mounted) {
             this.setState({
                 messages: this.addSessionStartMessages(combinedMsgs)
@@ -2206,7 +2207,7 @@ class ChatBotScreen extends React.Component {
         let date = moment().valueOf();
 
         if (this.state.messages.length > 0) {
-            const message = this.state.messages[0];
+            const message = this.state.messages[this.state.messages.length - 2]; // -2 to not consider the oldest sessionStartMessage
             date = moment(message.message.getMessageDate()).valueOf();
         }
 
@@ -2227,7 +2228,7 @@ class ChatBotScreen extends React.Component {
             //     this.oldestLoadedDate()
             // );
 
-            return messages;
+            return messages.reverse();
         } catch (error) {
             return [];
         }
@@ -2556,41 +2557,23 @@ class ChatBotScreen extends React.Component {
                         >
                             <View
                                 style={{
-                                    flex: 1,
-                                    justifyContent: 'flex-end'
+                                    flex: 1
                                 }}
                             >
-                                <SpringScrollView
-                                    accessibilityLabel="Messages List"
-                                    testID="messages-list"
-                                    ref={list => {
-                                        this.chatList = list;
-                                    }}
-                                    loadingFooter={PullToLoadFooter}
-                                    onLoading={() => {
-                                        this.readLambdaQueue();
-                                        setTimeout(() => {
-                                            this.chatList.endLoading();
-                                        }, 3000);
-                                    }}
-                                    refreshHeader={PullToRefreshHeader}
-                                    onRefresh={() => {
-                                        this.onRefreshx();
-                                        setTimeout(() => {
-                                            this.chatList.endRefresh();
-                                        }, 3000);
-                                    }}
-                                    tapToHideKeyboard={false}
-                                >
-                                    {/* extraData={this.state.messages}
+                                <FlatList
+                                    inverted
+                                    onEndReached={this.loadOlderMessages.bind(
+                                        this
+                                    )}
+                                    onEndReachedThreshold={0.1}
+                                    extraData={this.state.messages}
                                     style={chatStyles.messagesList}
                                     keyboardShouldPersistTaps="handled"
-                                    ListFooterComponent={this.renderSmartSuggestions()}
+                                    ListHeaderComponent={this.renderSmartSuggestions()}
                                     accessibilityLabel="Messages List"
                                     testID="messages-list"
                                     ref={list => {
                                         this.chatList = list;
-                                        // this.checkForScrolling();
                                     }}
                                     data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}
@@ -2598,20 +2581,26 @@ class ChatBotScreen extends React.Component {
                                     refreshControl={
                                         <RefreshControl
                                             colors={['#9Bd35A', '#689F38']}
-                                            refreshing={this.state.refreshing}
-                                            onRefresh={this.onRefresh.bind(
-                                                this
-                                            )}
+                                            refreshing={
+                                                this.state.fetchingNewMessages
+                                            }
+                                            onRefresh={() => {
+                                                this.setState({
+                                                    fetchingNewMessages: true
+                                                });
+                                                this.readLambdaQueue();
+                                                setTimeout(() => {
+                                                    this.setState({
+                                                        fetchingNewMessages: false
+                                                    });
+                                                }, 3000);
+                                            }}
                                         />
                                     }
                                     onScrollToIndexFailed={this.onScrollToIndexFailed.bind(
                                         this
-                                    )} */}
-                                    {this.state.messages.map((item, index) => {
-                                        return this.renderItem({ item, index });
-                                    })}
-                                    {this.renderSmartSuggestions()}
-                                </SpringScrollView>
+                                    )}
+                                />
                                 {this.state.showSlider
                                     ? this.renderSlider()
                                     : null}

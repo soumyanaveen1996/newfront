@@ -13,7 +13,8 @@ var screen = Dimensions.get('window');
 const stylesheet = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: 'rgb(248, 248, 248)'
+        backgroundColor: 'rgb(248, 248, 248)',
+        height: '100%'
     },
     container: {
         flex: 1,
@@ -22,7 +23,8 @@ const stylesheet = StyleSheet.create({
     messagesList: {
         // height: hp('80%'),
         flex: 1,
-        overflow: 'visible'
+        overflow: 'visible',
+        marginBottom: 15
         // flexDirection: 'column-reverse'
     },
     row: {
