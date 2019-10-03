@@ -287,18 +287,19 @@ class ChatBotScreen extends React.Component {
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
             // Find the first non-read message and use scrollToIndex.
-            let index = -1;
+            let index = 0;
             for (let i = 0; i < messages.length; i++) {
                 let msg = messages[i];
 
-                if (!msg.message.isRead()) {
+                if (msg.message.isRead()) {
                     index = i;
                     break;
                 }
             }
             this.firstUnreadIndex = index;
-            if (index === -1) {
-                this.scrollToBottom = true;
+            if (index !== 0 && this.chatList) {
+                this.chatList.scrollToIndex({ index: index });
+                // this.scrollToBottom = true;
             }
 
             if (!this.mounted) {
@@ -361,8 +362,6 @@ class ChatBotScreen extends React.Component {
             // TODO: handle errors
             self.botLoaded = false;
         }
-
-        this.checkForScrolling();
 
         this.keyboardWillShowListener = Keyboard.addListener(
             'keyboardWillShow',
@@ -636,17 +635,7 @@ class ChatBotScreen extends React.Component {
         return this.props.bot.botId;
     }
 
-    keyboardWillShow = () => {
-        //     if (this.slider) {
-        //         this.slider.close(undefined, true);
-        //         this.setState({ sliderClosed: true });
-        //     } else {
-        //         this.setState({ sliderClosed: false });
-        //     }
-        // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        // this.sliderPreviousState = this.state.showSlider || false;
-        // this.setState({ showOptions: false, showSlider: false },this.scrollToBottomIfNeeded())
-    };
+    keyboardWillShow = () => {};
 
     keyboardDidShow = () => {
         if (Platform.OS === 'ios') {
@@ -654,38 +643,17 @@ class ChatBotScreen extends React.Component {
                 LayoutAnimation.Presets.easeInEaseOut
             );
         }
-        // if (Platform.OS === 'android' && this.slider) {
-        //     this.slider.close(undefined, true);
-        //     this.setState({ sliderClosed: true, showOptions: false });
-        // } else {
-        //     this.setState({ sliderClosed: false, showOptions: false });
-        // }
-        this.setState(
-            { showOptions: false, showSlider: false },
-            this.scrollToBottomIfNeeded()
-        );
+        this.setState({ showOptions: false, showSlider: false });
     };
 
-    keyboardWillHide = () => {
-        // this.scrollToBottomIfNeeded();
-        // this.setState({ showSlider: this.sliderPreviousState || false });
-        // if (Platform.OS === 'android' && this.state.sliderClosed) {
-        //     this.setState({ showSlider: true });
-        // }
-        // if (!this.state.showOptions) {
-        //     this.setState({ showSlider: this.sliderPreviousState || false })
-        // }
-    };
+    keyboardWillHide = () => {};
 
     keyboardDidHide = () => {
-        this.setState(
-            {
-                showSlider: this.state.showOptions
-                    ? false
-                    : this.sliderPreviousState
-            },
-            this.scrollToBottomIfNeeded()
-        );
+        this.setState({
+            showSlider: this.state.showOptions
+                ? false
+                : this.sliderPreviousState
+        });
     };
 
     handleMessageEventsSend(event) {
@@ -693,12 +661,6 @@ class ChatBotScreen extends React.Component {
             return;
         }
         this.sendMessage(event.message);
-        // this.loadedBot.asyncResult(
-        //     event.message,
-        //     this.botState,
-        //     this.state.messages,
-        //     this.botContext
-        // );
     }
 
     handleMessageEvents(event) {
@@ -994,9 +956,7 @@ class ChatBotScreen extends React.Component {
 
     updateSmartSuggestions(message) {
         // Suggestions
-        this.smartSuggestionsArea
-            .update(message.getMessage())
-            .then(() => this.checkForScrolling());
+        this.smartSuggestionsArea.update(message.getMessage());
     }
 
     fireSlider(message) {
@@ -1087,14 +1047,9 @@ class ChatBotScreen extends React.Component {
             }
         });
         this.slider = null;
-        if (scroll) {
-            this.scrollToBottomIfNeeded();
-        }
     };
 
-    onSliderOpen() {
-        this.scrollToBottomIfNeeded();
-    }
+    onSliderOpen() {}
 
     onScrollToIndexFailed() {
         if (this.chatList) {
@@ -1104,19 +1059,19 @@ class ChatBotScreen extends React.Component {
 
     checkForScrolling() {
         setTimeout(() => {
-            // if (this.firstUnreadIndex !== -1) {
-            //     if (this.chatList) {
-            //         this.chatList.scrollToIndex({
-            //             index: this.firstUnreadIndex,
-            //             animated: true
-            //         });
-            //     }
-            //     this.firstUnreadIndex = -1;
-            // } else {
-            if (this.chatList) {
-                this.chatList.scrollToOffset({ offset: 0 });
+            if (this.firstUnreadIndex !== -1) {
+                if (this.chatList) {
+                    this.chatList.scrollToIndex({
+                        index: this.firstUnreadIndex,
+                        animated: true
+                    });
+                }
+                this.firstUnreadIndex = -1;
+            } else {
+                if (this.chatList) {
+                    this.chatList.scrollToOffset({ offset: 0 });
+                }
             }
-            // }
             this.initialScrollDone = true;
         }, 300);
     }
@@ -1323,25 +1278,6 @@ class ChatBotScreen extends React.Component {
             this.processingMessageQueue = false;
             resolve(this.processingMessageQueue);
         });
-
-        // var message = this.messageQueue.shift();
-        // if (message) {
-        //     this.processingMessageQueue = true;
-        //     LayoutAnimation.configureNext(
-        //         LayoutAnimation.Presets.easeInEaseOut
-        //     );
-        //     this.appendMessageToChat(message)
-        //         .then(() => {
-        //             return this.sleep(
-        //                 Config.ChatMessageOptions.messageTransitionTime
-        //             );
-        //         })
-        //         .then(() => {
-        //             this.processMessageQueue();
-        //         });
-        // } else {
-        //     this.processingMessageQueue = false;
-        // }
     }
 
     /** Returns true if queue processing is running, false if it's ended */
@@ -1350,7 +1286,6 @@ class ChatBotScreen extends React.Component {
             this.messageQueue.push(message);
             if (this.processingMessageQueue === false) {
                 await this.processMessageQueue();
-                this.checkForScrolling();
                 resolve(false);
             } else {
                 resolve(true);
@@ -1392,22 +1327,6 @@ class ChatBotScreen extends React.Component {
         this.chatListHeight = height;
         //this.chatList.scrollToBottom({animated : true});
     };
-
-    /*
-    onMessageItemLayout = (event, message) => {
-        const key = message.getMessageId();
-        if (!this.scrollHeight) {
-            this.scrollHeight = 0;
-            this.itemHeights = {};
-        }
-        const { height } = event.nativeEvent.layout;
-        this.scrollHeight += height - (this.itemHeights[key] || 0);
-        this.itemHeights[key] = height;
-        if (_.keys(this.itemHeights).length === this.state.messages.length &&
-            this.scrollToBottom) {
-            this.scrollToBottomIfNeeded();
-        }
-    } */
 
     renderItem({ item, index }) {
         const message = item.message;
@@ -1638,7 +1557,6 @@ class ChatBotScreen extends React.Component {
     };
 
     sendMessage = async message => {
-        // console.log('>>>>>>sendmessage', message)
         this.countMessage(message);
 
         GoogleAnalytics.logEvents(
@@ -1651,7 +1569,7 @@ class ChatBotScreen extends React.Component {
 
         await this.updateChat(message);
         this.scrollToBottom = true;
-
+        this.chatList.scrollToOffset({ offset: 0 });
         await this.waitForQueueProcessing();
         const getNext = this.loadedBot.next(
             message,
@@ -1674,23 +1592,6 @@ class ChatBotScreen extends React.Component {
         } else {
             return getNext;
         }
-
-        //     //this.scrollToBottomIfNeeded();
-        // this.waitForQueueProcessing().then(() => {
-        //     this.loadedBot.next(
-        //         message,
-        //         this.botState,
-        //         this.state.messages,
-        //         this.botContext
-        //     );
-        //     // .then(response => {
-        //     //     if (response.status === 200) {
-        //     //         message.setStatus(1);
-        //     //         this.updateChat(message);
-        //     //     }
-        //     // });
-        //     //this.scrollToBottomIfNeeded();
-        // });
     };
 
     async onSendMessage(messageStr) {
@@ -2234,9 +2135,7 @@ class ChatBotScreen extends React.Component {
         }
     }
 
-    onSliderResize() {
-        this.scrollToBottomIfNeeded();
-    }
+    onSliderResize() {}
 
     addBotMessage = message =>
         new Promise(resolve => {
