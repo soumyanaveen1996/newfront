@@ -202,7 +202,7 @@ export default class MessageHandler extends events.EventEmitter {
             MessageDAO.selectMessagesBeforeDate(botKey, max, dateLimit).then(
                 messages => {
                     // we want in reverse order
-                    resolve(messages.reverse());
+                    resolve(messages);
                 }
             );
         });
