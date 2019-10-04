@@ -32,7 +32,6 @@ import {
 } from '../../api/ContactServices';
 import Store from '../../redux/store/configureStore';
 import { completeContactsLoad } from '../../redux/actions/UserActions';
-import PhoneInput from 'react-native-phone-input';
 
 class NewContactScreen extends React.Component {
     static navigationOptions({ navigation }) {

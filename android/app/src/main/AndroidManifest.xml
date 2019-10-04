@@ -15,8 +15,8 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    <!-- <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" /> -->
+    <!-- <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" /> -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
@@ -44,12 +44,12 @@
             android:resource="@android:color/white"/>
         <meta-data android:name="com.transistorsoft.locationmanager.license" android:value="bb110b4d3e3ba9eb4a804b0509e9688088d177e79c4be1988169b9029b9a67fa" />
 
-        <receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
+        <!-- <receiver android:name="com.google.android.gms.gcm.GcmReceiver" android:exported="true" android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver>
+        </receiver> -->
 
 
 
@@ -60,16 +60,16 @@
             </intent-filter>
         </receiver>
         <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
-        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false">
+        <!-- <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-        <service android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService">
+        </service> -->
+        <!-- <service android:name="com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </service> -->
         <service android:name="com.frontm.frontm.FrontmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
