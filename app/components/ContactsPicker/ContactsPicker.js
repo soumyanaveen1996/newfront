@@ -161,31 +161,9 @@ class ContactsPicker extends React.Component {
             showConnectionMessage: this.showConnectionMessage,
             inviteUser: this.inviteUser.bind(this)
         });
-        // this.checkPollingStrategy()
 
-        // const loadedContacts = await Contact.getAddedContacts()
-        // if (loadedContacts.length > 0) {
-        //     this.dataSource = new FrontMAddedContactsPickerDataSource(this)
-        //     return
-        // }
-        // Contact.refreshContacts().then(() => {
-        //     Contact.getAddedContacts().then(contacts => {
-        //         this.dataSource = new FrontMAddedContactsPickerDataSource(this)
-        //         if (contacts.length === 0) {
-        //             //If no contacts are added then go directly to contacts bot
-        //             this.handleAddContact()
-        //         }
-        //     })
-        // })
-
-        // if (!this.props.appState.contactsLoaded) {
-        //     Contact.refreshContacts();
-        //     return;
-        // }
         if (this.props.appState.contactsLoaded) {
-            Contact.getAddedContacts().then(contacts => {
-                this.refresh();
-            });
+            this.refresh();
         }
     }
 
@@ -465,33 +443,6 @@ class ContactsPicker extends React.Component {
         });
     }
 
-    grpcAddContacts(user, userIds) {
-        if (!userIds || userIds.length === 0) {
-            return;
-        }
-        return new Promise((resolve, reject) => {
-            ContactsServiceClient.add(
-                user.creds.sessionId,
-                { userIds },
-                (error, result) => {
-                    console.log(
-                        'GRPC:::ContactsServiceClient::find : ',
-                        error,
-                        result
-                    );
-                    if (error) {
-                        reject({
-                            type: 'error',
-                            error: error.code
-                        });
-                    } else {
-                        resolve(result);
-                    }
-                }
-            );
-        });
-    }
-
     addContacts(selectedContacts) {
         return new Promise((resolve, reject) => {
             Contact.addContacts(selectedContacts)
@@ -499,7 +450,7 @@ class ContactsPicker extends React.Component {
                     return Auth.getUser();
                 })
                 .then(user => {
-                    return this.grpcAddContacts(
+                    return Contact.grpcAddContacts(
                         user,
                         _.map(selectedContacts, contact => {
                             return contact.userId;

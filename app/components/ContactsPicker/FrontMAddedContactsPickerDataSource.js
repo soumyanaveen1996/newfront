@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { CONTACTS_REQUEST_PAGE_SIZE } from './config';
 import { Contact } from '../../lib/capability';
 import images from '../../config/images';
+import { ContactType } from '../../lib/capability/Contact';
 
 export default class ContactsPickerDataSource {
     constructor(delegate) {
@@ -38,13 +39,17 @@ export default class ContactsPickerDataSource {
                 id: data.userId,
                 name: data.userName,
                 emailAddress:
-                    data.contactType === 'frontm' ? data.emailAddress : null,
+                    data.contactType === ContactType.FRONTM
+                        ? data.emailAddress
+                        : null,
                 emailAddresses:
-                    data.contactType === 'local' ? data.emailAddresses : null,
+                    data.contactType === ContactType.LOCAL
+                        ? data.emailAddresses
+                        : null,
                 phoneNumbers: data.phoneNumbers,
                 isWaitingForConfirmation: data.waitingForConfirmation || false,
                 isFavourite: data.isFavourite || false,
-                contactType: data.contactType || 'frontm',
+                contactType: data.contactType || ContactType.FRONTM,
                 type: data.type || 'people'
             };
 

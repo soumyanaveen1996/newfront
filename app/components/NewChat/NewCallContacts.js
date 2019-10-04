@@ -70,6 +70,7 @@ import contactsStyles from '../ContactsPicker/styles';
 import { NETWORK_STATE } from '../../lib/network';
 import GetCredit from '../GetCredit';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
+import { ContactType } from '../../lib/capability/Contact';
 
 const R = require('ramda');
 
@@ -293,7 +294,10 @@ class NewCallContacts extends React.Component {
             return;
         }
         const FrontMContacts = contacts.filter(contact => {
-            return !contact.contactType || contact.contactType === 'frontm';
+            return (
+                !contact.contactType ||
+                contact.contactType === ContactType.FRONTM
+            );
         });
         const AddressBook = this.createAddressBook(FrontMContacts);
         let newAddressBook = AddressBook.filter(elem => {

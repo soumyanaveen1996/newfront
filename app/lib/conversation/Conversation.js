@@ -324,6 +324,7 @@ export default class Conversation {
 
     static deleteConversation = conversationId =>
         Conversation.removeConversation(conversationId, IM_CHAT);
+
     static deleteChannelConversation = conversationId =>
         Conversation.removeConversation(conversationId, CHANNEL_CHAT);
 
@@ -348,6 +349,7 @@ export default class Conversation {
             );
         });
     };
+
     static grpcDeleteLocalContacts = (user, localContacts) => {
         // console.log('delete grpc contcat ', localContacts);
 
@@ -369,6 +371,7 @@ export default class Conversation {
             );
         });
     };
+
     static deleteContacts = body => {
         // console.log('sending data for delete before', body);
         let currentUserId;
@@ -395,6 +398,7 @@ export default class Conversation {
                 .catch(reject);
         });
     };
+
     static deleteLocalContacts = body => {
         // console.log('sending data for local conatct delete before', body);
 
