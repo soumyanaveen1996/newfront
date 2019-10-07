@@ -7,6 +7,8 @@ import { TwilioVoIP } from '../lib/twilio';
 import { Platform } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import EventEmitter, { AuthEvents } from '../lib/events';
+import { BackgroundBotChat } from '../lib/BackgroundTask';
+import SystemBot from '../lib/bot/SystemBot';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
@@ -16,6 +18,7 @@ export default class AfterLogin {
             Mapbox.setAccessToken(
                 'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
             );
+            AfterLogin.initializeBackgroundTask();
             ContactsCache.init();
             MessageCounter.init();
             NetworkPoller.start();
@@ -24,6 +27,13 @@ export default class AfterLogin {
             // EventEmitter.emit(AuthEvents.userDataFetched);
         }
     };
+
+    static async initializeBackgroundTask() {
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+        await bgBotScreen.initialize();
+    }
 
     configureNotifications = () => {
         Notification.deviceInfo()

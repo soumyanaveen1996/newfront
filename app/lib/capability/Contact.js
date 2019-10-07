@@ -225,8 +225,8 @@ export default class Contact {
             Contact.getAddedContacts()
                 .then(existingContacts => {
                     existingContacts = existingContacts || [];
-                    const allContacts = newContacts.concat(existingContacts); //priority to new contacts
-                    _.uniqBy(allContacts, 'userId');
+                    let allContacts = newContacts.concat(existingContacts); //priority to new contacts
+                    allContacts = _.uniqBy(allContacts, 'userId');
                     return Contact.saveContacts(allContacts);
                 })
                 .then(function(contactList) {
@@ -253,8 +253,8 @@ export default class Contact {
             Contact.getAddedContacts()
                 .then(existingContacts => {
                     existingContacts = existingContacts || [];
-                    const allContacts = newContacts.concat(existingContacts); //priority to new contacts
-                    _.uniqBy(allContacts, 'userId');
+                    let allContacts = newContacts.concat(existingContacts); //priority to new contacts
+                    allContacts = _.uniqBy(allContacts, 'userId');
                     return Contact.saveContacts(allContacts);
                 })
                 .then(function(contactList) {
@@ -269,27 +269,20 @@ export default class Contact {
      * Used to delete any type of contacts.
      * Delete one or more contacts locally using their userId.
      */
-    static deleteContacts = contactIds =>
+    static deleteContacts = contacts =>
         new Promise((resolve, reject) => {
-            if (!Array.isArray(contactIds)) {
-                contactIds = [contactIds];
+            if (!Array.isArray(contacts)) {
+                contacts = [contacts];
             }
             Contact.getAddedContacts()
                 .then(existingContacts => {
                     existingContacts = existingContacts || [];
-                    const filteredContacts = existingContacts.filter(
-                        contact => {
-                            const found = contactIds.find(id => {
-                                return id === contact.userId;
-                            });
-                            if (found) {
-                                return false;
-                            } else {
-                                return true;
-                            }
-                        }
+                    existingContacts = _.differenceBy(
+                        existingContacts,
+                        contacts,
+                        'userId'
                     );
-                    return Contact.saveContacts(filteredContacts);
+                    return Contact.saveContacts(existingContacts);
                 })
                 .then(function(contactList) {
                     return resolve(contactList);

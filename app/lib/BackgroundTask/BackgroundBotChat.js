@@ -127,8 +127,8 @@ export default class BackgroundBotChat {
             this.getBotKey(),
             PAGE_SIZE,
             this.oldestLoadedDate()
-        ).reverse();
-        return messages;
+        );
+        return messages.reverse();
     }
 
     oldestLoadedDate() {
