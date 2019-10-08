@@ -18,7 +18,10 @@ export default class Form2Message extends React.Component {
 
     componentDidMount() {
         const currentForm = Store.getState().user.currentForm;
-        if (currentForm.formMessage.formId === this.props.messageData.formId) {
+        if (
+            currentForm &&
+            currentForm.formMessage.formId === this.props.messageData.formId
+        ) {
             this.openForm();
         }
     }
