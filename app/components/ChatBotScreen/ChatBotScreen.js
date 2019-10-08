@@ -899,12 +899,24 @@ class ChatBotScreen extends React.Component {
                     );
                 }
             } else {
+                this.openForm(message);
                 this.updateChat(message);
             }
         } else {
             this.updateChat(message);
         }
     };
+
+    openForm(formMessage) {
+        Store.dispatch(
+            setCurrentForm({
+                formData: formMessage.getMessage(),
+                formMessage: formMessage.getMessageOptions(),
+                currentResults: null,
+                change: null
+            })
+        );
+    }
 
     done = () => {
         // Done with the bot - navigate away?
@@ -940,7 +952,7 @@ class ChatBotScreen extends React.Component {
                             this.chatState.nextSmartSuggestion = undefined;
                         }
                     }
-                    resolve();
+                    resolve(res);
                 })
                 .catch(() => {
                     resolve();

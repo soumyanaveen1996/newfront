@@ -76,11 +76,8 @@ export class GoogleAnalytics {
     };
 
     logEvents = (category, action, label, value, experiment) => {
-        console.log('>>>>>>>0');
         try {
-            console.log('>>>>>>>1');
             if (!this.disableGA) {
-                console.log('>>>>>>>2');
                 let gaEvent = new GAHits.Event(
                     category,
                     action,
@@ -88,9 +85,7 @@ export class GoogleAnalytics {
                     value,
                     experiment
                 );
-                console.log('>>>>>>>3');
                 if (Store.getState().user.network === NETWORK_STATE.full) {
-                    console.log('>>>>>>>4');
                     this.ga.send(gaEvent);
                 }
             }
