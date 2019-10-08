@@ -354,38 +354,6 @@ export default class ContactDetailsScreen extends React.Component {
                     {this.checkFavourite()}
                 </View>
             );
-        } else {
-            return (
-                <View
-                    style={{
-                        height: 75,
-                        borderTopColor: 'rgba(221,222,227,1)',
-                        borderTopWidth: 1,
-                        borderBottomWidth: 5,
-                        borderBottomColor: 'rgba(221,222,227,1)',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <TouchableOpacity
-                        style={styles.actionButtonCD}
-                        onPress={this.startChat.bind(this)}
-                    >
-                        <View
-                            style={[
-                                styles.actionIconCD,
-                                { backgroundColor: GlobalColors.sideButtons }
-                            ]}
-                        >
-                            <Image
-                                style={{ width: 32, height: 32 }}
-                                source={images.contact_chat_btn}
-                            />
-                        </View>
-                        <Text>Conversation</Text>
-                    </TouchableOpacity>
-                </View>
-            );
         }
     }
 
