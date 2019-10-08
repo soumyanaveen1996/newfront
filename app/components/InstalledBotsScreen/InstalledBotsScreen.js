@@ -40,6 +40,12 @@ import config from '../../config/config';
 import { Icons } from '../../config/icons';
 import { EmptyInstalledBot } from '../BotStoreScreen';
 import { NativeModules } from 'react-native';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
+
 const UserServiceClient = NativeModules.UserServiceClient;
 
 const LAST_CHECK_TIME_KEY = 'last_bot_check_time';
@@ -244,6 +250,13 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     deleteBot = async bot => {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.STORE,
+            GoogleAnalyticsEventsActions.UNINSTALLED_BOT,
+            bot.botName,
+            0,
+            null
+        );
         const dceBot = dce.bot(bot);
         try {
             const user = await Promise.resolve(Auth.getUser());

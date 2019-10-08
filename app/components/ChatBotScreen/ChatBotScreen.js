@@ -66,8 +66,8 @@ import VersionCheck from 'react-native-version-check';
 import versionCompare from 'semver-compare';
 import {
     GoogleAnalytics,
-    GoogleAnalyticsCategories,
-    GoogleAnalyticsEvents
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
 import DocumentPicker from 'react-native-document-picker';
 import { SmartSuggestions } from '../SmartSuggestions';
@@ -353,8 +353,9 @@ class ChatBotScreen extends React.Component {
                         });
                         if (this.props.call) {
                             this.showCallMessage();
+                        } else {
+                            this.logGoogleAnalytics();
                         }
-                    } else {
                     }
                 }
             );
@@ -401,13 +402,7 @@ class ChatBotScreen extends React.Component {
             PollingStrategyEvents.changed,
             this.checkPollingStrategy.bind(this)
         );
-        GoogleAnalytics.logEvents(
-            GoogleAnalyticsCategories.BOT_OPENED,
-            this.props.bot.botName,
-            null,
-            0,
-            null
-        );
+
         Store.dispatch(
             setCurrentConversationId(this.conversationContext.conversationId)
         );
@@ -1560,8 +1555,8 @@ class ChatBotScreen extends React.Component {
         this.countMessage(message);
 
         GoogleAnalytics.logEvents(
-            GoogleAnalyticsEvents.SEND_MESSAGE,
-            'Message',
+            GoogleAnalyticsEventsCategories.CHAT,
+            GoogleAnalyticsEventsActions.SEND_MESSAGE,
             this.props.bot.botName,
             0,
             null

@@ -26,6 +26,11 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 export default class InviteModal extends React.Component {
     constructor(props) {
@@ -85,6 +90,13 @@ export default class InviteModal extends React.Component {
         if (!reg.test(this.state.email)) {
             return;
         }
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.CONTACTS,
+            GoogleAnalyticsEventsActions.INVITE_CONTACT,
+            null,
+            0,
+            null
+        );
         Keyboard.dismiss();
 
         this.textInput.clear();

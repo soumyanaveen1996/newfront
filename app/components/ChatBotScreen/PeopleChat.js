@@ -18,7 +18,11 @@ import chatStyles from './styles';
 import { PhoneState } from '../Phone';
 import NetworkButton from '../Header/NetworkButton';
 import GlobalColors from '../../config/styles';
-
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 var backTimer = null;
 
 export default class PeopleChat extends ChatBotScreen {
@@ -161,6 +165,13 @@ export default class PeopleChat extends ChatBotScreen {
                 this.conversationContext,
                 this.user,
                 false
+            );
+            GoogleAnalytics.logEvents(
+                GoogleAnalyticsEventsCategories.CALL,
+                GoogleAnalyticsEventsActions.VOIP_CALL,
+                null,
+                0,
+                null
             );
             Actions.phone({
                 state: PhoneState.init,
@@ -443,5 +454,15 @@ export default class PeopleChat extends ChatBotScreen {
                 refreshing: false
             });
         }
+    }
+
+    logGoogleAnalytics() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.CHAT,
+            GoogleAnalyticsEventsActions.PEOPLE_CHAT_OPENED,
+            null,
+            0,
+            null
+        );
     }
 }

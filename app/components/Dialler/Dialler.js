@@ -38,6 +38,11 @@ import {
 } from 'react-native-responsive-screen';
 import Calls from '../../lib/calls';
 import * as Progress from 'react-native-progress';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 const R = require('ramda');
 
@@ -258,6 +263,13 @@ export default class Dialler extends React.Component {
             }
             const user = await Auth.getUser();
             if (call_type === PSTN_CALL.SAT_CALL) {
+                GoogleAnalytics.logEvents(
+                    GoogleAnalyticsEventsCategories.CALL,
+                    GoogleAnalyticsEventsActions.SATELLITE_CALL,
+                    null,
+                    0,
+                    null
+                );
                 const {
                     error,
                     sat_phone_number,
@@ -280,6 +292,13 @@ export default class Dialler extends React.Component {
                     call_to: phone_number
                 });
             } else {
+                GoogleAnalytics.logEvents(
+                    GoogleAnalyticsEventsCategories.CALL,
+                    GoogleAnalyticsEventsActions.PSTN_CALL,
+                    null,
+                    0,
+                    null
+                );
                 this.setState({
                     satCall: false,
                     satCallPin: null,
@@ -308,6 +327,7 @@ export default class Dialler extends React.Component {
                 'Sorry , I am unable to connect your call. Please try after sometime'
             );
             this.closeCall();
+            Actions.pop();
         }
     }
 

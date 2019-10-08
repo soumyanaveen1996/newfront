@@ -16,6 +16,11 @@ import {
 } from '../../redux/actions/UserActions';
 import PhoneContacts from 'react-native-contacts';
 import { NativeModules, Platform, PermissionsAndroid } from 'react-native';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 export const ContactType = {
     FRONTM: 'frontm',
@@ -146,6 +151,13 @@ export default class Contact {
                             error: error.code
                         });
                     } else {
+                        GoogleAnalytics.logEvents(
+                            GoogleAnalyticsEventsCategories.CONTACTS,
+                            GoogleAnalyticsEventsActions.ADDED_CONTACT,
+                            'number of contacts added',
+                            userIds.length,
+                            null
+                        );
                         resolve(result);
                     }
                 }

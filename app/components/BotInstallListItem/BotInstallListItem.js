@@ -16,6 +16,12 @@ import { Auth, Network } from '../../lib/capability';
 import config from '../../config/config';
 import { Actions } from 'react-native-router-flux';
 import { NativeModules, NativeEventEmitter } from 'react-native';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
+
 const UserServiceClient = NativeModules.UserServiceClient;
 
 const subtitleNumberOfLines = 2;
@@ -110,6 +116,13 @@ export default class BotInstallListItem extends React.Component {
     }
 
     async installBot() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.STORE,
+            GoogleAnalyticsEventsActions.INSTALLED_BOT,
+            this.props.bot.botName,
+            0,
+            null
+        );
         let botStatus = utils.checkBotStatus(
             this.props.installedBots,
             this.props.bot
