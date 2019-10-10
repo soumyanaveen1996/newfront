@@ -30,13 +30,22 @@ import Modal from 'react-native-modal';
 import images from '../../config/images';
 import { HeaderRightIcon, HeaderBack } from '../Header';
 import I18n from '../../config/i18n/i18n';
-import { Settings, PollingStrategyTypes } from '../../lib/capability';
+import {
+    Settings,
+    PollingStrategyTypes,
+    Media,
+    Resource,
+    ResourceTypes
+} from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
 import { connect } from 'react-redux';
 import { setCurrentForm } from '../../redux/actions/UserActions';
 import ChatModal from '../ChatBotScreen/ChatModal';
 import modalStyle from '../Cards/styles';
 import NetworkButton from '../Header/NetworkButton';
+import Constants from '../../config/constants';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import RNFS from 'react-native-fs';
 
 class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -242,6 +251,29 @@ class Form2 extends React.Component {
                     return answer.value;
                 };
                 break;
+            case fieldType.imageField:
+                answer.value = fieldData.value || '';
+                answer.getResponse = async action => {
+                    if (action === formAction.CONFIRM && answer.value) {
+                        try {
+                            await Resource.uploadFile(
+                                Constants.IMAGES_DIRECTORY +
+                                        '/' +
+                                        answer.value,
+                                this.props.conversationId,
+                                answer.value.slice(0, -4),
+                                ResourceTypes.Image
+                            );
+                            return answer.value;
+                        } catch (e) {
+                            throw e;
+                        }
+                    }
+                    return answer.value;
+                };
+                answer.validationMessage = 'Could not upload the image';
+                answer.valid = true;
+                break;
             default:
             }
             this.answers.push(answer);
@@ -309,7 +341,7 @@ class Form2 extends React.Component {
             formId: this.props.id,
             action: action,
             fields: _.map(this.answers, (answer, index) => {
-                const responseValue = answer.getResponse();
+                const responseValue = answer.getResponse(action);
                 if (completed === true) {
                     if (this.props.formData[index].mandatory) {
                         if (
@@ -364,13 +396,18 @@ class Form2 extends React.Component {
         return data;
     }
 
-    onDone() {
-        let response = this.getResponse(formAction.CONFIRM);
-        if (response.completed) {
-            this.props.onDone(this.saveFormData(), response.responseData);
-            Actions.pop();
-        } else {
-            console.log('FORM: you must fill all mandatory fields');
+    async onDone() {
+        try {
+            let response = await this.getResponse(formAction.CONFIRM);
+            if (response.completed) {
+                this.props.onDone(this.saveFormData(), response.responseData);
+                Actions.pop();
+            } else {
+                console.log('FORM: you must fill all mandatory fields');
+            }
+        } catch (error) {
+            this.answers[key].valid = false;
+            this.setState({ answers: this.answers });
         }
     }
 
@@ -515,6 +552,7 @@ class Form2 extends React.Component {
             />
         );
     }
+
     renderNumberField(content, key) {
         return (
             <TextInput
@@ -1280,6 +1318,94 @@ class Form2 extends React.Component {
         );
     }
 
+    renderImagePicker(fieldData, key) {
+        const imageUri =
+            Constants.IMAGES_DIRECTORY + '/' + this.state.answers[key].value;
+        return (
+            <View style={styles.imagePickerContainer}>
+                <TouchableOpacity
+                    style={styles.imageContainer}
+                    disabled={this.state.answers[key].value}
+                    onPress={() => {
+                        this.pickImage(fieldData, key);
+                    }}
+                >
+                    {this.state.answers[key].value ? (
+                        <Image
+                            source={{ uri: imageUri }}
+                            style={styles.image}
+                            resizeMode="cover"
+                            onError={() => {
+                                this.answers[key].value = '';
+                                this.answers[key].valid = true;
+                                this.setState({
+                                    answers: this.answers,
+                                    showInfoOfIndex: null
+                                });
+                            }}
+                        />
+                    ) : (
+                        Icons.upload()
+                    )}
+                </TouchableOpacity>
+                {this.state.answers[key].value ? (
+                    <TouchableOpacity
+                        style={styles.removeImage}
+                        onPress={() => {
+                            this.answers[key].valid = true;
+                            this.answers[key].value = '';
+                            this.answers[key].filled = false;
+                            this.onMoveAction(
+                                key,
+                                this.answers[key].id,
+                                this.answers[key].value
+                            );
+                            this.setState({
+                                answers: this.answers,
+                                showInfoOfIndex: null
+                            });
+                        }}
+                    >
+                        <Image source={images.delete_icon_trash} />
+                        <Text style={styles.removeImageText}>Remove</Text>
+                    </TouchableOpacity>
+                ) : null}
+            </View>
+        );
+    }
+
+    async pickImage(fieldData, key) {
+        let result = await Media.pickMediaFromLibrary({
+            allowsEditing: false,
+            exif: true,
+            base64: true
+        });
+        if (!result.cancelled) {
+            let imageUri = result.uri;
+            const fileName =
+                this.props.conversationId + this.props.id + fieldData.id;
+            const completeFilename = fileName + '.png';
+            const newUri = Constants.IMAGES_DIRECTORY + '/' + completeFilename;
+            const exist = await RNFS.exists(newUri);
+            if (exist) {
+                await RNFS.unlink(newUri);
+            }
+            await RNFS.mkdir(Constants.IMAGES_DIRECTORY);
+            await RNFS.copyFile(imageUri, newUri);
+            this.answers[key].value = completeFilename;
+            this.answers[key].valid = true;
+            this.onMoveAction(
+                key,
+                this.answers[key].id,
+                this.answers[key].value
+            );
+            this.setState({
+                answers: this.answers,
+                showInfoOfIndex: null
+            });
+        }
+    }
+
     renderModalInfoValue(value, isModal) {
         if (value === null || value === undefined) {
             return <Text style={modalStyle.fieldText}>-</Text>;
@@ -1357,6 +1483,9 @@ class Form2 extends React.Component {
         case fieldType.lookup:
             field = this.renderLookup(fieldData, key);
             break;
+        case fieldType.imageField:
+            field = this.renderImagePicker(fieldData, key);
+            break;
         default:
         }
         return (
@@ -1386,7 +1515,9 @@ class Form2 extends React.Component {
                     </View>
                 </View>
                 {field}
-                {fieldData.validation && this.answers[key].valid === false
+                {(fieldData.validation ||
+                    fieldData.type === fieldType.imageField) &&
+                this.answers[key].valid === false
                     ? this.renderValidationMessage(
                         this.answers[key].validationMessage ||
                               'Validation error'
@@ -1428,8 +1559,16 @@ class Form2 extends React.Component {
         return allFields;
     }
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
-        const formIdCompleted = this.checkFormValidation();
+        const formIsCompleted = this.checkFormValidation();
         return (
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -1464,14 +1603,14 @@ class Form2 extends React.Component {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     disabled={
-                                        this.state.disabled || !formIdCompleted
+                                        this.state.disabled || !formIsCompleted
                                     }
                                     style={[
                                         styles.f2DoneButton,
                                         {
                                             opacity:
                                                 this.state.disabled ||
-                                                !formIdCompleted
+                                                !formIsCompleted
                                                     ? 0.2
                                                     : 1
                                         }
@@ -1512,6 +1651,7 @@ class Form2 extends React.Component {
                         </ScrollView>
                     </SafeAreaView>
                 </TouchableWithoutFeedback>
+                {this.renderToast()}
             </KeyboardAvoidingView>
         );
     }

@@ -392,7 +392,8 @@ export const Icons = {
         'material-community',
         35,
         GlobalColors.frontmLightBlue
-    )
+    ),
+    upload: icon('upload', 'material-community', 35, GlobalColors.disabledGray)
 };
 
 export default Icons;
