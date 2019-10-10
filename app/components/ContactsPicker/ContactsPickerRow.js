@@ -9,6 +9,7 @@ import Images from '../../config/images';
 import { GlobalColors } from '../../config/styles';
 import Icon from 'react-native-vector-icons';
 import images from '../../images';
+import { ContactType } from '../../lib/capability/Contact';
 
 const R = require('ramda');
 
@@ -147,7 +148,7 @@ export default class ContactsPickerRow extends React.Component {
                             </Text>
                         </View>
                     ) : null}
-                    {contact.contactType === 'local' && (
+                    {contact.contactType === ContactType.LOCAL && (
                         <View
                             style={{
                                 width: 90,

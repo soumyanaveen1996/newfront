@@ -266,7 +266,7 @@ class Form2 extends React.Component {
     }
 
     componentWillUnmount() {
-        setCurrentForm(null);
+        this.props.setCurrentForm(null);
     }
 
     showConnectionMessage = connectionType => {

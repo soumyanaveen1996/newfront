@@ -9,7 +9,8 @@ import {
     Platform,
     BackHandler,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    AsyncStorage
 } from 'react-native';
 import styles from './styles';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -70,11 +71,20 @@ export default class LoginScreen extends React.Component {
             ],
             loading: false,
             pressedFbBtn: false,
-            pressedGglBtn: false
+            pressedGglBtn: false,
+            suspendedRegistration: false
         };
 
         this.formValuesArray = [];
         this.inputs = {};
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('signupStage').then(stage => {
+            if (stage && stage === 'checkCode') {
+                this.setState({ suspendedRegistration: true });
+            }
+        });
     }
 
     onFormSubmit() {
@@ -202,6 +212,7 @@ export default class LoginScreen extends React.Component {
                 });
             });
     };
+
     loginWithFacebook = async () => {
         this.setState({ loading: true });
         this.setState({ pressedFbBtn: !this.state.pressedFbBtn });
@@ -262,6 +273,7 @@ export default class LoginScreen extends React.Component {
             );
         }
     };
+
     displayPasswordErrorMessege = () => {
         if (
             this.state.passwordErrorMessage &&
@@ -400,6 +412,24 @@ export default class LoginScreen extends React.Component {
                                 {this.renderGoogleBtn()}
                             </TouchableOpacity>
                         </View>
+                        {this.state.suspendedRegistration ? (
+                            <TouchableOpacity
+                                onPress={() =>
+                                    Actions.confirmationScreen({
+                                        type: ActionConst.REPLACE
+                                    })
+                                }
+                                style={{ alignItems: 'center', zIndex: 1 }}
+                            >
+                                <Text style={swiperStyle.goToLine}>
+                                    Or complete your registration
+                                    <Image
+                                        style={swiperStyle.arrow}
+                                        source={images.blue_arrow}
+                                    />
+                                </Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </View>
                 </ScrollView>
                 <View style={swiperStyle.bottomBox}>

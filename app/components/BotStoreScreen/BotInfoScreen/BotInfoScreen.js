@@ -21,6 +21,12 @@ import config from '../../../config/config';
 import { Auth, Network } from '../../../lib/capability';
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import NetworkButton from '../../Header/NetworkButton';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../../lib/GoogleAnalytics';
+
 const UserServiceClient = NativeModules.UserServiceClient;
 const timeout = Platform.OS === 'android' ? 1000 : 400;
 
@@ -82,6 +88,16 @@ export default class BotInfoScreen extends React.Component {
         };
     }
 
+    componentDidMount() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.STORE,
+            GoogleAnalyticsEventsActions.VISITED_BOT,
+            this.props.botInfo.botName,
+            0,
+            null
+        );
+    }
+
     subscribeToBot(botId, user) {
         return new Promise((resolve, reject) => {
             UserServiceClient.subscribeBot(
@@ -129,6 +145,13 @@ export default class BotInfoScreen extends React.Component {
     }
 
     async installBot() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.STORE,
+            GoogleAnalyticsEventsActions.INSTALLED_BOT,
+            this.props.botInfo.botName,
+            0,
+            null
+        );
         if (
             this.props.status === 'installed' &&
             this.props.status !== 'update'

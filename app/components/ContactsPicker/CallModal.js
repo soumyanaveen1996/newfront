@@ -7,6 +7,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import SystemBot from '../../lib/bot/SystemBot';
 import Store from '../../redux/store/configureStore';
 import { NETWORK_STATE } from '../../lib/network';
+import { ContactType } from '../../lib/capability/Contact';
 
 export default class CallModal extends React.Component {
     constructor(props) {
@@ -175,7 +176,7 @@ export default class CallModal extends React.Component {
                             </View>
                         </View>
                     ) : null}
-                    {contactSelected.contactType !== 'local' ? (
+                    {contactSelected.contactType !== ContactType.LOCAL ? (
                         <View style={styles.phoneContainer}>
                             <View style={styles.modalTextContainerImg}>
                                 <Image

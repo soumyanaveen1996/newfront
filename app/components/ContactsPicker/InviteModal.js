@@ -26,6 +26,11 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 export default class InviteModal extends React.Component {
     constructor(props) {
@@ -85,6 +90,13 @@ export default class InviteModal extends React.Component {
         if (!reg.test(this.state.email)) {
             return;
         }
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.CONTACTS,
+            GoogleAnalyticsEventsActions.INVITE_CONTACT,
+            null,
+            0,
+            null
+        );
         Keyboard.dismiss();
 
         this.textInput.clear();
@@ -122,33 +134,6 @@ export default class InviteModal extends React.Component {
 
     setInviteVisible = () => this.setState({ isInviteVisible: true });
     setInviteHide = () => this.setState({ isInviteVisible: false });
-    createLocalContact = () => {
-        const fakeData = {
-            localContacts: [
-                {
-                    userName: `SidHemu${Math.floor(
-                        Math.random() * 20
-                    ).toString()}`,
-                    emailAddresses: {
-                        home: `sid_hello+${Math.floor(
-                            Math.random() * 20
-                        ).toString()}@example.com`,
-                        work: ''
-                    },
-                    phoneNumbers: {
-                        land: '08045678955',
-                        mobile: '919880433199',
-                        satellite: ''
-                    }
-                }
-            ]
-        };
-
-        AddLocalContacts(fakeData).then(elem => {
-            console.log('data ', elem);
-            this.props.setVisible(false);
-        });
-    };
 
     createNewContact = () => {
         Actions.newContactScreen();
@@ -316,33 +301,6 @@ export default class InviteModal extends React.Component {
                                             Invite Friends to FrontM
                                         </Text>
                                     </TouchableOpacity>
-                                    {/* <TouchableOpacity
-                                    style={{
-                                        width: wp('80%'),
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        marginVertical: 10
-                                    }}
-                                    onPress={() => {
-                                        this.createLocalContact();
-                                    }}
-                                >
-                                    <Image
-                                        style={{
-                                            width: 25,
-                                            height: 25,
-                                            resizeMode: 'contain',
-                                            marginLeft: 10
-                                        }}
-                                        source={require('../../images/email-icon/send-invitation-icon3x.png')}
-                                    />
-
-                                    <Text style={styles.inviteEmail}>
-                                        FAKE CREATE LOCAL CONTACTS(REMOVE
-                                        THIS!!!)
-                                    </Text>
-                                </TouchableOpacity> */}
                                 </View>
                             </View>
                         </TouchableWithoutFeedback>

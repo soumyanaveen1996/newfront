@@ -16,6 +16,17 @@ import {
 } from '../../redux/actions/UserActions';
 import PhoneContacts from 'react-native-contacts';
 import { NativeModules, Platform, PermissionsAndroid } from 'react-native';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
+
+export const ContactType = {
+    FRONTM: 'frontm',
+    LOCAL: 'local'
+};
+
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -105,7 +116,7 @@ export default class Contact {
                     // Filter for uuidArr
                     uuidArr = uuidArr || [];
                     const frontmContacts = contacts.filter(
-                        contact => contact.contactType !== 'local'
+                        contact => contact.contactType !== ContactType.LOCAL
                     );
                     let filteredContacts = _.filter(frontmContacts, contact => {
                         return uuidArr.indexOf(contact.userId) > -1;
@@ -119,35 +130,236 @@ export default class Contact {
                     reject(err);
                 });
         });
-    // Add one or more
+
+    static grpcAddContacts(user, userIds) {
+        if (!userIds || userIds.length === 0) {
+            return;
+        }
+        return new Promise((resolve, reject) => {
+            ContactsServiceClient.add(
+                user.creds.sessionId,
+                { userIds },
+                (error, result) => {
+                    console.log(
+                        'GRPC:::ContactsServiceClient::find : ',
+                        error,
+                        result
+                    );
+                    if (error) {
+                        reject({
+                            type: 'error',
+                            error: error.code
+                        });
+                    } else {
+                        GoogleAnalytics.logEvents(
+                            GoogleAnalyticsEventsCategories.CONTACTS,
+                            GoogleAnalyticsEventsActions.ADDED_CONTACT,
+                            'number of contacts added',
+                            userIds.length,
+                            null
+                        );
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
+    /**
+     * Used to add frontm contacts locally when the user send a request to another user.
+     * Saves one or more contacts locally with waitingForConfirmation: true
+     */
     static addContacts = contacts =>
         new Promise((resolve, reject) => {
             if (!Array.isArray(contacts)) {
                 contacts = [contacts];
             }
-
+            const newContacts = contacts.map(contact => {
+                contact.waitingForConfirmation = true;
+                return contact;
+            });
             Contact.getAddedContacts()
-                .then(function(cts) {
-                    cts = cts || [];
-                    const notPresentContacts = _.differenceBy(
-                        contacts,
-                        cts,
-                        contact => contact.userId
-                    );
-                    const newContacts = cts.concat(notPresentContacts);
-                    const newContacts_Unconfirmed = newContacts.map(
-                        contact => ({
-                            waitingForConfirmation: true,
-                            ...contact
-                        })
-                    );
-                    return Contact.saveContacts(newContacts_Unconfirmed);
+                .then(existingContacts => {
+                    existingContacts = existingContacts || [];
+                    const allContacts = existingContacts.concat(newContacts); //priority to existing contacts
+                    _.uniqBy(allContacts, 'userId');
+                    return Contact.saveContacts(allContacts);
                 })
-                .then(function(cts) {
-                    return resolve(cts);
+                .then(function(contactList) {
+                    return resolve(contactList);
                 })
                 .catch(err => {
                     reject(err);
+                });
+        });
+
+    /**
+     * Used to add frontm contacts that the user accepted and now have showAcceptedIgnoreMsg: false.
+     * Saves one or more contacts locally with waitingForConfirmation: false
+     */
+    static addAcceptedContacts = contacts =>
+        new Promise((resolve, reject) => {
+            if (!Array.isArray(contacts)) {
+                contacts = [contacts];
+            }
+            const newContacts = contacts.map(contact => {
+                contact.waitingForConfirmation = false;
+                return contact;
+            });
+            Contact.getAddedContacts()
+                .then(existingContacts => {
+                    existingContacts = existingContacts || [];
+                    const allContacts = newContacts.concat(existingContacts); //priority to new contacts
+                    _.uniqBy(allContacts, 'userId');
+                    return Contact.saveContacts(allContacts);
+                })
+                .then(function(contactList) {
+                    return resolve(contactList);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    /**
+     * Used to add local contacts created by the user on other devices.
+     * Saves one or more contacts locally with contactType = 'local'
+     */
+    static addLocalContacts = contacts =>
+        new Promise((resolve, reject) => {
+            if (!Array.isArray(contacts)) {
+                contacts = [contacts];
+            }
+            const newContacts = contacts.map(contact => {
+                contact.contactType = ContactType.LOCAL;
+                return contact;
+            });
+            Contact.getAddedContacts()
+                .then(existingContacts => {
+                    existingContacts = existingContacts || [];
+                    let allContacts = newContacts.concat(existingContacts); //priority to new contacts
+                    allContacts = _.uniqBy(allContacts, 'userId');
+                    return Contact.saveContacts(allContacts);
+                })
+                .then(function(contactList) {
+                    return resolve(contactList);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    /**
+     * Used to update local contacts.
+     * Update one or more local contacts locally.
+     */
+    static updateLocalContacts = contacts =>
+        new Promise((resolve, reject) => {
+            if (!Array.isArray(contacts)) {
+                contacts = [contacts];
+            }
+            const newContacts = contacts.map(contact => {
+                contact.contactType = ContactType.LOCAL;
+                return contact;
+            });
+            Contact.getAddedContacts()
+                .then(existingContacts => {
+                    existingContacts = existingContacts || [];
+                    let allContacts = newContacts.concat(existingContacts); //priority to new contacts
+                    allContacts = _.uniqBy(allContacts, 'userId');
+                    return Contact.saveContacts(allContacts);
+                })
+                .then(function(contactList) {
+                    return resolve(contactList);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    /**
+     * Used to delete any type of contacts.
+     * Delete one or more contacts locally using their userId.
+     */
+    static deleteContacts = contacts =>
+        new Promise((resolve, reject) => {
+            if (!Array.isArray(contacts)) {
+                contacts = [contacts];
+            }
+            Contact.getAddedContacts()
+                .then(existingContacts => {
+                    existingContacts = existingContacts || [];
+                    existingContacts = _.differenceBy(
+                        existingContacts,
+                        contacts,
+                        'userId'
+                    );
+                    return Contact.saveContacts(existingContacts);
+                })
+                .then(function(contactList) {
+                    return resolve(contactList);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    /**
+     * Save contact list locally. Old data will be lost.
+     */
+    static saveContacts = contacts =>
+        new Promise(async (resolve, reject) => {
+            const incomingContacts = contacts.map(contact => {
+                if (contact) {
+                    if (!contact.waitingForConfirmation) {
+                        contact.waitingForConfirmation = false;
+                    }
+                    return contact;
+                }
+            });
+            const existingContacts = await Contact.getAddedContacts();
+            const existingContactsAccepted = existingContacts.filter(
+                contact => {
+                    if (contact && contact.ignored === undefined) {
+                        return true;
+                    }
+                    if (contact && contact.ignored === false) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            const remoteContacts = incomingContacts.filter(contact => {
+                if (contact && contact.ignored === undefined) {
+                    return true;
+                }
+                if (contact && contact.ignored === false) {
+                    return true;
+                }
+                return false;
+            });
+            let AllContacts = [];
+            for (let contact of remoteContacts) {
+                const localContact = R.find(R.propEq('userId', contact.userId))(
+                    existingContactsAccepted
+                );
+                if (localContact && localContact.ignored === true) {
+                    contact.ignored = true;
+                }
+                // const mergedContact = R.mergeRight(
+                //     localContact,
+                //     contact
+                // );
+                // console.log('save contcats **************** ', mergedContact);
+
+                AllContacts.push(contact);
+            }
+            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
+                .then(() => {
+                    return resolve(AllContacts);
+                })
+                .catch(err => {
+                    return reject(err);
                 });
         });
 
@@ -221,60 +433,6 @@ export default class Contact {
                 })
                 .then(function(cts) {
                     return resolve(cts);
-                })
-                .catch(err => {
-                    return reject(err);
-                });
-        });
-
-    static saveContacts = contacts =>
-        new Promise(async (resolve, reject) => {
-            const incomingContacts = contacts.map(contact => {
-                if (contact) {
-                    if (!contact.waitingForConfirmation) {
-                        contact.waitingForConfirmation = false;
-                    }
-                    return contact;
-                }
-            });
-            const localContacts = await Contact.getAddedContacts();
-            const localContactsAccepted = localContacts.filter(contact => {
-                if (contact && contact.ignored === undefined) {
-                    return true;
-                }
-                if (contact && contact.ignored === false) {
-                    return true;
-                }
-                return false;
-            });
-            const remoteContacts = incomingContacts.filter(contact => {
-                if (contact && contact.ignored === undefined) {
-                    return true;
-                }
-                if (contact && contact.ignored === false) {
-                    return true;
-                }
-                return false;
-            });
-            let AllContacts = [];
-            for (let contact of remoteContacts) {
-                const localContact = R.find(R.propEq('userId', contact.userId))(
-                    localContactsAccepted
-                );
-                if (localContact && localContact.ignored === true) {
-                    contact.ignored = true;
-                }
-                // const mergedContact = R.mergeRight(
-                //     localContact,
-                //     contact
-                // );
-                // console.log('save contcats **************** ', mergedContact);
-
-                AllContacts.push(contact);
-            }
-            DeviceStorage.save(CONTACT_STORAGE_KEY_CAPABILITY, AllContacts)
-                .then(() => {
-                    return resolve(AllContacts);
                 })
                 .catch(err => {
                     return reject(err);
@@ -435,7 +593,7 @@ export default class Contact {
                             contact => {
                                 if (!contact.showAcceptIgnoreMsg) {
                                     return _.extend({}, contact, {
-                                        contactType: 'frontm',
+                                        contactType: ContactType.FRONTM,
                                         ignored: false,
                                         type: 'People'
                                     });
@@ -450,7 +608,7 @@ export default class Contact {
                                 return {
                                     ...contact,
                                     type: 'People',
-                                    contactType: 'local'
+                                    contactType: ContactType.LOCAL
                                 };
                             }
                         );

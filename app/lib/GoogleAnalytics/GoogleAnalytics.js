@@ -8,22 +8,28 @@ import { Platform } from 'react-native';
 import Store from '../../redux/store/configureStore';
 import { NETWORK_STATE } from '../network';
 
-export const GoogleAnalyticsCategories = {
-    APP_LAUNCHED: 'App Launched',
-    BOT_OPENED: 'Bot Opened'
+export const GoogleAnalyticsEventsCategories = {
+    APP: 'App',
+    CALL: 'Call',
+    CHAT: 'Chat',
+    CONTACTS: 'Contacts',
+    STORE: 'Store'
 };
-
-export const GoogleAnalyticsEvents = {
-    APP_OPENED: 'App Opened',
-    VOIP_CALL: 'Voip Call',
-    PSTN_CALL: 'PSTN Call',
-    SATELLITE_CALL: 'Satellite Call',
-    ADDED_CONTACT: 'Added a Contact',
+export const GoogleAnalyticsEventsActions = {
+    ADDED_CONTACTS: 'Added a Contacts',
+    APP_LAUNCHED: 'App Launched',
+    BOT_OPENED: 'Bot Chat Opened',
+    PEOPLE_CHAT_OPENED: 'People Chat Opened',
+    CHANNEL_CHAT_OPENED: 'Channel Chat Opened',
+    INSTALLED_BOT: 'Installed BOT',
+    UNINSTALLED_BOT: 'Uninstalled BOT',
     INVITE_CONTACT: 'Invited a Contact',
     OPENED_MARKETPLACE: 'Opened Marketplace',
+    PSTN_CALL: 'PSTN Call',
+    SATELLITE_CALL: 'Satellite Call',
+    SEND_MESSAGE: 'Sent a Message',
     VISITED_BOT: 'Visited Bot Details Page',
-    INSTALLED_BOT: 'Installed BOT',
-    SEND_MESSAGE: 'Sent a Message'
+    VOIP_CALL: 'Voip Call'
 };
 
 export class GoogleAnalytics {
@@ -79,10 +85,7 @@ export class GoogleAnalytics {
                     value,
                     experiment
                 );
-                if (
-                    !Platform.OS === 'android' ||
-                    !Store.getState().user.network === NETWORK_STATE.none
-                ) {
+                if (Store.getState().user.network === NETWORK_STATE.full) {
                     this.ga.send(gaEvent);
                 }
             }

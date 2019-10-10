@@ -26,8 +26,8 @@ import { ContactsCache } from '../../lib/ContactsCache';
 import { MessageCounter } from '../../lib/MessageCounter';
 import {
     GoogleAnalytics,
-    GoogleAnalyticsCategories,
-    GoogleAnalyticsEvents
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
 import { TwilioVoIP } from '../../lib/twilio';
 import { Telnet } from '../../lib/capability';
@@ -120,15 +120,13 @@ export default class Splash extends React.Component {
         ContactsCache.init(); // after loging. Logout should clear it.
         await MessageCounter.init(); // after login or check for login / logout events and clear data or initialize data as necessary
         GoogleAnalytics.init();
-        if (Platform.OS !== 'android') {
-            GoogleAnalytics.logEvents(
-                GoogleAnalyticsCategories.APP_LAUNCHED,
-                GoogleAnalyticsEvents.APP_OPENED,
-                null,
-                0,
-                null
-            );
-        }
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.APP,
+            GoogleAnalyticsEventsActions.APP_LAUNCHED,
+            null,
+            0,
+            null
+        );
 
         Store.initStore({
             satelliteConnection: false

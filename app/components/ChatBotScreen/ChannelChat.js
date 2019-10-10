@@ -11,6 +11,11 @@ import { Icons } from '../../config/icons';
 import images from '../../images';
 import { Platform } from 'react-native';
 import NetworkButton from '../Header/NetworkButton';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 var backTimer = null;
 const timeout = Platform.OS === 'android' ? 500 : 400;
@@ -274,5 +279,15 @@ export default class ChannelChat extends ChatBotScreen {
                 refreshing: false
             });
         }
+    }
+
+    logGoogleAnalytics() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.CHAT,
+            GoogleAnalyticsEventsActions.CHANNEL_CHAT_OPENED,
+            null,
+            0,
+            null
+        );
     }
 }

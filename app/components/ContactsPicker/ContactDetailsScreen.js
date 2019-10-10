@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { GlobalColors } from '../../config/styles';
 import ProfileImage from '../ProfileImage';
 import Images from '../../config/images';
-import Contact from '../../lib/capability/Contact';
+import Contact, { ContactType } from '../../lib/capability/Contact';
 import config from '../../config/config';
 import { Auth, Network } from '../../lib/capability';
 import { Actions, ActionConst } from 'react-native-router-flux';
@@ -100,7 +100,7 @@ export default class ContactDetailsScreen extends React.Component {
                         placeholderStyle={styles.propicCD}
                         resizeMode="cover"
                     />
-                    {this.props.contact.contactType === 'local' ? (
+                    {this.props.contact.contactType === ContactType.LOCAL ? (
                         <TouchableOpacity
                             style={{
                                 position: 'absolute',
@@ -141,201 +141,6 @@ export default class ContactDetailsScreen extends React.Component {
         );
     }
 
-    compareEmail = contact => {
-        const { emailAddresses = [] } = contact;
-        const phoneEmails = emailAddresses.map(email => email.email);
-        // console.log('emails fo contacts ', phoneEmails);
-        if (this.props.contact.contactType === 'local') {
-            const localEmails = Object.values(
-                this.props.contact.emailAddresses
-            );
-            return R.intersection(localEmails, phoneEmails).length > 0;
-        } else {
-            const found = phoneEmails.find(email => {
-                email === this.props.contact.emailAddress;
-            });
-            if (found) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
-    getLocalContacts = async () => {
-        console.log('going thos getLocalContact');
-
-        return new Promise((resolve, reject) => {
-            Contacts.getAllWithoutPhotos((error, contacts) => {
-                if (error) {
-                    return reject('Cannt Find Local Contacts');
-                }
-                // console.log('get contacts ', contacts);
-
-                const foundLocalContact = R.filter(this.compareEmail, contacts);
-                return resolve(foundLocalContact);
-
-                // R.filter();
-            });
-        });
-    };
-
-    addLocalConatcts = localContacts => {
-        console.log('checking local contact ', localContacts);
-
-        let emailToDisplay = this.props.contact.emails[0].email || '';
-        let contactEmail = '';
-
-        if (emailToDisplay && emailToDisplay.home) {
-            contactEmail = emailToDisplay.home;
-        }
-
-        if (emailToDisplay && emailToDisplay.work) {
-            contactEmail = emailToDisplay.work;
-        }
-        if (emailToDisplay && emailToDisplay.home && emailToDisplay.work) {
-            contactEmail = emailToDisplay.work;
-        }
-
-        if (
-            emailToDisplay &&
-            (emailToDisplay.home === '' || emailToDisplay.work === '')
-        ) {
-            contactEmail = '';
-        }
-
-        console.log('we see', localContacts);
-
-        if (localContacts.length === 0) {
-            // this.setState({ loading: false });
-            return Alert.alert(
-                'No phone contact found for email address ',
-                contactEmail
-            );
-        }
-        const localPhone = localContacts[0].phoneNumbers[0].number;
-        if (localPhone && localPhone !== '') {
-            this.setState({ loading: true });
-            Contact.getAddedContacts().then(contactsData => {
-                let updateContacts = contactsData.map(elem => {
-                    if (elem.userId === this.props.contact.id) {
-                        const localPhonePath = R.lensPath([
-                            'phoneNumbers',
-                            'local'
-                        ]);
-                        elem = R.set(localPhonePath, localPhone, elem);
-
-                        // elem.phoneNumbers.local = localPhone;
-                    }
-                    return elem;
-                });
-                Contact.saveContacts(updateContacts).then(() => {
-                    this.props.updateContactScreen();
-
-                    setTimeout(async () => {
-                        const allContacts = await Contact.getAddedContacts();
-                        this.setState({ loading: false });
-                        const newContact = allContacts
-                            .filter(contact => contact.ignored === false)
-                            .filter(
-                                contact =>
-                                    contact.userId === this.props.contact.id
-                            );
-                        // console.log('lets see this one ', newContact);
-
-                        if (newContact && newContact.length > 0) {
-                            const reloadContact = newContact.map(data => ({
-                                id: data.userId,
-                                name: data.userName,
-                                emails: [{ email: data.emailAddress }], // Format based on phone contact from expo
-                                phoneNumbers: data.phoneNumbers,
-                                isWaitingForConfirmation:
-                                    data.waitingForConfirmation || false,
-                                isFavourite: data.isFavourite || false
-                            }));
-                            Actions.refresh({
-                                key: Math.random(),
-                                contact: reloadContact[0],
-                                updateList: this.props.updateList,
-                                updateContactScreen: this.props
-                                    .updateContactScreen
-                            });
-                        }
-                    }, 2000);
-                    // this.setState({ isFavourite: true });
-                });
-            });
-        }
-    };
-    importLocalContacts = async () => {
-        console.log('import local contact');
-
-        let localContacts;
-        if (Platform.OS === 'android') {
-            PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-                {
-                    title: 'Contacts',
-                    message: 'Grant access for contacts to display in FrontM'
-                }
-            )
-                .then(async granted => {
-                    // console.log(
-                    //     'granted =======',
-                    //     granted === PermissionsAndroid.RESULTS.GRANTED
-                    // );
-
-                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                        // console.log('going in this condition');
-
-                        this.getLocalContacts().then(data => {
-                            // console.log('get all conatctcs', data);
-                            this.addLocalConatcts(data);
-                        });
-                        // localContacts = await this.getLocalContacts();
-                        // console.log('we will se th contact ', localContacts);
-
-                        // this.addLocalConatcts(localContacts);
-                    } else {
-                        console.log('Cannot get permission for Contacts');
-                        return Alert.alert('Please grant access for contacts');
-                        // Alert.alert(
-                        //     'Please grant access for contacts',
-                        //     'Would you like to grant access for contacts to diaplay in FrontM?',
-                        //     [
-                        //         {
-                        //             text: 'No',
-                        //             onPress: () =>
-                        //                 console.log('Cancel Pressed'),
-                        //             style: 'cancel'
-                        //         },
-                        //         {
-                        //             text: 'Yes',
-                        //             onPress: () => {
-                        //                 this.importLocalContacts();
-                        //                 console.log('OK Pressed');
-                        //             }
-                        //         }
-                        //     ],
-                        //     { cancelable: false }
-                        // );
-                    }
-                })
-                .catch(err => {
-                    console.log('PermissionsAndroid', err);
-                });
-        } else {
-            localContacts = await this.getLocalContacts();
-
-            // console.log(
-            //     'we will see ',
-            //     localContacts,
-            //     this.props.contact.emails
-            // );
-
-            this.addLocalConatcts(localContacts);
-        }
-    };
     addToFavourite = () => {
         console.log('contacts details ', this.props.contact);
         this.setState({ loading: true });
@@ -446,7 +251,7 @@ export default class ContactDetailsScreen extends React.Component {
     checkFavourite = () => {
         if (
             this.props.contact.contactType &&
-            this.props.contact.contactType !== 'local'
+            this.props.contact.contactType !== ContactType.LOCAL
         ) {
             if (this.state.isFavourite) {
                 return (
@@ -503,7 +308,7 @@ export default class ContactDetailsScreen extends React.Component {
             return (
                 <View style={styles.actionAreaCD}>
                     {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'local' &&
+                    this.props.contact.contactType !== ContactType.LOCAL &&
                     this.props.contact.type !== 'Vessels' ? (
                             <TouchableOpacity
                                 style={styles.actionButtonCD}
@@ -523,7 +328,7 @@ export default class ContactDetailsScreen extends React.Component {
                                 <Text>Chat</Text>
                             </TouchableOpacity>
                         ) : null}
-                    {this.props.contact.contactType === 'local' &&
+                    {this.props.contact.contactType === ContactType.LOCAL &&
                     (!this.props.contact.phoneNumbers ||
                         !Object.values(this.props.contact.phoneNumbers).find(
                             number => {
@@ -547,38 +352,6 @@ export default class ContactDetailsScreen extends React.Component {
                         )}
 
                     {this.checkFavourite()}
-                </View>
-            );
-        } else {
-            return (
-                <View
-                    style={{
-                        height: 75,
-                        borderTopColor: 'rgba(221,222,227,1)',
-                        borderTopWidth: 1,
-                        borderBottomWidth: 5,
-                        borderBottomColor: 'rgba(221,222,227,1)',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <TouchableOpacity
-                        style={styles.actionButtonCD}
-                        onPress={this.startChat.bind(this)}
-                    >
-                        <View
-                            style={[
-                                styles.actionIconCD,
-                                { backgroundColor: GlobalColors.sideButtons }
-                            ]}
-                        >
-                            <Image
-                                style={{ width: 32, height: 32 }}
-                                source={images.contact_chat_btn}
-                            />
-                        </View>
-                        <Text>Conversation</Text>
-                    </TouchableOpacity>
                 </View>
             );
         }
@@ -699,41 +472,10 @@ export default class ContactDetailsScreen extends React.Component {
             });
     }
 
-    renderFooterButtons() {
-        // console.log('checking in andorid', this.props);
-
-        if (
-            this.props.contact.isWaitingForConfirmation ||
-            (!this.props.contact.emailAddress &&
-                !this.props.contact.emailAddresses)
-        ) {
-            return <View />;
-        }
-        return (
-            <View
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginVertical: 10
-                }}
-            >
-                <TouchableOpacity
-                    onPress={this.importLocalContacts}
-                    style={styles.import_btn}
-                >
-                    <Text style={styles.cancel_text}>
-                        Import phone from address book
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-
     renderEmails() {
         if (!this.props.contact.isWaitingForConfirmation) {
             if (
-                this.props.contact.contactType === 'local' &&
+                this.props.contact.contactType === ContactType.LOCAL &&
                 this.props.contact.emailAddresses
             ) {
                 return (
@@ -870,9 +612,8 @@ export default class ContactDetailsScreen extends React.Component {
                 {this.renderNameArea()}
                 {this.renderActionButtons()}
                 {this.renderDetails()}
-                {/* {this.renderFooterButtons()} */}
                 {this.props.contact.contactType &&
-                    this.props.contact.contactType !== 'local' &&
+                    this.props.contact.contactType !== ContactType.LOCAL &&
                     this.props.contact.type !== 'Vessels' && (
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
@@ -898,7 +639,7 @@ export default class ContactDetailsScreen extends React.Component {
                 )}
 
                 {this.props.contact.contactType &&
-                    this.props.contact.contactType === 'local' && (
+                    this.props.contact.contactType === ContactType.LOCAL && (
                     <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{

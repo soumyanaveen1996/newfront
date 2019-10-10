@@ -68,7 +68,11 @@ const fetchContactsDetails = async user => {
 export default class TwilioVoIP {
     init = async () => {
         return new Promise(async (resolve, reject) => {
-            await this.initTelephony();
+            try {
+                await this.initTelephony();
+            } catch (e) {
+                console.log('initTelephony ERROR: ', e);
+            }
             setTimeout(() => {
                 console.log('Sourav Logging:::: 8');
                 this.listenToEvents();
@@ -145,8 +149,7 @@ export default class TwilioVoIP {
                 return true;
             } catch (err) {
                 console.log('initTelephony error : ', err);
-                return true;
-                // throw err;
+                throw err;
             }
         }
     };

@@ -1,9 +1,13 @@
 import {
     GoogleAnalytics as GA,
-    GoogleAnalyticsCategories,
-    GoogleAnalyticsEvents
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
 } from './GoogleAnalytics';
 
 let GoogleAnalytics = new GA();
 
-export { GoogleAnalytics, GoogleAnalyticsCategories, GoogleAnalyticsEvents };
+export {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsActions,
+    GoogleAnalyticsEventsCategories
+};

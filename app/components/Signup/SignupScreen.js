@@ -84,6 +84,7 @@ export default class SignupScreen extends React.Component {
         }
         return counter === 4;
     };
+
     passwordChecking = string => {
         if (string.length >= 8) {
             const newArr = [...this.state.passwordCriteria];
@@ -365,12 +366,12 @@ export default class SignupScreen extends React.Component {
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
                 <View style={styles.logoHeader}>
-                    <HeaderBack
+                    {/* <HeaderBack
                         onPress={() => {
                             Actions.pop();
                         }}
                         style={{ position: 'absolute', left: 20 }}
-                    />
+                    /> */}
                     <Image source={images.frontm_header_logo} />
                 </View>
                 <ScrollView

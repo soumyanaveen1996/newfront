@@ -1,5 +1,10 @@
 import ChatBotScreen from './ChatBotScreen';
 import { ConversationContext } from '../../lib/capability';
+import {
+    GoogleAnalytics,
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
+} from '../../lib/GoogleAnalytics';
 
 export default class BotChat extends ChatBotScreen {
     constructor(props) {
@@ -24,5 +29,15 @@ export default class BotChat extends ChatBotScreen {
             console.log('Error getting a conversation context for bot chat');
             throw error;
         }
+    }
+
+    logGoogleAnalytics() {
+        GoogleAnalytics.logEvents(
+            GoogleAnalyticsEventsCategories.CHAT,
+            GoogleAnalyticsEventsActions.BOT_OPENED,
+            this.props.bot.botName,
+            0,
+            null
+        );
     }
 }

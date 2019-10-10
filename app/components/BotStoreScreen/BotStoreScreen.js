@@ -47,8 +47,8 @@ import EmptyInstalledBot from './EmptyInstalledBot';
 
 import {
     GoogleAnalytics,
-    GoogleAnalyticsCategories,
-    GoogleAnalyticsEvents
+    GoogleAnalyticsEventsCategories,
+    GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
 import NetworkButton from '../Header/NetworkButton';
 
@@ -204,12 +204,13 @@ class BotStoreScreen extends React.Component {
             this.state !== nextState
         );
     }
+
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
         Store.dispatch(completeCatalogLoad(true));
         GoogleAnalytics.logEvents(
-            GoogleAnalyticsEvents.OPENED_MARKETPLACE,
-            'Visited',
+            GoogleAnalyticsEventsCategories.STORE,
+            GoogleAnalyticsEventsActions.OPENED_MARKETPLACE,
             null,
             0,
             null
