@@ -1441,6 +1441,7 @@ class ChatBotScreen extends React.Component {
                         message={message}
                         saveMessage={this.persistMessage.bind(this)}
                         onSubmit={this.onFormDone.bind(this)}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else if (

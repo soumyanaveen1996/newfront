@@ -18,7 +18,8 @@ export const fieldType = {
     dateTime: 'datetime',
     multiselection: 'multi_selection',
     passwordField: 'password_field',
-    lookup: 'lookup'
+    lookup: 'lookup',
+    imageField: 'image_field'
 };
 
 export const formAction = {
