@@ -17,11 +17,9 @@ export default class Resource {
     /**
      * Async method that returns a S3 URL of the file thats uploaded. You can rename the file in the backend swith `filenameWithoutExtension` parameter
      *
-     * @param base64Data Base64 data of the resource
      * @param fileUri Local filesystem uri
      * @param bucketName Directory of the backend where to save the file
      * @param filenameWithoutExtension Remote name of the file without extension
-     * @param user Authenticated user
      * @param resourceType Either 'image', 'video', 'audio' or 'other_file'
      * @param fileMIMEType MIME type of the file
      * @param clearCache

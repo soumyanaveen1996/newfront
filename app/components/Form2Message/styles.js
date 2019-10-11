@@ -1,6 +1,11 @@
 import { Platform, StyleSheet, Dimensions } from 'react-native';
 import { GlobalColors } from '../../config/styles';
 
+const ScreenSize = {
+    w: Dimensions.get('window').width,
+    h: Dimensions.get('window').height
+};
+
 export default (stylesheet = StyleSheet.create({
     //MESSAGE
     container: {
@@ -305,5 +310,34 @@ export default (stylesheet = StyleSheet.create({
         fontSize: 14,
         fontWeight: '400',
         color: 'white'
+    },
+
+    //IMAGE PICKER
+    imagePickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    imageContainer: {
+        width: ScreenSize.w * 0.36,
+        aspectRatio: 1,
+        borderRadius: ScreenSize.w * 0.18,
+        backgroundColor: GlobalColors.textField,
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        overflow: 'hidden'
+    },
+    removeImage: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        flex: 1
+    },
+    removeImageText: {
+        fontSize: 16,
+        color: GlobalColors.red,
+        marginLeft: 10
+    },
+    image: {
+        width: '100%',
+        height: '100%'
     }
 }));
