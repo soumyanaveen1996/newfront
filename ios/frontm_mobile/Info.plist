@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>335</string>
+	<string>336</string>
 	<key>CodePushDeploymentKey</key>
 	<string>yvzJ1O25Y_eEGExdv2HTossDvImU033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
 	<key>FacebookAppID</key>
@@ -83,6 +83,8 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Frontm requires Apple Music access</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need your consent to access your bluetooth. We need it in case you wish to use bluetooth connection during making phone calls.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Frontm requires Bluetooth access</string>
 	<key>NSCalendarsUsageDescription</key>
