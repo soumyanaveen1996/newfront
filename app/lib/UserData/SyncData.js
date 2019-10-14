@@ -1,4 +1,4 @@
-import EventEmitter, { AuthEvents } from '../events';
+import EventEmitter, { AuthEvents, CallsEvents } from '../events';
 import { Contact, Channel, NetworkRequest } from '../capability';
 import { AppState } from 'react-native';
 import Auth from '../capability/Auth';
@@ -40,7 +40,10 @@ export const synchronizeUserData = async () => {
         }, 1000);
         setTimeout(() => Channel.refreshChannels(), 2000);
         setTimeout(() => Channel.refreshUnsubscribedChannels(), 3000);
-        setTimeout(() => Calls.fetchCallHistory(), 4000);
+        setTimeout(
+            () => EventEmitter.emit(CallsEvents.callHistoryUpdated),
+            4000
+        );
     } catch (error) {
         console.error('CRITICAL:::::Errror Synching Contacts', error);
         syncNoNetwork();

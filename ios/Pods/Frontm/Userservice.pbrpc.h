@@ -20,6 +20,8 @@
 @class LastLoggedInDomainInput;
 @class ManageTncInput;
 @class ManageTncResponse;
+@class PaginatedCallHistoryInput;
+@class PaginatedCallHistoryResponse;
 @class SelectedDomainInput;
 @class SubscribeBotInput;
 @class SubscribeBotResponse;
@@ -150,6 +152,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToGetCallHistoryWithRequest:(Empty *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetPaginatedCallHistory(PaginatedCallHistoryInput) returns (PaginatedCallHistoryResponse)
+
+- (void)getPaginatedCallHistoryWithRequest:(PaginatedCallHistoryInput *)request handler:(void(^)(PaginatedCallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetPaginatedCallHistoryWithRequest:(PaginatedCallHistoryInput *)request handler:(void(^)(PaginatedCallHistoryResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse)

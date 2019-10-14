@@ -22,6 +22,7 @@
 #import "CallHistoryResponse+frontm.h"
 #import "TopupBalanceResponse+frontm.h"
 #import "DeviceBoolResponse+frontm.h"
+#import "PaginatedCallHistoryResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -281,6 +282,25 @@ RCT_REMAP_METHOD(getCallHistory, getCallHistoryWithSessionId:(NSString *)session
                            }
                          }];
   
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(getPaginatedCallHistory, getPaginatedCallHistoryWithSessionId:(NSString *)sessionId withParams:(NSDictionary *)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:getPaginatedCallHistory Params : %@", sessionId);
+  
+  PaginatedCallHistoryInput *request = [PaginatedCallHistoryInput new];
+  request.startTime = [params[@"startTime"]doubleValue];
+  
+  GRPCProtoCall *call =[self.serviceClient RPCToGetPaginatedCallHistoryWithRequest:request handler:^(PaginatedCallHistoryResponse * _Nullable response, NSError * _Nullable error) {
+    if (error != nil) {
+      callback(@[@{}, [NSNull null]]);
+      return;
+    } else {
+      RCTLog(@"method:getPaginatedCallHistory response : %@", [response toResponse]);
+      callback(@[[NSNull null], [response toResponse]]);
+    }
+  }];
   call.requestHeaders[@"sessionId"] = sessionId;
   [call start];
 }

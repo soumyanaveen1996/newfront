@@ -2,79 +2,39 @@ import React from 'react';
 import {
     View,
     SafeAreaView,
-    SectionList,
-    TextInput,
-    KeyboardAvoidingView,
-    ActivityIndicator,
     Platform,
     Text,
     TouchableOpacity,
     Image,
-    PermissionsAndroid,
     Alert,
     FlatList,
     NativeModules,
     RefreshControl
 } from 'react-native';
 import styles from './styles';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import SystemBot from '../../lib/bot/SystemBot';
-import {
-    Contact,
-    Auth,
-    Network,
-    Message,
-    MessageTypeConstants
-} from '../../lib/capability';
-import {
-    EventEmitter,
-    AuthEvents,
-    CallQuotaEvents,
-    TwilioEvents,
-    CallsEvents
-} from '../../lib/events';
+import { EventEmitter, AuthEvents, CallsEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
-import {
-    setCurrentScene,
-    refreshContacts
-} from '../../redux/actions/UserActions';
-import { NetworkStatusNotchBar } from '../NetworkStatusBar';
+import { setCurrentScene } from '../../redux/actions/UserActions';
 import NewChatItemSeparator from './NewChatItemSeparator';
-import NewChatSectionHeader from './NewChatSectionHeader';
-import NewChatIndexView from './NewChatIndexView';
-import NewChatRow from './NewChatRow';
-import {
-    SECTION_HEADER_HEIGHT,
-    searchBarConfig,
-    addButtonConfig
-} from './config';
 import Images from '../../config/images';
 import ProfileImage from '../ProfileImage';
-import Modal from 'react-native-modal';
-import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import { Icons } from '../../config/icons';
-import { EmptyContact } from '../ContactsPicker';
 import { BackgroundImage } from '../BackgroundImage';
-import config from '../../config/config';
-import InviteModal from '../ContactsPicker/InviteModal';
-import { BackgroundBotChat } from '../../lib/BackgroundTask';
-import Bot from '../../lib/bot';
 import Calls from '../../lib/calls';
 import { formattedDate } from '../../lib/utils';
 import eventEmitter from '../../lib/events/EventEmitter';
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp
-} from 'react-native-responsive-screen';
 import { NETWORK_STATE } from '../../lib/network';
 import GlobalColors from '../../config/styles';
 import images from '../../config/images';
 import { CallDirection, CallType } from '../../lib/calls/Calls';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
-const UserServiceClient = NativeModules.UserServiceClient;
+const PAGE_SIZE = 25;
 
 class CallHistory extends React.Component {
     constructor(props) {
@@ -85,20 +45,26 @@ class CallHistory extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const callHistory = await Calls.getLocalCallHistory();
+        if (callHistory) {
+            if (callHistory.length >= PAGE_SIZE) {
+                this.setState({ callHistory: callHistory.slice(0, PAGE_SIZE) });
+            } else {
+                this.setState({ callHistory: callHistory });
+            }
+        }
+        this.updateCallHistory();
         eventEmitter.addListener(
             CallsEvents.callHistoryUpdated,
-            this.getCallHistory.bind(this)
+            this.updateCallHistory.bind(this)
         );
-        Calls.fetchCallHistory().then(() => {
-            this.getCallHistory();
-        });
     }
 
     componentWillUnmount() {
         eventEmitter.removeListener(
             CallsEvents.callHistoryUpdated,
-            this.getCallHistory.bind(this)
+            this.updateCallHistory.bind(this)
         );
     }
 
@@ -108,7 +74,6 @@ class CallHistory extends React.Component {
             I18n.t('Call_History'),
             I18n.t('Call_History')
         );
-        Calls.fetchCallHistory();
     }
 
     static onExit() {
@@ -119,10 +84,44 @@ class CallHistory extends React.Component {
         return nextProps.appState.currentScene === I18n.t('Call_History');
     }
 
-    getCallHistory() {
-        Calls.getCallHistory().then(res => {
-            this.setState({ callHistory: res });
-        });
+    async updateCallHistory() {
+        console.log('>>>>>>>EVENT');
+        try {
+            const newCalls = await Calls.updateCallHistory();
+            this.setState({
+                callHistory: newCalls.concat(this.state.callHistory)
+            });
+        } catch (error) {
+            this.refs.toast.show(
+                'Could not update call history',
+                DURATION.LENGTH_SHORT
+            );
+            throw error;
+        }
+    }
+
+    async loadOlderCalls() {
+        if (
+            !this.state.callHistory[this.state.callHistory.length - 1].lastCall
+        ) {
+            try {
+                let lastCallTime = Date.now();
+                if (this.state.callHistory.length > 0) {
+                    lastCallTime = this.state.callHistory[
+                        this.state.callHistory.length - 1
+                    ].callTimestamp;
+                }
+                const olderCalls = await Calls.fetchCallHistory(lastCallTime);
+                this.setState({
+                    callHistory: this.state.callHistory.concat(olderCalls)
+                });
+            } catch (error) {
+                this.refs.toast.show(
+                    'Could not load older calls',
+                    DURATION.LENGTH_SHORT
+                );
+            }
+        }
     }
 
     makeVoipCall(id, name) {
@@ -156,6 +155,18 @@ class CallHistory extends React.Component {
     }
 
     renderRow({ item }) {
+        if (item.lastCall) {
+            return (
+                <View
+                    style={[
+                        styles.contactItemContainer,
+                        { justifyContent: 'center', alignItems: 'center' }
+                    ]}
+                >
+                    <Text style={{ alignSelf: 'center' }}>No more calls.</Text>
+                </View>
+            );
+        }
         let id;
         let name;
         let number;
@@ -263,6 +274,14 @@ class CallHistory extends React.Component {
         );
     }
 
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
@@ -277,7 +296,7 @@ class CallHistory extends React.Component {
                                                 { refreshing: true },
                                                 async () => {
                                                     try {
-                                                        await Calls.fetchCallHistory();
+                                                        await this.updateCallHistory();
                                                         this.setState({
                                                             refreshing: false
                                                         });
@@ -293,6 +312,8 @@ class CallHistory extends React.Component {
                                     />
                                 ) : null
                             }
+                            onEndReached={this.loadOlderCalls.bind(this)}
+                            onEndReachedThreshold={0.1}
                             data={this.state.callHistory}
                             extraData={this.state.callHistory}
                             renderItem={this.renderRow.bind(this)}
@@ -302,6 +323,7 @@ class CallHistory extends React.Component {
                         this.renderEmptyScreen()
                     )}
                 </BackgroundImage>
+                {this.renderToast()}
             </SafeAreaView>
         );
     }
@@ -311,7 +333,7 @@ const mapStateToProps = state => ({
     appState: state.user
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = () => {
     return {};
 };
 
