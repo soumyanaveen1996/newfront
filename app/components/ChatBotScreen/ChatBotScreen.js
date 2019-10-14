@@ -1640,19 +1640,19 @@ class ChatBotScreen extends React.Component {
         message.setCreatedBy(this.getUserId());
         message.imageMessage(message.getMessageId() + '.png');
         this.queueMessage(message);
-
-        let imageResizeResponse = await ImageResizer.createResizedImage(
-            imageUri,
-            800,
-            800,
-            'PNG',
-            50,
-            0,
-            'images'
-        );
+        // let imageResizeResponse = await ImageResizer.createResizedImage(
+        //     imageUri,
+        //     800,
+        //     800,
+        //     'PNG',
+        //     50,
+        //     0,
+        //     'images'
+        // );
         const newUri =
             Constants.IMAGES_DIRECTORY + '/' + message.getMessageId() + '.png';
-        await RNFS.moveFile(imageResizeResponse.uri, newUri);
+        await RNFS.mkdir(Constants.IMAGES_DIRECTORY);
+        await RNFS.copyFile(imageUri, newUri);
 
         // Send the file to the S3/backend and then let the user know
         await Resource.uploadFile(
