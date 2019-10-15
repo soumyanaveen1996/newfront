@@ -154,9 +154,9 @@ class NetworkPoller {
                 setTimeout(() => {
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
-                BackgroundTimer.setTimeout(() => {
-                    Contact.refreshContacts();
-                }, 2000);
+                // BackgroundTimer.setTimeout(() => {
+                //     Contact.refreshContacts();
+                // }, 2000);
             })
         );
         this.grpcEndSubscription.push(
