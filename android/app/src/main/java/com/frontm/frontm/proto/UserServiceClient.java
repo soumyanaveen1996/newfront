@@ -35,6 +35,8 @@ import com.frontm.frontm.proto.converters.CallHistoryResponseConverter;
 import com.frontm.user.proto.BotSubscriptionsResponse;
 import com.frontm.user.proto.CallHistoryResponse;
 import com.frontm.user.proto.ContactsResponse;
+import com.frontm.user.proto.PaginatedCallHistoryInput;
+import com.frontm.user.proto.PaginatedCallHistoryResponse;
 import com.frontm.user.proto.SubscribeBotInput;
 import com.frontm.user.proto.SubscribeBotResponse;
 import com.frontm.user.proto.SubscribeDomainInput;
@@ -61,6 +63,7 @@ import com.frontm.user.proto.TopupBalanceInput;
 import com.frontm.user.proto.TopupBalanceResponse;
 import com.frontm.user.proto.DeviceInfo;
 import com.frontm.user.proto.DeviceBoolResponse;
+import com.frontm.frontm.proto.converters.PaginatedCallHistoryResponseConverter;
 
 
 public class UserServiceClient extends ReactContextBaseJavaModule {
@@ -555,6 +558,37 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             @Override
             public void onNext(CallHistoryResponse value) {
                 callback.invoke(null, new CallHistoryResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getPaginatedCallHistory(String sessionId, ReadableMap param, final Callback callback)
+    {
+        Log.d("GRPC:::getPaginatedCallHistory", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        PaginatedCallHistoryInput input = PaginatedCallHistoryInput.newBuilder()
+                .setStartTime(param.getDouble("startTime"))
+                .build();
+        stub.getPaginatedCallHistory(input, new StreamObserver<PaginatedCallHistoryResponse>() {
+            @Override
+            public void onNext(PaginatedCallHistoryResponse value) {
+                callback.invoke(null, new PaginatedCallHistoryResponseConverter().toResponse(value));
             }
 
             @Override

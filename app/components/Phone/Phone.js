@@ -14,7 +14,7 @@ import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
 import { Actions, ActionConst } from 'react-native-router-flux';
-import { EventEmitter, TwilioEvents } from '../../lib/events';
+import { EventEmitter, TwilioEvents, CallsEvents } from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import { ContactsCache } from '../../lib/ContactsCache';
@@ -78,7 +78,7 @@ export default class Phone extends React.Component {
         if (this.deviceDidReceiveIncomingListener) {
             this.deviceDidReceiveIncomingListener.remove();
         }
-        Calls.fetchCallHistory();
+        EventEmitter.emit(CallsEvents.callHistoryUpdated);
     }
 
     async setUpPhoneCall(props) {

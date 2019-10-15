@@ -396,6 +396,38 @@ typedef GPB_ENUM(CompaniesResponse_FieldNumber) {
 
 @end
 
+#pragma mark - PaginatedCallHistoryInput
+
+typedef GPB_ENUM(PaginatedCallHistoryInput_FieldNumber) {
+  PaginatedCallHistoryInput_FieldNumber_StartTime = 1,
+};
+
+@interface PaginatedCallHistoryInput : GPBMessage
+
+@property(nonatomic, readwrite) double startTime;
+
+@end
+
+#pragma mark - PaginatedCallHistoryResponse
+
+typedef GPB_ENUM(PaginatedCallHistoryResponse_FieldNumber) {
+  PaginatedCallHistoryResponse_FieldNumber_Error = 1,
+  PaginatedCallHistoryResponse_FieldNumber_RecordsArray = 2,
+  PaginatedCallHistoryResponse_FieldNumber_MoreRecordsExist = 3,
+};
+
+@interface PaginatedCallHistoryResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<CallHistoryObject*> *recordsArray;
+/** The number of items in @c recordsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger recordsArray_Count;
+
+@property(nonatomic, readwrite) BOOL moreRecordsExist;
+
+@end
+
 #pragma mark - CallHistoryResponse
 
 typedef GPB_ENUM(CallHistoryResponse_FieldNumber) {

@@ -220,7 +220,7 @@ export default class TwilioVoIP {
     closePhoneScreen = () => {
         console.log('FrontM VoIP : ', Actions.currentScene);
         if (Actions.currentScene === ROUTER_SCENE_KEYS.phone) {
-            Calls.fetchCallHistory();
+            EventEmitter.emit(CallsEvents.callHistoryUpdated);
             Actions.pop();
         }
     };
@@ -268,7 +268,7 @@ export default class TwilioVoIP {
         console.log('FrontM VoIP : callRejectedHandler : ', data);
         Store.updateStore(data);
         EventEmitter.emit(TwilioEvents.callRejected, data);
-        Calls.fetchCallHistory();
+        EventEmitter.emit(CallsEvents.callHistoryUpdated);
     };
 
     deviceDidReceiveIncomingHandler = async data => {

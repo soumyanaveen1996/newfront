@@ -13,7 +13,12 @@ import TwilioVoice from 'react-native-twilio-programmable-voice';
 import Styles, { diameter } from './styles';
 import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';
-import { EventEmitter, TwilioEvents, CallQuotaEvents } from '../../lib/events';
+import {
+    EventEmitter,
+    TwilioEvents,
+    CallQuotaEvents,
+    CallsEvents
+} from '../../lib/events';
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import _ from 'lodash';
@@ -159,7 +164,7 @@ export default class Dialler extends React.Component {
         this.mounted = false;
         EventListeners.forEach(listener => listener.remove());
         EventListeners = [];
-        Calls.fetchCallHistory();
+        EventEmitter.emit(CallsEvents.callHistoryUpdated);
     }
 
     componentDidUpdate(prevProps, prevState) {

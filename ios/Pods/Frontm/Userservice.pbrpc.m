@@ -211,6 +211,18 @@
              responseClass:[CallHistoryResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark GetPaginatedCallHistory(PaginatedCallHistoryInput) returns (PaginatedCallHistoryResponse)
+
+- (void)getPaginatedCallHistoryWithRequest:(PaginatedCallHistoryInput *)request handler:(void(^)(PaginatedCallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetPaginatedCallHistoryWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetPaginatedCallHistoryWithRequest:(PaginatedCallHistoryInput *)request handler:(void(^)(PaginatedCallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetPaginatedCallHistory"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[PaginatedCallHistoryResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 #pragma mark GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse)
 
 - (void)getCallHistoryForContactWithRequest:(CallHistoryInput *)request handler:(void(^)(CallHistoryResponse *_Nullable response, NSError *_Nullable error))handler{

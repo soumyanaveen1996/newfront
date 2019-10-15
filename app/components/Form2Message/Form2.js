@@ -111,6 +111,7 @@ class Form2 extends React.Component {
             dateModalMode: 'date',
             formIsCompleted: this.checkFormValidation()
         };
+        this.uploadQueue = [];
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
             onBack: this.onCloseForm.bind(this)
@@ -253,22 +254,8 @@ class Form2 extends React.Component {
                 break;
             case fieldType.imageField:
                 answer.value = fieldData.value || '';
-                answer.getResponse = async action => {
-                    if (action === formAction.CONFIRM && answer.value) {
-                        try {
-                            await Resource.uploadFile(
-                                Constants.IMAGES_DIRECTORY +
-                                        '/' +
-                                        answer.value,
-                                this.props.conversationId,
-                                answer.value.slice(0, -4),
-                                ResourceTypes.Image
-                            );
-                            return answer.value;
-                        } catch (e) {
-                            throw e;
-                        }
-                    }
+                answer.getResponse = action => {
+                    this.uploadQueue.push(answer.value);
                     return answer.value;
                 };
                 answer.validationMessage = 'Could not upload the image';
@@ -401,6 +388,7 @@ class Form2 extends React.Component {
             let response = await this.getResponse(formAction.CONFIRM);
             if (response.completed) {
                 this.props.onDone(this.saveFormData(), response.responseData);
+                await this.uploadFiles();
                 Actions.pop();
             } else {
                 console.log('FORM: you must fill all mandatory fields');
@@ -409,6 +397,21 @@ class Form2 extends React.Component {
             this.answers[key].valid = false;
             this.setState({ answers: this.answers });
         }
+    }
+
+    async uploadFiles() {
+        this.uploadQueue.forEach(async fileName => {
+            try {
+                await Resource.uploadFile(
+                    Constants.IMAGES_DIRECTORY + '/' + fileName,
+                    this.props.conversationId,
+                    fileName.slice(0, -4),
+                    ResourceTypes.Image
+                );
+            } catch (e) {
+                throw e;
+            }
+        });
     }
 
     onCloseForm() {

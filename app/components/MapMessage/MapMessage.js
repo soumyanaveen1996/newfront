@@ -68,7 +68,9 @@ export default class MapMessage extends React.Component {
                         console.log('ERROR: ', e);
                     });
             } else {
-                ControlDAO.getContentById(this.props.mapOptions.mapId)
+                ControlDAO.getContentById(
+                    this.props.mapOptions.mapId + this.props.conversationId
+                )
                     .then(mapData => {
                         return Mapbox.snapshotManager.takeSnap({
                             centerCoordinate: [
@@ -92,7 +94,7 @@ export default class MapMessage extends React.Component {
                 mapData = this.props.mapData;
             } else {
                 mapData = await ControlDAO.getContentById(
-                    this.props.mapOptions.mapId
+                    this.props.mapOptions.mapId + this.props.conversationId
                 );
             }
             if (mapData.markers && mapData.markers.length > 0) {

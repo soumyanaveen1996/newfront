@@ -17,16 +17,16 @@ export default class MessageHandler extends events.EventEmitter {
      * Persist a given message onto the local device. A botkey is required to key the message.
      * The messages are put in a stack - meaning last in first out (when calling fetch)
      *
-     * @param botKey A string key to indicate the identifier of bot
+     * @param conversationId A string key to indicate the identifier of a conversation
      * @param message A Message object to persist
      *
      * @return Promise that resolves once persisted
      */
-    persistOnDevice = (botKey, message) =>
+    persistOnDevice = (conversationId, message) =>
         new Promise((resolve, reject) => {
-            if (!message || !botKey) {
+            if (!message || !conversationId) {
                 reject(
-                    'A valid message object and botkey is required to persist on local'
+                    'A valid message object and conversationId is required to persist on local'
                 );
             }
             // Just return
@@ -44,17 +44,20 @@ export default class MessageHandler extends events.EventEmitter {
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_MAP
                 ) {
-                    controlId = message.getMessageOptions().mapId + botKey;
+                    controlId =
+                        message.getMessageOptions().mapId + conversationId;
                 } else if (
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_FORM2
                 ) {
-                    controlId = message.getMessageOptions().formId + botKey;
+                    controlId =
+                        message.getMessageOptions().formId + conversationId;
                 } else if (
                     message.getMessageType() ===
                     MessageTypeConstants.MESSAGE_TYPE_CHART
                 ) {
-                    controlId = message.getMessageOptions().chartId + botKey;
+                    controlId =
+                        message.getMessageOptions().chartId + conversationId;
                 }
 
                 ControlDAO.controlExist(controlId)
@@ -80,7 +83,7 @@ export default class MessageHandler extends events.EventEmitter {
                                     message.getMessageOptions()
                                 )
                             );
-                            message.setBotKey(botKey);
+                            message.setBotKey(conversationId);
                             promises.push(
                                 MessageDAO.insertOrUpdateMessage(message)
                             );
@@ -92,7 +95,7 @@ export default class MessageHandler extends events.EventEmitter {
                     })
                     .catch(reject);
             } else {
-                message.setBotKey(botKey);
+                message.setBotKey(conversationId);
                 MessageDAO.insertOrUpdateMessage(message)
                     .then(() => {
                         resolve(true);

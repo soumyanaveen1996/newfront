@@ -1211,6 +1211,123 @@ typedef struct CompaniesResponse__storage_ {
 
 @end
 
+#pragma mark - PaginatedCallHistoryInput
+
+@implementation PaginatedCallHistoryInput
+
+@dynamic startTime;
+
+typedef struct PaginatedCallHistoryInput__storage_ {
+  uint32_t _has_storage_[1];
+  double startTime;
+} PaginatedCallHistoryInput__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "startTime",
+        .dataTypeSpecific.className = NULL,
+        .number = PaginatedCallHistoryInput_FieldNumber_StartTime,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(PaginatedCallHistoryInput__storage_, startTime),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeDouble,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[PaginatedCallHistoryInput class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(PaginatedCallHistoryInput__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - PaginatedCallHistoryResponse
+
+@implementation PaginatedCallHistoryResponse
+
+@dynamic error;
+@dynamic recordsArray, recordsArray_Count;
+@dynamic moreRecordsExist;
+
+typedef struct PaginatedCallHistoryResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t error;
+  NSMutableArray *recordsArray;
+} PaginatedCallHistoryResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "error",
+        .dataTypeSpecific.className = NULL,
+        .number = PaginatedCallHistoryResponse_FieldNumber_Error,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(PaginatedCallHistoryResponse__storage_, error),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "recordsArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(CallHistoryObject),
+        .number = PaginatedCallHistoryResponse_FieldNumber_RecordsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(PaginatedCallHistoryResponse__storage_, recordsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+      {
+        .name = "moreRecordsExist",
+        .dataTypeSpecific.className = NULL,
+        .number = PaginatedCallHistoryResponse_FieldNumber_MoreRecordsExist,
+        .hasIndex = 1,
+        .offset = 2,  // Stored in _has_storage_ to save space.
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeBool,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[PaginatedCallHistoryResponse class]
+                                     rootClass:[UserserviceRoot class]
+                                          file:UserserviceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(PaginatedCallHistoryResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\003\020\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - CallHistoryResponse
 
 @implementation CallHistoryResponse
