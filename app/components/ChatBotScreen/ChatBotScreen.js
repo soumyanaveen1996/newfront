@@ -974,7 +974,9 @@ class ChatBotScreen extends React.Component {
     }
 
     openMap(mapId, title) {
-        ControlDAO.getContentById(mapId).then(content => {
+        ControlDAO.getContentById(
+            mapId + this.conversationContext.conversationId
+        ).then(content => {
             Keyboard.dismiss();
             this.currentMapId = mapId;
             Store.dispatch(setCurrentMap(content));
@@ -1342,12 +1344,14 @@ class ChatBotScreen extends React.Component {
                 message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP
             ) {
+                console.log('>>>>>>>mapmess', message.getMessage());
                 return (
                     <MapMessage
                         isFromUser={false}
                         isFromBot={true}
                         openMap={this.openMap.bind(this)}
                         mapOptions={message.getMessageOptions()}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else if (
@@ -1384,6 +1388,7 @@ class ChatBotScreen extends React.Component {
                         openMap={this.openLocationMessage.bind(this)}
                         mapOptions={message.getMessageOptions()}
                         mapData={message.getMessage()}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else if (
@@ -1452,6 +1457,7 @@ class ChatBotScreen extends React.Component {
                     <ChartMessage
                         chartOptions={message.getMessageOptions()}
                         chartData={message.getMessage()}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else {
@@ -1485,6 +1491,7 @@ class ChatBotScreen extends React.Component {
                         isFromBot={false}
                         openMap={this.openMap.bind(this)}
                         mapOptions={message.getMessageOptions()}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else if (
@@ -1521,6 +1528,7 @@ class ChatBotScreen extends React.Component {
                         openMap={this.openLocationMessage.bind(this)}
                         mapOptions={message.getMessageOptions()}
                         mapData={message.getMessage()}
+                        conversationId={this.conversationContext.conversationId}
                     />
                 );
             } else {
@@ -1640,19 +1648,19 @@ class ChatBotScreen extends React.Component {
         message.setCreatedBy(this.getUserId());
         message.imageMessage(message.getMessageId() + '.png');
         this.queueMessage(message);
-
-        let imageResizeResponse = await ImageResizer.createResizedImage(
-            imageUri,
-            800,
-            800,
-            'PNG',
-            50,
-            0,
-            'images'
-        );
+        // let imageResizeResponse = await ImageResizer.createResizedImage(
+        //     imageUri,
+        //     800,
+        //     800,
+        //     'PNG',
+        //     50,
+        //     0,
+        //     'images'
+        // );
         const newUri =
             Constants.IMAGES_DIRECTORY + '/' + message.getMessageId() + '.png';
-        await RNFS.moveFile(imageResizeResponse.uri, newUri);
+        await RNFS.mkdir(Constants.IMAGES_DIRECTORY);
+        await RNFS.copyFile(imageUri, newUri);
 
         // Send the file to the S3/backend and then let the user know
         await Resource.uploadFile(

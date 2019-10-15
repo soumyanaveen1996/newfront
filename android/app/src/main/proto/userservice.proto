@@ -23,6 +23,7 @@ service UserService {
     rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
     rpc GetCompanies(commonmessages.Empty) returns (CompaniesResponse) {}
     rpc GetCallHistory(commonmessages.Empty) returns (CallHistoryResponse) {}
+    rpc GetPaginatedCallHistory(PaginatedCallHistoryInput) returns (PaginatedCallHistoryResponse) {}
     rpc GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse) {}
     rpc GetUserDomains(commonmessages.Empty) returns (UserDomainsResponse) {}
     rpc UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (commonmessages.Empty) {}
@@ -135,6 +136,15 @@ message CompaniesResponse {
     repeated string companies = 1;
 }
 
+message PaginatedCallHistoryInput {
+    double startTime = 1;
+};
+
+message PaginatedCallHistoryResponse {
+    int32 error = 1;
+    repeated CallHistoryObject records = 2;
+    bool moreRecordsExist = 3;
+}
 
 message CallHistoryResponse {
     repeated CallHistoryObject content = 1;
