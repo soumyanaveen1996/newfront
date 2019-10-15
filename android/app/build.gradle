@@ -109,7 +109,7 @@ android {
         applicationId "com.frontm.frontm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 422
+        versionCode 427
         versionName "5.5"
         multiDexEnabled true
         renderscriptTargetApi 23
@@ -148,8 +148,8 @@ android {
     }
     buildTypes {
         release {
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
-            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
@@ -157,9 +157,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
