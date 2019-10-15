@@ -40,6 +40,7 @@ import Store from '../../redux/store/configureStore';
 import { setFirstLogin } from '../../redux/actions/UserActions';
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import swiperStyle from '../Swiper/styles';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -71,8 +72,7 @@ export default class LoginScreen extends React.Component {
             ],
             loading: false,
             pressedFbBtn: false,
-            pressedGglBtn: false,
-            suspendedRegistration: false
+            pressedGglBtn: false
         };
 
         this.formValuesArray = [];
@@ -80,6 +80,21 @@ export default class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
+        EventEmitter.addListener(
+            AuthEvents.loginStageUpdate,
+            this.updateStage.bind(this)
+        );
+        this.updateStage();
+    }
+
+    componentWillUnmount() {
+        EventEmitter.removeListener(
+            AuthEvents.loginStageUpdate,
+            this.updateStage.bind(this)
+        );
+    }
+
+    updateStage() {
         AsyncStorage.getItem('signupStage').then(stage => {
             if (stage && stage === 'checkCode') {
                 this.setState({ suspendedRegistration: true });

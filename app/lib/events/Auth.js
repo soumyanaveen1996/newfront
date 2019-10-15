@@ -4,7 +4,8 @@ export const AuthEvents = {
     userDataFetched: 'userDataFetched',
     userChanged: 'userChanged',
     tabSelected: 'tabSelected',
-    tabTopSelected: 'tabTopSelected'
+    tabTopSelected: 'tabTopSelected',
+    loginStageUpdate: 'loginStageUpdate'
 };
 
 export default AuthEvents;
