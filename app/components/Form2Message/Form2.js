@@ -35,7 +35,8 @@ import {
     PollingStrategyTypes,
     Media,
     Resource,
-    ResourceTypes
+    ResourceTypes,
+    Auth
 } from '../../lib/capability';
 import { formStatus, fieldType, formAction } from './config';
 import { connect } from 'react-redux';
@@ -46,6 +47,9 @@ import NetworkButton from '../Header/NetworkButton';
 import Constants from '../../config/constants';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import RNFS from 'react-native-fs';
+import config from '../../config/config';
+import utils from '../../lib/utils';
+import { AssetFetcher } from '../../lib/dce';
 
 class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -1324,27 +1328,84 @@ class Form2 extends React.Component {
     renderImagePicker(fieldData, key) {
         const imageUri =
             Constants.IMAGES_DIRECTORY + '/' + this.state.answers[key].value;
+        const remoteUrl = `${config.proxy.protocol}${
+            config.proxy.resource_host
+        }${config.proxy.downloadFilePath}/${this.props.conversationId}/${
+            this.state.answers[key].value
+        }`;
         return (
             <View style={styles.imagePickerContainer}>
                 <TouchableOpacity
                     style={styles.imageContainer}
-                    disabled={this.state.answers[key].value}
+                    disabled={
+                        (this.state.answers[key].value ? true : false) ||
+                        this.state.disabled
+                    }
                     onPress={() => {
                         this.pickImage(fieldData, key);
                     }}
                 >
                     {this.state.answers[key].value ? (
                         <Image
+                            key={imageUri}
                             source={{ uri: imageUri }}
                             style={styles.image}
                             resizeMode="cover"
-                            onError={() => {
-                                this.answers[key].value = '';
-                                this.answers[key].valid = true;
-                                this.setState({
-                                    answers: this.answers,
-                                    showInfoOfIndex: null
-                                });
+                            onError={async () => {
+                                try {
+                                    await RNFS.mkdir(
+                                        Constants.IMAGES_DIRECTORY
+                                    );
+                                    const user = await Auth.getUser();
+                                    const headers =
+                                        utils.s3DownloadHeaders(
+                                            remoteUrl,
+                                            user
+                                        ) || undefined;
+                                    await AssetFetcher.downloadFile(
+                                        imageUri,
+                                        remoteUrl,
+                                        headers,
+                                        true,
+                                        false
+                                    );
+                                    const exist = await AssetFetcher.existsOnDevice(
+                                        imageUri
+                                    );
+                                    if (exist) {
+                                        this.answers[key].value = '';
+                                        this.answers[key].valid = true;
+                                        this.setState(
+                                            {
+                                                answers: this.answers,
+                                                showInfoOfIndex: null
+                                            },
+                                            () => {
+                                                //forces rerender of the image
+                                                this.answers[key].value =
+                                                    fieldData.value;
+                                                this.setState({
+                                                    answers: this.answers,
+                                                    showInfoOfIndex: null
+                                                });
+                                            }
+                                        );
+                                    } else {
+                                        this.answers[key].value = '';
+                                        this.answers[key].valid = true;
+                                        this.setState({
+                                            answers: this.answers,
+                                            showInfoOfIndex: null
+                                        });
+                                    }
+                                } catch (error) {
+                                    this.answers[key].value = '';
+                                    this.answers[key].valid = true;
+                                    this.setState({
+                                        answers: this.answers,
+                                        showInfoOfIndex: null
+                                    });
+                                }
                             }}
                         />
                     ) : (
@@ -1368,6 +1429,7 @@ class Form2 extends React.Component {
                                 showInfoOfIndex: null
                             });
                         }}
+                        disabled={this.state.disabled}
                     >
                         <Image source={images.delete_icon_trash} />
                         <Text style={styles.removeImageText}>Remove</Text>
