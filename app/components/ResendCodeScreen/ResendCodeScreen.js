@@ -14,6 +14,7 @@ import styles from './styles';
 import I18n from '../../config/i18n/i18n';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class ResendCodeScreen extends Component {
     constructor(props) {
@@ -95,6 +96,7 @@ export default class ResendCodeScreen extends Component {
                         this.state.userEmail
                     );
                     await AsyncStorage.setItem('signupStage', 'checkCode');
+                    EventEmitter.emit(AuthEvents.loginStageUpdate);
                     Actions.confirmationScreen({
                         type: ActionConst.REPLACE,
                         userEmail: this.state.userEmail,
@@ -165,23 +167,6 @@ export default class ResendCodeScreen extends Component {
                                 change it.
                             </Text>
                         </View>
-                        {/* <View style={styles.pinCode}>
-                            <TextInput
-                                style={styles.input}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                onChangeText={this.onChangeEmailText.bind(this)}
-                                keyboardType="email-address"
-                                editable={true}
-                                returnKeyType={'done'}
-                                placeholder="email@example.com"
-                                value={this.state.userEmail}
-                                underlineColorAndroid={'transparent'}
-                                placeholderTextColor="rgba(155,155,155,1)"
-                                selectTextOnFocus={true}
-                            />
-                            {this.displayEmailErrorMessege()}
-                        </View> */}
                         <View style={styles.codeButton}>
                             <TouchableOpacity
                                 disabled={!this.checkFieldEmpty()}

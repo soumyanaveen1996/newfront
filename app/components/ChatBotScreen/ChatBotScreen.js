@@ -1344,7 +1344,6 @@ class ChatBotScreen extends React.Component {
                 message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP
             ) {
-                console.log('>>>>>>>mapmess', message.getMessage());
                 return (
                     <MapMessage
                         isFromUser={false}

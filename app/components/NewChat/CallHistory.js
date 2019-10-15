@@ -85,7 +85,6 @@ class CallHistory extends React.Component {
     }
 
     async updateCallHistory() {
-        console.log('>>>>>>>EVENT');
         try {
             const newCalls = await Calls.updateCallHistory();
             this.setState({
