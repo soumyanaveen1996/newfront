@@ -25,6 +25,7 @@ import {
     synchronizePhoneBook
 } from '../../lib/UserData/SyncData';
 import { TwilioVoIP } from '../../lib/twilio';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class ConfirmationScreen extends Component {
     constructor(props) {
@@ -96,6 +97,7 @@ export default class ConfirmationScreen extends Component {
                 .then(async data => {
                     if (data.success) {
                         await AsyncStorage.setItem('signupStage', 'done');
+                        EventEmitter.emit(AuthEvents.loginStageUpdate);
                         this.setState({ signupStatus: 'codeConfirmed' });
                         this.showMainScreen();
                     }

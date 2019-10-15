@@ -20,6 +20,7 @@ import images from '../../images';
 import { Auth } from '../../lib/capability';
 import Loader from '../Loader/Loader';
 import { HeaderBack } from '../Header';
+import EventEmitter, { AuthEvents } from '../../lib/events';
 
 export default class SignupScreen extends React.Component {
     constructor(props) {
@@ -186,7 +187,7 @@ export default class SignupScreen extends React.Component {
                             this.state.name
                         );
                         await AsyncStorage.setItem('signupStage', 'checkCode');
-
+                        EventEmitter.emit(AuthEvents.loginStageUpdate);
                         this.setState({ loading: false, name: '', email: '' });
                         Actions.confirmationScreen({
                             type: ActionConst.REPLACE,

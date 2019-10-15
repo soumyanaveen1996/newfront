@@ -542,6 +542,7 @@ class MainRouter extends React.Component {
                                     <Scene
                                         key={ROUTER_SCENE_KEYS.imageViewer}
                                         component={ImageViewer}
+                                        hideNavBar={true}
                                     />
 
                                     <Scene
