@@ -246,11 +246,10 @@ export default class GetCredit extends React.Component {
                                         <Text
                                             style={[
                                                 styles.currency,
-                                                { fontSize: 16 }
+                                                { fontSize: 18 }
                                             ]}
                                         >
-                                            {' '}
-                                            $
+                                            ${' '}
                                         </Text>
                                         {this.props.currentBalance.toFixed(2)}
                                     </Text>

@@ -82,7 +82,7 @@ export default (stylesheet = StyleSheet.create({
     },
     currency: {
         fontSize: 12,
-        fontWeight: '100'
+        fontWeight: '300'
     },
     buyButton: {
         alignSelf: 'center',
