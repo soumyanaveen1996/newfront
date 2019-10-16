@@ -79,7 +79,6 @@ class MyProfileScreen extends React.Component {
             currentIndex: null,
             loading: false
         };
-        this.mounted = true;
     }
 
     componentDidMount() {
@@ -96,8 +95,6 @@ class MyProfileScreen extends React.Component {
                     config.proxy.profileImage +
                     userDetails.userId +
                     '.png';
-
-                this.setState({ profileImage: imageUrl });
 
                 const info = { ...userDetails.info };
                 // const emailArray = [];
@@ -123,24 +120,19 @@ class MyProfileScreen extends React.Component {
                 // }
 
                 // emailArray.push(info.emailAddress);
-                if (this.mounted) {
-                    this.setState({
-                        myName: info.userName,
-                        emailAddress: info.emailAddress,
-                        phoneNumbers: info.phoneNumbers,
-                        searchable: info.searchable || false,
-                        visible: info.visible || false
-                    });
-                }
+                this.setState({
+                    myName: info.userName,
+                    emailAddress: info.emailAddress || this.state.emailAddress,
+                    phoneNumbers: info.phoneNumbers || this.state.phoneNumbers,
+                    searchable: info.searchable || false,
+                    visible: info.visible || false,
+                    profileImage: imageUrl
+                });
             })
             .catch(err => {
                 console.log('Error Loading User details', err);
             });
     };
-
-    componentWillUnmount() {
-        this.mounted = false;
-    }
 
     setPhoneNumber = (number, index, key) => {
         let getPhoneNumbers = [...this.state.phoneNumbers];
