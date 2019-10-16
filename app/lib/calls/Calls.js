@@ -52,13 +52,13 @@ export default class Calls {
             if (!existingCalls || existingCalls.length === 0) {
                 const page = await this.getPaginatedCallHistory(Date.now());
                 const callHistory = page.records;
-                if (!page.moreRecordsExist) {
-                    callHistory.records.push({
+                if (!page.moreRecordsExist && callHistory.length !== 0) {
+                    callHistory.push({
                         lastCall: true,
                         callTimestamp: 0
                     });
                 }
-                await this.saveCallHistory(callHistory);
+                const save = await this.saveCallHistory(callHistory);
                 return callHistory;
             } else {
                 newCalls = await this.fillCallHistoryHead(
