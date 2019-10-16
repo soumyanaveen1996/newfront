@@ -44,21 +44,13 @@ export default class ConfirmationScreen extends Component {
         this.textInput = null;
     }
 
-    componentWillMount() {
+    componentDidMount() {
         AsyncStorage.getItem('userEmail').then(token => {
-            this.setState(() => {
-                return { userEmail: token };
-            });
-        });
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps !== this.props) {
             this.setState({
-                userEmail: this.props.userEmail,
+                userEmail: this.props.userEmail || token,
                 password: this.props.password
             });
-        }
+        });
     }
 
     componentWillUnmount() {
@@ -287,7 +279,6 @@ export default class ConfirmationScreen extends Component {
                         keyboardType="numeric"
                         // autoFocus={true}
                         placeholder="------"
-                        returnKeyType={'done'}
                         value={this.state.code === 0 ? null : this.state.code}
                         onChangeText={this.onChangeCode.bind(this)}
                         underlineColorAndroid="transparent"

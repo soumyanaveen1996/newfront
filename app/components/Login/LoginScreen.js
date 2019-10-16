@@ -133,12 +133,21 @@ export default class LoginScreen extends React.Component {
 
                 this.showMainScreen();
             })
-            .catch(err => {
-                this.setState({
-                    loading: false,
-                    emailErrorMessage: err.message,
-                    passwordErrorMessage: ''
-                });
+            .catch(async err => {
+                if (err.message === 'User is not confirmed.') {
+                    await AsyncStorage.setItem('signupStage', 'checkCode');
+                    await AsyncStorage.setItem('userEmail', this.state.email);
+                }
+                this.setState(
+                    {
+                        loading: false,
+                        emailErrorMessage: err.message,
+                        passwordErrorMessage: ''
+                    },
+                    () => {
+                        this.updateStage();
+                    }
+                );
             });
     }
 
