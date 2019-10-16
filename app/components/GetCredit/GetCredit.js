@@ -174,8 +174,8 @@ export default class GetCredit extends React.Component {
                             : styles.creditButtonText
                     }
                 >
+                    <Text style={styles.currency}>$ </Text>
                     {credit}
-                    <Text style={styles.currency}> $</Text>
                 </Text>
             </TouchableOpacity>
         );
@@ -243,16 +243,15 @@ export default class GetCredit extends React.Component {
                                     />
                                 ) : (
                                     <Text style={styles.balance}>
-                                        {this.props.currentBalance.toFixed(2)}
                                         <Text
                                             style={[
                                                 styles.currency,
-                                                { fontSize: 16 }
+                                                { fontSize: 18 }
                                             ]}
                                         >
-                                            {' '}
-                                            $
+                                            ${' '}
                                         </Text>
+                                        {this.props.currentBalance.toFixed(2)}
                                     </Text>
                                 )}
                             </View>
