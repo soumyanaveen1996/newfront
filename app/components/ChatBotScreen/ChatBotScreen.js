@@ -1587,7 +1587,12 @@ class ChatBotScreen extends React.Component {
             this.state.messages,
             this.botContext
         );
-        if (message.getMessageType() === 'background_event') {
+        if (
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_SENSOR
+        ) {
             return getNext;
         }
         const isPromise = getNext instanceof Promise;

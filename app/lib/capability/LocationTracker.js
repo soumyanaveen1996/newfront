@@ -9,7 +9,7 @@ import backgroundTaskSql from '../persistence/backgroundTaskSql';
 import EventEmitter, { MessageEvents } from '../events';
 import {
     getBotManifest,
-    reportLocationBG
+    sendBackgroundMessageSafe
 } from '../BackgroundTask/BackgroundTaskProcessor';
 
 export default class LocationTracker {
@@ -100,13 +100,19 @@ export default class LocationTracker {
             latitude: parseFloat(location.latitude),
             longitude: parseFloat(location.longitude)
         };
-        const task = {
-            botId: data.botId,
-            conversationId: data.conversationId,
-            key: JSON.stringify(currentLocation),
-            options: {}
-        };
-        await reportLocationBG(task, user);
+
+        let message = new Message();
+        message.setCreatedBy({
+            addedByBot: true,
+            messageDate: moment().valueOf()
+        });
+        message.backgroundEventMessage(JSON.stringify(currentLocation), {});
+
+        await sendBackgroundMessageSafe(
+            message,
+            data.botId,
+            data.conversationId
+        );
     };
 
     static onLocation = async location => {
