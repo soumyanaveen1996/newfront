@@ -95,6 +95,7 @@
     "react-native-responsive-screen": "^1.1.9",
     "react-native-router-flux": "^4.0.4",
     "react-native-segmented-control-tab": "^3.2.1",
+    "react-native-sensors": "^5.3.2",
     "react-native-simple-radio-button": "^2.7.3",
     "react-native-sound": "^0.10.9",
     "react-native-spring-scrollview": "^2.0.22",

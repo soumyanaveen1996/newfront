@@ -34,6 +34,7 @@ import OfflineMap from './OfflineMap';
 import { Moment, MomentTimezone } from './Moment';
 import { Immutable } from './Immutable';
 import { R } from './Ramda';
+import { Accelerometer } from './Sensors';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
@@ -75,5 +76,6 @@ export {
     UpdateCallQuota,
     Utils,
     version,
-    LocationTracker
+    LocationTracker,
+    Accelerometer
 };

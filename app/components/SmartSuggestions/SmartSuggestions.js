@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import Suggestion from './Suggestion';
 import styles from './styles';
-import { timeout } from 'rxjs/operator/timeout';
 
 export default class SmartSuggestions extends React.Component {
     constructor(props) {
