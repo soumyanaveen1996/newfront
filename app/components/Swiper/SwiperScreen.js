@@ -218,7 +218,11 @@ export default class SwiperScreen extends Component {
                             </View>
                         </ImageBackground>
                     </View>
-                    <View style={styles.slide}>
+                    <View
+                        style={styles.slide}
+                        accessibilityLabel="welcome4"
+                        testID="welcome4"
+                    >
                         <View style={styles.sliderImageContainer}>
                             <Image
                                 style={styles.slider}
@@ -230,11 +234,23 @@ export default class SwiperScreen extends Component {
                             style={styles.backgroundImage}
                             source={images.logo_background}
                         >
-                            <View style={styles.innerBox}>
-                                <Text style={styles.headerText}>
+                            <View
+                                style={styles.innerBox}
+                                accessibilityLabel="welcome4"
+                                testID="welcome4"
+                            >
+                                <Text
+                                    style={styles.headerText}
+                                    accessibilityLabel="welcome4"
+                                    testID="welcome4"
+                                >
                                     {this.state.swiperData[3].header}
                                 </Text>
-                                <Text style={styles.text}>
+                                <Text
+                                    style={styles.text}
+                                    accessibilityLabel="welcome4"
+                                    testID="welcome4"
+                                >
                                     {this.state.swiperData[3].description}
                                 </Text>
                             </View>
