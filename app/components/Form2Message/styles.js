@@ -89,7 +89,7 @@ export default (stylesheet = StyleSheet.create({
     f2FieldContainer: {
         marginTop: 25,
         paddingBottom: 15,
-        marginHorizontal: '10%',
+        marginHorizontal: ScreenSize.w * 0.1,
         borderBottomWidth: 1,
         borderColor: GlobalColors.disabledGray
     },
@@ -314,17 +314,29 @@ export default (stylesheet = StyleSheet.create({
 
     //IMAGE PICKER
     imagePickerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: ScreenSize.w,
+        aspectRatio: 1.2
     },
     imageContainer: {
-        width: ScreenSize.w * 0.36,
-        aspectRatio: 1,
-        borderRadius: ScreenSize.w * 0.18,
+        width: ScreenSize.w,
+        aspectRatio: 1.2,
+        position: 'absolute',
+        left: -(ScreenSize.w * 0.1),
         backgroundColor: GlobalColors.textField,
         justifyContent: 'center',
-        alignItems: 'stretch',
+        alignItems: 'center',
         overflow: 'hidden'
+    },
+    imageFieldContainer: {
+        width: '92%',
+        height: '92%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderStyle: 'dashed',
+        borderWidth: 3,
+        borderColor: GlobalColors.disabledGray
     },
     removeImage: {
         flexDirection: 'row',

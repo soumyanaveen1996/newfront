@@ -1409,10 +1409,12 @@ class Form2 extends React.Component {
                             }}
                         />
                     ) : (
-                        Icons.upload()
+                        <View style={styles.imageFieldContainer}>
+                            {Icons.camera()}
+                        </View>
                     )}
                 </TouchableOpacity>
-                {this.state.answers[key].value ? (
+                {/* {this.state.answers[key].value ? (
                     <TouchableOpacity
                         style={styles.removeImage}
                         onPress={() => {
@@ -1434,7 +1436,7 @@ class Form2 extends React.Component {
                         <Image source={images.delete_icon_trash} />
                         <Text style={styles.removeImageText}>Remove</Text>
                     </TouchableOpacity>
-                ) : null}
+                ) : null} */}
             </View>
         );
     }
