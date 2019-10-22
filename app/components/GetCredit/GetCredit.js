@@ -53,11 +53,16 @@ export default class GetCredit extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.currentBalance !== this.props.currentBalance) {
-            this.setState({
-                updatingBalance: false,
-                purchaseExecuted: true,
-                selectedCredit: undefined
-            });
+            this.setState(
+                {
+                    updatingBalance: false,
+                    purchaseExecuted: true,
+                    selectedCredit: undefined
+                },
+                () => {
+                    this.close();
+                }
+            );
         }
     }
 
@@ -97,10 +102,6 @@ export default class GetCredit extends React.Component {
                 });
         }
     }
-
-    // onExit() {
-    //     this.close();
-    // }
 
     close() {
         if (this.state.purchaseExecuted) {
@@ -342,15 +343,16 @@ export default class GetCredit extends React.Component {
 
                             <TouchableOpacity
                                 style={
-                                    this.state.selectedCredit ||
-                                    this.state.purchaseExecuted
+                                    this.state.selectedCredit
                                         ? styles.buyButton
-                                        : styles.buyButtonDisabled
+                                        : this.state.purchaseExecuted
+                                            ? styles.buyButtonExecuted
+                                            : styles.buyButtonDisabled
                                 }
                                 disabled={
-                                    (!this.state.selectedCredit &&
-                                        !this.state.purchaseExecuted) ||
-                                    this.state.updatingBalance
+                                    !this.state.selectedCredit ||
+                                    this.state.updatingBalance ||
+                                    this.state.purchaseExecuted
                                 }
                                 onPress={
                                     this.state.purchaseExecuted
