@@ -13,7 +13,7 @@ export default class CenterComponent extends React.Component {
                 style={
                     Platform.OS === 'android' ? { marginLeft: wp('20%') } : null
                 }
-                source={images.frontm_header_logo}
+                source={images.frontm_header_logo2}
             />
         );
     }

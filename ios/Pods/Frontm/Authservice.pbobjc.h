@@ -30,6 +30,7 @@ CF_EXTERN_C_BEGIN
 @class DomainRoles;
 @class PhoneNumbers;
 @class SignInUser;
+@class UserAddress;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -173,6 +174,9 @@ typedef GPB_ENUM(SignInUser_FieldNumber) {
   SignInUser_FieldNumber_DomainsArray = 7,
   SignInUser_FieldNumber_ArchiveMessages = 8,
   SignInUser_FieldNumber_TncAccept = 9,
+  SignInUser_FieldNumber_UserTimezone = 10,
+  SignInUser_FieldNumber_UserCompanyName = 11,
+  SignInUser_FieldNumber_Address = 12,
 };
 
 @interface SignInUser : GPBMessage
@@ -198,6 +202,14 @@ typedef GPB_ENUM(SignInUser_FieldNumber) {
 @property(nonatomic, readwrite) BOOL archiveMessages;
 
 @property(nonatomic, readwrite) BOOL tncAccept;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userTimezone;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
 
 @end
 

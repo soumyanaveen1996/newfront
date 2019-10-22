@@ -470,6 +470,9 @@ typedef struct SigninResponse__storage_ {
 @dynamic domainsArray, domainsArray_Count;
 @dynamic archiveMessages;
 @dynamic tncAccept;
+@dynamic userTimezone;
+@dynamic userCompanyName;
+@dynamic hasAddress, address;
 
 typedef struct SignInUser__storage_ {
   uint32_t _has_storage_[1];
@@ -478,6 +481,9 @@ typedef struct SignInUser__storage_ {
   PhoneNumbers *phoneNumbers;
   NSString *userName;
   NSMutableArray *domainsArray;
+  NSString *userTimezone;
+  NSString *userCompanyName;
+  UserAddress *address;
 } SignInUser__storage_;
 
 // This method is threadsafe because it is initially called
@@ -567,6 +573,33 @@ typedef struct SignInUser__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeBool,
       },
+      {
+        .name = "userTimezone",
+        .dataTypeSpecific.className = NULL,
+        .number = SignInUser_FieldNumber_UserTimezone,
+        .hasIndex = 12,
+        .offset = (uint32_t)offsetof(SignInUser__storage_, userTimezone),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userCompanyName",
+        .dataTypeSpecific.className = NULL,
+        .number = SignInUser_FieldNumber_UserCompanyName,
+        .hasIndex = 13,
+        .offset = (uint32_t)offsetof(SignInUser__storage_, userCompanyName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "address",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserAddress),
+        .number = SignInUser_FieldNumber_Address,
+        .hasIndex = 14,
+        .offset = (uint32_t)offsetof(SignInUser__storage_, address),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[SignInUser class]
@@ -578,7 +611,7 @@ typedef struct SignInUser__storage_ {
                                          flags:GPBDescriptorInitializationFlag_None];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\006\003\014\000\004\006\000\005\014\000\006\010\000\010\017\000\t\t\000";
+        "\010\003\014\000\004\006\000\005\014\000\006\010\000\010\017\000\t\t\000\n\014\000\013\017\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
