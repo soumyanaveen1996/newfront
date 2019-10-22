@@ -24,6 +24,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Bot from '../../lib/bot';
 import * as RNIap from 'react-native-iap';
+import formStyles from '../Form2Message/styles';
 
 const EventListeners = [];
 
@@ -36,7 +37,8 @@ export default class GetCredit extends React.Component {
             purchaseExecuted: false,
             codeApplied: false,
             code: '',
-            showInfo: false
+            showInfo: false,
+            codeError: ''
         };
     }
 
@@ -146,7 +148,7 @@ export default class GetCredit extends React.Component {
                 this.setState({ codeApplied: true });
             })
             .catch(error => {
-                this.refs.toast.show(error, DURATION.LENGTH_SHORT);
+                this.setState({ codeError: error });
             });
     }
 
@@ -211,6 +213,78 @@ export default class GetCredit extends React.Component {
                 </View>
             );
         }
+    }
+
+    renderCodeInput() {
+        return (
+            <View style={styles.codeArea}>
+                {/* <Text style={styles.codeText}>{this.state.codeApplied ? 'Your code has been applied.' : null}</Text> */}
+                <View style={styles.rightCodeArea}>
+                    {this.renderInfoBubble()}
+                    {Icons.info({
+                        size: 27,
+                        color: GlobalColors.frontmLightBlue,
+                        onPress: () => {
+                            this.setState({
+                                showInfo: !this.state.showInfo
+                            });
+                        }
+                    })}
+                    <TextInput
+                        numberOfLines={1}
+                        maxLength={30}
+                        editable={!this.state.codeApplied}
+                        style={
+                            this.state.codeApplied
+                                ? styles.codeInputApplied
+                                : styles.codeInput
+                        }
+                        placeholder={'Partner code'}
+                        placeholderTextColor={GlobalColors.darkGray}
+                        value={this.state.code}
+                        onChangeText={text => {
+                            this.setState({ code: text, codeError: '' });
+                        }}
+                    />
+
+                    <TouchableOpacity
+                        style={
+                            this.state.code.length < 2 || this.state.codeApplied
+                                ? styles.codeButtonDisabled
+                                : styles.codeButton
+                        }
+                        onPress={this.applyCode.bind(this)}
+                        disabled={
+                            this.state.code.length < 2 || this.state.codeApplied
+                        }
+                    >
+                        <Text style={styles.codeButtonText}>Apply</Text>
+                    </TouchableOpacity>
+                </View>
+                {this.state.codeError ? (
+                    <View
+                        style={[
+                            formStyles.validationMessage,
+                            {
+                                position: 'absolute',
+                                bottom: 0,
+                                alignSelf: 'flex-start',
+                                left: 30
+                            }
+                        ]}
+                    >
+                        <Text style={formStyles.validationMessageText}>
+                            {this.state.codeError}
+                        </Text>
+                    </View>
+                ) : null}
+                <Text style={styles.codeText}>
+                    {this.state.codeApplied
+                        ? 'Your code has been applied.'
+                        : ' '}
+                </Text>
+            </View>
+        );
     }
 
     render() {
@@ -285,62 +359,7 @@ export default class GetCredit extends React.Component {
                             </View>
                         </View>
                         <View style={{ marginVertical: '15%' }}>
-                            <View style={styles.codeArea}>
-                                {/* <Text style={styles.codeText}>{this.state.codeApplied ? 'Your code has been applied.' : null}</Text> */}
-                                <View style={styles.rightCodeArea}>
-                                    {this.renderInfoBubble()}
-                                    {Icons.info({
-                                        size: 27,
-                                        color: GlobalColors.frontmLightBlue,
-                                        onPress: () => {
-                                            this.setState({
-                                                showInfo: !this.state.showInfo
-                                            });
-                                        }
-                                    })}
-                                    <TextInput
-                                        numberOfLines={1}
-                                        maxLength={30}
-                                        editable={!this.state.codeApplied}
-                                        style={
-                                            this.state.codeApplied
-                                                ? styles.codeInputApplied
-                                                : styles.codeInput
-                                        }
-                                        placeholder={'Partner code'}
-                                        placeholderTextColor={
-                                            GlobalColors.darkGray
-                                        }
-                                        value={this.state.code}
-                                        onChangeText={text => {
-                                            this.setState({ code: text });
-                                        }}
-                                    />
-                                    <TouchableOpacity
-                                        style={
-                                            this.state.code.length < 2 ||
-                                            this.state.codeApplied
-                                                ? styles.codeButtonDisabled
-                                                : styles.codeButton
-                                        }
-                                        onPress={this.applyCode.bind(this)}
-                                        disabled={
-                                            this.state.code.length < 2 ||
-                                            this.state.codeApplied
-                                        }
-                                    >
-                                        <Text style={styles.codeButtonText}>
-                                            Apply
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <Text style={styles.codeText}>
-                                    {this.state.codeApplied
-                                        ? 'Your code has been applied.'
-                                        : ' '}
-                                </Text>
-                            </View>
-
+                            {this.renderCodeInput()}
                             <TouchableOpacity
                                 style={
                                     this.state.selectedCredit

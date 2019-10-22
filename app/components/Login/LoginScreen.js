@@ -172,6 +172,7 @@ export default class LoginScreen extends React.Component {
             DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
         });
         Store.dispatch(setFirstLogin(true));
+        AsyncStorage.setItem('signupStage', '');
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
         synchronizePhoneBook();
