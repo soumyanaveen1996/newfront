@@ -9473,10 +9473,10 @@ react-native-segmented-control-tab@^3.2.1:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-sensors@^5.3.2:
-  version "5.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-sensors/-/react-native-sensors-5.3.2.tgz#59981a0482ba1236ec69a4e9de104fa1f4a2c52b"
-  integrity sha512-73PxkyN3qDKGOBOe42UrsDGbdwlBDxr6iFDdwDO2KW8s3kkIm3wYa5RRKVnow1D2YNaGUdkAtIS9jwJtpTMVpQ==
+react-native-sensors@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-sensors/-/react-native-sensors-5.3.0.tgz#8c89541f80a68c185ff2f7059c3078f4975c730c"
+  integrity sha512-+VIWli3mWIBniOghoHAuVAnw9LO0Oc1kIoJnSh3RKalM4iUR39erx6TZz3FbShSqbLO6apAbk0P0g6u1DB4v6w==
   dependencies:
     rxjs ">= 6"
 
@@ -10386,6 +10386,7 @@ rxjs-compat@^6.5.3:
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.5.3.tgz#18440949b2678bf87a78a754009676b2c49183dc"
   integrity sha512-BIJX2yovz3TBpjJoAZyls2QYuU6ZiCaZ+U96SmxQpuSP/qDUfiXPKOVLbThBB2WZijNHkdTTJXKRwvv5Y48H7g==
+
 "rxjs@>= 6":
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.3.tgz#510e26317f4db91a7eb1de77d9dd9ba0a4899a3a"
