@@ -1338,7 +1338,7 @@ class Form2 extends React.Component {
                 <TouchableOpacity
                     style={styles.imageContainer}
                     disabled={
-                        (this.state.answers[key].value ? true : false) ||
+                        // (this.state.answers[key].value ? true : false) ||
                         this.state.disabled
                     }
                     onPress={() => {

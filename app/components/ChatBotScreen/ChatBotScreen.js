@@ -2447,26 +2447,6 @@ class ChatBotScreen extends React.Component {
         if (this.props.call) {
             return <View />;
         }
-        let messaggio = new Message();
-        messaggio.messageByBot(true);
-        messaggio.form2Message(
-            [
-                {
-                    id: 'field name',
-                    title: 'field label',
-                    type: 'image_field'
-                }
-            ],
-            {
-                formId: 11111,
-                title: 'Vessel details',
-                description: 'Please fill the vessel details',
-                confirm: 'Save', //Default is Done
-                cancel: 'Cancel' //Default is Cancel
-            }
-        );
-
-        const messaggione = { message: messaggio };
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
@@ -2509,7 +2489,7 @@ class ChatBotScreen extends React.Component {
                                     ref={list => {
                                         this.chatList = list;
                                     }}
-                                    data={[messaggione, ...this.state.messages]}
+                                    data={this.state.messages}
                                     renderItem={this.renderItem.bind(this)}
                                     onLayout={this.onChatListLayout.bind(this)}
                                     refreshControl={
