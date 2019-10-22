@@ -13,7 +13,7 @@ import {
 } from '../BackgroundTask/BackgroundTaskProcessor';
 
 export default class LocationTracker {
-    static start_tracking = async data => {
+    static start_tracking = async (data, precision = 100) => {
         ////
         // 1.  Wire up event-listeners
         //
@@ -42,7 +42,7 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 100,
+                distanceFilter: precision,
                 heartbeatInterval: 180,
                 preventSuspend: true,
                 // Activity Recognition
@@ -106,7 +106,7 @@ export default class LocationTracker {
             addedByBot: true,
             messageDate: moment().valueOf()
         });
-        message.backgroundEventMessage(JSON.stringify(currentLocation), {});
+        message.backgroundEventMessage(currentLocation, {});
 
         await sendBackgroundMessageSafe(
             message,
