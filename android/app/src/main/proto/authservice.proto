@@ -67,6 +67,9 @@ message SignInUser {
     repeated commonmessages.DomainRoles domains = 7;
     bool archiveMessages = 8;
     bool tncAccept = 9;
+    string userTimezone = 10;
+    string userCompanyName = 11;
+    commonmessages.UserAddress address = 12;
 }
 
 message FacebookSigninInput {

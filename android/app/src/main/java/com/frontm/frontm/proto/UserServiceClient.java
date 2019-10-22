@@ -1,28 +1,24 @@
 package com.frontm.frontm.proto;
 
-import android.util.Log;
-import android.os.Handler;
+import java.util.concurrent.TimeUnit;
+
+import javax.security.auth.callback.Callback;
+
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.frontm.auth.proto.AuthServiceGrpc;
-import com.frontm.auth.proto.FrontmSigninInput;
-import com.frontm.auth.proto.GoogleSigninInput;
-import com.frontm.auth.proto.SigninResponse;
-import com.frontm.auth.proto.SignupResponse;
-import com.frontm.auth.proto.SignupUser;
 import com.frontm.commonmessages.proto.Empty;
 import com.frontm.commonmessages.proto.PhoneNumbers;
 import com.frontm.commonmessages.proto.SelectedDomainInput;
+import com.frontm.commonmessages.proto.UserAddress;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BotSubscriptionsResponseConverter;
+import com.frontm.frontm.proto.converters.CallHistoryResponseConverter;
 import com.frontm.frontm.proto.converters.ContactsResponseConverter;
 import com.frontm.frontm.proto.converters.DeviceBoolResponseConverter;
-import com.frontm.frontm.proto.converters.SigninResponseConverter;
-import com.frontm.frontm.proto.converters.SignupResponseConverter;
+import com.frontm.frontm.proto.converters.PaginatedCallHistoryResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
 import com.frontm.frontm.proto.converters.TopupBalanceResponseConverter;
@@ -31,40 +27,35 @@ import com.frontm.frontm.proto.converters.UpdateUserProfileResponseConverter;
 import com.frontm.frontm.proto.converters.UserConverter;
 import com.frontm.frontm.proto.converters.VoipStatusResponseConverter;
 import com.frontm.frontm.proto.converters.VoipToggleResponseConverter;
-import com.frontm.frontm.proto.converters.CallHistoryResponseConverter;
 import com.frontm.user.proto.BotSubscriptionsResponse;
 import com.frontm.user.proto.CallHistoryResponse;
 import com.frontm.user.proto.ContactsResponse;
+import com.frontm.user.proto.DeviceBoolResponse;
+import com.frontm.user.proto.DeviceInfo;
 import com.frontm.user.proto.PaginatedCallHistoryInput;
 import com.frontm.user.proto.PaginatedCallHistoryResponse;
 import com.frontm.user.proto.SubscribeBotInput;
 import com.frontm.user.proto.SubscribeBotResponse;
 import com.frontm.user.proto.SubscribeDomainInput;
 import com.frontm.user.proto.SubscribeDomainResponse;
+import com.frontm.user.proto.TopupBalanceInput;
 import com.frontm.user.proto.TopupBalanceResponse;
 import com.frontm.user.proto.TwilioTokenInput;
 import com.frontm.user.proto.TwilioTokenResponse;
 import com.frontm.user.proto.UpdateUserProfileResponse;
 import com.frontm.user.proto.User;
-import com.frontm.user.proto.UserOrBuilder;
 import com.frontm.user.proto.UserServiceGrpc;
 import com.frontm.user.proto.VoipStatusInput;
 import com.frontm.user.proto.VoipStatusResponse;
 import com.frontm.user.proto.VoipToggleResponse;
-import com.frontm.user.proto.CallHistoryResponse;
 import com.squareup.okhttp.ConnectionSpec;
-import java.util.concurrent.TimeUnit;
+
+import android.util.Log;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 import io.grpc.stub.MetadataUtils;
 import io.grpc.stub.StreamObserver;
-import com.frontm.user.proto.TopupBalanceInput;
-import com.frontm.user.proto.TopupBalanceResponse;
-import com.frontm.user.proto.DeviceInfo;
-import com.frontm.user.proto.DeviceBoolResponse;
-import com.frontm.frontm.proto.converters.PaginatedCallHistoryResponseConverter;
-
 
 public class UserServiceClient extends ReactContextBaseJavaModule {
 
@@ -72,14 +63,13 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     private Boolean mIsAlreadyListening = false;
     private String mSessionId;
 
-        public Boolean getmIsAlreadyListening() {
+    public Boolean getmIsAlreadyListening() {
         return mIsAlreadyListening;
     }
 
     public void setmIsAlreadyListening(Boolean mIsAlreadyListening) {
         this.mIsAlreadyListening = mIsAlreadyListening;
     }
-
 
     public String getmSessionId() {
         return mSessionId;
@@ -89,19 +79,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         this.mSessionId = mSessionId;
     }
 
-
     public ManagedChannel getmChannel() {
         if (mChannel == null) {
             String host = BuildConfig.GRPC_HOST;
             int port = BuildConfig.GRPC_PORT;
             try {
-                mChannel = OkHttpChannelBuilder.forAddress(host, port)
-                        .connectionSpec(ConnectionSpec.MODERN_TLS)
-                        .keepAliveTime(30000, TimeUnit.MILLISECONDS)
-                        .keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
+                mChannel = OkHttpChannelBuilder.forAddress(host, port).connectionSpec(ConnectionSpec.MODERN_TLS)
+                        .keepAliveTime(30000, TimeUnit.MILLISECONDS).keepAliveTimeout(5000, TimeUnit.MILLISECONDS)
                         .keepAliveWithoutCalls(true)
-                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
-                        .build();
+                        .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory()).build();
             } catch (Exception e) {
                 mChannel = null;
             }
@@ -114,7 +100,7 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     public void handleError() {
-        if(mChannel == null){
+        if (mChannel == null) {
             return;
         }
         mChannel.shutdown();
@@ -127,10 +113,8 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         String host = BuildConfig.GRPC_HOST;
         int port = BuildConfig.GRPC_PORT;
         try {
-            mChannel = OkHttpChannelBuilder.forAddress(host, port)
-                    .connectionSpec(ConnectionSpec.MODERN_TLS)
-                    .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory())
-                    .build();
+            mChannel = OkHttpChannelBuilder.forAddress(host, port).connectionSpec(ConnectionSpec.MODERN_TLS)
+                    .sslSocketFactory(TLSContext.shared(getReactApplicationContext()).getSocketFactory()).build();
         } catch (Exception e) {
             mChannel = null;
         }
@@ -141,83 +125,78 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
         return "UserServiceClient";
     }
 
-
     @ReactMethod
-    public void getBotSubscriptions(String sessionId, final Callback callback)
-    {
+    public void getBotSubscriptions(String sessionId, final Callback callback) {
         Log.d("GRPC:::getBotSubscriptions", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(SelectedDomainInput.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
-            @Override
-            public void onNext(BotSubscriptionsResponse value) {
-                callback.invoke(null, new BotSubscriptionsResponseConverter().toResponse(value));
-            }
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getBotSubscriptions(
+                SelectedDomainInput.newBuilder().build(), new StreamObserver<BotSubscriptionsResponse>() {
+                    @Override
+                    public void onNext(BotSubscriptionsResponse value) {
+                        callback.invoke(null, new BotSubscriptionsResponseConverter().toResponse(value));
+                    }
 
-            @Override
-            public void onError(Throwable t) {
-                callback.invoke(Arguments.createMap());
-            }
+                    @Override
+                    public void onError(Throwable t) {
+                        callback.invoke(Arguments.createMap());
+                    }
 
-            @Override
-            public void onCompleted() {
+                    @Override
+                    public void onCompleted() {
 
-            }
-        });
+                    }
+                });
 
     }
 
     @ReactMethod
-    public void getContacts(String sessionId, final Callback callback)
-    {
+    public void getContacts(String sessionId, final Callback callback) {
         Log.d("GRPC:::getContacts", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
-        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(SelectedDomainInput.newBuilder().build(), new StreamObserver<ContactsResponse>() {
-            @Override
-            public void onNext(ContactsResponse value) {
-                callback.invoke(null, new ContactsResponseConverter().toResponse(value));
-            }
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getContacts(SelectedDomainInput.newBuilder().build(),
+                new StreamObserver<ContactsResponse>() {
+                    @Override
+                    public void onNext(ContactsResponse value) {
+                        callback.invoke(null, new ContactsResponseConverter().toResponse(value));
+                    }
 
-            @Override
-            public void onError(Throwable t) {
-                handleError();
-                callback.invoke(Arguments.createMap());
-            }
+                    @Override
+                    public void onError(Throwable t) {
+                        handleError();
+                        callback.invoke(Arguments.createMap());
+                    }
 
-            @Override
-            public void onCompleted() {
+                    @Override
+                    public void onCompleted() {
 
-            }
-        });
+                    }
+                });
 
     }
 
-
     @ReactMethod
-    public void updateUserProfile(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void updateUserProfile(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::updateUser", params.toString());
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        User.Builder builder = User.newBuilder()
-                .setSearchable(params.getBoolean("searchable"))
-                .setVisible(params.getBoolean("visible"))
-                .setUserName(params.getString("userName"))
-                .setEmailAddress(params.getString("emailAddress"));
+        User.Builder builder = User.newBuilder().setSearchable(params.getBoolean("searchable"))
+                .setVisible(params.getBoolean("visible")).setUserName(params.getString("userName"))
+                .setEmailAddress(params.getString("emailAddress"))
+                .setUserCompanyName(params.getString("userCompanyName"))
+                .setUserTimezone(params.getString("userTimezone"));
 
         if (params.hasKey("phoneNumbers")) {
             ReadableMap ph = params.getMap("phoneNumbers");
@@ -237,11 +216,34 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             builder.setPhoneNumbers(numbersBuilder.build());
         }
 
+        if (params.hasKey("address")) {
+            ReadableMap ph = params.getMap("address");
+            UserAddress.Builder addressBuilder = UserAddress.newBuilder();
+
+            if (ph.hasKey("addressLine1")) {
+                addressBuilder.setAddressLine1(ph.getString("addressLine1"));
+            }
+
+            if (ph.hasKey("city")) {
+                addressBuilder.setCity(ph.getString("city"));
+            }
+
+            if (ph.hasKey("state")) {
+                addressBuilder.setState(ph.getString("state"));
+            }
+            if (ph.hasKey("postCode")) {
+                addressBuilder.setPostCode(ph.getString("postCode"));
+            }
+            if (ph.hasKey("country")) {
+                addressBuilder.setCountry(ph.getString("country"));
+            }
+            builder.setAddress(addressBuilder.build());
+        }
+
         User user = builder.build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -266,18 +268,14 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getUserDetails(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void getUserDetails(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::getUserDetails", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        User user = User.newBuilder()
-                .setUserId(params.getString("userId"))
-                .build();
+        User user = User.newBuilder().setUserId(params.getString("userId")).build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -301,20 +299,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
 
     }
 
-
     @ReactMethod
-    public void subscribeBot(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void subscribeBot(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::subscribeBot", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        SubscribeBotInput input = SubscribeBotInput.newBuilder()
-                .setBotId(params.getString("botId"))
-                .build();
+        SubscribeBotInput input = SubscribeBotInput.newBuilder().setBotId(params.getString("botId")).build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -339,18 +332,14 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void unsubscribeBot(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void unsubscribeBot(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::unsubscribeBot", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        SubscribeBotInput input = SubscribeBotInput.newBuilder()
-                .setBotId(params.getString("botId"))
-                .build();
+        SubscribeBotInput input = SubscribeBotInput.newBuilder().setBotId(params.getString("botId")).build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -375,18 +364,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void subscribeDomain(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void subscribeDomain(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::subscribeDomain", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
         SubscribeDomainInput input = SubscribeDomainInput.newBuilder()
-                .setVerificationCode(params.getString("verificationCode"))
-                .build();
+                .setVerificationCode(params.getString("verificationCode")).build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -411,16 +397,14 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getVOIPStatus(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void getVOIPStatus(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::getVOIPStatus", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
         VoipStatusInput input = VoipStatusInput.newBuilder().setUserId(params.getString("userId")).build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -445,14 +429,12 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void enableVOIP(String sessionId, final Callback callback)
-    {
+    public void enableVOIP(String sessionId, final Callback callback) {
         Log.d("GRPC:::enableVOIP", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -477,14 +459,12 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void disableVOIP(String sessionId, final Callback callback)
-    {
+    public void disableVOIP(String sessionId, final Callback callback) {
         Log.d("GRPC:::disableVOIP", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -509,18 +489,14 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void generateTwilioToken(String sessionId, ReadableMap params, final Callback callback)
-    {
+    public void generateTwilioToken(String sessionId, ReadableMap params, final Callback callback) {
         Log.d("GRPC:::generateTwilioTo", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        TwilioTokenInput input = TwilioTokenInput.newBuilder()
-                .setPlatform("android")
-                .setEnv(params.getString("env"))
+        TwilioTokenInput input = TwilioTokenInput.newBuilder().setPlatform("android").setEnv(params.getString("env"))
                 .build();
 
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
 
         stub = MetadataUtils.attachHeaders(stub, header);
@@ -545,13 +521,11 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getCallHistory(String sessionId, final Callback callback)
-    {
+    public void getCallHistory(String sessionId, final Callback callback) {
         Log.d("GRPC:::getCallHistory", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
         stub = MetadataUtils.attachHeaders(stub, header);
         stub.getCallHistory(Empty.newBuilder().build(), new StreamObserver<CallHistoryResponse>() {
@@ -573,18 +547,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPaginatedCallHistory(String sessionId, ReadableMap param, final Callback callback)
-    {
+    public void getPaginatedCallHistory(String sessionId, ReadableMap param, final Callback callback) {
         Log.d("GRPC:::getPaginatedCallHistory", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
         stub = MetadataUtils.attachHeaders(stub, header);
         PaginatedCallHistoryInput input = PaginatedCallHistoryInput.newBuilder()
-                .setStartTime(param.getDouble("startTime"))
-                .build();
+                .setStartTime(param.getDouble("startTime")).build();
         stub.getPaginatedCallHistory(input, new StreamObserver<PaginatedCallHistoryResponse>() {
             @Override
             public void onNext(PaginatedCallHistoryResponse value) {
@@ -604,21 +575,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void topupUserBalance(String sessionId, ReadableMap param, final Callback callback)
-    {
+    public void topupUserBalance(String sessionId, ReadableMap param, final Callback callback) {
         Log.d("GRPC:::topupUserBalance", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
         stub = MetadataUtils.attachHeaders(stub, header);
-        TopupBalanceInput input = TopupBalanceInput.newBuilder()
-                .setPaymentCode(param.getString("paymentCode"))
-                .setAmount(param.getDouble("amount"))
-                .setToken(param.getString("token"))
-                .setPlatform("android")
-                .build();
+        TopupBalanceInput input = TopupBalanceInput.newBuilder().setPaymentCode(param.getString("paymentCode"))
+                .setAmount(param.getDouble("amount")).setToken(param.getString("token")).setPlatform("android").build();
         stub.topupUserBalance(input, new StreamObserver<TopupBalanceResponse>() {
             @Override
             public void onNext(TopupBalanceResponse value) {
@@ -638,19 +603,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void registerDevice(String sessionId, ReadableMap param, final Callback callback)
-    {
+    public void registerDevice(String sessionId, ReadableMap param, final Callback callback) {
         Log.d("GRPC:::RegisterDevice", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
         stub = MetadataUtils.attachHeaders(stub, header);
-        DeviceInfo input = DeviceInfo.newBuilder()
-                .setDeviceToken(param.getString("deviceToken"))
-                .setDeviceType("android")
-                .build();
+        DeviceInfo input = DeviceInfo.newBuilder().setDeviceToken(param.getString("deviceToken"))
+                .setDeviceType("android").build();
         stub.registerDevice(input, new StreamObserver<DeviceBoolResponse>() {
             @Override
             public void onNext(DeviceBoolResponse value) {
@@ -670,19 +631,15 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void deregisterDevice(String sessionId, ReadableMap param, final Callback callback)
-    {
+    public void deregisterDevice(String sessionId, ReadableMap param, final Callback callback) {
         Log.d("GRPC:::deregisterDevice", sessionId);
         UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
-        Metadata header=new Metadata();
-        Metadata.Key<String> key =
-                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
         header.put(key, sessionId);
         stub = MetadataUtils.attachHeaders(stub, header);
-        DeviceInfo input = DeviceInfo.newBuilder()
-                .setDeviceToken(param.getString("deviceToken"))
-                .setDeviceType("android")
-                .build();
+        DeviceInfo input = DeviceInfo.newBuilder().setDeviceToken(param.getString("deviceToken"))
+                .setDeviceType("android").build();
         stub.deregisterDevice(input, new StreamObserver<DeviceBoolResponse>() {
             @Override
             public void onNext(DeviceBoolResponse value) {
