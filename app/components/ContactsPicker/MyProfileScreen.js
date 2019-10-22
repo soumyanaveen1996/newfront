@@ -10,7 +10,8 @@ import {
     Alert,
     ScrollView,
     Platform,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Picker
 } from 'react-native';
 import ImageResizer from 'react-native-image-resizer';
 import _ from 'lodash';
@@ -38,6 +39,10 @@ import ImageCache from '../../lib/image_cache';
 import utils from '../../lib/utils';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import RNFS from 'react-native-fs';
+import moment from 'moment-timezone';
+import TimeZonePickerModal from './TimeZonePickerModel';
+import countries from '../../lib/utils/ListOfCountries';
+import CountryModal from './CountryModal';
 
 const R = require('ramda');
 
@@ -72,24 +77,64 @@ class MyProfileScreen extends React.Component {
                 land: '',
                 satellite: ''
             },
+            prefixes: {
+                mobile: '',
+                land: '',
+                satellite: ''
+            },
             emailAddress: '',
+            userCompanyName: '',
+            state: '',
+            addressLine1: '',
+            city: '',
+            country: 'IND',
+            userTimezone: 'Etc/UTC',
+            selectedTimezoneObj: {},
+            selectedCountryObj: {},
             searchable: true,
             visible: false,
             inviteModalVisible: false,
             currentIndex: null,
-            loading: false
+            loading: false,
+            modalVisible: false,
+            modalVisibleCountry: false,
+            timeZones: [],
+            errorMsgCity: false
         };
         this.mounted = true;
+        this.inputs = {};
     }
 
     componentDidMount() {
         this.gettingUserProfile();
     }
 
+    fetchTimeZone = () => {
+        let timeZones = moment.tz.names();
+        let offsetTmz = [];
+        for (let i in timeZones) {
+            let obj = {
+                value: timeZones[i],
+                placeholder:
+                    ' (GMT' +
+                    moment.tz(timeZones[i]).format('Z') +
+                    ')' +
+                    timeZones[i]
+            };
+            offsetTmz.push(obj);
+        }
+
+        timeZones.forEach((elem, index) => {
+            if (this.state.userTimezone === elem.value) {
+                this.setState({ selectedTimezoneObj: elem });
+            }
+        });
+    };
+
     gettingUserProfile = () => {
         Auth.getUser()
             .then(userDetails => {
-                // console.log('data', userDetails.info);
+                console.log('data===========', userDetails.info);
                 const imageUrl =
                     config.proxy.protocol +
                     config.proxy.host +
@@ -100,6 +145,45 @@ class MyProfileScreen extends React.Component {
                 this.setState({ profileImage: imageUrl });
 
                 const info = { ...userDetails.info };
+
+                let timeZones = moment.tz.names();
+                let offsetTmz = [];
+                for (let i in timeZones) {
+                    let obj = {
+                        value: timeZones[i],
+                        placeholder:
+                            ' (GMT' +
+                            moment.tz(timeZones[i]).format('Z') +
+                            ')' +
+                            timeZones[i]
+                    };
+
+                    if (!info.userTimezone) {
+                        if (timeZones[i] === 'Etc/UTC') {
+                            this.setState({
+                                selectedTimezoneObj: obj
+                            });
+                        }
+                    } else {
+                        if (info.userTimezone === timeZones[i]) {
+                            this.setState({
+                                selectedTimezoneObj: obj
+                            });
+                        }
+                    }
+
+                    offsetTmz.push(obj);
+                }
+
+                // offsetTmz.forEach((elem, index) => {
+                //     if (info.userTimezone === elem.value) {
+                //         this.setState(
+                //             {
+                //                 selectedTimezoneObj: elem
+                //             }
+                //         );
+                //     }
+                // });
                 // const emailArray = [];
                 // let phoneArray = [];
                 // if (info.phoneNumbers) {
@@ -123,14 +207,104 @@ class MyProfileScreen extends React.Component {
                 // }
 
                 // emailArray.push(info.emailAddress);
+
+                if (userDetails.info && userDetails.info.phoneNumbers) {
+                    const mobileNumber = userDetails.info.phoneNumbers.mobile;
+                    const landNumber = userDetails.info.phoneNumbers.land;
+                    const satelliteNumber =
+                        userDetails.info.phoneNumbers.satellite;
+                    if (mobileNumber) {
+                        if (mobileNumber.charAt(0) === '+') {
+                            const spaceIndex = mobileNumber.indexOf(' ');
+                            if (spaceIndex > 0) {
+                                this.state.prefixes.mobile = mobileNumber.slice(
+                                    1,
+                                    spaceIndex
+                                );
+                                this.state.phoneNumbers.mobile = mobileNumber.slice(
+                                    spaceIndex + 1
+                                );
+                            } else {
+                                this.state.prefixes.mobile = mobileNumber.slice(
+                                    1
+                                );
+                            }
+                        } else {
+                            this.state.phoneNumbers.mobile = mobileNumber;
+                        }
+                    }
+                    if (landNumber) {
+                        if (landNumber.charAt(0) === '+') {
+                            const spaceIndex = landNumber.indexOf(' ');
+                            if (spaceIndex > 0) {
+                                this.state.prefixes.land = landNumber.slice(
+                                    1,
+                                    spaceIndex
+                                );
+                                this.state.phoneNumbers.land = landNumber.slice(
+                                    spaceIndex + 1
+                                );
+                            } else {
+                                this.state.prefixes.land = landNumber.slice(1);
+                            }
+                        } else {
+                            this.state.phoneNumbers.land = landNumber;
+                        }
+                    }
+                    if (satelliteNumber) {
+                        if (satelliteNumber.charAt(0) === '+') {
+                            const spaceIndex = satelliteNumber.indexOf(' ');
+                            if (spaceIndex > 0) {
+                                this.state.prefixes.satellite = satelliteNumber.slice(
+                                    1,
+                                    spaceIndex
+                                );
+                                this.state.phoneNumbers.satellite = satelliteNumber.slice(
+                                    spaceIndex + 1
+                                );
+                            } else {
+                                this.state.prefixes.satellite = satelliteNumber.slice(
+                                    1
+                                );
+                            }
+                        } else {
+                            this.state.phoneNumbers.satellite = satelliteNumber;
+                        }
+                    }
+                    this.setState({ phoneNumbers: this.state.phoneNumbers });
+                }
                 if (this.mounted) {
                     this.setState({
                         myName: info.userName,
                         emailAddress: info.emailAddress,
-                        phoneNumbers: info.phoneNumbers,
                         searchable: info.searchable || false,
-                        visible: info.visible || false
+                        visible: info.visible || false,
+                        userCompanyName: info.userCompanyName || '',
+                        addressLine1:
+                            (info.address && info.address.addressLine1) || '',
+                        city: (info.address && info.address.city) || '',
+                        state: (info.address && info.address.state) || '',
+                        postCode: (info.address && info.address.postCode) || '',
+                        country: (info.address && info.address.country) || '',
+                        userTimezone: info.userTimezone || 'Etc/UTC'
                     });
+                    if (
+                        (info.address && !info.address.country) ||
+                        !info.address
+                    ) {
+                        this.setState({
+                            selectedCountryObj: {
+                                code: null,
+                                name: 'SELECT COUNTRY'
+                            }
+                        });
+                    } else {
+                        countries.forEach(elem => {
+                            if (info.address.country === elem.code) {
+                                this.setState({ selectedCountryObj: elem });
+                            }
+                        });
+                    }
                 }
             })
             .catch(err => {
@@ -149,21 +323,69 @@ class MyProfileScreen extends React.Component {
     };
 
     saveProfile = async () => {
+        if (!this.state.city || this.state.city.trim() === '') {
+            this.setState({ errorMsgCity: true });
+            return;
+        }
         try {
             this.setState({ loading: true });
+            let mobilePrefix = this.state.prefixes.mobile.replace(/\s/g, '');
+            if (mobilePrefix) {
+                mobilePrefix = '+' + mobilePrefix + ' ';
+            }
+            let landPrefix = this.state.prefixes.land.replace(/\s/g, '');
+            if (landPrefix) {
+                landPrefix = '+' + landPrefix + ' ';
+            }
+            let satellitePrefix = this.state.prefixes.satellite.replace(
+                /\s/g,
+                ''
+            );
+            if (satellitePrefix) {
+                satellitePrefix = '+' + satellitePrefix + ' ';
+            }
+            let phoneNumbers = {
+                mobile:
+                    mobilePrefix +
+                    this.state.phoneNumbers.mobile.replace(/\s/g, ''),
+                land:
+                    landPrefix +
+                    this.state.phoneNumbers.land.replace(/\s/g, ''),
+                satellite:
+                    satellitePrefix +
+                    this.state.phoneNumbers.satellite.replace(/\s/g, '')
+            };
             let detailObj = {
                 emailAddress: this.state.emailAddress,
                 searchable: this.state.searchable,
                 visible: this.state.visible,
                 userName: this.state.myName,
-                phoneNumbers: this.state.phoneNumbers
+                phoneNumbers: phoneNumbers,
+                userCompanyName: this.state.userCompanyName,
+                address: {
+                    addressLine1: this.state.addressLine1,
+                    state: this.state.state,
+                    postCode: this.state.postCode,
+                    city: this.state.city,
+                    country: this.state.country
+                },
+                userTimezone: this.state.userTimezone
             };
 
             let userDetails = {
                 userName: this.state.myName,
                 searchable: this.state.searchable,
                 visible: this.state.visible,
-                phoneNumbers: this.state.phoneNumbers
+                phoneNumbers: phoneNumbers,
+                userCompanyName: this.state.userCompanyName,
+                address: {
+                    addressLine1: this.state.addressLine1,
+                    state: this.state.state,
+                    postCode: this.state.postCode,
+                    city: this.state.city,
+                    country: this.state.country
+                },
+                userTimezone: this.state.userTimezone
             };
 
             // if (this.state.phoneNumbers && this.state.phoneNumbers.length > 0) {
@@ -206,7 +428,6 @@ class MyProfileScreen extends React.Component {
                 Auth.updateUserDetails(userDetails)
                     .then(data => {
                         // console.log('saved data ', data);
-
                         this.setState({ loading: false });
                         setTimeout(() => {
                             this.showAlert('Profile updated');
@@ -604,6 +825,216 @@ class MyProfileScreen extends React.Component {
         );
     }
 
+    focusNextField = id => {
+        this.inputs[id].focus();
+    };
+
+    setModalVisible(value) {
+        this.setState({ modalVisible: value });
+    }
+    setModalVisibleCountry(value) {
+        this.setState({ modalVisibleCountry: value });
+    }
+
+    displayCityErrorMessege = () => {
+        if (
+            !this.state.city &&
+            this.state.city.length === 0 &&
+            this.state.errorMsgCity
+        ) {
+            return (
+                <View style={styles.errorContainer}>
+                    <View style={styles.userError}>
+                        <Text style={styles.errorText}>
+                            City field is required
+                        </Text>
+                    </View>
+                </View>
+            );
+        }
+    };
+
+    renderAddress() {
+        return (
+            <View
+                style={styles.formContainer}
+                behavior={Platform.OS === 'ios' ? 'position' : null}
+            >
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> Company </Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        returnKeyType={'next'}
+                        blurOnSubmit={false}
+                        value={this.state.userCompanyName}
+                        placeholder="Company"
+                        onSubmitEditing={() => {
+                            this.focusNextField('address');
+                        }}
+                        ref={input => {
+                            this.inputs.company = input;
+                        }}
+                        onChangeText={this.onChangeCompany}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> Address </Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        returnKeyType={'next'}
+                        blurOnSubmit={false}
+                        value={this.state.addressLine1}
+                        placeholder="Address"
+                        ref={input => {
+                            this.inputs.address = input;
+                        }}
+                        onSubmitEditing={() => {
+                            this.focusNextField('city');
+                        }}
+                        onChangeText={this.onChangeAddressLine1}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> City* </Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        returnKeyType={'next'}
+                        blurOnSubmit={false}
+                        value={this.state.city}
+                        placeholder="City"
+                        ref={input => {
+                            this.inputs.city = input;
+                        }}
+                        onEndEditing={(e: any) => {
+                            // console.log('data====== ', e.nativeEvent.text);
+                            if (
+                                e.nativeEvent.text.trim() === '' ||
+                                e.nativeEvent.text.length === 0
+                            ) {
+                                this.setState({ errorMsgCity: true });
+                            }
+                        }}
+                        onSubmitEditing={data => {
+                            this.focusNextField('state');
+                        }}
+                        onChangeText={this.onChangeCity}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                    {this.displayCityErrorMessege()}
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> State </Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        returnKeyType={'next'}
+                        blurOnSubmit={false}
+                        value={this.state.state}
+                        placeholder="State"
+                        ref={input => {
+                            this.inputs.state = input;
+                        }}
+                        onSubmitEditing={() => {
+                            this.focusNextField('postCode');
+                        }}
+                        onChangeText={this.onChangeState}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> Post Code </Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        returnKeyType={'done'}
+                        blurOnSubmit={false}
+                        value={this.state.postCode}
+                        placeholder="Post Code"
+                        ref={input => {
+                            this.inputs.postCode = input;
+                        }}
+                        onChangeText={this.onChangePostCode}
+                        placeholderTextColor="rgba(155,155,155,1)"
+                        clearButtonMode="always"
+                    />
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> Country </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.setState({ modalVisibleCountry: true });
+                        }}
+                        style={styles.input}
+                    >
+                        <Text style={{ color: '#666666' }}>
+                            {this.state.selectedCountryObj.name}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.entryFields}>
+                    <Text style={styles.placeholderText}> Timezone </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.setState({ modalVisible: true });
+                        }}
+                        style={styles.input}
+                    >
+                        <Text style={{ color: '#666666' }}>
+                            {this.state.selectedTimezoneObj.placeholder}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <CountryModal
+                    isVisible={this.state.modalVisibleCountry}
+                    setVisible={this.setModalVisibleCountry.bind(this)}
+                    selectedCountry={this.state.country}
+                    selectingCountry={this.selectCountry}
+                />
+                <TimeZonePickerModal
+                    isVisible={this.state.modalVisible}
+                    setVisible={this.setModalVisible.bind(this)}
+                    selectedTimezone={this.state.userTimezone}
+                    selectingTimeZone={this.selectTimeZone}
+                />
+            </View>
+        );
+    }
+
+    selectTimeZone = data => {
+        this.setState({ userTimezone: data.value, selectedTimezoneObj: data });
+    };
+    selectCountry = data => {
+        this.setState({ country: data.code, selectedCountryObj: data });
+    };
+
+    onChangeCompany = text => {
+        this.setState({ userCompanyName: text });
+    };
+    onChangeAddressLine1 = text => {
+        this.setState({ addressLine1: text });
+    };
+    onChangeCity = text => {
+        if (text && text.length > 0) {
+            this.setState({ errorMsgCity: false });
+        }
+        this.setState({ city: text });
+    };
+    onChangeState = text => {
+        this.setState({ state: text });
+    };
+    onChangePostCode = text => {
+        this.setState({ postCode: text });
+    };
+
     infoRender = type => {
         let icon;
         if (type === 'land' || type === 'mobile') {
@@ -634,15 +1065,7 @@ class MyProfileScreen extends React.Component {
 
         return (
             <View style={styles.mainInfoRenderContainer}>
-                <View
-                    style={[
-                        styles.labelContainer,
-                        {
-                            borderRightColor: 'rgba(221,222,227,1)',
-                            borderRightWidth: 1
-                        }
-                    ]}
-                >
+                <View style={styles.labelContainer}>
                     {icon}
                     <Text style={styles.labelStyle}>{type}</Text>
                 </View>
@@ -651,6 +1074,36 @@ class MyProfileScreen extends React.Component {
                     type === 'mobile' ||
                     type === 'satellite' ? (
                             <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <View style={styles.inputPrefix}>
+                                    {/* prefix */}
+                                    <Text
+                                        style={{
+                                            color: 'rgba(102, 102, 102, 1)',
+                                            fontSize: 14
+                                        }}
+                                    >
+                                    +
+                                    </Text>
+                                    <TextInput
+                                        style={{
+                                            flex: 1,
+                                            color: 'rgba(102, 102, 102, 1)',
+                                            fontSize: 14
+                                        }}
+                                        value={this.state.prefixes[type]}
+                                        keyboardType="number-pad"
+                                        autoCorrect={false}
+                                        maxLength={4}
+                                        blurOnSubmit={false}
+                                        onChangeText={text => {
+                                            let numbers = this.state.prefixes;
+                                            numbers[type] = text;
+                                            this.setState({ prefixes: numbers });
+                                        }}
+                                        underlineColorAndroid={'transparent'}
+                                        placeholderTextColor="rgba(155,155,155,1)"
+                                    />
+                                </View>
                                 {/* number */}
                                 <TextInput
                                     style={styles.inputNumber}
@@ -775,7 +1228,7 @@ class MyProfileScreen extends React.Component {
     }
 
     render() {
-        // console.log('image url ', this.state.reloadProfileImage);
+        // console.log('profile data =======', this.state);
 
         return (
             <KeyboardAvoidingView
@@ -802,6 +1255,7 @@ class MyProfileScreen extends React.Component {
                             {this.renderEmailsOLD()} */}
                             {this.renderNumbers()}
                             {this.renderEmails()}
+                            {this.renderAddress()}
                             {this.renderBottomSettings()}
                             {this.renderBottomButtons()}
                         </View>
