@@ -142,8 +142,6 @@ class MyProfileScreen extends React.Component {
                     userDetails.userId +
                     '.png';
 
-                this.setState({ profileImage: imageUrl });
-
                 const info = { ...userDetails.info };
 
                 let timeZones = moment.tz.names();
@@ -279,6 +277,7 @@ class MyProfileScreen extends React.Component {
                         emailAddress: info.emailAddress,
                         searchable: info.searchable || false,
                         visible: info.visible || false,
+                        profileImage: imageUrl,
                         userCompanyName: info.userCompanyName || '',
                         addressLine1:
                             (info.address && info.address.addressLine1) || '',
@@ -311,10 +310,6 @@ class MyProfileScreen extends React.Component {
                 console.log('Error Loading User details', err);
             });
     };
-
-    componentWillUnmount() {
-        this.mounted = false;
-    }
 
     setPhoneNumber = (number, index, key) => {
         let getPhoneNumbers = [...this.state.phoneNumbers];

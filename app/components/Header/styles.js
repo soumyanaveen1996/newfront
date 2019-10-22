@@ -21,8 +21,8 @@ const stylesheet = StyleSheet.create({
         marginLeft: 15
     },
     defaultHeaderLeftIcon: {
-        marginHorizontal: 5,
-        paddingHorizontal: 10
+        marginHorizontal: 15
+        // paddingHorizontal: 10
     },
     defaultHeaderRightIcon: {
         marginHorizontal: 5,

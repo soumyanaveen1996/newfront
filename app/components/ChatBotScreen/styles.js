@@ -8,7 +8,7 @@ import {
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
 
-var screen = Dimensions.get('window');
+var screen = Dimensions.get('screen');
 
 const stylesheet = StyleSheet.create({
     safeArea: {

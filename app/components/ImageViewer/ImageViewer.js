@@ -1,6 +1,12 @@
 import React from 'react';
 import Image from '../TransformableImage/TransformableImage';
-import { CameraRoll, TouchableOpacity, View } from 'react-native';
+import {
+    CameraRoll,
+    TouchableOpacity,
+    View,
+    SafeAreaView,
+    StatusBar
+} from 'react-native';
 import styles from './styles';
 import Icons from '../../config/icons';
 import Toast, { DURATION } from 'react-native-easy-toast';
@@ -10,11 +16,12 @@ import { Actions } from 'react-native-router-flux';
 import ImageCache from '../../lib/image_cache';
 
 export default class ImageViewer extends React.Component {
-    static navigationOptions({ navigation, screenProps }) {
-        return {
-            headerLeft: <HeaderBack onPress={Actions.pop} />
-        };
-    }
+    // static navigationOptions({ navigation, screenProps }) {
+    //     return {
+    //         headerVisible: false,
+    //         // headerLeft: <HeaderBack onPress={Actions.pop} />
+    //     };
+    // }
 
     constructor(props) {
         super(props);
@@ -50,7 +57,14 @@ export default class ImageViewer extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
+                <StatusBar barStyle="light-content" />
+                <View style={styles.toolbar}>
+                    <HeaderBack
+                        onPress={Actions.pop}
+                        style={{ alignSelf: 'flex-start' }}
+                    />
+                </View>
                 <Image
                     style={styles.image}
                     source={{ uri: this.props.uri }}
@@ -60,16 +74,15 @@ export default class ImageViewer extends React.Component {
                     <TouchableOpacity
                         disabled={this.state.saveDisabled}
                         onPress={this.onImageSave.bind(this)}
+                        style={styles.saveIcon}
                     >
                         {this.state.saveDisabled
-                            ? Icons.toolbarSaveDisbled({
-                                style: styles.saveIcon
-                            })
-                            : Icons.toolbarSave({ style: styles.saveIcon })}
+                            ? Icons.toolbarSaveDisbled()
+                            : Icons.toolbarSave()}
                     </TouchableOpacity>
                 </View>
                 <Toast ref="toast" />
-            </View>
+            </SafeAreaView>
         );
     }
 }

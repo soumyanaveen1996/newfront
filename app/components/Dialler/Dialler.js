@@ -193,20 +193,6 @@ export default class Dialler extends React.Component {
 
     async getSatelliteCallNumber(number, user) {
         try {
-            // const options = {
-            //     method: 'GET',
-            //     url:
-            //         config.proxy.protocol +
-            //         config.proxy.host +
-            //         '/v2/satelliteDetails?botId=onboarding-bot',
-            //     headers: {
-            //         sessionId: user.creds.sessionId
-            //     }
-            // };
-            // const response = await Network(options);
-            // const { data } = response;
-            // const { error, content } = data;
-            // const { SAT_PHONE_NUM, SAT_PHONE_PIN } = content[0];
             let callingNumber;
             if (number.startsWith('00870') || number.startsWith('00816')) {
                 callingNumber = number.substring(2);
@@ -445,35 +431,9 @@ export default class Dialler extends React.Component {
                 }),
             0
         );
-        // if (this.state.bgBotScreen) {
-        //     this.setState({updatingCallQuota: true})
-        //     setTimeout(() => {
-        //         console.log('Updating Call Balance......')
-        //         const message = new Message({
-        //             msg: {
-        //                 callQuotaUsed: 0
-        //             },
-        //             messageType: MESSAGE_TYPE
-        //         })
-        //         message.setCreatedBy({addedByBot: true})
-        //         this.state.bgBotScreen.next(
-        //             message,
-        //             {},
-        //             [],
-        //             this.state.bgBotScreen.getBotContext()
-        //         )
-        //     }, 6000)
-        // }
     }
 
     countMinutes = callQuota => {
-        // let quotaLeft = callQuota * 60
-        // const intervalId = setInterval(() => {
-        //     quotaLeft = quotaLeft - 1
-        //     if (quotaLeft < 0) {
-        //         this.closeCall()
-        //     }
-        // }, 1000)
         this.setState({ intervalId });
     };
 
@@ -701,30 +661,6 @@ export default class Dialler extends React.Component {
             currentBalance: this.state.callQuota,
             wasDialler: this.state.dialledNumber
         });
-        // Bot.getInstalledBots()
-        //     .then(bots => {
-        //         console.log('bot data ', bots);
-        //         dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
-        //         if (dwIndex < 0) {
-        //             return Alert.alert(
-        //                 'You have to download DigitalWallet Bot to buy Credits'
-        //             );
-        //         }
-        //         const DWBot = bots[dwIndex];
-        //         // console.log('page to go ', DWBot);
-
-        //         // Actions.botChat({ bot: DWBot });
-        //         Actions.pop();
-        //         Actions.botChat({ bot: DWBot });
-        //         // setTimeout(
-        //         //     () => Actions.refresh({ bot: DWBot, key: Math.random() }),
-        //         //     0
-        //         // );
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         Alert.alert('An error occured');
-        //     });
     }
 
     renderCountryCode = () => {
@@ -846,9 +782,12 @@ export default class Dialler extends React.Component {
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         {this.renderButton()}
                     </View>
-                    <View style={{ flex: 1, alignItems: 'center' }}>
+                    <TouchableOpacity
+                        style={{ flex: 1, alignItems: 'center' }}
+                        onPress={this.handleDelete.bind(this)}
+                    >
                         {Icons.backSpace()}
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 {this.renderModal()}
             </View>
@@ -1008,79 +947,9 @@ export default class Dialler extends React.Component {
                     }}
                     onButtonPressed={this.buttonPressedOnModal.bind(this)}
                 />
-                {/* <View style={Styles.buttonContainer}>
-                    <TouchableOpacity
-                        style={
-                            this.state.micOn
-                                ? Styles.buttonCtr
-                                : Styles.buttonCtrOn
-                        }
-                        onPress={this.toggleMic.bind(this)}
-                    >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-mute-btn.png')}
-                        />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={Styles.buttonCtr}
-                        onPress={this.closeCall.bind(this)}
-                    >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-endcall-btn.png')}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={
-                            this.state.speakerOn
-                                ? Styles.buttonCtrOn
-                                : Styles.buttonCtr
-                        }
-                        onPress={this.toggleSpeaker.bind(this)}
-                    >
-                        <Image
-                            style={Styles.btnImg}
-                            source={require('../../images/contact/call-speaker-btn.png')}
-                        />
-                    </TouchableOpacity>
-                </View> */}
             </View>
         );
     };
-
-    // diallerIncallwDigits = () => {
-    //     const { diallerState } = this.state;
-    //     const message = this.statusMessage(diallerState);
-    //     return (
-    //         <View style={Styles.container}>
-    //             <View style={Styles.initialMainContainer}>
-    //                 <Text style={Styles.diallerNumberText}>
-    //                     {this.phonenumber(diallerState)}
-    //                 </Text>
-    //             </View>
-    //             <View style={Styles.swapButtonContainer}>
-    //                 <TouchableOpacity
-    //                     style={Styles.closeButton}
-    //                     onPress={this.closeDigits.bind(this)}
-    //                 >
-    //                     <Text style={Styles.closeButtonText}>
-    //                         {I18n.t('Close')}
-    //                     </Text>
-    //                 </TouchableOpacity>
-    //             </View>
-    //             <View style={Styles.diallerContainer}>
-    //                 <View style={Styles.diallerButtonContainer}>
-    //                     {this.renderButtons()}
-    //                 </View>
-    //             </View>
-    //             <View style={Styles.callButtonContainer}>
-    //                 {this.renderButton()}
-    //             </View>
-    //         </View>
-    //     );
-    // };
 
     render() {
         // console.log('Dialled Number', this.state.diallerState);

@@ -355,18 +355,16 @@ export const Icons = {
     //FORM
     time: icon('ios-time-outline', 'ionicon', 20, GlobalColors.frontmLightBlue),
     toolbarSave: icon(
-        'ios-download-outline',
-        'ionicon',
+        'download',
+        'antdesign',
         30,
-        Colors.iosBlue,
-        Colors.iosBlue
+        GlobalColors.frontmLightBlue
     ),
     toolbarSaveDisbled: icon(
-        'ios-download-outline',
-        'ionicon',
+        'download',
+        'antdesign',
         30,
-        Colors.disabledGray,
-        Colors.disabledGray
+        GlobalColors.frontmLightBlueTransparent
     ),
     userPosition: icon('md-locate', 'ionicon', 15, GlobalColors.headerBlack),
     videoRecordCircle: icon('circle', 'font-awesome', 46, '#F00'),
