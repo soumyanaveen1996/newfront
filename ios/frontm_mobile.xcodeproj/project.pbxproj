@@ -172,6 +172,7 @@
 		6B2D929D2310237800639CD2 /* TopupBalanceResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D929C2310237800639CD2 /* TopupBalanceResponse+frontm.m */; };
 		6B3FBBE52BEA41AFB7EA118A /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 515AD2D5FDDC4884A04D87B3 /* SF-Pro-Text-Semibold.otf */; };
 		6B4C3C4B2305A02300B86BC2 /* UserDomain+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */; };
+		6B5CF44F235E13D5008D701B /* libRNSensors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5CF444235E13A8008D701B /* libRNSensors.a */; };
 		6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */; };
 		6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */; };
 		6B9829B722CF5C64008E00AD /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BD220C709B00659F09 /* libRNBlur.a */; };
@@ -785,6 +786,13 @@
 			remoteGlobalIDString = 323A12871E5F266B004975B8;
 			remoteInfo = "ART-tvOS";
 		};
+		6B5CF443235E13A8008D701B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNSensors;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -1084,6 +1092,7 @@
 		6B2D92F02310238D00639CD2 /* TopupBalanceResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopupBalanceResponse+frontm.h"; sourceTree = "<group>"; };
 		6B4C3BF723059FD900B86BC2 /* UserDomain+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UserDomain+frontm.h"; sourceTree = "<group>"; };
 		6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UserDomain+frontm.m"; sourceTree = "<group>"; };
+		6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSensors.xcodeproj; path = "../node_modules/react-native-sensors/ios/RNSensors.xcodeproj"; sourceTree = "<group>"; };
 		6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryResponse+frontm.m"; sourceTree = "<group>"; };
 		6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryResponse+frontm.h"; sourceTree = "<group>"; };
 		6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryObject+frontm.m"; sourceTree = "<group>"; };
@@ -1155,6 +1164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B5CF44F235E13D5008D701B /* libRNSensors.a in Frameworks */,
 				6B22598C232281CA00DA143F /* libART.a in Frameworks */,
 				213F5BE82303BF7B0056CC04 /* libRCTFBSDK.a in Frameworks */,
 				213F5AD8230320CA0056CC04 /* FBSDKCoreKit.framework in Frameworks */,
@@ -1832,6 +1842,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6B5CF3F4235E13A7008D701B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6B5CF444235E13A8008D701B /* libRNSensors.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1844,6 +1862,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */,
 				6B225983232281A000DA143F /* ART.xcodeproj */,
 				21E0FB6121C3740A00C9B1E4 /* BugsnagReactNative.xcodeproj */,
 				2123A5BA216DFA9C00CDC29A /* CodePush.xcodeproj */,
@@ -2105,7 +2124,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
 						LastSwiftMigration = "";
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = true;
@@ -2298,6 +2317,10 @@
 				{
 					ProductGroup = 040C5AAC1FFCF9A50071B62D /* Products */;
 					ProjectRef = AF8E97A68C6747C986CC381E /* RNKeychain.xcodeproj */;
+				},
+				{
+					ProductGroup = 6B5CF3F4235E13A7008D701B /* Products */;
+					ProjectRef = 6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5A621FFCF9A50071B62D /* Products */;
@@ -2907,6 +2930,13 @@
 			remoteRef = 6B22598A232281A000DA143F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		6B5CF444235E13A8008D701B /* libRNSensors.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSensors.a;
+			remoteRef = 6B5CF443235E13A8008D701B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -3033,7 +3063,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=\"node --expose-gc --max_old_space_size=8192\"\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3264,8 +3294,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
@@ -3302,6 +3333,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn",
 				);
 				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3316,7 +3348,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -3377,11 +3409,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3415,6 +3447,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn",
 				);
 				INFOPLIST_FILE = frontm_mobile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3429,7 +3462,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3443,8 +3476,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
@@ -3481,6 +3515,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn",
 				);
 				INFOPLIST_FILE = "frontm_mobile/Info-prod.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3495,7 +3530,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -3510,11 +3545,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3548,6 +3583,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-sign-in/ios/RNGoogleSignIn",
 				);
 				INFOPLIST_FILE = "frontm_mobile/Info-prod.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3562,7 +3598,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
