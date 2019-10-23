@@ -155,17 +155,9 @@ class CallHistory extends React.Component {
 
     renderRow({ item }) {
         if (item.lastCall) {
-            return (
-                <View
-                    style={[
-                        styles.contactItemContainer,
-                        { justifyContent: 'center', alignItems: 'center' }
-                    ]}
-                >
-                    <Text style={{ alignSelf: 'center' }}>No more calls.</Text>
-                </View>
-            );
+            return null;
         }
+
         let id;
         let name;
         let number;

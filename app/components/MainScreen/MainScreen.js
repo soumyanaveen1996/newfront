@@ -4,7 +4,8 @@ import {
     Alert,
     AsyncStorage,
     TouchableOpacity,
-    Image
+    Image,
+    Text
 } from 'react-native';
 import BotList from './BotList';
 import { SafeAreaView } from 'react-navigation';
@@ -17,13 +18,19 @@ import {
     AsyncResultEventEmitter,
     NETWORK_EVENTS_CONSTANTS
 } from '../../lib/network';
-import EventEmitter, { MessageEvents, AuthEvents } from '../../lib/events';
+import EventEmitter, {
+    MessageEvents,
+    AuthEvents,
+    CallQuotaEvents
+} from '../../lib/events';
 import Auth from '../../lib/capability/Auth';
 import {
     PollingStrategyTypes,
     Settings,
     Network,
-    Contact
+    Contact,
+    Message,
+    MessageTypeConstants
 } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import Bot from '../../lib/bot';
@@ -45,6 +52,7 @@ import Store from '../../redux/store/configureStore';
 import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
+import { BackgroundBotChat } from '../../lib/BackgroundTask';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -53,6 +61,7 @@ const MainScreenStates = {
 };
 
 let firstTimer = false;
+EventListener = [];
 
 class MainScreen extends React.Component {
     static navigationOptions({ navigation }) {
@@ -79,7 +88,7 @@ class MainScreen extends React.Component {
                         marginHorizontal: 17,
                         resizeMode: 'contain'
                     }}
-                    source={images.bot_icon_assistant}
+                    source={images.header_assistant_icon}
                 />
             </TouchableOpacity>
         );
@@ -115,7 +124,10 @@ class MainScreen extends React.Component {
             noChats: false,
             showNetworkStatusBar: false,
             network: null,
-            searchString: ''
+            searchString: '',
+            callQuota: 0,
+            callQuotaUpdateError: false,
+            updatingCallQuota: true
         };
     }
 
@@ -201,7 +213,47 @@ class MainScreen extends React.Component {
             AuthEvents.userLoggedOut,
             this.userLoggedOutHandler
         );
+        EventEmitter.addListener(
+            CallQuotaEvents.UPDATED_QUOTA,
+            this.handleCallQuotaUpdateSuccess
+        );
+        EventEmitter.addListener(
+            CallQuotaEvents.UPD_QUOTA_ERROR,
+            this.handleCallQuotaUpdateFailure
+        );
+        this.getBalance();
     }
+
+    getBalance = async () => {
+        const message = new Message({
+            msg: {
+                callQuotaUsed: 0
+            },
+            messageType: MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA
+        });
+        message.setCreatedBy({ addedByBot: true });
+        var bgBotScreen = new BackgroundBotChat({
+            bot: SystemBot.backgroundTaskBot
+        });
+        await bgBotScreen.initialize();
+        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
+        this.setState({ updatingCallQuota: true, bgBotScreen });
+    };
+
+    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+        this.setState({
+            callQuota,
+            updatingCallQuota: false,
+            callQuotaUpdateError: false
+        });
+    };
+
+    handleCallQuotaUpdateFailure = ({ error }) => {
+        this.setState({
+            updatingCallQuota: false,
+            callQuotaUpdateError: true
+        });
+    };
 
     shouldComponentUpdate(nextProps) {
         return nextProps.appState.currentScene === I18n.t('Home');
@@ -570,6 +622,38 @@ class MainScreen extends React.Component {
         console.log('this is being called', firstTimer);
     }
 
+    renderCreditBar() {
+        return (
+            <View style={MainScreenStyles.creditBar}>
+                <Text style={MainScreenStyles.creditBarText}>
+                    Current balance:
+                    <Text style={MainScreenStyles.creditText}>
+                        {' $' +
+                            (this.state.updatingCallQuota
+                                ? '...'
+                                : this.state.callQuota)}
+                    </Text>
+                </Text>
+                <Text
+                    onPress={() => {
+                        if (!this.state.updatingCallQuota) {
+                            Actions.getCredit({
+                                currentBalance: this.state.callQuota
+                            });
+                        }
+                    }}
+                    style={
+                        this.state.updatingCallQuota
+                            ? MainScreenStyles.getCreditDisabled
+                            : MainScreenStyles.getCredit
+                    }
+                >
+                    Get credit
+                </Text>
+            </View>
+        );
+    }
+
     render() {
         // console.log('first timer ', this.state.firstTimer);
 
@@ -592,6 +676,7 @@ class MainScreen extends React.Component {
                                 : 'light-content'
                         }
                     /> */}
+                    {this.renderCreditBar()}
                     <View>
                         <NetworkStatusNotchBar />
                     </View>

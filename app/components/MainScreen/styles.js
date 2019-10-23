@@ -131,6 +131,31 @@ export const MainScreenStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 17
+    },
+    creditBar: {
+        backgroundColor: GlobalColors.white,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+        borderBottomWidth: 4
+    },
+    creditBarText: {
+        color: 'rgba(153, 153, 153, 1)',
+        fontSize: 16
+    },
+    creditText: {
+        color: 'rgba(74, 74, 74, 1)'
+    },
+    getCredit: {
+        color: GlobalColors.frontmLightBlue,
+        fontSize: 20
+    },
+    getCreditDisabled: {
+        color: GlobalColors.frontmLightBlueTransparent,
+        fontSize: 20
     }
 });
 

@@ -107,6 +107,16 @@ export default (stylesheet = StyleSheet.create({
         backgroundColor: GlobalColors.frontmLightBlue,
         opacity: 0.2
     },
+    buyButtonExecuted: {
+        alignSelf: 'center',
+        width: '75%',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10,
+        marginVertical: 20,
+        backgroundColor: GlobalColors.transparent
+    },
     buyButtonText: {
         fontSize: 18,
         color: GlobalColors.white

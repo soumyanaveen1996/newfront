@@ -40,7 +40,8 @@ import {
     ResourceTypes,
     Settings,
     PollingStrategyTypes,
-    Notification
+    Notification,
+    Accelerometer
 } from '../../lib/capability';
 import dce from '../../lib/dce';
 import I18n from '../../config/i18n/i18n';
@@ -630,8 +631,6 @@ class ChatBotScreen extends React.Component {
         return this.props.bot.botId;
     }
 
-    keyboardWillShow = () => {};
-
     keyboardDidShow = () => {
         if (Platform.OS === 'ios') {
             LayoutAnimation.configureNext(
@@ -640,8 +639,6 @@ class ChatBotScreen extends React.Component {
         }
         this.setState({ showOptions: false, showSlider: false });
     };
-
-    keyboardWillHide = () => {};
 
     keyboardDidHide = () => {
         this.setState({
@@ -1057,8 +1054,6 @@ class ChatBotScreen extends React.Component {
         });
         this.slider = null;
     };
-
-    onSliderOpen() {}
 
     onScrollToIndexFailed() {
         if (this.chatList) {
@@ -1592,7 +1587,12 @@ class ChatBotScreen extends React.Component {
             this.state.messages,
             this.botContext
         );
-        if (message.getMessageType() === 'background_event') {
+        if (
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_TYPE_SENSOR
+        ) {
             return getNext;
         }
         const isPromise = getNext instanceof Promise;
@@ -1900,8 +1900,6 @@ class ChatBotScreen extends React.Component {
         });
     }
 
-    async updateConversationContextId() {}
-
     resetConversation() {
         Keyboard.dismiss();
         // TODO: should the first parameter be message even?
@@ -1924,7 +1922,7 @@ class ChatBotScreen extends React.Component {
                     this.botContext
                 );
             })
-            .catch(() => {});
+            .catch();
     }
 
     addSelectedContactsToBot = selectedRows => {
@@ -2149,8 +2147,6 @@ class ChatBotScreen extends React.Component {
             return [];
         }
     }
-
-    onSliderResize() {}
 
     addBotMessage = message =>
         new Promise(resolve => {

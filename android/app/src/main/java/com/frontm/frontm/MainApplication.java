@@ -50,6 +50,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.transistorsoft.rnbackgroundgeolocation.*;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.sensors.RNSensorsPackage;
 //
 import java.util.Arrays;
 import java.util.List;
@@ -100,7 +101,7 @@ public class MainApplication extends Application implements ReactApplication {
               getApplicationContext(), BuildConfig.DEBUG),
           new RNCameraPackage(), new BackgroundTimerPackage(), new BackgroundTaskPackage(),
           new ReactNativeAudioPackage(), new AndroidOpenSettingsPackage(), new ActionSheetPackage(),
-          new SQLitePluginPackage(),new RCTMGLPackage(),
+          new SQLitePluginPackage(),new RCTMGLPackage(), new RNSensorsPackage(),
               new GRPCPackage()
       );
 

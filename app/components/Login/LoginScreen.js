@@ -172,6 +172,7 @@ export default class LoginScreen extends React.Component {
             DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
         });
         Store.dispatch(setFirstLogin(true));
+        AsyncStorage.setItem('signupStage', '');
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
         synchronizePhoneBook();
@@ -259,14 +260,26 @@ export default class LoginScreen extends React.Component {
             ? images.btn_pressed_facebook
             : images.btn_facebook;
 
-        return <Image source={imgSource} />;
+        return (
+            <Image
+                source={imgSource}
+                accessibilityLabel="F login"
+                testID="F-login"
+            />
+        );
     };
     renderGoogleBtn = () => {
         let imgSource = this.state.pressedGglBtn
             ? images.btn_pressed_google
             : images.btn_google;
 
-        return <Image source={imgSource} />;
+        return (
+            <Image
+                source={imgSource}
+                accessibilityLabel="G login"
+                testID="G-login"
+            />
+        );
     };
 
     displayEmailErrorMessege = () => {
@@ -425,12 +438,16 @@ export default class LoginScreen extends React.Component {
                         </Text>
                         <View style={styles.socialMediaButtons}>
                             <TouchableOpacity
+                                accessibilityLabel="F login"
+                                testID="F-login"
                                 onPress={() => this.loginWithFacebook()}
                             >
                                 {this.renderFacebookBtn()}
                             </TouchableOpacity>
 
                             <TouchableOpacity
+                                accessibilityLabel="G login"
+                                testID="G-login"
                                 onPress={() => this.loginWithGoogle()}
                             >
                                 {this.renderGoogleBtn()}
@@ -456,10 +473,16 @@ export default class LoginScreen extends React.Component {
                         ) : null}
                     </View>
                 </ScrollView>
-                <View style={swiperStyle.bottomBox}>
+                <View
+                    style={swiperStyle.bottomBox}
+                    accessibilityLabel="Signup"
+                    testID="Signup"
+                >
                     <TouchableOpacity
                         onPress={this.goToSignupPage}
                         style={{ alignItems: 'center', zIndex: 1 }}
+                        accessibilityLabel="Signup"
+                        testID="Signup"
                     >
                         <Text style={swiperStyle.goToLine}>
                             You don’t have an account?

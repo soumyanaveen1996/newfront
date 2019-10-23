@@ -133,7 +133,7 @@ class Bot {
                         }
                     } catch (e) {
                         if (__DEV__) {
-                            console.tron('Errro in eval', dep.name);
+                            console.tron('Error in eval', dep.name);
                         }
                         throw e;
                     }
