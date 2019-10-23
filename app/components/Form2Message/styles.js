@@ -316,12 +316,12 @@ export default (stylesheet = StyleSheet.create({
     imagePickerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: ScreenSize.w,
-        aspectRatio: 1.2
+        width: '100%',
+        height: ScreenSize.w * 0.8
     },
     imageContainer: {
         width: ScreenSize.w,
-        aspectRatio: 1.2,
+        height: ScreenSize.w * 0.8,
         position: 'absolute',
         left: -(ScreenSize.w * 0.1),
         backgroundColor: GlobalColors.textField,

@@ -1334,63 +1334,72 @@ class Form2 extends React.Component {
             this.state.answers[key].value
         }`;
         return (
-            <View style={styles.imagePickerContainer}>
-                <TouchableOpacity
-                    style={styles.imageContainer}
-                    disabled={
-                        // (this.state.answers[key].value ? true : false) ||
-                        this.state.disabled
-                    }
-                    onPress={() => {
-                        this.pickImage(fieldData, key);
-                    }}
-                >
-                    {this.state.answers[key].value ? (
-                        <Image
-                            key={imageUri}
-                            source={{ uri: imageUri }}
-                            style={styles.image}
-                            resizeMode="cover"
-                            onError={async () => {
-                                try {
-                                    await RNFS.mkdir(
-                                        Constants.IMAGES_DIRECTORY
-                                    );
-                                    const user = await Auth.getUser();
-                                    const headers =
-                                        utils.s3DownloadHeaders(
+            <View>
+                <View style={styles.imagePickerContainer}>
+                    <TouchableOpacity
+                        style={styles.imageContainer}
+                        disabled={
+                            // (this.state.answers[key].value ? true : false) ||
+                            this.state.disabled
+                        }
+                        onPress={() => {
+                            this.pickImage(fieldData, key);
+                        }}
+                    >
+                        {this.state.answers[key].value ? (
+                            <Image
+                                key={imageUri}
+                                source={{ uri: imageUri }}
+                                style={styles.image}
+                                resizeMode="cover"
+                                onError={async () => {
+                                    try {
+                                        await RNFS.mkdir(
+                                            Constants.IMAGES_DIRECTORY
+                                        );
+                                        const user = await Auth.getUser();
+                                        const headers =
+                                            utils.s3DownloadHeaders(
+                                                remoteUrl,
+                                                user
+                                            ) || undefined;
+                                        await AssetFetcher.downloadFile(
+                                            imageUri,
                                             remoteUrl,
-                                            user
-                                        ) || undefined;
-                                    await AssetFetcher.downloadFile(
-                                        imageUri,
-                                        remoteUrl,
-                                        headers,
-                                        true,
-                                        false
-                                    );
-                                    const exist = await AssetFetcher.existsOnDevice(
-                                        imageUri
-                                    );
-                                    if (exist) {
-                                        this.answers[key].value = '';
-                                        this.answers[key].valid = true;
-                                        this.setState(
-                                            {
-                                                answers: this.answers,
-                                                showInfoOfIndex: null
-                                            },
-                                            () => {
-                                                //forces rerender of the image
-                                                this.answers[key].value =
-                                                    fieldData.value;
-                                                this.setState({
+                                            headers,
+                                            true,
+                                            false
+                                        );
+                                        const exist = await AssetFetcher.existsOnDevice(
+                                            imageUri
+                                        );
+                                        if (exist) {
+                                            this.answers[key].value = '';
+                                            this.answers[key].valid = true;
+                                            this.setState(
+                                                {
                                                     answers: this.answers,
                                                     showInfoOfIndex: null
-                                                });
-                                            }
-                                        );
-                                    } else {
+                                                },
+                                                () => {
+                                                    //forces rerender of the image
+                                                    this.answers[key].value =
+                                                        fieldData.value;
+                                                    this.setState({
+                                                        answers: this.answers,
+                                                        showInfoOfIndex: null
+                                                    });
+                                                }
+                                            );
+                                        } else {
+                                            this.answers[key].value = '';
+                                            this.answers[key].valid = true;
+                                            this.setState({
+                                                answers: this.answers,
+                                                showInfoOfIndex: null
+                                            });
+                                        }
+                                    } catch (error) {
                                         this.answers[key].value = '';
                                         this.answers[key].valid = true;
                                         this.setState({
@@ -1398,23 +1407,23 @@ class Form2 extends React.Component {
                                             showInfoOfIndex: null
                                         });
                                     }
-                                } catch (error) {
-                                    this.answers[key].value = '';
-                                    this.answers[key].valid = true;
-                                    this.setState({
-                                        answers: this.answers,
-                                        showInfoOfIndex: null
-                                    });
-                                }
-                            }}
-                        />
-                    ) : (
-                        <View style={styles.imageFieldContainer}>
-                            {Icons.camera()}
-                        </View>
-                    )}
-                </TouchableOpacity>
-                {/* {this.state.answers[key].value ? (
+                                }}
+                            />
+                        ) : (
+                            <View style={styles.imageFieldContainer}>
+                                {Icons.camera()}
+                                <Text
+                                    style={{
+                                        color: GlobalColors.darkGray,
+                                        fontSize: 18
+                                    }}
+                                >
+                                    Upload a photo
+                                </Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                    {/* {this.state.answers[key].value ? (
                     <TouchableOpacity
                         style={styles.removeImage}
                         onPress={() => {
@@ -1437,6 +1446,33 @@ class Form2 extends React.Component {
                         <Text style={styles.removeImageText}>Remove</Text>
                     </TouchableOpacity>
                 ) : null} */}
+                </View>
+                {this.state.answers[key].value ? (
+                    <Text
+                        onPress={() => {
+                            this.answers[key].valid = true;
+                            this.answers[key].value = '';
+                            this.answers[key].filled = false;
+                            this.onMoveAction(
+                                key,
+                                this.answers[key].id,
+                                this.answers[key].value
+                            );
+                            this.setState({
+                                answers: this.answers,
+                                showInfoOfIndex: null
+                            });
+                        }}
+                        style={{
+                            alignSelf: 'center',
+                            fontSize: 16,
+                            marginTop: 8,
+                            color: GlobalColors.frontmLightBlue
+                        }}
+                    >
+                        Remove and select a new photo
+                    </Text>
+                ) : null}
             </View>
         );
     }
