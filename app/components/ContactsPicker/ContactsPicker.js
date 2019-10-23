@@ -35,7 +35,8 @@ import {
     Settings,
     PollingStrategyTypes,
     Auth,
-    Network
+    Network,
+    Accelerometer
 } from '../../lib/capability';
 import { Icons } from '../../config/icons';
 import { BackgroundImage } from '../BackgroundImage';
