@@ -12,9 +12,7 @@ export default class CenterComponent extends React.Component {
             <Image
                 accessibilityLabel="FrontM Logo"
                 testID="frontm-logo"
-                style={
-                    Platform.OS === 'android' ? { marginLeft: wp('29%') } : null
-                }
+                style={Platform.OS === 'android' ? { marginLeft: '47%' } : null}
                 source={images.frontm_header_logo2}
             />
         );
