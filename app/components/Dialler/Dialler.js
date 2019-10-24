@@ -748,7 +748,7 @@ export default class Dialler extends React.Component {
                             {'Call to Phone'}
                         </Text>
                         <Text style={Styles.callQuotaText}>
-                            {'Current Balance: '}
+                            {'Current balance: '}
                             <Text style={{ color: GlobalColors.black }}>$</Text>
                             <Text style={{ color: GlobalColors.black }}>
                                 {this.state.updatingCallQuota
@@ -768,7 +768,7 @@ export default class Dialler extends React.Component {
                                 fontSize: 18
                             }}
                         >
-                            Get Credit
+                            Get credit
                         </Text>
                     </TouchableOpacity>
                 </View>
