@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>5.5</string>
+	<string>5.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,7 +46,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>363</string>
+	<string>375</string>
 	<key>CodePushDeploymentKey</key>
 	<string>yvzJ1O25Y_eEGExdv2HTossDvImU033a46d5-4d9f-4e44-aef1-f3a3484814e3</string>
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
