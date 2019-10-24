@@ -762,7 +762,12 @@ export default class Dialler extends React.Component {
                         onPress={this.getCredit.bind(this)}
                         disabled={this.state.updatingCallQuota}
                     >
-                        <Text style={{ color: 'rgba(0,167,214,1)' }}>
+                        <Text
+                            style={{
+                                color: GlobalColors.frontmLightBlue,
+                                fontSize: 18
+                            }}
+                        >
                             Get Credit
                         </Text>
                     </TouchableOpacity>

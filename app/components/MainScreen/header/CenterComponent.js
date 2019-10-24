@@ -10,6 +10,8 @@ export default class CenterComponent extends React.Component {
     render() {
         return (
             <Image
+                accessibilityLabel="FrontM Logo"
+                testID="frontm-logo"
                 style={
                     Platform.OS === 'android' ? { marginLeft: wp('20%') } : null
                 }

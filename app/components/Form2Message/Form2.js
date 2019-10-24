@@ -1470,7 +1470,7 @@ class Form2 extends React.Component {
                             color: GlobalColors.frontmLightBlue
                         }}
                     >
-                        Remove and select a new photo
+                        Remove photo
                     </Text>
                 ) : null}
             </View>

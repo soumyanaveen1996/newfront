@@ -66,7 +66,12 @@ EventListener = [];
 class MainScreen extends React.Component {
     static navigationOptions({ navigation }) {
         let ret = {
-            headerTitle: <CenterComponent />
+            headerTitle: (
+                <CenterComponent
+                    accessibilityLabel="FrontM Logo"
+                    testID="frontm-logo"
+                />
+            )
         };
         // if (appConfig.app.hideFilter !== true) {
         //     ret.headerRight = (
@@ -80,8 +85,12 @@ class MainScreen extends React.Component {
         ret.headerLeft = (
             <TouchableOpacity
                 onPress={navigation.state.params.openFrontMAssistant}
+                accessibilityLabel="FrontM Assistant"
+                testID="frontm-assistant"
             >
                 <Image
+                    accessibilityLabel="FrontM Assistant"
+                    testID="frontm-assistant"
                     style={{
                         height: 35,
                         aspectRatio: 1,
@@ -631,7 +640,7 @@ class MainScreen extends React.Component {
                         {' $' +
                             (this.state.updatingCallQuota
                                 ? '...'
-                                : this.state.callQuota)}
+                                : this.state.callQuota.toFixed(2))}
                     </Text>
                 </Text>
                 <Text

@@ -707,7 +707,8 @@ class NewCallContacts extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        color: 'rgba(0,167,214,1)'
+                                        color: GlobalColors.frontmLightBlue,
+                                        fontSize: 18
                                     }}
                                 >
                                     Get Credit
