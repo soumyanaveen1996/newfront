@@ -605,23 +605,21 @@ class MainScreen extends React.Component {
 
     renderMain() {
         return (
-            <View style={{ height: '100%' }}>
-                <BotList
-                    ref={connectedBot => {
-                        this.botList = connectedBot
-                            ? connectedBot.getWrappedInstance()
-                            : null;
-                    }}
-                    onBack={this.onBack.bind(this)}
-                    bots={this.state.bots}
-                    setFavorite={this.setConversationFavorite}
-                    unsetFavorite={this.setConversationUnFavorite}
-                    searchString={this.state.searchString}
-                    onSearch={this.onSearch}
-                    setNoChats={this.setNoChats}
-                    updateTimeline={this.update}
-                />
-            </View>
+            <BotList
+                ref={connectedBot => {
+                    this.botList = connectedBot
+                        ? connectedBot.getWrappedInstance()
+                        : null;
+                }}
+                onBack={this.onBack.bind(this)}
+                bots={this.state.bots}
+                setFavorite={this.setConversationFavorite}
+                unsetFavorite={this.setConversationUnFavorite}
+                searchString={this.state.searchString}
+                onSearch={this.onSearch}
+                setNoChats={this.setNoChats}
+                updateTimeline={this.update}
+            />
         );
     }
 
@@ -668,6 +666,7 @@ class MainScreen extends React.Component {
 
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                {this.renderCreditBar()}
                 <BackgroundImage
                     style={{ display: 'flex', flexDirection: 'column' }}
                 >
@@ -685,7 +684,7 @@ class MainScreen extends React.Component {
                                 : 'light-content'
                         }
                     /> */}
-                    {this.renderCreditBar()}
+
                     <View>
                         <NetworkStatusNotchBar />
                     </View>
