@@ -8,6 +8,7 @@
 
 #import "SignInUser+frontm.h"
 #import "PhoneNumbers+frontm.h"
+#import "UserAddress+frontm.h"
 #import "DomainRoles+frontm.h"
 
 @implementation SignInUser (frontm)
@@ -24,6 +25,9 @@
              @"userId": self.userId,
              @"userName": self.userName,
              @"phoneNumbers": [self.phoneNumbers toJSON],
+             @"address":[self.address toJSON],
+             @"userCompanyName" : self.userCompanyName,
+             @"userTimezone" : self.userTimezone,
              @"hasPhoneNumbers": @(self.hasPhoneNumbers),
              @"domains": domains,
              @"archiveMessages": @(self.archiveMessages)

@@ -56,7 +56,7 @@ DEPENDENCIES:
   - TwilioVoice (~> 2.0.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - "!ProtoCompiler"
     - "!ProtoCompiler-gRPCPlugin"
     - BoringSSL-GRPC
@@ -87,4 +87,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d06b47926152bb54c25e55ffdc5aa41124c29c40
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4
