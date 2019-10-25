@@ -27,6 +27,84 @@ const stylesheet = StyleSheet.create({
         marginVertical: 3,
         paddingHorizontal: 15
     },
+    formContainer: Platform.select({
+        ios: {
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            marginBottom: 20,
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        android: {
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            marginBottom: 20,
+            alignItems: 'center',
+            justifyContent: 'center'
+        }
+    }),
+    placeholderText: {
+        fontWeight: '300',
+        color: 'rgba(74,74,74,1)',
+        width: 300,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        letterSpacing: 1,
+        lineHeight: 20,
+        fontSize: 14,
+        marginTop: 20
+    },
+    entryFields: Platform.select({
+        ios: {
+            position: 'relative',
+            width: 300,
+            backgroundColor: 'transparent'
+        },
+        android: {
+            width: 300,
+            backgroundColor: 'transparent'
+        }
+    }),
+
+    errorContainer: Platform.select({
+        ios: {
+            position: 'absolute',
+            minWidth: 180,
+            bottom: -30,
+            right: 0
+        },
+        android: {
+            minWidth: 180,
+            flex: 1,
+            alignItems: 'flex-end'
+        }
+    }),
+    userError: Platform.select({
+        ios: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            zIndex: 999999,
+            minWidth: 180,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        },
+        android: {
+            backgroundColor: 'rgba(229,69,59,1)',
+            width: 180,
+            borderTopRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            borderTopLeftRadius: 0,
+            alignItems: 'center'
+        }
+    }),
+    errorText: {
+        color: '#ffffff',
+        textAlign: 'center',
+        padding: 6
+    },
     searchIcon: {
         paddingHorizontal: 10
     },
@@ -665,7 +743,7 @@ const stylesheet = StyleSheet.create({
         alignItems: 'stretch'
     },
     labelContainer: {
-        flex: 2,
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',

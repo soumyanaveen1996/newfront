@@ -276,14 +276,11 @@ const stylesheet = StyleSheet.create({
     getCretidButton: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 7,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderRadius: 3,
-        borderColor: GlobalColors.sideButtons
+        paddingVertical: 5,
+        paddingHorizontal: 8
     },
     getCreditText: {
-        fontSize: 16,
+        fontSize: 18,
         color: GlobalColors.sideButtons
     },
     waitingConfirmation: {

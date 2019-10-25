@@ -421,10 +421,12 @@ export default StyleSheet.create({
             flexDirection: 'column',
             position: 'relative',
             width: wp('80%'),
+            alignItems: 'stretch',
             backgroundColor: 'transparent'
         },
         android: {
             width: wp('80%'),
+            alignItems: 'stretch',
             backgroundColor: 'transparent'
         }
     }),
@@ -442,7 +444,6 @@ export default StyleSheet.create({
 
     inputChannel: {
         height: 40,
-        width: 300,
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,
         color: 'rgba(0,0,0,0.8)',
@@ -455,8 +456,7 @@ export default StyleSheet.create({
     },
 
     inputChannelDescription: {
-        height: 80,
-        width: 300,
+        height: 90,
         justifyContent: 'flex-start',
         backgroundColor: 'rgba(244,244,244,1)',
         padding: 10,

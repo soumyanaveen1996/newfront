@@ -304,7 +304,10 @@ class FrontmAuth {
                 userName: result.data.user.userName,
                 domains: result.data.user.domainsArray,
                 archiveMessages: result.data.user.archiveMessages,
-                phoneNumbers: result.data.user.phoneNumbers
+                phoneNumbers: result.data.user.phoneNumbers,
+                userCompanyName: result.data.user.userCompanyName,
+                userTimezone: result.data.user.userTimezone,
+                address: result.data.user.address
             }
         };
     }

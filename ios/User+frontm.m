@@ -8,6 +8,7 @@
 
 #import "User+frontm.h"
 #import "PhoneNumbers+frontm.h"
+#import "UserAddress+frontm.h"
 #import "NSArray+Map.h"
 
 @implementation User (frontm)
@@ -17,7 +18,10 @@
            @"userName": self.userName,
            @"emailAddress": self.emailAddress,
            @"phoneNumbers": self.hasPhoneNumbers ? [self.phoneNumbers toJSON] : [NSNull null],
+           @"address": self.hasAddress ? [self.address toJSON] : [NSNull null],
            @"searchable": @(self.searchable),
+           @"userCompanyName" : self.userCompanyName,
+           @"userTimezone" : self.userTimezone,
            @"visible": @(self.visible),
            @"userId": self.userId,
            @"companyId": self.companyId

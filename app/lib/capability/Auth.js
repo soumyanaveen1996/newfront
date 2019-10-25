@@ -501,7 +501,9 @@ export default class Auth {
                     user.info.phoneNumbers = details.phoneNumbers || {};
                     user.info.searchable = details.searchable || false;
                     user.info.visible = details.visible || false;
-
+                    user.info.userCompanyName = details.userCompanyName || '';
+                    user.info.address = details.address || {};
+                    user.info.userTimezone = details.userTimezone || 'Etc/UTC';
                     // user.info.surname = details.surname || user.info.surname;
                     // user.info.givenName =
                     //     details.givenName || user.info.givenName;

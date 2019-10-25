@@ -14,12 +14,11 @@ public class UserAddressConverter {
         WritableMap map = Arguments.createMap();
         map.putString("addressLine1", address.getAddressLine1());
         map.putString("addressLine2", address.getAddressLine2());
-        map.putString("addressCity", address.getCity());
-        map.putString("addressCountry", address.getCountry());
-        map.putString("addressPostCode", address.getPostCode());
-        map.putString("addressState", address.getState());
+        map.putString("city", address.getCity());
+        map.putString("country", address.getCountry());
+        map.putString("postCode", address.getPostCode());
+        map.putString("state", address.getState());
 
         return map;
     }
 }
-

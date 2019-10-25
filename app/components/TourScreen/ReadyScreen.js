@@ -16,10 +16,18 @@ export default class ReadyScreen extends Component {
                         Let's start using FrontM.
                     </Text>
                     <TouchableOpacity
+                        accessibilityLabel="Let's start"
+                        testID="lets-start"
                         style={styles.buttonContainer}
                         onPress={this.props.action}
                     >
-                        <Text style={styles.buttonText}>Lets's start</Text>
+                        <Text
+                            accessibilityLabel="Let's start"
+                            testID="lets-start"
+                            style={styles.buttonText}
+                        >
+                            Lets's start
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>
