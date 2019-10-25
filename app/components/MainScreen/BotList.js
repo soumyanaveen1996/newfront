@@ -393,6 +393,82 @@ class BotList extends React.Component {
         }
     };
 
+    renderItem(chat, rowMap) {
+        const { item = null } = chat;
+        let rowItem = <View />;
+        // return <View />
+        if (item.elemType === 'search') {
+            rowItem = this.renderSearchBar({
+                onSearch: this.props.onSearch
+            });
+        }
+        if (item.elemType === 'buttons') {
+            rowItem = this.renderButtonBar();
+        }
+        if (item.elemType === 'header') {
+            rowItem = this.renderHeader({
+                headerText: item.headerText
+            });
+        }
+
+        if (item.elemType === 'favorite' || item.elemType === 'recents') {
+            rowItem =
+                item.type === 'bot' ? (
+                    <BotListItem
+                        bot={item.bot}
+                        chatData={item.chatData}
+                        onBack={this.props.onBack}
+                    />
+                ) : (
+                    <ConversationListItem
+                        conversation={item.bot}
+                        chatData={item.chatData}
+                        onBack={this.props.onBack}
+                    />
+                );
+        }
+        return rowItem;
+    }
+
+    renderHiddenItem(hdata, rowMap) {
+        const {
+            item: { type = null, elemType, bot = null, chatData = null, key }
+        } = hdata;
+
+        const Favorite =
+            type && (type === 'conversation' || type === 'bot') ? (
+                <FavoriteView
+                    conversationId={bot.conversationId}
+                    botId={bot.botId}
+                    onClick={
+                        elemType === 'favorite'
+                            ? (conversationId, botId, chatData) =>
+                                this.unsetFavorite(
+                                    key,
+                                    rowMap,
+                                    conversationId,
+                                    botId,
+                                    chatData,
+                                    type
+                                )
+                            : (conversationId, botId, chatData) =>
+                                this.setFavorite(
+                                    key,
+                                    rowMap,
+                                    conversationId,
+                                    botId,
+                                    chatData,
+                                    type
+                                )
+                    }
+                    chatData={chatData}
+                    chatType={type}
+                    unfavorite={elemType === 'favorite'}
+                />
+            ) : null;
+        return Favorite;
+    }
+
     render() {
         const { loaded, data, stopFaker } = this.state;
         const clipped = Platform.OS === 'ios' ? false : true;
@@ -400,7 +476,7 @@ class BotList extends React.Component {
         // const allFavs = favData.filter(chats => this.applyFilter(chats))
         const allData = data.filter(chats => this.applyFilter(chats));
         return (
-            <View style={BotListStyles.listViewStyle}>
+            <View style={{ height: '100%' }}>
                 <CustomPlaceholder
                     onReady={this.state.stopFaker}
                     animate="fade"
@@ -452,105 +528,13 @@ class BotList extends React.Component {
                                 ) : null
                             }
                             useFlatList
-                            style={{ height: '100%' }}
                             data={allData}
                             closeOnScroll={true}
                             closeOnRowPress={true}
                             closeOnRowBeginSwipe={true}
                             recalculateHiddenLayout={true}
-                            renderItem={(chat, rowMap) => {
-                                const { item = null, index, separators } = chat;
-                                let rowItem = <View />;
-                                // return <View />
-                                if (item.elemType === 'search') {
-                                    rowItem = this.renderSearchBar({
-                                        onSearch: this.props.onSearch
-                                    });
-                                }
-                                if (item.elemType === 'buttons') {
-                                    rowItem = this.renderButtonBar();
-                                }
-                                if (item.elemType === 'header') {
-                                    rowItem = this.renderHeader({
-                                        headerText: item.headerText
-                                    });
-                                }
-
-                                if (
-                                    item.elemType === 'favorite' ||
-                                    item.elemType === 'recents'
-                                ) {
-                                    rowItem =
-                                        item.type === 'bot' ? (
-                                            <BotListItem
-                                                bot={item.bot}
-                                                chatData={item.chatData}
-                                                onBack={this.props.onBack}
-                                            />
-                                        ) : (
-                                            <ConversationListItem
-                                                conversation={item.bot}
-                                                chatData={item.chatData}
-                                                onBack={this.props.onBack}
-                                            />
-                                        );
-                                }
-                                return rowItem;
-                            }}
-                            renderHiddenItem={(hdata, rowMap) => {
-                                const {
-                                    item: {
-                                        type = null,
-                                        elemType,
-                                        bot = null,
-                                        chatData = null,
-                                        key
-                                    }
-                                } = hdata;
-
-                                const Favorite =
-                                    type &&
-                                    (type === 'conversation' ||
-                                        type === 'bot') ? (
-                                            <FavoriteView
-                                                conversationId={bot.conversationId}
-                                                botId={bot.botId}
-                                                onClick={
-                                                    elemType === 'favorite'
-                                                        ? (
-                                                            conversationId,
-                                                            botId,
-                                                            chatData
-                                                        ) =>
-                                                            this.unsetFavorite(
-                                                                key,
-                                                                rowMap,
-                                                                conversationId,
-                                                                botId,
-                                                                chatData,
-                                                                type
-                                                            )
-                                                        : (
-                                                            conversationId,
-                                                            botId,
-                                                            chatData
-                                                        ) =>
-                                                            this.setFavorite(
-                                                                key,
-                                                                rowMap,
-                                                                conversationId,
-                                                                botId,
-                                                                chatData,
-                                                                type
-                                                            )
-                                                }
-                                                chatData={chatData}
-                                                chatType={type}
-                                                unfavorite={elemType === 'favorite'}
-                                            />
-                                        ) : null;
-                                return Favorite;
-                            }}
+                            renderItem={this.renderItem.bind(this)}
+                            renderHiddenItem={this.renderHiddenItem.bind(this)}
                             leftOpenValue={hiddenItemWidth}
                             previewRowKey={'0'}
                             previewOpenValue={-40}

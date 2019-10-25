@@ -876,7 +876,7 @@ class NewCallContacts extends React.Component {
                         </View>
                         <View style={styles.balanceContainer}>
                             <Text style={styles.balanceText}>
-                                Current Balance:{' '}
+                                Current balance:{' '}
                                 <Text style={{ color: 'black' }}>
                                     {' '}
                                     ${this.state.callQuota.toFixed(2)}

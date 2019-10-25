@@ -164,7 +164,6 @@ export const BotListStyles = {
         flexGrow: 1,
         backgroundColor: GlobalColors.background
     },
-    listViewStyle: {},
     separator: {
         height: 0,
         backgroundColor: GlobalColors.background

@@ -690,7 +690,7 @@ class NewCallContacts extends React.Component {
                             }}
                         >
                             <Text style={{ marginLeft: 10 }}>
-                                {' Current Balance: '}
+                                {' Current balance: '}
                                 <Text>
                                     {this.state.updatingCallQuota
                                         ? '...'
@@ -707,10 +707,11 @@ class NewCallContacts extends React.Component {
                             >
                                 <Text
                                     style={{
-                                        color: 'rgba(0,167,214,1)'
+                                        color: GlobalColors.frontmLightBlue,
+                                        fontSize: 18
                                     }}
                                 >
-                                    Get Credit
+                                    Get credit
                                 </Text>
                             </TouchableOpacity>
                         </View>

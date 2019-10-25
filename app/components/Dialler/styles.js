@@ -273,9 +273,6 @@ const Styles = StyleSheet.create({
         opacity: 0.5
     },
     callQuotaBuy: {
-        borderWidth: 1,
-        borderColor: 'rgba(0,167,214,1)',
-        borderRadius: 6,
         height: hp('4%'),
         display: 'flex',
         alignItems: 'center',
