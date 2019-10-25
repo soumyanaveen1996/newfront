@@ -22,20 +22,18 @@ public class GetArchivedMessagesContentConverter {
         map.putString("createdBy", message.getCreatedBy());
 
         try {
-            JSONObject json = new JSONObject(message.getContent().toStringUtf8());
-            map.putMap("content", JsonConvert.jsonToReact(json));
+            JSONArray json = new JSONArray(message.getContent().toStringUtf8());
+            map.putArray("content", JsonConvert.jsonToReact(json));
         } catch (JSONException e) {
             Log.d("GRPC:::Error", e.getStackTrace().toString());
             return null;
         }
-
         try {
             JSONObject json = new JSONObject(message.getOptions().toStringUtf8());
             map.putMap("options", JsonConvert.jsonToReact(json));
         } catch (JSONException e) {
-            Log.d("GRPC:::Error", e.getStackTrace().toString());
+            return map;
         }
-
         return map;
     }
 
