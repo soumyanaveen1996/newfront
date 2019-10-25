@@ -2,8 +2,7 @@ package com.frontm.frontm.proto;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.security.auth.callback.Callback;
-
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
