@@ -69,6 +69,7 @@ import { NativeModules } from 'react-native';
 import ImageCache from '../../lib/image_cache';
 import utils from '../../lib/utils';
 import NetworkButton from '../Header/NetworkButton';
+import ContactsEvents from '../../lib/events/Contacts';
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
 
 class ContactsPicker extends React.Component {
@@ -158,6 +159,9 @@ class ContactsPicker extends React.Component {
             AuthEvents.tabSelected,
             this.tabSelected.bind(this)
         );
+        EventEmitter.addListener(ContactsEvents.contactsRefreshed, async () => {
+            this.updateList();
+        });
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
             inviteUser: this.inviteUser.bind(this)
