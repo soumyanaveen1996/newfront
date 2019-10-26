@@ -354,15 +354,10 @@ export const Icons = {
     square: icon('md-square', 'ionicon', 28, GlobalColors.red),
     //FORM
     time: icon('ios-time-outline', 'ionicon', 20, GlobalColors.frontmLightBlue),
-    toolbarSave: icon(
-        'download',
-        'antdesign',
-        30,
-        GlobalColors.frontmLightBlue
-    ),
+    toolbarSave: icon('download', 'feather', 30, GlobalColors.frontmLightBlue),
     toolbarSaveDisbled: icon(
         'download',
-        'antdesign',
+        'feather',
         30,
         GlobalColors.frontmLightBlueTransparent
     ),

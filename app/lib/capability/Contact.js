@@ -21,6 +21,8 @@ import {
     GoogleAnalyticsEventsCategories,
     GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
+import EventEmitter from '../events';
+import ContactsEvents from '../events/Contacts';
 
 export const ContactType = {
     FRONTM: 'frontm',
@@ -646,10 +648,13 @@ export default class Contact {
                             allContacts
                         );
 
-                        Contact.saveContacts(allContacts);
-                        Store.dispatch(completeContactsLoad(true));
-                        return resolve();
+                        return Contact.saveContacts(allContacts);
                     }
+                })
+                .then(() => {
+                    EventEmitter.emit(ContactsEvents.contactsRefreshed);
+                    Store.dispatch(completeContactsLoad(true));
+                    return resolve();
                 })
                 .catch(error => {
                     console.log('Contacts Load', error);

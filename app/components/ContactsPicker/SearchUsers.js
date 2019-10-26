@@ -127,11 +127,11 @@ export default class SearchUsers extends React.Component {
             Contact.refreshContacts();
             this.setState({ loading: false });
             Actions.pop();
-            setTimeout(() => {
-                Actions.refresh({
-                    key: Math.random()
-                });
-            }, 100);
+            // setTimeout(() => {
+            //     Actions.refresh({
+            //         key: Math.random()
+            //     });
+            // }, 100);
         });
     }
 
