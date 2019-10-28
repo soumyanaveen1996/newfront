@@ -4,7 +4,6 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.frontm.auth.proto.SignInUser;
-import com.frontm.user.proto.User;
 
 public class SignInUserConverter {
 
@@ -12,12 +11,17 @@ public class SignInUserConverter {
         WritableMap map = Arguments.createMap();
         map.putString("userName", user.getUserName());
         map.putString("emailAddress", user.getEmailAddress());
+        map.putString("userTimezone", user.getUserTimezone());
+        map.putString("userCompanyName", user.getUserCompanyName());
         map.putString("userId", user.getUserId());
         map.putBoolean("visible", user.getVisible());
         map.putBoolean("searchable", user.getSearchable());
         map.putBoolean("archiveMessages", user.getArchiveMessages());
         if (user.hasPhoneNumbers()) {
             map.putMap("phoneNumbers", new PhoneNumbersConverter().toJson(user.getPhoneNumbers()));
+        }
+        if (user.hasAddress()) {
+            map.putMap("address", new UserAddressConverter().toJson(user.getAddress()));
         }
 
         if (user.getDomainsCount() > 0) {

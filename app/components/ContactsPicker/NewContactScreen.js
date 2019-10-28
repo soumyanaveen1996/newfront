@@ -163,7 +163,7 @@ class NewContactScreen extends React.Component {
         this.setState({ modalVisible: value });
     }
 
-    infoRender = (type, myInfoData) => {
+    infoRender = type => {
         let icon;
         if (type === 'land' || type === 'mobile') {
             icon = (

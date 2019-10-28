@@ -19,6 +19,7 @@
 #import "SubscribeDomainResponse+frontm.h"
 #import "ContactsResponse+frontm.h"
 #import "PhoneNumbers+frontm.h"
+#import "UserAddress+frontm.h"
 #import "CallHistoryResponse+frontm.h"
 #import "TopupBalanceResponse+frontm.h"
 #import "DeviceBoolResponse+frontm.h"
@@ -112,6 +113,8 @@ RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)s
   User *user = [User new];
   user.userName = params[@"userName"];
   user.emailAddress = params[@"emailAddress"];
+  user.userCompanyName = params[@"userCompanyName"];
+  user.userTimezone = params[@"userTimezone"];
   user.searchable = [params[@"searchable"] boolValue];
   user.visible = [params[@"visible"] boolValue];
   if (params[@"phoneNumbers"] && ![NSNull isEqual:params[@"phoneNumbers"]]) {
@@ -119,6 +122,14 @@ RCT_REMAP_METHOD(updateUserProfile, updateUserProfileWithSessionId:(NSString *)s
     user.phoneNumbers.satellite = params[@"phoneNumbers"][@"satellite"];
     user.phoneNumbers.land = params[@"phoneNumbers"][@"land"];
     user.phoneNumbers.mobile = params[@"phoneNumbers"][@"mobile"];
+  }
+  if (params[@"address"] && ![NSNull isEqual:params[@"address"]]) {
+    user.address = [UserAddress new];
+    user.address.addressLine1 = params[@"address"][@"addressLine1"];
+    user.address.city = params[@"address"][@"city"];
+    user.address.state = params[@"address"][@"state"];
+    user.address.postCode = params[@"address"][@"postCode"];
+    user.address.country = params[@"address"][@"country"];
   }
 
   GRPCProtoCall *call = [self.serviceClient
