@@ -4,7 +4,7 @@ import { Auth, Notification } from '../lib/capability';
 
 import { NetworkPoller } from '../lib/network';
 import { TwilioVoIP } from '../lib/twilio';
-import { Platform } from 'react-native';
+import { Platform, AsyncStorage } from 'react-native';
 import Mapbox from '@react-native-mapbox-gl/maps';
 import EventEmitter, { AuthEvents } from '../lib/events';
 import { BackgroundBotChat } from '../lib/BackgroundTask';
@@ -18,6 +18,8 @@ export default class AfterLogin {
             Mapbox.setAccessToken(
                 'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
             );
+            AsyncStorage.setItem('signupStage', 'done');
+            AsyncStorage.setItem('userEmail', '');
             AfterLogin.initializeBackgroundTask();
             ContactsCache.init();
             MessageCounter.init();
