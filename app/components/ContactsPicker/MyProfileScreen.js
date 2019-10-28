@@ -40,10 +40,10 @@ import utils from '../../lib/utils';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import RNFS from 'react-native-fs';
 import moment from 'moment-timezone';
-import TimeZonePickerModal from './TimeZonePickerModel';
 import countries from '../../lib/utils/ListOfCountries';
-import CountryModal from './CountryModal';
 import GlobalColors from '../../config/styles';
+import Modal from 'react-native-modal';
+import form2Styles from '../Form2Message/styles';
 
 const R = require('ramda');
 
@@ -88,48 +88,37 @@ class MyProfileScreen extends React.Component {
             state: '',
             addressLine1: '',
             city: '',
-            country: 'IND',
+            country: '',
             userTimezone: 'Etc/UTC',
-            selectedTimezoneObj: {},
-            selectedCountryObj: {},
+            iosCountry: 'Select country',
+            iosUserTimezone: ' (GMT+00:00)Etc/UTC',
             searchable: true,
             visible: false,
             inviteModalVisible: false,
             currentIndex: null,
             loading: false,
-            modalVisible: false,
-            modalVisibleCountry: false,
-            timeZones: [],
-            errorMsgCity: false
+            errorMsgCity: false,
+            pickerModal: null
         };
         this.mounted = true;
         this.inputs = {};
+        this.timeZones = [];
     }
 
     componentDidMount() {
+        this.fetchTimeZone();
         this.gettingUserProfile();
     }
 
     fetchTimeZone = () => {
-        let timeZones = moment.tz.names();
-        let offsetTmz = [];
-        for (let i in timeZones) {
+        let zones = moment.tz.names();
+        for (let i in zones) {
             let obj = {
-                value: timeZones[i],
-                placeholder:
-                    ' (GMT' +
-                    moment.tz(timeZones[i]).format('Z') +
-                    ')' +
-                    timeZones[i]
+                code: zones[i],
+                name: ' (GMT' + moment.tz(zones[i]).format('Z') + ')' + zones[i]
             };
-            offsetTmz.push(obj);
+            this.timeZones.push(obj);
         }
-
-        timeZones.forEach((elem, index) => {
-            if (this.state.userTimezone === elem.value) {
-                this.setState({ selectedTimezoneObj: elem });
-            }
-        });
     };
 
     gettingUserProfile = () => {
@@ -144,68 +133,6 @@ class MyProfileScreen extends React.Component {
                     '.png';
 
                 const info = { ...userDetails.info };
-
-                let timeZones = moment.tz.names();
-                let offsetTmz = [];
-                for (let i in timeZones) {
-                    let obj = {
-                        value: timeZones[i],
-                        placeholder:
-                            ' (GMT' +
-                            moment.tz(timeZones[i]).format('Z') +
-                            ')' +
-                            timeZones[i]
-                    };
-
-                    if (!info.userTimezone) {
-                        if (timeZones[i] === 'Etc/UTC') {
-                            this.setState({
-                                selectedTimezoneObj: obj
-                            });
-                        }
-                    } else {
-                        if (info.userTimezone === timeZones[i]) {
-                            this.setState({
-                                selectedTimezoneObj: obj
-                            });
-                        }
-                    }
-
-                    offsetTmz.push(obj);
-                }
-
-                // offsetTmz.forEach((elem, index) => {
-                //     if (info.userTimezone === elem.value) {
-                //         this.setState(
-                //             {
-                //                 selectedTimezoneObj: elem
-                //             }
-                //         );
-                //     }
-                // });
-                // const emailArray = [];
-                // let phoneArray = [];
-                // if (info.phoneNumbers) {
-                //     if (Array.isArray(info.phoneNumbers)) {
-                //         phoneArray = [...info.phoneNumbers];
-                //     } else {
-                //         let phoneObject = { ...info.phoneNumbers };
-
-                //         for (var key in phoneObject) {
-                //             let tempObj = {};
-                //             if (phoneObject.hasOwnProperty(key)) {
-                //                 const keyName = key;
-                //                 tempObj = {
-                //                     [keyName]: phoneObject[key]
-                //                 };
-                //             }
-
-                //             phoneArray.push(tempObj);
-                //         }
-                //     }
-                // }
-
-                // emailArray.push(info.emailAddress);
 
                 if (userDetails.info && userDetails.info.phoneNumbers) {
                     const mobileNumber = userDetails.info.phoneNumbers.mobile;
@@ -273,6 +200,20 @@ class MyProfileScreen extends React.Component {
                     this.setState({ phoneNumbers: this.state.phoneNumbers });
                 }
                 if (this.mounted) {
+                    let iosCountry;
+                    let iosUserTimezone;
+                    if (Platform.OS === 'ios') {
+                        if (info.address && info.address.country) {
+                            iosCountry = countries.find(country => {
+                                return country.code === info.address.country;
+                            }).name;
+                        }
+                        if (info.userTimezone) {
+                            iosUserTimezone = this.timeZones.find(zone => {
+                                return zone.code === info.userTimezone;
+                            }).name;
+                        }
+                    }
                     this.setState({
                         myName: info.userName,
                         emailAddress: info.emailAddress,
@@ -286,25 +227,10 @@ class MyProfileScreen extends React.Component {
                         state: (info.address && info.address.state) || '',
                         postCode: (info.address && info.address.postCode) || '',
                         country: (info.address && info.address.country) || '',
-                        userTimezone: info.userTimezone || 'Etc/UTC'
+                        userTimezone: info.userTimezone || 'Etc/UTC',
+                        iosCountry: iosCountry,
+                        iosUserTimezone: iosUserTimezone
                     });
-                    if (
-                        (info.address && !info.address.country) ||
-                        !info.address
-                    ) {
-                        this.setState({
-                            selectedCountryObj: {
-                                code: null,
-                                name: 'SELECT COUNTRY'
-                            }
-                        });
-                    } else {
-                        countries.forEach(elem => {
-                            if (info.address.country === elem.code) {
-                                this.setState({ selectedCountryObj: elem });
-                            }
-                        });
-                    }
                 }
             })
             .catch(err => {
@@ -825,13 +751,6 @@ class MyProfileScreen extends React.Component {
         this.inputs[id].focus();
     };
 
-    setModalVisible(value) {
-        this.setState({ modalVisible: value });
-    }
-    setModalVisibleCountry(value) {
-        this.setState({ modalVisibleCountry: value });
-    }
-
     displayCityErrorMessege = () => {
         if (
             !this.state.city &&
@@ -965,60 +884,130 @@ class MyProfileScreen extends React.Component {
                 </View>
                 <View style={styles.entryFields}>
                     <Text style={styles.placeholderText}> Country </Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.setState({ modalVisibleCountry: true });
-                        }}
-                        style={styles.input}
-                    >
-                        <Text
-                            style={{
-                                color:
-                                    this.state.selectedCountryObj.name ===
-                                    'SELECT COUNTRY'
-                                        ? 'rgba(155,155,155,1)'
-                                        : '#666666'
+                    {Platform.OS === 'ios' ? (
+                        <TouchableOpacity
+                            style={styles.input}
+                            onPress={() => {
+                                this.setState({
+                                    pickerModal: {
+                                        list: countries,
+                                        isCountry: true,
+                                        onSelectedValue: (value, index) => {
+                                            this.setState({
+                                                country: value,
+                                                iosCountry:
+                                                    countries[index].name
+                                            });
+                                        }
+                                    }
+                                });
                             }}
                         >
-                            {this.state.selectedCountryObj.name}
-                        </Text>
-                    </TouchableOpacity>
+                            <Text>{this.state.iosCountry}</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <Picker
+                            selectedValue={this.state.country}
+                            mode="dialog"
+                            style={styles.input}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({ country: itemValue })
+                            }
+                        >
+                            {countries.map(country => {
+                                return (
+                                    <Picker.Item
+                                        label={country.name}
+                                        value={country.code}
+                                    />
+                                );
+                            })}
+                        </Picker>
+                    )}
                 </View>
                 <View style={styles.entryFields}>
                     <Text style={styles.placeholderText}> Timezone </Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.setState({ modalVisible: true });
-                        }}
-                        style={styles.input}
-                    >
-                        <Text style={{ color: '#666666' }}>
-                            {this.state.selectedTimezoneObj.placeholder}
-                        </Text>
-                    </TouchableOpacity>
+                    {Platform.OS === 'ios' ? (
+                        <TouchableOpacity
+                            style={styles.input}
+                            onPress={() => {
+                                this.setState({
+                                    pickerModal: {
+                                        list: this.timeZones,
+                                        isCountry: false,
+                                        onSelectedValue: (value, index) =>
+                                            this.setState({
+                                                userTimezone: value,
+                                                iosUserTimezone: this.timeZones[
+                                                    index
+                                                ].name
+                                            })
+                                    }
+                                });
+                            }}
+                        >
+                            <Text>{this.state.iosUserTimezone}</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <Picker
+                            selectedValue={this.state.userTimezone}
+                            mode="dialog"
+                            style={styles.input}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({ userTimezone: itemValue })
+                            }
+                        >
+                            {this.timeZones.map(zone => {
+                                return (
+                                    <Picker.Item
+                                        label={zone.name}
+                                        value={zone.code}
+                                    />
+                                );
+                            })}
+                        </Picker>
+                    )}
                 </View>
-                <CountryModal
-                    isVisible={this.state.modalVisibleCountry}
-                    setVisible={this.setModalVisibleCountry.bind(this)}
-                    selectedCountry={this.state.country}
-                    selectingCountry={this.selectCountry}
-                />
-                <TimeZonePickerModal
-                    isVisible={this.state.modalVisible}
-                    setVisible={this.setModalVisible.bind(this)}
-                    selectedTimezone={this.state.userTimezone}
-                    selectingTimeZone={this.selectTimeZone}
-                />
             </View>
         );
     }
 
-    selectTimeZone = data => {
-        this.setState({ userTimezone: data.value, selectedTimezoneObj: data });
-    };
-    selectCountry = data => {
-        this.setState({ country: data.code, selectedCountryObj: data });
-    };
+    renderIOSPickerModal() {
+        const pickerModal = this.state.pickerModal || { list: [] };
+        return (
+            <Modal
+                isVisible={this.state.pickerModal}
+                onBackdropPress={() => {
+                    this.setState({
+                        pickerModal: null
+                    });
+                }}
+                style={form2Styles.dateModalIOS}
+                backdropOpacity={0.1}
+            >
+                <Picker
+                    selectedValue={
+                        pickerModal.isCountry
+                            ? this.state.country
+                            : this.state.userTimezone
+                    }
+                    style={{ backgroundColor: GlobalColors.white }}
+                    onValueChange={(itemValue, itemIndex) => {
+                        pickerModal.onSelectedValue(itemValue, itemIndex);
+                    }}
+                >
+                    {pickerModal.list.map(value => {
+                        return (
+                            <Picker.Item
+                                label={value.name}
+                                value={value.code}
+                            />
+                        );
+                    })}
+                </Picker>
+            </Modal>
+        );
+    }
 
     onChangeCompany = text => {
         this.setState({ userCompanyName: text });
@@ -1262,6 +1251,9 @@ class MyProfileScreen extends React.Component {
                             {this.renderAddress()}
                             {this.renderBottomSettings()}
                             {this.renderBottomButtons()}
+                            {Platform.OS === 'ios'
+                                ? this.renderIOSPickerModal()
+                                : null}
                         </View>
                     </ScrollView>
                     {this.renderToast()}
