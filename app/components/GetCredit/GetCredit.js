@@ -47,6 +47,10 @@ export default class GetCredit extends React.Component {
         this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
             this.purchaseHandler.bind(this)
         );
+        this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
+            console.warn('purchaseErrorListener', error);
+            this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+        });
         EventEmitter.addListener(
             CallQuotaEvents.UPDATED_QUOTA,
             this.onBalanceUpdated.bind(this)
@@ -55,13 +59,9 @@ export default class GetCredit extends React.Component {
             CallQuotaEvents.UPD_QUOTA_ERROR,
             ({ error }) => {
                 this.setState({ updatingBalance: false });
-                this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+                this.refs.toast.show(error.message, DURATION.LENGTH_SHORT);
             }
         );
-        this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
-            console.warn('purchaseErrorListener', error);
-            this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
-        });
     }
 
     componentDidUpdate(prevProps) {
