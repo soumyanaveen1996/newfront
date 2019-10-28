@@ -146,6 +146,11 @@ export default class LoginScreen extends React.Component {
                     },
                     () => {
                         this.updateStage();
+                        Actions.confirmationScreen({
+                            type: ActionConst.REPLACE,
+                            userEmail: this.state.email,
+                            password: this.state.password
+                        });
                     }
                 );
             });
@@ -172,7 +177,6 @@ export default class LoginScreen extends React.Component {
             DefaultPreference.set('CONTACTS_BOT', ContactsBOT);
         });
         Store.dispatch(setFirstLogin(true));
-        AsyncStorage.setItem('signupStage', '');
         AfterLogin.executeAfterLogin();
         synchronizeUserData();
         synchronizePhoneBook();
