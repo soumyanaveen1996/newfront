@@ -155,7 +155,7 @@ export default class CountryModal extends React.Component {
                             height: 45
                         }}
                     >
-                        All Timezones{' '}
+                        Country
                     </Text>
 
                     <ScrollView

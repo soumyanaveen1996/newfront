@@ -43,6 +43,7 @@ import moment from 'moment-timezone';
 import TimeZonePickerModal from './TimeZonePickerModel';
 import countries from '../../lib/utils/ListOfCountries';
 import CountryModal from './CountryModal';
+import GlobalColors from '../../config/styles';
 
 const R = require('ramda');
 
@@ -970,7 +971,15 @@ class MyProfileScreen extends React.Component {
                         }}
                         style={styles.input}
                     >
-                        <Text style={{ color: '#666666' }}>
+                        <Text
+                            style={{
+                                color:
+                                    this.state.selectedCountryObj.name ===
+                                    'SELECT COUNTRY'
+                                        ? 'rgba(155,155,155,1)'
+                                        : '#666666'
+                            }}
+                        >
                             {this.state.selectedCountryObj.name}
                         </Text>
                     </TouchableOpacity>

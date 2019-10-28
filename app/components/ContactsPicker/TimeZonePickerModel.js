@@ -178,7 +178,7 @@ export default class TimeZonePickerModal extends React.Component {
                             height: 45
                         }}
                     >
-                        All Timezones{' '}
+                        All Timezones
                     </Text>
 
                     <ScrollView
