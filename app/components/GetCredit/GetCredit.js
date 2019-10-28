@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { Actions } from 'react-native-router-flux';
-import EventEmitter from '../../lib/events';
+import EventEmitter, { CallQuotaEvents } from '../../lib/events';
 import { InAppPurchase } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
@@ -46,6 +46,17 @@ export default class GetCredit extends React.Component {
         RNIap.consumeAllItemsAndroid();
         this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
             this.purchaseHandler.bind(this)
+        );
+        EventEmitter.addListener(
+            CallQuotaEvents.UPDATED_QUOTA,
+            this.onBalanceUpdated.bind(this)
+        );
+        EventEmitter.addListener(
+            CallQuotaEvents.UPD_QUOTA_ERROR,
+            ({ error }) => {
+                this.setState({ updatingBalance: false });
+                this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+            }
         );
         this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
             console.warn('purchaseErrorListener', error);
@@ -77,6 +88,20 @@ export default class GetCredit extends React.Component {
             this.purchaseErrorSubscription.remove();
             this.purchaseErrorSubscription = null;
         }
+    }
+
+    onBalanceUpdated({ callQuota }) {
+        this.props.currentBalance = callQuota.toFixed(2);
+        this.setState(
+            {
+                updatingBalance: false,
+                purchaseExecuted: true,
+                selectedCredit: undefined
+            },
+            () => {
+                this.close();
+            }
+        );
     }
 
     purchaseHandler(purchase) {
