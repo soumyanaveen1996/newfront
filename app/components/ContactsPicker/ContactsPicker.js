@@ -170,6 +170,7 @@ class ContactsPicker extends React.Component {
         if (this.props.appState.contactsLoaded) {
             this.refresh();
         }
+        this.mounted = true;
     }
 
     componentDidUpdate(prevProps) {
@@ -497,7 +498,8 @@ class ContactsPicker extends React.Component {
         // console.log('go to profile page using ', this.state.userInfo);
         Actions.myProfileScreen({
             userId: this.state.userInfo.userId,
-            updateContactScreen: this.updateList.bind(this)
+            updateContactScreen: this.updateList.bind(this),
+            updateMyProfile: this.gettingUserDetails.bind(this)
         });
     };
 

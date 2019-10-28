@@ -351,6 +351,7 @@ class MyProfileScreen extends React.Component {
                     .then(data => {
                         // console.log('saved data ', data);
                         this.setState({ loading: false });
+                        this.props.updateMyProfile();
                         setTimeout(() => {
                             this.showAlert('Profile updated');
                         }, 200);
