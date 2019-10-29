@@ -19,6 +19,9 @@ import Permissions from 'react-native-permissions';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { MessageCounter } from '../../lib/MessageCounter';
 import I18n from '../../config/i18n/i18n';
+import Constants from '../../config/constants';
+import RNFS from 'react-native-fs';
+import GlobalColors from '../../config/styles';
 
 export default class ChatInputBar extends React.Component {
     constructor(props) {
@@ -141,9 +144,10 @@ export default class ChatInputBar extends React.Component {
         const options = { ...commonOptions, ...platformOptions };
         // Generate file name using current time
         // Path will be like: /data/user/0/org.frontm.app/files/FrontM_1514101359570.3gp in Android
+        RNFS.mkdir(Constants.AUDIO_DIRECTORY);
         const filePath =
             AudioUtils.DocumentDirectoryPath +
-            '/FrontM_' +
+            '/audio/FrontM_' +
             Date.now() +
             options.extension;
         try {
@@ -325,13 +329,18 @@ export default class ChatInputBar extends React.Component {
             }
             return (
                 <View style={{ alignItems: 'center' }}>
-                    <View style={chatBarStyle(this.props.network)}>
+                    <View
+                        style={[
+                            chatBarStyle(this.props.network),
+                            { paddingVertical: 8 }
+                        ]}
+                    >
                         <TouchableOpacity
                             onPress={() => this._cancelRecording()}
                             style={styles.cancelButton}
                         >
                             {Icons.cancelRecording({
-                                style: styles.cancelRecordingIcon
+                                color: GlobalColors.frontmLightBlue
                             })}
                         </TouchableOpacity>
                         <View style={styles.recordingTimeContainer}>

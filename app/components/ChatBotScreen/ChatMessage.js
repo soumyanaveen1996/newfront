@@ -303,7 +303,13 @@ export default class ChatMessage extends React.Component {
         };
         const component = (
             <View style={audioStyle}>
-                <AudioPlayer audioSource={{ uri: url, headers: headers }} />
+                <AudioPlayer
+                    audioSource={{
+                        fileName: remoteFileName,
+                        uri: url,
+                        headers: headers
+                    }}
+                />
             </View>
         );
 

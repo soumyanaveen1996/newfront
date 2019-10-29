@@ -287,6 +287,10 @@ class ChatBotScreen extends React.Component {
 
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
+            if (messages.length < pageSize) {
+                await this.loadOldMessagesFromServer();
+                messages = await this.loadMessages();
+            }
             // Find the first non-read message and use scrollToIndex.
             let index = 0;
             for (let i = 0; i < messages.length; i++) {
@@ -307,15 +311,15 @@ class ChatBotScreen extends React.Component {
                 return;
             }
 
-            let serverMessages = [];
-            if (messages.length < pageSize) {
-                serverMessages = await this.loadOldMessagesFromServer();
-            }
-
-            let allMessages = R.uniqWith(R.eqProps('key'), [
-                ...serverMessages,
-                ...messages
-            ]);
+            // let serverMessages = [];
+            // if (messages.length < pageSize) {
+            //     serverMessages = await this.loadOldMessagesFromServer();
+            // }
+            let allMessages = messages;
+            // let allMessages = R.uniqWith(R.eqProps('key'), [
+            //     ...serverMessages,
+            //     ...messages
+            // ]);
             allMessages = allMessages.slice(0, pageSize);
             // 4. Update the state of the bot with the messages we have
             this.setState(
@@ -1714,26 +1718,22 @@ class ChatBotScreen extends React.Component {
     };
 
     sendAudio = async audioURI => {
-        let rename = message.getMessageId() + '.aac';
-        const toUri = await Utils.copyFileAsync(
-            audioURI,
-            Constants.AUDIO_DIRECTORY,
-            rename
-        );
-
-        // TODO(amal): Upload Audio file
+        console.log('>>>>>>audioUri', audioURI);
         let message = new Message();
+        let rename = message.getMessageId() + '.aac';
         message.setCreatedBy(this.getUserId());
+        message.audioMessage(rename);
+        this.queueMessage(message);
 
-        // Send the file to the S3/backend and then let the user know
-        const uploadedUrl = await Resource.uploadFile(
-            null,
-            toUri,
+        const newUri = Constants.AUDIO_DIRECTORY + '/' + rename;
+        await RNFS.moveFile(audioURI, newUri);
+        await Resource.uploadFile(
+            newUri,
             this.conversationContext.conversationId,
             message.getMessageId(),
             ResourceTypes.Audio
         );
-        message.audioMessage(uploadedUrl.split('/').pop());
+
         return this.sendMessage(message);
     };
 
@@ -2443,6 +2443,7 @@ class ChatBotScreen extends React.Component {
         if (this.props.call) {
             return <View />;
         }
+        console.log('>>>>>>>>>messaggi', this.state.messages);
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
