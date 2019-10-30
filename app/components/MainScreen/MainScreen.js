@@ -165,7 +165,8 @@ class MainScreen extends React.Component {
                 this.openOnboaringBot();
             }
         });
-
+        await AsyncStorage.setItem('signupStage', 'done');
+        await AsyncStorage.setItem('userEmail', '');
         let getFirstTime = await AsyncStorage.getItem('firstTimeUser');
         if (getFirstTime === null) {
             getFirstTime = true;

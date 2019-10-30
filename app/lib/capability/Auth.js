@@ -434,6 +434,12 @@ export default class Auth {
                     return BackgroundTaskDAO.deleteAllTasks();
                 })
                 .then(() => {
+                    return AsyncStorage.removeItem('signupStage');
+                })
+                .then(() => {
+                    return AsyncStorage.removeItem('userEmail');
+                })
+                .then(() => {
                     EventEmitter.emit(AuthEvents.userLoggedOut);
                     // Logging in as Default user for Onboarding bot
                     // resolve(Auth.saveUser(DefaultUser));

@@ -8,6 +8,8 @@ import utils from '../../lib/utils';
 import Sound from 'react-native-sound';
 import _ from 'lodash';
 import { UIActivityIndicator } from 'react-native-indicators';
+import RNFS from 'react-native-fs';
+import { AssetFetcher } from '../../lib/dce';
 
 const AudioPlayerStates = {
     LOADING: 'loading',
@@ -23,6 +25,9 @@ export default class AudioPlayer extends React.Component {
             playerState: AudioPlayerStates.LOADING,
             progress: 0
         };
+        this.localPath = decodeURI(
+            Constants.AUDIO_DIRECTORY + '/' + this.props.fileName
+        );
     }
 
     _clearTrackProgessInterval() {
@@ -45,19 +50,21 @@ export default class AudioPlayer extends React.Component {
         this._clearTrackProgessInterval();
     }
 
-    componentDidMount() {
-        this.downloadFile();
-    }
-
-    async downloadFile() {
+    async componentDidMount() {
         const { uri, headers } = this.props.audioSource;
-        const audioSource = await utils.downloadFileAsync(
-            uri,
-            headers,
-            Constants.AUDIO_DIRECTORY
-        );
-
-        var audioPath = audioSource.uri;
+        const exist = await AssetFetcher.existsOnDevice(this.localPath);
+        let audioPath;
+        if (!exist) {
+            await RNFS.mkdir(Constants.AUDIO_DIRECTORY);
+            const audioSource = await utils.downloadFileAsync(
+                uri,
+                headers,
+                Constants.AUDIO_DIRECTORY
+            );
+            audioPath = audioSource.uri;
+        } else {
+            audioPath = this.localPath;
+        }
         if (_.startsWith(audioPath, 'file://') && Platform.OS === 'android') {
             audioPath = audioPath.substr(6);
         }

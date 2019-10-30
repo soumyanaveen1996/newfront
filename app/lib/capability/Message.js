@@ -56,7 +56,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_SEARCH_BOX: 'search_box',
     MESSAGE_TYPE_SEARCH_BOX_RESPONSE: 'search_box_response',
     MESSAGE_TYPE_CARDS: 'cards',
-    MESSAGE_TYPE_CARD_ACTION: 'card_action'
+    MESSAGE_TYPE_CARD_ACTION: 'card_action',
+    MESSAGE_TYPE_RUN_MODE: 'run_mode'
 };
 
 export const IntToMessageTypeConstants = {
@@ -93,7 +94,8 @@ export const IntToMessageTypeConstants = {
     510: MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
     520: MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE,
     530: MessageTypeConstants.MESSAGE_TYPE_CARDS,
-    540: MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION
+    540: MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION,
+    550: MessageTypeConstants.MESSAGE_TYPE_RUN_MODE
 };
 
 export const MessageTypeConstantsToInt = _.invert(IntToMessageTypeConstants);
@@ -411,6 +413,10 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION;
     };
 
+    runMode = (data, options) => {
+        this._messageType = MessageTypeConstants.MESSAGE_TYPE_RUN_MODE;
+    };
+
     messageByBot = (option = true) => {
         this._addedByBot = option;
     };
@@ -497,6 +503,7 @@ export default class Message {
                 MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE ||
+            this._messageType === MessageTypeConstants.MESSAGE_TYPE_RUN_MODE ||
             !this._messageType
         ) {
             return '';
@@ -751,7 +758,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX_RESPONSE,
-            MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION
+            MessageTypeConstants.MESSAGE_TYPE_CARD_ACTION,
+            MessageTypeConstants.MESSAGE_TYPE_RUN_MODE
         ];
         if (_.includes(emptyMessages, this.getMessageType())) {
             return true;

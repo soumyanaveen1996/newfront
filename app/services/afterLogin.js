@@ -18,8 +18,8 @@ export default class AfterLogin {
             Mapbox.setAccessToken(
                 'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
             );
-            AsyncStorage.setItem('signupStage', 'done');
-            AsyncStorage.setItem('userEmail', '');
+            await AsyncStorage.removeItem('signupStage');
+            await AsyncStorage.removeItem('userEmail');
             AfterLogin.initializeBackgroundTask();
             ContactsCache.init();
             MessageCounter.init();

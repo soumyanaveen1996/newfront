@@ -138,18 +138,14 @@ class NewCallContacts extends React.Component {
             prevProps.appState.contactsLoaded !==
             this.props.appState.contactsLoaded
         ) {
-            Contact.getAddedContacts().then(contacts => {
-                this.refresh(contacts);
-            });
+            this.gettingAllContactData();
         }
 
         if (
             prevProps.appState.refreshContacts !==
             this.props.appState.refreshContacts
         ) {
-            Contact.getAddedContacts().then(contacts => {
-                this.refresh(contacts);
-            });
+            this.gettingAllContactData();
         }
     }
 
@@ -206,6 +202,9 @@ class NewCallContacts extends React.Component {
 
     gettingAllContactData = () => {
         Contact.getAddedContacts().then(contacts => {
+            contacts = contacts.filter(contact => {
+                return !contact.waitingForConfirmation;
+            });
             this.refresh(contacts);
         });
     };
@@ -400,7 +399,7 @@ class NewCallContacts extends React.Component {
     }
 
     renderContactsList() {
-        // console.log('all contacts ', this.state.contactsData);
+        console.log('all contacts ', this.state.contactsData);
 
         const sectionTitles = _.map(
             this.state.contactsData,

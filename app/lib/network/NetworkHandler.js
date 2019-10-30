@@ -331,6 +331,7 @@ const handlePreviousMessages = (res, conversationId, botId, date, user) => {
                 mData.contentType !== '470' &&
                 mData.contentType !== '250' &&
                 mData.contentType !== '460' &&
+                mData.contentType !== '550' &&
                 mData.contentType !== '1000' &&
                 mData.contentType !== '1001'
             ) {

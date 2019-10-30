@@ -72,11 +72,16 @@ export default class LoginScreen extends React.Component {
             ],
             loading: false,
             pressedFbBtn: false,
-            pressedGglBtn: false
+            pressedGglBtn: false,
+            suspendedRegistration: false
         };
 
         this.formValuesArray = [];
         this.inputs = {};
+    }
+
+    static onEnter() {
+        this.updateStage();
     }
 
     componentDidMount() {
@@ -98,6 +103,8 @@ export default class LoginScreen extends React.Component {
         AsyncStorage.getItem('signupStage').then(stage => {
             if (stage && stage === 'checkCode') {
                 this.setState({ suspendedRegistration: true });
+            } else {
+                this.setState({ suspendedRegistration: false });
             }
         });
     }
@@ -137,6 +144,21 @@ export default class LoginScreen extends React.Component {
                 if (err.message === 'User is not confirmed.') {
                     await AsyncStorage.setItem('signupStage', 'checkCode');
                     await AsyncStorage.setItem('userEmail', this.state.email);
+                    this.setState(
+                        {
+                            loading: false,
+                            emailErrorMessage: err.message,
+                            passwordErrorMessage: ''
+                        },
+                        () => {
+                            this.updateStage();
+                            Actions.confirmationScreen({
+                                type: ActionConst.REPLACE,
+                                userEmail: this.state.email,
+                                password: this.state.password
+                            });
+                        }
+                    );
                 }
                 this.setState(
                     {
@@ -146,11 +168,6 @@ export default class LoginScreen extends React.Component {
                     },
                     () => {
                         this.updateStage();
-                        Actions.confirmationScreen({
-                            type: ActionConst.REPLACE,
-                            userEmail: this.state.email,
-                            password: this.state.password
-                        });
                     }
                 );
             });
