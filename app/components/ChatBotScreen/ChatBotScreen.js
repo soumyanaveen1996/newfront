@@ -2443,7 +2443,6 @@ class ChatBotScreen extends React.Component {
         if (this.props.call) {
             return <View />;
         }
-        console.log('>>>>>>>>>messaggi', this.state.messages);
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (
