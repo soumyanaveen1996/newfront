@@ -167,22 +167,18 @@ class MainScreen extends React.Component {
         });
         await AsyncStorage.setItem('signupStage', 'done');
         await AsyncStorage.setItem('userEmail', '');
-        let getFirstTime = await AsyncStorage.getItem('firstTimeUser');
-        if (getFirstTime === null) {
-            getFirstTime = true;
-        }
-        console.log('get the first time user details ', getFirstTime);
+        let existingUser = await AsyncStorage.getItem('existingUser');
+        console.log('get the first time user details ', existingUser);
 
-        if (getFirstTime === true) {
-            this.setState({ firstTimer: true }, () => {
-                firstTimer = this.state.firstTimer;
-            });
-        }
-
-        if (getFirstTime === false) {
+        if (existingUser) {
             this.setState({ firstTimer: false }, () => {
                 firstTimer = this.state.firstTimer;
             });
+        } else {
+            this.setState({ firstTimer: true }, () => {
+                firstTimer = this.state.firstTimer;
+            });
+            AsyncStorage.setItem('existingUser', 'true');
         }
 
         const isUserLoggedIn = await Auth.isUserLoggedIn();

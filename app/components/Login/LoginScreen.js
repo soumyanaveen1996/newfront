@@ -180,6 +180,7 @@ export default class LoginScreen extends React.Component {
         await TwilioVoIP.init();
         // RemoteBotInstall.syncronizeBots()
         console.log('Sourav Logging:::: 7');
+        await AsyncStorage.setItem('existingUser', 'true');
         Auth.getUser().then(user => {
             if (Platform.OS === 'android') {
                 DefaultPreference.setName('NativeStorage');
