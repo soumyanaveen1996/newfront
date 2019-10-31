@@ -107,29 +107,16 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    userError: Platform.select({
-        ios: {
-            backgroundColor: 'rgba(229,69,59,1)',
-            zIndex: 999999,
-            width: 200,
-            padding: 2,
-            borderTopRightRadius: 10,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
-            borderTopLeftRadius: 0,
-            alignItems: 'center'
-        },
-        android: {
-            backgroundColor: 'rgba(229,69,59,1)',
-            width: 150,
-            padding: 2,
-            borderTopRightRadius: 10,
-            borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
-            borderTopLeftRadius: 0,
-            alignItems: 'center'
-        }
-    }),
+    userError: {
+        backgroundColor: GlobalColors.red,
+        zIndex: 999999,
+        padding: 2,
+        borderTopRightRadius: 6,
+        borderBottomLeftRadius: 6,
+        borderBottomRightRadius: 6,
+        borderTopLeftRadius: 0,
+        alignItems: 'center'
+    },
     errorText: Platform.select({
         ios: {
             color: '#ffffff',
