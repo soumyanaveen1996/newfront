@@ -50,7 +50,10 @@ export default class BotInstallListItem extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.installedBots !== this.props.installedBots) {
+        if (
+            JSON.stringify(prevProps.installedBots) !==
+            JSON.stringify(this.props.installedBots)
+        ) {
             let botStatus = utils.checkBotStatus(
                 this.props.installedBots,
                 this.props.bot
