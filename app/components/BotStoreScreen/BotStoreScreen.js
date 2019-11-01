@@ -145,10 +145,6 @@ class BotStoreScreen extends React.Component {
         );
     }
 
-    async componentWillMount() {
-        // await RemoteBotInstall.syncronizeBots()
-    }
-
     async componentDidMount() {
         if (Actions.prevScene === ROUTER_SCENE_KEYS.barCodeScanner) {
             this.setState({ showNewProvider: true });

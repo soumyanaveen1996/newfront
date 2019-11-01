@@ -61,6 +61,8 @@ class NetworkButton extends React.Component {
         ) {
             this.lastIcon = (
                 <Image
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     source={images.gsm}
                     resizeMode="contain"
                     style={{ width: 50, height: 50, opacity: 0.2 }}
@@ -68,10 +70,14 @@ class NetworkButton extends React.Component {
             );
             return (
                 <TouchableOpacity
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     activeOpacity={1}
                     onPress={() => this.showConnectionMessage('gsm')}
                 >
                     <Image
+                        accessibilityLabel="Network Icon"
+                        testID="network-icon"
                         source={images.gsm}
                         resizeMode="contain"
                         style={{ width: 50, height: 50 }}
@@ -85,6 +91,8 @@ class NetworkButton extends React.Component {
         ) {
             this.lastIcon = (
                 <Image
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     source={images.refresh}
                     resizeMode="contain"
                     style={{ width: 50, height: 50, opacity: 0.2 }}
@@ -92,10 +100,14 @@ class NetworkButton extends React.Component {
             );
             return (
                 <TouchableOpacity
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     onPress={() => this.props.manualAction}
                     activeOpacity={1}
                 >
                     <Image
+                        accessibilityLabel="Network Icon"
+                        testID="network-icon"
                         source={images.refresh}
                         resizeMode="contain"
                         style={{ width: 50, height: 50 }}
@@ -109,6 +121,8 @@ class NetworkButton extends React.Component {
         ) {
             this.lastIcon = (
                 <Image
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     source={images.satellite}
                     resizeMode="contain"
                     style={{ width: 50, height: 50, opacity: 0.2 }}
@@ -116,10 +130,14 @@ class NetworkButton extends React.Component {
             );
             return (
                 <TouchableOpacity
+                    accessibilityLabel="Network Icon"
+                    testID="network-icon"
                     onPress={() => this.showConnectionMessage('satellite')}
                     activeOpacity={1}
                 >
                     <Image
+                        accessibilityLabel="Network Icon"
+                        testID="network-icon"
                         source={images.satellite}
                         resizeMode="contain"
                         style={{ width: 50, height: 50 }}

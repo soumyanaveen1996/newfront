@@ -162,16 +162,17 @@ class Bot extends events.EventEmitter {
                         (error, result) => {
                             console.log('GRPC:::apply code : ', error, result);
                             if (error) {
-                                reject('ERROR');
-                            }
-                            if (result.data.error !== 0) {
-                                reject(result.data.errorMessage);
+                                reject('An error occured.');
                             } else {
-                                console.log(
-                                    'GRPC:::subscribing domain ',
-                                    result.data
-                                );
-                                resolve(result.data.content);
+                                if (result.data.error !== 0) {
+                                    reject(result.data.errorMessage);
+                                } else {
+                                    console.log(
+                                        'GRPC:::subscribing domain ',
+                                        result.data
+                                    );
+                                    resolve(result.data.content);
+                                }
                             }
                         }
                     );

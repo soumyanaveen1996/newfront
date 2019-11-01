@@ -21,7 +21,6 @@ export default class NewProviderPopup extends Component {
         super(props);
         this.state = {
             show: true,
-            wrongCode: false,
             code: '',
             apiError: false,
             loading: false
@@ -46,28 +45,20 @@ export default class NewProviderPopup extends Component {
         this.setState({ loading: true });
         try {
             const addProvider = await Bot.addNewProvider(this.state.code);
-            if (!addProvider) {
-                this.setState({ loading: false });
-                this.setState({ wrongCode: true, apiError: false });
-            }
-            if (addProvider && !addProvider[0]) {
-                this.setState({ loading: false });
-                this.setState({ wrongCode: true, apiError: false });
+            if (!addProvider || addProvider.length <= 0) {
+                this.setState({
+                    loading: false,
+                    apiError: 'Cannot Add Provider. An error occured.'
+                });
             } else {
-                RemoteBotInstall.syncronizeBots()
-                    .then(data => {
-                        this.setState({ loading: false, apiError: false });
-                        // console.log('lets see the data ', data);
-                        this.cancelNewProvider();
-                        this.props.onSubmit();
-                    })
-                    .catch(err => {
-                        console.log('error occured ', err);
-                    });
+                await RemoteBotInstall.syncronizeBots();
+                this.setState({ loading: false, apiError: null });
+                // console.log('lets see the data ', data);
+                this.cancelNewProvider();
+                this.props.onSubmit();
             }
-        } catch (e) {
-            this.setState({ loading: false });
-            this.setState({ wrongCode: false, apiError: true });
+        } catch (errorMessage) {
+            this.setState({ loading: false, apiError: errorMessage });
         }
     }
 
@@ -83,23 +74,12 @@ export default class NewProviderPopup extends Component {
     };
 
     displayErrorMessege = () => {
-        if (this.state.wrongCode) {
-            return (
-                <View style={styles.errorContainer}>
-                    <View style={styles.userError}>
-                        <Text style={styles.errorText}>
-                            Incorrect code. Try again
-                        </Text>
-                    </View>
-                </View>
-            );
-        }
         if (this.state.apiError) {
             return (
                 <View style={styles.errorContainer}>
                     <View style={styles.userError}>
                         <Text style={styles.errorText}>
-                            Cannot Add Provider. An error occured.
+                            {this.state.apiError}
                         </Text>
                     </View>
                 </View>
