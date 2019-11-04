@@ -11,9 +11,14 @@ import {
     getBotManifest,
     sendBackgroundMessageSafe
 } from '../BackgroundTask/BackgroundTaskProcessor';
+import { Platform } from 'react-native';
 
 export default class LocationTracker {
-    static start_tracking = async (data, precision = 100) => {
+    static start_tracking = async (
+        data,
+        precision = 100,
+        heartbeatInterval = 180
+    ) => {
         ////
         // 1.  Wire up event-listeners
         //
@@ -34,6 +39,12 @@ export default class LocationTracker {
             );
         });
 
+        let heartbeat_local = heartbeatInterval;
+
+        if (Platform.OS === 'android' && heartbeatInterval < 60) {
+            heartbeat_local = 60;
+        }
+
         ////
         // 2.  Execute #ready method (required)
         //
@@ -43,7 +54,7 @@ export default class LocationTracker {
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
                 distanceFilter: precision,
-                heartbeatInterval: 180,
+                heartbeatInterval: heartbeat_local,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
@@ -55,7 +66,7 @@ export default class LocationTracker {
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
                 // url: 'http://tracker.transistorsoft.com/locations/frontm',
-                // params: BackgroundGeolocation.transistorTrackerParams(Device),
+                params: BackgroundGeolocation.transistorTrackerParams(Device),
                 batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
                 autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
