@@ -64,21 +64,6 @@ export default class GetCredit extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.currentBalance !== this.props.currentBalance) {
-            this.setState(
-                {
-                    updatingBalance: false,
-                    purchaseExecuted: true,
-                    selectedCredit: undefined
-                },
-                () => {
-                    this.close();
-                }
-            );
-        }
-    }
-
     componentWillUnmount() {
         if (this.purchaseUpdateSubscription) {
             this.purchaseUpdateSubscription.remove();
