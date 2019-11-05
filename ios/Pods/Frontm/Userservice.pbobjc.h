@@ -600,11 +600,14 @@ typedef GPB_ENUM(TopupBalanceInput_FieldNumber) {
 
 typedef GPB_ENUM(TopupBalanceResponse_FieldNumber) {
   TopupBalanceResponse_FieldNumber_Error = 1,
+  TopupBalanceResponse_FieldNumber_CallQuota = 2,
 };
 
 @interface TopupBalanceResponse : GPBMessage
 
 @property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite) double callQuota;
 
 @end
 

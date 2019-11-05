@@ -1938,10 +1938,12 @@ typedef struct TopupBalanceInput__storage_ {
 @implementation TopupBalanceResponse
 
 @dynamic error;
+@dynamic callQuota;
 
 typedef struct TopupBalanceResponse__storage_ {
   uint32_t _has_storage_[1];
   int32_t error;
+  double callQuota;
 } TopupBalanceResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -1959,6 +1961,15 @@ typedef struct TopupBalanceResponse__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
+      {
+        .name = "callQuota",
+        .dataTypeSpecific.className = NULL,
+        .number = TopupBalanceResponse_FieldNumber_CallQuota,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(TopupBalanceResponse__storage_, callQuota),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeDouble,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[TopupBalanceResponse class]
@@ -1968,6 +1979,11 @@ typedef struct TopupBalanceResponse__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(TopupBalanceResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\002\t\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

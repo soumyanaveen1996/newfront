@@ -61,6 +61,7 @@ import contactsStyles from '../ContactsPicker/styles';
 import GlobalColors from '../../config/styles';
 import { LargeList } from 'react-native-largelist-v3';
 import { NETWORK_STATE } from '../../lib/network';
+import UserServices from '../../api/UserServices';
 
 var EventListeners = [];
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
@@ -73,15 +74,16 @@ class NewCallContacts extends React.Component {
             contactsData: [],
             contactVisible: false,
             contactSelected: null,
-            updatingCallQuota: false,
+            updatingCallQuota: true,
             searchString: '',
             sectionTitles: [],
-            filteredSections: []
+            filteredSections: [],
+            callQuotaUpdateError: false
         };
     }
 
     componentDidMount() {
-        this.initBackGroundBot();
+        this.getBalance();
         EventListeners.push(
             EventEmitter.addListener(
                 CallQuotaEvents.UPDATED_QUOTA,
@@ -97,31 +99,6 @@ class NewCallContacts extends React.Component {
         );
 
         this.refresh(this.props.appState.phoneContacts);
-
-        // InteractionManager.runAfterInteractions(() => {
-        //     if (Platform.OS === 'android') {
-        //         PermissionsAndroid.request(
-        //             PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-        //             {
-        //                 title: 'Contacts',
-        //                 message:
-        //                     'Grant access for contacts to display in FrontM'
-        //             }
-        //         )
-        //             .then(granted => {
-        //                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        //                     this.gettingAllContactData();
-        //                 } else {
-        //                     this.refresh([]);
-        //                 }
-        //             })
-        //             .catch(err => {
-        //                 console.log('PermissionsAndroid', err);
-        //             });
-        //     } else {
-        //         this.gettingAllContactData();
-        //     }
-        // });
     }
 
     componentDidUpdate(prevProps) {}
@@ -131,49 +108,35 @@ class NewCallContacts extends React.Component {
         EventListeners = [];
     }
 
-    initBackGroundBot = async () => {
-        const message = new Message({
-            msg: {
-                callQuotaUsed: 0
-            },
-            messageType: MESSAGE_TYPE
+    getBalance() {
+        this.setState({ updatingCallQuota: true }, async () => {
+            try {
+                const newBalance = await UserServices.getUserBalance();
+                this.setState({
+                    callQuota: newBalance,
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: false
+                });
+            } catch (error) {
+                this.setState({
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: true
+                });
+            }
         });
-        message.setCreatedBy({ addedByBot: true });
-        var bgBotScreen = new BackgroundBotChat({
-            bot: SystemBot.backgroundTaskBot
-        });
-
-        this.setState({ updatingCallQuota: true, bgBotScreen });
-        bgBotScreen.initialize().then(() => {
-            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        });
-    };
+    }
 
     getCredit() {
-        Actions.getCredit({ currentBalance: this.state.callQuota });
+        Actions.getCredit({
+            currentBalance: this.state.callQuota,
+            updateCallBack: newBalance =>
+                this.setState({ callQuota: newBalance })
+        });
         // console.log('In Get Credit');
 
         this.setContactVisible(false, null);
-
-        // Bot.getInstalledBots()
-        //     .then(bots => {
-        //         // console.log(bots);
-        //         dwIndex = R.findIndex(R.propEq('botId', 'DigitalWallet'))(bots);
-        //         if (dwIndex < 0) {
-        //             return Alert.alert(
-        //                 'You have to download DigitalWallet Bot to buy Credits'
-        //             );
-        //         }
-        //         const DWBot = bots[dwIndex];
-        //         // Actions.botChat({bot: DWBot})
-        //         // Actions.pop();
-        //         setTimeout(() => Actions.botChat({ bot: DWBot }), 0);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //         Alert.alert('An error occured');
-        //     });
     }
+
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         this.setState({
             callQuota,
@@ -690,11 +653,12 @@ class NewCallContacts extends React.Component {
                             }}
                         >
                             <Text style={{ marginLeft: 10 }}>
-                                {' Current balance: '}
+                                {'Current balance: '}
                                 <Text>
-                                    {this.state.updatingCallQuota
+                                    {this.state.updatingCallQuota ||
+                                    this.state.callQuotaUpdateError
                                         ? '...'
-                                        : this.state.callQuota}
+                                        : '$' + this.state.callQuota.toFixed(2)}
                                 </Text>
                             </Text>
                             <TouchableOpacity

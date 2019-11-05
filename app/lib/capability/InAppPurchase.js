@@ -38,37 +38,6 @@ const connection = async () => {
     }
 };
 
-const grpcTopupUserBalance = (paymentCode, amount, token) =>
-    new Promise((resolve, reject) => {
-        Auth.getUser().then(user => {
-            console.log('GRPC ::::: MONEY FOR FRONTM $_$');
-            const platform = Platform.OS;
-            return UserServiceClient.topupUserBalance(
-                user.creds.sessionId,
-                {
-                    paymentCode,
-                    amount,
-                    token,
-                    platform
-                },
-                (error, result) => {
-                    if (error) {
-                        reject({
-                            type: 'error',
-                            error: error.code
-                        });
-                    } else {
-                        if (result.data.error === 0) {
-                            resolve(result);
-                        } else {
-                            reject(result.data.error);
-                        }
-                    }
-                }
-            );
-        });
-    });
-
 const buyProduct = async ({
     productCode,
     productName = PRODUCT_NAMES.VOIP,
@@ -106,8 +75,7 @@ const buyProduct = async ({
 const InAppPurchase = {
     PRODUCT_NAMES,
     InAppPurchaseErrorCodes,
-    buyProduct,
-    grpcTopupUserBalance
+    buyProduct
 };
 
 export default InAppPurchase;

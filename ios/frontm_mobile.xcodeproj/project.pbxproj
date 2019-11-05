@@ -175,6 +175,7 @@
 		6B5CF44F235E13D5008D701B /* libRNSensors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5CF444235E13A8008D701B /* libRNSensors.a */; };
 		6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */; };
 		6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */; };
+		6B76A31E237193BB005BE766 /* UserBalanceResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B76A31D237193BB005BE766 /* UserBalanceResponse+frontm.m */; };
 		6B9829B722CF5C64008E00AD /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0F97BD220C709B00659F09 /* libRNBlur.a */; };
 		6BB8F988232ABEBC00AFD85B /* UserAddress+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB8F987232ABEBC00AFD85B /* UserAddress+frontm.m */; };
 		6F7D7C1ACD58476CBE5E6FA5 /* SF-Pro-Display-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BA8D401667BE4388A4AA9FEB /* SF-Pro-Display-ThinItalic.otf */; };
@@ -1097,6 +1098,8 @@
 		6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryResponse+frontm.h"; sourceTree = "<group>"; };
 		6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryObject+frontm.m"; sourceTree = "<group>"; };
 		6B6442552283F84500E81203 /* CallHistoryObject+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryObject+frontm.h"; sourceTree = "<group>"; };
+		6B76A2C5237193AA005BE766 /* UserBalanceResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UserBalanceResponse+frontm.h"; sourceTree = "<group>"; };
+		6B76A31D237193BB005BE766 /* UserBalanceResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UserBalanceResponse+frontm.m"; sourceTree = "<group>"; };
 		6BB8F92E232ABE7800AFD85B /* UserAddress+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UserAddress+frontm.h"; sourceTree = "<group>"; };
 		6BB8F987232ABEBC00AFD85B /* UserAddress+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UserAddress+frontm.m"; sourceTree = "<group>"; };
 		6C0B9BE1240F43B084D4480E /* RNSpringScrollView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpringScrollView.xcodeproj; path = "../node_modules/react-native-spring-scrollview/ios/RNSpringScrollView.xcodeproj"; sourceTree = "<group>"; };
@@ -1619,6 +1622,8 @@
 				0490560F223B61A4008FECC8 /* TimelineResponse+frontm.m */,
 				6B2D92F02310238D00639CD2 /* TopupBalanceResponse+frontm.h */,
 				6B2D929C2310237800639CD2 /* TopupBalanceResponse+frontm.m */,
+				6B76A2C5237193AA005BE766 /* UserBalanceResponse+frontm.h */,
+				6B76A31D237193BB005BE766 /* UserBalanceResponse+frontm.m */,
 				0490562C223B7535008FECC8 /* TwilioTokenResponse+frontm.h */,
 				0490562D223B7535008FECC8 /* TwilioTokenResponse+frontm.m */,
 				04905623223B731E008FECC8 /* UpdateFavouritesResponse+frontm.h */,
@@ -2124,7 +2129,7 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6EZTYQSN4H;
 						LastSwiftMigration = "";
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = true;
@@ -3063,7 +3068,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=\"node --expose-gc --max_old_space_size=8192\"\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
 		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3145,6 +3150,7 @@
 			files = (
 				0490561F223B6A33008FECC8 /* TimelineBotInfo+frontm.m in Sources */,
 				04704B2522368937003ABE94 /* SigninResponse+frontm.m in Sources */,
+				6B76A31E237193BB005BE766 /* UserBalanceResponse+frontm.m in Sources */,
 				04905661223BB9D9008FECC8 /* ContactsResponse+frontm.m in Sources */,
 				6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
@@ -3296,10 +3302,10 @@
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3348,7 +3354,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -3411,9 +3417,9 @@
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3462,7 +3468,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -3478,10 +3484,10 @@
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3530,7 +3536,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "6bb2f070-95b2-4686-9ced-198baf4be48c";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -3547,9 +3553,9 @@
 				CODE_SIGN_ENTITLEMENTS = frontm_mobile/frontm_mobile.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6EZTYQSN4H;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
 					"$(inherited)",
@@ -3598,7 +3604,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.frontm.frontm;
 				PRODUCT_NAME = frontm_mobile;
 				PROVISIONING_PROFILE = "0133dd2a-964b-49cf-9c85-05b0c569fba7";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.frontm.frontm";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "frontm_mobile-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";

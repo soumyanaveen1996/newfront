@@ -8,8 +8,8 @@ option java_package = "com.frontm.channels.proto";
 package channels;
 
 service ChannelsService {
-    rpc GetSubscribed (commonmessages.Empty) returns (ChannelListResponse) {}
-    rpc GetUnsubscribed (commonmessages.Empty) returns (ChannelListResponse) {}
+    rpc GetSubscribed (commonmessages.SelectedDomainInput) returns (ChannelListResponse) {}
+    rpc GetUnsubscribed (commonmessages.SelectedDomainInput) returns (ChannelListResponse) {}
     rpc GetOwned (commonmessages.Empty) returns (ChannelListResponse) {}
     rpc Subscribe (SubUnsubInput) returns (BooleanResponse) {}
     rpc Unsubscribe (SubUnsubInput) returns (BooleanResponse) {}
@@ -26,6 +26,7 @@ service ChannelsService {
     rpc GetChannelAdmins (ChannelDomainInput) returns (ParticipantsListResponse) {}
     rpc UpdateChannelAdmins (UpdateUsersInput) returns (BooleanResponse) {}
     rpc DeleteChannel (ChannelDomainInput) returns (BooleanResponse) {}
+    rpc FindNewParticipants (FindNewParticipantsInput) returns (FindNewParticipantsResponse) {}
 }
 
 message SubUnsubInput {
@@ -127,4 +128,23 @@ message ChangeOwnerInput {
     string channelName = 1;
     string userDomain = 2;
     string newOwnerId = 3;
+}
+
+message FindNewParticipantsInput {
+    string queryString = 1;
+    string channelName = 2;
+    string userDomain = 3;
+}
+
+message FindNewParticipantsResponse {
+    int32 error = 1;
+    repeated NewParticipant content = 2;
+    string errorMessage = 3;
+}
+
+message NewParticipant {
+    string userName = 1;
+    string userId = 2;
+    string userCompanyName = 3;
+    commonmessages.UserAddress address = 4;
 }

@@ -203,6 +203,7 @@ message TopupBalanceInput {
 
 message TopupBalanceResponse {
     int32 error = 1;
+    double callQuota = 2;
 }
 
 message DeviceInfo {

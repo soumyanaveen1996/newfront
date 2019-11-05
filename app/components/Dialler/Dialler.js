@@ -48,6 +48,7 @@ import {
     GoogleAnalyticsEventsCategories,
     GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
+import UserServices from '../../api/UserServices';
 
 const R = require('ramda');
 
@@ -107,8 +108,7 @@ export default class Dialler extends React.Component {
 
     componentDidMount() {
         this.mounted = true;
-        // Get the current Call Quota using a background Bot
-        this.initBackGroundBot();
+        this.getBalance();
         // Subscribe to Events
         EventListeners.push(
             EventEmitter.addListener(
@@ -176,6 +176,24 @@ export default class Dialler extends React.Component {
                 this.call();
             }
         }
+    }
+
+    getBalance() {
+        this.setState({ updatingCallQuota: true }, async () => {
+            try {
+                const newBalance = await UserServices.getUserBalance();
+                this.setState({
+                    callQuota: newBalance,
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: false
+                });
+            } catch (error) {
+                this.setState({
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: true
+                });
+            }
+        });
     }
 
     checkSatelliteCall(number) {
@@ -330,24 +348,6 @@ export default class Dialler extends React.Component {
         TwilioVoice.disconnect();
         // Actions.pop()
     }
-
-    initBackGroundBot = async () => {
-        const message = new Message({
-            msg: {
-                callQuotaUsed: 0
-            },
-            messageType: MESSAGE_TYPE
-        });
-        message.setCreatedBy({ addedByBot: true });
-        var bgBotScreen = new BackgroundBotChat({
-            bot: SystemBot.backgroundTaskBot
-        });
-
-        await bgBotScreen.initialize();
-
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        this.setState({ updatingCallQuota: true, bgBotScreen });
-    };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         this.setState({
@@ -751,9 +751,10 @@ export default class Dialler extends React.Component {
                             {'Current balance: '}
                             <Text style={{ color: GlobalColors.black }}>$</Text>
                             <Text style={{ color: GlobalColors.black }}>
-                                {this.state.updatingCallQuota
+                                {this.state.updatingCallQuota ||
+                                this.state.callQuotaUpdateError
                                     ? '...'
-                                    : this.state.callQuota}
+                                    : this.state.callQuota.toFixed(2)}
                             </Text>
                         </Text>
                     </View>

@@ -157,9 +157,9 @@ android {
         }
         debug {
             // For Debug Prod Uncomment this Line
-            buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
+            // buildConfigField 'String', 'GRPC_HOST', '"prod.frontm.ai"'
             // For Debug Dev Uncomment this line
-            // buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
+            buildConfigField 'String', 'GRPC_HOST', '"grpcdev.frontm.ai"'
             buildConfigField 'int', 'GRPC_PORT', '50051'
         }
         stage {
@@ -242,7 +242,7 @@ dependencies {
     compile(project(':react-native-device-info')){
         exclude group: 'com.google.android.gms', module: 'play-services-gcm'
     }
-    compile project(':react-native-contacts')
+    implementation project(':react-native-contacts')
     compile project(':react-native-code-push')
     compile(project(':react-native-camera')){
         exclude group: 'com.google.android.gms'
