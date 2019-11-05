@@ -640,6 +640,21 @@ typedef GPB_ENUM(DeviceBoolResponse_FieldNumber) {
 
 @end
 
+#pragma mark - UserBalanceResponse
+
+typedef GPB_ENUM(UserBalanceResponse_FieldNumber) {
+  UserBalanceResponse_FieldNumber_CallQuota = 1,
+  UserBalanceResponse_FieldNumber_Error = 2,
+};
+
+@interface UserBalanceResponse : GPBMessage
+
+@property(nonatomic, readwrite) double callQuota;
+
+@property(nonatomic, readwrite) int32_t error;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 CF_EXTERN_C_END

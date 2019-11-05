@@ -295,5 +295,17 @@
              responseClass:[DeviceBoolResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
+#pragma mark GetUserBalance(Empty) returns (UserBalanceResponse)
+
+- (void)getUserBalanceWithRequest:(Empty *)request handler:(void(^)(UserBalanceResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToGetUserBalanceWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToGetUserBalanceWithRequest:(Empty *)request handler:(void(^)(UserBalanceResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"GetUserBalance"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[UserBalanceResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
 @end
 #endif

@@ -699,8 +699,7 @@ class NewCallContacts extends React.Component {
                             </Text>
                             <TouchableOpacity
                                 style={{
-                                    ...DStyles.callQuotaBuy,
-                                    backgroundColor: 'rgba(255,255,255,1)'
+                                    ...DStyles.callQuotaBuy
                                 }}
                                 onPress={this.getCredit.bind(this)}
                                 disabled={this.state.updatingCallQuota}
