@@ -23,6 +23,7 @@ import com.frontm.frontm.proto.converters.SubscribeDomainResponseConverter;
 import com.frontm.frontm.proto.converters.TopupBalanceResponseConverter;
 import com.frontm.frontm.proto.converters.TwilioTokenResponseConverter;
 import com.frontm.frontm.proto.converters.UpdateUserProfileResponseConverter;
+import com.frontm.frontm.proto.converters.UserBalanceResponseConverter;
 import com.frontm.frontm.proto.converters.UserConverter;
 import com.frontm.frontm.proto.converters.VoipStatusResponseConverter;
 import com.frontm.frontm.proto.converters.VoipToggleResponseConverter;
@@ -43,6 +44,7 @@ import com.frontm.user.proto.TwilioTokenInput;
 import com.frontm.user.proto.TwilioTokenResponse;
 import com.frontm.user.proto.UpdateUserProfileResponse;
 import com.frontm.user.proto.User;
+import com.frontm.user.proto.UserBalanceResponse;
 import com.frontm.user.proto.UserServiceGrpc;
 import com.frontm.user.proto.VoipStatusInput;
 import com.frontm.user.proto.VoipStatusResponse;
@@ -643,6 +645,32 @@ public class UserServiceClient extends ReactContextBaseJavaModule {
             @Override
             public void onNext(DeviceBoolResponse value) {
                 callback.invoke(null, new DeviceBoolResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void getUserBalance(String sessionId, final Callback callback) {
+        Log.d("GRPC:::getUserBalance", sessionId);
+        UserServiceGrpc.UserServiceStub stub = UserServiceGrpc.newStub(getmChannel());
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+        stub = MetadataUtils.attachHeaders(stub, header);
+        stub.getUserBalance(Empty.newBuilder().build(), new StreamObserver<UserBalanceResponse>() {
+            @Override
+            public void onNext(UserBalanceResponse value) {
+                callback.invoke(null, new UserBalanceResponseConverter().toResponse(value));
             }
 
             @Override

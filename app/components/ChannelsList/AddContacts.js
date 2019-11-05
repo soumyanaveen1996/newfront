@@ -31,10 +31,12 @@ import { GlobalColors } from '../../config/styles';
 import { Auth } from '../../lib/capability';
 import _ from 'lodash';
 import NetworkButton from '../Header/NetworkButton';
+import ChannelsServices from '../../api/ChannelsServices';
 
 const R = require('ramda');
 const cancelImg = require('../../images/channels/cross-deselect-participant.png');
 const ContactsServiceClient = NativeModules.ContactsServiceClient;
+const ChannelsServiceClient = NativeModules.ChannelsServiceClient;
 
 class AddContacts extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -239,10 +241,14 @@ class AddContacts extends React.Component {
     searchUsers(e) {
         this.setState({ searching: true });
         const searchString = e.nativeEvent.text;
-        Auth.getUser()
-            .then(user => {
-                return this.grpcSearch(user, searchString.trim());
-            })
+        const currentChannel = this.props.channel || {
+            channelName: 'new_channel',
+            userDomain: this.props.userDomain
+        };
+        ChannelsServices.findNewParticipants(
+            currentChannel,
+            searchString.trim()
+        )
             .then(users => {
                 _.map(this.state.selectedContacts, contact => {
                     let found = _.find(users, user => {
@@ -255,30 +261,6 @@ class AddContacts extends React.Component {
                 this.setState({ contacts: users, searching: false });
             })
             .catch(() => this.setState({ searching: false }));
-    }
-
-    grpcSearch(user, queryString) {
-        return new Promise((resolve, reject) => {
-            ContactsServiceClient.find(
-                user.creds.sessionId,
-                { queryString },
-                (error, result) => {
-                    console.log(
-                        'GRPC:::ContactsServiceClient::find : ',
-                        error,
-                        result
-                    );
-                    if (error) {
-                        reject({
-                            type: 'error',
-                            error: error.code
-                        });
-                    } else {
-                        resolve(result.data.content);
-                    }
-                }
-            );
-        });
     }
 
     render() {

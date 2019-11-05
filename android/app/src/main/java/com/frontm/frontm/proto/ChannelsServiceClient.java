@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.frontm.channels.proto.AddParticipantsInput;
+import com.frontm.channels.proto.FindNewParticipantsInput;
 import com.frontm.channels.proto.UpdateUsersInput;
 import com.frontm.channels.proto.AuthorizeParticipantInput;
 import com.frontm.channels.proto.ChangeOwnerInput;
@@ -18,16 +19,19 @@ import com.frontm.channels.proto.BooleanResponse;
 import com.frontm.channels.proto.ChannelListResponse;
 import com.frontm.channels.proto.ChannelsServiceGrpc;
 import com.frontm.channels.proto.CreateChannelResponse;
+import com.frontm.channels.proto.FindNewParticipantsResponse;
 import com.frontm.channels.proto.CreateEditInput;
 import com.frontm.channels.proto.DomainChannels;
 import com.frontm.channels.proto.InputChannel;
 import com.frontm.channels.proto.ParticipantsListResponse;
 import com.frontm.channels.proto.SubUnsubInput;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.commonmessages.proto.SelectedDomainInput;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.BooleanResponseConverter;
 import com.frontm.frontm.proto.converters.ChannelListResponseConverter;
 import com.frontm.frontm.proto.converters.CreateChannelResponseConverter;
+import com.frontm.frontm.proto.converters.FindNewParticipantsResponseConverter;
 import com.frontm.frontm.proto.converters.ParticipantsListResponseConverter;
 import com.squareup.okhttp.ConnectionSpec;
 
@@ -119,10 +123,14 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void getSubscribed(String sessionId, final Callback callback)
+    public void getSubscribed(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getSubscribed", sessionId);
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
+
+        SelectedDomainInput input = SelectedDomainInput.newBuilder()
+                .setSelectedDomain(params.getString("selectedDomain"))
+                .build();
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -131,7 +139,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getSubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getSubscribed(input, new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
@@ -153,10 +161,15 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void getUnsubscribed(String sessionId, final Callback callback)
+    public void getUnsubscribed(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getUnsubscribed", sessionId);
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
+
+        SelectedDomainInput input = SelectedDomainInput.newBuilder()
+                .setSelectedDomain(params.getString("selectedDomain"))
+                .build();
+
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -165,7 +178,7 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getUnsubscribed(Empty.newBuilder().build(), new StreamObserver<ChannelListResponse>() {
+        stub.withDeadlineAfter(30000, TimeUnit.MILLISECONDS).getUnsubscribed(input, new StreamObserver<ChannelListResponse>() {
             @Override
             public void onNext(ChannelListResponse value) {
                 callback.invoke(null, new ChannelListResponseConverter().toResponse(value));
@@ -831,7 +844,44 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
 
             }
         });
+    }
 
+    @ReactMethod
+    public void findNewParticipants(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::findNewParticipants", params.toString());
+        ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
+
+        FindNewParticipantsInput input = FindNewParticipantsInput.newBuilder()
+                .setChannelName(params.getString("channelName"))
+                .setUserDomain(params.getString("userDomain"))
+                .setQueryString(params.getString("queryString"))
+                .build();
+
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.findNewParticipants(input, new StreamObserver<FindNewParticipantsResponse>() {
+            @Override
+            public void onNext(FindNewParticipantsResponse value) {
+                callback.invoke(null, new FindNewParticipantsResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
     }
 
 

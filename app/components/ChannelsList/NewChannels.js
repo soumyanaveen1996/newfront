@@ -284,7 +284,13 @@ class NewChannels extends React.Component {
     }
 
     addParticipants() {
-        Actions.addParticipants();
+        let userDomain;
+        if (this.state.typeValue === 'platform') {
+            userDomain = 'frontmai';
+        } else {
+            userDomain = this.props.channels.team;
+        }
+        Actions.addParticipants({ userDomain: userDomain });
     }
 
     render() {
