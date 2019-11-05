@@ -38,7 +38,8 @@ export default class GetCredit extends React.Component {
             codeApplied: false,
             code: '',
             showInfo: false,
-            codeError: ''
+            codeError: '',
+            currentBalance: this.props.currentBalance.toFixed(2)
         };
     }
 
@@ -76,17 +77,19 @@ export default class GetCredit extends React.Component {
     }
 
     onBalanceUpdated({ callQuota }) {
-        this.props.currentBalance = callQuota.toFixed(2);
-        this.setState(
-            {
-                updatingBalance: false,
-                purchaseExecuted: true,
-                selectedCredit: undefined
-            },
-            () => {
-                this.close();
-            }
-        );
+        if (this.state.currentBalance !== callQuota.toFixed(2)) {
+            this.setState(
+                {
+                    updatingBalance: false,
+                    purchaseExecuted: true,
+                    selectedCredit: undefined,
+                    currentBalance: callQuota.toFixed(2)
+                },
+                () => {
+                    this.close();
+                }
+            );
+        }
     }
 
     purchaseHandler(purchase) {
@@ -336,7 +339,7 @@ export default class GetCredit extends React.Component {
                                         >
                                             ${' '}
                                         </Text>
-                                        {this.props.currentBalance.toFixed(2)}
+                                        {this.state.currentBalance}
                                     </Text>
                                 )}
                             </View>
