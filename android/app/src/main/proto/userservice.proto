@@ -30,6 +30,7 @@ service UserService {
     rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
     rpc RegisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
     rpc DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc GetUserBalance(commonmessages.Empty) returns (UserBalanceResponse) {}
 }
 
 message User {
@@ -202,6 +203,7 @@ message TopupBalanceInput {
 
 message TopupBalanceResponse {
     int32 error = 1;
+    double callQuota = 2;
 }
 
 message DeviceInfo {
@@ -212,4 +214,9 @@ message DeviceInfo {
 message DeviceBoolResponse {
     int32 error = 1;
     repeated bool content = 2;
+}
+
+message UserBalanceResponse {
+    double callQuota = 1;
+    int32 error = 2;
 }

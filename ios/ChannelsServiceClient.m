@@ -13,6 +13,7 @@
 #import "BooleanResponse+frontm.h"
 #import "CreateChannelResponse+frontm.h"
 #import "DomainChannels+frontm.h"
+#import "FindNewParticipantsResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -38,11 +39,14 @@ RCT_EXPORT_MODULE();
 }
 
 
-RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::Channels Service Client method:getSubscribed Params : %@", sessionId);
-
+  
+  SelectedDomainInput *input = [SelectedDomainInput new];
+  input.selectedDomain = params[@"selectedDomain"];
+  
   GRPCProtoCall *call = [self.serviceClient
-                         RPCToGetSubscribedWithRequest:[Empty new] handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
+                         RPCToGetSubscribedWithRequest:input handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
                              callback(@[@{}, [NSNull null]]);
                              return;
@@ -56,11 +60,14 @@ RCT_REMAP_METHOD(getSubscribed, getSubscribedWithSessionId:(NSString *)sessionId
   [call start];
 }
 
-RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(getUnsubscribed, getUnsubscribedWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"GRPC:::Channels Service Client method:getUnsubscribed Params : %@", sessionId);
+  
+  SelectedDomainInput *input = [SelectedDomainInput new];
+  input.selectedDomain = params[@"selectedDomain"];
 
   GRPCProtoCall *call = [self.serviceClient
-                         RPCToGetUnsubscribedWithRequest:[Empty new] handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
+                         RPCToGetUnsubscribedWithRequest:input handler:^(ChannelListResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
                              callback(@[@{}, [NSNull null]]);
                              return;
@@ -411,6 +418,30 @@ RCT_REMAP_METHOD(deleteChannel, deleteChannelWithSessionId:(NSString *)sessionId
   GRPCProtoCall *call = [
                          self.serviceClient
                          RPCToDeleteChannelWithRequest:input handler:^(BooleanResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             callback(@[[NSNull null], [response toResponse]]);
+                           }
+                         }
+                         ];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(findNewParticipants, findNewParticipantsWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"GRPC:::Channels Service Client method:findNewParticipants Params : %@", sessionId);
+  
+  FindNewParticipantsInput *input = [FindNewParticipantsInput new];
+  input.queryString = params[@"queryString"];
+  input.channelName = params[@"channelName"];
+  input.userDomain = params[@"userDomain"];
+  
+  GRPCProtoCall *call = [
+                         self.serviceClient
+                         RPCToFindNewParticipantsWithRequest:input handler:^(FindNewParticipantsResponse * _Nullable response, NSError * _Nullable error) {
                            if (error != nil) {
                              callback(@[@{}, [NSNull null]]);
                              return;

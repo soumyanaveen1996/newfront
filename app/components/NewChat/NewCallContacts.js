@@ -71,6 +71,7 @@ import { NETWORK_STATE } from '../../lib/network';
 import GetCredit from '../GetCredit';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import { ContactType } from '../../lib/capability/Contact';
+import UserServices from '../../api/UserServices';
 
 const R = require('ramda');
 
@@ -90,7 +91,7 @@ class NewCallContacts extends React.Component {
             contactSelected: null,
             callQuota: 0,
             callQuotaUpdateError: false,
-            updatingCallQuota: false,
+            updatingCallQuota: true,
             filters: ['All Contacts', 'People', 'Vessels'],
             selectedFilter: 0,
             showFilterMenu: false,
@@ -100,9 +101,8 @@ class NewCallContacts extends React.Component {
     }
 
     async componentDidMount() {
-        this.initBackGroundBot();
+        this.getBalance();
         // Subscribe to Events
-
         EventListeners.push(
             EventEmitter.addListener(
                 CallQuotaEvents.UPDATED_QUOTA,
@@ -149,6 +149,24 @@ class NewCallContacts extends React.Component {
         }
     }
 
+    getBalance() {
+        this.setState({ updatingCallQuota: true }, async () => {
+            try {
+                const newBalance = await UserServices.getUserBalance();
+                this.setState({
+                    callQuota: newBalance,
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: false
+                });
+            } catch (error) {
+                this.setState({
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: true
+                });
+            }
+        });
+    }
+
     async askNotificationPermission() {
         try {
             Notification.checkPermissions(res => {
@@ -160,25 +178,6 @@ class NewCallContacts extends React.Component {
             console.log('error', e);
         }
     }
-
-    initBackGroundBot = async () => {
-        const message = new Message({
-            msg: {
-                callQuotaUsed: 0
-            },
-            messageType: MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA
-        });
-        message.setCreatedBy({ addedByBot: true });
-        var bgBotScreen = new BackgroundBotChat({
-            bot: SystemBot.backgroundTaskBot
-        });
-
-        this.setState({ updatingCallQuota: true, bgBotScreen });
-
-        bgBotScreen.initialize().then(() => {
-            bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        });
-    };
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         if (Actions.currentScene === ROUTER_SCENE_KEYS.getCredit) {
@@ -311,7 +310,11 @@ class NewCallContacts extends React.Component {
 
     getCredit() {
         this.setContactVisible(false, null);
-        Actions.getCredit({ currentBalance: this.state.callQuota });
+        Actions.getCredit({
+            currentBalance: this.state.callQuota,
+            updateCallBack: newBalance =>
+                this.setState({ callQuota: newBalance })
+        });
         // Bot.getInstalledBots()
         //     .then(bots => {
         //         console.log(bots);
@@ -877,8 +880,10 @@ class NewCallContacts extends React.Component {
                             <Text style={styles.balanceText}>
                                 Current balance:{' '}
                                 <Text style={{ color: 'black' }}>
-                                    {' '}
-                                    ${this.state.callQuota.toFixed(2)}
+                                    {this.state.updatingCallQuota ||
+                                    this.state.callQuotaUpdateError
+                                        ? '...'
+                                        : '$' + this.state.callQuota.toFixed(2)}
                                 </Text>
                             </Text>
                             <TouchableOpacity

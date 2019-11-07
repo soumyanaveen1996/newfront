@@ -5,7 +5,8 @@ import {
     AsyncStorage,
     TouchableOpacity,
     Image,
-    Text
+    Text,
+    NativeModules
 } from 'react-native';
 import BotList from './BotList';
 import { SafeAreaView } from 'react-navigation';
@@ -53,6 +54,7 @@ import { NetworkStatusNotchBar } from '../NetworkStatusBar';
 import SatelliteConnectionEvents from '../../lib/events/SatelliteConnection';
 import ChatStatusBar from '../ChatBotScreen/ChatStatusBar';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
+import UserServices from '../../api/UserServices';
 
 const MainScreenStates = {
     notLoaded: 'notLoaded',
@@ -62,6 +64,7 @@ const MainScreenStates = {
 
 let firstTimer = false;
 EventListener = [];
+const UserServiceClient = NativeModules.UserServiceClient;
 
 class MainScreen extends React.Component {
     static navigationOptions({ navigation }) {
@@ -230,21 +233,23 @@ class MainScreen extends React.Component {
         this.getBalance();
     }
 
-    getBalance = async () => {
-        const message = new Message({
-            msg: {
-                callQuotaUsed: 0
-            },
-            messageType: MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA
+    getBalance() {
+        this.setState({ updatingCallQuota: true }, async () => {
+            try {
+                const newBalance = await UserServices.getUserBalance();
+                this.setState({
+                    callQuota: newBalance,
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: false
+                });
+            } catch (error) {
+                this.setState({
+                    updatingCallQuota: false,
+                    callQuotaUpdateError: true
+                });
+            }
         });
-        message.setCreatedBy({ addedByBot: true });
-        var bgBotScreen = new BackgroundBotChat({
-            bot: SystemBot.backgroundTaskBot
-        });
-        await bgBotScreen.initialize();
-        bgBotScreen.next(message, {}, [], bgBotScreen.getBotContext());
-        this.setState({ updatingCallQuota: true, bgBotScreen });
-    };
+    }
 
     handleCallQuotaUpdateSuccess = ({ callQuota }) => {
         this.setState({
@@ -633,7 +638,8 @@ class MainScreen extends React.Component {
                     Current balance:
                     <Text style={MainScreenStyles.creditText}>
                         {' $' +
-                            (this.state.updatingCallQuota
+                            (this.state.updatingCallQuota ||
+                            this.state.callQuotaUpdateError
                                 ? '...'
                                 : this.state.callQuota.toFixed(2))}
                     </Text>
@@ -642,7 +648,9 @@ class MainScreen extends React.Component {
                     onPress={() => {
                         if (!this.state.updatingCallQuota) {
                             Actions.getCredit({
-                                currentBalance: this.state.callQuota
+                                currentBalance: this.state.callQuota,
+                                updateCallBack: newBalance =>
+                                    this.setState({ callQuota: newBalance })
                             });
                         }
                     }}

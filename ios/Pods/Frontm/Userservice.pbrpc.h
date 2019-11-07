@@ -33,6 +33,7 @@
 @class TwilioTokenResponse;
 @class UpdateUserProfileResponse;
 @class User;
+@class UserBalanceResponse;
 @class UserDomainsResponse;
 @class VoipStatusInput;
 @class VoipStatusResponse;
@@ -201,6 +202,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToDeregisterDeviceWithRequest:(DeviceInfo *)request handler:(void(^)(DeviceBoolResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetUserBalance(Empty) returns (UserBalanceResponse)
+
+- (void)getUserBalanceWithRequest:(Empty *)request handler:(void(^)(UserBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetUserBalanceWithRequest:(Empty *)request handler:(void(^)(UserBalanceResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end

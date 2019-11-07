@@ -115,6 +115,8 @@ class ChatBotScreen extends React.Component {
         } else {
             navigationOptions.headerLeft = (
                 <HeaderBack
+                    accessibilityLabel="Header Back Arrow"
+                    testID="header-back-arrow"
                     onPress={() => {
                         if (state.params.botDone) {
                             state.params.botDone();

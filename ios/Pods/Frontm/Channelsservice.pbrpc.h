@@ -18,7 +18,10 @@
 @class CreateChannelResponse;
 @class CreateEditInput;
 @class Empty;
+@class FindNewParticipantsInput;
+@class FindNewParticipantsResponse;
 @class ParticipantsListResponse;
+@class SelectedDomainInput;
 @class SubUnsubInput;
 @class UpdateUsersInput;
 
@@ -33,18 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ChannelsService <NSObject>
 
-#pragma mark GetSubscribed(Empty) returns (ChannelListResponse)
+#pragma mark GetSubscribed(SelectedDomainInput) returns (ChannelListResponse)
 
-- (void)getSubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getSubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetSubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetSubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetUnsubscribed(Empty) returns (ChannelListResponse)
+#pragma mark GetUnsubscribed(SelectedDomainInput) returns (ChannelListResponse)
 
-- (void)getUnsubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getUnsubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetUnsubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetUnsubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark GetOwned(Empty) returns (ChannelListResponse)
@@ -150,6 +153,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)deleteChannelWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToDeleteChannelWithRequest:(ChannelDomainInput *)request handler:(void(^)(BooleanResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark FindNewParticipants(FindNewParticipantsInput) returns (FindNewParticipantsResponse)
+
+- (void)findNewParticipantsWithRequest:(FindNewParticipantsInput *)request handler:(void(^)(FindNewParticipantsResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToFindNewParticipantsWithRequest:(FindNewParticipantsInput *)request handler:(void(^)(FindNewParticipantsResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end
