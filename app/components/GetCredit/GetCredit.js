@@ -25,6 +25,7 @@ import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
 import Bot from '../../lib/bot';
 import * as RNIap from 'react-native-iap';
 import formStyles from '../Form2Message/styles';
+import UserServices from '../../api/UserServices';
 
 const EventListeners = [];
 
@@ -38,7 +39,8 @@ export default class GetCredit extends React.Component {
             codeApplied: false,
             code: '',
             showInfo: false,
-            codeError: ''
+            codeError: '',
+            currentBalance: this.props.currentBalance.toFixed(2)
         };
     }
 
@@ -51,17 +53,6 @@ export default class GetCredit extends React.Component {
             console.warn('purchaseErrorListener', error);
             this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
         });
-        EventEmitter.addListener(
-            CallQuotaEvents.UPDATED_QUOTA,
-            this.onBalanceUpdated.bind(this)
-        );
-        EventEmitter.addListener(
-            CallQuotaEvents.UPD_QUOTA_ERROR,
-            ({ error }) => {
-                this.setState({ updatingBalance: false });
-                this.refs.toast.show(error.message, DURATION.LENGTH_SHORT);
-            }
-        );
     }
 
     componentWillUnmount() {
@@ -75,31 +66,17 @@ export default class GetCredit extends React.Component {
         }
     }
 
-    onBalanceUpdated({ callQuota }) {
-        this.props.currentBalance = callQuota.toFixed(2);
-        this.setState(
-            {
-                updatingBalance: false,
-                purchaseExecuted: true,
-                selectedCredit: undefined
-            },
-            () => {
-                this.close();
-            }
-        );
-    }
-
     purchaseHandler(purchase) {
         console.log('purchaseUpdatedListener', purchase);
         const receipt = purchase.transactionReceipt;
         RNIap.consumeAllItemsAndroid();
         if (receipt) {
-            InAppPurchase.grpcTopupUserBalance(
+            UserServices.topupUserBalance(
                 '100',
                 parseFloat(this.state.selectedCredit),
                 'sampleToken'
             )
-                .then(deliveryResult => {
+                .then(newBalance => {
                     if (Platform.OS === 'ios') {
                         RNIap.finishTransactionIOS(purchase.transactionId);
                     } else if (Platform.OS === 'android') {
@@ -107,10 +84,27 @@ export default class GetCredit extends React.Component {
                             purchase.purchaseToken
                         );
                     }
+                    this.setState(
+                        {
+                            updatingBalance: false,
+                            purchaseExecuted: true,
+                            selectedCredit: undefined,
+                            currentBalance: newBalance.toFixed(2)
+                        },
+                        () => {
+                            if (this.props.updateCallBack) {
+                                this.props.updateCallBack(newBalance);
+                            }
+                            this.close();
+                        }
+                    );
                 })
                 .catch(e => {
                     this.setState({ updatingBalance: false });
-                    this.refs.toast.show(e.toString(), DURATION.LENGTH_SHORT);
+                    this.refs.toast.show(
+                        'Could not update the balance',
+                        DURATION.LENGTH_SHORT
+                    );
                 });
         }
     }
@@ -336,7 +330,7 @@ export default class GetCredit extends React.Component {
                                         >
                                             ${' '}
                                         </Text>
-                                        {this.props.currentBalance.toFixed(2)}
+                                        {this.state.currentBalance}
                                     </Text>
                                 )}
                             </View>

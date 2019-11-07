@@ -54,7 +54,6 @@ const getPhoneContacts = () => {
             Store.dispatch(setPhoneContacts([]));
             return;
         }
-
         const AllPhoneContacts = contacts.map((contact, index) => {
             return {
                 userId: index,

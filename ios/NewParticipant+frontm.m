@@ -1,21 +1,23 @@
 //
-//  TopupBalanceResponse+frontm.m
+//  NewParticipant+frontm.m
 //  frontm_mobile
 //
-//  Created by Davide on 23/08/2019.
+//  Created by Davide on 05/11/2019.
 //  Copyright © 2019 Facebook. All rights reserved.
 //
 
-#import "TopupBalanceResponse+frontm.h"
+#import "NewParticipant+frontm.h"
+#import "UserAddress+frontm.h"
 #import "NSArray+Map.h"
 
-@implementation TopupBalanceResponse (frontm)
+@implementation NewParticipant (frontm)
 
 - (NSDictionary *) toJSON {
-  
   return @{
-           @"error": @(self.error),
-           @"callQuota": @(self.callQuota)
+           @"userName": self.userName,
+           @"address": self.hasAddress ? [self.address toJSON] : [NSNull null],
+           @"userCompanyName" : self.userCompanyName,
+           @"userId": self.userId,
            };
 }
 
@@ -33,4 +35,5 @@
     return [obj toJSON];
   }];
 }
+
 @end

@@ -529,12 +529,15 @@ class ContactsPicker extends React.Component {
                         </View>
                         <View style={{ position: 'absolute', right: 10 }}>
                             <TouchableOpacity
-                                accessibilityLabel="More Button"
+                                accessibilityLabel="Edit Button"
+                                testID="edit-button"
                                 onPress={() => {
                                     this.goToMyProfile();
                                 }}
                             >
                                 <Image
+                                    accessibilityLabel="Edit Button"
+                                    testID="edit-button"
                                     style={{
                                         width: 40,
                                         height: 40

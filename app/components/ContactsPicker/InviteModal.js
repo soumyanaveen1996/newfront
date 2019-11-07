@@ -170,8 +170,12 @@ export default class InviteModal extends React.Component {
                                 >
                                     <TouchableOpacity
                                         onPress={() => this.hideModal({})}
+                                        accessibilityLabel="Close Popup"
+                                        testID="close-popup"
                                     >
                                         <Image
+                                            accessibilityLabel="Close Popup"
+                                            testID="close-popup"
                                             style={{
                                                 width: 15,
                                                 height: 15,
@@ -344,8 +348,14 @@ const InviteByEmail = ({
                             margin: 10
                         }}
                     >
-                        <TouchableOpacity onPress={onClose}>
+                        <TouchableOpacity
+                            accessibilityLabel="Close Popup"
+                            testID="close-popup"
+                            onPress={onClose}
+                        >
                             <Image
+                                accessibilityLabel="Close Popup"
+                                testID="close-popup"
                                 style={{
                                     width: 15,
                                     height: 15,

@@ -31,25 +31,25 @@
 
 #pragma mark - Method Implementations
 
-#pragma mark GetSubscribed(Empty) returns (ChannelListResponse)
+#pragma mark GetSubscribed(SelectedDomainInput) returns (ChannelListResponse)
 
-- (void)getSubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)getSubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToGetSubscribedWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToGetSubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToGetSubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"GetSubscribed"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[ChannelListResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
-#pragma mark GetUnsubscribed(Empty) returns (ChannelListResponse)
+#pragma mark GetUnsubscribed(SelectedDomainInput) returns (ChannelListResponse)
 
-- (void)getUnsubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
+- (void)getUnsubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
   [[self RPCToGetUnsubscribedWithRequest:request handler:handler] start];
 }
 // Returns a not-yet-started RPC object.
-- (GRPCProtoCall *)RPCToGetUnsubscribedWithRequest:(Empty *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
+- (GRPCProtoCall *)RPCToGetUnsubscribedWithRequest:(SelectedDomainInput *)request handler:(void(^)(ChannelListResponse *_Nullable response, NSError *_Nullable error))handler{
   return [self RPCToMethod:@"GetUnsubscribed"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[ChannelListResponse class]
@@ -233,6 +233,18 @@
   return [self RPCToMethod:@"DeleteChannel"
             requestsWriter:[GRXWriter writerWithValue:request]
              responseClass:[BooleanResponse class]
+        responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
+}
+#pragma mark FindNewParticipants(FindNewParticipantsInput) returns (FindNewParticipantsResponse)
+
+- (void)findNewParticipantsWithRequest:(FindNewParticipantsInput *)request handler:(void(^)(FindNewParticipantsResponse *_Nullable response, NSError *_Nullable error))handler{
+  [[self RPCToFindNewParticipantsWithRequest:request handler:handler] start];
+}
+// Returns a not-yet-started RPC object.
+- (GRPCProtoCall *)RPCToFindNewParticipantsWithRequest:(FindNewParticipantsInput *)request handler:(void(^)(FindNewParticipantsResponse *_Nullable response, NSError *_Nullable error))handler{
+  return [self RPCToMethod:@"FindNewParticipants"
+            requestsWriter:[GRXWriter writerWithValue:request]
+             responseClass:[FindNewParticipantsResponse class]
         responsesWriteable:[GRXWriteable writeableWithSingleHandler:handler]];
 }
 @end

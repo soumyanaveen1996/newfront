@@ -242,7 +242,7 @@ dependencies {
     compile(project(':react-native-device-info')){
         exclude group: 'com.google.android.gms', module: 'play-services-gcm'
     }
-    compile project(':react-native-contacts')
+    implementation project(':react-native-contacts')
     compile project(':react-native-code-push')
     compile(project(':react-native-camera')){
         exclude group: 'com.google.android.gms'

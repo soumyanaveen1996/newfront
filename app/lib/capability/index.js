@@ -27,7 +27,6 @@ import Telnet from './Telnet';
 import BotState from './BotState';
 import BackgroundTaskQueue from './BackgroundTaskQueue';
 import MessageQuota from './MessageQuota';
-import UpdateCallQuota from './CallQuota';
 import RemoteBotInstall from '../RemoteBotInstall';
 import InAppPurchase from './InAppPurchase';
 import OfflineMap from './OfflineMap';
@@ -35,9 +34,11 @@ import { Moment, MomentTimezone } from './Moment';
 import { Immutable } from './Immutable';
 import { R } from './Ramda';
 import { Accelerometer } from './Sensors';
+import { UpdateCallQuota, CallQuota } from './CallQuota';
 const version = '1.1'; // Keeps getting bumped if new capabilities are added (after release 1)
 
 export {
+    Accelerometer,
     AgentGuard,
     Auth,
     AUTH_PROVIDERS,
@@ -52,6 +53,7 @@ export {
     futureRequest,
     Immutable,
     InAppPurchase,
+    LocationTracker,
     Media,
     Message,
     MessageQuota,
@@ -73,9 +75,8 @@ export {
     ResourceTypes,
     Settings,
     Telnet,
-    UpdateCallQuota,
     Utils,
     version,
-    LocationTracker,
-    Accelerometer
+    UpdateCallQuota,
+    CallQuota
 };

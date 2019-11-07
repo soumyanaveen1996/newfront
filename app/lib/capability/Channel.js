@@ -151,6 +151,7 @@ export default class Channel {
             if (user) {
                 ChannelsServiceClient.getSubscribed(
                     user.creds.sessionId,
+                    {},
                     (err, result) => {
                         if (err) {
                             reject(new Error('Unknown error'));
@@ -169,6 +170,7 @@ export default class Channel {
             if (user) {
                 ChannelsServiceClient.getUnsubscribed(
                     user.creds.sessionId,
+                    {},
                     (err, result) => {
                         if (err) {
                             reject(new Error('Unknown error'));
@@ -187,6 +189,7 @@ export default class Channel {
             if (user) {
                 ChannelsServiceClient.getOwned(
                     user.creds.sessionId,
+                    {},
                     (err, result) => {
                         if (err) {
                             reject(new Error('Unknown error'));

@@ -31,7 +31,9 @@ CF_EXTERN_C_BEGIN
 @class DBChannel;
 @class DomainChannels;
 @class InputChannel;
+@class NewParticipant;
 @class ParticpantUser;
+@class UserAddress;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -376,6 +378,67 @@ typedef GPB_ENUM(ChangeOwnerInput_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *newOwnerId NS_RETURNS_NOT_RETAINED;
+
+@end
+
+#pragma mark - FindNewParticipantsInput
+
+typedef GPB_ENUM(FindNewParticipantsInput_FieldNumber) {
+  FindNewParticipantsInput_FieldNumber_QueryString = 1,
+  FindNewParticipantsInput_FieldNumber_ChannelName = 2,
+  FindNewParticipantsInput_FieldNumber_UserDomain = 3,
+};
+
+@interface FindNewParticipantsInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *queryString;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@end
+
+#pragma mark - FindNewParticipantsResponse
+
+typedef GPB_ENUM(FindNewParticipantsResponse_FieldNumber) {
+  FindNewParticipantsResponse_FieldNumber_Error = 1,
+  FindNewParticipantsResponse_FieldNumber_ContentArray = 2,
+  FindNewParticipantsResponse_FieldNumber_ErrorMessage = 3,
+};
+
+@interface FindNewParticipantsResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NewParticipant*> *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *errorMessage;
+
+@end
+
+#pragma mark - NewParticipant
+
+typedef GPB_ENUM(NewParticipant_FieldNumber) {
+  NewParticipant_FieldNumber_UserName = 1,
+  NewParticipant_FieldNumber_UserId = 2,
+  NewParticipant_FieldNumber_UserCompanyName = 3,
+  NewParticipant_FieldNumber_Address = 4,
+};
+
+@interface NewParticipant : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
 
 @end
 

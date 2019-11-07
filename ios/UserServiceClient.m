@@ -24,6 +24,7 @@
 #import "TopupBalanceResponse+frontm.h"
 #import "DeviceBoolResponse+frontm.h"
 #import "PaginatedCallHistoryResponse+frontm.h"
+#import "UserBalanceResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -380,6 +381,25 @@ RCT_REMAP_METHOD(deregisterDevice, deregisterDeviceWithSessionId:(NSString *)ses
                              } else {
                                callback(@[[NSNull null], [response toResponse]]);
                              }
+                           }
+                         }];
+  
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(getUserBalance, getUserBalanceWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:getUserBalance Params : %@", sessionId);
+  
+  GRPCProtoCall *call = [self.serviceClient
+                         RPCToGetUserBalanceWithRequest:[Empty new]
+                         handler:^(UserBalanceResponse * _Nullable response, NSError * _Nullable error) {
+                           if (error != nil) {
+                             callback(@[@{}, [NSNull null]]);
+                             return;
+                           } else {
+                             RCTLog(@"method:getUserBalance response : %@", [response toResponse]);
+                             callback(@[[NSNull null], [response toResponse]]);
                            }
                          }];
   

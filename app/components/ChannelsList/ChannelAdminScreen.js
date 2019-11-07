@@ -228,7 +228,8 @@ class ChannelAdminScreen extends React.Component {
     manageParticipants() {
         Actions.addParticipants({
             title: 'Manage participants',
-            onSelected: this.updateParticipants.bind(this)
+            onSelected: this.updateParticipants.bind(this),
+            channel: this.channel
         });
     }
 
