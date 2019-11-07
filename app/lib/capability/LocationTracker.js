@@ -53,19 +53,19 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: precision,
-                heartbeatInterval: heartbeat_local,
+                distanceFilter: 100,
+                heartbeatInterval: 300,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
                 // Application config
-                debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
                 stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
                 startOnBoot: true, // <-- Auto start tracking when device is powered-up.
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
-                // url: 'http://tracker.transistorsoft.com/locations/frontm',
+                url: 'http://tracker.transistorsoft.com/locations/frontm',
                 params: BackgroundGeolocation.transistorTrackerParams(Device),
                 batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
                 autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
