@@ -69,8 +69,8 @@ export const SYSTEM_BOT_MANIFEST = {
             },
             archiveUtils: {
                 remote: 'true',
-                url: 'botfarm/rc/frontmai/archiveUtils/1.1.0/archiveUtils.js',
-                version: '1.1.0'
+                url: 'botfarm/rc/frontmai/archiveUtils/1.2.0/archiveUtils.js',
+                version: '1.2.0'
             }
         },
         description:
@@ -186,8 +186,8 @@ export const SYSTEM_BOT_MANIFEST = {
             },
             archiveUtils: {
                 remote: 'true',
-                url: 'botfarm/rc/frontmai/archiveUtils/1.1.0/archiveUtils.js',
-                version: '1.1.0'
+                url: 'botfarm/rc/frontmai/archiveUtils/1.2.0/archiveUtils.js',
+                version: '1.2.0'
             }
         },
         description: 'Bot that executes jobs in the backend',

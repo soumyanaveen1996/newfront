@@ -53,22 +53,23 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 100,
-                heartbeatInterval: 300,
+                distanceFilter: 50,
+                // heartbeatInterval: 300,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
                 // Application config
-                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+                debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
                 logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
                 stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
                 startOnBoot: true, // <-- Auto start tracking when device is powered-up.
                 disableLocationAuthorizationAlert: false,
+                minimumActivityRecognitionConfidence: 30,
                 // HTTP / SQLite config
                 url: 'http://tracker.transistorsoft.com/locations/frontm',
                 params: BackgroundGeolocation.transistorTrackerParams(Device),
-                batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-                autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
+                batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+                // autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
                     // <-- Optional HTTP headers
                     // 'X-FOO': 'bar'
@@ -102,7 +103,6 @@ export default class LocationTracker {
         );
         const user = await Auth.getUser();
         if (!user) {
-            console.log('Sourav Logging:::: Could not get User ----> Exit');
             return;
         }
 
@@ -133,10 +133,8 @@ export default class LocationTracker {
             // const data = await DeviceStorage.get('location_bot');
             const taskId = await BackgroundGeolocation.startBackgroundTask();
 
-            await RemoteLogger('Got Location Data');
-            console.log('Sourav Logging:::: Remote Logged');
+            RemoteLogger('Got Location Data');
             await LocationTracker.report_location(location.coords);
-            console.log('Sourav Logging:::: Reported to Bot');
             BackgroundGeolocation.stopBackgroundTask(taskId);
         } catch (error) {
             BackgroundGeolocation.stopBackgroundTask(taskId);

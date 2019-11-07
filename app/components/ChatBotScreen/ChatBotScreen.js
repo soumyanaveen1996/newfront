@@ -436,10 +436,17 @@ class ChatBotScreen extends React.Component {
     }
 
     botDone = () => {
+        const types = this.state.messages.map(message =>
+            message.message.getMessageType()
+        );
+        const all_messages = this.state.messages.filter(
+            message => message.message.getMessageType() !== 'background_event'
+        );
         this.loadedBot.done(
             null,
             this.botState,
-            this.state.messages,
+            all_messages,
+            // this.state.messages,
             this.botContext
         );
     };
