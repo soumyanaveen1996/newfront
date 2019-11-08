@@ -144,9 +144,6 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         CatalogInput input = CatalogInput.newBuilder()
                 .setIsWebRequest(false)
-                .setOutput(null)
-                .setQuery(null)
-                .setSelectedDomain(null)
                 .build();
 
         Metadata header=new Metadata();
@@ -184,16 +181,13 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void getCatalog(String sessionId, final Callback callback)
+    public void getCatalog(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getCatalog", sessionId);
         ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
 
         CatalogInput input = CatalogInput.newBuilder()
                 .setIsWebRequest(false)
-                .setOutput(null)
-                .setQuery(null)
-                .setSelectedDomain(null)
                 .build();
 
         Metadata header=new Metadata();
@@ -422,11 +416,13 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
         stub.getPaginatedArchivedMessages(input, new StreamObserver<GetPaginatedArchivedMessagesResponse>() {
             @Override
             public void onNext(GetPaginatedArchivedMessagesResponse value) {
+                Log.d("GRPC:::getPaginatedArchivedMessages", value.toString());
                 callback.invoke(null, new GetPaginatedArchivedMessagesResponseConverter().toResponse(value));
             }
 
             @Override
             public void onError(Throwable t) {
+                Log.d("GRPC:::getPaginatedArchivedMessagesE", t.toString());
                 callback.invoke(Arguments.createMap());
             }
 

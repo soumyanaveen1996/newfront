@@ -7,6 +7,7 @@ export default class ConversationServices {
     static getPaginatedArchivedMessages(conversationId, botId, startTime) {
         return new Promise((resolve, reject) => {
             Auth.getUser().then(user => {
+                console.log('>>>>>>>', conversationId, botId, startTime);
                 ConversationServiceClient.getPaginatedArchivedMessages(
                     user.creds.sessionId,
                     {
