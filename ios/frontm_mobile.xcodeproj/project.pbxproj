@@ -172,6 +172,7 @@
 		6B2D929D2310237800639CD2 /* TopupBalanceResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D929C2310237800639CD2 /* TopupBalanceResponse+frontm.m */; };
 		6B3FBBE52BEA41AFB7EA118A /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 515AD2D5FDDC4884A04D87B3 /* SF-Pro-Text-Semibold.otf */; };
 		6B4C3C4B2305A02300B86BC2 /* UserDomain+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */; };
+		6B53353E237570D90057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B53353D237570D90057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.m */; };
 		6B5CF44F235E13D5008D701B /* libRNSensors.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B5CF444235E13A8008D701B /* libRNSensors.a */; };
 		6B6442022283F36500E81203 /* CallHistoryResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */; };
 		6B6442542283F82D00E81203 /* CallHistoryObject+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6442532283F82D00E81203 /* CallHistoryObject+frontm.m */; };
@@ -1095,6 +1096,8 @@
 		6B2D92F02310238D00639CD2 /* TopupBalanceResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TopupBalanceResponse+frontm.h"; sourceTree = "<group>"; };
 		6B4C3BF723059FD900B86BC2 /* UserDomain+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UserDomain+frontm.h"; sourceTree = "<group>"; };
 		6B4C3C4A2305A02300B86BC2 /* UserDomain+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UserDomain+frontm.m"; sourceTree = "<group>"; };
+		6B5334E5237570B70057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GetPaginatedArchivedMessagesResponse+frontm.h"; sourceTree = "<group>"; };
+		6B53353D237570D90057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GetPaginatedArchivedMessagesResponse+frontm.m"; sourceTree = "<group>"; };
 		6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSensors.xcodeproj; path = "../node_modules/react-native-sensors/ios/RNSensors.xcodeproj"; sourceTree = "<group>"; };
 		6B6442012283F36500E81203 /* CallHistoryResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CallHistoryResponse+frontm.m"; sourceTree = "<group>"; };
 		6B6442522283F38300E81203 /* CallHistoryResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CallHistoryResponse+frontm.h"; sourceTree = "<group>"; };
@@ -1575,6 +1578,8 @@
 				0490560B223B6080008FECC8 /* GetArchivedMessagesContent+frontm.h */,
 				0490560C223B6080008FECC8 /* GetArchivedMessagesContent+frontm.m */,
 				049055B8223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.h */,
+				6B5334E5237570B70057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.h */,
+				6B53353D237570D90057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.m */,
 				049055B9223B603F008FECC8 /* GetArchivedMessagesResponse+frontm.m */,
 				0458FAB22238E647002D37A3 /* GetConversationDetailsChannels+frontm.h */,
 				0458FAB32238E647002D37A3 /* GetConversationDetailsChannels+frontm.m */,
@@ -3229,6 +3234,7 @@
 				0445655F2248C5DE00996110 /* DomainChannels+frontm.m in Sources */,
 				04905649223B879E008FECC8 /* BooleanResponse+frontm.m in Sources */,
 				04E0FF8E2238E063004F19B1 /* CatalogBotClients+frontm.m in Sources */,
+				6B53353E237570D90057CF54 /* GetPaginatedArchivedMessagesResponse+frontm.m in Sources */,
 				6B2A5D0E23548D2C0052E154 /* PaginatedCallHistoryResponse+frontm.m in Sources */,
 				6BF13F612371D74800A96A16 /* NewParticipant+frontm.m in Sources */,
 				0490563D223B7D8B008FECC8 /* Channel+frontm.m in Sources */,

@@ -101,6 +101,7 @@ import ImageResizer from 'react-native-image-resizer';
 import ImageMessage from '../ImageMessage/ImageMessage';
 import NetworkButton from '../Header/NetworkButton';
 import VideoMessage from '../ImageMessage/VideoMessage';
+import MessageManager from '../../lib/conversation/MessageManager';
 
 const R = require('ramda');
 
@@ -184,6 +185,7 @@ class ChatBotScreen extends React.Component {
             allContacts: [],
             bottomLoaded: true
         };
+        this.moreMessagesExist = true;
         this.botState = {}; // Will be mutated by the bot to keep any state
         this.chatState = {
             updatingChat: false
@@ -289,10 +291,12 @@ class ChatBotScreen extends React.Component {
 
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
-            if (messages.length < pageSize) {
-                await this.loadOldMessagesFromServer();
-                messages = await this.loadMessages();
-            }
+            // let messages = await this.loadMessages();
+            // if (messages.length < pageSize) {
+            //     await this.loadOldMessagesFromServer();
+            //     messages = await this.loadMessages();
+            // }
+
             // Find the first non-read message and use scrollToIndex.
             let index = 0;
             for (let i = 0; i < messages.length; i++) {
@@ -1235,6 +1239,9 @@ class ChatBotScreen extends React.Component {
     /**Render the new message on screen */
     updateMessages = (messages, callback) => {
         if (this.mounted) {
+            LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+            );
             this.setState(
                 {
                     typing: '',
@@ -1278,11 +1285,6 @@ class ChatBotScreen extends React.Component {
         return new Promise(async resolve => {
             this.processingMessageQueue = true;
             while (this.messageQueue.length > 0) {
-                if (Platform.OS === 'ios') {
-                    LayoutAnimation.configureNext(
-                        LayoutAnimation.Presets.easeInEaseOut
-                    );
-                }
                 await this.appendMessageToChat(this.messageQueue.shift());
             }
             this.processingMessageQueue = false;
@@ -2091,12 +2093,20 @@ class ChatBotScreen extends React.Component {
     };
 
     async loadMessages() {
-        let messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
+        const page = await MessageManager.getPaginatedMessages(
             this.conversationContext.conversationId,
-            pageSize,
+            this.getBotId(),
             this.oldestLoadedDate()
         );
-        return messages;
+        if (!page.moreMessagesExist) {
+            this.moreMessagesExist = false;
+        }
+        //  messages = await MessageHandler.fetchDeviceMessagesBeforeDate(
+        //     this.conversationContext.conversationId,
+        //     pageSize,
+        //     this.oldestLoadedDate()
+        // );
+        return page.messages;
     }
 
     async onRefresh() {
@@ -2110,12 +2120,17 @@ class ChatBotScreen extends React.Component {
     }
 
     async loadOlderMessages() {
-        let messages = await this.loadMessages();
-        let combinedMsgs = this.state.messages.concat(messages);
-        if (this.mounted) {
-            this.setState({
-                messages: this.addSessionStartMessages(combinedMsgs)
-            });
+        if (this.moreMessagesExist) {
+            let messages = await this.loadMessages();
+            let combinedMsgs = this.state.messages.concat(messages);
+            if (this.mounted) {
+                LayoutAnimation.configureNext(
+                    LayoutAnimation.Presets.easeInEaseOut
+                );
+                this.setState({
+                    messages: this.addSessionStartMessages(combinedMsgs)
+                });
+            }
         }
     }
 

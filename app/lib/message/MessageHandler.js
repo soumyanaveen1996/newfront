@@ -194,20 +194,22 @@ export default class MessageHandler extends events.EventEmitter {
      * Returns the top max (most recent) messages from the local/device storage
      * TODO: Enhance the method to do queries better (from, to, all messages, sort etc)
      *
-     * @param botKey A string key to indicate the identifier of bot
+     * @param conversationId A string key to indicate the identifier of conversation
      * @param max Last 'n' messages required. Default to 5
      * @param dateLimit Fetch Messages that were created before param value
      *
      * @return Promise that resolves to an array of messages (sorted from least recent to most)
      */
-    fetchDeviceMessagesBeforeDate = (botKey, max = 5, dateLimit) =>
+    fetchDeviceMessagesBeforeDate = (conversationId, max = 25, dateLimit) =>
         new Promise((resolve, reject) => {
-            MessageDAO.selectMessagesBeforeDate(botKey, max, dateLimit).then(
-                messages => {
-                    // we want in reverse order
-                    resolve(messages);
-                }
-            );
+            MessageDAO.selectMessagesBeforeDate(
+                conversationId,
+                max,
+                dateLimit
+            ).then(messages => {
+                // we want in reverse order
+                resolve(messages);
+            });
         });
 
     /**

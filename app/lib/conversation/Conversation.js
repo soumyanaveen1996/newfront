@@ -45,10 +45,12 @@ export default class Conversation {
 
     static grpcGetTimeline = user => {
         return new Promise((resolve, reject) => {
+            console.log('>>>>>>>>>gettimeline');
             ConversationServiceClient.getTimeline(
                 user.creds.sessionId,
+                {},
                 (error, result) => {
-                    console.log('GRPC:::grpcUpdateFavorites : ', error, result);
+                    console.log('>>>>>GRPC:::getTimeline : ', error, result);
                     if (error) {
                         reject({
                             type: 'error',
@@ -75,7 +77,7 @@ export default class Conversation {
                     return Conversation.grpcGetTimeline(user);
                 })
                 .then(async res => {
-                    console.log('GRPC:::Timeline : ', res);
+                    console.log('>>>>GRPC:::Timeline : ', res);
                     let manifestChan = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );
