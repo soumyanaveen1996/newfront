@@ -267,15 +267,19 @@ export const sendBackgroundMessageSafe = async (
         botScreen
     );
     if (!conversationContext) {
-        console.log('Sourav Logging:::: No Conversation COntext Found');
+        RemoteLogger(
+            'Location Tracker:::: No Conversation Context - Cannot Send data'
+        );
         return;
     }
     if (activeBot == botId) {
+        RemoteLogger('Location Tracker:::: Sending Location to Bot');
         EventEmitter.emit(MessageEvents.messageSend, {
             message,
             botId: activeBot
         });
     } else {
+        RemoteLogger('Location Tracker:::: Sending Location to Bot');
         await processMessage(message, botManifest, botContext, true);
     }
     return;

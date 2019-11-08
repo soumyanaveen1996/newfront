@@ -33,11 +33,7 @@ export default class LocationTracker {
         BackgroundGeolocation.onHeartbeat(LocationTracker.handleHeartBeat);
 
         // This event fires when the user toggles location-services authorization
-        BackgroundGeolocation.onProviderChange(() => {
-            RemoteLogger(
-                `Provider Has Changed ${moment().format('DD-MM hh:mm:ss')}`
-            );
-        });
+        BackgroundGeolocation.onProviderChange(() => {});
 
         let heartbeat_local = heartbeatInterval;
 
@@ -54,21 +50,20 @@ export default class LocationTracker {
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
                 distanceFilter: 50,
-                // heartbeatInterval: 300,
+                heartbeatInterval: 120,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
                 // Application config
-                debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
+                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
                 stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
                 startOnBoot: true, // <-- Auto start tracking when device is powered-up.
                 disableLocationAuthorizationAlert: false,
-                minimumActivityRecognitionConfidence: 30,
                 // HTTP / SQLite config
-                url: 'http://tracker.transistorsoft.com/locations/frontm',
-                params: BackgroundGeolocation.transistorTrackerParams(Device),
-                batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+                // url: 'http://tracker.transistorsoft.com/locations/frontm',
+                // params: BackgroundGeolocation.transistorTrackerParams(Device),
+                // batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
                 // autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
                     // <-- Optional HTTP headers
@@ -98,9 +93,6 @@ export default class LocationTracker {
     };
 
     static report_location = async location => {
-        console.log(
-            'Sourav Logging:::: Got a Location, Proceed with Reporting'
-        );
         const user = await Auth.getUser();
         if (!user) {
             return;
@@ -146,7 +138,7 @@ export default class LocationTracker {
         // const data = await DeviceStorage.get('location_bot');
         console.log('Sourav Logging:::: In heartbeat');
 
-        await RemoteLogger(`Received Heartbeat ${JSON.stringify(event)}`);
+        RemoteLogger(`Received Heartbeat ${JSON.stringify(event)}`);
         const location = await BackgroundGeolocation.getCurrentPosition({
             samples: 1,
             persist: true

@@ -136,15 +136,8 @@ class NetworkPoller {
 
         this.grpcSubscription.push(
             eventEmitter.addListener('sse_message', message => {
-                console.log(
-                    'Sourav Logging:::: Received SSE Response',
-                    message
-                );
-
-                console.log(
-                    'Sourav Logging:::: Processing Message : in GRPC Push'
-                );
                 setTimeout(() => {
+                    RemoteLogger('Air PostCard:::: SSE Response Processing');
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
                 // BackgroundTimer.setTimeout(() => {
