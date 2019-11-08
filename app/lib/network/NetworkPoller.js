@@ -35,13 +35,6 @@ const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
 const R = require('ramda');
 
-// BackgroundTask.define(async () => {
-//     // await NetworkHandler.poll();
-//     RemoteLogger('Firing a Background Task now');
-//     await BackgroundTaskProcessor.process();
-//     BackgroundTask.finish();
-// });
-
 class NetworkPoller {
     grpcSubscription = [];
     grpcEndSubscription = [];

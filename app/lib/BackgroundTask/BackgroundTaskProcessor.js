@@ -142,13 +142,11 @@ const processTask = async (task, user) => {
         message.backgroundEventMessage(task.key, task.options);
 
         if (activeBot == task.botId) {
-            RemoteLogger('Running Tasks Bot is Open');
             EventEmitter.emit(MessageEvents.messageSend, {
                 message,
                 botId: activeBot
             });
         } else {
-            RemoteLogger('Running Tasks Bot is Closed');
             await processMessage(message, botManifest, botContext, true);
         }
         await BackgroundTaskDAO.updateBackgroundTaskLastRun(
@@ -199,7 +197,6 @@ const processMessage = async (
             break;
         }
     }
-    RemoteLogger(`Sending message to boT ${JSON.stringify(message)}`);
     bot.next(message, {}, [], botContext);
 };
 
@@ -274,13 +271,11 @@ export const sendBackgroundMessageSafe = async (
         return;
     }
     if (activeBot == botId) {
-        RemoteLogger('Running Tasks Bot is Open');
         EventEmitter.emit(MessageEvents.messageSend, {
             message,
             botId: activeBot
         });
     } else {
-        RemoteLogger('Running Tasks Bot is Closed');
         await processMessage(message, botManifest, botContext, true);
     }
     return;
