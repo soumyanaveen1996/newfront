@@ -7,11 +7,18 @@ option java_package = "com.frontm.conversation.proto";
 package conversation;
 
 service ConversationService {
-    rpc UpdateFavourites(UpdateFavouritesInput) returns (UpdateFavouritesResponse) {}
-    rpc GetTimeline(commonmessages.Empty) returns (TimelineResponse) {}
-    rpc GetCatalog(commonmessages.Empty) returns (CatalogResponse) {}
-    rpc GetConversationDetails(GetConversationDetailsInput) returns (GetConversationDetailsResponse) {}
-    rpc GetArchivedMessages(GetArchivedMessagesInput) returns (GetArchivedMessagesResponse) {}
+    rpc UpdateFavourites (UpdateFavouritesInput) returns (UpdateFavouritesResponse) {}
+    rpc GetTimeline (TimeLineInput) returns (TimelineResponse) {}
+    rpc GetCatalog (CatalogInput) returns (CatalogResponse) {}
+    rpc GetConversationDetails (GetConversationDetailsInput) returns (GetConversationDetailsResponse) {}
+    rpc GetArchivedMessages (GetArchivedMessagesInput) returns (GetArchivedMessagesResponse) {}
+    rpc GetPaginatedArchivedMessages (GetPaginatedArchivedMessagesInput) returns (GetPaginatedArchivedMessagesResponse) {}
+    rpc ResetConversation (ResetConversationInput) returns (commonmessages.Empty) {}
+    rpc GetFavouriteConversations (commonmessages.SelectedDomainInput) returns (FavouritesResponse) {}
+}
+
+message TimeLineInput {
+    bool isWebRequest = 1;
 }
 
 message UpdateFavouritesInput {
@@ -49,7 +56,15 @@ message TimelineConversation {
     TimelineBotInfo bot = 9;
     bytes lastMessage = 10;
     TimelineContact contact = 11;
+    TimelineChannel channel = 12;
 }
+
+message TimelineChannel {
+    string channelName = 4;
+    string userDomain = 5;
+    string description = 7;
+}
+
 
 message TimelineChannels {
     string channelName = 1;
@@ -77,6 +92,11 @@ message TimelineContact {
 
 message CatalogResponse {
     repeated CatalogBot bots = 1;
+    message CatalogBots {
+        repeated CatalogBot bots = 1;
+    }
+    map<string, CatalogBots> companies = 2;
+    map<string, CatalogBots> categories = 3;
 }
 
 message CatalogBot {
@@ -131,6 +151,7 @@ message GetConversationDetailsResponse {
     GetConversationDetailsUser conversationOwner = 2;
     repeated GetConversationDetailsUser participants = 3;
     int32 error = 4;
+    string userDomain = 5;
 }
 
 message GetConversationDetailsUser {
@@ -163,4 +184,42 @@ message GetArchivedMessagesContent {
     string createdBy = 4;
     bytes content = 5;
     bytes options = 6;
+}
+
+message GetPaginatedArchivedMessagesInput {
+    string conversationId = 1;
+    string botId = 2;
+    double startTime = 3;
+}
+
+message GetPaginatedArchivedMessagesResponse {
+    int32 error = 1;
+    bool moreMessagesExist = 2;
+    repeated GetArchivedMessagesContent content = 3;
+}
+
+message CatalogInput {
+    bool isWebRequest = 1;
+    string query = 2;
+    string output = 3;
+    string selectedDomain = 4;
+}
+
+message ResetConversationInput {
+    string conversationId = 1;
+    string botId = 2;
+}
+
+message FavContact {
+    string userName = 1;
+    string emailAddress = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+    string userId = 4;
+    string userCompanyName = 5;
+    commonmessages.UserAddress address = 6;
+}
+
+message FavouritesResponse {
+    repeated TimelineConversation favourites = 1;
+    repeated FavContact favouritePeople = 2;
 }
