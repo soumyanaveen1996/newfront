@@ -35,13 +35,6 @@ const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
 const R = require('ramda');
 
-// BackgroundTask.define(async () => {
-//     // await NetworkHandler.poll();
-//     RemoteLogger('Firing a Background Task now');
-//     await BackgroundTaskProcessor.process();
-//     BackgroundTask.finish();
-// });
-
 class NetworkPoller {
     grpcSubscription = [];
     grpcEndSubscription = [];
@@ -143,15 +136,8 @@ class NetworkPoller {
 
         this.grpcSubscription.push(
             eventEmitter.addListener('sse_message', message => {
-                console.log(
-                    'Sourav Logging:::: Received SSE Response',
-                    message
-                );
-
-                console.log(
-                    'Sourav Logging:::: Processing Message : in GRPC Push'
-                );
                 setTimeout(() => {
+                    RemoteLogger('Air PostCard:::: SSE Response Processing');
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 1000);
                 // BackgroundTimer.setTimeout(() => {

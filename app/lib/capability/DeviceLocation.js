@@ -32,14 +32,12 @@ export default class DeviceLocation {
         new Promise((resolve, reject) => {
             Permissions.request('location').then(response => {
                 if (response === 'authorized') {
-                    RemoteLogger('Getting Location');
                     navigator.geolocation.getCurrentPosition(
                         location => {
                             console.log(
                                 'Location : ',
                                 JSON.stringify(location)
                             );
-                            RemoteLogger('Sending Location');
                             let deviceLocation = {
                                 latitude: location.coords.latitude,
                                 longitude: location.coords.longitude

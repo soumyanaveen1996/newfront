@@ -4,6 +4,7 @@ import { MessageDAO, NetworkDAO } from '../persistence';
 import EventEmitter, { AuthEvents, MessageEvents } from '../events';
 import { BackgroundTaskProcessor } from '../BackgroundTask';
 import Store from '../../redux/store/configureStore';
+import RemoteLogger from '../utils/remoteDebugger';
 
 export default class MessageQueue {
     constructor(options = {}) {
@@ -114,21 +115,13 @@ export default class MessageQueue {
 
     async handleMessage(message) {
         let user = await Auth.getUser();
-        console.log(
-            'Sourav Logging:::: Processing Message:::',
-            message.messageId
-        );
+
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
         if (alreadyProcessed) {
+            RemoteLogger('Message is already processes.... RETURN --->');
             return true;
         }
 
-        console.log(
-            'Processing message : ',
-            message,
-            Queue,
-            IMBotMessageHandler
-        );
         let bot = message.bot;
         // Name of the bot is the key, unless its IMBot (one to many relationship)
         if (bot === 'im-bot' || bot === 'channels-bot') {

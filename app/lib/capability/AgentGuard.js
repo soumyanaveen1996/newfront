@@ -6,6 +6,7 @@ const R = require('ramda');
 import { Network } from '../capability';
 
 import { NativeModules, Platform } from 'react-native';
+import RemoteLogger from '../utils/remoteDebugger';
 const AgentGuardServiceClient = NativeModules.AgentGuardServiceClient;
 
 export class AgentGuardError extends Error {
@@ -58,10 +59,6 @@ export default class AgentGuard {
     };
     static execute = async params => {
         try {
-            console.log(
-                'Sourav Logging:::: Executing Agent Guard',
-                params.parameters
-            );
             const user = await Auth.getUser();
 
             const key = R.pathOr(null, ['conversation', 'bot'], params);
@@ -76,6 +73,8 @@ export default class AgentGuard {
                 };
 
                 const response = await Network(options, true);
+                RemoteLogger('Air PostCard:::: Response from Agent Guard');
+
                 return response;
                 // return convertResponse(response);
             }
