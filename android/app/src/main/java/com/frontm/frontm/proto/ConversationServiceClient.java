@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.frontm.commonmessages.proto.Empty;
+import com.frontm.conversation.proto.CatalogInput;
 import com.frontm.conversation.proto.CatalogResponse;
 import com.frontm.conversation.proto.ConversationServiceGrpc;
 import com.frontm.conversation.proto.GetArchivedMessagesContent;
@@ -17,11 +18,15 @@ import com.frontm.conversation.proto.GetArchivedMessagesInput;
 import com.frontm.conversation.proto.GetArchivedMessagesResponse;
 import com.frontm.conversation.proto.GetConversationDetailsInput;
 import com.frontm.conversation.proto.GetConversationDetailsResponse;
+import com.frontm.conversation.proto.TimeLineInput;
 import com.frontm.conversation.proto.TimelineResponse;
 import com.frontm.conversation.proto.UpdateFavouritesInput;
+import com.frontm.conversation.proto.GetPaginatedArchivedMessagesInput;
+import com.frontm.conversation.proto.GetPaginatedArchivedMessagesResponse;
 import com.frontm.conversation.proto.UpdateFavouritesResponse;
 import com.frontm.frontm.BuildConfig;
 import com.frontm.frontm.proto.converters.CatalogResponseConverter;
+import com.frontm.frontm.proto.converters.GetPaginatedArchivedMessagesResponseConverter;
 import com.frontm.frontm.proto.converters.GetArchivedMessagesResponseConverter;
 import com.frontm.frontm.proto.converters.GetConversationDetailsResponseConverter;
 import com.frontm.frontm.proto.converters.SubscribeBotResponseConverter;
@@ -137,6 +142,13 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::getCatalog", sessionId);
         ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
 
+        CatalogInput input = CatalogInput.newBuilder()
+                .setIsWebRequest(false)
+                .setOutput(null)
+                .setQuery(null)
+                .setSelectedDomain(null)
+                .build();
+
         Metadata header=new Metadata();
         Metadata.Key<String> key =
                 Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
@@ -146,7 +158,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging:::", "getCatalog: Heartbeat Catalog");
 
-        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+        stub.withDeadlineAfter(15000, TimeUnit.MILLISECONDS).getCatalog(input, new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
                 Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Heartbeat Catalog");
@@ -177,6 +189,13 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
         Log.d("GRPC:::getCatalog", sessionId);
         ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
 
+        CatalogInput input = CatalogInput.newBuilder()
+                .setIsWebRequest(false)
+                .setOutput(null)
+                .setQuery(null)
+                .setSelectedDomain(null)
+                .build();
+
         Metadata header=new Metadata();
         Metadata.Key<String> key =
                 Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
@@ -186,7 +205,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         Log.d("Sourav Logging:::", "getCatalog: Calling Catalog");
 
-        stub.withDeadlineAfter(20000, TimeUnit.MILLISECONDS).getCatalog(Empty.newBuilder().build(), new StreamObserver<CatalogResponse>() {
+        stub.withDeadlineAfter(20000, TimeUnit.MILLISECONDS).getCatalog(input, new StreamObserver<CatalogResponse>() {
             @Override
             public void onNext(CatalogResponse value) {
                 Log.d("Sourav Logging:::", "Sourav Logging ::: getCatalog: Success Catalog");
@@ -308,10 +327,12 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getTimeline(String sessionId, final Callback callback)
+    public void getTimeline(String sessionId, ReadableMap params, final Callback callback)
     {
         Log.d("GRPC:::getTimeline", sessionId);
         ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
+
+        TimeLineInput input =  TimeLineInput.newBuilder().setIsWebRequest(false).build();
 
         Metadata header=new Metadata();
         Metadata.Key<String> key =
@@ -320,7 +341,7 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
         stub = MetadataUtils.attachHeaders(stub, header);
 
-        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getTimeline(Empty.newBuilder().build(), new StreamObserver<TimelineResponse>() {
+        stub.withDeadlineAfter(60000, TimeUnit.MILLISECONDS).getTimeline(input, new StreamObserver<TimelineResponse>() {
             @Override
             public void onNext(TimelineResponse value) {
                 callback.invoke(null, new TimelineResponseConverter().toResponse(value));
@@ -378,5 +399,42 @@ public class ConversationServiceClient extends ReactContextBaseJavaModule {
 
     }
 
+    @ReactMethod
+    public void getPaginatedArchivedMessages(String sessionId, ReadableMap params, final Callback callback)
+    {
+        Log.d("GRPC:::getPaginatedArchivedMessages", sessionId);
+        ConversationServiceGrpc.ConversationServiceStub stub = ConversationServiceGrpc.newStub(getmChannel());
 
+
+        GetPaginatedArchivedMessagesInput input = GetPaginatedArchivedMessagesInput.newBuilder()
+                .setConversationId(params.getString("conversationId"))
+                .setBotId(params.getString("botId"))
+                .setStartTime(params.getDouble("startTime"))
+                .build();
+
+        Metadata header=new Metadata();
+        Metadata.Key<String> key =
+                Metadata.Key.of("sessionId", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, sessionId);
+
+        stub = MetadataUtils.attachHeaders(stub, header);
+
+        stub.getPaginatedArchivedMessages(input, new StreamObserver<GetPaginatedArchivedMessagesResponse>() {
+            @Override
+            public void onNext(GetPaginatedArchivedMessagesResponse value) {
+                callback.invoke(null, new GetPaginatedArchivedMessagesResponseConverter().toResponse(value));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                callback.invoke(Arguments.createMap());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+
+    }
 }

@@ -4,13 +4,13 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.frontm.conversation.proto.GetArchivedMessagesContent;
-import com.frontm.conversation.proto.GetArchivedMessagesResponse;
+import com.frontm.conversation.proto.GetPaginatedArchivedMessagesResponse;
 import com.frontm.queue.proto.QueueMessage;
 import com.frontm.queue.proto.QueueResponse;
 
-public class GetArchivedMessagesResponseConverter {
+public class GetPaginatedArchivedMessagesResponseConverter {
 
-    public WritableMap toJson(GetArchivedMessagesResponse response) {
+    public WritableMap toJson(GetPaginatedArchivedMessagesResponse response) {
 
         WritableMap map = Arguments.createMap();
 
@@ -25,10 +25,11 @@ public class GetArchivedMessagesResponseConverter {
             map.putArray("content", Arguments.createArray());
         }
         map.putInt("error", response.getError());
+        map.putBoolean("moreMessagesExist", response.getMoreMessagesExist());
         return map;
     }
 
-    public WritableMap toResponse(GetArchivedMessagesResponse response) {
+    public WritableMap toResponse(GetPaginatedArchivedMessagesResponse response) {
         WritableMap map = Arguments.createMap();
         map.putMap("data", this.toJson(response));
         return map;
