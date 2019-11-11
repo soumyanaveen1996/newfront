@@ -36,12 +36,32 @@ export default class MessageQueue {
 
     push(message) {
         console.log('Message  to enqueued : ', message);
-        this.queue[this.queueLength++] = message;
-        this.process();
+        this.queue.push(message);
+        // this.queue[this.queueLength++] = message;
+        // this.process();
+
+        console.log(
+            'Sourav Logging:::: Current Queue Length',
+            this.queue.length
+        );
     }
 
     checkForMessages() {
-        console.log('Sourav Logging:::: I am Chcking for any new messages');
+        if (this.processing) {
+            console.log(
+                'Sourav Logging:::: Message is Processed from Queue. Try Later... BYE'
+            );
+            return;
+        }
+        console.log(
+            'Sourav Logging:::: Start processing Queue',
+            this.queue.length
+        );
+        const nextMessage = this.queue.shift();
+        console.log('Sourav Logging:::: Process This message', nextMessage);
+        if (nextMessage) {
+            this.process(nextMessage);
+        }
     }
 
     top() {
@@ -53,9 +73,7 @@ export default class MessageQueue {
     }
 
     clear() {
-        while (this.top()) {
-            this.pop();
-        }
+        this.queue = [];
     }
 
     pop() {
@@ -122,7 +140,9 @@ export default class MessageQueue {
 
         const alreadyProcessed = await this.isMessageAlreadyProcessed(message);
         if (alreadyProcessed) {
-            RemoteLogger('Message is already processes.... RETURN --->');
+            console.log(
+                'Sourav Logging:::: Message is already processes.... RETURN --->'
+            );
             return true;
         }
 
@@ -169,31 +189,43 @@ export default class MessageQueue {
         return true;
     }
 
-    async process() {
-        if (this.processing) {
-            return;
-        }
+    async process(message) {
         this.processing = true;
-        while (this.top()) {
-            const message = this.top();
-            console.log(
-                'Processing Message : ',
-                message.details,
-                this.queueLength
-            );
-            for (let i = 0; i < this.retryCount; ++i) {
-                try {
-                    const success = await this.handleMessage(message);
-                    console.log('Message handle state : ', success);
-                    if (success) {
-                        break;
-                    }
-                } catch (e) {
-                    console.log('Error in handling message : ', e);
-                }
-            }
-            this.pop();
+        try {
+            await this.handleMessage(message);
+        } catch (e) {
+            console.log('Error in handling message from QUEUE-----> ', e);
         }
+        // Processing done. Pick up next message for Processing
         this.processing = false;
+        return true;
     }
+
+    // async process() {
+    //     if (this.processing) {
+    //         return;
+    //     }
+    //     this.processing = true;
+    //     while (this.top()) {
+    //         const message = this.top();
+    //         console.log(
+    //             'Processing Message : ',
+    //             message.details,
+    //             this.queueLength
+    //         );
+    //         for (let i = 0; i < this.retryCount; ++i) {
+    //             try {
+    //                 const success = await this.handleMessage(message);
+    //                 console.log('Message handle state : ', success);
+    //                 if (success) {
+    //                     break;
+    //                 }
+    //             } catch (e) {
+    //                 console.log('Error in handling message : ', e);
+    //             }
+    //         }
+    //         this.pop();
+    //     }
+    //     this.processing = false;
+    // }
 }

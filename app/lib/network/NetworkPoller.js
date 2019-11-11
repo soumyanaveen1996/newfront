@@ -140,7 +140,7 @@ class NetworkPoller {
                 setTimeout(() => {
                     RemoteLogger('Air PostCard:::: SSE Response Processing');
                     MessageQueue.push(message);
-                }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                }, (Math.floor(Math.random() * 2) + 1) * 500);
                 // BackgroundTimer.setTimeout(() => {
                 //     Contact.refreshContacts();
                 // }, 2000);
@@ -359,9 +359,7 @@ class NetworkPoller {
                 this.process();
             }, config.network.gsm.pollingInterval);
             this.msgCheck = BackgroundTimer.setInterval(() => {
-                InteractionManager.runAfterInteractions(() => {
-                    MessageQueue.checkForMessages();
-                });
+                MessageQueue.checkForMessages();
             }, 5000);
         } else if (this.appState === 'background') {
             console.log(
