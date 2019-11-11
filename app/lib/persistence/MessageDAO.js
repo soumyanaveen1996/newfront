@@ -427,9 +427,9 @@ const selectMessagesOfType = (botkey, messageType) =>
         });
     });
 
-const selectMessagesBeforeDate = (botkey, limit, date) =>
+const selectMessagesBeforeDate = (conversationId, limit, date) =>
     new Promise((resolve, reject) => {
-        let args = [botkey, date, limit];
+        let args = [conversationId, date, limit];
         db.transaction(transaction => {
             let sql = messageSql.selectMessagesBeforeDate;
 

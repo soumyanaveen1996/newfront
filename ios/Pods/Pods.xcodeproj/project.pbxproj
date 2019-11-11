@@ -6634,7 +6634,7 @@
 /* Begin XCBuildConfiguration section */
 		0AD4FC2CE89DE6DB7872B96721857E7C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8D73DCFB22EDCCDAC0AE9DE7E93CAB45 /* Protobuf.xcconfig */;
+			baseConfigurationReference = 49641727A310AC130FF5B36555CF8636 /* Protobuf.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6659,7 +6659,7 @@
 		};
 		0D43199A6122159BADC9944D91B9B787 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			baseConfigurationReference = 0FC00F36F57F7F1C7DDA4BF9F46636FF /* gRPC.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
@@ -6674,34 +6674,9 @@
 			};
 			name = DebugDevelop;
 		};
-		0DD8E09CF27B2A6C9946ED2A1EDDFB3E /* ReleaseDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F1D23EA9D967C208A76249B387F35EE3 /* Frontm.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Frontm/Frontm-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Frontm;
-				PRODUCT_NAME = Frontm;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = ReleaseDevelop;
-		};
 		17892FCA3F4A9D2DC926348DC0CE99E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8D73DCFB22EDCCDAC0AE9DE7E93CAB45 /* Protobuf.xcconfig */;
+			baseConfigurationReference = 49641727A310AC130FF5B36555CF8636 /* Protobuf.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6817,12 +6792,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Frontm/Frontm-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Frontm;
+				PRODUCT_NAME = Frontm;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
-			name = Debug;
+			name = DebugDevelop;
 		};
 		24B7B0EB20F06D9581FEF6D7540A8F1B /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -6887,34 +6875,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = ReleaseDevelop;
-		};
-		3BE9E30105EAFBBF6BB63B21A3981B6E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		400893E78B06CD3B61B0220AE223FB29 /* DebugDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = DebugDevelop;
 		};
 		407B95552466E64C2380F15A043F3DA1 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -7079,6 +7039,31 @@
 			};
 			name = ReleaseDevelop;
 		};
+		6EF8E9249A08C7C8CFCBB5623EE03FCB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C128D514E4E6951769C06FA5CCFE4D5 /* Frontm.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Frontm/Frontm-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Frontm;
+				PRODUCT_NAME = Frontm;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		73F0E6D95B28698622A5434F7966C961 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0924AFDCB2DBB749D77207A7BEB24526 /* nanopb.xcconfig */;
@@ -7130,23 +7115,9 @@
 			};
 			name = ReleaseDevelop;
 		};
-		8A3E910BA642F068E5F51C5B01C97BC2 /* ReleaseDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = ReleaseDevelop;
-		};
 		8BC05C039D28A34392C947AEF7149AE1 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8D73DCFB22EDCCDAC0AE9DE7E93CAB45 /* Protobuf.xcconfig */;
+			baseConfigurationReference = 49641727A310AC130FF5B36555CF8636 /* Protobuf.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -7427,7 +7398,7 @@
 		};
 		99FEFFE67FEE1ECA2D922563D788914C /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			baseConfigurationReference = 0FC00F36F57F7F1C7DDA4BF9F46636FF /* gRPC.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
@@ -7659,7 +7630,7 @@
 		};
 		C45A5AB23C953C023C193289B31EC304 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			baseConfigurationReference = 0FC00F36F57F7F1C7DDA4BF9F46636FF /* gRPC.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
@@ -7782,33 +7753,37 @@
 			};
 			name = Debug;
 		};
-		E3D046098D47546ADC8EF02C71AF2642 /* Debug */ = {
+		DBB318E2FFB7AAB41B62607135CB0F5A /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F1D23EA9D967C208A76249B387F35EE3 /* Frontm.xcconfig */;
+			baseConfigurationReference = 80E6D070EF5958A5CB3DC5B1557BC126 /* TwilioVoice.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				GCC_PREFIX_HEADER = "Target Support Files/Frontm/Frontm-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_MODULE_NAME = Frontm;
-				PRODUCT_NAME = Frontm;
-				PUBLIC_HEADERS_FOLDER_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
-			name = Debug;
+			name = ReleaseDevelop;
+		};
+		E4F807A97E470AC9EAC55F781CCEA18E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80E6D070EF5958A5CB3DC5B1557BC126 /* TwilioVoice.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		E6EE52894593647BFFE3C3B878B3402A /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			baseConfigurationReference = 0FC00F36F57F7F1C7DDA4BF9F46636FF /* gRPC.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -7833,7 +7808,7 @@
 		};
 		EBDF1C25286233808302F8B850BF082A /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8D73DCFB22EDCCDAC0AE9DE7E93CAB45 /* Protobuf.xcconfig */;
+			baseConfigurationReference = 49641727A310AC130FF5B36555CF8636 /* Protobuf.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";

@@ -13,6 +13,7 @@
 #import "TimelineResponse+frontm.h"
 #import "GetArchivedMessagesResponse+frontm.h"
 #import "UpdateFavouritesResponse+frontm.h"
+#import "GetPaginatedArchivedMessagesResponse+frontm.h"
 #import <React/RCTLog.h>
 #import "GRPCMetadata.h"
 
@@ -36,10 +37,16 @@ RCT_EXPORT_MODULE();
   return self;
 }
 
-RCT_REMAP_METHOD(getCatalog, getCatalogWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(getCatalog, getCatalogWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:getCatalog Params : %@", sessionId);
+  
+  CatalogInput *input = [CatalogInput new];
+  input.isWebRequest = false;
+  input.query = nil;
+  input.output = nil;
+  input.selectedDomain = nil;
 
-  GRPCProtoCall *call = [self.serviceClient RPCToGetCatalogWithRequest:[Empty new] handler:^(CatalogResponse * _Nullable response, NSError * _Nullable error) {
+  GRPCProtoCall *call = [self.serviceClient RPCToGetCatalogWithRequest:input handler:^(CatalogResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {
       callback(@[@{}, [NSNull null]]);
       return;
@@ -104,10 +111,13 @@ RCT_REMAP_METHOD(updateFavorites, updateFavoritesWithSessionId:(NSString *)sessi
 }
 
 
-RCT_REMAP_METHOD(getTimeline, getTimelineWithSessionId:(NSString *)sessionId andCallback:(RCTResponseSenderBlock)callback ) {
+RCT_REMAP_METHOD(getTimeline, getTimelineWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
   RCTLog(@"method:getTimeline Params : %@", sessionId);
+  
+  TimeLineInput *input = [TimeLineInput new];
+  input.isWebRequest = false;
 
-  GRPCProtoCall *call = [self.serviceClient RPCToGetTimelineWithRequest:[Empty new] handler:^(TimelineResponse * _Nullable response, NSError * _Nullable error) {
+  GRPCProtoCall *call = [self.serviceClient RPCToGetTimelineWithRequest:input handler:^(TimelineResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {
       callback(@[@{}, [NSNull null]]);
       return;
@@ -130,6 +140,28 @@ RCT_REMAP_METHOD(getArchivedMessages, getArchivedMessagesWithSessionId:(NSString
 
 
   GRPCProtoCall *call = [self.serviceClient RPCToGetArchivedMessagesWithRequest:input handler:^(GetArchivedMessagesResponse * _Nullable response, NSError * _Nullable error) {
+    if (error != nil) {
+      callback(@[@{}, [NSNull null]]);
+      return;
+    } else {
+      callback(@[[NSNull null], [response toResponse]]);
+    }
+  }];
+
+  call.requestHeaders[@"sessionId"] = sessionId;
+  [call start];
+}
+
+RCT_REMAP_METHOD(getPaginatedArchivedMessages, getPaginatedArchivedMessagesWithSessionId:(NSString *)sessionId andParams:(NSDictionary*)params andCallback:(RCTResponseSenderBlock)callback ) {
+  RCTLog(@"method:getPaginatedArchivedMessages Params : %@", sessionId);
+
+  GetPaginatedArchivedMessagesInput *input = [GetPaginatedArchivedMessagesInput new];
+  input.conversationId = params[@"conversationId"];
+  input.botId = params[@"botId"];
+  input.startTime = [params[@"startTime"]doubleValue];
+
+
+  GRPCProtoCall *call = [self.serviceClient RPCToGetPaginatedArchivedMessagesWithRequest:input handler:^(GetPaginatedArchivedMessagesResponse * _Nullable response, NSError * _Nullable error) {
     if (error != nil) {
       callback(@[@{}, [NSNull null]]);
       return;

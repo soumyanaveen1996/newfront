@@ -9,12 +9,19 @@
 #import <RxLibrary/GRXWriter.h>
 #endif
 
+@class CatalogInput;
 @class CatalogResponse;
 @class Empty;
+@class FavouritesResponse;
 @class GetArchivedMessagesInput;
 @class GetArchivedMessagesResponse;
 @class GetConversationDetailsInput;
 @class GetConversationDetailsResponse;
+@class GetPaginatedArchivedMessagesInput;
+@class GetPaginatedArchivedMessagesResponse;
+@class ResetConversationInput;
+@class SelectedDomainInput;
+@class TimeLineInput;
 @class TimelineResponse;
 @class UpdateFavouritesInput;
 @class UpdateFavouritesResponse;
@@ -37,18 +44,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (GRPCProtoCall *)RPCToUpdateFavouritesWithRequest:(UpdateFavouritesInput *)request handler:(void(^)(UpdateFavouritesResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetTimeline(Empty) returns (TimelineResponse)
+#pragma mark GetTimeline(TimeLineInput) returns (TimelineResponse)
 
-- (void)getTimelineWithRequest:(Empty *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getTimelineWithRequest:(TimeLineInput *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetTimelineWithRequest:(Empty *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetTimelineWithRequest:(TimeLineInput *)request handler:(void(^)(TimelineResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
-#pragma mark GetCatalog(Empty) returns (CatalogResponse)
+#pragma mark GetCatalog(CatalogInput) returns (CatalogResponse)
 
-- (void)getCatalogWithRequest:(Empty *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
+- (void)getCatalogWithRequest:(CatalogInput *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
 
-- (GRPCProtoCall *)RPCToGetCatalogWithRequest:(Empty *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
+- (GRPCProtoCall *)RPCToGetCatalogWithRequest:(CatalogInput *)request handler:(void(^)(CatalogResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 #pragma mark GetConversationDetails(GetConversationDetailsInput) returns (GetConversationDetailsResponse)
@@ -63,6 +70,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getArchivedMessagesWithRequest:(GetArchivedMessagesInput *)request handler:(void(^)(GetArchivedMessagesResponse *_Nullable response, NSError *_Nullable error))handler;
 
 - (GRPCProtoCall *)RPCToGetArchivedMessagesWithRequest:(GetArchivedMessagesInput *)request handler:(void(^)(GetArchivedMessagesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetPaginatedArchivedMessages(GetPaginatedArchivedMessagesInput) returns (GetPaginatedArchivedMessagesResponse)
+
+- (void)getPaginatedArchivedMessagesWithRequest:(GetPaginatedArchivedMessagesInput *)request handler:(void(^)(GetPaginatedArchivedMessagesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetPaginatedArchivedMessagesWithRequest:(GetPaginatedArchivedMessagesInput *)request handler:(void(^)(GetPaginatedArchivedMessagesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark ResetConversation(ResetConversationInput) returns (Empty)
+
+- (void)resetConversationWithRequest:(ResetConversationInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToResetConversationWithRequest:(ResetConversationInput *)request handler:(void(^)(Empty *_Nullable response, NSError *_Nullable error))handler;
+
+
+#pragma mark GetFavouriteConversations(SelectedDomainInput) returns (FavouritesResponse)
+
+- (void)getFavouriteConversationsWithRequest:(SelectedDomainInput *)request handler:(void(^)(FavouritesResponse *_Nullable response, NSError *_Nullable error))handler;
+
+- (GRPCProtoCall *)RPCToGetFavouriteConversationsWithRequest:(SelectedDomainInput *)request handler:(void(^)(FavouritesResponse *_Nullable response, NSError *_Nullable error))handler;
 
 
 @end
