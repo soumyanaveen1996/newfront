@@ -40,6 +40,10 @@ export default class MessageQueue {
         this.process();
     }
 
+    checkForMessages() {
+        console.log('Sourav Logging:::: I am Chcking for any new messages');
+    }
+
     top() {
         if (this.queueLength > 0) {
             return this.queue[0];

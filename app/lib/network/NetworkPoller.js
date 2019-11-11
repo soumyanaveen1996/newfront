@@ -34,6 +34,7 @@ const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
 const R = require('ramda');
+var messageCheckTimer;
 
 class NetworkPoller {
     grpcSubscription = [];
@@ -274,7 +275,6 @@ class NetworkPoller {
                 console.log('App Inactive ---------> Stop Cleanup Service');
                 clearInterval(this.cleanupInterval);
                 this.appState = nextAppState;
-
                 this.startPolling();
             }
         }
@@ -337,7 +337,9 @@ class NetworkPoller {
             console.log('App is active. Stopping polling');
             if (this.appleIntervalId) {
                 BackgroundTimer.clearInterval(this.appleIntervalId);
+                BackgroundTimer.clearInterval(this.msgCheck);
                 this.appleIntervalId = null;
+                this.msgCheck = null;
             }
             //BackgroundTask.cancel();
         } else if (this.appState === 'background') {
@@ -356,6 +358,11 @@ class NetworkPoller {
             this.appleIntervalId = BackgroundTimer.setInterval(() => {
                 this.process();
             }, config.network.gsm.pollingInterval);
+            this.msgCheck = BackgroundTimer.setInterval(() => {
+                InteractionManager.runAfterInteractions(() => {
+                    MessageQueue.checkForMessages();
+                });
+            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 '---------App is in background. So starting background task every 15 minutes-----------'
