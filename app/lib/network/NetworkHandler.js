@@ -382,39 +382,6 @@ const fetchOldMessagesBeforeDate = (conversationId, botId, date) =>
         });
     });
 
-const getArchivedMessages = (botId, conversationId) => {
-    return new Promise((resolve, reject) => {
-        Auth.getUser().then(user => {
-            ConversationServiceClient.getArchivedMessages(
-                user.creds.sessionId,
-                { conversationId: conversationId, botId: botId },
-                (error, result) => {
-                    console.log(
-                        'GRPC:::grpcGetArchivedMessages : ',
-                        error,
-                        result
-                    );
-                    if (error) {
-                        reject({
-                            type: 'error',
-                            error: error.code
-                        });
-                    } else {
-                        const messages = handlePreviousMessages(
-                            result,
-                            conversationId,
-                            botId,
-                            null,
-                            user
-                        );
-                        resolve(messages);
-                    }
-                }
-            );
-        });
-    });
-};
-
 const ping = user => {
     let options = {
         method: 'get',
@@ -434,6 +401,5 @@ export default {
     poll: poll,
     readLambda: readLambda,
     keepAlive: keepAlive,
-    fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate,
-    getArchivedMessages: getArchivedMessages
+    fetchOldMessagesBeforeDate: fetchOldMessagesBeforeDate
 };

@@ -31,14 +31,19 @@ CF_EXTERN_C_BEGIN
 @class CatalogBotClients;
 @class CatalogDependencies;
 @class CatalogDependency;
+@class CatalogResponse_CatalogBots;
+@class FavContact;
 @class GetArchivedMessagesContent;
 @class GetConversationDetailsChannels;
 @class GetConversationDetailsUser;
+@class PhoneNumbers;
 @class TimelineBotInfo;
+@class TimelineChannel;
 @class TimelineChannels;
 @class TimelineContact;
 @class TimelineContent;
 @class TimelineConversation;
+@class UserAddress;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,6 +60,18 @@ NS_ASSUME_NONNULL_BEGIN
  * this file and all files that it depends on.
  **/
 @interface ConversationserviceRoot : GPBRootObject
+@end
+
+#pragma mark - TimeLineInput
+
+typedef GPB_ENUM(TimeLineInput_FieldNumber) {
+  TimeLineInput_FieldNumber_IsWebRequest = 1,
+};
+
+@interface TimeLineInput : GPBMessage
+
+@property(nonatomic, readwrite) BOOL isWebRequest;
+
 @end
 
 #pragma mark - UpdateFavouritesInput
@@ -146,6 +163,7 @@ typedef GPB_ENUM(TimelineConversation_FieldNumber) {
   TimelineConversation_FieldNumber_Bot = 9,
   TimelineConversation_FieldNumber_LastMessage = 10,
   TimelineConversation_FieldNumber_Contact = 11,
+  TimelineConversation_FieldNumber_Channel = 12,
 };
 
 @interface TimelineConversation : GPBMessage
@@ -179,6 +197,28 @@ typedef GPB_ENUM(TimelineConversation_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) TimelineContact *contact;
 /** Test to see if @c contact has been set. */
 @property(nonatomic, readwrite) BOOL hasContact;
+
+@property(nonatomic, readwrite, strong, null_resettable) TimelineChannel *channel;
+/** Test to see if @c channel has been set. */
+@property(nonatomic, readwrite) BOOL hasChannel;
+
+@end
+
+#pragma mark - TimelineChannel
+
+typedef GPB_ENUM(TimelineChannel_FieldNumber) {
+  TimelineChannel_FieldNumber_ChannelName = 4,
+  TimelineChannel_FieldNumber_UserDomain = 5,
+  TimelineChannel_FieldNumber_Description_p = 7,
+};
+
+@interface TimelineChannel : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *channelName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *description_p;
 
 @end
 
@@ -258,9 +298,33 @@ typedef GPB_ENUM(TimelineContact_FieldNumber) {
 
 typedef GPB_ENUM(CatalogResponse_FieldNumber) {
   CatalogResponse_FieldNumber_BotsArray = 1,
+  CatalogResponse_FieldNumber_Companies = 2,
+  CatalogResponse_FieldNumber_Categories = 3,
 };
 
 @interface CatalogResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<CatalogBot*> *botsArray;
+/** The number of items in @c botsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger botsArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, CatalogResponse_CatalogBots*> *companies;
+/** The number of items in @c companies without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger companies_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, CatalogResponse_CatalogBots*> *categories;
+/** The number of items in @c categories without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger categories_Count;
+
+@end
+
+#pragma mark - CatalogResponse_CatalogBots
+
+typedef GPB_ENUM(CatalogResponse_CatalogBots_FieldNumber) {
+  CatalogResponse_CatalogBots_FieldNumber_BotsArray = 1,
+};
+
+@interface CatalogResponse_CatalogBots : GPBMessage
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<CatalogBot*> *botsArray;
 /** The number of items in @c botsArray without causing the array to be created. */
@@ -434,6 +498,7 @@ typedef GPB_ENUM(GetConversationDetailsResponse_FieldNumber) {
   GetConversationDetailsResponse_FieldNumber_ConversationOwner = 2,
   GetConversationDetailsResponse_FieldNumber_ParticipantsArray = 3,
   GetConversationDetailsResponse_FieldNumber_Error = 4,
+  GetConversationDetailsResponse_FieldNumber_UserDomain = 5,
 };
 
 @interface GetConversationDetailsResponse : GPBMessage
@@ -451,6 +516,8 @@ typedef GPB_ENUM(GetConversationDetailsResponse_FieldNumber) {
 @property(nonatomic, readonly) NSUInteger participantsArray_Count;
 
 @property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userDomain;
 
 @end
 
@@ -549,6 +616,130 @@ typedef GPB_ENUM(GetArchivedMessagesContent_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSData *content;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSData *options;
+
+@end
+
+#pragma mark - GetPaginatedArchivedMessagesInput
+
+typedef GPB_ENUM(GetPaginatedArchivedMessagesInput_FieldNumber) {
+  GetPaginatedArchivedMessagesInput_FieldNumber_ConversationId = 1,
+  GetPaginatedArchivedMessagesInput_FieldNumber_BotId = 2,
+  GetPaginatedArchivedMessagesInput_FieldNumber_StartTime = 3,
+};
+
+@interface GetPaginatedArchivedMessagesInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *conversationId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *botId;
+
+@property(nonatomic, readwrite) double startTime;
+
+@end
+
+#pragma mark - GetPaginatedArchivedMessagesResponse
+
+typedef GPB_ENUM(GetPaginatedArchivedMessagesResponse_FieldNumber) {
+  GetPaginatedArchivedMessagesResponse_FieldNumber_Error = 1,
+  GetPaginatedArchivedMessagesResponse_FieldNumber_MoreMessagesExist = 2,
+  GetPaginatedArchivedMessagesResponse_FieldNumber_ContentArray = 3,
+};
+
+@interface GetPaginatedArchivedMessagesResponse : GPBMessage
+
+@property(nonatomic, readwrite) int32_t error;
+
+@property(nonatomic, readwrite) BOOL moreMessagesExist;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<GetArchivedMessagesContent*> *contentArray;
+/** The number of items in @c contentArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger contentArray_Count;
+
+@end
+
+#pragma mark - CatalogInput
+
+typedef GPB_ENUM(CatalogInput_FieldNumber) {
+  CatalogInput_FieldNumber_IsWebRequest = 1,
+  CatalogInput_FieldNumber_Query = 2,
+  CatalogInput_FieldNumber_Output = 3,
+  CatalogInput_FieldNumber_SelectedDomain = 4,
+};
+
+@interface CatalogInput : GPBMessage
+
+@property(nonatomic, readwrite) BOOL isWebRequest;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *query;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *output;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *selectedDomain;
+
+@end
+
+#pragma mark - ResetConversationInput
+
+typedef GPB_ENUM(ResetConversationInput_FieldNumber) {
+  ResetConversationInput_FieldNumber_ConversationId = 1,
+  ResetConversationInput_FieldNumber_BotId = 2,
+};
+
+@interface ResetConversationInput : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *conversationId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *botId;
+
+@end
+
+#pragma mark - FavContact
+
+typedef GPB_ENUM(FavContact_FieldNumber) {
+  FavContact_FieldNumber_UserName = 1,
+  FavContact_FieldNumber_EmailAddress = 2,
+  FavContact_FieldNumber_PhoneNumbers = 3,
+  FavContact_FieldNumber_UserId = 4,
+  FavContact_FieldNumber_UserCompanyName = 5,
+  FavContact_FieldNumber_Address = 6,
+};
+
+@interface FavContact : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userName;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *emailAddress;
+
+@property(nonatomic, readwrite, strong, null_resettable) PhoneNumbers *phoneNumbers;
+/** Test to see if @c phoneNumbers has been set. */
+@property(nonatomic, readwrite) BOOL hasPhoneNumbers;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *userCompanyName;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserAddress *address;
+/** Test to see if @c address has been set. */
+@property(nonatomic, readwrite) BOOL hasAddress;
+
+@end
+
+#pragma mark - FavouritesResponse
+
+typedef GPB_ENUM(FavouritesResponse_FieldNumber) {
+  FavouritesResponse_FieldNumber_FavouritesArray = 1,
+  FavouritesResponse_FieldNumber_FavouritePeopleArray = 2,
+};
+
+@interface FavouritesResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<TimelineConversation*> *favouritesArray;
+/** The number of items in @c favouritesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger favouritesArray_Count;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<FavContact*> *favouritePeopleArray;
+/** The number of items in @c favouritePeopleArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger favouritePeopleArray_Count;
 
 @end
 

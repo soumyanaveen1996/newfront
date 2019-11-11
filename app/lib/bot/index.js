@@ -206,6 +206,7 @@ class Bot extends events.EventEmitter {
         return new Promise((resolve, reject) => {
             ConversationServiceClient.getCatalog(
                 user.creds.sessionId,
+                {},
                 (error, result) => {
                     //console.log('GRPC:::getCatalog : ', error, result);
                     if (error) {
