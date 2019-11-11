@@ -166,7 +166,6 @@ public class ChannelsServiceClient extends ReactContextBaseJavaModule {
         ChannelsServiceGrpc.ChannelsServiceStub stub = ChannelsServiceGrpc.newStub(getmChannel());
 
         SelectedDomainInput input = SelectedDomainInput.newBuilder()
-                .setSelectedDomain(params.getString("selectedDomain"))
                 .build();
 
 
