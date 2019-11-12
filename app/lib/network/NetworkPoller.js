@@ -377,6 +377,10 @@ class NetworkPoller {
             BackgroundTimer.clearInterval(this.appleIntervalId);
             this.appleIntervalId = null;
         }
+        if (this.msgCheckSatellite) {
+            BackgroundTimer.clearInterval(this.msgCheckSatellite);
+            this.msgCheckSatellite = null;
+        }
         this.keepAliveCount = 0;
     };
 
@@ -396,6 +400,9 @@ class NetworkPoller {
                     this.keepAliveCount++;
                 }
             }, config.network.satellite.keepAliveInterval);
+            this.msgCheckSatellite = BackgroundTimer.setInterval(() => {
+                MessageQueue.checkForMessages();
+            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 'App is in background. So starting background task every 1 hour'

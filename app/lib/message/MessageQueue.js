@@ -44,6 +44,8 @@ export default class MessageQueue {
             'Sourav Logging:::: Current Queue Length',
             this.queue.length
         );
+
+        this.checkForMessages();
     }
 
     checkForMessages() {
