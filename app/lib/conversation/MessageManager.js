@@ -37,9 +37,9 @@ export default class MessageManager {
             messages = messages.concat(localMessages);
             if (!localMessages || localMessages.length < this.PAGE_SIZE) {
                 if (localMessages.length > 0) {
-                    startTime = localMessages[
-                        localMessages.length - 1
-                    ].message.getMessageDate();
+                    startTime = localMessages[localMessages.length - 1].message
+                        .getMessageDate()
+                        .getTime();
                 }
                 const page = await ConversationServices.getPaginatedArchivedMessages(
                     conversationId,

@@ -45,12 +45,11 @@ export default class Conversation {
 
     static grpcGetTimeline = user => {
         return new Promise((resolve, reject) => {
-            console.log('>>>>>>>>>gettimeline');
             ConversationServiceClient.getTimeline(
                 user.creds.sessionId,
                 {},
                 (error, result) => {
-                    console.log('>>>>>GRPC:::getTimeline : ', error, result);
+                    console.log('GRPC:::getTimeline : ', error, result);
                     if (error) {
                         reject({
                             type: 'error',
