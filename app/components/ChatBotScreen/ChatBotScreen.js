@@ -1729,7 +1729,6 @@ class ChatBotScreen extends React.Component {
     };
 
     sendAudio = async audioURI => {
-        console.log('>>>>>>audioUri', audioURI);
         let message = new Message();
         let rename = message.getMessageId() + '.aac';
         message.setCreatedBy(this.getUserId());

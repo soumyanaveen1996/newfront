@@ -6,9 +6,11 @@ import {
     setUpdateIntervalForType,
     SensorTypes
 } from 'react-native-sensors';
-import { Message } from '.';
+import { Message, ConversationContext } from '.';
 import moment from 'moment';
 import { sendBackgroundMessageSafe } from '../BackgroundTask/BackgroundTaskProcessor';
+import { Bot } from '../dce';
+import { Conversation } from '../conversation';
 
 const activeAccelerometers = {};
 
@@ -19,23 +21,47 @@ export class Accelerometer {
      * @param {String} conversationId
      * @param {Number} frequency of the updates in Hz
      */
-    static startUpdates(botId, conversationId, frequency = 60) {
-        setUpdateIntervalForType(SensorTypes.accelerometer, 1000 / frequency);
-        const subscription = accelerometer.subscribe(
-            ({ x, y, z, timestamp }) => {
-                const update = { x, y, z };
-                let message = new Message();
-                message.setCreatedBy({
-                    addedByBot: true,
-                    messageDate: moment().valueOf()
+    static async startUpdates(botId, conversationId, frequency = 60) {
+        try {
+            if (botId && conversationId) {
+                const allBots = await Bot.allInstalledBots();
+                const foundBot = allBots.find(bot => {
+                    return bot.botId === botId;
                 });
-                message.sensorMessage(update, {
-                    type: SensorTypes.accelerometer
-                });
-                sendBackgroundMessageSafe(message, botId, conversationId);
+                if (foundBot) {
+                    setUpdateIntervalForType(
+                        SensorTypes.accelerometer,
+                        1000 / frequency
+                    );
+                    const subscription = accelerometer.subscribe(
+                        ({ x, y, z, timestamp }) => {
+                            const update = { x, y, z };
+                            let message = new Message({
+                                addedByBot: true,
+                                messageDate: moment().valueOf()
+                            });
+                            // message.setCreatedBy();
+                            message.sensorMessage(update, {
+                                type: SensorTypes.accelerometer
+                            });
+                            sendBackgroundMessageSafe(
+                                message,
+                                botId,
+                                conversationId
+                            );
+                        }
+                    );
+                    activeAccelerometers[botId + conversationId] = subscription;
+                } else {
+                    throw new Error('bot not found');
+                }
+            } else {
+                throw new Error('botId and conversationId required');
             }
-        );
-        activeAccelerometers[botId + conversationId] = subscription;
+        } catch (error) {
+            console.log('Accelerometer startUpdates ERROR: ', error.message);
+            throw error;
+        }
     }
 
     /**
@@ -44,7 +70,9 @@ export class Accelerometer {
      * @param {*} conversationId
      */
     static stopUpdates(botId, conversationId) {
-        activeAccelerometers[botId + conversationId].unsubscribe();
+        if (activeAccelerometers[botId + conversationId]) {
+            activeAccelerometers[botId + conversationId].unsubscribe();
+        }
     }
 }
 

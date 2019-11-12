@@ -204,6 +204,8 @@ class NewContactScreen extends React.Component {
                                     +
                                     </Text>
                                     <TextInput
+                                        accessibilityLabel={'Prefix' + type}
+                                        testID={'prefix' + type}
                                         style={{
                                             flex: 1,
                                             color: 'rgba(102, 102, 102, 1)',
@@ -225,6 +227,8 @@ class NewContactScreen extends React.Component {
                                 </View>
                                 {/* number */}
                                 <TextInput
+                                    accessibilityLabel={'number' + type}
+                                    testID={'number' + type}
                                     style={styles.inputNumber}
                                     value={this.state.phoneNumbers[type]}
                                     keyboardType="phone-pad"
@@ -244,6 +248,8 @@ class NewContactScreen extends React.Component {
                         ) : (
                         // email
                             <TextInput
+                                accessibilityLabel={'Email' + type}
+                                testID={'email' + type}
                                 style={styles.inputNumber}
                                 value={this.state.emailAddresses[type]}
                                 keyboardType="email-address"
@@ -475,6 +481,8 @@ class NewContactScreen extends React.Component {
                 >
                     <Text style={styles.nameLabel}>{I18n.t('Name')}</Text>
                     <TextInput
+                        accessibilityLabel="Name"
+                        testID="name"
                         style={styles.input}
                         autoCorrect={false}
                         value={this.state.name}
