@@ -62,8 +62,9 @@ export default class LocationTracker {
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
                 // url: 'http://tracker.transistorsoft.com/locations/frontm',
+                url: 'http://5eab9d31.ngrok.io/location',
                 // params: BackgroundGeolocation.transistorTrackerParams(Device),
-                // batchSync: false, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+                batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
                 // autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
                     // <-- Optional HTTP headers
@@ -119,6 +120,8 @@ export default class LocationTracker {
     };
 
     static onLocation = async location => {
+        RemoteLogger('Got Location Data');
+        return;
         try {
             console.log('Sourav Logging:::: ON Location');
             // const taskId = await BackgroundGeolocation.startBackgroundTask();
@@ -134,6 +137,7 @@ export default class LocationTracker {
     };
 
     static handleHeartBeat = async event => {
+        return;
         const taskId = await BackgroundGeolocation.startBackgroundTask();
         // const data = await DeviceStorage.get('location_bot');
         console.log('Sourav Logging:::: In heartbeat');
