@@ -33,6 +33,8 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
+const MSG_ANDROID_GSM = 'msg_android_gsm';
+const MSG_ANDROID_SAT = 'msg_android_sat';
 const R = require('ramda');
 var messageCheckTimer;
 
@@ -413,14 +415,6 @@ class NetworkPoller {
         }
     };
 
-    stopAndroidGSMPolling = async () => {
-        const intervalId = await DeviceStorage.get(POLL_KEY);
-        if (intervalId) {
-            BackgroundTimer.clearInterval(intervalId);
-            await DeviceStorage.delete(POLL_KEY);
-        }
-    };
-
     startAndroidGSMPolling = async () => {
         console.log('Sourav Logging:::: In start GSM', this.appState);
         const pollingInterval =
@@ -443,21 +437,25 @@ class NetworkPoller {
             this.clearQueue();
         }, clearQueue);
 
+        const msgCheckAndroidGSM = BackgroundTimer.setInterval(() => {
+            MessageQueue.checkForMessages();
+        }, 5000);
+
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(CLEAR_KEY, clearQueueIntervalId);
+        await DeviceStorage.save(MSG_ANDROID_GSM, msgCheckAndroidGSM);
     };
 
-    stopAndroidSatellitePolling = async () => {
+    stopAndroidGSMPolling = async () => {
         const intervalId = await DeviceStorage.get(POLL_KEY);
-        const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
-        const clearQueueId = await DeviceStorage.get(CLEAR_KEY);
         if (intervalId) {
             BackgroundTimer.clearInterval(intervalId);
-            BackgroundTimer.clearInterval(keepAliveId);
-            BackgroundTimer.clearInterval(clearQueueId);
             await DeviceStorage.delete(POLL_KEY);
-            await DeviceStorage.delete(KEEPALIVE_KEY);
-            await DeviceStorage.delete(CLEAR_KEY);
+        }
+        const msgAndroid = await DeviceStorage.get(MSG_ANDROID_GSM);
+        if (msgAndroid) {
+            BackgroundTimer.clearInterval(msgAndroid);
+            await DeviceStorage.delete(MSG_ANDROID_GSM);
         }
     };
 
@@ -471,8 +469,30 @@ class NetworkPoller {
         const keepAliveId = BackgroundTimer.setInterval(() => {
             NetworkHandler.keepAlive();
         }, config.network.satellite.keepAliveInterval);
+        const msgCheckAndroidSAT = BackgroundTimer.setInterval(() => {
+            MessageQueue.checkForMessages();
+        }, 5000);
+
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(KEEPALIVE_KEY, keepAliveId);
+        await DeviceStorage.save(MSG_ANDROID_SAT, msgCheckAndroidSAT);
+    };
+
+    stopAndroidSatellitePolling = async () => {
+        const intervalId = await DeviceStorage.get(POLL_KEY);
+        const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
+        const clearQueueId = await DeviceStorage.get(CLEAR_KEY);
+        const msgAndroid = await DeviceStorage.get(MSG_ANDROID_SAT);
+        if (intervalId) {
+            BackgroundTimer.clearInterval(intervalId);
+            BackgroundTimer.clearInterval(keepAliveId);
+            BackgroundTimer.clearInterval(clearQueueId);
+            BackgroundTimer.clearInterval(msgAndroid);
+            await DeviceStorage.delete(POLL_KEY);
+            await DeviceStorage.delete(KEEPALIVE_KEY);
+            await DeviceStorage.delete(CLEAR_KEY);
+            await DeviceStorage.delete(MSG_ANDROID_GSM);
+        }
     };
 
     stopGSMPolling = () => {
