@@ -12,6 +12,7 @@ import {
     sendBackgroundMessageSafe
 } from '../BackgroundTask/BackgroundTaskProcessor';
 import { Platform } from 'react-native';
+import { LocationError } from './DeviceLocation';
 
 export default class LocationTracker {
     static start_tracking = async (
@@ -49,36 +50,32 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 10,
-                heartbeatInterval: 120,
+                distanceFilter: 50,
+                heartbeatInterval: 60,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
                 // Application config
                 debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
+                enableHeadless: true,
                 stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
                 startOnBoot: true, // <-- Auto start tracking when device is powered-up.
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
-                // url: 'http://tracker.transistorsoft.com/locations/frontm',
-                url: 'http://52.90.72.163:3001/location',
-                // params: BackgroundGeolocation.transistorTrackerParams(Device),
+                url: 'http://tracker.transistorsoft.com/locations/frontm',
+                // url: 'http://52.90.72.163:3001/location',
+                params: BackgroundGeolocation.transistorTrackerParams(Device),
                 // batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-                autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
+                // autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
                     // <-- Optional HTTP headers
-                    AuthorizationToken: 'UserTokenXYZ'
                 },
                 // params: {
                 //     // <-- Optional HTTP params
                 //     // auth_token: 'maybe_your_server_authenticates_via_token_YES?'
                 // }
-                params: {
-                    device: 'Blah Blah',
-                    botId: data.botId,
-                    conversationId: data.conversationId
-                }
+                params: {}
             },
             async state => {
                 console.log(
@@ -125,8 +122,6 @@ export default class LocationTracker {
     };
 
     static onLocation = async location => {
-        RemoteLogger('Got Location Data');
-        return;
         try {
             console.log('Sourav Logging:::: ON Location');
             // const taskId = await BackgroundGeolocation.startBackgroundTask();
@@ -142,23 +137,19 @@ export default class LocationTracker {
     };
 
     static handleHeartBeat = async event => {
-        return;
         const taskId = await BackgroundGeolocation.startBackgroundTask();
         // const data = await DeviceStorage.get('location_bot');
-        console.log('Sourav Logging:::: In heartbeat');
 
-        RemoteLogger(`Received Heartbeat ${JSON.stringify(event)}`);
         const location = await BackgroundGeolocation.getCurrentPosition({
             samples: 1,
             persist: true
         });
-        console.log('Sourav Logging:::: Will Report Location to Bot');
         await LocationTracker.report_location(location.coords);
-        console.log('Sourav Logging:::: Heartbeat Event', location);
         BackgroundGeolocation.stopBackgroundTask(taskId);
     };
 
     static stop_tracking = () => {
+        BackgroundGeolocation.removeAllListeners();
         return BackgroundGeolocation.stop();
     };
 

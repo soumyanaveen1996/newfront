@@ -73,8 +73,6 @@ export default class AgentGuard {
                 };
 
                 const response = await Network(options, true);
-                RemoteLogger('Air PostCard:::: Response from Agent Guard');
-
                 return response;
                 // return convertResponse(response);
             }
