@@ -49,7 +49,7 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 50,
+                distanceFilter: 10,
                 heartbeatInterval: 120,
                 preventSuspend: true,
                 // Activity Recognition
@@ -62,18 +62,23 @@ export default class LocationTracker {
                 disableLocationAuthorizationAlert: false,
                 // HTTP / SQLite config
                 // url: 'http://tracker.transistorsoft.com/locations/frontm',
-                url: 'http://5eab9d31.ngrok.io/location',
+                url: 'http://52.90.72.163:3001/location',
                 // params: BackgroundGeolocation.transistorTrackerParams(Device),
-                batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
-                // autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
+                // batchSync: true, // <-- [Default: false] Set true to sync locations to server in a single HTTP request.
+                autoSync: true, // <-- [Default: true]Set true to sync each location to server as it arrives.,,
                 headers: {
                     // <-- Optional HTTP headers
-                    // 'X-FOO': 'bar'
-                }
+                    AuthorizationToken: 'UserTokenXYZ'
+                },
                 // params: {
                 //     // <-- Optional HTTP params
                 //     // auth_token: 'maybe_your_server_authenticates_via_token_YES?'
                 // }
+                params: {
+                    device: 'Blah Blah',
+                    botId: data.botId,
+                    conversationId: data.conversationId
+                }
             },
             async state => {
                 console.log(
