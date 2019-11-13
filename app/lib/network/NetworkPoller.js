@@ -33,7 +33,10 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 const POLL_KEY = 'poll_key';
 const CLEAR_KEY = 'clear_key';
 const KEEPALIVE_KEY = 'keepalive_key';
+const MSG_ANDROID_GSM = 'msg_android_gsm';
+const MSG_ANDROID_SAT = 'msg_android_sat';
 const R = require('ramda');
+var messageCheckTimer;
 
 class NetworkPoller {
     grpcSubscription = [];
@@ -139,7 +142,7 @@ class NetworkPoller {
                 setTimeout(() => {
                     RemoteLogger('Air PostCard:::: SSE Response Processing');
                     MessageQueue.push(message);
-                }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                }, (Math.floor(Math.random() * 2) + 1) * 500);
                 // BackgroundTimer.setTimeout(() => {
                 //     Contact.refreshContacts();
                 // }, 2000);
@@ -274,7 +277,6 @@ class NetworkPoller {
                 console.log('App Inactive ---------> Stop Cleanup Service');
                 clearInterval(this.cleanupInterval);
                 this.appState = nextAppState;
-
                 this.startPolling();
             }
         }
@@ -337,7 +339,9 @@ class NetworkPoller {
             console.log('App is active. Stopping polling');
             if (this.appleIntervalId) {
                 BackgroundTimer.clearInterval(this.appleIntervalId);
+                BackgroundTimer.clearInterval(this.msgCheck);
                 this.appleIntervalId = null;
+                this.msgCheck = null;
             }
             //BackgroundTask.cancel();
         } else if (this.appState === 'background') {
@@ -356,6 +360,9 @@ class NetworkPoller {
             this.appleIntervalId = BackgroundTimer.setInterval(() => {
                 this.process();
             }, config.network.gsm.pollingInterval);
+            this.msgCheck = BackgroundTimer.setInterval(() => {
+                MessageQueue.checkForMessages();
+            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 '---------App is in background. So starting background task every 15 minutes-----------'
@@ -371,6 +378,10 @@ class NetworkPoller {
         if (this.appleIntervalId) {
             BackgroundTimer.clearInterval(this.appleIntervalId);
             this.appleIntervalId = null;
+        }
+        if (this.msgCheckSatellite) {
+            BackgroundTimer.clearInterval(this.msgCheckSatellite);
+            this.msgCheckSatellite = null;
         }
         this.keepAliveCount = 0;
     };
@@ -391,6 +402,9 @@ class NetworkPoller {
                     this.keepAliveCount++;
                 }
             }, config.network.satellite.keepAliveInterval);
+            this.msgCheckSatellite = BackgroundTimer.setInterval(() => {
+                MessageQueue.checkForMessages();
+            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 'App is in background. So starting background task every 1 hour'
@@ -398,14 +412,6 @@ class NetworkPoller {
             // BackgroundTask.schedule({
             //     period: 900
             // });
-        }
-    };
-
-    stopAndroidGSMPolling = async () => {
-        const intervalId = await DeviceStorage.get(POLL_KEY);
-        if (intervalId) {
-            BackgroundTimer.clearInterval(intervalId);
-            await DeviceStorage.delete(POLL_KEY);
         }
     };
 
@@ -431,21 +437,25 @@ class NetworkPoller {
             this.clearQueue();
         }, clearQueue);
 
+        const msgCheckAndroidGSM = BackgroundTimer.setInterval(() => {
+            MessageQueue.checkForMessages();
+        }, 5000);
+
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(CLEAR_KEY, clearQueueIntervalId);
+        await DeviceStorage.save(MSG_ANDROID_GSM, msgCheckAndroidGSM);
     };
 
-    stopAndroidSatellitePolling = async () => {
+    stopAndroidGSMPolling = async () => {
         const intervalId = await DeviceStorage.get(POLL_KEY);
-        const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
-        const clearQueueId = await DeviceStorage.get(CLEAR_KEY);
         if (intervalId) {
             BackgroundTimer.clearInterval(intervalId);
-            BackgroundTimer.clearInterval(keepAliveId);
-            BackgroundTimer.clearInterval(clearQueueId);
             await DeviceStorage.delete(POLL_KEY);
-            await DeviceStorage.delete(KEEPALIVE_KEY);
-            await DeviceStorage.delete(CLEAR_KEY);
+        }
+        const msgAndroid = await DeviceStorage.get(MSG_ANDROID_GSM);
+        if (msgAndroid) {
+            BackgroundTimer.clearInterval(msgAndroid);
+            await DeviceStorage.delete(MSG_ANDROID_GSM);
         }
     };
 
@@ -459,8 +469,30 @@ class NetworkPoller {
         const keepAliveId = BackgroundTimer.setInterval(() => {
             NetworkHandler.keepAlive();
         }, config.network.satellite.keepAliveInterval);
+        const msgCheckAndroidSAT = BackgroundTimer.setInterval(() => {
+            MessageQueue.checkForMessages();
+        }, 5000);
+
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(KEEPALIVE_KEY, keepAliveId);
+        await DeviceStorage.save(MSG_ANDROID_SAT, msgCheckAndroidSAT);
+    };
+
+    stopAndroidSatellitePolling = async () => {
+        const intervalId = await DeviceStorage.get(POLL_KEY);
+        const keepAliveId = await DeviceStorage.get(KEEPALIVE_KEY);
+        const clearQueueId = await DeviceStorage.get(CLEAR_KEY);
+        const msgAndroid = await DeviceStorage.get(MSG_ANDROID_SAT);
+        if (intervalId) {
+            BackgroundTimer.clearInterval(intervalId);
+            BackgroundTimer.clearInterval(keepAliveId);
+            BackgroundTimer.clearInterval(clearQueueId);
+            BackgroundTimer.clearInterval(msgAndroid);
+            await DeviceStorage.delete(POLL_KEY);
+            await DeviceStorage.delete(KEEPALIVE_KEY);
+            await DeviceStorage.delete(CLEAR_KEY);
+            await DeviceStorage.delete(MSG_ANDROID_GSM);
+        }
     };
 
     stopGSMPolling = () => {

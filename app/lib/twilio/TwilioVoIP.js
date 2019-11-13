@@ -121,14 +121,11 @@ export default class TwilioVoIP {
                 const user = await Auth.getUser();
                 console.log(user);
 
-                console.log('Sourav Logging:::: 1');
                 const accessToken = await Twilio.getAccessToken(user);
-                console.log('Sourav Logging:::: 2');
                 if (!(__DEV__ && Platform.os === 'ios')) {
                     console.log('INit VoiP....');
 
                     const isAudioEnabled = await this.requestAudioPermissions();
-                    console.log('Sourav Logging:::: 3');
                     if (!isAudioEnabled) {
                         this.showAlertMessage(
                             'Audio Permissions required for VoIP calls. Please enable them in settings'
@@ -136,10 +133,8 @@ export default class TwilioVoIP {
                     }
                 }
                 await TwilioVoice.initWithToken(accessToken);
-                console.log('Sourav Logging:::: 4');
 
                 await Twilio.enableVoIP(user);
-                console.log('Sourav Logging:::: 5');
                 // console.log('Access Token for TWILIO>>>>>>>>>>>', accessToken);
                 if (Platform.OS === 'ios') {
                     TwilioVoice.configureCallKit({
