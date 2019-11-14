@@ -10,7 +10,8 @@ import {
     Platform,
     TextInput,
     KeyboardAvoidingView,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Alert
 } from 'react-native';
 import styles from './styles';
 import _ from 'lodash';
@@ -18,7 +19,7 @@ import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { Actions } from 'react-native-router-flux';
 import EventEmitter, { CallQuotaEvents } from '../../lib/events';
-import { InAppPurchase } from '../../lib/capability';
+import { InAppPurchase, Auth } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
@@ -26,8 +27,9 @@ import Bot from '../../lib/bot';
 import * as RNIap from 'react-native-iap';
 import formStyles from '../Form2Message/styles';
 import UserServices from '../../api/UserServices';
+import email from 'react-native-email';
 
-const EventListeners = [];
+const updateEventListener = [];
 
 export default class GetCredit extends React.Component {
     constructor(props) {
@@ -45,103 +47,115 @@ export default class GetCredit extends React.Component {
     }
 
     componentDidMount() {
-        RNIap.consumeAllItemsAndroid();
-        this.purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
-            this.purchaseHandler.bind(this)
+        this.updateEventListener = EventEmitter.addListener(
+            CallQuotaEvents.UPDATED_QUOTA,
+            this.onCallQuotaUpdateSuccess.bind(this)
         );
-        this.purchaseErrorSubscription = RNIap.purchaseErrorListener(error => {
-            console.warn('purchaseErrorListener', error);
-            this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
-        });
+        this.errorEventListener = EventEmitter.addListener(
+            CallQuotaEvents.UPD_QUOTA_ERROR,
+            this.onCallQuotaUpdateFailure.bind(this)
+        );
     }
 
     componentWillUnmount() {
-        if (this.purchaseUpdateSubscription) {
-            this.purchaseUpdateSubscription.remove();
-            this.purchaseUpdateSubscription = null;
-        }
-        if (this.purchaseErrorSubscription) {
-            this.purchaseErrorSubscription.remove();
-            this.purchaseErrorSubscription = null;
-        }
+        this.updateEventListener.remove();
+        this.errorEventListener.remove();
     }
 
-    purchaseHandler(purchase) {
-        console.log('purchaseUpdatedListener', purchase);
-        const receipt = purchase.transactionReceipt;
-        RNIap.consumeAllItemsAndroid();
-        if (receipt) {
-            UserServices.topupUserBalance(
-                '100',
-                parseFloat(this.state.selectedCredit),
-                'sampleToken'
-            )
-                .then(newBalance => {
-                    if (Platform.OS === 'ios') {
-                        RNIap.finishTransactionIOS(purchase.transactionId);
-                    } else if (Platform.OS === 'android') {
-                        RNIap.acknowledgePurchaseAndroid(
-                            purchase.purchaseToken
-                        );
-                    }
-                    this.setState(
-                        {
-                            updatingBalance: false,
-                            purchaseExecuted: true,
-                            selectedCredit: undefined,
-                            currentBalance: newBalance.toFixed(2)
-                        },
-                        () => {
-                            if (this.props.updateCallBack) {
-                                this.props.updateCallBack(newBalance);
-                            }
-                            this.close();
-                        }
-                    );
-                })
-                .catch(e => {
-                    this.setState({ updatingBalance: false });
-                    this.refs.toast.show(
-                        'Could not update the balance',
-                        DURATION.LENGTH_SHORT
-                    );
-                });
+    onCallQuotaUpdateSuccess(newBalance) {
+        this.setState({
+            updatingBalance: false,
+            purchaseExecuted: true,
+            selectedCredit: undefined,
+            currentBalance: newBalance.toFixed(2)
+        });
+        if (this.props.updateCallBack) {
+            this.props.updateCallBack(newBalance);
         }
+        this.close();
+    }
+
+    onCallQuotaUpdateFailure(error) {
+        this.setState({ updatingBalance: false });
+        this.sendEmailToSupport();
+        this.refs.toast.show(
+            'Could not update your balance',
+            DURATION.LENGTH_SHORT
+        );
+    }
+
+    async sendEmailToSupport() {
+        Alert.alert(
+            'An error occurred',
+            'We are having problems updating your balance. Please contact support@frontm.com describing your problem.',
+            [
+                {
+                    text: 'Ask me later',
+                    onPress: () => console.log('Ask me later pressed')
+                },
+                {
+                    text: 'Cancel',
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: async () => {
+                        try {
+                            const user = await Auth.getUser();
+                            const userEmail = user.info.emailAddress;
+                            const userName = user.info.userName;
+                            const to = ['davide@frontm.com'];
+                            await email(to, {
+                                subject:
+                                    'Failed balance update for ' + userName,
+                                body:
+                                    'Username: ' +
+                                    userName +
+                                    '\nEmail: ' +
+                                    userEmail
+                            });
+                        } catch (error) {
+                            console.log('Could not call email app');
+                        }
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
     }
 
     close() {
         if (this.state.purchaseExecuted) {
             Actions.pop();
         }
-        // if (this.props.wasDialler) {
-        //     Actions.dialler({ phoneNumber: this.props.wasDialler });
-        // }
     }
 
     buyCredit() {
         this.setState({ updatingBalance: true }, async () => {
             let productCode;
+            const products = InAppPurchase.ProductCodes.Voip;
             switch (this.state.selectedCredit) {
             case '4.99':
-                productCode = 'balance_4_99';
+                productCode = products.BALANCE_4_99;
                 break;
             case '9.99':
-                productCode = 'balance_9_99';
+                productCode = products.BALANCE_9_99;
                 break;
             case '49.99':
-                productCode = 'balance_49_99';
+                productCode = products.BALANCE_49_99;
                 break;
             case '99.99':
-                productCode = 'balance_99_99';
+                productCode = products.BALANCE_99_99;
                 break;
             }
             try {
                 await InAppPurchase.buyProduct({
-                    productCode: productCode
+                    productCode: productCode,
+                    productName: InAppPurchase.ProductTypes.VOIP
                 });
             } catch (error) {
                 this.setState({ updatingBalance: false });
-                this.refs.toast.show(error.toString(), DURATION.LENGTH_SHORT);
+                this.refs.toast.show(error.message, DURATION.LENGTH_SHORT);
             }
         });
     }

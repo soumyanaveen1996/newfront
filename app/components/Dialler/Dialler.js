@@ -349,7 +349,7 @@ export default class Dialler extends React.Component {
         // Actions.pop()
     }
 
-    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+    handleCallQuotaUpdateSuccess = callQuota => {
         this.setState({
             callQuota,
             updatingCallQuota: false,
@@ -357,7 +357,7 @@ export default class Dialler extends React.Component {
         });
     };
 
-    handleCallQuotaUpdateFailure = ({ error }) => {
+    handleCallQuotaUpdateFailure = error => {
         this.setState({
             updatingCallQuota: false,
             callQuotaUpdateError: true

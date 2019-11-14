@@ -137,7 +137,7 @@ class NewCallContacts extends React.Component {
         this.setContactVisible(false, null);
     }
 
-    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+    handleCallQuotaUpdateSuccess = callQuota => {
         this.setState({
             callQuota,
             updatingCallQuota: false,
@@ -145,7 +145,7 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    handleCallQuotaUpdateFailure = ({ error }) => {
+    handleCallQuotaUpdateFailure = error => {
         this.setState({
             updatingCallQuota: false,
             callQuotaUpdateError: true

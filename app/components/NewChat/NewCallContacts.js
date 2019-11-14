@@ -179,7 +179,7 @@ class NewCallContacts extends React.Component {
         }
     }
 
-    handleCallQuotaUpdateSuccess = ({ callQuota }) => {
+    handleCallQuotaUpdateSuccess = callQuota => {
         if (Actions.currentScene === ROUTER_SCENE_KEYS.getCredit) {
             setTimeout(() => {
                 Actions.refresh({ currentBalance: this.state.callQuota });
@@ -192,7 +192,7 @@ class NewCallContacts extends React.Component {
         });
     };
 
-    handleCallQuotaUpdateFailure = ({ error }) => {
+    handleCallQuotaUpdateFailure = error => {
         this.setState({
             updatingCallQuota: false,
             callQuotaUpdateError: true

@@ -9,6 +9,8 @@ import Mapbox from '@react-native-mapbox-gl/maps';
 import EventEmitter, { AuthEvents } from '../lib/events';
 import { BackgroundBotChat } from '../lib/BackgroundTask';
 import SystemBot from '../lib/bot/SystemBot';
+import * as RNIap from 'react-native-iap';
+import { PurchaseManager } from '../lib/capability/InAppPurchase';
 
 export default class AfterLogin {
     static executeAfterLogin = async () => {
@@ -20,6 +22,7 @@ export default class AfterLogin {
             );
             await AsyncStorage.removeItem('signupStage');
             await AsyncStorage.removeItem('userEmail');
+            PurchaseManager.subscribe();
             AfterLogin.initializeBackgroundTask();
             ContactsCache.init();
             MessageCounter.init();

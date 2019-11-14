@@ -11,6 +11,7 @@ public class TopupBalanceResponseConverter {
         WritableMap map = Arguments.createMap();
 
         map.putInt("error", response.getError());
+        map.putDouble("callQuota", response.getCallQuota());
 
         return map;
     }
