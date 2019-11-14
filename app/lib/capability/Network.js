@@ -16,7 +16,7 @@ import { NetworkHandler } from '../network';
 
 import { NativeModules } from 'react-native';
 import RemoteLogger from '../utils/remoteDebugger';
-const { AgentGuardServiceClient } = NativeModules;
+const { AgentGuardServiceClient, UserServiceClient } = NativeModules;
 
 const R = require('ramda');
 /**
@@ -132,6 +132,8 @@ const getGrpcService = name => {
     switch (name) {
     case 'AgentGuardServiceClient':
         return AgentGuardServiceClient;
+    case 'UserServiceClient':
+        return UserServiceClient;
 
     default:
         return null;

@@ -5,14 +5,11 @@ import UserServices from '../../api/UserServices';
 export const UpdateCallQuota = ({ error = null, callQuota }) => {
     // Update the latest Call Quota
     if (error) {
-        EventEmitter.emit(CallQuotaEvents.UPD_QUOTA_ERROR, { error });
+        EventEmitter.emit(CallQuotaEvents.UPD_QUOTA_ERROR, error);
     } else {
         DeviceStorage.save(CallQuota.CURRENT_BALANCE_LOCAL_KEY, callQuota);
     }
-
-    EventEmitter.emit(CallQuotaEvents.UPDATED_QUOTA, {
-        callQuota
-    });
+    EventEmitter.emit(CallQuotaEvents.UPDATED_QUOTA, callQuota);
     // Maybe push it to async storage ?? - TBD
     return this;
 };
