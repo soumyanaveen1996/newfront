@@ -140,7 +140,6 @@ class NetworkPoller {
         this.grpcSubscription.push(
             eventEmitter.addListener('sse_message', message => {
                 setTimeout(() => {
-                    RemoteLogger('Air PostCard:::: SSE Response Processing');
                     MessageQueue.push(message);
                 }, (Math.floor(Math.random() * 2) + 1) * 500);
                 // BackgroundTimer.setTimeout(() => {

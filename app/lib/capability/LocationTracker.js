@@ -50,8 +50,8 @@ export default class LocationTracker {
                 reset: true,
                 // Geolocation Config
                 desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-                distanceFilter: 50,
-                heartbeatInterval: 60,
+                distanceFilter: precision,
+                heartbeatInterval: heartbeat_local,
                 preventSuspend: true,
                 // Activity Recognition
                 stopTimeout: 1,
