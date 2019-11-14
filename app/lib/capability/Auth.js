@@ -22,6 +22,7 @@ import { Message, MessageTypeConstants } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import { NativeModules } from 'react-native';
+import { PurchaseManager } from './InAppPurchase';
 
 const AuthServiceClient = NativeModules.AuthServiceClient;
 const UserServiceClient = NativeModules.UserServiceClient;
@@ -408,6 +409,7 @@ export default class Auth {
 
         return new Promise((resolve, reject) => {
             FrontmAuth.facebookLogout();
+            PurchaseManager.unsubscribe();
             DeviceStorage.delete(USER_SESSION)
                 .then(() => {
                     return Bot.unInstallBots();

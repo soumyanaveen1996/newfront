@@ -76,7 +76,6 @@ export default class Conversation {
                     return Conversation.grpcGetTimeline(user);
                 })
                 .then(async res => {
-                    console.log('>>>>GRPC:::Timeline : ', res);
                     let manifestChan = await Promise.resolve(
                         SystemBot.get(SystemBot.channelsBotManifestName)
                     );

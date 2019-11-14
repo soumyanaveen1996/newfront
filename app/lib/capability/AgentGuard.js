@@ -57,6 +57,7 @@ export default class AgentGuard {
             console.log('Sourav Logging:::: Error Calling AG Heartbeat', error);
         }
     };
+
     static execute = async params => {
         try {
             const user = await Auth.getUser();

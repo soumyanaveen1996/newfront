@@ -18,6 +18,7 @@ export default class UserServices {
                         platform
                     },
                     (error, result) => {
+                        console.log('GRPC:::topupUserBalance', error, result);
                         if (error) {
                             reject({
                                 type: 'error',
