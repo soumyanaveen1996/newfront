@@ -56,7 +56,7 @@ export default class LocationTracker {
                 // Activity Recognition
                 stopTimeout: 1,
                 // Application config
-                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+                // debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 logLevel: BackgroundGeolocation.LOG_LEVEL_VERBOSE,
                 enableHeadless: true,
                 stopOnTerminate: false, // <-- Allow the background-service to continue tracking when user closes the app.
