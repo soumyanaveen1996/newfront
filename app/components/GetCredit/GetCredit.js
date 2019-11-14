@@ -19,7 +19,7 @@ import { Icons } from '../../config/icons';
 import Modal from 'react-native-modal';
 import { Actions } from 'react-native-router-flux';
 import EventEmitter, { CallQuotaEvents } from '../../lib/events';
-import { InAppPurchase, Auth } from '../../lib/capability';
+import { Auth, InAppPurchase } from '../../lib/capability';
 import GlobalColors from '../../config/styles';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import ROUTER_SCENE_KEYS from '../../routes/RouterSceneKeyConstants';
