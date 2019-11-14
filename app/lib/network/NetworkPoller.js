@@ -438,7 +438,7 @@ class NetworkPoller {
 
         const msgCheckAndroidGSM = BackgroundTimer.setInterval(() => {
             MessageQueue.checkForMessages();
-        }, 5000);
+        }, 10000);
 
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(CLEAR_KEY, clearQueueIntervalId);
@@ -470,7 +470,7 @@ class NetworkPoller {
         }, config.network.satellite.keepAliveInterval);
         const msgCheckAndroidSAT = BackgroundTimer.setInterval(() => {
             MessageQueue.checkForMessages();
-        }, 5000);
+        }, 15000);
 
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(KEEPALIVE_KEY, keepAliveId);
