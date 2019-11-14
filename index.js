@@ -13,7 +13,7 @@ if (__DEV__ && Platform.OS === 'iOS') {
 
 const HeadlessTask = async event => {
     let params = event.params;
-    console.log('[BackgroundGeolocation HeadlessTask] -', event.name, params);
+    console.log('[BackgroundGeolocation HeadlessTasks] -', event.name, params);
     let taskId;
     switch (event.name) {
     case 'heartbeat':
