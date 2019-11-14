@@ -22,7 +22,7 @@ const HeadlessTask = async event => {
     case 'location':
         taskId = await BackgroundGeolocation.startBackgroundTask();
         await RemoteLogger(
-            `Received Heartbeat ${event.name} -- ${JSON.stringify(params)}`
+            `Received Location ${event.name} -- ${JSON.stringify(params)}`
         );
         BackgroundGeolocation.stopBackgroundTask(taskId);
         break;
