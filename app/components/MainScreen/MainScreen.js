@@ -31,7 +31,8 @@ import {
     Network,
     Contact,
     Message,
-    MessageTypeConstants
+    MessageTypeConstants,
+    CallQuota
 } from '../../lib/capability';
 import { Conversation } from '../../lib/conversation';
 import Bot from '../../lib/bot';
@@ -243,10 +244,19 @@ class MainScreen extends React.Component {
                     callQuotaUpdateError: false
                 });
             } catch (error) {
-                this.setState({
-                    updatingCallQuota: false,
-                    callQuotaUpdateError: true
-                });
+                try {
+                    const newBalance = await CallQuota.getBalanceLocal();
+                    this.setState({
+                        callQuota: newBalance,
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: false
+                    });
+                } catch (e) {
+                    this.setState({
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: true
+                    });
+                }
             }
         });
     }

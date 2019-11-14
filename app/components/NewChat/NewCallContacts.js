@@ -28,7 +28,8 @@ import {
     Network,
     Message,
     MessageTypeConstants,
-    Notification
+    Notification,
+    CallQuota
 } from '../../lib/capability';
 import {
     EventEmitter,
@@ -159,10 +160,19 @@ class NewCallContacts extends React.Component {
                     callQuotaUpdateError: false
                 });
             } catch (error) {
-                this.setState({
-                    updatingCallQuota: false,
-                    callQuotaUpdateError: true
-                });
+                try {
+                    const newBalance = await CallQuota.getBalanceLocal();
+                    this.setState({
+                        callQuota: newBalance,
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: false
+                    });
+                } catch (e) {
+                    this.setState({
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: true
+                    });
+                }
             }
         });
     }

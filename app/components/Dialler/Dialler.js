@@ -22,7 +22,7 @@ import {
 import I18n from '../../config/i18n/i18n';
 import { TwilioVoIP } from '../../lib/twilio';
 import _ from 'lodash';
-import { Message, MessageTypeConstants } from '../../lib/capability';
+import { Message, MessageTypeConstants, CallQuota } from '../../lib/capability';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';
 import SystemBot from '../../lib/bot/SystemBot';
 import { Auth } from '../../lib/capability';
@@ -188,10 +188,19 @@ export default class Dialler extends React.Component {
                     callQuotaUpdateError: false
                 });
             } catch (error) {
-                this.setState({
-                    updatingCallQuota: false,
-                    callQuotaUpdateError: true
-                });
+                try {
+                    const newBalance = await CallQuota.getBalanceLocal();
+                    this.setState({
+                        callQuota: newBalance,
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: false
+                    });
+                } catch (e) {
+                    this.setState({
+                        updatingCallQuota: false,
+                        callQuotaUpdateError: true
+                    });
+                }
             }
         });
     }
