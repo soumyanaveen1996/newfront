@@ -104,7 +104,7 @@ export default class GetCredit extends React.Component {
                             const user = await Auth.getUser();
                             const userEmail = user.info.emailAddress;
                             const userName = user.info.userName;
-                            const to = ['davide@frontm.com'];
+                            const to = ['support@frontm.com'];
                             await email(to, {
                                 subject:
                                     'Failed balance update for ' + userName,
