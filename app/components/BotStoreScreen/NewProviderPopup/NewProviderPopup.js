@@ -102,7 +102,7 @@ export default class NewProviderPopup extends Component {
                     <View style={styles.container}>
                         <Text style={styles.headerText}>
                             {' '}
-                            Sign in to a new provider
+                            Activate Premium apps
                         </Text>
                         <Text style={styles.descriptionText}>
                             Please write an alphanumeric code or scan if it is a
