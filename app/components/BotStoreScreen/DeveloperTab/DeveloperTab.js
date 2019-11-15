@@ -240,7 +240,7 @@ export default class DeveloperTab extends React.Component {
                         onPress={this.newProvider}
                     >
                         <Text style={styles.newProviderText}>
-                            + Sign in to a new Provider
+                            + Activate Premium apps
                         </Text>
                     </TouchableOpacity>
                 </View>

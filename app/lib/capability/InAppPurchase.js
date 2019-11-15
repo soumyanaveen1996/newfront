@@ -123,14 +123,8 @@ export class InAppPurchase {
                     android: [productCode]
                 });
             }
-            if (Platform.OS === 'ios') {
-                RNIap.clearTransactionIOS();
-            } else if (Platform.OS === 'android') {
-                await RNIap.consumeAllItemsAndroid();
-            }
             const products = await RNIap.getProducts(itemSkus);
             const sku = products[0].productId;
-
             const purchase = await RNIap.requestPurchase(sku, false);
             return purchase;
         } catch (err) {
