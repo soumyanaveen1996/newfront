@@ -41,12 +41,14 @@ export default class SwiperScreen extends Component {
                         'Easily top up built-in Digital Wallet and make phone calls to anywhere in the world. Even to Satellite Phone numbers.',
                     imageSource: images.preview_slider_2
                 },
+                ///////REMOVED////////
                 {
                     header: 'Making flying fun again',
                     description:
                         'Message your loved ones and your teams, on a Cruise ship or an Aeroplane. Or even from Timbuktu.',
                     imageSource: images.preview_slider_3
                 },
+                /////////////////////
                 {
                     header: "Let's get you going",
                     description:
@@ -196,7 +198,7 @@ export default class SwiperScreen extends Component {
                             </View>
                         </ImageBackground>
                     </View>
-                    <View style={styles.slide}>
+                    {/* <View style={styles.slide}>
                         <View style={styles.sliderImageContainer}>
                             <Image
                                 style={styles.slider}
@@ -217,7 +219,7 @@ export default class SwiperScreen extends Component {
                                 </Text>
                             </View>
                         </ImageBackground>
-                    </View>
+                    </View> */}
                     <View
                         style={styles.slide}
                         accessibilityLabel="welcome4"
