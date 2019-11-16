@@ -36,10 +36,10 @@ export class PurchaseManager {
         if (receipt) {
             if (Platform.OS === 'ios') {
                 RNIap.finishTransactionIOS(purchase.transactionId);
-                RNIap.clearTransactionIOS();
+                // RNIap.clearTransactionIOS();
             } else if (Platform.OS === 'android') {
+                RNIap.consumePurchaseAndroid(purchase.purchaseToken);
                 RNIap.consumeAllItemsAndroid();
-                RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken);
             }
             if (
                 purchase.productId ===

@@ -22,7 +22,7 @@ export default class AfterLogin {
             );
             await AsyncStorage.removeItem('signupStage');
             await AsyncStorage.removeItem('userEmail');
-            PurchaseManager.subscribe();
+            // PurchaseManager.subscribe();
             AfterLogin.initializeBackgroundTask();
             ContactsCache.init();
             MessageCounter.init();
