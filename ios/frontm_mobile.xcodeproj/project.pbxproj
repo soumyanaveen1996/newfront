@@ -3321,7 +3321,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 421;
+				CURRENT_PROJECT_VERSION = 423;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3363,7 +3363,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3437,7 +3437,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 421;
+				CURRENT_PROJECT_VERSION = 423;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
@@ -3478,7 +3478,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3505,7 +3505,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 421;
+				CURRENT_PROJECT_VERSION = 423;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3547,7 +3547,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3575,7 +3575,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 421;
+				CURRENT_PROJECT_VERSION = 423;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
@@ -3616,7 +3616,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 5.6.2;
+				MARKETING_VERSION = 5.6.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
