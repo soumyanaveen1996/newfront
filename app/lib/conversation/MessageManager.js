@@ -3,6 +3,8 @@ import _ from 'lodash';
 import Message from '../capability/Message';
 import { MessageHandler } from '../../lib/message';
 import ConversationServices from '../../api/ConversationServices';
+import { NETWORK_STATE } from '../network';
+import Store from '../../redux/store/configureStore';
 
 export default class MessageManager {
     static PAGE_SIZE = 25;
@@ -35,7 +37,10 @@ export default class MessageManager {
                 startTime
             );
             messages = messages.concat(localMessages);
-            if (!localMessages || localMessages.length < this.PAGE_SIZE) {
+            if (
+                (!localMessages || localMessages.length < this.PAGE_SIZE) &&
+                Store.getState().user.network !== NETWORK_STATE.none
+            ) {
                 if (localMessages.length > 0) {
                     startTime = localMessages[localMessages.length - 1].message
                         .getMessageDate()
