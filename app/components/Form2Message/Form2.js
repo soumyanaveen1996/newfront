@@ -259,7 +259,9 @@ class Form2 extends React.Component {
             case fieldType.imageField:
                 answer.value = fieldData.value || '';
                 answer.getResponse = action => {
-                    this.uploadQueue.push(answer.value);
+                    if (action === formAction.CONFIRM) {
+                        this.uploadQueue.push(answer.value);
+                    }
                     return answer.value;
                 };
                 answer.validationMessage = 'Could not upload the image';
@@ -1447,7 +1449,7 @@ class Form2 extends React.Component {
                     </TouchableOpacity>
                 ) : null} */}
                 </View>
-                {this.state.answers[key].value ? (
+                {this.state.answers[key].value && !this.state.disabled ? (
                     <Text
                         onPress={() => {
                             this.answers[key].valid = true;
