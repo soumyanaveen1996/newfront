@@ -141,7 +141,7 @@ class NetworkPoller {
             eventEmitter.addListener('sse_message', message => {
                 setTimeout(() => {
                     MessageQueue.push(message);
-                }, (Math.floor(Math.random() * 2) + 1) * 500);
+                }, (Math.floor(Math.random() * 5) + 1) * 1000);
                 // BackgroundTimer.setTimeout(() => {
                 //     Contact.refreshContacts();
                 // }, 2000);
@@ -359,9 +359,6 @@ class NetworkPoller {
             this.appleIntervalId = BackgroundTimer.setInterval(() => {
                 this.process();
             }, config.network.gsm.pollingInterval);
-            this.msgCheck = BackgroundTimer.setInterval(() => {
-                MessageQueue.checkForMessages();
-            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 '---------App is in background. So starting background task every 15 minutes-----------'
@@ -401,9 +398,6 @@ class NetworkPoller {
                     this.keepAliveCount++;
                 }
             }, config.network.satellite.keepAliveInterval);
-            this.msgCheckSatellite = BackgroundTimer.setInterval(() => {
-                MessageQueue.checkForMessages();
-            }, 5000);
         } else if (this.appState === 'background') {
             console.log(
                 'App is in background. So starting background task every 1 hour'
@@ -436,10 +430,6 @@ class NetworkPoller {
             this.clearQueue();
         }, clearQueue);
 
-        const msgCheckAndroidGSM = BackgroundTimer.setInterval(() => {
-            MessageQueue.checkForMessages();
-        }, 10000);
-
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(CLEAR_KEY, clearQueueIntervalId);
         await DeviceStorage.save(MSG_ANDROID_GSM, msgCheckAndroidGSM);
@@ -468,9 +458,6 @@ class NetworkPoller {
         const keepAliveId = BackgroundTimer.setInterval(() => {
             NetworkHandler.keepAlive();
         }, config.network.satellite.keepAliveInterval);
-        const msgCheckAndroidSAT = BackgroundTimer.setInterval(() => {
-            MessageQueue.checkForMessages();
-        }, 15000);
 
         await DeviceStorage.save(POLL_KEY, newIntervalId);
         await DeviceStorage.save(KEEPALIVE_KEY, keepAliveId);
