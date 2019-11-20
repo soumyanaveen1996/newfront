@@ -907,6 +907,15 @@ const stylesheet = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    save_btn_disabled: {
+        width: 120,
+        height: 30,
+        backgroundColor: 'rgba(0,189,242,1)',
+        borderRadius: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        opacity: 0.2
+    },
     save_btn_text: {
         color: 'rgba(255,255,255,1)',
         fontFamily: 'SF Pro Text',
