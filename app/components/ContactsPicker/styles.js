@@ -215,7 +215,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: 'space-between'
     },
     contactItemName: {
-        color: GlobalColors.headerBlack,
+        color: GlobalColors.textBlack,
         fontSize: 16
     },
     contactItemEmail: {

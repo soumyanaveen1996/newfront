@@ -50,6 +50,7 @@ import RNFS from 'react-native-fs';
 import config from '../../config/config';
 import utils from '../../lib/utils';
 import { AssetFetcher } from '../../lib/dce';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class Form2 extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -115,6 +116,7 @@ class Form2 extends React.Component {
             dateModalMode: 'date',
             formIsCompleted: this.checkFormValidation()
         };
+        this.keyboardVerticalOffset = Platform.OS === 'ios' ? 60 : 0;
         this.uploadQueue = [];
         this.props.navigation.setParams({
             showConnectionMessage: this.showConnectionMessage,
@@ -1675,89 +1677,87 @@ class Form2 extends React.Component {
     render() {
         const formIsCompleted = this.checkFormValidation();
         return (
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                style={styles.f2Container}
+            <TouchableWithoutFeedback
+                disabled={this.state.showInfoOfIndex === null}
+                onPress={() => this.setState({ showInfoOfIndex: null })}
+                style={{ flex: 1, backgroundColor: GlobalColors.white }}
             >
-                <TouchableWithoutFeedback
-                    disabled={this.state.showInfoOfIndex === null}
-                    onPress={() => this.setState({ showInfoOfIndex: null })}
-                    style={{ flex: 1 }}
+                <SafeAreaView
+                    style={{ flex: 1, backgroundColor: GlobalColors.white }}
                 >
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <ScrollView
-                            keyboardShouldPersistTaps="handled"
-                            style={{ flex: 1 }}
-                        >
-                            <Text style={styles.f2Title}>
-                                {this.props.title}
-                            </Text>
-                            {this.renderFields()}
-                            <View style={styles.f2BottomArea}>
-                                <TouchableOpacity
-                                    style={styles.f2CancelButton}
-                                    onPress={
-                                        this.state.disabled
-                                            ? () => Actions.pop()
-                                            : this.onCancelForm.bind(this)
-                                    }
-                                >
-                                    <Text style={styles.f2CancelButtonText}>
-                                        {this.props.cancel || 'Cancel'}
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    disabled={
-                                        this.state.disabled || !formIsCompleted
-                                    }
-                                    style={[
-                                        styles.f2DoneButton,
-                                        {
-                                            opacity:
-                                                this.state.disabled ||
-                                                !formIsCompleted
-                                                    ? 0.2
-                                                    : 1
-                                        }
-                                    ]}
-                                    onPress={this.onDone.bind(this)}
-                                >
-                                    <Text style={styles.f2DoneButtonText}>
-                                        {this.props.confirm || 'Done'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            {this.renderDateModalIOS()}
-                            {this.renderDropdownModal()}
-                            <ChatModal
-                                content={this.renderLookupInfoModalContent(
-                                    this.state.lookupModalInfo
-                                )}
-                                isVisible={this.state.showLookupModal}
-                                backdropOpacity={0.1}
-                                onBackButtonPress={() =>
-                                    this.setState({
-                                        showLookupModal: false,
-                                        lookupModalInfo: null
-                                    })
+                    <KeyboardAwareScrollView
+                        keyboardShouldPersistTaps="handled"
+                        style={{ flex: 1, backgroundColor: GlobalColors.white }}
+                        extraScrollHeight={50}
+                        keyboardOpeningTime={10}
+                        enableOnAndroid={false}
+                    >
+                        <Text style={styles.f2Title}>{this.props.title}</Text>
+                        {this.renderFields()}
+                        <View style={styles.f2BottomArea}>
+                            <TouchableOpacity
+                                style={styles.f2CancelButton}
+                                onPress={
+                                    this.state.disabled
+                                        ? () => Actions.pop()
+                                        : this.onCancelForm.bind(this)
                                 }
-                                onBackdropPress={() =>
-                                    this.setState({
-                                        showLookupModal: false,
-                                        lookupModalInfo: null
-                                    })
+                            >
+                                <Text style={styles.f2CancelButtonText}>
+                                    {this.props.cancel || 'Cancel'}
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                disabled={
+                                    this.state.disabled || !formIsCompleted
                                 }
-                                style={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    margin: 0
-                                }}
-                            />
-                        </ScrollView>
-                    </SafeAreaView>
-                </TouchableWithoutFeedback>
-                {this.renderToast()}
-            </KeyboardAvoidingView>
+                                style={[
+                                    styles.f2DoneButton,
+                                    {
+                                        opacity:
+                                            this.state.disabled ||
+                                            !formIsCompleted
+                                                ? 0.2
+                                                : 1
+                                    }
+                                ]}
+                                onPress={this.onDone.bind(this)}
+                            >
+                                <Text style={styles.f2DoneButtonText}>
+                                    {this.props.confirm || 'Done'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {this.renderDateModalIOS()}
+                        {this.renderDropdownModal()}
+                        <ChatModal
+                            content={this.renderLookupInfoModalContent(
+                                this.state.lookupModalInfo
+                            )}
+                            isVisible={this.state.showLookupModal}
+                            backdropOpacity={0.1}
+                            onBackButtonPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            onBackdropPress={() =>
+                                this.setState({
+                                    showLookupModal: false,
+                                    lookupModalInfo: null
+                                })
+                            }
+                            style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: 0
+                            }}
+                        />
+                    </KeyboardAwareScrollView>
+                    {this.renderToast()}
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
         );
     }
 }

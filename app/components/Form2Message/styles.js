@@ -94,10 +94,10 @@ export default (stylesheet = StyleSheet.create({
         borderColor: GlobalColors.disabledGray
     },
     f2LabelTitle: {
-        fontSize: 16,
+        fontSize: 18,
         marginRight: 5,
         alignSelf: 'center',
-        color: GlobalColors.headerBlack
+        color: GlobalColors.textBlack
     },
     f2BottomArea: {
         marginVertical: 35,
@@ -145,20 +145,24 @@ export default (stylesheet = StyleSheet.create({
         borderRadius: 5,
         borderTopRightRadius: 0,
         borderColor: GlobalColors.textField,
-        borderLeftWidth: 1,
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
-        borderRightWidth: 1
+        // borderLeftWidth: 1,
+        // borderBottomWidth: 1,
+        // borderTopWidth: 1,
+        // borderRightWidth: 1,
+        fontSize: 18,
+        color: GlobalColors.textDarkGrey
     },
     textArea: {
         height: 120,
         paddingHorizontal: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         backgroundColor: GlobalColors.textField,
         borderRadius: 5,
-        borderTopRightRadius: 0
+        borderTopRightRadius: 0,
+        fontSize: 18,
+        color: GlobalColors.textDarkGrey
     },
     checkbox: {
         backgroundColor: GlobalColors.transparent,
@@ -167,7 +171,7 @@ export default (stylesheet = StyleSheet.create({
         paddingHorizontal: 0
     },
     optionText: {
-        fontSize: 18,
+        fontSize: 16,
         color: GlobalColors.headerBlack,
         fontWeight: 'normal'
     },

@@ -39,6 +39,7 @@ import { ButtonMessage } from '../ButtonMessage';
 import config from '../../config/config';
 import ContactCard from './ContactCard';
 import TapToOpenFile from './TapToOpenFile';
+import GlobalColors from '../../config/styles';
 
 const getRandomInt = max => Math.floor(Math.random() * Math.floor(max));
 
@@ -400,7 +401,13 @@ export default class ChatMessage extends React.Component {
                     linkDefault={true}
                     linkStyle={{ textDecorationLine: 'underline' }}
                 >
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <View
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            color: GlobalColors.textBlack
+                        }}
+                    >
                         <Text
                             style={chatMessageTextStyle(this.props.alignRight)}
                         >

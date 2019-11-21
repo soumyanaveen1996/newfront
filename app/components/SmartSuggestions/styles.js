@@ -30,6 +30,6 @@ export default StyleSheet.create({
     },
     suggestionText: {
         fontSize: 15,
-        color: GlobalColors.black
+        color: GlobalColors.textBlack
     }
 });
