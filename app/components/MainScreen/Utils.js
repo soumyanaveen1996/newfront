@@ -6,7 +6,7 @@ import {
 } from '../../lib/capability';
 import { MessageHandler } from '../../lib/message';
 import { Queue } from '../../lib/network';
-import { IM_CHAT } from '../../lib/conversation/Conversation';
+import Conversation, { IM_CHAT } from '../../lib/conversation/Conversation';
 import ChannelDAO from '../../lib/persistence/ChannelDAO';
 
 const getMessageDataForBot = bot =>
@@ -73,15 +73,22 @@ const getMessageDataForConversation = (conversation, user) =>
                     );
                 })
                 .then(channel => {
-                    getMessageDataForConversationFromServer(
-                        conversation,
-                        context,
-                        chatName,
-                        undefined
-                    ).then(data => {
-                        data.channel = channel;
-                        resolve(data);
-                    });
+                    if (channel) {
+                        getMessageDataForConversationFromServer(
+                            conversation,
+                            context,
+                            chatName,
+                            undefined
+                        ).then(data => {
+                            data.channel = channel;
+                            resolve(data);
+                        });
+                    } else {
+                        Conversation.deleteChannelConversation(
+                            conversation.conversationId
+                        );
+                        resolve(null);
+                    }
                 })
                 .catch(reject);
         }
