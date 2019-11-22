@@ -48,6 +48,9 @@ export default class BotListScreen extends React.Component {
     }
 
     componentDidMount() {
+        if (this.state.searchString) {
+            this.updateText(this.state.searchString);
+        }
         Bot.getTimeLineBots().then(bots => {
             this.setState({ installedBots: bots });
         });
@@ -88,25 +91,15 @@ export default class BotListScreen extends React.Component {
         Actions.botChat({ bot: item });
     }
 
-    async updateText() {
-        const searchBot = await Bot.searchBots(this.state.searchString.trim());
-        this.setState({ searchString: this.state.searchString.trim() });
-        const filteredSearchBot = [];
-
-        for (var arr in this.props.allBotsData) {
-            for (var filter in searchBot) {
-                if (
-                    this.props.allBotsData[arr].botId ===
-                    searchBot[filter].botId
-                ) {
-                    filteredSearchBot.push(this.props.allBotsData[arr]);
-                }
-            }
-        }
+    async updateText(searchString) {
+        const searchBot = this.props.data.filter(bot => {
+            return bot.botName.startsWith(searchString);
+        });
 
         let count = searchBot.length;
         this.setState({
-            botsData: [...filteredSearchBot],
+            searchString: searchString,
+            botsData: searchBot,
             countResults: count
         });
     }
@@ -134,10 +127,9 @@ export default class BotListScreen extends React.Component {
                         placeholder="Search apps"
                         value={this.state.searchString}
                         onChangeText={searchString => {
-                            this.setState({ searchString, countResults: 0 });
+                            this.updateText(searchString);
                         }}
                         underlineColorAndroid="transparent"
-                        onSubmitEditing={() => this.updateText()}
                         value={this.state.searchString}
                     />
                 </View>
@@ -146,6 +138,23 @@ export default class BotListScreen extends React.Component {
             return null;
         }
     };
+
+    renderAppsCount() {
+        if (this.state.countResults > 0 && this.state.searchString.length > 0) {
+            return (
+                <View>
+                    <Text style={styles.appsCount}>
+                        {this.state.countResults}
+                        <Text style={styles.appsCountSlim}>
+                            {' '}
+                            apps found for search{' '}
+                        </Text>
+                        {this.state.searchString}
+                    </Text>
+                </View>
+            );
+        }
+    }
 
     renderToast() {
         if (Platform.OS === 'ios') {
@@ -157,24 +166,10 @@ export default class BotListScreen extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', padding: 10 }}>
+            <View
+                style={{ flex: 1, alignItems: 'center', paddingHorizontal: 10 }}
+            >
                 {this.searchBotFields()}
-                {this.state.countResults > 0 &&
-                    this.state.searchString.length > 0 && (
-                    <View>
-                        <Text
-                            style={{
-                                color: 'rgba(74, 74, 74, 1)',
-                                fontSize: 22,
-                                fontWeight: '600',
-                                marginBottom: 20
-                            }}
-                        >
-                            {this.state.countResults} apps found for search{' '}
-                            {this.state.searchString}
-                        </Text>
-                    </View>
-                )}
                 <FlatList
                     refreshControl={
                         Store.getState().user.network === 'full' ? (
@@ -205,6 +200,7 @@ export default class BotListScreen extends React.Component {
                     data={this.state.botsData}
                     renderItem={this.renderRowItem.bind(this)}
                     extraData={this.state}
+                    ListHeaderComponent={this.renderAppsCount()}
                 />
                 {this.renderToast()}
             </View>

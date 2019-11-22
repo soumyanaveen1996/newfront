@@ -116,7 +116,8 @@ class BotStoreScreen extends React.Component {
             catalogLoaded: false,
             networkError: false,
             showNewProvider: false,
-            qrCodeData: ''
+            qrCodeData: '',
+            searching: false
         };
     }
 
@@ -389,46 +390,13 @@ class BotStoreScreen extends React.Component {
         );
     }
 
-    // onTileCilcked = title => {
-    //     Actions.botListScreen({
-    //         data: this.state.catalogData.bots,
-    //         title: title,
-    //         typeScreen: 'search'
-    //     });
-    // };
-
-    async updateText() {
-        const searchBot = await Bot.searchBots(this.state.searchString.trim());
-
-        const filteredSearchBot = [];
-
-        for (var arr in this.state.catalogData.bots) {
-            for (var filter in searchBot) {
-                if (
-                    this.state.catalogData.bots[arr].botId ===
-                    searchBot[filter].botId
-                ) {
-                    filteredSearchBot.push(this.state.catalogData.bots[arr]);
-                }
-            }
-        }
-
-        this.setState(() => {
-            return {
-                botsData: [...filteredSearchBot],
-                countResults: searchBot.length
-            };
-        });
-
+    searchBots() {
         Actions.botListScreen({
-            data: this.state.botsData,
-            allBotsData: this.state.catalogData.bots,
+            data: this.state.catalogData.bots,
             title: 'Marketplace',
             typeScreen: 'search',
             searchText: this.state.searchString
         });
-
-        this.setState({ searchString: '' });
     }
 
     render() {
@@ -458,36 +426,17 @@ class BotStoreScreen extends React.Component {
         return (
             <BackgroundImage style={{ flex: 1 }}>
                 <Loader loading={this.state.loading} />
-                {/* <TouchableOpacity
-                    style={styles.searchSection}
-                    onPress={() => this.onTileCilcked('Marketplace')}
-                >
-                    <Icon
-                        style={styles.searchIcon}
-                        name="search"
-                        size={24}
-                        color="rgba(0, 189, 242, 1)"
-                    />
-                    <View style={styles.input}>
-                        <Text
-                            style={{
-                                color: 'rgba(155, 155, 155, 1)',
-                                fontSize: 16,
-                                fontFamily: 'SF Pro Text'
-                            }}
-                        >
-                            {' '}
-                            Search apps{' '}
-                        </Text>
-                    </View>
-                </TouchableOpacity> */}
                 <View style={styles.searchSection}>
-                    <Icon
-                        style={styles.searchIcon}
-                        name="search"
-                        size={24}
-                        color="rgba(0, 189, 242, 1)"
-                    />
+                    {this.state.searching ? (
+                        <ActivityIndicator size="small" />
+                    ) : (
+                        <Icon
+                            style={styles.searchIcon}
+                            name="search"
+                            size={24}
+                            color="rgba(0, 189, 242, 1)"
+                        />
+                    )}
                     <TextInput
                         style={styles.input}
                         placeholder="Search apps"
@@ -496,7 +445,7 @@ class BotStoreScreen extends React.Component {
                             this.setState({ searchString });
                         }}
                         underlineColorAndroid="transparent"
-                        onSubmitEditing={() => this.updateText()}
+                        onSubmitEditing={() => this.searchBots()}
                     />
                 </View>
                 {this.state.showNewProvider && (
@@ -507,13 +456,6 @@ class BotStoreScreen extends React.Component {
                         qrCode={this.state.qrCodeData}
                     />
                 )}
-                {/* <StatusBar
-                    hidden={false}
-                    backgroundColor="grey"
-                    barStyle={
-                        Platform.OS === 'ios' ? 'dark-content' : 'light-content'
-                    }
-                /> */}
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
             </BackgroundImage>

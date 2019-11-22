@@ -78,7 +78,8 @@ export default StyleSheet.create({
         marginTop: 50
     },
     flatList: {
-        height: '100%'
+        height: '100%',
+        marginTop: 10
     },
     searchSection: {
         width: wp('100%'),
@@ -88,13 +89,11 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         marginTop: 3,
-        marginBottom: 20,
         paddingHorizontal: 20
     },
     searchIcon: {
         padding: 10
     },
-
     input: {
         flex: 1,
         paddingTop: 10,
@@ -103,5 +102,19 @@ export default StyleSheet.create({
         paddingLeft: 0,
         backgroundColor: '#fff',
         color: 'rgba(155,155,155,1)'
+    },
+    appsCount: {
+        color: GlobalColors.textBlack,
+        fontSize: 22,
+        fontWeight: '600',
+        marginBottom: 20,
+        marginTop: 10,
+        marginLeft: 10
+    },
+    appsCountSlim: {
+        color: GlobalColors.textBlack,
+        fontSize: 22,
+        fontWeight: '400',
+        marginBottom: 20
     }
 });
