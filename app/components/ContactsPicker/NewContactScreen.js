@@ -533,7 +533,12 @@ class NewContactScreen extends React.Component {
                     onPress={() => {
                         this.saveProfile();
                     }}
-                    style={styles.save_btn}
+                    style={
+                        this.state.name
+                            ? styles.save_btn
+                            : styles.save_btn_disabled
+                    }
+                    disabled={!this.state.name}
                 >
                     <Text style={styles.save_btn_text}>{I18n.t('SAVE')}</Text>
                 </TouchableOpacity>

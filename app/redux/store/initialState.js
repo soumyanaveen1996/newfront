@@ -1,25 +1,25 @@
 import I18n from '../../config/i18n/i18n';
 const initialState = {
     user: {
-        satelliteMode: false,
-        remoteBotsInstalled: false,
-        catalogLoaded: true,
-        allConversationsLoaded: false,
         allChannelsLoaded: false,
+        allConversationsLoaded: false,
+        catalogLoaded: true,
         contactsLoaded: false,
         conversationsLoaded: false,
+        currentConversationId: '',
+        currentForm: null,
+        currentMap: null,
         currentScene: I18n.t('Home'),
-        refreshTimeline: true,
+        firstLogin: false,
+        network: 'full',
+        phoneContacts: [],
         refreshChannels: true,
         refreshContacts: true,
+        refreshTimeline: true,
         refreshUserEmail: true,
-        network: 'full',
-        currentConversationId: '',
-        upload: 0,
-        currentMap: null,
-        currentForm: null,
-        firstLogin: false,
-        phoneContacts: []
+        remoteBotsInstalled: false,
+        satelliteMode: false,
+        upload: 0
     },
     botState: {
         id: null

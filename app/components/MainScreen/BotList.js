@@ -117,9 +117,10 @@ class BotList extends React.Component {
                 allChats.push({ key: bot.botId, type: 'bot', bot: bot });
             }
         });
-
-        let allChatsData = await Promise.all(
-            _.map(allChats, async (conversation, index) => {
+        let allChatsData = [];
+        for (let index = 0; index < allChats.length; index++) {
+            try {
+                const conversation = allChats[index];
                 let chatData = null;
                 if (conversation.type === 'bot') {
                     chatData = await Promise.resolve(
@@ -133,15 +134,16 @@ class BotList extends React.Component {
                         )
                     );
                 }
-                conversation.chatData = chatData;
-
-                return conversation;
-            })
-        ).catch(e => {
-            console.error('Error getting info for timeline', e);
-            return [];
-        });
-
+                if (chatData) {
+                    conversation.chatData = chatData;
+                    allChatsData.push(conversation);
+                }
+            } catch (e) {
+                console.error('Error getting info for timeline', e);
+                allChatsData = [];
+                break;
+            }
+        }
         // console.log('getting all chat data ', allChatsData);
 
         // Remove All Vessels from the List

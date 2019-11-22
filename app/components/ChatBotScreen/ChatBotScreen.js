@@ -291,12 +291,6 @@ class ChatBotScreen extends React.Component {
 
             // 3. Get messages for this bot / chat
             let messages = await this.loadMessages();
-            // let messages = await this.loadMessages();
-            // if (messages.length < pageSize) {
-            //     await this.loadOldMessagesFromServer();
-            //     messages = await this.loadMessages();
-            // }
-
             // Find the first non-read message and use scrollToIndex.
             let index = 0;
             for (let i = 0; i < messages.length; i++) {
