@@ -1,7 +1,12 @@
 import React from 'react';
 import styles from './styles';
 import Icons from '../../config/icons';
-import { TouchableOpacity, Alert, Image } from 'react-native';
+import {
+    TouchableOpacity,
+    Alert,
+    Image,
+    ActivityIndicator
+} from 'react-native';
 import { connect } from 'react-redux';
 import { NETWORK_STATE } from '../../lib/network';
 import I18n from '../../config/i18n/i18n';
@@ -18,6 +23,7 @@ class NetworkButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loadingManual: false,
             pollingStrategy: PollingStrategyTypes.manual
         };
     }
@@ -102,16 +108,29 @@ class NetworkButton extends React.Component {
                 <TouchableOpacity
                     accessibilityLabel="Network Icon"
                     testID="network-icon"
-                    onPress={() => this.props.manualAction}
+                    onPress={() => {
+                        this.setState({ loadingManual: true });
+                        this.props.manualAction;
+                        setTimeout(() => {
+                            this.setState({ loadingManual: false });
+                        }, 2000);
+                    }}
                     activeOpacity={1}
                 >
-                    <Image
-                        accessibilityLabel="Network Icon"
-                        testID="network-icon"
-                        source={images.refresh}
-                        resizeMode="contain"
-                        style={{ width: 50, height: 50 }}
-                    />
+                    {this.state.loadingManual ? (
+                        <ActivityIndicator
+                            size="small"
+                            style={{ marginRight: 10 }}
+                        />
+                    ) : (
+                        <Image
+                            accessibilityLabel="Network Icon"
+                            testID="network-icon"
+                            source={images.refresh}
+                            resizeMode="contain"
+                            style={{ width: 50, height: 50 }}
+                        />
+                    )}
                 </TouchableOpacity>
             );
         } else if (
