@@ -51,6 +51,7 @@ import {
     GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
 import NetworkButton from '../Header/NetworkButton';
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 class BotStoreScreen extends React.Component {
     static navigationOptions({ navigation, screenProps }) {
@@ -63,13 +64,6 @@ class BotStoreScreen extends React.Component {
                     manualAction={() => {
                         state.params.refresh();
                     }}
-                    gsmAction={() => {
-                        state.params.showConnectionMessage('gsm');
-                    }}
-                    satelliteAction={() => {
-                        state.params.showConnectionMessage('satellite');
-                    }}
-                    disconnectedAction={() => {}}
                 />
             </View>
         );
@@ -108,7 +102,6 @@ class BotStoreScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showSearchBar: false,
             selectedIndex: 0,
             searchString: '',
             countResults: 0,
@@ -117,29 +110,13 @@ class BotStoreScreen extends React.Component {
             networkError: false,
             showNewProvider: false,
             qrCodeData: '',
-            searching: false
+            searching: false,
+            installedBots: []
         };
     }
 
-    async updateCatalog() {
-        let catalog = await Bot.getCatalog();
-        if (catalog.bots) {
-            catalog.bots.filter(bot => {
-                return !bot.systemBot;
-            });
-        }
-        // catalog = { ...catalog, ...{ bots: user_bots } };
-        this.setState({
-            showSearchBar: false,
-            selectedIndex: this.state.selectedIndex || 0,
-            catalogData: catalog,
-            catalogLoaded: true,
-            networkError: false,
-            loading: false
-        });
-    }
-
     async componentWillUnmount() {
+        this.mounted = false;
         EventEmitter.removeListener(
             AuthEvents.userChanged,
             this.userChangedHandler.bind(this)
@@ -152,48 +129,24 @@ class BotStoreScreen extends React.Component {
         }
 
         this.props.navigation.setParams({
-            refresh: NetworkHandler.readLambda,
-            showConnectionMessage: this.showConnectionMessage
+            refresh: this.updateCatalog.bind(this)
         });
-        try {
-            setTimeout(() => this.updateCatalog(), 200);
-
-            EventEmitter.addListener(
-                AuthEvents.userChanged,
-                this.userChangedHandler.bind(this)
-            );
-            // await this.updateCatalog()
-            if (this.props.navigation) {
-                this.props.navigation.setParams({
-                    handleSearchClick: this.handleSearchClick.bind(this),
-                    handleSearchSubmit: this.handleSearchSubmit.bind(this)
-                });
-            }
-        } catch (error) {
-            console.error(
-                'Error occurred during componentWillMount getting catalogData; ',
-                error
-            );
-            if (error instanceof NetworkError) {
-                this.setState({
-                    showSearchBar: false,
-                    selectedIndex: 0,
-                    catalogLoaded: false,
-                    networkError: true
-                });
-            }
-        }
+        setTimeout(() => this.updateCatalog(), 200);
+        this.mounted = true;
+        EventEmitter.addListener(
+            AuthEvents.userChanged,
+            this.userChangedHandler.bind(this)
+        );
     }
 
-    componentDidUpdate(prevProps) {
-        if (
-            prevProps.appState.catalogLoaded !==
-            this.props.appState.catalogLoaded
-        ) {
-            this.updateCatalog();
-            this.checkPollingStrategy();
-        }
-    }
+    // componentDidUpdate(prevProps) {
+    //     if (
+    //         prevProps.appState.catalogLoaded !==
+    //         this.props.appState.catalogLoaded
+    //     ) {
+    //         this.updateCatalog();
+    //     }
+    // }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
@@ -204,7 +157,10 @@ class BotStoreScreen extends React.Component {
 
     static onEnter() {
         EventEmitter.emit(AuthEvents.tabSelected, I18n.t('Bot_Store'));
-        Store.dispatch(completeCatalogLoad(true));
+        // Store.dispatch(completeCatalogLoad(true));
+        if (this.mounted) {
+            this.updateCatalog();
+        }
         GoogleAnalytics.logEvents(
             GoogleAnalyticsEventsCategories.STORE,
             GoogleAnalyticsEventsActions.OPENED_MARKETPLACE,
@@ -217,75 +173,55 @@ class BotStoreScreen extends React.Component {
     static onExit() {
         // RemoteBotInstall.syncronizeBots();
         Store.dispatch(setCurrentScene('none'));
-        Store.dispatch(completeCatalogLoad(false));
+        // Store.dispatch(completeCatalogLoad(false));
     }
 
-    async refresh() {
-        const isUserLoggedIn = await Auth.isUserLoggedIn();
-        if (this.state && isUserLoggedIn) {
-            await this.updateCatalog();
+    async updateCatalog() {
+        console.log('>>>>>>>>UPDATE');
+        try {
+            const installedBots = await Bot.getTimeLineBots();
+            let catalog = await Bot.getCatalog();
+            if (catalog.bots) {
+                catalog.bots.filter(bot => {
+                    return !bot.systemBot;
+                });
+            }
+            // catalog = { ...catalog, ...{ bots: user_bots } };
+            this.setState({
+                selectedIndex: this.state.selectedIndex || 0,
+                catalogData: catalog,
+                catalogLoaded: true,
+                networkError: false,
+                loading: false,
+                installedBots: installedBots || []
+            });
+        } catch (error) {
+            this.refs.toast.show(error.message, DURATION.LENGTH_SHORT);
+            this.setState({
+                catalogLoaded: true,
+                networkError: true,
+                loading: false
+            });
         }
     }
 
-    checkPollingStrategy = async () => {
-        let pollingStrategy = await Settings.getPollingStrategy();
-        this.showButton(pollingStrategy);
+    onBotInstalled = async () => {
+        Bot.getTimeLineBots().then(bots => {
+            this.setState({ installedBots: bots });
+            this.showToastMessage(I18n.t('Bot_installed'));
+        });
     };
 
-    showConnectionMessage = connectionType => {
-        let message = I18n.t('Auto_Message');
-        if (connectionType === 'gsm') {
-            message = I18n.t('Gsm_Message');
-        } else if (connectionType === 'satellite') {
-            message = I18n.t('Satellite_Message');
-        }
-        Alert.alert(
-            I18n.t('Automatic_Network'),
-            message,
-            [{ text: I18n.t('Ok'), style: 'cancel' }],
-            { cancelable: false }
-        );
-    };
-
-    showButton = pollingStrategy => {
-        if (pollingStrategy === PollingStrategyTypes.manual) {
-            this.props.navigation.setParams({ button: 'manual' });
-        } else if (pollingStrategy === PollingStrategyTypes.automatic) {
-            this.props.navigation.setParams({ button: 'none' });
-        } else if (pollingStrategy === PollingStrategyTypes.gsm) {
-            this.props.navigation.setParams({ button: 'gsm' });
-        } else if (pollingStrategy === PollingStrategyTypes.satellite) {
-            this.props.navigation.setParams({ button: 'satellite' });
-        }
+    onBotInstallFailed = () => {
+        this.showToastMessage(I18n.t('Bot_install_failed'));
     };
 
     async userChangedHandler() {
-        this.refresh();
-    }
-
-    onBack() {
-        this.refresh();
-    }
-
-    handleSearchClick() {
-        this.setState({ showSearchBar: true });
-        if (this.props.navigation) {
-            this.props.navigation.setParams({ showSearchBar: true });
-        }
-    }
-
-    handleSearchSubmit() {
-        this.setState({ showSearchBar: false });
-        if (this.props.navigation) {
-            this.props.navigation.setParams({ showSearchBar: false });
-        }
+        this.updateCatalog();
     }
 
     onIndexChange(index) {
         this.setState({ selectedIndex: index });
-        if (this.props.navigation) {
-            this.props.navigation.setParams({ selectedIndex: index });
-        }
     }
 
     changeHandler = value => {
@@ -301,22 +237,17 @@ class BotStoreScreen extends React.Component {
     };
 
     onSubmit = () => {
-        // this.updateCatalog();
+        this.updateCatalog();
         this.setState({ selectedIndex: 2 });
-        this.refresh();
-
-        // setTimeout(() => {
-        //     this.setState({ selectedIndex: 2 });
-        //     this.refresh();
-        //     Actions.refresh({
-        //         key: Math.random()
-        //     });
-        // }, 2000);
     };
 
     qrCodeSubmit = code => {
         this.setState({ qrCodeData: code });
     };
+
+    showToastMessage(message) {
+        this.refs.toast.show(message, DURATION.LENGTH_SHORT);
+    }
 
     botStoreList() {
         if (this.state.selectedIndex === 2) {
@@ -325,9 +256,12 @@ class BotStoreScreen extends React.Component {
                     style={{ flex: 1 }}
                     developerData={this.state.catalogData.developer}
                     botsData={this.state.catalogData.bots}
-                    onBack={this.onBack.bind(this)}
                     onChange={this.changeHandler}
-                    refresh={this.refresh.bind(this)}
+                    refresh={this.updateCatalog.bind(this)}
+                    showToastMessage={this.showToastMessage.bind(this)}
+                    installedBots={this.state.installedBots}
+                    onBotInstalled={this.onBotInstalled.bind(this)}
+                    onBotInstallFailed={this.onBotInstallFailed.bind(this)}
                 />
             );
         }
@@ -337,8 +271,11 @@ class BotStoreScreen extends React.Component {
                     style={{ flex: 1 }}
                     categoriesData={this.state.catalogData.categories}
                     botsData={this.state.catalogData.bots}
-                    onBack={this.onBack.bind(this)}
-                    refresh={this.refresh.bind(this)}
+                    refresh={this.updateCatalog.bind(this)}
+                    showToastMessage={this.showToastMessage.bind(this)}
+                    installedBots={this.state.installedBots}
+                    onBotInstalled={this.onBotInstalled.bind(this)}
+                    onBotInstallFailed={this.onBotInstallFailed.bind(this)}
                 />
             );
         }
@@ -350,8 +287,11 @@ class BotStoreScreen extends React.Component {
                 <FeaturedTab
                     style={{ flex: 1 }}
                     featuredBots={featuredBots}
-                    onBack={this.onBack.bind(this)}
-                    refresh={this.refresh.bind(this)}
+                    refresh={this.updateCatalog.bind(this)}
+                    showToastMessage={this.showToastMessage.bind(this)}
+                    installedBots={this.state.installedBots}
+                    onBotInstalled={this.onBotInstalled.bind(this)}
+                    onBotInstallFailed={this.onBotInstallFailed.bind(this)}
                 />
             );
         }
@@ -361,7 +301,9 @@ class BotStoreScreen extends React.Component {
                     goHome={() => {
                         this.onIndexChange(0);
                     }}
-                    refresh={this.refresh.bind(this)}
+                    refresh={this.updateCatalog.bind(this)}
+                    showToastMessage={this.showToastMessage.bind(this)}
+                    installedBots={this.state.installedBots}
                 />
             );
         }
@@ -394,16 +336,26 @@ class BotStoreScreen extends React.Component {
         Actions.botListScreen({
             data: this.state.catalogData.bots,
             title: 'Marketplace',
-            typeScreen: 'search',
-            searchText: this.state.searchString
+            searchMode: true,
+            searchText: this.state.searchString,
+            installedBots: this.state.installedBots,
+            onBotInstalled: this.onBotInstalled.bind(this),
+            onBotInstallFailed: this.onBotInstallFailed.bind(this)
         });
+    }
+
+    renderToast() {
+        if (Platform.OS === 'ios') {
+            return <Toast ref="toast" position="bottom" positionValue={350} />;
+        } else {
+            return <Toast ref="toast" position="center" />;
+        }
     }
 
     render() {
         if (this.props.appState.network !== 'full') {
             return <EmptyInstalledBot noNetwork={true} />;
         }
-
         if (this.state.networkError) {
             return (
                 <ErrorMessage
@@ -414,7 +366,6 @@ class BotStoreScreen extends React.Component {
                 />
             );
         }
-
         if (!this.state.catalogLoaded) {
             return (
                 <View style={styles.loading}>
@@ -458,6 +409,7 @@ class BotStoreScreen extends React.Component {
                 )}
                 {this.segmentedControlTab()}
                 {this.botStoreList()}
+                {this.renderToast()}
             </BackgroundImage>
         );
     }

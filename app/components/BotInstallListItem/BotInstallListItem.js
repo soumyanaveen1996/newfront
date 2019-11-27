@@ -30,16 +30,14 @@ const BotInstallListItemStates = {
     INSTALLING: 'installing',
     INSTALLED: 'installed',
     NOT_INSTALLED: 'not_installed',
-    UPDATE: 'update'
+    UPDATE: 'update',
+    NONE: 'none'
 };
 
 export default class BotInstallListItem extends React.Component {
     constructor(props) {
         super(props);
-        let botStatus = utils.checkBotStatus(
-            this.props.installedBots,
-            this.props.bot
-        );
+        let botStatus = BotInstallListItemStates.NONE;
         this.state = {
             status: botStatus.installed
                 ? botStatus.update
@@ -47,6 +45,22 @@ export default class BotInstallListItem extends React.Component {
                     : BotInstallListItemStates.INSTALLED
                 : BotInstallListItemStates.NOT_INSTALLED
         };
+    }
+
+    componentDidMount() {
+        let botStatus = utils.checkBotStatus(
+            this.props.installedBots,
+            this.props.bot
+        );
+        botStatus.installed
+            ? botStatus.update
+                ? this.setState({ status: BotInstallListItemStates.UPDATE })
+                : this.setState({
+                    status: BotInstallListItemStates.INSTALLED
+                })
+            : this.setState({
+                status: BotInstallListItemStates.NOT_INSTALLED
+            });
     }
 
     componentDidUpdate(prevProps) {
@@ -176,13 +190,16 @@ export default class BotInstallListItem extends React.Component {
                     </TouchableOpacity>
                 </View>
             );
-        } else if (this.state.status === BotInstallListItemStates.INSTALLING) {
+        } else if (
+            this.state.status === BotInstallListItemStates.INSTALLING ||
+            this.state.status === BotInstallListItemStates.NONE
+        ) {
             return (
                 <View style={styles.rightContainer}>
                     <ActivityIndicator size="small" />
                 </View>
             );
-        } else {
+        } else if (this.state.status === BotInstallListItemStates.INSTALLED) {
             return (
                 <View style={styles.rightContainer}>
                     <TouchableOpacity
@@ -201,6 +218,12 @@ export default class BotInstallListItem extends React.Component {
                             {I18n.t('OPEN')}
                         </Text>
                     </TouchableOpacity>
+                </View>
+            );
+        } else {
+            return (
+                <View style={styles.rightContainer}>
+                    <ActivityIndicator size="small" />
                 </View>
             );
         }

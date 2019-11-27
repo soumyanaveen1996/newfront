@@ -61,8 +61,8 @@ export default StyleSheet.create({
         flex: 1
     },
     flatList: {
-        flex: 1,
-        paddingTop: 15
+        alignItems: 'center',
+        paddingVertical: 15
     },
     toast: {
         position: 'absolute',

@@ -41,7 +41,6 @@ export default class BotListScreen extends React.Component {
         super(props);
         this.state = {
             botsData: this.props.data,
-            type: this.props.typeScreen,
             searchString: this.props.searchText || '',
             countResults: this.props.count
         };
@@ -51,20 +50,15 @@ export default class BotListScreen extends React.Component {
         if (this.state.searchString) {
             this.updateText(this.state.searchString);
         }
-        Bot.getTimeLineBots().then(bots => {
-            this.setState({ installedBots: bots });
-        });
+        // Bot.getTimeLineBots().then(bots => {
+        //     this.setState({ installedBots: bots });
+        // });
         this.mounted = true;
     }
 
     onBotInstalled = async () => {
-        Bot.getTimeLineBots().then(bots => {
-            this.setState({ installedBots: bots });
-            this.refs.toast.show(
-                I18n.t('Bot_installed'),
-                DURATION.LENGTH_SHORT
-            );
-        });
+        this.props.onBotInstalled();
+        this.refs.toast.show(I18n.t('Bot_installed'), DURATION.LENGTH_SHORT);
     };
 
     onBotInstallFailed = () => {
@@ -82,7 +76,7 @@ export default class BotListScreen extends React.Component {
                 onBotInstalled={this.onBotInstalled}
                 onBotInstallFailed={this.onBotInstallFailed}
                 onBotClick={this.onBotClick.bind(this)}
-                installedBots={this.state.installedBots}
+                installedBots={this.props.installedBots}
             />
         );
     };
@@ -113,7 +107,7 @@ export default class BotListScreen extends React.Component {
     };
 
     searchBotFields = () => {
-        if (this.state.type && this.state.type === 'search') {
+        if (this.props.searchMode) {
             return (
                 <View style={styles.searchSection}>
                     <Icon
@@ -172,28 +166,29 @@ export default class BotListScreen extends React.Component {
                 {this.searchBotFields()}
                 <FlatList
                     refreshControl={
-                        Store.getState().user.network === 'full' ? (
-                            <RefreshControl
-                                onRefresh={() => {
-                                    this.setState(
-                                        { refreshing: true },
-                                        async () => {
-                                            try {
-                                                await this.props.refresh();
-                                                this.setState({
-                                                    refreshing: false
-                                                });
-                                            } catch (e) {
-                                                this.setState({
-                                                    refreshing: false
-                                                });
+                        Store.getState().user.network === 'full' &&
+                        !this.props.searchMode ? (
+                                <RefreshControl
+                                    onRefresh={() => {
+                                        this.setState(
+                                            { refreshing: true },
+                                            async () => {
+                                                try {
+                                                    await this.props.refresh();
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                } catch (e) {
+                                                    this.setState({
+                                                        refreshing: false
+                                                    });
+                                                }
                                             }
-                                        }
-                                    );
-                                }}
-                                refreshing={this.state.refreshing}
-                            />
-                        ) : null
+                                        );
+                                    }}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
                     }
                     style={styles.flatList}
                     keyExtractor={(item, index) => item.botId}

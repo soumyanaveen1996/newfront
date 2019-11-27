@@ -34,32 +34,30 @@ export default class FeaturedTab extends React.Component {
         this.mounted = true;
     }
 
-    onBotInstalled = async () => {
-        Bot.getTimeLineBots().then(bots => {
-            this.setState({ installedBots: bots });
-            this.refs.toast.show(
-                I18n.t('Bot_installed'),
-                DURATION.LENGTH_SHORT
-            );
+    onPullToRefresh() {
+        this.setState({ refreshing: true }, async () => {
+            try {
+                await this.props.refresh();
+                this.setState({
+                    refreshing: false
+                });
+            } catch (e) {
+                this.setState({
+                    refreshing: false
+                });
+            }
         });
-    };
-
-    onBotInstallFailed = () => {
-        this.refs.toast.show(
-            I18n.t('Bot_install_failed'),
-            DURATION.LENGTH_SHORT
-        );
-    };
+    }
 
     renderBot = bot => {
         return (
             <BotInstallListItem
                 bot={bot}
                 key={bot.botId}
-                onBotInstalled={this.onBotInstalled}
-                onBotInstallFailed={this.onBotInstallFailed}
                 onBotClick={this.onBotClick.bind(this)}
-                installedBots={this.state.installedBots}
+                installedBots={this.props.installedBots}
+                onBotInstalled={this.props.onBotInstalled}
+                onBotInstallFailed={this.props.onBotInstallFailed}
             />
         );
     };
@@ -76,52 +74,23 @@ export default class FeaturedTab extends React.Component {
         );
     };
 
-    renderToast() {
-        if (Platform.OS === 'ios') {
-            return <Toast ref="toast" position="bottom" positionValue={350} />;
-        } else {
-            return <Toast ref="toast" position="center" />;
-        }
-    }
-
     render() {
         return (
-            <ScrollView style={{ flex: 1 }}>
-                <View style={{ flex: 1, alignItems: 'center' }}>
-                    <FlatList
-                        refreshControl={
-                            Store.getState().user.network === 'full' ? (
-                                <RefreshControl
-                                    onRefresh={() => {
-                                        this.setState(
-                                            { refreshing: true },
-                                            async () => {
-                                                try {
-                                                    await this.props.refresh();
-                                                    this.setState({
-                                                        refreshing: false
-                                                    });
-                                                } catch (e) {
-                                                    this.setState({
-                                                        refreshing: false
-                                                    });
-                                                }
-                                            }
-                                        );
-                                    }}
-                                    refreshing={this.state.refreshing}
-                                />
-                            ) : null
-                        }
-                        style={styles.flatList}
-                        keyExtractor={(item, index) => item.botId}
-                        data={this.state.botsData}
-                        renderItem={this.renderGridItem.bind(this)}
-                        extraData={this.state}
-                    />
-                    {this.renderToast()}
-                </View>
-            </ScrollView>
+            <FlatList
+                refreshControl={
+                    Store.getState().user.network === 'full' ? (
+                        <RefreshControl
+                            onRefresh={this.onPullToRefresh.bind(this)}
+                            refreshing={this.state.refreshing}
+                        />
+                    ) : null
+                }
+                contentContainerStyle={styles.flatList}
+                keyExtractor={(item, index) => item.botId}
+                data={this.state.botsData}
+                renderItem={this.renderGridItem.bind(this)}
+                extraData={this.state}
+            />
         );
     }
 
