@@ -1,4 +1,8 @@
 import Mapbox from '@react-native-mapbox-gl/maps';
+import { Message, ConversationContext } from '.';
+import moment from 'moment';
+import { sendBackgroundMessageSafe } from '../BackgroundTask/BackgroundTaskProcessor';
+import { Bot } from '../dce';
 
 Mapbox.setAccessToken(
     'pk.eyJ1IjoiZ2FjaWx1IiwiYSI6ImNqcHh0azRhdTFjbXQzeW8wcW5vdXhlMzkifQ.qPfpVkrWbk-GSBY3uc6z3A'
@@ -29,8 +33,9 @@ export default class OfflineMap {
      * @param {Object} southWestBound coordinates of the south west limit
      * @param {number} [minZoom=0] from 0 to 19
      * @param {number} [maxZoom=16] from 0 to 19
-     * @param {progressCallback} [progressListener] callback fired every 500ms that listens for status events while downloading the offline resource.
+     * @param {progressCallback} [progressListener] callback that listens for status events while downloading the offline resource.
      * @param {errorCallback} [errorListener] callback fired when the download terminates with an error.
+     * @param {string} progressUpdateInterval sets the value at which download status events will be sent over the React Native bridge (default: 500ms).
      */
     static saveMap(
         name,
@@ -39,7 +44,8 @@ export default class OfflineMap {
         minZoom = 0,
         maxZoom = 16,
         progressListener,
-        errorListener
+        errorListener,
+        progressUpdateInterval
     ) {
         const options = {
             name: name,
@@ -51,6 +57,9 @@ export default class OfflineMap {
             minZoom: minZoom,
             maxZoom: maxZoom
         };
+        if (progressUpdateInterval) {
+            MapboxGL.setProgressEventThrottle(progressUpdateInterval);
+        }
         Mapbox.offlineManager.createPack(
             options,
             progressListener,
@@ -115,5 +124,77 @@ export default class OfflineMap {
                 })
                 .catch(reject);
         });
+    }
+
+    static async downloadFromBot(
+        botId,
+        conversationId,
+        name,
+        northEastBound,
+        southWestBound,
+        minZoom = 0,
+        maxZoom = 16,
+        progressUpdateInterval
+    ) {
+        try {
+            if (botId && conversationId) {
+                const allBots = await Bot.allInstalledBots();
+                const foundBot = allBots.find(bot => {
+                    return bot.botId === botId;
+                });
+                if (foundBot) {
+                    const sendMessageUpdate = (offlineRegion, status) => {
+                        let message = new Message({
+                            addedByBot: true,
+                            messageDate: moment().valueOf()
+                        });
+                        // message.setCreatedBy();
+                        message.downloadProgressMessage({
+                            offlineRegion,
+                            status
+                        });
+                        sendBackgroundMessageSafe(
+                            message,
+                            botId,
+                            conversationId
+                        );
+                    };
+                    const sendErrorMessage = (offlineRegion, err) => {
+                        let message = new Message({
+                            addedByBot: true,
+                            messageDate: moment().valueOf()
+                        });
+                        // message.setCreatedBy();
+                        message.downloadErrorMessage({
+                            offlineRegion,
+                            err
+                        });
+                        sendBackgroundMessageSafe(
+                            message,
+                            botId,
+                            conversationId
+                        );
+                    };
+
+                    this.saveMap(
+                        name,
+                        northEastBound,
+                        southWestBound,
+                        minZoom,
+                        maxZoom,
+                        sendMessageUpdate,
+                        sendErrorMessage,
+                        progressUpdateInterval
+                    );
+                } else {
+                    throw new Error('bot not found');
+                }
+            } else {
+                throw new Error('botId and conversationId required');
+            }
+        } catch (error) {
+            console.log('Offline map manager ERROR: ', error.message);
+            throw error;
+        }
     }
 }

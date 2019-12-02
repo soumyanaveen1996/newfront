@@ -10,7 +10,8 @@ import {
     Alert,
     ScrollView,
     RefreshControl,
-    Platform
+    Platform,
+    NativeModules
 } from 'react-native';
 import styles, { BotListItemStyles } from './styles';
 import { Icon } from 'react-native-elements';
@@ -39,12 +40,12 @@ import {
 import config from '../../config/config';
 import { Icons } from '../../config/icons';
 import { EmptyInstalledBot } from '../BotStoreScreen';
-import { NativeModules } from 'react-native';
 import {
     GoogleAnalytics,
     GoogleAnalyticsEventsCategories,
     GoogleAnalyticsEventsActions
 } from '../../lib/GoogleAnalytics';
+import Store from '../../redux/store/configureStore';
 
 const UserServiceClient = NativeModules.UserServiceClient;
 
@@ -87,8 +88,7 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     async componentDidMount() {
-        //this.props.navigation.setParams({ fireBotSore: this.onAddClicked.bind(this) });
-        this.refreshData();
+        await this.refreshInstalledBots();
         this.checkForBotUpdates();
         this.mounted = true;
     }
@@ -115,12 +115,9 @@ export default class InstalledBotsScreen extends React.Component {
             let botUpdateStatuses = this.state.botUpdateStatuses;
             botUpdateStatuses[bot.botId] = false;
             this.setState({ botUpdateStatuses: botUpdateStatuses });
-            this.refs.toast.show(I18n.t('Bot_updated'), DURATION.LENGTH_SHORT);
+            this.props.showToastMessage(I18n.t('Bot_updated'));
         } catch (e) {
-            this.refs.toast.show(
-                I18n.t('Bot_update_failed'),
-                DURATION.LENGTH_SHORT
-            );
+            this.props.showToastMessage(I18n.t('Bot_update_failed'));
             throw e;
         }
     }
@@ -197,6 +194,7 @@ export default class InstalledBotsScreen extends React.Component {
     }
 
     async refreshInstalledBots() {
+        this.props.refresh();
         const bots = await Bot.getInstalledBots();
         const defaultBots = await Promise.resolve(SystemBot.getDefaultBots());
         this.bots = _.reject(bots, bot =>
@@ -204,19 +202,11 @@ export default class InstalledBotsScreen extends React.Component {
         );
         if (this.queryText && this.queryText.length > 0) {
             this.onSearchQueryChange(this.queryText);
-            this.setstate({ loaded: true });
+            this.setstate({ loaded: true, refreshing: false });
         } else {
-            this.setState({ bots: this.bots, loaded: true });
+            this.setState({ bots: this.bots, loaded: true, refreshing: false });
         }
     }
-
-    async refreshData() {
-        await this.refreshInstalledBots();
-    }
-
-    onAddClicked = () => {
-        Actions.botStore({ onBack: this.refreshData.bind(this) });
-    };
 
     onDeletePress = async bot => {
         Alert.alert(
@@ -262,21 +252,15 @@ export default class InstalledBotsScreen extends React.Component {
             const user = await Promise.resolve(Auth.getUser());
             await this.unsubscribeFromBot(dceBot.botId, user);
         } catch (e) {
-            this.refs.toast.show('Bot unsubscribe fail', DURATION.LENGTH_SHORT);
+            this.props.showToastMessage('Bot unsubscribe fail');
         }
         try {
             await MessageHandler.deleteBotMessages(bot.botId);
             await Bot.delete(dceBot);
             this.refreshInstalledBots();
-            this.refs.toast.show(
-                I18n.t('Bot_uninstalled'),
-                DURATION.LENGTH_SHORT
-            );
+            this.props.showToastMessage(I18n.t('Bot_uninstalled'));
         } catch (e) {
-            this.refs.toast.show(
-                I18n.t('Bot_uninstall_failed'),
-                DURATION.LENGTH_SHORT
-            );
+            this.props.showToastMessage(I18n.t('Bot_uninstall_failed'));
         }
     };
 
@@ -418,7 +402,7 @@ export default class InstalledBotsScreen extends React.Component {
         return (
             <Swipeout
                 right={swipeBtns}
-                style={{ flex: 1 }}
+                // style={{ flex: 1 }}
                 backgroundColor={GlobalColors.transparent}
                 autoClose={true}
             >
@@ -477,28 +461,16 @@ export default class InstalledBotsScreen extends React.Component {
         );
     }
 
-    renderSearchBar() {
-        return (
-            <View style={styles.searchBar}>
-                <TextInput
-                    style={styles.searchTextInput}
-                    underlineColorAndroid="transparent"
-                    placeholder="Search"
-                    selectionColor={GlobalColors.white}
-                    placeholderTextColor={searchBarConfig.placeholderTextColor}
-                    onChangeText={this.onSearchQueryChange.bind(this)}
-                    clearButtonMode="always"
-                />
-            </View>
-        );
-    }
-
-    renderToast() {
-        if (Platform.OS === 'ios') {
-            return <Toast ref="toast" position="bottom" positionValue={350} />;
-        } else {
-            return <Toast ref="toast" position="center" />;
-        }
+    onPullToRefresh() {
+        this.setState({ refreshing: true }, async () => {
+            try {
+                await this.refreshInstalledBots();
+            } catch (e) {
+                this.setState({
+                    refreshing: false
+                });
+            }
+        });
     }
 
     render() {
@@ -512,28 +484,24 @@ export default class InstalledBotsScreen extends React.Component {
         } else {
             if (this.state.bots && this.state.bots.length > 0) {
                 return (
-                    <ScrollView style={{ flex: 1 }}>
-                        <View style={{ flex: 1, alignItems: 'center' }}>
-                            <FlatList
-                                style={styles.flatList}
-                                keyExtractor={(item, index) => item.botId}
-                                data={this.state.bots}
-                                renderItem={this.renderGridItem.bind(this)}
-                                extraData={this.state}
-                                ItemSeparatorComponent={() => (
-                                    <View style={[styles.separator]} />
-                                )}
-                                refreshControl={
-                                    <RefreshControl
-                                        colors={['#9Bd35A', '#689F38']}
-                                        refreshing={this.state.refreshing}
-                                        onRefresh={this.onRefresh.bind(this)}
-                                    />
-                                }
-                            />
-                            {this.renderToast()}
-                        </View>
-                    </ScrollView>
+                    <FlatList
+                        contentContainerStyle={styles.flatList}
+                        keyExtractor={(item, index) => item.botId}
+                        data={this.state.bots}
+                        renderItem={this.renderGridItem.bind(this)}
+                        extraData={this.state}
+                        ItemSeparatorComponent={() => (
+                            <View style={[styles.separator]} />
+                        )}
+                        refreshControl={
+                            Store.getState().user.network === 'full' ? (
+                                <RefreshControl
+                                    onRefresh={this.onPullToRefresh.bind(this)}
+                                    refreshing={this.state.refreshing}
+                                />
+                            ) : null
+                        }
+                    />
                 );
             } else {
                 return <EmptyInstalledBot goHome={this.props.goHome} />;

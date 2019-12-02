@@ -10,7 +10,6 @@ import {
 import styles from './styles';
 import BotInstallListItem from '../BotInstallListItem';
 import Bot from '../../lib/bot';
-import Toast, { DURATION } from 'react-native-easy-toast';
 import I18n from '../../config/i18n/i18n';
 import utils from '../../lib/utils';
 import { Actions } from 'react-native-router-flux';
@@ -43,55 +42,23 @@ export default class BotContainer extends React.Component {
         this.mounted = true;
     }
 
-    componentDidUpdate() {
-        Bot.getTimeLineBots().then(bots => {
-            if (bots !== this.state.installedBots) {
-                this.setState({ installedBots: bots });
-            }
-        });
-    }
-
-    // componentWillReceiveProps(nextProps) {
-    //     console.log(nextProps.clickedIndex, this.props.currentIndex);
-
-    //     if (this.props.currentIndex === nextProps.clickedIndex) {
-    //         this.setState(prevState => ({
-    //             collapseTab: !prevState.collapseTab
-    //         }));
-    //     }
+    // componentDidUpdate() {
+    //     Bot.getTimeLineBots().then(bots => {
+    //         if (bots !== this.state.installedBots) {
+    //             this.setState({ installedBots: bots });
+    //         }
+    //     });
     // }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log(nextProps.clickedIndex, this.props.currentIndex);
-
-    //     if (nextProps.clickedIndex === this.props.currentIndex) {
-    //         this.setState(prevState => ({
-    //             collapseTab: !prevState.collapseTab
-    //         }));
-
-    //         return true;
-    //     }
-    // }
-
-    onBotInstalled = async () => {
-        Bot.getTimeLineBots().then(bots => {
-            this.setState({ installedBots: bots });
-            this.refs.toast.show(
-                I18n.t('Bot_installed'),
-                DURATION.LENGTH_SHORT
-            );
-        });
-    };
 
     renderBot = bot => {
         return (
             <BotInstallListItem
                 bot={bot}
                 key={bot.botId}
-                onBotInstalled={this.onBotInstalled}
-                onBotInstallFailed={this.props.onBotInstallFailed}
                 onBotClick={this.onBotClick.bind(this)}
-                installedBots={this.state.installedBots}
+                installedBots={this.props.installedBots}
+                onBotInstalled={this.props.onBotInstalled}
+                onBotInstallFailed={this.props.onBotInstallFailed}
             />
         );
     };
@@ -118,7 +85,10 @@ export default class BotContainer extends React.Component {
             data: selectedBots,
             count: count,
             title: title,
-            refresh: this.props.refresh
+            refresh: this.props.refresh,
+            installedBots: this.props.installedBots,
+            onBotInstalled: this.props.onBotInstalled,
+            onBotInstallFailed: this.props.onBotInstallFailed
         });
     };
 
@@ -130,20 +100,6 @@ export default class BotContainer extends React.Component {
     };
 
     render() {
-        // let limitedBotData = [];
-
-        // let indexBot = 0;
-
-        // if (this.state.botsData.length > 1) {
-        //     while (indexBot < 2) {
-        //         limitedBotData.push(this.state.botsData[indexBot]);
-        //         indexBot++;
-        //     }
-        // }
-        // if (this.state.botsData.length === 1) {
-        //     limitedBotData.push(this.state.botsData[0]);
-        // }
-
         if (this.props.botsData && this.props.botsData.length > 0) {
             return (
                 <View
@@ -229,17 +185,7 @@ export default class BotContainer extends React.Component {
                                 );
                             })}
                         </ScrollView>
-                    ) : // <FlatList
-                    //     style={styles.flatList}
-                    //     keyExtractor={(item, index) => item.botId}
-                    //     data={limitedBotData}
-                    //     renderItem={this.renderGridItem.bind(this)}
-                    //     extraData={this.state}
-                    //     scrollEnabled={false}
-                    //     verticalScrollingDisabled={true}
-                    //     showsVerticalScrollIndicator={false}
-                    // />
-                        null}
+                    ) : null}
                     <View style={styles.exploreAllFooter}>
                         <TouchableOpacity
                             onPress={() => this.onTileCilcked(this.state.title)}

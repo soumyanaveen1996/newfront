@@ -105,8 +105,8 @@ export default StyleSheet.create({
         color: GlobalColors.white
     },
     flatList: {
-        flex: 1,
-        paddingTop: 15
+        alignItems: 'center',
+        paddingVertical: 15
     },
     loading: {
         position: 'absolute',

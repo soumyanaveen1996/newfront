@@ -24,119 +24,31 @@ import Store from '../../../redux/store/configureStore';
 export default class DeveloperTab extends React.Component {
     constructor(props) {
         super(props);
-        // this.getDomainMgmtBotData();
         this.state = {
-            // Hide + for now until we have more auth sources
-            // developerData : [...this.props.developerData , {name :I18n.t('Authenticate')}]
-            // developerData: [
-            //     ...this.props.developerData,
-            //     this.domainMgmtBotData
-            // ],
             refreshing: false,
             developerData: [...this.props.developerData],
             collapseIndex: 0
         };
     }
 
-    // renderBotImage = botData => {
-    //     var botImage;
-    //     if (botData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
-    //         botImage = (
-    //             <View style={styles.authenticateButton}>
-    //                 <Text allowFontScaling={false} style={styles.plusText}>
-    //                     +
-    //                 </Text>
-    //             </View>
-    //         );
-    //     } else {
-    //         if (botData.logoSlug != null) {
-    //             botImage = (
-    //                 <Image
-    //                     source={images[botData.logoSlug]}
-    //                     style={styles.iconStyle}
-    //                 />
-    //             );
-    //         } else {
-    //             botImage = (
-    //                 <CachedImage
-    //                     imageTag="botLogo"
-    //                     source={{ uri: botData.logoUrl }}
-    //                     style={styles.iconStyle}
-    //                 />
-    //             );
-    //         }
-    //     }
-    //     return botImage;
-    // };
-
-    // onTileCilcked = (botsId, title) => {
-    //     if (botsId == null) {
-    //         return;
-    //     }
-
-    //     let selectedBots = this.props.botsData.filter(bot => {
-    //         return botsId.indexOf(bot.botId) >= 0;
-    //     });
-    //     Actions.botListScreen({ data: selectedBots, title: title });
-    // };
-
-    // onDomainMgmtTileClicked() {
-    //     Actions.botChat({
-    //         bot: this.domainMgmtChatBot,
-    //         onBack: this.props.onBack
-    //     });
-    // }
-
-    // getDomainMgmtBotData() {
-    //     const domainMgmtBotData = _.filter(this.props.botsData, bot => {
-    //         return (
-    //             bot.botId.indexOf(SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) !==
-    //             -1
-    //         );
-    //     });
-
-    //     let managmentBots = [];
-
-    //     domainMgmtBotData.map(data => {
-    //         managmentBots.push(data.botId);
-    //     });
-
-    //     this.domainMgmtBotData = {
-    //         name: domainMgmtBotData[0].botName,
-    //         logoUrl: domainMgmtBotData[0].logoUrl,
-    //         botIds: [...managmentBots]
-    //     };
-    //     this.domainMgmtChatBot = domainMgmtBotData[0];
-    // }
-
-    // renderGridItem = (rowData, index) => {
-    //     let domainMgmtBot = false;
-    //     let botName = rowData.name;
-    //     if (rowData.botId === SYSTEM_BOT_MANIFEST['domMgmt-bot'].botId) {
-    //         botName = I18n.t('Activate_Enterprise_Bots');
-    //         domainMgmtBot = true;
-    //     }
-    //     return (
-    //         <TouchableHighlight
-    //             key={index}
-    //             style={styles.gridStyle}
-    //             onPress={() =>
-    //                 domainMgmtBot
-    //                     ? this.onDomainMgmtTileClicked()
-    //                     : this.onTileCilcked(rowData.botIds, botName)
-    //             }
-    //         >
-    //             <View style={styles.tileContent}>
-    //                 {this.renderBotImage(rowData)}
-    //                 <Text style={styles.rowTitle}>{botName}</Text>
-    //             </View>
-    //         </TouchableHighlight>
-    //     );
-    // };
-
     onCollapse = i => {
         this.setState({ collapseIndex: i });
     };
+
+    onPullToRefresh() {
+        this.setState({ refreshing: true }, async () => {
+            try {
+                await this.props.refresh();
+                this.setState({
+                    refreshing: false
+                });
+            } catch (e) {
+                this.setState({
+                    refreshing: false
+                });
+            }
+        });
+    }
 
     renderCategoryBots = () => {
         return this.props.developerData.map((data, index) => {
@@ -171,8 +83,10 @@ export default class DeveloperTab extends React.Component {
                         tabStatus="provider"
                         clickedIndex={this.state.collapseIndex}
                         handleCollapse={this.onCollapse}
-                        onBotInstallFailed={this.onBotInstallFailed}
                         refresh={this.props.refresh.bind(this)}
+                        installedBots={this.props.installedBots}
+                        onBotInstalled={this.props.onBotInstalled}
+                        onBotInstallFailed={this.props.onBotInstallFailed}
                     />
                 );
             }
@@ -183,21 +97,6 @@ export default class DeveloperTab extends React.Component {
         this.props.onChange(true);
     };
 
-    onBotInstallFailed = () => {
-        this.refs.toast.show(
-            I18n.t('Bot_install_failed'),
-            DURATION.LENGTH_SHORT
-        );
-    };
-
-    renderToast() {
-        if (Platform.OS === 'ios') {
-            return <Toast ref="toast" position="bottom" positionValue={350} />;
-        } else {
-            return <Toast ref="toast" position="center" />;
-        }
-    }
-
     render() {
         return (
             <ScrollView
@@ -205,23 +104,7 @@ export default class DeveloperTab extends React.Component {
                 refreshControl={
                     Store.getState().user.network === 'full' ? (
                         <RefreshControl
-                            onRefresh={() => {
-                                this.setState(
-                                    { refreshing: true },
-                                    async () => {
-                                        try {
-                                            await this.props.refresh();
-                                            this.setState({
-                                                refreshing: false
-                                            });
-                                        } catch (e) {
-                                            this.setState({
-                                                refreshing: false
-                                            });
-                                        }
-                                    }
-                                );
-                            }}
+                            onRefresh={this.onPullToRefresh.bind(this)}
                             refreshing={this.state.refreshing}
                         />
                     ) : null
@@ -245,7 +128,6 @@ export default class DeveloperTab extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {this.renderCategoryBots()}
-                {this.renderToast()}
             </ScrollView>
         );
     }

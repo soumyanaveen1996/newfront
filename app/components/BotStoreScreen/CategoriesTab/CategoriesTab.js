@@ -49,28 +49,20 @@ export default class CategoriesTab extends React.Component {
         return categoryImage;
     };
 
-    onTileCilcked = (botsId, title) => {
-        let selectedBots = this.props.botsData.filter(bot => {
-            return botsId.indexOf(bot.botId) >= 0;
+    onPullToRefresh() {
+        this.setState({ refreshing: true }, async () => {
+            try {
+                await this.props.refresh();
+                this.setState({
+                    refreshing: false
+                });
+            } catch (e) {
+                this.setState({
+                    refreshing: false
+                });
+            }
         });
-
-        Actions.botListScreen({ data: selectedBots, title: title });
-    };
-
-    renderGridItem = (rowData, index) => {
-        return (
-            <TouchableHighlight
-                key={index}
-                style={styles.gridStyle}
-                onPress={() => this.onTileCilcked(rowData.botIds, rowData.name)}
-            >
-                <View style={styles.tileContent}>
-                    {this.renderCategoryImage(rowData)}
-                    <Text style={styles.rowTitle}>{rowData.name}</Text>
-                </View>
-            </TouchableHighlight>
-        );
-    };
+    }
 
     onCollapse = i => {
         this.setState({ collapseIndex: i });
@@ -103,27 +95,14 @@ export default class CategoriesTab extends React.Component {
                     currentIndex={index}
                     clickedIndex={this.state.collapseIndex}
                     handleCollapse={this.onCollapse}
-                    onBotInstallFailed={this.onBotInstallFailed}
                     refresh={this.props.refresh.bind(this)}
+                    installedBots={this.props.installedBots}
+                    onBotInstalled={this.props.onBotInstalled}
+                    onBotInstallFailed={this.props.onBotInstallFailed}
                 />
             );
         });
     };
-
-    onBotInstallFailed = () => {
-        this.refs.toast.show(
-            I18n.t('Bot_install_failed'),
-            DURATION.LENGTH_SHORT
-        );
-    };
-
-    renderToast() {
-        if (Platform.OS === 'ios') {
-            return <Toast ref="toast" position="bottom" positionValue={350} />;
-        } else {
-            return <Toast ref="toast" position="center" />;
-        }
-    }
 
     render() {
         return (
@@ -132,30 +111,13 @@ export default class CategoriesTab extends React.Component {
                 refreshControl={
                     Store.getState().user.network === 'full' ? (
                         <RefreshControl
-                            onRefresh={() => {
-                                this.setState(
-                                    { refreshing: true },
-                                    async () => {
-                                        try {
-                                            await this.props.refresh();
-                                            this.setState({
-                                                refreshing: false
-                                            });
-                                        } catch (e) {
-                                            this.setState({
-                                                refreshing: false
-                                            });
-                                        }
-                                    }
-                                );
-                            }}
+                            onRefresh={this.onPullToRefresh.bind(this)}
                             refreshing={this.state.refreshing}
                         />
                     ) : null
                 }
             >
                 {this.renderCategoryBots()}
-                {this.renderToast()}
             </ScrollView>
         );
     }

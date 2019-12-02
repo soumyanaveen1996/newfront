@@ -1600,7 +1600,11 @@ class ChatBotScreen extends React.Component {
             message.getMessageType() ===
                 MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
             message.getMessageType() ===
-                MessageTypeConstants.MESSAGE_TYPE_SENSOR
+                MessageTypeConstants.MESSAGE_TYPE_SENSOR ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_DOWNLOAD_PROGRESS ||
+            message.getMessageType() ===
+                MessageTypeConstants.MESSAGE_DOWNLOAD_ERROR
         ) {
             return getNext;
         }

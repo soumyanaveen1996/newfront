@@ -40,6 +40,8 @@ export const MessageTypeConstants = {
     MESSAGE_TYPE_FORM_CANCEL: 'form_cancel',
     MESSAGE_TYPE_BACKGROUND_EVENT: 'background_event',
     MESSAGE_TYPE_SENSOR: 'sensor',
+    MESSAGE_DOWNLOAD_PROGRESS: 'download_progress',
+    MESSAGE_DOWNLOAD_ERROR: 'download_error',
     MESSAGE_TYPE_PDF: 'pdf',
     MESSAGE_TYPE_TEXT: 'txt',
     MESSAGE_TYPE_OTHER_FILE: 'other_file',
@@ -383,6 +385,16 @@ export default class Message {
         this._messageType = MessageTypeConstants.MESSAGE_TYPE_SENSOR;
     };
 
+    downloadProgressMessage = data => {
+        this._msg = data;
+        this._messageType = MessageTypeConstants.MESSAGE_DOWNLOAD_PROGRESS;
+    };
+
+    downloadErrorMessage = data => {
+        this._msg = data;
+        this._messageType = MessageTypeConstants.MESSAGE_DOWNLOAD_ERROR;
+    };
+
     searchBoxMessage = (data, options) => {
         this._msg = JSON.stringify(data || {});
         if (options) {
@@ -487,6 +499,9 @@ export default class Message {
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT ||
             this.messageType === MessageTypeConstants.MESSAGE_TYPE_SENSOR ||
+            this.messageType ===
+                MessageTypeConstants.MESSAGE_DOWNLOAD_PROGRESS ||
+            this.messageType === MessageTypeConstants.MESSAGE_DOWNLOAD_ERROR ||
             this._messageType ===
                 MessageTypeConstants.MESSAGE_TYPE_SLIDER_CANCEL ||
             this._messageType ===
@@ -754,6 +769,8 @@ export default class Message {
             MessageTypeConstants.MESSAGE_TYPE_SMART_SUGGESTIONS,
             MessageTypeConstants.MESSAGE_TYPE_BACKGROUND_EVENT,
             MessageTypeConstants.MESSAGE_TYPE_SENSOR,
+            MessageTypeConstants.MESSAGE_DOWNLOAD_PROGRESS,
+            MessageTypeConstants.MESSAGE_DOWNLOAD_ERROR,
             MessageTypeConstants.MESSAGE_TYPE_MAP_RESPONSE,
             MessageTypeConstants.MESSAGE_TYPE_CLOSE_FORM,
             MessageTypeConstants.MESSAGE_TYPE_SEARCH_BOX,
