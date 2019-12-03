@@ -9,7 +9,7 @@ import {
     ScrollView,
     SafeAreaView
 } from 'react-native';
-import TwilioVoice from 'react-native-twilio-programmable-voice';
+import TwilioVoice from 'react-native-twilio-voice-library';
 import Styles, { diameter } from './styles';
 import { Icons } from '../../config/icons';
 import { Actions } from 'react-native-router-flux';

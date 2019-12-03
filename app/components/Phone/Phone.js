@@ -10,7 +10,7 @@ import {
     Image,
     SafeAreaView
 } from 'react-native';
-import TwilioVoice from 'react-native-twilio-programmable-voice';
+import TwilioVoice from 'react-native-twilio-voice-library';
 import Styles from './styles';
 import { Icons } from '../../config/icons';
 import { Actions, ActionConst } from 'react-native-router-flux';

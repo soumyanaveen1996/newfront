@@ -16,8 +16,6 @@ import Bot from '../../lib/bot/index';
 import { Network, Notification } from '../capability';
 import { AsyncStorage } from 'react-native';
 import { MessageHandler } from '../message';
-import { Twilio } from '../twilio';
-import TwilioVoice from 'react-native-twilio-programmable-voice';
 import { Message, MessageTypeConstants } from '../../lib/capability';
 import SystemBot from '../../lib/bot/SystemBot';
 import { BackgroundBotChat } from '../../lib/BackgroundTask';

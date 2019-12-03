@@ -211,6 +211,7 @@ sourceSets {
 
 
 dependencies {
+    implementation project(':react-native-twilio-voice-library')
     implementation project(':react-native-fbsdk')
     compile project(':react-native-spring-scrollview')
     compile project(':react-native-blur')
@@ -222,7 +223,6 @@ dependencies {
     compile project(':react-native-video')
     compile project(':react-native-version-check')
     compile project(':react-native-vector-icons')
-    compile project(':react-native-twilio-programmable-voice')
     compile project(':react-native-tcp')
     compile project(':react-native-svg')
     compile project(':react-native-sound')
@@ -273,6 +273,7 @@ dependencies {
 	implementation project(':react-native-background-geolocation')
     implementation project(':react-native-background-fetch')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.twilio:voice-android:5.0.1'
 }
 
 

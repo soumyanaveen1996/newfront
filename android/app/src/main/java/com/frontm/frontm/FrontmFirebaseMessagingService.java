@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -21,12 +22,13 @@ import com.dieam.reactnativepushnotification.modules.RNPushNotificationHelper;
 import com.dieam.reactnativepushnotification.modules.RNPushNotificationJsDelivery;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.hoxfon.react.RNTwilioVoice.BuildConfig;
-import com.hoxfon.react.RNTwilioVoice.CallNotificationManager;
-import com.hoxfon.react.RNTwilioVoice.SoundPoolManager;
-import com.hoxfon.react.RNTwilioVoice.fcm.VoiceFirebaseMessagingService;
+import space.amal.twilio.BuildConfig;
+import space.amal.twilio.CallNotificationManager;
+import space.amal.twilio.SoundPoolManager;
+import space.amal.twilio.fcm.VoiceFirebaseMessagingService;
 import com.twilio.voice.CallInvite;
-import com.twilio.voice.MessageException;
+import com.twilio.voice.CancelledCallInvite;
+import com.twilio.voice.CallException;
 import com.twilio.voice.MessageListener;
 import com.twilio.voice.Voice;
 
@@ -35,10 +37,10 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.dieam.reactnativepushnotification.modules.RNPushNotification.LOG_TAG;
-import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.ACTION_INCOMING_CALL;
-import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.ACTION_REJECT_CALL;
-import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.INCOMING_CALL_INVITE;
-import static com.hoxfon.react.RNTwilioVoice.TwilioVoiceModule.INCOMING_CALL_NOTIFICATION_ID;
+import static space.amal.twilio.RNTwilioVoiceLibraryModule.ACTION_INCOMING_CALL;
+import static space.amal.twilio.RNTwilioVoiceLibraryModule.ACTION_REJECT_CALL;
+import static space.amal.twilio.RNTwilioVoiceLibraryModule.INCOMING_CALL_INVITE;
+import static space.amal.twilio.RNTwilioVoiceLibraryModule.INCOMING_CALL_NOTIFICATION_ID;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -197,9 +199,17 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
                 }
 
                 @Override
-                public void onError(MessageException messageException) {
-                    Log.e(TAG, "Error handling FCM message" + messageException.toString());
+                public void onCancelledCallInvite(@NonNull final CancelledCallInvite cancelledCallInvite, @Nullable CallException callException) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                                     public void run() {
+                                         FrontmFirebaseMessagingService.this.cancelNotification(cancelledCallInvite);
+                                     }
+                                 });
+
                 }
+
+
             });
         }
 
@@ -216,6 +226,26 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
     ) {
         sendIncomingCallMessageToActivity(context, callInvite, notificationId);
         showNotification(context, callInvite, notificationId, launchIntent);
+    }
+
+    private void cancelNotification(final CancelledCallInvite cancelledCallInvite) {
+        SoundPoolManager.getInstance((this)).stopRinging();
+        ReactInstanceManager mReactInstanceManager = ((ReactApplication) getApplication()).getReactNativeHost().getReactInstanceManager();
+        ReactContext context = mReactInstanceManager.getCurrentReactContext();
+        // If it's constructed, send a notification
+        if (context != null) {
+            callNotificationManager.removeCancelledCallNotification((ReactApplicationContext)context, cancelledCallInvite, 0);
+        } else {
+            mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+                public void onReactContextInitialized(ReactContext context) {
+                    int appImportance = callNotificationManager.getApplicationImportance((ReactApplicationContext)context);
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, "CONTEXT not present appImportance = " + appImportance);
+                    }
+                    callNotificationManager.removeCancelledCallNotification((ReactApplicationContext)context, cancelledCallInvite, 0);
+                }});
+        }
+
     }
 
     /*
@@ -241,7 +271,7 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
                                   int notificationId,
                                   Intent launchIntent
     ) {
-        if (callInvite != null && callInvite.getState() == CallInvite.State.PENDING) {
+        if (callInvite != null) {
             callNotificationManager.createIncomingCallNotification(context, callInvite, notificationId, launchIntent);
         } else {
             SoundPoolManager.getInstance(context.getBaseContext()).stopRinging();

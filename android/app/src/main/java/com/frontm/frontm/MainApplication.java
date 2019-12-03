@@ -8,6 +8,7 @@ import android.media.FaceDetector;
 import android.os.Build;
 
 import com.facebook.react.ReactApplication;
+import space.amal.twilio.RNTwilioVoiceLibraryPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.bolan9999.SpringScrollViewPackage;
 import com.cmcewen.blurview.BlurViewPackage;
@@ -20,7 +21,6 @@ import com.kevinresol.react_native_default_preference.RNDefaultPreferencePackage
 import com.brentvatne.react.ReactVideoPackage;
 import io.xogus.reactnative.versioncheck.RNVersionCheckPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.hoxfon.react.RNTwilioVoice.TwilioVoicePackage;
 import com.peel.react.TcpSocketsModule;
 import com.horcrux.svg.SvgPackage;
 import com.zmxv.RNSound.RNSoundPackage;
@@ -79,15 +79,13 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNTwilioVoiceLibraryPackage(false),
             // new FBSDKPackage(),
             new SpringScrollViewPackage(),
             new BlurViewPackage(),
             BugsnagReactNative.getPackage(),
             new RNDefaultPreferencePackage(), new ReactVideoPackage(), new RNVersionCheckPackage(),
-          new VectorIconsPackage(), new TwilioVoicePackage(false), // <---- pass false to
-                                                                   // handle microphone
-                                                                   // permissions
-                                                                   // in your application
+          new VectorIconsPackage(),
 					new RNBackgroundGeolocation(),
           new RNBackgroundFetchPackage(),
           new TcpSocketsModule(), new SvgPackage(), new RNSoundPackage(), new ReactNativePushNotificationPackage(),

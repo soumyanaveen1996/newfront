@@ -1,4 +1,4 @@
-import TwilioVoice from 'react-native-twilio-programmable-voice';
+import TwilioVoice from 'react-native-twilio-voice-library';
 import { Platform, Alert, AppState } from 'react-native';
 import { Auth } from '../capability';
 import Twilio from './twilio';
