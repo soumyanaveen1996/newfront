@@ -124,6 +124,7 @@
 		213F5ADA230320CA0056CC04 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5AD6230320CA0056CC04 /* FBSDKShareKit.framework */; };
 		213F5ADB230320CA0056CC04 /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5AD7230320CA0056CC04 /* FBSDKPlacesKit.framework */; };
 		213F5BE82303BF7B0056CC04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5BE72303BE910056CC04 /* libRCTFBSDK.a */; };
+		2191C5592396BE8D00416406 /* libRNTwilioVoiceLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 044BB6C52396563300F42193 /* libRNTwilioVoiceLibrary.a */; };
 		219B34FC224D559300DE5BD9 /* ParticpantUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */; };
 		219B34FF224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */; };
 		21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37EDD216CB089009C8922 /* StoreKit.framework */; };
@@ -1243,6 +1244,7 @@
 				21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */,
 				47E4021F20244363A724DD7A /* libTcpSockets.a in Frameworks */,
 				48BE9D02B6754E06906FD589 /* libRNSpringScrollView.a in Frameworks */,
+				2191C5592396BE8D00416406 /* libRNTwilioVoiceLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3081,7 +3083,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=\"node --expose-gc --max_old_space_size=8192\"\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3108,7 +3110,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-frontm_mobile/Pods-frontm_mobile-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/gRPC/gRPCCertificates.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/gRPC/gRPCCertificates.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
