@@ -38,6 +38,7 @@ export const PhoneState = {
     incomingcall: 'incomingcall'
 };
 
+// VOIP CALLS
 export default class Phone extends React.Component {
     constructor(props) {
         super(props);
@@ -62,7 +63,13 @@ export default class Phone extends React.Component {
         if (this.state.phoneState === PhoneState.init) {
             this.initialize();
         } else if (this.state.phoneState === PhoneState.incomingcall) {
-            this.findCallerName({ username: this.state.username });
+            const caller = this.findCallerName({
+                username: this.state.username
+            });
+            this.setState({
+                username: caller.username,
+                userId: caller.userId
+            });
             Keyboard.dismiss();
         }
     }
@@ -87,8 +94,8 @@ export default class Phone extends React.Component {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
             if (call_from && call_from.startsWith('client:')) {
-                this.findCallerName({ call_from });
-                call_from = '';
+                const caller = this.findCallerName({ call_from });
+                call_from = caller.username;
             }
         }
         if (Platform.OS === 'android') {
@@ -119,19 +126,19 @@ export default class Phone extends React.Component {
             const clientDetails = await ContactsCache.getUserDetails(clientId);
             if (clientDetails) {
                 if (this.mounted) {
-                    this.setState({
+                    return {
                         username: clientDetails.userName,
                         userId: clientId
-                    });
+                    };
                 }
             } else {
                 ContactsCache.fetchContactDetailsForUser(clientId).then(
                     contactDetails => {
                         if (this.mounted) {
-                            this.setState({
+                            return {
                                 username: contactDetails.userName,
                                 userId: clientId
-                            });
+                            };
                         }
                     }
                 );
@@ -171,8 +178,12 @@ export default class Phone extends React.Component {
 
     deviceDidReceiveIncomingHandler(data) {
         const username = data.call_from;
-        this.setState({ phoneState: PhoneState.incomingcall });
-        this.findCallerName({ username });
+        const caller = this.findCallerName({ username });
+        this.setState({
+            phoneState: PhoneState.incomingcall,
+            username: caller.username,
+            userId: caller.userIds
+        });
     }
 
     connectionDidDisconnectHandler(data) {
@@ -253,10 +264,7 @@ export default class Phone extends React.Component {
     }
 
     renderCallerInfo = () => {
-        if (
-            this.state.phoneState === PhoneState.calling ||
-            this.state.phoneState === PhoneState.incall
-        ) {
+        if (this.state.username) {
             return (
                 <View>
                     <Text style={Styles.callingNumberText}>
@@ -264,22 +272,13 @@ export default class Phone extends React.Component {
                     </Text>
                 </View>
             );
-        }
-        if (this.state.phoneState === PhoneState.incomingcall) {
+        } else {
             return (
                 <View>
-                    <Text style={Styles.callingNumberText}>
-                        {this.state.username}
-                    </Text>
+                    <Text style={Styles.callingNumberText}>{''}</Text>
                 </View>
             );
         }
-
-        return (
-            <View>
-                <Text style={Styles.callingNumberText}>{''}</Text>
-            </View>
-        );
     };
 
     renderCallStatus = () => {
@@ -412,6 +411,7 @@ export default class Phone extends React.Component {
             state: phoneState,
             userName: this.username()
         });
+        console.log('>>>>>>>>>>AA', this.state);
         // console.log('Current Phone State', phoneState);
         return (
             <SafeAreaView style={Styles.container}>
