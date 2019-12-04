@@ -644,15 +644,12 @@ class MainScreen extends React.Component {
     renderCreditBar() {
         return (
             <View style={MainScreenStyles.creditBar}>
-                <Text style={MainScreenStyles.creditBarText}>
-                    Current balance:
-                    <Text style={MainScreenStyles.creditText}>
-                        {' $' +
-                            (this.state.updatingCallQuota ||
-                            this.state.callQuotaUpdateError
-                                ? '...'
-                                : this.state.callQuota.toFixed(2))}
-                    </Text>
+                <Text style={MainScreenStyles.creditText}>
+                    {' $' +
+                        (this.state.updatingCallQuota ||
+                        this.state.callQuotaUpdateError
+                            ? '...'
+                            : this.state.callQuota.toFixed(2))}
                 </Text>
                 <Text
                     onPress={() => {
