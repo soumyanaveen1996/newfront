@@ -124,9 +124,9 @@
 		213F5ADA230320CA0056CC04 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5AD6230320CA0056CC04 /* FBSDKShareKit.framework */; };
 		213F5ADB230320CA0056CC04 /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5AD7230320CA0056CC04 /* FBSDKPlacesKit.framework */; };
 		213F5BE82303BF7B0056CC04 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 213F5BE72303BE910056CC04 /* libRCTFBSDK.a */; };
-		2191C5592396BE8D00416406 /* libRNTwilioVoiceLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 044BB6C52396563300F42193 /* libRNTwilioVoiceLibrary.a */; };
 		219B34FC224D559300DE5BD9 /* ParticpantUser+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */; };
 		219B34FF224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */; };
+		21CAB9312397EFF0006E959C /* libRNTwilioVoiceLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CAB92B2397EFD1006E959C /* libRNTwilioVoiceLibrary.a */; };
 		21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37EDD216CB089009C8922 /* StoreKit.framework */; };
 		21D37F5F216CB937009C8922 /* libRNIap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21D37F54216CB925009C8922 /* libRNIap.a */; };
 		21EE4F7122147AEB0079B8C3 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EE4F7022147A830079B8C3 /* libRNFetchBlob.a */; };
@@ -468,13 +468,6 @@
 			remoteGlobalIDString = 9FD355121D3E4A2900D06170;
 			remoteInfo = RNGoogleSignin;
 		};
-		044BB6C42396563300F42193 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 044BB6C02396563300F42193 /* RNTwilioVoiceLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNTwilioVoiceLibrary;
-		};
 		0454180D210C987800A658A2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */;
@@ -642,6 +635,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNSpringScrollView;
+		};
+		21CAB92A2397EFD1006E959C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21CAB8D52397EFD1006E959C /* RNTwilioVoiceLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNTwilioVoiceLibrary;
 		};
 		21D37F53216CB925009C8922 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -870,7 +870,6 @@
 		0445655D2248C5DE00996110 /* DomainChannels+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DomainChannels+frontm.h"; sourceTree = "<group>"; };
 		0445655E2248C5DE00996110 /* DomainChannels+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "DomainChannels+frontm.m"; sourceTree = "<group>"; };
 		044975C522B8C558003DFC41 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		044BB6C02396563300F42193 /* RNTwilioVoiceLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNTwilioVoiceLibrary.xcodeproj; path = "../node_modules/react-native-twilio-voice-library/ios/RNTwilioVoiceLibrary.xcodeproj"; sourceTree = "<group>"; };
 		044E9DAE22BCF87E001F4768 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = "../node_modules/@react-native-mapbox-gl/maps/ios/Mapbox.framework"; sourceTree = "<group>"; };
 		0453E5DB212045DA0078059D /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
 		045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
@@ -1043,6 +1042,7 @@
 		219B34FB224D559300DE5BD9 /* ParticpantUser+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ParticpantUser+frontm.m"; sourceTree = "<group>"; };
 		219B34FD224D5E4200DE5BD9 /* ParticipantsListResponse+frontm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ParticipantsListResponse+frontm.h"; sourceTree = "<group>"; };
 		219B34FE224D5E5700DE5BD9 /* ParticipantsListResponse+frontm.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ParticipantsListResponse+frontm.m"; sourceTree = "<group>"; };
+		21CAB8D52397EFD1006E959C /* RNTwilioVoiceLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNTwilioVoiceLibrary.xcodeproj; path = "../node_modules/react-native-twilio-voice-library/ios/RNTwilioVoiceLibrary.xcodeproj"; sourceTree = "<group>"; };
 		21D37EDD216CB089009C8922 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21D37F12216CB924009C8922 /* RNIap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNIap.xcodeproj; path = "../node_modules/react-native-iap/ios/RNIap.xcodeproj"; sourceTree = "<group>"; };
 		21E0FB6121C3740A00C9B1E4 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
@@ -1244,7 +1244,7 @@
 				21D37EDE216CB089009C8922 /* StoreKit.framework in Frameworks */,
 				47E4021F20244363A724DD7A /* libTcpSockets.a in Frameworks */,
 				48BE9D02B6754E06906FD589 /* libRNSpringScrollView.a in Frameworks */,
-				2191C5592396BE8D00416406 /* libRNTwilioVoiceLibrary.a in Frameworks */,
+				21CAB9312397EFF0006E959C /* libRNTwilioVoiceLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1492,14 +1492,6 @@
 			isa = PBXGroup;
 			children = (
 				0442D7FC22B8D23E001C2A0E /* libRNGoogleSignin.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		044BB6C12396563300F42193 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				044BB6C52396563300F42193 /* libRNTwilioVoiceLibrary.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1810,6 +1802,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		21CAB8D62397EFD1006E959C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				21CAB92B2397EFD1006E959C /* libRNTwilioVoiceLibrary.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		21D37F13216CB924009C8922 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1882,6 +1882,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				21CAB8D52397EFD1006E959C /* RNTwilioVoiceLibrary.xcodeproj */,
 				6B5CF3F3235E13A7008D701B /* RNSensors.xcodeproj */,
 				6B225983232281A000DA143F /* ART.xcodeproj */,
 				21E0FB6121C3740A00C9B1E4 /* BugsnagReactNative.xcodeproj */,
@@ -1914,7 +1915,6 @@
 				6B0F977F220C709A00659F09 /* RNBlur.xcodeproj */,
 				04F4A9ED208A234300662D34 /* RNCamera.xcodeproj */,
 				21149DC521930D9200F429AC /* RNDefaultPreference.xcodeproj */,
-				044BB6C02396563300F42193 /* RNTwilioVoiceLibrary.xcodeproj */,
 				B0D42C0A20BD77CC00C8BE47 /* RNDeviceInfo.xcodeproj */,
 				045417D2210C987800A658A2 /* RNDocumentPicker.xcodeproj */,
 				21EE4F6B22147A830079B8C3 /* RNFetchBlob.xcodeproj */,
@@ -2355,8 +2355,8 @@
 					ProjectRef = 183B3E8A9A004B05A794FA35 /* RNSVG.xcodeproj */;
 				},
 				{
-					ProductGroup = 044BB6C12396563300F42193 /* Products */;
-					ProjectRef = 044BB6C02396563300F42193 /* RNTwilioVoiceLibrary.xcodeproj */;
+					ProductGroup = 21CAB8D62397EFD1006E959C /* Products */;
+					ProjectRef = 21CAB8D52397EFD1006E959C /* RNTwilioVoiceLibrary.xcodeproj */;
 				},
 				{
 					ProductGroup = 040C5A661FFCF9A50071B62D /* Products */;
@@ -2628,13 +2628,6 @@
 			remoteRef = 0442D7FB22B8D23E001C2A0E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		044BB6C52396563300F42193 /* libRNTwilioVoiceLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNTwilioVoiceLibrary.a;
-			remoteRef = 044BB6C42396563300F42193 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		0454180E210C987800A658A2 /* libRNDocumentPicker.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2801,6 +2794,13 @@
 			fileType = archive.ar;
 			path = libRNSpringScrollView.a;
 			remoteRef = 21B3A86E22B2392300B40F4F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		21CAB92B2397EFD1006E959C /* libRNTwilioVoiceLibrary.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTwilioVoiceLibrary.a;
+			remoteRef = 21CAB92A2397EFD1006E959C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		21D37F54216CB925009C8922 /* libRNIap.a */ = {
@@ -3083,7 +3083,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=node\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh";
+			shellScript = "export DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(DebugDevelop|Debug)\"\nexport NODE_BINARY=\"node --expose-gc --max_old_space_size=8192\"\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh\n";
 		};
 		0FCEBAB913E98446F70D2C2C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
