@@ -151,11 +151,11 @@ export const MainScreenStyles = StyleSheet.create({
     },
     getCredit: {
         color: GlobalColors.frontmLightBlue,
-        fontSize: 20
+        fontSize: 16
     },
     getCreditDisabled: {
         color: GlobalColors.frontmLightBlueTransparent,
-        fontSize: 20
+        fontSize: 16
     }
 });
 
