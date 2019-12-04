@@ -46,7 +46,6 @@ export default class Phone extends React.Component {
     }
 
     async setUpPhoneCall(props) {
-        console.log('>>>>>>>from', props);
         let call_to, call_from;
         if (Platform.OS === 'ios') {
             call_to = props.data ? props.data.call_to : 'Unknown';
