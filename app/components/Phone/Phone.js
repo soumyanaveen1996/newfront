@@ -45,56 +45,14 @@ export default class Phone extends React.Component {
         this.setUpPhoneCall(props);
     }
 
-    componentDidMount() {
-        this.mounted = true;
-        this.connectionDidDisconnectListener = EventEmitter.addListener(
-            TwilioEvents.connectionDidDisconnect,
-            this.connectionDidDisconnectHandler.bind(this)
-        );
-        this.connectionDidConnectListener = EventEmitter.addListener(
-            TwilioEvents.connectionDidConnect,
-            this.connectionDidConnectHandler.bind(this)
-        );
-        this.deviceDidReceiveIncomingListener = EventEmitter.addListener(
-            TwilioEvents.deviceDidReceiveIncoming,
-            this.deviceDidReceiveIncomingHandler.bind(this)
-        );
-
-        if (this.state.phoneState === PhoneState.init) {
-            this.initialize();
-        } else if (this.state.phoneState === PhoneState.incomingcall) {
-            const caller = this.findCallerName({
-                username: this.state.username
-            });
-            this.setState({
-                username: caller.username,
-                userId: caller.userId
-            });
-            Keyboard.dismiss();
-        }
-    }
-
-    componentWillUnmount() {
-        this.mounted = false;
-        if (this.connectionDidDisconnectListener) {
-            this.connectionDidDisconnectListener.remove();
-        }
-        if (this.connectionDidConnectListener) {
-            this.connectionDidConnectListener.remove();
-        }
-        if (this.deviceDidReceiveIncomingListener) {
-            this.deviceDidReceiveIncomingListener.remove();
-        }
-        EventEmitter.emit(CallsEvents.callHistoryUpdated);
-    }
-
     async setUpPhoneCall(props) {
+        console.log('>>>>>>>from', props);
         let call_to, call_from;
         if (Platform.OS === 'ios') {
             call_to = props.data ? props.data.call_to : 'Unknown';
             call_from = props.data ? props.data.call_from : 'Unknown';
             if (call_from && call_from.startsWith('client:')) {
-                const caller = this.findCallerName({ call_from });
+                const caller = await this.findCallerDetails(call_from);
                 call_from = caller.username;
             }
         }
@@ -119,7 +77,48 @@ export default class Phone extends React.Component {
         };
     }
 
-    async findCallerName({ username }) {
+    async componentDidMount() {
+        this.mounted = true;
+        this.connectionDidDisconnectListener = EventEmitter.addListener(
+            TwilioEvents.connectionDidDisconnect,
+            this.connectionDidDisconnectHandler.bind(this)
+        );
+        this.connectionDidConnectListener = EventEmitter.addListener(
+            TwilioEvents.connectionDidConnect,
+            this.connectionDidConnectHandler.bind(this)
+        );
+        this.deviceDidReceiveIncomingListener = EventEmitter.addListener(
+            TwilioEvents.deviceDidReceiveIncoming,
+            this.deviceDidReceiveIncomingHandler.bind(this)
+        );
+
+        if (this.state.phoneState === PhoneState.init) {
+            this.initialize();
+        } else if (this.state.phoneState === PhoneState.incomingcall) {
+            const caller = await this.findCallerDetails(this.state.username);
+            this.setState({
+                username: caller.username,
+                userId: caller.userId
+            });
+            Keyboard.dismiss();
+        }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+        if (this.connectionDidDisconnectListener) {
+            this.connectionDidDisconnectListener.remove();
+        }
+        if (this.connectionDidConnectListener) {
+            this.connectionDidConnectListener.remove();
+        }
+        if (this.deviceDidReceiveIncomingListener) {
+            this.deviceDidReceiveIncomingListener.remove();
+        }
+        EventEmitter.emit(CallsEvents.callHistoryUpdated);
+    }
+
+    async findCallerDetails(username) {
         // const {username} = this.state
         if (username && _.startsWith(username, 'client:')) {
             const clientId = username.substr(7);
@@ -143,6 +142,11 @@ export default class Phone extends React.Component {
                     }
                 );
             }
+        } else {
+            return {
+                username: this.state.username,
+                userId: this.state.userId
+            };
         }
     }
 
@@ -176,9 +180,9 @@ export default class Phone extends React.Component {
         }
     }
 
-    deviceDidReceiveIncomingHandler(data) {
+    async deviceDidReceiveIncomingHandler(data) {
         const username = data.call_from;
-        const caller = this.findCallerName({ username });
+        const caller = await this.findCallerDetails(username);
         this.setState({
             phoneState: PhoneState.incomingcall,
             username: caller.username,
@@ -411,7 +415,6 @@ export default class Phone extends React.Component {
             state: phoneState,
             userName: this.username()
         });
-        console.log('>>>>>>>>>>AA', this.state);
         // console.log('Current Phone State', phoneState);
         return (
             <SafeAreaView style={Styles.container}>
