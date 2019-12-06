@@ -48,15 +48,15 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - Protobuf (3.10.0)
-  - TwilioVoice (2.0.7)
+  - TwilioVoice (5.1.0)
 
 DEPENDENCIES:
   - Frontm (from `.`)
   - gRPC-ProtoRPC
-  - TwilioVoice (~> 2.0.0)
+  - TwilioVoice (~> 5.1)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - "!ProtoCompiler"
     - "!ProtoCompiler-gRPCPlugin"
     - BoringSSL-GRPC
@@ -66,6 +66,7 @@ SPEC REPOS:
     - gRPC-RxLibrary
     - nanopb
     - Protobuf
+  trunk:
     - TwilioVoice
 
 EXTERNAL SOURCES:
@@ -83,8 +84,8 @@ SPEC CHECKSUMS:
   gRPC-RxLibrary: bf23bc3bfde06674a794bb63f458f8d67d4038bb
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: a4dc852ad69c027ca2166ed287b856697814375b
-  TwilioVoice: c0eacff80ee4d9b1e5f8c789ce8c5747c09e6140
+  TwilioVoice: 11cc62b4818cf83d969389cff26ec68fd705abc4
 
-PODFILE CHECKSUM: d06b47926152bb54c25e55ffdc5aa41124c29c40
+PODFILE CHECKSUM: cc3054df6bba399338b89e48c3df1859ee2a30e3
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

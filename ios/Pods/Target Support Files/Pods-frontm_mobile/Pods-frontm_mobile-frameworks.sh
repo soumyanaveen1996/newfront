@@ -161,16 +161,16 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${PODS_ROOT}/TwilioVoice/TwilioVoice.framework"
+  install_framework "${PODS_ROOT}/TwilioVoice/Build/iOS/TwilioVoice.framework"
 fi
 if [[ "$CONFIGURATION" == "DebugDevelop" ]]; then
-  install_framework "${PODS_ROOT}/TwilioVoice/TwilioVoice.framework"
+  install_framework "${PODS_ROOT}/TwilioVoice/Build/iOS/TwilioVoice.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${PODS_ROOT}/TwilioVoice/TwilioVoice.framework"
+  install_framework "${PODS_ROOT}/TwilioVoice/Build/iOS/TwilioVoice.framework"
 fi
 if [[ "$CONFIGURATION" == "ReleaseDevelop" ]]; then
-  install_framework "${PODS_ROOT}/TwilioVoice/TwilioVoice.framework"
+  install_framework "${PODS_ROOT}/TwilioVoice/Build/iOS/TwilioVoice.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

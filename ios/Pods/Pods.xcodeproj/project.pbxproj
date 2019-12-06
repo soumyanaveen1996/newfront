@@ -1838,6 +1838,7 @@
 		3550D3B4398FB70F0FC667EDB8DF2AFC /* atomic_with_std.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = atomic_with_std.h; path = src/core/lib/gprpp/atomic_with_std.h; sourceTree = "<group>"; };
 		357636B74DD4F0550695032AABF0ADCE /* dsa.c */ = {isa = PBXFileReference; includeInIndex = 1; name = dsa.c; path = crypto/dsa/dsa.c; sourceTree = "<group>"; };
 		35820F89990977558CB73057A92E6215 /* http_connect_handshaker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = http_connect_handshaker.h; path = src/core/ext/filters/client_channel/http_connect_handshaker.h; sourceTree = "<group>"; };
+		35B317C0527DA6A91FC722D3AE0E6A29 /* TwilioVoice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwilioVoice.framework; path = Build/iOS/TwilioVoice.framework; sourceTree = "<group>"; };
 		366A2FA237EBFEDA2C4673E682AAACDD /* gethostname.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = gethostname.h; path = src/core/lib/iomgr/gethostname.h; sourceTree = "<group>"; };
 		3690BAE6C9459FAD30974D3978DB6DBF /* client_channel_factory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = client_channel_factory.h; path = src/core/ext/filters/client_channel/client_channel_factory.h; sourceTree = "<group>"; };
 		36B76EFEB908B10E6FA1A21801585E62 /* useful.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = useful.h; path = src/core/lib/gpr/useful.h; sourceTree = "<group>"; };
@@ -1891,7 +1892,6 @@
 		3D66B9C476FF4CE8755A95D7CBDA4717 /* sync_windows.cc */ = {isa = PBXFileReference; includeInIndex = 1; name = sync_windows.cc; path = src/core/lib/gpr/sync_windows.cc; sourceTree = "<group>"; };
 		3D86D9033045F73DF9A9F54F232F1279 /* NSData+GRPC.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSData+GRPC.m"; path = "src/objective-c/GRPCClient/private/NSData+GRPC.m"; sourceTree = "<group>"; };
 		3DAAB0AD62870D7A773FF2AED8EC325F /* cmp.c */ = {isa = PBXFileReference; includeInIndex = 1; name = cmp.c; path = crypto/fipsmodule/bn/cmp.c; sourceTree = "<group>"; };
-		3DD22BD735BF666616D7A5C027A9221C /* TwilioVoice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwilioVoice.framework; sourceTree = "<group>"; };
 		3E154BF52F1674F5D6CC2AF9356F8EB0 /* ssl_aead_ctx.cc */ = {isa = PBXFileReference; includeInIndex = 1; name = ssl_aead_ctx.cc; path = ssl/ssl_aead_ctx.cc; sourceTree = "<group>"; };
 		3E88283907B5785BB39752C1904A0609 /* GRXImmediateWriter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GRXImmediateWriter.m; path = "src/objective-c/RxLibrary/GRXImmediateWriter.m"; sourceTree = "<group>"; };
 		3EA83B459EF0BC0BC297FEF9988190E3 /* GRPCCall+OAuth2.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "GRPCCall+OAuth2.h"; path = "src/objective-c/GRPCClient/GRPCCall+OAuth2.h"; sourceTree = "<group>"; };
@@ -3115,14 +3115,6 @@
 			path = Protobuf;
 			sourceTree = "<group>";
 		};
-		0F7EF0BAE7AB2B8FCBD360D94C770FDA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				3DD22BD735BF666616D7A5C027A9221C /* TwilioVoice.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		17F3E8F0999C6121AD889518311B1DE8 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -3830,7 +3822,7 @@
 		880BF731D564AA202C0990E6C9016994 /* TwilioVoice */ = {
 			isa = PBXGroup;
 			children = (
-				0F7EF0BAE7AB2B8FCBD360D94C770FDA /* Frameworks */,
+				CA2EC6B4752CFA569F114678CE1DAB1E /* Frameworks */,
 				066BADBF2299382BE96DE8211A573411 /* Support Files */,
 			);
 			name = TwilioVoice;
@@ -3931,6 +3923,14 @@
 				6E965954DDD06A4F55EA2976174F6DF6 /* Pods-frontm_mobile */,
 			);
 			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		CA2EC6B4752CFA569F114678CE1DAB1E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35B317C0527DA6A91FC722D3AE0E6A29 /* TwilioVoice.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -6657,23 +6657,6 @@
 			};
 			name = Release;
 		};
-		0D43199A6122159BADC9944D91B9B787 /* DebugDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
-				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = gRPCCertificates;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = DebugDevelop;
-		};
 		0DD8E09CF27B2A6C9946ED2A1EDDFB3E /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F1D23EA9D967C208A76249B387F35EE3 /* Frontm.xcconfig */;
@@ -6748,24 +6731,67 @@
 			};
 			name = Release;
 		};
-		19C2431F2A0CBA77E12F04DC28F16356 /* Debug */ = {
+		196DFA3E4A09A28224918543529A1885 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 83D46302794636C23366E98144992B45 /* Pods-frontm_mobile.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Debug;
 		};
@@ -6795,12 +6821,27 @@
 			};
 			name = ReleaseDevelop;
 		};
-		1C93AFC469516290F528562B52138BB3 /* Release */ = {
+		1C79A8E501732927F3587D4F2A8BCEF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F4756ADA39AA83607DE39EC7F1CB4D4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
 				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = gRPCCertificates;
@@ -6811,16 +6852,20 @@
 			};
 			name = Release;
 		};
-		20BAD4BD23B2E8A06CFC6F429886DCA4 /* Debug */ = {
+		21D21BBA024BF8DE2BAF34C277097867 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
@@ -6863,6 +6908,29 @@
 			};
 			name = ReleaseDevelop;
 		};
+		2E3222B2D9B1052A56C3C40860281B8A /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B9F00A876E78B18FB840A1D395D2577 /* Pods-frontm_mobile.releasedevelop.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseDevelop;
+		};
 		2ED3F8B1D6426B09BF475CF98CBEC060 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
@@ -6888,35 +6956,30 @@
 			};
 			name = ReleaseDevelop;
 		};
-		3BE9E30105EAFBBF6BB63B21A3981B6E /* Release */ = {
+		3059C588819427901108724A05A9AB2E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
+			baseConfigurationReference = C8D55CF139B771424E667F59FFD7E117 /* Pods-frontm_mobile.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		400893E78B06CD3B61B0220AE223FB29 /* DebugDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = DebugDevelop;
-		};
-		407B95552466E64C2380F15A043F3DA1 /* DebugDevelop */ = {
+		38BAC366F85D4DD8F4AB95E293034B01 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -6964,7 +7027,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6975,6 +7038,21 @@
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = DebugDevelop;
+		};
+		4B773ABBCDD8FB862C4BB10228866F66 /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseDevelop;
 		};
 		51B492B01ED7479031A558CE2D75A471 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7079,6 +7157,21 @@
 			};
 			name = ReleaseDevelop;
 		};
+		6A035CBA4D87471F9271E31540879FC0 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = DebugDevelop;
+		};
 		73F0E6D95B28698622A5434F7966C961 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0924AFDCB2DBB749D77207A7BEB24526 /* nanopb.xcconfig */;
@@ -7130,20 +7223,6 @@
 			};
 			name = ReleaseDevelop;
 		};
-		8A3E910BA642F068E5F51C5B01C97BC2 /* ReleaseDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = ReleaseDevelop;
-		};
 		8BC05C039D28A34392C947AEF7149AE1 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8D73DCFB22EDCCDAC0AE9DE7E93CAB45 /* Protobuf.xcconfig */;
@@ -7169,129 +7248,28 @@
 			};
 			name = DebugDevelop;
 		};
-		8F17DC3A99F99FBAD606CE6963886315 /* Release */ = {
+		90D543DF4370D67A1C7062CE7004F6F8 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 762DE5B8CCC8D680C026EB2FD1F99A39 /* Pods-frontm_mobile.debugdevelop.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				SYMROOT = "${SRCROOT}/../build";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
-		};
-		916E0404255105F480DC4950B7625F7A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_DEBUG=1",
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Debug;
+			name = DebugDevelop;
 		};
 		938E4BC1EF9D8B9CC51F793225F3742B /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7343,104 +7321,20 @@
 			};
 			name = DebugDevelop;
 		};
-		983F70AADD5355E163C77286D0576046 /* ReleaseDevelop */ = {
+		99B5869DDE221CA04CBCAA7477C761C5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B9F00A876E78B18FB840A1D395D2577 /* Pods-frontm_mobile.releasedevelop.xcconfig */;
+			baseConfigurationReference = 66DE6028DF1B1CB441E9C251A9F648A4 /* TwilioVoice.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = ReleaseDevelop;
-		};
-		99C2C25438D4EF0A25A4290C3921CDC2 /* ReleaseDevelop */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE_DEVELOP=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = ReleaseDevelop;
-		};
-		99FEFFE67FEE1ECA2D922563D788914C /* ReleaseDevelop */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
-				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = gRPCCertificates;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = ReleaseDevelop;
+			name = Release;
 		};
 		9B0ADF68B2C9A53C63CB2A88EDBFCDF7 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -7531,6 +7425,25 @@
 			};
 			name = Release;
 		};
+		A9A45F1A4E4572DEC1424DD9EF517B8E /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = DebugDevelop;
+		};
 		ADFA0D914FBFA0A280FEF85EE93C2ECF /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 732B9CED285F30E58D4A8E0E0BF9BF55 /* gRPC-ProtoRPC.xcconfig */;
@@ -7553,6 +7466,66 @@
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B01D14FDC83DCF9D4BE53066BEA96D05 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
 		};
@@ -7657,22 +7630,6 @@
 			};
 			name = Release;
 		};
-		C45A5AB23C953C023C193289B31EC304 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
-				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = gRPCCertificates;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		C6AE204C68CBA4FB73E977F6BD1DAD91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0924AFDCB2DBB749D77207A7BEB24526 /* nanopb.xcconfig */;
@@ -7722,6 +7679,25 @@
 			};
 			name = Debug;
 		};
+		C8D33C085468423140FFD6AFDADCA88B /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = ReleaseDevelop;
+		};
 		CCD56DD7FBD1F8B0754261F0C2BE4270 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BFBCF45BE04B0668324AF0346F3A5C2D /* !ProtoCompiler.xcconfig */;
@@ -7735,28 +7711,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = ReleaseDevelop;
-		};
-		CD75C9508278B293EC6A8FD52098FEFA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C8D55CF139B771424E667F59FFD7E117 /* Pods-frontm_mobile.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACH_O_TYPE = staticlib;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
 		};
 		CE9F4F097007CBBC7D9B787BF068E67A /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -7880,6 +7834,66 @@
 			};
 			name = Debug;
 		};
+		EF4453A0E4F47B2244EE9C0EF47F02EB /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE_DEVELOP=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = ReleaseDevelop;
+		};
 		EF98C5D79A26EB3A9D49E0DDB9972209 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4ADE7BD8FEC73715C496F85691968001 /* gRPC-Core.xcconfig */;
@@ -7930,16 +7944,17 @@
 			};
 			name = DebugDevelop;
 		};
-		FA387AE919385B93E95E2CCE29870975 /* DebugDevelop */ = {
+		F53C697CB472267C1FA2F8580F8B2BE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 762DE5B8CCC8D680C026EB2FD1F99A39 /* Pods-frontm_mobile.debugdevelop.xcconfig */;
+			baseConfigurationReference = 83D46302794636C23366E98144992B45 /* Pods-frontm_mobile.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MACH_O_TYPE = staticlib;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -7948,9 +7963,8 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
-			name = DebugDevelop;
+			name = Debug;
 		};
 		FBECAAC17FC06356B391C4227772152F /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -8007,10 +8021,10 @@
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				916E0404255105F480DC4950B7625F7A /* Debug */,
-				407B95552466E64C2380F15A043F3DA1 /* DebugDevelop */,
-				8F17DC3A99F99FBAD606CE6963886315 /* Release */,
-				99C2C25438D4EF0A25A4290C3921CDC2 /* ReleaseDevelop */,
+				196DFA3E4A09A28224918543529A1885 /* Debug */,
+				38BAC366F85D4DD8F4AB95E293034B01 /* DebugDevelop */,
+				B01D14FDC83DCF9D4BE53066BEA96D05 /* Release */,
+				EF4453A0E4F47B2244EE9C0EF47F02EB /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8073,10 +8087,10 @@
 		A66400D398FAB60D905370E14E5A423F /* Build configuration list for PBXNativeTarget "Pods-frontm_mobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				19C2431F2A0CBA77E12F04DC28F16356 /* Debug */,
-				FA387AE919385B93E95E2CCE29870975 /* DebugDevelop */,
-				CD75C9508278B293EC6A8FD52098FEFA /* Release */,
-				983F70AADD5355E163C77286D0576046 /* ReleaseDevelop */,
+				F53C697CB472267C1FA2F8580F8B2BE0 /* Debug */,
+				90D543DF4370D67A1C7062CE7004F6F8 /* DebugDevelop */,
+				3059C588819427901108724A05A9AB2E /* Release */,
+				2E3222B2D9B1052A56C3C40860281B8A /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8084,10 +8098,10 @@
 		AFFD1C9F4BAE0C1C58E6FC9ED4D31DA1 /* Build configuration list for PBXAggregateTarget "TwilioVoice" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				20BAD4BD23B2E8A06CFC6F429886DCA4 /* Debug */,
-				400893E78B06CD3B61B0220AE223FB29 /* DebugDevelop */,
-				3BE9E30105EAFBBF6BB63B21A3981B6E /* Release */,
-				8A3E910BA642F068E5F51C5B01C97BC2 /* ReleaseDevelop */,
+				1C79A8E501732927F3587D4F2A8BCEF3 /* Debug */,
+				6A035CBA4D87471F9271E31540879FC0 /* DebugDevelop */,
+				99B5869DDE221CA04CBCAA7477C761C5 /* Release */,
+				4B773ABBCDD8FB862C4BB10228866F66 /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8106,10 +8120,10 @@
 		D4923733C04CA2AE365D6E9DA8BC0203 /* Build configuration list for PBXNativeTarget "gRPC-gRPCCertificates" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C45A5AB23C953C023C193289B31EC304 /* Debug */,
-				0D43199A6122159BADC9944D91B9B787 /* DebugDevelop */,
-				1C93AFC469516290F528562B52138BB3 /* Release */,
-				99FEFFE67FEE1ECA2D922563D788914C /* ReleaseDevelop */,
+				21D21BBA024BF8DE2BAF34C277097867 /* Debug */,
+				A9A45F1A4E4572DEC1424DD9EF517B8E /* DebugDevelop */,
+				1F4756ADA39AA83607DE39EC7F1CB4D4 /* Release */,
+				C8D33C085468423140FFD6AFDADCA88B /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

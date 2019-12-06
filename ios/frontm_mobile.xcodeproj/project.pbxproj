@@ -18,6 +18,7 @@
 		040C5BDB1FFDF2300071B62D /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BD81FFDF22F0071B62D /* GoogleSignInDependencies.framework */; };
 		040C5BDD1FFDF2300071B62D /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 040C5BD91FFDF22F0071B62D /* GoogleSignIn.bundle */; };
 		040C5BDF1FFDF2300071B62D /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040C5BDA1FFDF2300071B62D /* GoogleSignIn.framework */; };
+		041FD6BD2396BFF3008E41B5 /* libRNTwilioVoiceLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 044BB6C52396563300F42193 /* libRNTwilioVoiceLibrary.a */; };
 		0442D7FD22B8D24C001C2A0E /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0442D7FC22B8D23E001C2A0E /* libRNGoogleSignin.a */; };
 		0445655F2248C5DE00996110 /* DomainChannels+frontm.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445655E2248C5DE00996110 /* DomainChannels+frontm.m */; };
 		0449761322B8C558003DFC41 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 044975C522B8C558003DFC41 /* JavaScriptCore.framework */; };
@@ -1175,6 +1176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041FD6BD2396BFF3008E41B5 /* libRNTwilioVoiceLibrary.a in Frameworks */,
 				6B5CF44F235E13D5008D701B /* libRNSensors.a in Frameworks */,
 				6B22598C232281CA00DA143F /* libART.a in Frameworks */,
 				213F5BE82303BF7B0056CC04 /* libRCTFBSDK.a in Frameworks */,
