@@ -5599,6 +5599,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = 044B1561E81B700B0C2A219D9FAA4D86 /* Products */;
@@ -6835,7 +6836,7 @@
 			};
 			name = Debug;
 		};
-		1F4756ADA39AA83607DE39EC7F1CB4D4 /* Release */ = {
+		1C93AFC469516290F528562B52138BB3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
 			buildSettings = {
@@ -7198,6 +7199,24 @@
 			};
 			name = DebugDevelop;
 		};
+		7D71D6A2BA70A41EA91BD85DD5C4EB82 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = DebugDevelop;
+		};
 		8690E1BA403902128FD665AAFF5348F3 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1634F71F25566277BD0AD8E7606E1005 /* gRPC-RxLibrary.xcconfig */;
@@ -7247,6 +7266,54 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = DebugDevelop;
+		};
+		90D543DF4370D67A1C7062CE7004F6F8 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 762DE5B8CCC8D680C026EB2FD1F99A39 /* Pods-frontm_mobile.debugdevelop.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = DebugDevelop;
+		};
+		938E4BC1EF9D8B9CC51F793225F3742B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1634F71F25566277BD0AD8E7606E1005 /* gRPC-RxLibrary.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/gRPC-RxLibrary/gRPC-RxLibrary-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = RxLibrary;
+				PRODUCT_NAME = "gRPC-RxLibrary";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		90D543DF4370D67A1C7062CE7004F6F8 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -7528,6 +7595,24 @@
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
+		};
+		B3C3AF562CA0B9E36A1F386F045A387E /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = ReleaseDevelop;
 		};
 		B465473CFE40413E2F8BC5E128A027A3 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -8120,10 +8205,10 @@
 		D4923733C04CA2AE365D6E9DA8BC0203 /* Build configuration list for PBXNativeTarget "gRPC-gRPCCertificates" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				21D21BBA024BF8DE2BAF34C277097867 /* Debug */,
-				A9A45F1A4E4572DEC1424DD9EF517B8E /* DebugDevelop */,
-				1F4756ADA39AA83607DE39EC7F1CB4D4 /* Release */,
-				C8D33C085468423140FFD6AFDADCA88B /* ReleaseDevelop */,
+				C45A5AB23C953C023C193289B31EC304 /* Debug */,
+				7D71D6A2BA70A41EA91BD85DD5C4EB82 /* DebugDevelop */,
+				1C93AFC469516290F528562B52138BB3 /* Release */,
+				B3C3AF562CA0B9E36A1F386F045A387E /* ReleaseDevelop */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
