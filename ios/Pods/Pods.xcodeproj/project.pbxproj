@@ -6842,6 +6842,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
 				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = gRPCCertificates;
@@ -6851,6 +6852,23 @@
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
+		};
+		21D21BBA024BF8DE2BAF34C277097867 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
 		};
 		24B7B0EB20F06D9581FEF6D7540A8F1B /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
@@ -7297,6 +7315,54 @@
 			};
 			name = Release;
 		};
+		90D543DF4370D67A1C7062CE7004F6F8 /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 762DE5B8CCC8D680C026EB2FD1F99A39 /* Pods-frontm_mobile.debugdevelop.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = DebugDevelop;
+		};
+		938E4BC1EF9D8B9CC51F793225F3742B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1634F71F25566277BD0AD8E7606E1005 /* gRPC-RxLibrary.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/gRPC-RxLibrary/gRPC-RxLibrary-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = RxLibrary;
+				PRODUCT_NAME = "gRPC-RxLibrary";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		9667C7CEB95777149F29B946B9AF5867 /* DebugDevelop */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4ADE7BD8FEC73715C496F85691968001 /* gRPC-Core.xcconfig */;
@@ -7425,6 +7491,25 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+		};
+		A9A45F1A4E4572DEC1424DD9EF517B8E /* DebugDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = DebugDevelop;
 		};
 		ADFA0D914FBFA0A280FEF85EE93C2ECF /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7630,22 +7715,6 @@
 			};
 			name = Release;
 		};
-		C45A5AB23C953C023C193289B31EC304 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
-				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = gRPCCertificates;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		C6AE204C68CBA4FB73E977F6BD1DAD91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0924AFDCB2DBB749D77207A7BEB24526 /* nanopb.xcconfig */;
@@ -7694,6 +7763,25 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
+		};
+		C8D33C085468423140FFD6AFDADCA88B /* ReleaseDevelop */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41DF3C2462D11BDD3CF33DE63DA79A69 /* gRPC.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/gRPC";
+				IBSC_MODULE = GRPCClient;
+				INFOPLIST_FILE = "Target Support Files/gRPC/ResourceBundle-gRPCCertificates-gRPC-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = gRPCCertificates;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = ReleaseDevelop;
 		};
 		CCD56DD7FBD1F8B0754261F0C2BE4270 /* ReleaseDevelop */ = {
 			isa = XCBuildConfiguration;

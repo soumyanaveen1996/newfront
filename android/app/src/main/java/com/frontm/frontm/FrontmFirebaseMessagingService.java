@@ -111,7 +111,7 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
 
     public void onTwilioMessageReceived(RemoteMessage remoteMessage) {
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, "Bundle data: " + remoteMessage.getData());
+            Log.d(TAG, "Twilio Bundle data: " + remoteMessage.getData());
         }
 
         if (remoteMessage.getData().get("twi_account_sid") != null) {
@@ -275,7 +275,7 @@ public class FrontmFirebaseMessagingService extends FirebaseMessagingService {
             callNotificationManager.createIncomingCallNotification(context, callInvite, notificationId, launchIntent);
         } else {
             SoundPoolManager.getInstance(context.getBaseContext()).stopRinging();
-            callNotificationManager.removeIncomingCallNotification(context, callInvite, 0);
+            callNotificationManager.removeIncomingCallNotification(context, callInvite, notificationId);
         }
     }
 

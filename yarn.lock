@@ -9687,7 +9687,7 @@ react-native-tcp@^3.3.0:
 
 "react-native-twilio-voice-library@https://github.com/rajamal/react-native-twilio-voice-library.git":
   version "0.1.1"
-  resolved "https://github.com/rajamal/react-native-twilio-voice-library.git#1faf0c4c0e31ffe608d2995c03a7554e6050053b"
+  resolved "https://github.com/rajamal/react-native-twilio-voice-library.git#37b00a54a40cdce53e8fb1459e91082bf8e482f6"
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
