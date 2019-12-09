@@ -58,7 +58,9 @@ export default class ChartMessage extends React.Component {
     componentDidMount() {
         let chartData;
         let chartOptions;
-        ControlDAO.getContentById(this.props.chartOptions.chartId)
+        ControlDAO.getContentById(
+            this.props.chartOptions.chartId + this.props.conversationId
+        )
             .then(data => {
                 chartData = data;
                 return ControlDAO.getOptionsById(

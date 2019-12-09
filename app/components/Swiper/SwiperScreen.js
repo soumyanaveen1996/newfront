@@ -32,13 +32,13 @@ export default class SwiperScreen extends Component {
                 {
                     header: 'Keep conversations going no matter where you are',
                     description:
-                        'The communication & collaboration app designed for satellite WiFi users. For personal or professional use.',
+                        'Easily connect with your people at sea or on shore.\nCalls, Instant Messaging and AI applications.',
                     imageSource: images.preview_slider_1
                 },
                 {
-                    header: 'Say Goodbye to isolation',
+                    header: 'Internet Voice Calls',
                     description:
-                        'Easily top up built-in Digital Wallet and make phone calls to anywhere in the world. Even to Satellite Phone numbers.',
+                        'Lowest cost calls to satellite numbers.\nData-efficient calls back to shore.',
                     imageSource: images.preview_slider_2
                 },
                 ///////REMOVED////////
@@ -50,9 +50,9 @@ export default class SwiperScreen extends Component {
                 },
                 /////////////////////
                 {
-                    header: "Let's get you going",
+                    header: 'AI Applications',
                     description:
-                        'Built-in Apps ensure your work and access to information, remain uninterrupted. Even without internet.',
+                        'Artificial Intelligence applications.\nTracking, Monitoring and Operational assistance ',
                     imageSource: images.preview_slider_4
                 }
             ]

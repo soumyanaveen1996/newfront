@@ -130,6 +130,7 @@ export default class Notification {
 
     static handleRegister = token =>
         new Promise((resolve, reject) => {
+            console.log('>>>>>>1', token);
             if (token) {
                 var notificationDeviceInfo = {
                     deviceType: token.os === 'ios' ? 'iphone' : 'android',
@@ -138,18 +139,22 @@ export default class Notification {
                 };
                 Notification.grpcRegisterDevice(token.token)
                     .then(() => {
+                        console.log('>>>>>>2', notificationDeviceInfo);
                         return DeviceStorage.save(
                             NotificationKeys.notification,
                             notificationDeviceInfo
                         );
                     })
                     .then(obj => {
+                        console.log('>>>>>>3');
                         resolve();
                     })
                     .catch(e => {
+                        console.log('>>>>>>4', e);
                         reject(new Error('Could not register'));
                     });
             } else {
+                console.log('>>>>>>5');
                 reject(new Error('User cancelled'));
             }
         });
@@ -259,9 +264,11 @@ export default class Notification {
         new Promise((resolve, reject) => {
             DeviceStorage.get(NotificationKeys.notification)
                 .then(info => {
+                    console.log('>>>>>>aaaaa', info);
                     resolve(info);
                 })
                 .catch(error => {
+                    console.log('>>>>>>bbbbbb', error);
                     reject(error);
                 });
         });

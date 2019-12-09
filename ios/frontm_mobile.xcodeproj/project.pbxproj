@@ -3323,7 +3323,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 470;
+				CURRENT_PROJECT_VERSION = 478;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3439,7 +3439,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 470;
+				CURRENT_PROJECT_VERSION = 478;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",
@@ -3507,7 +3507,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 470;
+				CURRENT_PROJECT_VERSION = 478;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3577,7 +3577,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 470;
+				CURRENT_PROJECT_VERSION = 478;
 				DEVELOPMENT_TEAM = 6EZTYQSN4H;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Documents/FacebookSDK",

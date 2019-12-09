@@ -78,6 +78,7 @@ const kSort = src => {
 
 const MESSAGE_TYPE = MessageTypeConstants.MESSAGE_TYPE_UPDATE_CALL_QUOTA;
 
+// PSTN CALLS
 export default class Dialler extends React.Component {
     constructor(props) {
         super(props);
