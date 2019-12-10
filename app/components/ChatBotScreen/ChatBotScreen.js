@@ -2453,6 +2453,9 @@ class ChatBotScreen extends React.Component {
     };
 
     render() {
+        if (this.props.call) {
+            return <View />;
+        }
         if (!this.botLoaded) {
             return (
                 <View style={chatStyles.loading}>
@@ -2461,9 +2464,6 @@ class ChatBotScreen extends React.Component {
             );
         }
 
-        if (this.props.call) {
-            return <View />;
-        }
         // react-native-router-flux header seems to intefere with padding. So
         // we need a offset as per the header size
         return (

@@ -4,39 +4,27 @@ import {
     SafeAreaView,
     SectionList,
     TextInput,
-    KeyboardAvoidingView,
-    ActivityIndicator,
-    Platform,
     Text,
     TouchableOpacity,
     Image,
-    PermissionsAndroid,
     Alert,
     NativeModules,
     FlatList,
     LayoutAnimation,
-    UIManager,
-    TouchableWithoutFeedback
+    UIManager
 } from 'react-native';
 import styles from './styles';
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import _ from 'lodash';
 import SystemBot from '../../lib/bot/SystemBot';
 import {
     Contact,
     Auth,
     Network,
-    Message,
-    MessageTypeConstants,
     Notification,
     CallQuota
 } from '../../lib/capability';
-import {
-    EventEmitter,
-    AuthEvents,
-    CallQuotaEvents,
-    TwilioEvents
-} from '../../lib/events';
+import { EventEmitter, AuthEvents, CallQuotaEvents } from '../../lib/events';
 import { connect } from 'react-redux';
 import I18n from '../../config/i18n/i18n';
 import Store from '../../redux/store/configureStore';
