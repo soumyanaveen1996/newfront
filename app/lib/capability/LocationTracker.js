@@ -104,7 +104,9 @@ export default class LocationTracker {
         const data = await DeviceStorage.get('location_bot');
         const currentLocation = {
             latitude: parseFloat(location.latitude),
-            longitude: parseFloat(location.longitude)
+            longitude: parseFloat(location.longitude),
+            altitude: parseFloat(location.altitude),
+            speed: parseFloat(location.speed)
         };
 
         let message = new Message();
