@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.file.proto";
+
+package file;
+
+service FileService {
+    rpc UploadFile(GetFileUploadInput) returns (GetFileUploadResponse) {}
+    rpc UploadFileBase64(GetBase64FileUploadInput) returns (GetFileUploadResponse) {}
+}
+
+message GetFileUploadInput {
+    bytes file = 1;
+    string conversationId = 2;
+    string fileName = 3;
+    string fileScope = 4;
+}
+
+message GetBase64FileUploadInput {
+    string base64File = 1;
+    string conversationId = 2;
+    string fileName = 3;
+    string fileScope = 4;
+}
+
+message GetFileUploadResponse {
+    bool success = 1;
+}

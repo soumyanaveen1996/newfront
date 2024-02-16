@@ -1,0 +1,42 @@
+{
+    "botId": "im-bot",
+    "userDomain": "frontmai",
+    "allowResetConversation": "false",
+    "botClients": {
+     "mobile": true,
+     "web": false
+    },
+    "botName": "IMBot",
+    "botNameSearch": "imbot",
+    "botUrl": "botfarm/frontmai/imBot/1.18.0/imBot.js",
+    "category": [
+    ],
+    "conversational": true,
+    "dependencies": {
+     "agentGuardService": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/agentGuardService/1.7.0/agentGuardService.js",
+      "version": "1.7.0"
+     },
+     "authContext": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/authContext/1.2.0/authContext.js",
+      "version": "1.2.0"
+     },
+     "botUtils": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/botUtils/1.0.0/botUtils.js",
+      "version": "1.0.0"
+     }
+    },
+    "description": "Instant Messenger",
+    "descriptionSearch": "instant messenger",
+    "logoUrl": "IMBotLogo.png",
+    "slug": "im-bot",
+    "systemBot": true,
+    "userRoles": [
+     "enduser",
+     "thuraya-test"
+    ],
+    "version": "1.18.0"
+}

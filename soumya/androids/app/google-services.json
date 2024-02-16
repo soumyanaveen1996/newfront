@@ -1,0 +1,95 @@
+{
+  "project_info": {
+    "project_number": "834750737902",
+    "firebase_url": "https://onship-b21e7.firebaseio.com",
+    "project_id": "onship-b21e7",
+    "storage_bucket": "onship-b21e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834750737902:android:c261b5d37b4cfc017432ff",
+        "android_client_info": {
+          "package_name": "com.frontm.onship"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834750737902-9l3bfo6305c3qsd718d89vkdjfh4i3op.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "e1a9c68c1dc0f3ad962ee246b3a95234a100e033"
+          }
+        },
+        {
+          "client_id": "834750737902-bbd0n3ccs0mom22i6a27jg93p08d808t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "6dc3d26d4aacc71edc8ed65e69b5e44337c616b6"
+          }
+        },
+        {
+          "client_id": "834750737902-e3e7je7mg8h9u3kl11ivs1t3hfpun999.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "c1025f31ae26a0068cfd6ef05b1c95a884b833a7"
+          }
+        },
+        {
+          "client_id": "834750737902-fulhco4m85ahbajusgr7q926f0nqa19g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "9bdd17639cdefaf321a4e75cf54b9498d69b2798"
+          }
+        },
+        {
+          "client_id": "834750737902-jaukpi28p1hepro6bj56chsqm30pcv8p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "091ad6fb467b0f42fd62c09fcbdd3acfd6b1a816"
+          }
+        },
+        {
+          "client_id": "834750737902-qv2i7l42482stoopleish080n4sql2ga.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontm.onship",
+            "certificate_hash": "245b883609a23fa9d22fc2e462fd0de6654d3ed1"
+          }
+        },
+        {
+          "client_id": "834750737902-mve86aq37ndgevoi7qmpn99tbuulma8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIlf5x-Z4V3X1AZK1crkgZLTNzWtdpBqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834750737902-mve86aq37ndgevoi7qmpn99tbuulma8u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "834750737902-e95anddgm6np74ks07b7aoh5i2ho6igt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.frontm.onship"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

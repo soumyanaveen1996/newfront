@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.auth.proto";
+
+package auth;
+
+service AuthService {
+    rpc Signup (SignupUser) returns (SignupResponse) {}
+    rpc ConfirmSignup (SignupUser) returns (SignupResponse) {}
+    rpc ResendSignupConfirmCode (SignupUser) returns (SignupResponse) {}
+    rpc ResetPassword (SignupUser) returns (SignupResponse) {}
+    rpc ConfirmPasswordReset (SignupUser) returns (SignupResponse) {}
+    rpc ChangePassword (SignupUser) returns (SignupResponse) {}
+    rpc DeleteUser (SignupUser) returns (SignupResponse) {}
+    rpc FrontmSignin (FrontmSigninInput) returns (SigninResponse) {}
+    rpc GoogleSignin (GoogleSigninInput) returns (SigninResponse) {}
+    rpc AppleSignin (AppleSigninInput) returns (SigninResponse) {}
+    rpc FacebookSignin (FacebookSigninInput) returns (SigninResponse) {}
+    rpc CreateAnonymousAccess (AnonAccessInput) returns (SigninResponse) {}
+    rpc RefreshAnonymousUserSession (AnonAccessInput) returns (SignupResponse) {}
+    rpc ResetUserActivity(UserActivityInput) returns (SignupResponse) {}
+    rpc InitiateSoftwareMfa(MFAInput) returns (MFAOutput) {}
+    rpc ActivateSoftwareMfa(MFAInput) returns (MFAOutput) {}
+    rpc DeactivateSoftwareMfa(MFAInput) returns (MFAOutput) {}
+    rpc ChangeSoftwareMfa(MFAInput) returns (MFAOutput) {}
+}
+
+message SignupUser {
+    string email = 1;
+    string userName = 2;
+    string password = 3;
+    string confirmCode = 4;
+    string oldPassword = 5;
+    string newPassword = 6;
+    string verificationCode = 7;
+    string appType = 8;
+}
+
+message SignupResponse {
+    bool success = 1;
+    string data = 2;
+    string message = 3;
+    string errorCode = 4;
+}
+
+message FrontmSigninInput {
+    string email = 1;
+    string password = 2;
+    string platform = 3;
+    string appType = 4;
+    string otpToken = 5;
+}
+
+message GoogleSigninInput {
+    string code = 1;
+    string platform = 2;
+    string idToken = 3;
+    string refreshToken = 4;
+    string appType = 5;
+}
+
+message AppleSigninInput {
+    string userName = 1;
+    string code = 2;
+    string appType = 3;
+    string platform = 4;
+}
+
+message SigninResponse {
+    bool success = 1;
+    string message = 2;
+    string sessionId = 3;
+    SignInUser user = 4;
+    bool newUser = 5;
+    string errorCode = 6;
+}
+
+message SignInUser {
+    bool searchable = 1;
+    bool visible = 2;
+    string emailAddress = 3;
+    string userId = 4;
+    commonmessages.PhoneNumbers phoneNumbers = 5;
+    string userName = 6;
+    repeated commonmessages.DomainRoles domains = 7;
+    bool archiveMessages = 8;
+    bool tncAccept = 9;
+    string userTimezone = 10;
+    string userCompanyName = 11;
+    commonmessages.UserAddress address = 12;
+    bool tempUser = 13;
+    bool isPostpaidUser = 14;
+    bool lowBandwidthCalls = 15;
+    bool softwareMfaEnabled = 16;
+}
+
+message FacebookSigninInput {
+    string token = 1;
+    string platform = 2;
+    string userName = 3;
+    string emailAddress = 4;
+    string appType = 5;
+}
+
+message AnonAccessInput {
+    string urlDomain = 1;
+    string botId = 2;
+    string platform = 3;
+    string appType = 4;
+}
+
+message UserActivityInput {
+    string botId = 1;
+    string loginProvider = 2;
+    string password = 3;
+    string code = 4;
+    string idToken = 5;
+    string platform = 6;
+    string appType = 7;
+    string otpToken = 8;
+}
+
+message MFAInput {
+    string appType = 1;
+    string password = 2;
+    string otpToken = 3;
+}
+message MFAOutput{
+    bool success = 1;
+    string errorMessage = 2;
+    string errorCode = 3;
+    string qrCodeUri = 4;
+}

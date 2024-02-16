@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.commonmessages.proto";
+
+package commonmessages;
+
+
+message Empty {}
+
+message PhoneNumbers {
+    string satellite = 1;
+    string land = 2;
+    string mobile = 3;
+}
+
+message DomainRoles {
+    string domain = 1;
+    repeated string roles = 2;
+}
+
+message EmailAddresses {
+    string home = 1;
+    string work = 2;
+}
+
+message LocalContact {
+    string userName = 1;
+    commonmessages.EmailAddresses emailAddresses = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+    string userId = 4;
+}
+
+message UserAddress {
+    string addressLine1 = 1;
+    string addressLine2 = 2;
+    string city = 3;
+    string state = 4;
+    string country = 5;
+    string postCode = 6;
+}
+
+message SelectedDomainInput {
+    string selectedDomain = 1;
+}

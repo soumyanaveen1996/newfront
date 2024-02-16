@@ -1,0 +1,380 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.user.proto";
+
+package user;
+
+service UserService {
+    rpc UpdateUserProfile (User) returns (UpdateUserProfileResponse) {}
+    rpc GetUserDetails (User) returns (User) {}
+    rpc GetLocalUserDetails (LocalUserInput) returns (commonmessages.LocalContact) {}
+    rpc GetBotSubscriptions(commonmessages.SelectedDomainInput) returns (BotSubscriptionsResponse) {}
+    rpc GetBotSubscriptionsInfo(commonmessages.SelectedDomainInput) returns (BotSubscriptionsInfoResponse) {}
+    rpc GetContacts(commonmessages.SelectedDomainInput) returns (ContactsResponse) {}
+    rpc SubscribeBot(SubscribeBotInput) returns (SubscribeBotResponse) {}
+    rpc UnsubscribeBot(SubscribeBotInput) returns (SubscribeBotResponse) {}
+    rpc SubscribeDomain(SubscribeDomainInput) returns (SubscribeDomainResponse) {}
+    rpc EnableVoip(commonmessages.Empty) returns (VoipToggleResponse) {}
+    rpc DisableVoip(commonmessages.Empty) returns (VoipToggleResponse) {}
+    rpc GetVoipStatus(VoipStatusInput) returns (VoipStatusResponse) {}
+    rpc GenerateTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
+    rpc GenerateWebTwilioToken(TwilioTokenInput) returns (TwilioTokenResponse) {}
+    rpc ManageTnc(ManageTncInput) returns (ManageTncResponse) {}
+    rpc GetCompanies(commonmessages.Empty) returns (CompaniesResponse) {}
+    rpc GetCallHistory(commonmessages.Empty) returns (CallHistoryResponse) {}
+    rpc GetPaginatedCallHistory(PaginatedCallHistoryInput) returns (PaginatedCallHistoryResponse) {}
+    rpc GetCallHistoryForContact(CallHistoryInput) returns (CallHistoryResponse) {}
+    rpc GetUserDomains(commonmessages.Empty) returns (UserDomainsResponse) {}
+    rpc UpdateLastLoggedInDomain(LastLoggedInDomainInput) returns (commonmessages.Empty) {}
+    rpc TopupUserBalance(TopupBalanceInput) returns (TopupBalanceResponse) {}
+    rpc RegisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc DeregisterDevice(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc RegisterDeviceForVoip(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc DeregisterDeviceForVoip(DeviceInfo) returns (DeviceBoolResponse) {}
+    rpc GetUserBalance(commonmessages.Empty) returns (UserBalanceResponse) {}
+    rpc GetTwilioIceServers(commonmessages.Empty) returns (TwilioIceServersResponse) {}
+    rpc PreConnectCallCheck(PreConnectCallCheckInput) returns (PreConnectCallCheckResponse) {}
+    rpc GetAppBroadcastMessages(commonmessages.Empty) returns (AppBroadcastMessagesResponse) {}
+    rpc PostPaidUserCallsCheck(commonmessages.Empty) returns (PostPaidUserCallsCheckResponse) {}
+    rpc SendVoipPushNotification(VoipPushInput) returns (VoipPushResponse) {}
+    rpc SetUserAvailableForCall(commonmessages.Empty) returns (commonmessages.Empty) {}
+    rpc GetSystemBots(commonmessages.Empty) returns (SystemBotsResponse) {}
+}
+
+message User {
+    string userName = 1;
+    string emailAddress = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+    bool searchable = 4;
+    bool visible = 5;
+    string userId = 6;
+    string companyId = 7;
+    string userCompanyName = 8;
+    commonmessages.UserAddress address = 9;
+    string userTimezone = 10;
+    bool lowBandwidthCalls = 11;
+}
+
+message UpdateUserProfileResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+}
+
+message SystemBotsResponse {
+    int32 error = 1;
+    SystemBotsData content = 2;
+}
+
+message SystemBotsData {
+    int32 error = 1;
+    repeated SubscribedBots Items = 2;
+}
+
+message BotSubscriptionsResponse {
+    int32 error = 1;
+    SubscribedBotsContent content = 2;
+}
+
+message SubscribedBotsContent {
+    repeated string subscribed = 1;
+    repeated string favourites = 2;
+}
+
+message BotSubscriptionsInfoResponse {
+    int32 error = 1;
+    SubscribedBotsInfoContent content = 2;
+}
+
+message SubscribedBotsInfoContent {
+    repeated SubscribedBots subscribed = 1;
+    repeated SubscribedBots favourites = 2;
+}
+
+message SubscribedBots {
+    string botId = 1;
+    string userDomain = 2;
+    string allowResetConversation = 3;
+    SubscribedBotClients botClients = 4;
+    string botName = 5;
+    string botNameSearch = 6;
+    string botUrl = 7;
+    repeated string category = 8;
+    SubscribedDependencies dependencies = 9;
+    string description = 10;
+    string descriptionSearch = 11;
+    string logoUrl = 12;
+    string slug = 13;
+    repeated string userRoles = 14;
+    string version = 15;
+    string developer = 16;
+    bool featured = 17;
+    bool systemBot = 18;
+    string minRequiredPlatformVersion = 19;
+    bool conversational = 20;
+    bool isFavourite = 21;
+    int32 inactivityDuration = 22;
+    bool authorisedAccess = 23;
+}
+
+message SubscribedBotClients {
+    bool mobile = 1;
+    bool web = 2;
+}
+
+message SubscribedDependencies {
+    SubscribedDependency agentGuardService = 1;
+    SubscribedDependency authContext = 2;
+    SubscribedDependency archiveUtils = 3;
+    SubscribedDependency botUtils = 4;
+    SubscribedDependency autoRenewConversationContext = 5;
+}
+
+message SubscribedDependency {
+    bool remote = 1;
+    string version = 2;
+    string url = 3;
+}
+
+message ContactsResponse {
+    repeated Contact contacts = 1;
+    repeated Contact ignored = 2;
+    repeated commonmessages.LocalContact localContacts = 3;
+    string sites = 4;
+}
+
+message Contact {
+    string userName = 1;
+    string emailAddress = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+    string userId = 4;
+    bool waitingForConfirmation = 5;
+    string userCompanyName = 6;
+    commonmessages.UserAddress address = 7;
+    bool showAcceptIgnoreMsg = 8;
+}
+
+message SubscribeBotInput {
+    string botId = 1;
+}
+
+message SubscribeBotResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+}
+
+message SubscribeDomainInput {
+    string verificationCode = 1;
+}
+
+message SubscribeDomainResponse {
+    repeated UserDomain content = 1;
+    int32 error = 2;
+    string errorMessage = 3;
+}
+
+message VoipToggleResponse {
+    bool success = 1;
+}
+
+message VoipStatusInput {
+    string userId = 1;
+}
+
+message VoipStatusResponse {
+    bool voipEnabled = 1;
+    bool isPostpaidUser = 2;
+    int32 error = 3;
+}
+
+message TwilioTokenInput {
+    string platform = 1;
+    string env = 2;
+    string appType = 3;
+}
+
+message TwilioTokenResponse {
+    string accessToken = 1;
+}
+
+message TwilioIceServersResponse {
+    repeated IceServerObject iceServers = 1;
+}
+
+message IceServerObject {
+    string url = 1;
+    string urls = 2;
+    string username = 3;
+    string credential = 4;
+}
+
+message ManageTncInput {
+    string action = 1;
+}
+
+message ManageTncResponse {
+    int32 error = 1;
+    repeated ManageTncObject content = 2;
+}
+
+message ManageTncObject {
+    bool tncAccept = 1;
+}
+
+message CompaniesResponse {
+    repeated string companies = 1;
+}
+
+message PaginatedCallHistoryInput {
+    double startTime = 1;
+};
+
+message PaginatedCallHistoryResponse {
+    int32 error = 1;
+    repeated CallHistoryObject records = 2;
+    bool moreRecordsExist = 3;
+}
+
+message CallHistoryResponse {
+    repeated CallHistoryObject content = 1;
+}
+
+message CallHistoryObject {
+    double callCharge= 1;
+    int64 callTimestamp = 2;
+    float currentBalance = 3;
+    double duration = 4;
+    string userId = 5;
+    string callType = 6;
+    string callDirection = 7;
+    string fromUserId = 8;
+    string fromUserName = 9;
+    string toNumber = 10;
+    string toUserId = 11;
+    string toUserName = 12;
+    bool video = 13;
+}
+
+message UserDomainsResponse {
+    repeated UserDomain domains = 1;
+}
+
+message AssistantBotConfig {
+    string botId = 1;
+    string logoUrl = 2;
+    string name = 3;
+}
+
+message HomeLogoConfig {
+    string url = 1;
+    string name = 2;
+}
+
+message UserDomain {
+    string userDomain = 1;
+    string name = 2;
+    DomainViewMode viewModes = 3;
+    string logoUrl = 4;
+    bool lastLoggedIn = 5;
+    bool lockInUsers = 6;
+    string landingBotId = 7;
+    AssistantBotConfig assistantBotConfig = 8;
+    string tncUrl = 9;
+    string backgroundUrl = 10;
+    HomeLogoConfig homeLogoConfig = 11;
+}
+
+message DomainViewMode {
+    bool apps = 1;
+    bool channels = 2;
+    bool chat = 3;
+    bool voip = 4;
+    bool pstn = 5;
+}
+
+message CallHistoryInput {
+    string contactId = 1;
+}
+
+message LastLoggedInDomainInput {
+    string userDomain = 1;
+}
+
+message TopupBalanceInput {
+    string paymentCode = 1;
+    double amount = 2;
+    string token = 3;
+    string platform = 4;
+}
+
+message TopupBalanceResponse {
+    int32 error = 1;
+    double callQuota = 2;
+}
+
+message DeviceInfo {
+    string deviceToken = 1;
+    string deviceType = 2;
+    string platform = 3;
+}
+
+message DeviceBoolResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+}
+
+message UserBalanceResponse {
+    double callQuota = 1;
+    int32 error = 2;
+}
+
+message PreConnectCallCheckInput {
+    string videoSessionId = 1;
+    string callInitiatorUserId = 2;
+}
+
+message PreConnectCallCheckResponse {
+    bool success = 1;
+    string error = 2;
+}
+
+message AppBroadcastMessagesResponse {
+    repeated AppBroadcastMessage messages = 1;
+}
+
+message AppBroadcastMessage {
+    string message = 1;
+    int64 startTime = 2;
+    int64 endTime = 3;
+}
+
+message PostPaidUserCallsCheckResponse {
+    int32 error = 1;
+    bool isCallAllowed = 2;
+}
+
+message VoipPushInput {
+    string userId = 1;
+    string callerUserId = 2;
+    string videoSessionId = 3;
+    bool video = 4;
+    string callAction = 5;
+    double callStartTime = 6;
+    int64 callDuration = 7;
+    string callType = 8;
+    string calledNumber = 9;
+    string dialledSatPhoneNumber = 10;
+    bool isLocalContact = 11;
+    string data = 12;
+}
+
+message VoipPushResponse{
+    bool success = 1;
+}
+
+message LocalUserInput {
+    string userId = 1;
+    string localUserId = 2;
+}

@@ -1,0 +1,255 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+option java_multiple_files = true;
+option java_package = "com.frontm.conversation.proto";
+
+package conversation;
+
+service ConversationService {
+    rpc UpdateFavourites (UpdateFavouritesInput) returns (UpdateFavouritesResponse) {
+    }
+    rpc GetTimeline (TimeLineInput) returns (TimelineResponse) {
+    }
+    rpc GetCatalog (CatalogInput) returns (CatalogResponse) {
+    }
+    rpc GetConversationDetails (GetConversationDetailsInput) returns (GetConversationDetailsResponse) {
+    }
+    rpc GetArchivedMessages (GetArchivedMessagesInput) returns (GetArchivedMessagesResponse) {
+    }
+    rpc GetPaginatedArchivedMessages (GetPaginatedArchivedMessagesInput) returns (GetPaginatedArchivedMessagesResponse) {
+    }
+    rpc ResetConversation (ResetConversationInput) returns (commonmessages.Empty) {
+    }
+    rpc GetFavouriteConversations (commonmessages.SelectedDomainInput) returns (FavouritesResponse) {
+    }
+    rpc UpdateMessageStatusForUser(MessageStatusInput) returns (MessageStatusResponse) {}
+}
+
+message TimeLineInput {
+    bool isWebRequest = 1;
+}
+
+message UpdateFavouritesInput {
+    string action = 1;
+    string userDomain = 2;
+    string conversationId = 3;
+    string channelName = 4;
+    string userId = 5;
+    string botId = 6;
+}
+
+message UpdateFavouritesResponse {
+    string error = 1;
+}
+
+message TimelineResponse {
+    string error = 1;
+    TimelineContent content = 2;
+}
+
+message TimelineContent {
+    repeated TimelineConversation conversations = 1;
+    repeated TimelineConversation favourites = 2;
+}
+
+message TimelineConversation {
+    bool closed = 1;
+    repeated string participants = 2;
+    double createdOn = 3;
+    double modifiedOn = 4;
+    string userDomain = 5;
+    string conversationId = 6;
+    string createdBy = 7;
+    repeated TimelineChannels onChannels = 8;
+    TimelineBotInfo bot = 9;
+    bytes lastMessage = 10;
+    TimelineContact contact = 11;
+    TimelineChannel channel = 12;
+    double unreadCount = 13;
+}
+
+message TimelineChannel {
+    string channelName = 4;
+    string userDomain = 5;
+    string description = 7;
+}
+
+
+message TimelineChannels {
+    string channelName = 1;
+    string userDomain = 2;
+}
+
+message TimelineBotInfo {
+    string allowResetConversation = 1;
+    string botName = 2;
+    string logoUrl = 3;
+    string slug = 4;
+    string userDomain = 5;
+    string botUrl = 6;
+    string description = 7;
+    string botId = 8;
+    bool systemBot = 9;
+    bool conversational = 10;
+}
+
+message TimelineContact {
+    bool visible = 1;
+    bool searchable = 2;
+    string userName = 3;
+    string userId = 4;
+}
+
+message CatalogResponse {
+    repeated CatalogBot bots = 1;
+    message CatalogBots {
+        repeated CatalogBot bots = 1;
+    }
+    map<string, CatalogBots> companies = 2;
+    map<string, CatalogBots> categories = 3;
+}
+
+message CatalogBot {
+    string botId = 1;
+    string userDomain = 2;
+    string allowResetConversation = 3;
+    CatalogBotClients botClients = 4;
+    string botName = 5;
+    string botNameSearch = 6;
+    string botUrl = 7;
+    repeated string category = 8;
+    CatalogDependencies dependencies = 9;
+    string description = 10;
+    string descriptionSearch = 11;
+    string logoUrl = 12;
+    string slug = 13;
+    repeated string userRoles = 14;
+    string version = 15;
+    string developer = 16;
+    bool featured = 17;
+    bool systemBot = 18;
+    string minRequiredPlatformVersion = 19;
+    bool conversational = 20;
+    bool authorisedAccess = 21;
+    int32 inactivityDuration = 22;
+}
+
+message CatalogBotClients {
+    bool mobile = 1;
+    bool web = 2;
+}
+
+message CatalogDependencies {
+    CatalogDependency agentGuardService = 1;
+    CatalogDependency authContext = 2;
+    CatalogDependency archiveUtils = 3;
+    CatalogDependency botUtils = 4;
+    CatalogDependency autoRenewConversationContext = 5;
+}
+
+message CatalogDependency {
+    bool remote = 1;
+    string version = 2;
+    string url = 3;
+}
+
+message GetConversationDetailsInput {
+    string conversationId = 1;
+    string botId = 2;
+    string createdBy = 3;
+}
+
+message GetConversationDetailsResponse {
+    repeated GetConversationDetailsChannels onChannels = 1;
+    GetConversationDetailsUser conversationOwner = 2;
+    repeated GetConversationDetailsUser participants = 3;
+    int32 error = 4;
+    string userDomain = 5;
+}
+
+message GetConversationDetailsUser {
+    string userId = 1;
+    string userName = 2;
+}
+
+message GetConversationDetailsChannels {
+    string channelName = 1;
+    string userDomain = 2;
+    string channelId = 3;
+    string description = 4;
+    string logo = 5;
+}
+
+message GetArchivedMessagesInput {
+    string conversationId = 1;
+    string botId = 2;
+}
+
+message GetArchivedMessagesResponse {
+    int32 error = 1;
+    repeated GetArchivedMessagesContent content = 2;
+}
+
+message GetArchivedMessagesContent {
+    string messageId = 1;
+    string contentType = 2;
+    double createdOn = 3;
+    string createdBy = 4;
+    bytes content = 5;
+    bytes options = 6;
+    bool isOpened = 7;
+    bool isDelivered = 8;
+    bool isDeleted = 9;
+}
+
+message GetPaginatedArchivedMessagesInput {
+    string conversationId = 1;
+    string botId = 2;
+    double startTime = 3;
+    string fetchDirection = 4;
+}
+
+message GetPaginatedArchivedMessagesResponse {
+    int32 error = 1;
+    bool moreMessagesExist = 2;
+    repeated GetArchivedMessagesContent content = 3;
+}
+
+message CatalogInput {
+    bool isWebRequest = 1;
+    string query = 2;
+    string output = 3;
+    string selectedDomain = 4;
+}
+
+message ResetConversationInput {
+    string conversationId = 1;
+    string botId = 2;
+}
+
+message FavContact {
+    string userName = 1;
+    string emailAddress = 2;
+    commonmessages.PhoneNumbers phoneNumbers = 3;
+    string userId = 4;
+    string userCompanyName = 5;
+    commonmessages.UserAddress address = 6;
+}
+
+message FavouritesResponse {
+    repeated TimelineConversation favourites = 1;
+    repeated FavContact favouritePeople = 2;
+}
+
+message MessageStatusInput {
+    repeated string messageIds = 1;
+    string userDomain = 2;
+    string conversationId = 3;
+    string action = 4;
+}
+
+message MessageStatusResponse {
+    bool success = 1;
+    string message = 2;
+}

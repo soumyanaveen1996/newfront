@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.channels.proto";
+
+package channels;
+
+service ChannelsService {
+    rpc GetSubscribed (commonmessages.SelectedDomainInput) returns (ChannelListResponse) {}
+    rpc GetUnsubscribed (commonmessages.SelectedDomainInput) returns (ChannelListResponse) {}
+    rpc GetOwned (commonmessages.Empty) returns (ChannelListResponse) {}
+    rpc Subscribe (SubUnsubInput) returns (BooleanResponse) {}
+    rpc Unsubscribe (SubUnsubInput) returns (BooleanResponse) {}
+    rpc AddParticipants (AddParticipantsInput) returns (BooleanResponse) {}
+    rpc Create (CreateEditInput) returns (CreateChannelResponse) {}
+    rpc Edit (CreateEditInput) returns (BooleanResponse) {}
+
+    rpc GetParticipants (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc GetPendingParticipants (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc UpdateParticipants (UpdateUsersInput) returns (BooleanResponse) {}
+    rpc RequestPrivateChannelAccess (ChannelDomainInput) returns (BooleanResponse) {}
+    rpc AuthorizeParticipants (AuthorizeParticipantInput) returns (BooleanResponse) {}
+    rpc ChangeOwner (ChangeOwnerInput) returns (BooleanResponse) {}
+    rpc GetChannelAdmins (ChannelDomainInput) returns (ParticipantsListResponse) {}
+    rpc UpdateChannelAdmins (UpdateUsersInput) returns (BooleanResponse) {}
+    rpc DeleteChannel (ChannelDomainInput) returns (BooleanResponse) {}
+    rpc FindNewParticipants (FindNewParticipantsInput) returns (FindNewParticipantsResponse) {}
+}
+
+message SubUnsubInput {
+    repeated DomainChannels domainChannels = 1;
+}
+
+message DomainChannels {
+    string userDomain = 1;
+    repeated string channels = 2;
+}
+
+message AddParticipantsInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string newUserIds = 3;
+}
+
+message CreateEditInput {
+    InputChannel channel = 1;
+}
+
+message InputChannel {
+    string channelName = 1;
+    string userDomain = 2;
+    string description = 3;
+    string channelType = 4;
+    string discoverable = 5;
+}
+
+message ChannelListResponse {
+    int32 error = 1;
+    repeated DBChannel content = 2;
+}
+
+message DBChannel {
+    string channelId = 1;
+    string channelType = 2;
+    double createdOn = 3;
+    string channelName = 4;
+    string userDomain = 5;
+    ChannelOwner channelOwner = 6;
+    string description = 7;
+    string discoverable = 8;
+    string logo = 9;
+    bool isPlatformChannel = 10;
+    repeated string participants = 11;
+    bool requestSent = 12;
+    bool isFavourite = 13;
+}
+
+message ChannelOwner {
+    string emailAddress = 1;
+    string userName = 2;
+    string userId = 3;
+}
+
+message BooleanResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+    string errorMessage = 3;
+}
+
+message CreateChannelResponse {
+    int32 error = 1;
+    repeated string content = 2;
+    string errorMessage = 3;
+}
+
+message ChannelDomainInput {
+    string channelName = 1;
+    string userDomain = 2;
+}
+
+message ParticipantsListResponse {
+    int32 error = 1;
+    repeated ParticpantUser content = 2;
+}
+
+message ParticpantUser {
+    string userName = 1;
+    string userId = 2;
+    string role = 3;
+}
+
+message UpdateUsersInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string userIds = 3;
+}
+
+message AuthorizeParticipantInput {
+    string channelName = 1;
+    string userDomain = 2;
+    repeated string accepted = 3;
+    repeated string ignored = 4;
+}
+
+message ChangeOwnerInput {
+    string channelName = 1;
+    string userDomain = 2;
+    string newOwnerId = 3;
+}
+
+message FindNewParticipantsInput {
+    string queryString = 1;
+    string channelName = 2;
+    string userDomain = 3;
+}
+
+message FindNewParticipantsResponse {
+    int32 error = 1;
+    repeated NewParticipant content = 2;
+    string errorMessage = 3;
+}
+
+message NewParticipant {
+    string userName = 1;
+    string userId = 2;
+    string userCompanyName = 3;
+    commonmessages.UserAddress address = 4;
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.utils.proto";
+
+package utils;
+
+service UtilsService {
+    rpc AddLogEntry(LogEntryInput) returns (commonmessages.Empty) {}
+}
+
+message LogEntryInput {
+    string type = 1;
+    LongEntry entry = 2;
+    string more = 3;
+    string data = 4;
+}
+
+message LongEntry {
+    string userDomain = 1;
+    string userId = 2;
+    string userEmail = 3;
+    string botId = 4;
+    string conversationId = 5;
+    string entity = 6;
+    string intent = 7;
+    string client = 8;
+    string location = 9;
+    double timestamp = 10;
+    string level = 11;
+    string errorCode = 12;
+    string message = 13;
+}

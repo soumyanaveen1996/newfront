@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.airlines.proto";
+
+package airlines;
+
+service AirlinesService {
+    rpc ReportStats(StatsInput) returns (StatsResponse) {}
+}
+
+message StatsInput {
+    string parameters = 1;
+}
+
+message StatsResponse {
+    int32 error = 1;
+    repeated string content = 2;
+}

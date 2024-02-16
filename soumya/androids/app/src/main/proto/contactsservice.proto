@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.contacts.proto";
+
+package contacts;
+
+service ContactsService {
+    rpc Find (SearchQuery) returns (FindResponse) {}
+    rpc Add (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Accept (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Ignore (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Remove (ContactsInput) returns (AgentGuardBoolResponse) {}
+    rpc Invite (EmailIdList) returns (AgentGuardBoolResponse) {}
+    rpc Update (ContactsInput) returns (AgentGuardBoolResponse) {}
+}
+
+message SearchQuery {
+    string queryString = 1;
+    string selectedDomain = 2;
+}
+
+message ContactsInput {
+    repeated string userIds = 1;
+    repeated commonmessages.LocalContact localContacts = 2;
+}
+
+message EmailIdList {
+    repeated string emailIds = 1;
+    string selectedDomain = 2;
+}
+
+message AgentGuardBoolResponse {
+    int32 error = 1;
+    repeated bool content = 2;
+}
+
+message FindResponse {
+    int32 error = 1;
+    repeated MatchedUser content = 2;
+    string errorMessage = 3;
+}
+
+message MatchedUser {
+    string userName = 1;
+    string userId = 2;
+    string userCompanyName = 3;
+    commonmessages.UserAddress address = 4;
+}

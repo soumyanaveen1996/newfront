@@ -1,0 +1,45 @@
+{
+  "allowResetConversation": "false",
+  "botClients": {
+    "mobile": true,
+    "web": false
+  },
+  "botId": "onboarding-bot",
+  "botName": "Assistant",
+  "botNameSearch": "assistant",
+  "botUrl": "botfarm/frontmai/onboarding-bot/2.8.0/onboarding-bot.js",
+  "category": [
+
+  ],
+  "conversational": true,
+  "dependencies": {
+    "agentGuardService": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/agentGuardService/1.6.0/agentGuardService.js",
+      "version": "1.6.0"
+    },
+    "archiveUtils": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/archiveUtils/1.4.0/archiveUtils.js",
+      "version": "1.4.0"
+    },
+    "authContext": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/authContext/1.4.0/authContext.js",
+      "version": "1.4.0"
+    }
+  },
+  "description": "FrontM setup and customer support assistant",
+  "descriptionSearch": "frontm setup and customer support assistant",
+  "logoUrl": "AuthenticationLogo.png",
+  "modifiedBy": "mG7xFKAVfeTXwc6CeLaFjj",
+  "modifiedOn": 1610612946895,
+  "slug": "onboarding-bot",
+  "systemBot": true,
+  "userDomain": "frontmai",
+  "userRoles": [
+    "enduser",
+    "thuraya-test"
+  ],
+  "version": "2.8.0"
+}

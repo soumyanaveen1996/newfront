@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.queue.proto";
+option objc_class_prefix = "Frontm";
+
+
+package queue;
+
+service QueueService {
+    rpc GetSampleMessages (commonmessages.Empty) returns (stream MessageList) {}
+    rpc GetSampleStreamingMessages (commonmessages.Empty) returns (stream Message) {}
+    rpc GetSampleBufferedMessage (commonmessages.Empty) returns (stream BufferMessage) {}
+
+    rpc GetPaginatedQueueMessages (QueueMessageInput) returns (QueueResponseList) {}
+    rpc GetAllQueueMessages (commonmessages.Empty) returns (stream QueueResponse) {}
+    rpc GetStreamingQueueMessage (commonmessages.Empty) returns (stream QueueMessage) {}
+}
+
+message Message {
+    string id = 1;
+    string content = 2;
+}
+
+message BufferMessage {
+    bytes message = 1;
+}
+
+message MessageList {
+   repeated Message messages = 1;
+}
+
+message QueueResponse {
+    bool onSatellite = 1;
+    repeated QueueMessage queueMsgs = 2;
+    string errorMessage = 3;
+    string error = 4;
+}
+
+message QueueMessage {
+    string userId = 1;
+    string conversation = 2;
+    string bot = 3;
+    double createdOn = 4;
+    string createdBy = 5;
+    int32 contentType = 6;
+    string messageId = 7;
+    string requestUuid = 8;
+    bytes details = 9;
+    string error = 10;
+    bool isOpened = 11;
+    bool isDelivered = 12;
+    bool isDeleted = 13;
+}
+
+message QueueMessageInput {
+    double startTime = 1;
+}
+
+message QueueResponseList {
+    repeated QueueMessage queueMessages = 1;
+}
