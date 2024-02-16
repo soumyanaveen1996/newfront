@@ -1,0 +1,28 @@
+diff --git a/node_modules/react/cjs/react-jsx-runtime.development.js b/node_modules/react/cjs/react-jsx-runtime.development.js
+index 946a597..a7b5d01 100644
+--- a/node_modules/react/cjs/react-jsx-runtime.development.js
++++ b/node_modules/react/cjs/react-jsx-runtime.development.js
+@@ -266,6 +266,11 @@ function disableLogs() {
+         writable: true
+       }; // $FlowFixMe Flow thinks console is immutable.
+ 
++      var descriptor = Object.getOwnPropertyDescriptor(console, 'info');
++      if (!descriptor.configurable) {
++        return;
++      }
++
+       Object.defineProperties(console, {
+         info: props,
+         log: props,
+@@ -293,6 +298,11 @@ function reenableLogs() {
+         writable: true
+       }; // $FlowFixMe Flow thinks console is immutable.
+ 
++      var descriptor = Object.getOwnPropertyDescriptor(console, 'info');
++      if (!descriptor.configurable) {
++        return;
++      }
++
+       Object.defineProperties(console, {
+         log: assign({}, props, {
+           value: prevLog

@@ -1,0 +1,61 @@
+{
+  "allowResetConversation": "false",
+  "aws:rep:deleting": false,
+  "aws:rep:updateregion": "us-east-1",
+  "aws:rep:updatetime": 1611049236.640001,
+  "botClients": {
+    "mobile": true,
+    "web": true
+  },
+  "botId": "onshipOnboardingBot",
+  "botName": "onship Assistant ",
+  "botNameSearch": "onship assistant ",
+  "botUrl": "botfarm/onship/onshipOnboardingBot/1.0.8/onshipOnboardingBot.js",
+  "category": [
+    "Productivity"
+  ],
+  "createdBy": "gdwYFM67AXRQyYrN7d7Afg",
+  "createdOn": 1577784352151,
+  "dependencies": {
+    "agentGuardService": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/agentGuardService/1.6.0/agentGuardService.js",
+      "version": "1.6.0"
+    },
+    "archiveUtils": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/archiveUtils/1.4.0/archiveUtils.js",
+      "version": "1.4.0"
+    },
+    "authContext": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/authContext/1.4.0/authContext.js",
+      "version": "1.4.0"
+    },
+    "autoRenewConversationContext": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/autoRenewConversationContext/1.0.0/autoRenewConversationContext.js",
+      "version": "1.0.0"
+    },
+    "botUtils": {
+      "remote": "true",
+      "url": "botfarm/rc/frontmai/botUtils/1.0.0/botUtils.js",
+      "version": "1.0.0"
+    }
+  },
+  "description": "onship Assistant ",
+  "descriptionSearch": "onship assistant ",
+  "developer": "FrontM",
+  "featured": false,
+  "logoUrl": "OnShip_FrontM_Assistant__onshipOnboardingBot.png",
+  "modifiedBy": "jzEykfJm1DRYJu5F8MkQcV",
+  "modifiedOn": 1611049235314,
+  "slug": "onship-onboarding-bot",
+  "systemBot": true,
+  "userDomain": "onship",
+  "userRoles": [
+    "enduser",
+    "admin"
+  ],
+  "version": "1.0.8"
+}

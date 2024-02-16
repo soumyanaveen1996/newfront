@@ -1,0 +1,21 @@
+From 3bd4dcd99875602cfc80e0d4d3b2e3ed6c64a45b Mon Sep 17 00:00:00 2001
+From: "Tone T. Thangsongcharoen" <netguy87@gmail.com>
+Date: Wed, 4 May 2022 20:21:17 -0500
+Subject: [PATCH] Update Dependency to JitPack!
+
+Updated Android-ScalableVideoView to use JitPack instead of JCenter as JCenter has been deprecated. https://www.jitpack.io/#thang2162/Android-ScalableVideoView
+---
+ android/build.gradle | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/android/build.gradle b/android/build.gradle
+index 2fb8dfd2a..4120458b4 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -22,5 +22,5 @@ android {
+ dependencies {
+     //noinspection GradleDynamicVersion
+     implementation "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
+-    implementation 'com.yqritc:android-scalablevideoview:1.0.4'
++    implementation 'com.github.thang2162:Android-ScalableVideoView:v1.1.1'
+ }
