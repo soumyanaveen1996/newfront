@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.payment.proto";
+
+package payment;
+
+service PaymentService {
+    rpc InitiatePayment (InitiatePaymentInput) returns (InitiatePaymentResponse) {}
+    rpc ConfirmPayment (ConfirmPaymentInput) returns (ConfirmPaymentResponse) {}
+}
+
+message InitiatePaymentInput {
+    string paymentMethodId = 1;
+    float topupAmount = 2;
+    float taxAmount = 3;
+    string currency = 4;
+    string paymentCode = 5;
+}
+
+message InitiatePaymentResponse {
+    bool success = 1;
+    string errorMessage = 2;
+    bool actionRequired = 3;
+    string clientSecret = 4;
+}
+
+message ConfirmPaymentInput {
+    string paymentIntentId = 1;
+    float topupAmount = 2;
+    float taxAmount = 3;
+    string currency = 4;
+    string paymentCode = 5;
+}
+
+message ConfirmPaymentResponse {
+    bool success = 1;
+    string errorMessage = 2;
+}

@@ -1,0 +1,62 @@
+{
+  "botId": "nvYDkqiLpvkfvQzWurBMZa",
+  "userDomain": "onship",
+  "allowResetConversation": "false",
+  "authorisedAccess": false,
+  "botClients": {
+   "mobile": true,
+   "web": true
+  },
+  "botName": "Emma Virtual Assistant",
+  "botNameSearch": "emma",
+  "botUrl": "botfarm/onship/nvYDkqiLpvkfvQzWurBMZa/1.5.26/nvYDkqiLpvkfvQzWurBMZa.js",
+  "category": [
+   "Personal Assistance"
+  ],
+  "conversational": true,
+  "createdBy": "uvoGc6ZHoKwvznqThYexSr",
+  "createdOn": 1622651999035,
+  "dependencies": {
+   "agentGuardService": {
+    "remote": "true",
+    "url": "botfarm/rc/frontmai/agentGuardService/1.6.0/agentGuardService.js",
+    "version": "1.6.0"
+   },
+   "archiveUtils": {
+    "remote": "true",
+    "url": "botfarm/rc/frontmai/archiveUtils/1.5.0/archiveUtils.js",
+    "version": "1.5.0"
+   },
+   "authContext": {
+    "remote": "true",
+    "url": "botfarm/rc/frontmai/authContext/1.4.0/authContext.js",
+    "version": "1.4.0"
+   },
+   "autoRenewConversationContext": {
+    "remote": "true",
+    "url": "botfarm/rc/frontmai/autoRenewConversationContext/1.0.0/autoRenewConversationContext.js",
+    "version": "1.0.0"
+   },
+   "botUtils": {
+    "remote": "true",
+    "url": "botfarm/rc/frontmai/botUtils/1.0.0/botUtils.js",
+    "version": "1.0.0"
+   }
+  },
+  "description": "Your personalised virtual assistant for updates, general knowledge and assistance in using the App",
+  "descriptionSearch": "your personalised virtual assistant for updates, general knowledge and assistance in using the app",
+  "developer": "FrontM",
+  "featured": true,
+  "frameworkVersion": "v3",
+  "inactivityDuration": 0,
+  "logoUrl": "Emma_nvYDkqiLpvkfvQzWurBMZa.png",
+  "modifiedBy": "jzEykfJm1DRYJu5F8MkQcV",
+  "modifiedOn": 1682056856626,
+  "slug": "nvYDkqiLpvkfvQzWurBMZa-Bot",
+  "systemBot": false,
+  "userRoles": [
+   "developer",
+   "enduser"
+  ],
+  "version": "1.5.26"
+ }

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.agentguard.proto";
+
+package agentguard;
+
+service AgentGuardService {
+    rpc Execute(AgentGuardInput) returns (AgentGuardStringResponse) {}
+}
+
+message AgentGuardInput {
+    Conversation conversation = 1;
+    string capability = 2;
+    string parameters = 3;
+    bool sync = 4;
+    string requestUuid = 5;
+}
+
+message Conversation {
+    string conversationId = 1;
+    string bot = 2;
+    repeated string participants = 3;
+    repeated Channel onChannels = 4;
+    bool closed = 5;
+}
+
+message Channel {
+    string channelName = 1;
+    string userDomain = 2;
+}
+
+message AgentGuardStringResponse {
+    int32 error = 1;
+    repeated string content = 2;
+}

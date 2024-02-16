@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "commonmessages.proto";
+
+option java_multiple_files = true;
+option java_package = "com.frontm.ping.proto";
+
+package ping;
+
+service PingService {
+    rpc Ping(commonmessages.Empty) returns (PingReply) {}
+}
+
+message PingReply {
+    string message = 1;
+}
+
