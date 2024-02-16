@@ -1,0 +1,24 @@
+{
+  "name": "react-native-pjsip",
+  "version": "2.8.0",
+  "summary": "PJSIP module for React Native",
+  "license": "GPL-3.0",
+  "authors": {
+    "name": "Vadim Ruban",
+    "email": "vadim.ruban@carusto.com"
+  },
+  "homepage": "https://github.com/datso/react-native-pjsip",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/datso/react-native-pjsip.git"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  },
+  "vendored_frameworks": "ios/VialerPJSIP.framework"
+}

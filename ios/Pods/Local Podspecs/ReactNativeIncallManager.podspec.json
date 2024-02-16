@@ -1,0 +1,27 @@
+{
+  "name": "ReactNativeIncallManager",
+  "version": "4.0.1",
+  "summary": "Handling media-routes/sensors/events during a audio/video chat on React Native",
+  "description": "Handling media-routes/sensors/events during a audio/video chat on React Native",
+  "homepage": "https://github.com/react-native-webrtc/react-native-incall-manager#readme",
+  "license": "ISC",
+  "authors": "Henry Lin <zxcpoiu@gmail.com>",
+  "source": {
+    "git": "https://github.com/zxcpoiu/react-native-incall-manager.git",
+    "tag": "4.0.1"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "preserve_paths": [
+    "LICENSE",
+    "package.json"
+  ],
+  "source_files": "**/*.{h,m}",
+  "exclude_files": "example/**/*",
+  "dependencies": {
+    "React-Core": [
+
+    ]
+  }
+}

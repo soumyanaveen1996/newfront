@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-file-logger/ios/FileLoggerFormatter.h

@@ -1,0 +1,20 @@
+{
+  "name": "JitsiMeetFrontmSDK",
+  "version": "1.0.5",
+  "license": "Apache License, Version 2.0",
+  "homepage": "https://frontm.ai/",
+  "authors": {
+    "Akshaya Rao": "akshaya@frontm.com"
+  },
+  "summary": "Jitsis meet custom SDK for frontm",
+  "source": {
+    "path": "./JitsiMeetSDK.xcframework"
+  },
+  "vendored_frameworks": "JitsiMeetSDK.xcframework",
+  "platforms": {
+    "osx": null,
+    "ios": null,
+    "tvos": null,
+    "watchos": null
+  }
+}
